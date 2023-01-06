@@ -1,10 +1,11 @@
-function new_cell(text: string) {
-	let cell = document.createElement("td");
-	cell.innerHTML = text;
-	return cell;
-}
-
 window.onload = async function () {
+
+	let new_cell = function(text: string) {
+		let cell = document.createElement("td");
+		cell.innerHTML = text;
+		return cell;
+	}
+
 	// "query" the server
 	const response = await fetch(
 		"/query_games_own",

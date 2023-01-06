@@ -93,6 +93,12 @@ router.get('/games', games_own_get);
 import { query_games_list_own_get } from './server_query_games';
 router.get('/query_games_own', query_games_list_own_get);
 
+// implement retrieve ranking of players
+import { ranking_users_get } from './server_ranking';
+router.get('/ranking_users', ranking_users_get);
+import { query_ranking_users_get } from './server_query_user';
+router.get('/query_ranking_users', query_ranking_users_get);
+
 // implement sending, receiving, accepting, setting result of challenges
 import {
 	query_challenges_received_get,

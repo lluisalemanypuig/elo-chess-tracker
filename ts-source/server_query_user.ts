@@ -27,6 +27,7 @@ import { log_now } from './utils/misc';
 import { user_get_all_names_and_usernames, user_retrieve } from './server/users';
 import { session_id_exists, is_user_logged_in } from './server/session';
 import { User } from './models/user';
+import { ServerMemory } from './server/configuration';
 
 /// Returns the list of user full names and usernames sorted by name
 export async function query_user_list_get(req: any, res: any) {
@@ -71,4 +72,42 @@ export async function query_user_get(req: any, res: any) {
 		'fullname' : user.get_full_name(),
 		'classical' : JSON.stringify(user.get_classical_rating())
 	});
+}
+
+export async function query_ranking_users_get(req: any, res: any) {
+	debug(log_now(), "GET user_query_get...");
+
+	const session_id = req.cookies.session_id;
+	const username = req.cookies.user;
+
+	let r = is_user_logged_in(session_id, username);
+	if (!r[0]) {
+		res.send({ 'r' : '0', 'reason' : r[1] });
+		return;
+	}
+
+	let users: any[] = [];
+
+	{
+	let users_array = ServerMemory.get_instance().users;
+	for (let i = 0; i < users_array.length; ++i) {
+		users.push({
+			'name' : users_array[i].get_full_name(),
+			'elo' : users_array[i].get_classical_rating().rating,
+			'total_games' : users_array[i].get_classical_rating().num_games,
+			'won' : users_array[i].get_classical_rating().won,
+			'drawn' : users_array[i].get_classical_rating().drawn,
+			'lost' : users_array[i].get_classical_rating().lost
+		});
+	}
+	}
+	users.sort(
+		(u1: any, u2: any): number => {
+			if (u1.elo < u2.elo) { return 1; }
+			if (u1.elo == u2.elo) { return 0; }
+			return -1;
+		}
+	);
+
+	res.send({ 'r' : '1', 'users' : users });
 }
