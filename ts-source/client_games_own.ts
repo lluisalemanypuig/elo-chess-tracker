@@ -27,21 +27,10 @@ window.onload = async function () {
 	for (var i = 0; i < games.length; i++) {
 		let row = document.createElement("tr");
 
-		let result: string;
-		if (games[i].result == 'white_wins') {
-			result = "1 - 0";
-		}
-		else if (games[i].result == 'black_wins') {
-			result = "0 - 1";
-		}
-		else {
-			result = "1/2 - 1/2"
-		}
-		
 		row.appendChild(new_cell(games[i].white));
 		row.appendChild(new_cell(games[i].black));
-		row.appendChild(new_cell(result));
-		row.appendChild(new_cell(games[i].date.replace('..', ' ')));
+		row.appendChild(new_cell(games[i].result));
+		row.appendChild(new_cell(games[i].date));
 		row.appendChild(new_cell(games[i].type));
 		row.appendChild(new_cell(games[i].white_Elo));
 		row.appendChild(new_cell(games[i].white_Elo_increment));

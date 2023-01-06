@@ -62,12 +62,29 @@ export async function query_games_list_own_get(req: any, res: any) {
 			let g = game_set[j];
 			if (g.is_user_involved(username)) {
 				let inc = increment(username, g);
+				
+				let type: string = "";
+				if (g.game_type == 'classical') {
+					type = "Classical";
+				}
+
+				let result: string;
+				if (g.result == 'white_wins') {
+					result = "1 - 0";
+				}
+				else if (g.result == 'black_wins') {
+					result = "0 - 1";
+				}
+				else {
+					result = "1/2 - 1/2"
+				}
+
 				data_to_return.push({
 					'white': (user_retrieve(g.white.get_username()) as User).get_full_name(),
 					'black': (user_retrieve(g.black.get_username()) as User).get_full_name(),
-					'type': g.game_type,
-					'result': g.result,
-					'date' : g.when,
+					'type': type,
+					'result': result,
+					'date' : g.when.replace('..', ' '),
 					'white_Elo': g.white.get_classical_rating().rating,
 					'black_Elo': g.black.get_classical_rating().rating,
 					'white_Elo_increment': (inc.white_Elo_increment < 0 ? inc.white_Elo_increment : "+" + inc.white_Elo_increment),
