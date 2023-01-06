@@ -11,6 +11,9 @@
 	"classical" : {
 		"rating" : 1500,
 		"num_games" : 0,
+		"won" : 0,
+		"drawn" : 0,
+		"lost" : 0,
 		"K" : 40
 	}
 }

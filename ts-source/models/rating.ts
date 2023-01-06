@@ -28,6 +28,13 @@ export class Rating {
 	public rating: number;
 	/// Number of games
 	public num_games: number;
+	/// Number of won games
+	public won: number;
+	/// Number of drawn games
+	public drawn: number;
+	/// Number of lost games
+	public lost: number;
+
 	/// Constant
 	public K: number;
 
@@ -35,21 +42,34 @@ export class Rating {
 	 * @brief Constructor
 	 * @param rating Actual rating points
 	 * @param num_games Number of games
+	 * @param won Number of won games
+	 * @param drawn Number of drawn games
+	 * @param lost Number of lost games
 	 * @param K Constant
 	 */
 	constructor(
 		rating: number,
 		num_games: number,
+		won: number,
+		drawn: number,
+		lost: number,
 		K: number
 	) {
 		this.rating = rating;
 		this.num_games = num_games;
+		this.won = won;
+		this.drawn = drawn;
+		this.lost = lost;
 		this.K = K;
 	}
 
 	/// Clones the object.
 	clone(): Rating {
-		return new Rating(this.rating, this.num_games, this.K);
+		return new Rating(
+			this.rating,
+			this.num_games, this.won, this.drawn, this.lost,
+			this.K
+		);
 	}
 }
 
@@ -67,7 +87,7 @@ export function rating_from_json(json: any): Rating {
 
 	return new Rating(
 		json["rating"],
-		json["num_games"],
+		json["num_games"], json["won"], json["drawn"], json["lost"],
 		json["K"]
 	);
 }

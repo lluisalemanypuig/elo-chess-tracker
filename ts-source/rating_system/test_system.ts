@@ -44,14 +44,20 @@ function update_classical(game: Game): [Player, Player] {
 	if (result == "draw") {
 		classical_white.rating = (rt1 + rt2 - ng1 / K1 * 100) / 2;
 		classical_black.rating = (rt1 + rt2 + ng2 / K2 * 100) / 2;
+		classical_white.drawn += 1;
+		classical_black.drawn += 1;
 	}
 	else if (result == "white_wins") {
 		classical_white.rating = (rt1 + rt2) / 2 + ng1 / K1 * 100;
 		classical_black.rating = (rt1 + rt2) / 2 - ng2 / K2 * 100;
+		classical_white.won += 1;
+		classical_black.lost += 1;
 	}
 	else if (result == "black_wins") {
 		classical_white.rating = (rt1 + rt2) / 2 - ng1 / K1 * 100;
 		classical_black.rating = (rt1 + rt2) / 2 + ng2 / K2 * 100;
+		classical_white.lost += 1;
+		classical_black.won += 1;
 	}
 
 	classical_white.num_games = ng1;
@@ -74,5 +80,8 @@ export function test_player_vs_player(game: Game): [Player, Player] {
 		return update_classical(game);
 	}
 
-	return [new Player("", new Rating(0, 0, 0)), new Player("", new Rating(0, 0, 0))];
+	return [
+		new Player("", new Rating(0, 0, 0, 0, 0, 0)),
+		new Player("", new Rating(0, 0, 0, 0, 0, 0))
+	];
 }

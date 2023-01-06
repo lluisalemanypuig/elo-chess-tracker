@@ -104,7 +104,7 @@ export async function user_create_new_post(req: any, res: any) {
 		new Password(_pass[0], _pass[1]),
 		new_roles,
 		[], // empty set of games
-		new Rating(new_classical_rating, 0, 40)
+		new Rating(new_classical_rating, 0, 0, 0, 0, 40)
 	);
 
 	user_add_new(u);
