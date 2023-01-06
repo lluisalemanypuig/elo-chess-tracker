@@ -6,7 +6,7 @@
 		"encrypted" : "E58+UFM7FbTwbJKWaITp+bwDqPIvz6bMvFxtPB9kL3Y=",
 		"iv" : "5xdIVti+3mJyVXrskEoGGA=="
 	},
-	"roles" : ["member", "teacher"],
+	"roles" : ["member", "teacher", "admin"],
 	"games" : [],
 	"classical" : {
 		"rating" : 1500,
