@@ -1,0 +1,66 @@
+<!--
+Elo rating for a Chess Club
+Copyright (C) 2023  Lluís Alemany Puig
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+Contact:
+	Lluís Alemany Puig
+	https://github.com/lluisalemanypuig
+-->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<script type="text/javascript" src="js-source/bdl__client_user_new.js"> </script>
+</head>
+
+<body>
+	<center>
+	<h1 id="user_new_title">CREATE A NEW USER</h1>
+
+	<div id="user_creation_area">
+		<!-- username box -->
+		<label>Username:</label>
+		<input type="text" id="username_box" name="username_box"><br><br>
+		
+		<!-- First Name -->
+		<label>First name:</label>
+		<input type="text" id="first_name_box" name="first_name_box"><br><br>
+
+		<!-- Last Name -->
+		<label>Last name:</label>
+		<input type="text" id="last_name_box" name="last_name_box"><br><br>
+
+		<!-- Role -->
+		<label>Role:</label>
+		<select name="role_select" id="role_select"></select><br></br>
+
+		<!-- Password -->
+		<label>Password:</label>
+		<input type="password" id="password_box" name="password_box"><br><br>
+		
+		<!-- Initial classical rating -->
+		<label>Classical rating:</label>
+		<input type="text" id="classical_rating_box" name="classical_rating_box"><br><br>
+
+		<!-- submit data -->
+		<button type="button" id="submit_new_user_button" name="submit_new_user_button">Submit</button><br><br>
+	</div>
+
+	</center>
+</body>
+</html>

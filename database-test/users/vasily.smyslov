@@ -1,0 +1,16 @@
+{
+	"username" : "vasily.smyslov",
+	"first_name" : "Vasily",
+	"last_name" : "Smyslov",
+	"password" : {
+		"encrypted" : "E58+UFM7FbTwbJKWaITp+bwDqPIvz6bMvFxtPB9kL3Y=",
+		"iv" : "5xdIVti+3mJyVXrskEoGGA=="
+	},
+	"roles" : ["member", "teacher"],
+	"games" : [],
+	"classical" : {
+		"rating" : 1500,
+		"num_games" : 0,
+		"K" : 40
+	}
+}

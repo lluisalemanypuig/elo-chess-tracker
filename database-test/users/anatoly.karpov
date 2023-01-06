@@ -1,0 +1,16 @@
+{
+	"username" : "anatoly.karpov",
+	"first_name" : "Anatoly",
+	"last_name" : "Karpov",
+	"password" : {
+		"encrypted" : "giIonuFQn++gHJee5CDig/6chUsfob2AApnfMlCQTdTrI01hujbUb3UtXDoVti0C",
+		"iv" : "VT+asIAhIDPQ7kZwYAf1fw=="
+	},
+	"roles" : ["member"],
+	"games" : [],
+	"classical" : {
+		"rating" : 1500,
+		"num_games" : 0,
+		"K" : 40
+	}
+}

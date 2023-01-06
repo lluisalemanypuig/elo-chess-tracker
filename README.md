@@ -1,2 +1,2 @@
 # elo-chess-tracker
-Small website to track Elo ratings within a chess club
+A small webpage to keep track of Elo ratings of chess players

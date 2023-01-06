@@ -1,0 +1,65 @@
+<!--
+Elo rating for a Chess Club
+Copyright (C) 2023  Lluís Alemany Puig
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+Contact:
+	Lluís Alemany Puig
+	https://github.com/lluisalemanypuig
+-->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<script type="text/javascript" src="js-source/bdl__client_user_edit.js"> </script>
+</head>
+
+<body>
+	<center>
+	<h1 id="user_edit_title">EDIT EXISTING USER -- UNDER CONSTRUCTION</h1>
+
+	<div id="user_edition_area">
+		<!-- User selection  -->
+		<label for="username_datalist">Select user:</label>
+		<input list="username_datalist" id="usernames_list" name="usernames_list">
+		<datalist id="username_datalist">
+			<option value="asdf">
+		</datalist><br><br>
+
+		<!-- First Name -->
+		<label for="first_name_box">First name:</label>
+		<input type="text" id="first_name_box" name="first_name_box"><br><br>
+
+		<!-- Last Name -->
+		<label for="last_name_box">Last name:</label>
+		<input type="text" id="last_name_box" name="last_name_box"><br><br>
+
+		<!-- Role -->
+		<label for="role_select">Role:</label>
+		<select name="role_select" id="role_select"></select><br></br>
+
+		<!-- Initial classical rating -->
+		<label for="classical_rating_box">Classical rating:</label>
+		<input type="text" id="classical_rating_box" name="classical_rating_box"><br><br>
+
+		<!-- submit data -->
+		<button type="button" id="submit_changes" name="submit_changes">Submit changes</button><br><br>
+	</div>
+
+	</center>
+</body>
+</html>

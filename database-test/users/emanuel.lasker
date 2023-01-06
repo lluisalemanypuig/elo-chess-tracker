@@ -1,0 +1,16 @@
+{
+	"username" : "emanuel.lasker",
+	"first_name" : "Emanuel",
+	"last_name" : "Lasker",
+	"password" : {
+		"encrypted" : "z7A7j5F91yU4aDWKGFO442sG4BiAZDaozuV8DnPKH9s=",
+		"iv" : "HKWsa7MNUz/cbN7lelyPQA=="
+	},
+	"roles" : ["member", "teacher"],
+	"games" : [],
+	"classical" : {
+		"rating" : 1500,
+		"num_games" : 0,
+		"K" : 40
+	}
+}

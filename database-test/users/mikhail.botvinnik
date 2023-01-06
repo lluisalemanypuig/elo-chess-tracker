@@ -1,0 +1,16 @@
+{
+	"username" : "mikhail.botvinnik",
+	"first_name" : "Mikhail",
+	"last_name" : "Botvinnik",
+	"password" : {
+		"encrypted" : "zIRz3INW0jJ+xrcy7o5S8QA1HLr6b1rgAcDJO4hHV4LjKKfwfK8/WWbEBSXcThQo",
+		"iv" : "kdr4DZk5n//DyVV9tJ5RpQ=="
+	},
+	"roles" : ["member", "admin"],
+	"games" : [],
+	"classical" : {
+		"rating" : 1500,
+		"num_games" : 0,
+		"K" : 40
+	}
+}

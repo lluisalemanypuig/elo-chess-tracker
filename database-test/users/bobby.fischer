@@ -1,0 +1,16 @@
+{
+	"username" : "bobby.fischer",
+	"first_name" : "Bobby",
+	"last_name" : "Fischer",
+	"password" : {
+		"encrypted" : "Zs4nTGLUbqn9S5sAa6MXvBLBsB+Y1GAcnMJ0aySdxX0=",
+		"iv" : "OmyaADS/OqvZJFeSs/D3tA=="
+	},
+	"roles" : ["member", "student"],
+	"games" : [],
+	"classical" : {
+		"rating" : 1500,
+		"num_games" : 0,
+		"K" : 40
+	}
+}

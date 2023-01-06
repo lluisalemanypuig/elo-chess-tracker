@@ -1,0 +1,16 @@
+{
+	"username" : "magnus.carlsen",
+	"first_name" : "Magnus",
+	"last_name" : "Carlsen",
+	"password" : {
+		"encrypted" : "pnCCiauE6OLqcJblFnd6MGo57rbxhnWNe52qQKKB/u4cp4F9yB5tZU6yJt3Ql1q1",
+		"iv" : "HGsurqnLuVeC8ZnQXdDJAg=="
+	},
+	"roles" : ["member"],
+	"games" : [],
+	"classical" : {
+		"rating" : 1500,
+		"num_games" : 0,
+		"K" : 40
+	}
+}
