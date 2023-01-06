@@ -60,21 +60,41 @@ export function is_role_string_correct(r: string): boolean {
 
 // ----------------------------------------------------------------------------
 
-/// Create a new user
-export const CREATE_NEW_USER = 'create_new_user';
-/// Edit an existing user
-export const EDIT_EXISTING_USER = 'edit_existing_user';
-/// Edit every member
-export const EDIT_EVERYONE = 'edit_everyone';
-/// Edit a student
+/// Can create users
+export const CREATE_USER = 'create_user';
+
+/// Edit user
+export const EDIT_USER = 'edit_user';
+/// Edit admin
+export const EDIT_ADMIN = 'edit_admin';
+/// Edit teacher
+export const EDIT_TEACHER = 'edit_teacher';
+/// Edit members
+export const EDIT_MEMBER = 'edit_member';
+/// Edit students
 export const EDIT_STUDENT = 'edit_student';
+
+/// Assign admin role
+export const ASSIGN_ROLE_ADMIN = 'assign_role_admin';
+/// Assign teacher role
+export const ASSIGN_ROLE_TEACHER = 'assign_role_teacher';
+/// Assign member role
+export const ASSIGN_ROLE_MEMBER = 'assign_role_member';
+/// Assign student role
+export const ASSIGN_ROLE_STUDENT = 'assign_role_student';
 
 /// All actions that can be performed in this web
 export const all_actions = [
-	CREATE_NEW_USER,
-	EDIT_EXISTING_USER,
-	EDIT_EVERYONE,
-	EDIT_STUDENT
+	CREATE_USER,
+	EDIT_USER,
+	EDIT_ADMIN,
+	EDIT_TEACHER,
+	EDIT_MEMBER,
+	EDIT_STUDENT,
+	ASSIGN_ROLE_ADMIN,
+	ASSIGN_ROLE_TEACHER,
+	ASSIGN_ROLE_MEMBER,
+	ASSIGN_ROLE_STUDENT,
 
 ] as const;
 
@@ -84,14 +104,23 @@ export type Action = typeof all_actions[number];
 /// Relate each user role to a readable string
 export const user_role_to_action: { [key in UserRole]: Action[] } = {
 	admin: [
-		CREATE_NEW_USER,
-		EDIT_EXISTING_USER,
-		EDIT_EVERYONE,
+		CREATE_USER,
+		EDIT_USER,
+		EDIT_ADMIN,
+		EDIT_TEACHER,
+		EDIT_MEMBER,
+		EDIT_STUDENT,
+		ASSIGN_ROLE_ADMIN,
+		ASSIGN_ROLE_TEACHER,
+		ASSIGN_ROLE_MEMBER,
+		ASSIGN_ROLE_STUDENT,
 	],
 	
 	teacher: [
-		EDIT_EXISTING_USER,
+		CREATE_USER,
+		EDIT_USER,
 		EDIT_STUDENT,
+		ASSIGN_ROLE_STUDENT,
 	],
 
 	member: [

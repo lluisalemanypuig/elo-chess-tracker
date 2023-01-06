@@ -21,7 +21,7 @@ Contact:
 */
 
 import { logout_link_clicked } from "./client_logout";
-import { CREATE_NEW_USER, EDIT_EXISTING_USER, user_role_to_action } from "./models/user_role";
+import { CREATE_USER, EDIT_MEMBER, EDIT_STUDENT, user_role_to_action } from "./models/user_role";
 import { get_cookie } from "./utils/cookies";
 
 function fill_action_links() {
@@ -37,10 +37,10 @@ function fill_action_links() {
 		let r = user_roles[i];
 		let allowed_actions = user_role_to_action[r];
 		
-		if (allowed_actions.includes(CREATE_NEW_USER)) {
+		if (allowed_actions.includes(CREATE_USER)) {
 			add_create_new_user = true;
 		}
-		if (allowed_actions.includes(EDIT_EXISTING_USER)) {
+		if (allowed_actions.includes(EDIT_MEMBER) || allowed_actions.includes(EDIT_STUDENT)) {
 			edit_existing_user = true;
 		}
 	}

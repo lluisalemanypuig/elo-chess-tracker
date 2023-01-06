@@ -29,6 +29,7 @@ import { log_now } from './utils/misc';
 import { session_id_exists } from './server/session';
 import { user_retrieve } from './server/users';
 import { User } from './models/user';
+import { EDIT_MEMBER } from './models/user_role';
 
 function user_can_edit(id: string, username: string): boolean {
 	if (!session_id_exists(id, username)) {
@@ -41,7 +42,7 @@ function user_can_edit(id: string, username: string): boolean {
 		return false;
 	}
 	let user = _user as User;
-	if (!user.can_do('edit_existing_user')) {
+	if (!user.can_do(EDIT_MEMBER)) {
 		debug(log_now(), `    User '${username}' does not have sufficient permissions.`);
 		return false;
 	}

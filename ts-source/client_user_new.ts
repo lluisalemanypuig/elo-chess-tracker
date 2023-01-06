@@ -47,14 +47,6 @@ async function submit_new_user_clicked(event: any) {
 	}
 	const last_name_box = _last_name_box as HTMLInputElement;
 
-	// role box
-	const _role_select = document.getElementById("role_select");
-	if (_role_select == null) {
-		console.log("Element 'role_select' does not exist.");
-		return;
-	}
-	const role_select = _role_select as HTMLSelectElement;
-
 	// password box
 	const _password_box = document.getElementById("password_box");
 	if (_password_box == null) {
@@ -74,11 +66,19 @@ async function submit_new_user_clicked(event: any) {
 	const username = username_box.value;
 	const firstname = first_name_box.value;
 	const lastname = last_name_box.value;
-	const role = role_select.options[role_select.selectedIndex].value;
+	
+	let roles: string[] = [];
+	all_user_roles.forEach(
+		function(str: string) {
+			let checkbox_role = document.getElementById(str) as HTMLInputElement;
+			if (checkbox_role.checked) {
+				roles.push(str);
+			}
+		}
+	);
+	
 	const password = password_box.value;
 	const classical_rating = classical_rating_box.value;
-
-	console.log("Role chosen:", role);
 
 	if (username == "") {
 		alert("Missing username");
@@ -92,8 +92,8 @@ async function submit_new_user_clicked(event: any) {
 		alert("Missing last name");
 		return;
 	}
-	if (role == "") {
-		alert("Missing role");
+	if (roles.length == 0) {
+		alert("Missing roles");
 		return;
 	}
 	if (password == "") {
@@ -105,7 +105,6 @@ async function submit_new_user_clicked(event: any) {
 		return;
 	}
 	
-	// "query" the server
 	const response = await fetch(
 		"/user_create",
 		{
@@ -114,7 +113,7 @@ async function submit_new_user_clicked(event: any) {
 				'u' : username,
 				'fn' : firstname,
 				'ln' : lastname,
-				'r' : [role],
+				'r' : roles,
 				'p' : password,
 				'cr' : classical_rating
 			}),
@@ -124,27 +123,39 @@ async function submit_new_user_clicked(event: any) {
 
 	// report result
     const data = await response.json();
-	if (data.r != "success") {
+	if (data.r == "0") {
 		alert(`Could not create new user: '${data.reason}'`);
+		return;
 	}
+
+	window.location.href = "/";
 }
 
-function add_to_select(dd: HTMLSelectElement, show: string, value: string) {
-	let opt = document.createElement('option');
-	opt.text = show;
-	opt.value = value;
-	dd.appendChild(opt);
+function asdf(event: any) {
+
+}
+
+function add_to_select(div: HTMLDivElement, show: string, value: string) {
+	let checkbox = document.createElement("input");
+	checkbox.type = "checkbox";
+	checkbox.id = value;
+	div.appendChild(checkbox);
+	
+	let checkbox_label = document.createElement("label");
+	checkbox_label.textContent = show;
+	div.appendChild(checkbox_label);
+	div.appendChild(document.createElement("br"));
 }
 
 window.onload = function () {
 	// fill in select role dropdown with values
-	let role_select = document.getElementById("role_select") as HTMLSelectElement;
-	add_to_select(role_select, "", "");
+	let role_div = document.getElementById("role_checkboxes") as HTMLDivElement;
 	all_user_roles.forEach(
 		function(str: string) {
-			add_to_select(role_select, user_role_to_string[str as UserRole], str);
+			add_to_select(role_div, user_role_to_string[str as UserRole], str);
 		}
 	);
+	role_div.appendChild(document.createElement("br"));
 
 	// link button click with function
 	let submit_new_user = document.getElementById("submit_new_user_button") as HTMLLinkElement;

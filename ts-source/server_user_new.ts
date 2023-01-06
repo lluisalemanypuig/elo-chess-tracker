@@ -27,29 +27,28 @@ import path from 'path';
 
 import { log_now } from './utils/misc';
 import { is_user_logged_in } from './server/session';
-import { user_add_new, user_exists } from './server/users';
+import { user_add_new, user_exists, user_retrieve } from './server/users';
 import { User } from './models/user';
-import { is_role_string_correct } from './models/user_role';
+import {
+	ASSIGN_ROLE_ADMIN,
+	ASSIGN_ROLE_TEACHER,
+	ASSIGN_ROLE_MEMBER,
+	ASSIGN_ROLE_STUDENT,
+	is_role_string_correct,
+	CREATE_USER
+}
+from './models/user_role';
 import { encrypt_password_for_user } from './utils/encrypt';
 import { Password } from './models/password';
 import { Rating } from './models/rating';
 
-function can_user_create(session_id: string, username: string): boolean {
-	let r = is_user_logged_in(session_id, username);
-	if (!r[0]) { return false; }
-
-	let user = r[2] as User;
-	if (!user.can_do('create_new_user')) {
-		debug(log_now(), `    User '${username}' does not have sufficient permissions.`);
-		return false;
-	}
-	return true;
-}
-
 export async function user_create_new_get(req: any, res: any) {
 	debug(log_now(), "GET create_new_user page...");
-	if (!can_user_create(req.cookies.session_id, req.cookies.user)) {
-		res.send("403 - Forbidden");
+
+	const username = req.cookies.user;
+	const r = is_user_logged_in(req.cookies.session_id, username);
+	if (! r[0]) {
+		res.send(r[1]);
 		return;
 	}
 
@@ -59,7 +58,16 @@ export async function user_create_new_get(req: any, res: any) {
 export async function user_create_new_post(req: any, res: any) {
 	debug(log_now(), "POST create_new_user");
 
-	if (! can_user_create(req.cookies.session_id, req.cookies.user)) {
+	const username = req.cookies.user;
+	const r = is_user_logged_in(req.cookies.session_id, username);
+	if (! r[0]) {
+		res.send(r[1]);
+		return;
+	}
+
+	let registrerer = r[2] as User;
+	if (!registrerer.can_do(CREATE_USER)) {
+		debug(log_now(), `User '${username}' cannot create users.`);
 		res.send("403 - Forbidden");
 		return;
 	}
@@ -71,6 +79,7 @@ export async function user_create_new_post(req: any, res: any) {
 	const new_password = req.body.p;
 	const new_classical_rating = req.body.cr;
 
+	debug(log_now(), `User '${req.cookies.user}' is trying to create a new user:`);
 	debug(log_now(), `    Username: '${new_username}'`);
 	debug(log_now(), `    First name: '${new_firstname}'`);
 	debug(log_now(), `    Last name: '${new_lastname}'`);
@@ -79,8 +88,8 @@ export async function user_create_new_post(req: any, res: any) {
 
 	if (user_exists(new_username)) {
 		res.send({
-			"r": "fail",
-			"reason": "User already exists"
+			"r": "0",
+			"reason": `User '${new_username}' already exists`
 		});
 		return;
 	}
@@ -88,11 +97,45 @@ export async function user_create_new_post(req: any, res: any) {
 	for (let i = 0; i < new_roles.length; ++i) {
 		if (!is_role_string_correct(new_roles[i])) {
 			res.send({
-				"r": "fail",
+				"r": "0",
 				"reason": `Role string '${new_roles[i]}' is not correct.`
 			});
 			return;
 		}
+	}
+
+	let can_create: boolean = true;
+	if (new_roles.includes('admin')) {
+		can_create = can_create && registrerer.can_do(ASSIGN_ROLE_ADMIN);
+		if (!registrerer.can_do(ASSIGN_ROLE_ADMIN)) {
+			debug(log_now(), `User '${username}' cannot create admins.`);
+		}
+	}
+	if (new_roles.includes('teacher')) {
+		can_create = can_create && registrerer.can_do(ASSIGN_ROLE_TEACHER);
+		if (!registrerer.can_do(ASSIGN_ROLE_TEACHER)) {
+			debug(log_now(), `User '${username}' cannot create teachers.`);
+		}
+	}
+	if (new_roles.includes('member')) {
+		can_create = can_create && registrerer.can_do(ASSIGN_ROLE_MEMBER);
+		if (!registrerer.can_do(ASSIGN_ROLE_MEMBER)) {
+			debug(log_now(), `User '${username}' cannot create members.`);
+		}
+	}
+	if (new_roles.includes('student')) {
+		can_create = can_create && registrerer.can_do(ASSIGN_ROLE_STUDENT);
+		if (!registrerer.can_do(ASSIGN_ROLE_STUDENT)) {
+			debug(log_now(), `User '${username}' cannot create students.`);
+		}
+	}
+
+	if (!can_create) {
+		res.send({
+			"r": "0",
+			"reason": `You do not have enough permissions to create a user with the selected roles.`
+		});
+		return;
 	}
 
 	// encrypt password
@@ -108,5 +151,5 @@ export async function user_create_new_post(req: any, res: any) {
 	);
 
 	user_add_new(u);
-	res.send({ "r": "success" });
+	res.send({ "r": "1" });
 }
