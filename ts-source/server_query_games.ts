@@ -49,7 +49,7 @@ export async function query_games_list_own_get(req: any, res: any) {
 
 	let u = user_retrieve(username) as User;
 	let game_record_file_list = u.get_games();
-	for (let i = 0; i < game_record_file_list.length; ++i) {
+	for (let i = game_record_file_list.length - 1; i >= 0; --i) {
 		let game_record_file = path.join(games_dir, game_record_file_list[i]);
 
 		// read the games from the file
@@ -58,7 +58,7 @@ export async function query_games_list_own_get(req: any, res: any) {
 		debug(log_now(), `        Game record '${game_record_file}' read.`);
 		let game_set = game_set_from_json(data);
 
-		for (let j = 0; j < game_set.length; ++j) {
+		for (let j = game_set.length - 1; j >= 0; --j) {
 			let g = game_set[j];
 			if (g.is_user_involved(username)) {
 				let inc = increment(username, g);
