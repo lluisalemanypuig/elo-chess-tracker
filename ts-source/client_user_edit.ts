@@ -65,8 +65,10 @@ async function user_was_changed(event: any) {
 	last_name_box.value = "";
 
 	let username_list_input = document.getElementById("username_list") as HTMLInputElement;
-	const username = (document.querySelector('option[value="' + username_list_input.value + '"]') as HTMLOptionElement).id;
-	if (username != null) {
+	const username_option = document.querySelector('option[value="' + username_list_input.value + '"]');
+
+	if (username_option != null) {
+		const username = (username_option as HTMLOptionElement).id;
 		const response = await fetch(
 			"/query_user_modify",
 			{
