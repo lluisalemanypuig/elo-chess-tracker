@@ -101,6 +101,7 @@ export class User extends Player {
 		return `${this.first_name} ${this.last_name}`;
 	}
 
+	set_password(pwd: Password) { this.password = pwd; }
 	/// Returns the password of this user
 	get_password(): Password { return this.password; }
 

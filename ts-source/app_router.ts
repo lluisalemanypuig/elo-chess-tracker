@@ -107,6 +107,11 @@ import { post_user_edit, get_user_edit_page } from './server_user_edit';
 router.get('/user_edit', get_user_edit_page);
 router.post('/user_edit', post_user_edit);
 
+// implement change of password
+import { get_change_password_page, post_change_password } from './server_change_password';
+router.get('/change_password', get_change_password_page);
+router.post('/change_password', post_change_password);
+
 // implement retrieve list of games
 import { get_games_own_page } from './server_games';
 router.get('/games', get_games_own_page);

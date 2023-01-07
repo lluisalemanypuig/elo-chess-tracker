@@ -47,25 +47,28 @@ export function user_retrieve(username: string): (User | null) {
 	return null;
 }
 
+export function user_overwrite(user: User): void {
+	let user_dir = ServerDirectories.get_instance().users_directory;
+	let user_file = path.join(user_dir, user.get_username());
+
+	debug(log_now(), `Overwriting file '${user_file}' of user '${user.get_username()}'`);
+	fs.writeFileSync(user_file, JSON.stringify(user, null, 4));
+}
+
 /// Overwrites user data
-export function user_overwrite(
+export function user_rename_reassign_roles(
 	username: string,
 	first_name: string,
 	last_name: string,
 	roles: UserRole[]
 
 ): void {
-
 	let user = user_retrieve(username) as User;
 	user.set_first_name(first_name);
 	user.set_last_name(last_name);
 	user.set_roles(roles);
 
-	let user_dir = ServerDirectories.get_instance().users_directory;
-	let user_file = path.join(user_dir, user.get_username());
-
-	debug(log_now(), `Overwriting file '${user_file}' of user '${user.get_username()}'`);
-	fs.writeFileSync(user_file, JSON.stringify(user, null, 4));
+	user_overwrite(user);
 }
 
 /// Does a user exist?

@@ -20,9 +20,32 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { logout_link_clicked } from "./client_logout";
 import { CREATE_USER, EDIT_MEMBER, EDIT_STUDENT, user_role_to_action, user_role_to_string } from "./models/user_role";
-import { get_cookie } from "./utils/cookies";
+import { make_cookie_string } from "./utils/cookies";
+
+export async function logout_link_clicked(event: any) {
+	// "query" the server
+	const response = await fetch("/logout", {method: 'POST'});
+
+	// whether logout was successful or not, empty the cookies
+	document.cookie = make_cookie_string({
+		"name" : "session_id",
+		"value" : "",
+		"days" : 1
+	});
+	document.cookie = make_cookie_string({
+		"name" : "user",
+		"value" : "",
+		"days" : 1
+	});
+	document.cookie = make_cookie_string({
+		"name" : "type",
+		"value" : "",
+		"days" : 1
+	});
+	
+	window.location.href = "/";
+}
 
 function fill_action_links(user_roles: string[]) {
 	let action_links = document.getElementById("special_action_links") as HTMLDivElement;

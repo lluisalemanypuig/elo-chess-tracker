@@ -12,3 +12,5 @@ browserify js-source/client_challenges.js > js-source/bdl__client_challenges.js
 browserify js-source/client_games_own.js > js-source/bdl__client_games_own.js
 
 browserify js-source/client_ranking.js > js-source/bdl__client_ranking.js
+
+browserify js-source/client_password_change.js > js-source/bdl__client_password_change.js

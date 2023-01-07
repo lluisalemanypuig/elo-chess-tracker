@@ -27,7 +27,7 @@ import path from 'path';
 
 import { log_now } from './utils/misc';
 import { is_user_logged_in, session_id_exists } from './server/session';
-import { user_retrieve, user_overwrite } from './server/users';
+import { user_retrieve, user_rename_reassign_roles } from './server/users';
 import { User } from './models/user';
 import { ADMIN, EDIT_ADMIN, EDIT_MEMBER, EDIT_STUDENT, EDIT_TEACHER, MEMBER, STUDENT, TEACHER } from './models/user_role';
 
@@ -104,7 +104,7 @@ export async function post_user_edit(req: any, res: any) {
 	debug(log_now(), `    Last name: '${req.body.l}'`);
 	debug(log_now(), `    Roles: '${req.body.r}'`);
 
-	user_overwrite(
+	user_rename_reassign_roles(
 		modified.get_username(),
 		req.body.f, req.body.l,
 		req.body.r
