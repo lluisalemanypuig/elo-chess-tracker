@@ -35,15 +35,19 @@ import {
 	ASSIGN_ROLE_MEMBER,
 	ASSIGN_ROLE_STUDENT,
 	is_role_string_correct,
-	CREATE_USER
+	CREATE_USER,
+	STUDENT,
+	MEMBER,
+	TEACHER,
+	ADMIN
 }
 from './models/user_role';
 import { encrypt_password_for_user } from './utils/encrypt';
 import { Password } from './models/password';
 import { Rating } from './models/rating';
 
-export async function user_create_new_get(req: any, res: any) {
-	debug(log_now(), "GET create_new_user page...");
+export async function get_user_create_page(req: any, res: any) {
+	debug(log_now(), "GET user_create_page...");
 
 	const username = req.cookies.user;
 	const r = is_user_logged_in(req.cookies.session_id, username);
@@ -55,8 +59,8 @@ export async function user_create_new_get(req: any, res: any) {
 	res.sendFile(path.join(__dirname, "../html/user_new.html"));
 }
 
-export async function user_create_new_post(req: any, res: any) {
-	debug(log_now(), "POST create_new_user");
+export async function post_user_create(req: any, res: any) {
+	debug(log_now(), "POST user_create");
 
 	const username = req.cookies.user;
 	const r = is_user_logged_in(req.cookies.session_id, username);
@@ -105,25 +109,25 @@ export async function user_create_new_post(req: any, res: any) {
 	}
 
 	let can_create: boolean = true;
-	if (new_roles.includes('admin')) {
+	if (new_roles.includes(ADMIN)) {
 		can_create = can_create && registrerer.can_do(ASSIGN_ROLE_ADMIN);
 		if (!registrerer.can_do(ASSIGN_ROLE_ADMIN)) {
 			debug(log_now(), `User '${username}' cannot create admins.`);
 		}
 	}
-	if (new_roles.includes('teacher')) {
+	if (new_roles.includes(TEACHER)) {
 		can_create = can_create && registrerer.can_do(ASSIGN_ROLE_TEACHER);
 		if (!registrerer.can_do(ASSIGN_ROLE_TEACHER)) {
 			debug(log_now(), `User '${username}' cannot create teachers.`);
 		}
 	}
-	if (new_roles.includes('member')) {
+	if (new_roles.includes(MEMBER)) {
 		can_create = can_create && registrerer.can_do(ASSIGN_ROLE_MEMBER);
 		if (!registrerer.can_do(ASSIGN_ROLE_MEMBER)) {
 			debug(log_now(), `User '${username}' cannot create members.`);
 		}
 	}
-	if (new_roles.includes('student')) {
+	if (new_roles.includes(STUDENT)) {
 		can_create = can_create && registrerer.can_do(ASSIGN_ROLE_STUDENT);
 		if (!registrerer.can_do(ASSIGN_ROLE_STUDENT)) {
 			debug(log_now(), `User '${username}' cannot create students.`);
