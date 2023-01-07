@@ -65,6 +65,30 @@ router.get('/js-source/*', (req: any, res: any) => {
 	res.sendFile(filepath);
 });
 
+import { query_user_modify, query_user_list, query_user_main, query_ranking_users } from './server_query_user';
+router.get('/query_user_list', query_user_list);
+router.get('/query_user_main', query_user_main);
+router.post('/query_user_modify', query_user_modify);
+router.get('/query_ranking_users', query_ranking_users);
+
+// implement sending, receiving, accepting, setting result of challenges
+import {
+	query_challenges_received,
+	query_challenges_sent,
+	query_challenges_pending_set_result,
+	query_challenges_result_set_by_me,
+	query_challenges_result_set_by_opponent
+}
+from './server_query_challenges';
+router.get('/query_challenges_received', query_challenges_received);
+router.get('/query_challenges_sent', query_challenges_sent);
+router.get('/query_challenges_pending_set_result', query_challenges_pending_set_result);
+router.get('/query_challenges_result_set_by_me', query_challenges_result_set_by_me);
+router.get('/query_challenges_result_set_by_opponent', query_challenges_result_set_by_opponent);
+
+import { query_games_list_own_get } from './server_query_games';
+router.get('/query_games_own', query_games_list_own_get);
+
 // implement user login
 import { user_log_in } from './server_login';
 router.post('/login', user_log_in);
@@ -74,58 +98,30 @@ import { user_log_out } from './server_logout';
 router.post('/logout', user_log_out);
 
 // implement creation of a new user
-import { user_create_new_post, user_create_new_get } from './server_user_new';
-router.post('/user_create', user_create_new_post);
-router.get('/user_create', user_create_new_get);
-
-import { query_user_get, query_user_list_get } from './server_query_user';
-router.get('/query_user_list', query_user_list_get);
-router.get('/user_query', query_user_get);
-
-// implement edition of an existing user
-import { user_edit_existing_post, user_edit_existing_get } from './server_user_edit';
-router.post('/user_edit', user_edit_existing_post);
-router.get('/user_edit', user_edit_existing_get);
+import { post_user_create, get_user_create_page } from './server_user_new';
+router.get('/user_create', get_user_create_page);
+router.post('/user_create', post_user_create);
 
 // implement retrieve list of games
-import { games_own_get } from './server_games';
-router.get('/games', games_own_get);
-import { query_games_list_own_get } from './server_query_games';
-router.get('/query_games_own', query_games_list_own_get);
+import { get_games_own_page } from './server_games';
+router.get('/games', get_games_own_page);
 
 // implement retrieve ranking of players
-import { ranking_users_get } from './server_ranking';
-router.get('/ranking_users', ranking_users_get);
-import { query_ranking_users_get } from './server_query_user';
-router.get('/query_ranking_users', query_ranking_users_get);
+import { get_ranking_users_page } from './server_ranking';
+router.get('/ranking_users', get_ranking_users_page);
 
-// implement sending, receiving, accepting, setting result of challenges
-import {
-	query_challenges_received_get,
-	query_challenges_sent_get,
-	query_challenges_pending_set_result_get,
-	query_challenges_result_set_by_me_get,
-	query_challenges_result_set_by_opponent_get
-}
-from './server_query_challenges';
-router.get('/query_challenges_received', query_challenges_received_get);
-router.get('/query_challenges_sent', query_challenges_sent_get);
-router.get('/query_challenges_pending_set_result_get', query_challenges_pending_set_result_get);
-router.get('/query_challenges_result_set_by_me_get', query_challenges_result_set_by_me_get);
-router.get('/query_challenges_result_set_by_opponent_get', query_challenges_result_set_by_opponent_get);
-
-import { challenges_get } from './server_challenges';
-router.get('/challenges', challenges_get);
-import { challenge_send_post } from './server_challenges';
-router.post('/challenge_send', challenge_send_post);
-import { challenge_accept_post, challenge_decline_post } from './server_challenges';
-router.post('/challenge_accept', challenge_accept_post);
-router.post('/challenge_decline', challenge_decline_post);
-import { challenge_set_result_post } from './server_challenges';
-router.post('/challenge_set_result', challenge_set_result_post);
-import { challenge_agree_result_post, challenge_disagree_result_post } from './server_challenges';
-router.post('/challenge_agree_result', challenge_agree_result_post);
-router.post('/challenge_disagree_result', challenge_disagree_result_post);
+import { get_challenges_page } from './server_challenges';
+router.get('/challenges', get_challenges_page);
+import { post_challenge_send } from './server_challenges';
+router.post('/challenge_send', post_challenge_send);
+import { post_challenge_accept, post_challenge_decline } from './server_challenges';
+router.post('/challenge_accept', post_challenge_accept);
+router.post('/challenge_decline', post_challenge_decline);
+import { post_challenge_set_result } from './server_challenges';
+router.post('/challenge_set_result', post_challenge_set_result);
+import { post_challenge_agree_result, post_challenge_disagree_result } from './server_challenges';
+router.post('/challenge_agree_result', post_challenge_agree_result);
+router.post('/challenge_disagree_result', post_challenge_disagree_result);
 
 // retrieve main page
 router.get('/main', (req: any, res: any) => {
