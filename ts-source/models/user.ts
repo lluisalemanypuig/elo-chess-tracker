@@ -36,13 +36,13 @@ import { search, where_should_be_inserted } from '../utils/misc';
  */
 export class User extends Player {
 	/// First name
-	private readonly first_name: string;
+	private first_name: string;
 	/// Last name
-	private readonly last_name: string;
+	private last_name: string;
 	/// Password
-	private readonly password: Password;
+	private password: Password;
 	/// Roles of this user
-	private readonly roles: UserRole[];
+	private roles: UserRole[];
 	/**
 	 * @brief The set of games this user has played
 	 * 
@@ -85,6 +85,17 @@ export class User extends Player {
 		);
 	}
 
+	/// Set first name of the user
+	set_first_name(f: string): void { this.first_name = f; }
+	/// Set last name of the user
+	set_last_name(l: string): void { this.last_name = l; }
+	/// Set roles to the user
+	set_roles(rs: UserRole[]): void { this.roles = rs; }
+	
+	/// Return last name of the user
+	get_first_name(): string { return this.first_name; }
+	/// Return last name of the user
+	get_last_name(): string { return this.last_name; }
 	/// Returns the full name of this user
 	get_full_name(): string {
 		return `${this.first_name} ${this.last_name}`;
