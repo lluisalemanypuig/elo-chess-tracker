@@ -21,7 +21,7 @@ Contact:
 */
 
 async function fill_username_datalist() {
-	let username_datalist = document.getElementById("usernames_datalist") as HTMLDataListElement;
+	let username_datalist = document.getElementById("username_datalist") as HTMLDataListElement;
 
 	{
 	let opt = document.createElement('option');
@@ -53,11 +53,8 @@ async function fill_username_datalist() {
 
 async function submit_challenge_button_clicked(event: any) {
 	
-	// the user input
-	let input_username = document.getElementById("usernames_list") as HTMLInputElement;
-
-	let username_datalist_input = document.getElementById("usernames_list") as HTMLInputElement;
-	const username = (document.querySelector('option[value="' + username_datalist_input.value + '"]') as HTMLOptionElement).id;
+	let username_list_input = document.getElementById("username_list") as HTMLInputElement;
+	const username = (document.querySelector('option[value="' + username_list_input.value + '"]') as HTMLOptionElement).id;
 
 	// "query" the server
 	const response = await fetch(
