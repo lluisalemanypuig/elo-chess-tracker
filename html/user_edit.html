@@ -30,34 +30,33 @@ Contact:
 
 <body>
 	<center>
-	<h1 id="user_edit_title">EDIT EXISTING USER -- UNDER CONSTRUCTION</h1>
+	<h1 id="user_edit_title">EDIT USER</h1>
 
 	<div id="user_edition_area">
 		<!-- User selection  -->
 		<label for="username_datalist">Select user:</label>
-		<input list="username_datalist" id="usernames_list" name="usernames_list">
+		<input list="username_datalist" id="username_list" name="username_list">
 		<datalist id="username_datalist">
 			<option value="asdf">
 		</datalist><br><br>
 
 		<!-- First Name -->
 		<label for="first_name_box">First name:</label>
-		<input type="text" id="first_name_box" name="first_name_box"><br><br>
+		<input type="text" id="first_name_box" name="first_name_box">
+		<br><br>
 
 		<!-- Last Name -->
 		<label for="last_name_box">Last name:</label>
-		<input type="text" id="last_name_box" name="last_name_box"><br><br>
+		<input type="text" id="last_name_box" name="last_name_box">
+		<br><br>
 
 		<!-- Role -->
-		<label for="role_select">Role:</label>
-		<select name="role_select" id="role_select"></select><br></br>
-
-		<!-- Initial classical rating -->
-		<label for="classical_rating_box">Classical rating:</label>
-		<input type="text" id="classical_rating_box" name="classical_rating_box"><br><br>
+		<label>Role:</label><br><br>
+		<div id="role_checkboxes">
+		</div>
 
 		<!-- submit data -->
-		<button type="button" id="submit_changes" name="submit_changes">Submit changes</button><br><br>
+		<button type="button" id="submit_button" name="submit_button">Submit</button><br><br>
 	</div>
 
 	</center>

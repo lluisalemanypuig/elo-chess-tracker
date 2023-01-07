@@ -102,6 +102,11 @@ import { post_user_create, get_user_create_page } from './server_user_new';
 router.get('/user_create', get_user_create_page);
 router.post('/user_create', post_user_create);
 
+// implement edition of an existing user
+import { post_user_edit, get_user_edit_page } from './server_user_edit';
+router.get('/user_edit', get_user_edit_page);
+router.post('/user_edit', post_user_edit);
+
 // implement retrieve list of games
 import { get_games_own_page } from './server_games';
 router.get('/games', get_games_own_page);

@@ -26,32 +26,32 @@ const debug = Debug('ELO_TRACKER:server_user_edit');
 import path from 'path';
 
 import { log_now } from './utils/misc';
-import { session_id_exists } from './server/session';
-import { user_retrieve } from './server/users';
+import { is_user_logged_in, session_id_exists } from './server/session';
+import { user_retrieve, user_overwrite } from './server/users';
 import { User } from './models/user';
-import { EDIT_MEMBER } from './models/user_role';
+import { ADMIN, EDIT_ADMIN, EDIT_MEMBER, EDIT_STUDENT, EDIT_TEACHER, MEMBER, STUDENT, TEACHER } from './models/user_role';
 
-function user_can_edit(id: string, username: string): boolean {
+export async function get_user_edit_page(req: any, res: any) {
+	debug(log_now(), "GET user_edit_page...");
+
+	const id = req.cookies.session_id;
+	const username = req.cookies.user;
 	if (!session_id_exists(id, username)) {
 		debug(log_now(), `    User '${username}' is not logged in.`);
-		return false;
+		res.send("403 - Forbidden");
+		return;
 	}
+
 	let _user = user_retrieve(username);
 	if (_user == null) {
 		debug(log_now(), `    User '${username}' does not exist.`);
-		return false;
+		res.send("403 - Forbidden");
+		return;
 	}
-	let user = _user as User;
-	if (!user.can_do(EDIT_MEMBER)) {
-		debug(log_now(), `    User '${username}' does not have sufficient permissions.`);
-		return false;
-	}
-	return true;
-}
 
-export async function user_edit_existing_get(req: any, res: any) {
-	debug(log_now(), "GET edit_existing_user page...");
-	if (!user_can_edit(req.cookies.session_id, req.cookies.user)) {
+	let user = _user as User;
+	if (!user.can_do(EDIT_MEMBER) && !user.can_do(EDIT_STUDENT)) {
+		debug(log_now(), `    User '${username}' does not have sufficient permissions.`);
 		res.send("403 - Forbidden");
 		return;
 	}
@@ -59,6 +59,56 @@ export async function user_edit_existing_get(req: any, res: any) {
 	res.sendFile(path.join(__dirname, "../html/user_edit.html"));
 }
 
-export async function user_edit_existing_post(req: any, res: any) {
-	
+export async function post_user_edit(req: any, res: any) {
+	debug(log_now(), "POST user_edit...");
+
+	const session_id = req.cookies.session_id;
+	const username = req.cookies.user;
+
+	let r = is_user_logged_in(session_id, username);
+	if (!r[0]) {
+		res.send({ 'r' : '0', 'reason' : r[1] });
+		return;
+	}
+	let modifier = r[2] as User;
+
+	let _modified = user_retrieve(req.body.u);
+	if (_modified == null) {
+		res.send({ 'r' : '0', 'reason' : `User '${req.body.u}' to be modified does not exist.` });
+		return;
+	}
+	let modified = _modified as User;
+
+	debug(log_now(), `User '${modifier.get_username()}' is trying to modify user '${modified.get_username()}'`);
+
+	let enough_permissions: boolean = true;
+	if (modified.get_roles().includes(ADMIN) && !modifier.can_do(EDIT_ADMIN)) {
+		enough_permissions = false;
+	}
+	if (modified.get_roles().includes(TEACHER) && !modifier.can_do(EDIT_TEACHER)) {
+		enough_permissions = false;
+	}
+	if (modified.get_roles().includes(MEMBER) && !modifier.can_do(EDIT_MEMBER)) {
+		enough_permissions = false;
+	}
+	if (modified.get_roles().includes(STUDENT) && !modifier.can_do(EDIT_STUDENT)) {
+		enough_permissions = false;
+	}
+
+	if (!enough_permissions) {
+		res.send({ 'r' : '0', 'reason' : "You do not have enough permissions to edit this user." });
+		return;
+	}
+
+	debug(log_now(), `    First name: '${req.body.f}'`);
+	debug(log_now(), `    Last name: '${req.body.l}'`);
+	debug(log_now(), `    Roles: '${req.body.r}'`);
+
+	user_overwrite(
+		modified.get_username(),
+		req.body.f, req.body.l,
+		req.body.r
+	);
+
+	res.send({ 'r' : '1' });
 }

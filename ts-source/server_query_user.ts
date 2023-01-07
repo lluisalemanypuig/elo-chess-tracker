@@ -25,13 +25,13 @@ const debug = Debug('ELO_TRACKER:server_user_query');
 
 import { log_now } from './utils/misc';
 import { user_get_all_names_and_usernames, user_retrieve } from './server/users';
-import { session_id_exists, is_user_logged_in } from './server/session';
+import { is_user_logged_in } from './server/session';
 import { User } from './models/user';
 import { ServerMemory } from './server/configuration';
 
 /// Returns the list of user full names and usernames sorted by name
-export async function query_user_list_get(req: any, res: any) {
-	debug(log_now(), "GET user_list_query_get...");
+export async function query_user_list(req: any, res: any) {
+	debug(log_now(), "GET query_user_list...");
 
 	const session_id = req.cookies.session_id;
 	const username = req.cookies.user;
@@ -54,8 +54,8 @@ export async function query_user_list_get(req: any, res: any) {
 	res.send({ "data": list });
 }
 
-export async function query_user_get(req: any, res: any) {
-	debug(log_now(), "GET user_query_get...");
+export async function query_user_main(req: any, res: any) {
+	debug(log_now(), "GET query_user_main...");
 
 	const session_id = req.cookies.session_id;
 	const username = req.cookies.user;
@@ -70,12 +70,45 @@ export async function query_user_get(req: any, res: any) {
 	res.send({
 		'r' : '1',
 		'fullname' : user.get_full_name(),
-		'classical' : JSON.stringify(user.get_classical_rating())
+		'classical' : user.get_classical_rating(),
+		'roles' : user.get_roles()
 	});
 }
 
-export async function query_ranking_users_get(req: any, res: any) {
-	debug(log_now(), "GET user_query_get...");
+/**
+ * @brief Serves the query to the server that retrieves user info for modification purposes
+ * @param req 
+ * @param res 
+ * @returns 
+ */
+export async function query_user_modify(req: any, res: any) {
+	debug(log_now(), "POST query_user_modify...");
+
+	const session_id = req.cookies.session_id;
+	const username = req.cookies.user;
+
+	let r = is_user_logged_in(session_id, username);
+	if (!r[0]) {
+		res.send({ 'r' : '0', 'reason' : r[1] });
+		return;
+	}
+
+	let modified = user_retrieve(req.body.u);
+	if (modified == null) {
+		res.send({ 'r' : '0', 'reason' : `User '${req.body.u}' to be modified does not exist.` });
+		return;
+	}
+
+	res.send({
+		'r' : '1',
+		'first_name' : modified.get_first_name(),
+		'last_name' : modified.get_last_name(),
+		'roles' : modified.get_roles()
+	});
+}
+
+export async function query_ranking_users(req: any, res: any) {
+	debug(log_now(), "GET query_ranking_users...");
 
 	const session_id = req.cookies.session_id;
 	const username = req.cookies.user;
