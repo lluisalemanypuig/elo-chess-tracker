@@ -6,8 +6,8 @@ import path from 'path';
 import { log_now } from './utils/misc';
 import { is_user_logged_in } from './server/session';
 
-export async function games_own_get(req: any, res: any) {
-	debug(log_now(), "GET games_own page...");
+export async function get_games_own_page(req: any, res: any) {
+	debug(log_now(), "GET games_own_page...");
 
 	const id = req.cookies.session_id;
 	const username = req.cookies.user;

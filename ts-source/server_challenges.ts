@@ -39,8 +39,8 @@ import {
 import { user_exists, user_retrieve } from './server/users';
 import { Challenge } from './models/challenge';
 
-export async function challenges_get(req: any, res: any) {
-	debug(log_now(), "GET challenges page...");
+export async function get_challenges_page(req: any, res: any) {
+	debug(log_now(), "GET challenges_page...");
 
 	const id = req.cookies.session_id;
 	const username = req.cookies.user;
@@ -54,8 +54,8 @@ export async function challenges_get(req: any, res: any) {
 	res.sendFile(path.join(__dirname, "../html/challenges.html"));
 }
 
-export async function challenge_send_post(req: any, res: any) {
-	debug(log_now(), "POST challenge_send page...");
+export async function post_challenge_send(req: any, res: any) {
+	debug(log_now(), "POST challenge_send...");
 
 	const id = req.cookies.session_id;
 	const username = req.cookies.user;
@@ -98,7 +98,7 @@ export async function challenge_send_post(req: any, res: any) {
 	return;
 }
 
-export async function challenge_accept_post(req: any, res: any) {
+export async function post_challenge_accept(req: any, res: any) {
 	debug(log_now(), "POST challenge_accept...");
 
 	const id = req.cookies.session_id;
@@ -128,7 +128,7 @@ export async function challenge_accept_post(req: any, res: any) {
 	res.send({ 'r' : '1' });
 }
 
-export async function challenge_decline_post(req: any, res: any) {
+export async function post_challenge_decline(req: any, res: any) {
 	debug(log_now(), "POST challenge_decline...");
 
 	const id = req.cookies.session_id;
@@ -158,7 +158,7 @@ export async function challenge_decline_post(req: any, res: any) {
 	res.send({ 'r' : '1' });
 }
 
-export async function challenge_set_result_post(req: any, res: any) {
+export async function post_challenge_set_result(req: any, res: any) {
 	debug(log_now(), "POST challenge_set_result...");
 
 	const id = req.cookies.session_id;
@@ -264,8 +264,8 @@ export async function challenge_set_result_post(req: any, res: any) {
 	res.send({ 'r' : '1' });
 }
 
-export async function challenge_agree_result_post(req: any, res: any) {
-	debug(log_now(), "POST challenge_disagree_result...");
+export async function post_challenge_agree_result(req: any, res: any) {
+	debug(log_now(), "POST challenge_agree_result...");
 
 	const id = req.cookies.session_id;
 	const this_username = req.cookies.user;
@@ -290,7 +290,7 @@ export async function challenge_agree_result_post(req: any, res: any) {
 	res.send({ 'r' : '1' });
 }
 
-export async function challenge_disagree_result_post(req: any, res: any) {
+export async function post_challenge_disagree_result(req: any, res: any) {
 	debug(log_now(), "POST challenge_disagree_result...");
 
 	const id = req.cookies.session_id;
