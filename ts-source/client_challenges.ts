@@ -40,6 +40,11 @@ async function fill_username_datalist() {
 	);
 
 	const data = await response.json();
+	if (data.r == '0') {
+		alert(data.reason);
+		return;
+	}
+
 	const list = data.data as [string,string][];
 
 	let options = "";
