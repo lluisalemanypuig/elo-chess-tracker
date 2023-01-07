@@ -131,28 +131,24 @@ async function submit_new_user_clicked(event: any) {
 	window.location.href = "/";
 }
 
-function asdf(event: any) {
-
-}
-
-function add_to_select(div: HTMLDivElement, show: string, value: string) {
-	let checkbox = document.createElement("input");
-	checkbox.type = "checkbox";
-	checkbox.id = value;
-	div.appendChild(checkbox);
-	
-	let checkbox_label = document.createElement("label");
-	checkbox_label.textContent = show;
-	div.appendChild(checkbox_label);
-	div.appendChild(document.createElement("br"));
-}
-
 window.onload = function () {
+	let add_checkbox = function(div: HTMLDivElement, show: string, value: string) {
+		let checkbox = document.createElement("input");
+		checkbox.type = "checkbox";
+		checkbox.id = value;
+		div.appendChild(checkbox);
+		
+		let checkbox_label = document.createElement("label");
+		checkbox_label.textContent = show;
+		div.appendChild(checkbox_label);
+		div.appendChild(document.createElement("br"));
+	}
+
 	// fill in select role dropdown with values
 	let role_div = document.getElementById("role_checkboxes") as HTMLDivElement;
 	all_user_roles.forEach(
 		function(str: string) {
-			add_to_select(role_div, user_role_to_string[str as UserRole], str);
+			add_checkbox(role_div, user_role_to_string[str as UserRole], str);
 		}
 	);
 	role_div.appendChild(document.createElement("br"));
