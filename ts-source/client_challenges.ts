@@ -59,25 +59,29 @@ async function fill_username_datalist() {
 async function submit_challenge_button_clicked(event: any) {
 	
 	let username_list_input = document.getElementById("username_list") as HTMLInputElement;
-	const username = (document.querySelector('option[value="' + username_list_input.value + '"]') as HTMLOptionElement).id;
+	const username_option = document.querySelector('option[value="' + username_list_input.value + '"]');
 
-	// "query" the server
-	const response = await fetch(
-		"/challenge_send",
-		{
-			method: 'POST',
-			body : JSON.stringify({ 'to' : username }),
-			headers: { 'Content-type': 'application/json; charset=UTF-8' }
+	if (username_option != null) {
+		const username = username_option.id;
+
+		// "query" the server
+		const response = await fetch(
+			"/challenge_send",
+			{
+				method: 'POST',
+				body : JSON.stringify({ 'to' : username }),
+				headers: { 'Content-type': 'application/json; charset=UTF-8' }
+			}
+		);
+
+		const data = await response.json();
+		if (data.r == "0") {
+			alert(data.reason);
+			return;
 		}
-	);
 
-	const data = await response.json();
-	if (data.r == "0") {
-		alert(data.reason);
-		return;
+		window.location.href = "/challenges";
 	}
-
-	window.location.href = "/challenges";
 }
 
 async function accept_challenge_tag_clicked(event: any) {
