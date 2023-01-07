@@ -21,31 +21,28 @@ Contact:
 */
 
 import { logout_link_clicked } from "./client_logout";
-import { CREATE_USER, EDIT_MEMBER, EDIT_STUDENT, user_role_to_action } from "./models/user_role";
+import { CREATE_USER, EDIT_MEMBER, EDIT_STUDENT, user_role_to_action, user_role_to_string } from "./models/user_role";
 import { get_cookie } from "./utils/cookies";
 
-function fill_action_links() {
+function fill_action_links(user_roles: string[]) {
 	let action_links = document.getElementById("special_action_links") as HTMLDivElement;
 
-	// roles of user from the cookies
-	let user_roles = get_cookie("roles").split(',');
-
-	let add_create_new_user = false;
-	let edit_existing_user = false;
+	let create_user = false;
+	let edit_user = false;
 
 	for (let i = 0; i < user_roles.length; ++i) {
 		let r = user_roles[i];
 		let allowed_actions = user_role_to_action[r];
 		
 		if (allowed_actions.includes(CREATE_USER)) {
-			add_create_new_user = true;
+			create_user = true;
 		}
 		if (allowed_actions.includes(EDIT_MEMBER) || allowed_actions.includes(EDIT_STUDENT)) {
-			edit_existing_user = true;
+			edit_user = true;
 		}
 	}
 
-	if (add_create_new_user) {
+	if (create_user) {
 		let user_create_link = document.createElement("a") as HTMLAnchorElement;
 		user_create_link.href = "/user_create";
 		user_create_link.text = "Create new user";
@@ -53,7 +50,7 @@ function fill_action_links() {
 		action_links.appendChild(document.createElement("br"));
 		action_links.appendChild(document.createElement("br"));
 	}
-	if (edit_existing_user) {
+	if (edit_user) {
 		let user_edit_link = document.createElement("a") as HTMLAnchorElement;
 		user_edit_link.href = "/user_edit";
 		user_edit_link.text = "Edit user";
@@ -66,7 +63,7 @@ function fill_action_links() {
 async function fill_own_info() {
 	// "query" the server
 	const response = await fetch(
-		"/user_query",
+		"/query_user_main",
 		{
 			method: 'GET',
 			headers: { 'Content-type': 'application/json; charset=UTF-8' }
@@ -79,14 +76,27 @@ async function fill_own_info() {
 		return;
 	}
 
+	// roles of user from the cookies
+	let user_roles = data.roles;
+	// add hrefs according to the user's permissions.
+	fill_action_links(user_roles);
+
 	let div = document.getElementById("user_info") as HTMLDivElement;
 	{
 	let label_fullname = document.createElement("label");
 	label_fullname.textContent = data.fullname;
+	
+	// add roles of user next to the name
+	label_fullname.textContent += " - ";
+	label_fullname.textContent += user_role_to_string[user_roles[0]];
+	for (let i = 1; i < user_roles.length; ++i) {
+		label_fullname.textContent += ", " + user_role_to_string[user_roles[i]];
+	}
+
 	div.appendChild(label_fullname);
 	div.appendChild(document.createElement("br"));
 	}
-	let data_classical = JSON.parse(data.classical);
+	let data_classical = data.classical;
 	div.appendChild(document.createTextNode("Classical:"));
 	div.appendChild(document.createElement("br"));
 	{
@@ -106,9 +116,6 @@ async function fill_own_info() {
 }
 
 window.onload = function () {
-	// add hrefs according to the user's permissions.
-	fill_action_links();
-
 	// display user info
 	fill_own_info();
 

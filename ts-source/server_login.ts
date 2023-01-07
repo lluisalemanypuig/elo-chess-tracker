@@ -125,11 +125,6 @@ export async function user_log_in(req: any, res:any) {
 				"name" : "user",
 				"value" : user.get_username(),
 				"days" : 28
-			}),
-			make_cookie_string({
-				"name" : "roles",
-				"value" : user.get_roles(),
-				"days" : 28
 			})
 		]
 	});
