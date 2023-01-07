@@ -75,7 +75,7 @@ function update_classical(game: Game): [Player, Player] {
 	return [white, black];
 }
 
-export function test_player_vs_player(game: Game): [Player, Player] {
+export function player_vs_player(game: Game): [Player, Player] {
 	if (game.game_type == "classical") {
 		return update_classical(game);
 	}
