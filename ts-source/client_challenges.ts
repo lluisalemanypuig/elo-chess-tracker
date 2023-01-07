@@ -194,7 +194,7 @@ async function fill_challenges_sent_list() {
 
 async function fill_challenges_pending_set_result_list() {
 	const response = await fetch(
-		"/query_challenges_pending_set_result_get",
+		"/query_challenges_pending_set_result",
 		{
 			method: 'GET',
 			headers: { 'Content-type': 'application/json; charset=UTF-8' }
@@ -340,7 +340,7 @@ async function submit_result_challenge_button_clicked(event: any) {
 
 async function fill_challenges_result_set_by_me_list() {
 	const response = await fetch(
-		"/query_challenges_result_set_by_me_get",
+		"/query_challenges_result_set_by_me",
 		{
 			method: 'GET',
 			headers: { 'Content-type': 'application/json; charset=UTF-8' }
@@ -371,7 +371,7 @@ async function fill_challenges_result_set_by_me_list() {
 
 async function fill_challenges_result_set_by_opponent_list() {
 	const response = await fetch(
-		"/query_challenges_result_set_by_opponent_get",
+		"/query_challenges_result_set_by_opponent",
 		{
 			method: 'GET',
 			headers: { 'Content-type': 'application/json; charset=UTF-8' }
