@@ -29,7 +29,7 @@ import { log_now } from '../utils/misc';
 import { ServerMemory, ServerDirectories, RatingFormula } from "./configuration";
 import { user_from_json } from '../models/user';
 import { challenge_from_json } from '../models/challenge';
-import { test_player_vs_player } from '../rating_system/test_system';
+import { player_vs_player } from '../rating_system/Elo_system';
 import { game_set_from_json } from '../models/game';
 
 function initialize_sessions(): void {
@@ -100,7 +100,7 @@ function initialize_games(): void {
 export function server_initialize(base_dir: string = path.join(__dirname, "../../database")): void {
 
 	ServerDirectories.initialize(base_dir);
-	RatingFormula.initialize(test_player_vs_player);
+	RatingFormula.initialize(player_vs_player);
 
 	debug(log_now(), `Base directory: '${ServerDirectories.get_instance().base_directory}'`);
 	debug(log_now(), `    Games directory: '${ServerDirectories.get_instance().games_directory}'`);

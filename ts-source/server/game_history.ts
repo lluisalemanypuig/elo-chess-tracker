@@ -30,7 +30,6 @@ import { Player } from '../models/player';
 import { Game, GameResult, GameType, game_set_from_json } from '../models/game';
 import { User } from '../models/user';
 import { log_now, where_should_be_inserted, long_date_to_short_date, number_to_string } from '../utils/misc';
-import { test_player_vs_player } from '../rating_system/test_system';
 import { RatingFormula, ServerDirectories, ServerMemory } from './configuration';
 import { user_retrieve, user_update_from_players_data } from './users';
 
@@ -198,7 +197,6 @@ export function game_next_of_player(
 	return null;
 }
 
-
 /// Updates the given game record
 function update_game_record(
 	game_set: Game[],
@@ -243,7 +241,8 @@ function update_game_record(
 
 		if (white_was_updated || black_was_updated) {
 			// calculate result of game
-			let [white_after, black_after] = test_player_vs_player(game_set[i]);
+			let formula = RatingFormula.get_instance().formula;
+			let [white_after, black_after] = formula(game_set[i]);
 
 			if (!white_was_updated) {
 				debug(log_now(), `    White has been updated for the first time: ${JSON.stringify(white_after)}`);
