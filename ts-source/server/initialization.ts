@@ -29,8 +29,9 @@ import { log_now } from '../utils/misc';
 import { ServerMemory, ServerDirectories, RatingFormula } from "./configuration";
 import { user_from_json } from '../models/user';
 import { challenge_from_json } from '../models/challenge';
-import { player_vs_player } from '../rating_system/Elo_system';
 import { game_set_from_json } from '../models/game';
+
+import { player_vs_player } from '../rating_system/Elo';
 
 function initialize_sessions(): void {
 	let memory = ServerMemory.get_instance();

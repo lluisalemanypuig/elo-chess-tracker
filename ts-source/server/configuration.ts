@@ -27,7 +27,6 @@ import path from "path";
 
 import { User } from "../models/user";
 import { Challenge } from '../models/challenge';
-import { player_vs_player } from '../rating_system/Elo_system';
 
 /// What formula 
 export class RatingFormula {
@@ -36,7 +35,7 @@ export class RatingFormula {
 	/// The only instance of this class
 	private static instance: RatingFormula;
 
-	constructor(formula: Function = player_vs_player) {
+	constructor(formula: Function) {
 		this.formula = formula;
 	}
 
