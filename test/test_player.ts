@@ -30,7 +30,7 @@ function Test_Player() {
 	console.log("Creating, storing and reading a player");
 	console.log("======================================");
 
-	let p1: Player = new Player("p1", new Rating(1500, 0, 40));
+	let p1: Player = new Player("p1", new Rating(1500, 0, 0, 0, 0, 40));
 	console.log(p1);
 
 	console.log("Convert a player to JSON string");
@@ -87,7 +87,8 @@ function Test_User() {
 		"Perico", "de los Palotes",
 		new Password("caca", "iv"),
 		["admin"],
-		new Rating(1500, 0, 40)
+		[],
+		new Rating(1500, 0, 0,0,0, 40)
 	);
 	console.log(p1);
 
@@ -109,8 +110,12 @@ function Test_User() {
 			"classical" : {\
 				"rating" : 1500,\
 				"num_games" : 0,\
+				"won" : 0,\
+				"drawn" : 0,\
+				"lost" : 0,\
 				"K" : 34\
-			}\
+			},\
+			"games: []\
 		}';
 	let json_parse = JSON.parse(json_string);
 	console.log(typeof (json_parse));
@@ -133,8 +138,12 @@ function Test_User() {
 				"classical" : {\
 					"rating" : 1500,\
 					"num_games" : 0,\
+					"won" : 0,\
+					"drawn" : 0,\
+					"lost" : 0,\
 					"K" : 77\
-				}\
+				},\
+				"games" : []\
 			},\
 			{\
 				"username" : "p1",\
@@ -148,8 +157,12 @@ function Test_User() {
 				"classical" : {\
 					"rating" : 1700,\
 					"num_games" : 50,\
+					"won" : 0,\
+					"drawn" : 0,\
+					"lost" : 0,\
 					"K" : 65\
-				}\
+				},\
+				"games" : []\
 			}\
 		]';
 
