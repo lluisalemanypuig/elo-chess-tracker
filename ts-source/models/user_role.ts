@@ -63,7 +63,7 @@ export function is_role_string_correct(r: string): boolean {
 /// Can create users
 export const CREATE_USER = 'create_user';
 
-/// Edit user
+/// Edit a users
 export const EDIT_USER = 'edit_user';
 /// Edit admin
 export const EDIT_ADMIN = 'edit_admin';
@@ -83,6 +83,17 @@ export const ASSIGN_ROLE_MEMBER = 'assign_role_member';
 /// Assign student role
 export const ASSIGN_ROLE_STUDENT = 'assign_role_student';
 
+/// Can see a users games
+export const SEE_USER_GAMES = 'see_user_games';
+/// Can see admin's games
+export const SEE_ADMIN_GAMES = 'see_admin_games';
+/// Can see teacher's games
+export const SEE_TEACHER_GAMES = 'see_teacher_games';
+/// Can see members' games
+export const SEE_MEMBER_GAMES = 'see_member_games';
+/// Can see student' games
+export const SEE_STUDENT_GAMES = 'see_student_games';
+
 /// All actions that can be performed in this web
 export const all_actions = [
 	CREATE_USER,
@@ -95,6 +106,11 @@ export const all_actions = [
 	ASSIGN_ROLE_TEACHER,
 	ASSIGN_ROLE_MEMBER,
 	ASSIGN_ROLE_STUDENT,
+	SEE_USER_GAMES,
+	SEE_ADMIN_GAMES,
+	SEE_TEACHER_GAMES,
+	SEE_MEMBER_GAMES,
+	SEE_STUDENT_GAMES,
 
 ] as const;
 
@@ -104,23 +120,15 @@ export type Action = typeof all_actions[number];
 /// Relate each user role to a readable string
 export const user_role_to_action: { [key in UserRole]: Action[] } = {
 	admin: [
-		CREATE_USER,
-		EDIT_USER,
-		EDIT_ADMIN,
-		EDIT_TEACHER,
-		EDIT_MEMBER,
-		EDIT_STUDENT,
-		ASSIGN_ROLE_ADMIN,
-		ASSIGN_ROLE_TEACHER,
-		ASSIGN_ROLE_MEMBER,
-		ASSIGN_ROLE_STUDENT,
+		CREATE_USER, ASSIGN_ROLE_ADMIN, ASSIGN_ROLE_TEACHER, ASSIGN_ROLE_MEMBER, ASSIGN_ROLE_STUDENT,
+		EDIT_USER, EDIT_ADMIN, EDIT_TEACHER, EDIT_MEMBER, EDIT_STUDENT,
+		SEE_USER_GAMES, SEE_ADMIN_GAMES, SEE_TEACHER_GAMES, SEE_MEMBER_GAMES, SEE_STUDENT_GAMES,
 	],
 	
 	teacher: [
-		CREATE_USER,
-		EDIT_USER,
-		EDIT_STUDENT,
-		ASSIGN_ROLE_STUDENT,
+		CREATE_USER, ASSIGN_ROLE_STUDENT,
+		EDIT_USER, EDIT_STUDENT,
+		SEE_USER_GAMES, SEE_STUDENT_GAMES,
 	],
 
 	member: [

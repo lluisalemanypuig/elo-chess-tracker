@@ -20,7 +20,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { CREATE_USER, EDIT_MEMBER, EDIT_STUDENT, user_role_to_action, user_role_to_string } from "./models/user_role";
+import { CREATE_USER, EDIT_USER, SEE_USER_GAMES, user_role_to_action, user_role_to_string } from "./models/user_role";
 import { make_cookie_string } from "./utils/cookies";
 
 export async function logout_link_clicked(event: any) {
@@ -52,6 +52,7 @@ function fill_action_links(user_roles: string[]) {
 
 	let create_user = false;
 	let edit_user = false;
+	let see_user_games = false;
 
 	for (let i = 0; i < user_roles.length; ++i) {
 		let r = user_roles[i];
@@ -60,8 +61,11 @@ function fill_action_links(user_roles: string[]) {
 		if (allowed_actions.includes(CREATE_USER)) {
 			create_user = true;
 		}
-		if (allowed_actions.includes(EDIT_MEMBER) || allowed_actions.includes(EDIT_STUDENT)) {
+		if (allowed_actions.includes(EDIT_USER)) {
 			edit_user = true;
+		}
+		if (allowed_actions.includes(SEE_USER_GAMES)) {
+			see_user_games = true;
 		}
 	}
 
@@ -78,6 +82,14 @@ function fill_action_links(user_roles: string[]) {
 		user_edit_link.href = "/user_edit";
 		user_edit_link.text = "Edit user";
 		action_links.appendChild(user_edit_link);
+		action_links.appendChild(document.createElement("br"));
+		action_links.appendChild(document.createElement("br"));
+	}
+	if (see_user_games) {
+		let see_user_games_link = document.createElement("a") as HTMLAnchorElement;
+		see_user_games_link.href = "/games_all";
+		see_user_games_link.text = "See all games";
+		action_links.appendChild(see_user_games_link);
 		action_links.appendChild(document.createElement("br"));
 		action_links.appendChild(document.createElement("br"));
 	}

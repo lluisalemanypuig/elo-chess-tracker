@@ -86,8 +86,9 @@ router.get('/query_challenges_pending_set_result', query_challenges_pending_set_
 router.get('/query_challenges_result_set_by_me', query_challenges_result_set_by_me);
 router.get('/query_challenges_result_set_by_opponent', query_challenges_result_set_by_opponent);
 
-import { query_games_list_own_get } from './server_query_games';
-router.get('/query_games_own', query_games_list_own_get);
+import { query_games_list_own, query_games_list_all } from './server_query_games';
+router.get('/query_games_own', query_games_list_own);
+router.get('/query_games_all', query_games_list_all);
 
 // implement user login
 import { user_log_in } from './server_login';
@@ -113,8 +114,9 @@ router.get('/change_password', get_change_password_page);
 router.post('/change_password', post_change_password);
 
 // implement retrieve list of games
-import { get_games_own_page } from './server_games';
-router.get('/games', get_games_own_page);
+import { get_games_all_page, get_games_own_page } from './server_games';
+router.get('/games_own', get_games_own_page);
+router.get('/games_all', get_games_all_page);
 
 // implement retrieve ranking of players
 import { get_ranking_users_page } from './server_ranking';

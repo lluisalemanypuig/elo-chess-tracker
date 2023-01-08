@@ -21,7 +21,7 @@ Contact:
 */
 
 import Debug from 'debug';
-const debug = Debug('ELO_TRACKER:server_user_query');
+const debug = Debug('ELO_TRACKER:server_query_users');
 
 import { log_now } from './utils/misc';
 import { user_get_all_names_and_usernames, user_retrieve } from './server/users';

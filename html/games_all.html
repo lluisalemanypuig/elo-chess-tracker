@@ -25,39 +25,46 @@ Contact:
 
 <head>
 	<meta charset="UTF-8">
-	<script type="text/javascript" src="js-source/bdl__client_main.js"> </script>
+	<script type="text/javascript" src="js-source/bdl__client_games_all.js"> </script>
+
+	<style>
+	table {
+		border: 1px solid;
+  		color: black
+	}
+	table, td, th {
+		border-collapse: collapse;
+		border-right: 1px solid;
+  		color: black
+	}
+	td, th {
+		padding: 5px;
+		text-align: center;
+	}
+	</style>
 </head>
 
 <body>
 	<center>
-	<h1>MAIN</h1>
+	<h1>All games</h1>
 
-	<div id="special_action_links">
-		<u id="logout_link" style="color:blue;cursor:pointer">Logout</u><br><br>
-		<a href="/change_password">Change password</a><br><br>
-	</div>
-	
-	<div id="user_info" class="text-center">
-	</div>
-
-	<div id="challenges">
-		<!-- Challenge a user to a game. -->
-		<a href="/challenges">Challenges</a>
-		<br><br>
-	</div>
-
-	<div id="games">
-		<!-- List the user's own games. -->
-		<a href="/games_own">My games</a>
-		<br><br>
-	</div>
-	
-	<div id="ranking">
-		<!-- List the user's own games. -->
-		<a href="/ranking_users">Ranking</a>
-		<br><br>
+	<div id="games_all">
+		<table id="games_table">
+			<tr>
+				<th>White</th>
+				<th>Black</th>
+				<th>Result</th>
+				<th>Date</th>
+				<th>Type</th>
+				<th>Starting White Elo</th>
+				<th>Increment White Elo</th>
+				<th>Starting Black Elo</th>
+				<th>Increment Black Elo</th>
+			</tr>
+		</table>
 	</div>
 	</center>
-	
+
 </body>
+
 </html>

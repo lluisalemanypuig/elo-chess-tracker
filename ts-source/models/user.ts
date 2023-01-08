@@ -137,6 +137,10 @@ export class User extends Player {
 		}
 		return false;
 	}
+	/// Does a user have a certain role?
+	is(r: UserRole): boolean {
+		return this.roles.includes(r);
+	}
 
 	/**
 	 * @brief Copy the values of the members of the player
