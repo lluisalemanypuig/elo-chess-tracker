@@ -27,50 +27,50 @@ import { Rating } from '../models/rating';
 function update_classical(game: Game): [Player, Player] {
 	let white = game.white.clone();
 	let black = game.black.clone();
-	let result = game.result;
+	const result = game.result;
 
-	let classical_white = white.get_classical_rating();
-	let classical_black = black.get_classical_rating();
+	let white_rating = white.get_classical_rating();
+	let black_rating = black.get_classical_rating();
 
-	let rt1 = classical_white.rating;
-	let rt2 = classical_black.rating;
+	let rt1 = white_rating.rating;
+	let rt2 = black_rating.rating;
 
-	let ng1 = classical_white.num_games + 1;
-	let ng2 = classical_black.num_games + 1;
+	let ng1 = white_rating.num_games + 1;
+	let ng2 = black_rating.num_games + 1;
 
-	let K1 = classical_white.K;
-	let K2 = classical_black.K;
+	let K1 = white_rating.K;
+	let K2 = black_rating.K;
 
 	if (result == "draw") {
-		classical_white.rating = (rt1 + rt2 - ng1 / K1 * 100) / 2;
-		classical_black.rating = (rt1 + rt2 + ng2 / K2 * 100) / 2;
-		classical_white.drawn += 1;
-		classical_black.drawn += 1;
+		white_rating.rating = (rt1 + rt2 - ng1/K1*100)/2;
+		black_rating.rating = (rt1 + rt2 + ng2/K2*100)/2;
+		white_rating.drawn += 1;
+		black_rating.drawn += 1;
 	}
 	else if (result == "white_wins") {
-		classical_white.rating = (rt1 + rt2) / 2 + ng1 / K1 * 100;
-		classical_black.rating = (rt1 + rt2) / 2 - ng2 / K2 * 100;
-		classical_white.won += 1;
-		classical_black.lost += 1;
+		white_rating.rating = (rt1 + rt2)/2 + ng1/K1*100;
+		black_rating.rating = (rt1 + rt2)/2 - ng2/K2*100;
+		white_rating.won += 1;
+		black_rating.lost += 1;
 	}
 	else if (result == "black_wins") {
-		classical_white.rating = (rt1 + rt2) / 2 - ng1 / K1 * 100;
-		classical_black.rating = (rt1 + rt2) / 2 + ng2 / K2 * 100;
-		classical_white.lost += 1;
-		classical_black.won += 1;
+		white_rating.rating = (rt1 + rt2)/2 - ng1/K1*100;
+		black_rating.rating = (rt1 + rt2)/2 + ng2/K2*100;
+		white_rating.lost += 1;
+		black_rating.won += 1;
 	}
 
-	classical_white.num_games = ng1;
+	++white_rating.num_games;
 	if (ng1 >= 5) {
-		classical_white.K = 20;
+		white_rating.K = 20;
 	}
-	classical_black.num_games = ng2;
+	++black_rating.num_games;
 	if (ng2 >= 5) {
-		classical_black.K = 20;
+		black_rating.K = 20;
 	}
 
-	white.set_classical_rating(classical_white);
-	black.set_classical_rating(classical_black);
+	white.set_classical_rating(white_rating);
+	black.set_classical_rating(black_rating);
 
 	return [white, black];
 }
