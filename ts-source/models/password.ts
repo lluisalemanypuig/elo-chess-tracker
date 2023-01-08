@@ -36,6 +36,10 @@ export class Password {
 		this.encrypted = password;
 		this.iv = iv;
 	}
+
+	clone(): Password {
+		return new Password(this.encrypted, this.iv);
+	}
 }
 
 /**

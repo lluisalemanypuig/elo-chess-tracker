@@ -158,10 +158,16 @@ export class User extends Player {
 	clone(): User {
 		return new User(
 			this.username, this.first_name, this.last_name,
-			this.password, this.roles, this.games,
+			this.password.clone(), this.roles, this.games,
 
 			// copy all ratings!
 			this.classical.clone()
+		);
+	}
+
+	clone_as_player(): Player {
+		return new Player(
+			this.username, this.classical.clone()
 		);
 	}
 }

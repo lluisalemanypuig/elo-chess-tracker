@@ -52,7 +52,9 @@ export class Player {
 	get_classical_rating(): Rating { return this.classical; }
 
 	/// Sets the classical rating of the player
-	set_classical_rating(rating: Rating): void { this.classical = rating; }
+	set_classical_rating(rating: Rating): void {
+		this.classical = rating;
+	}
 
 	/// Creates a copy of this player.
 	clone(): Player {
