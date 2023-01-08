@@ -32,8 +32,8 @@ function increment(g: Game): any {
 		g.black.get_classical_rating().rating;
 
 	return {
-		'white_Elo_increment' : white_Elo_increment,
-		'black_Elo_increment' : black_Elo_increment
+		'white_Elo_increment' : Math.round(white_Elo_increment).toFixed(2),
+		'black_Elo_increment' : Math.round(black_Elo_increment).toFixed(2)
 	};
 }
 
