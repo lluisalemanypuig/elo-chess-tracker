@@ -3,7 +3,7 @@ import { Player } from "../models/player";
 import { Rating } from "../models/rating";
 
 function get_exp_score(Ra: number, Rb: number): number {
-	return 1.0/(1 + 10**((Rb - Ra) / 400.0));
+	return 1.0/(1 + 10**((Rb - Ra)/400));
 }
 
 function rating_adjustment(exp_score: number, score: number, k: number): number {
