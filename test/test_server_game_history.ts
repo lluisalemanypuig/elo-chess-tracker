@@ -20,17 +20,21 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import path from 'path';
 import { Game } from '../ts-source/models/game';
 import { User } from '../ts-source/models/user';
 import { ServerMemory } from '../ts-source/server/configuration';
-import { server_initialize } from '../ts-source/server/initialization';
+import { server_initialize_from_data } from '../ts-source/server/initialization';
 import { game_insert_in_history } from '../ts-source/server/game_history';
 import { user_retrieve } from '../ts-source/server/users';
 
 const prompt = require('prompt-sync')();
 
-server_initialize(path.join(__dirname, "database"));
+server_initialize_from_data(
+	{
+		"base_directory" : "/home/lluis/Documents/projects/elo-chess-tracker/test/database",
+		"rating_system" : "Elo"
+	}
+);
 
 let mem = ServerMemory.get_instance();
 

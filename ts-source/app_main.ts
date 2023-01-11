@@ -32,12 +32,11 @@ import Debug from 'debug';
 const debug = Debug('ELO_TRACKER:app_main');
 import { log_now } from './utils/misc';
 
-import { server_initialize } from './server/initialization';
+import { server_initialize_from_configuration_file } from './server/initialization';
 
 debug(log_now(), "Initialize server...");
 
-// Construct runtime data
-server_initialize();
+server_initialize_from_configuration_file();
 
 debug(log_now(), "Import app...");
 

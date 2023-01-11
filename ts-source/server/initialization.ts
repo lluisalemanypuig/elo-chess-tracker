@@ -31,7 +31,8 @@ import { user_from_json } from '../models/user';
 import { challenge_from_json } from '../models/challenge';
 import { game_set_from_json } from '../models/game';
 
-import { player_vs_player } from '../rating_system/Elo';
+import { player_vs_player as Test } from '../rating_system/test';
+import { player_vs_player as Elo } from '../rating_system/Elo';
 
 function initialize_sessions(): void {
 	let memory = ServerMemory.get_instance();
@@ -97,13 +98,21 @@ function initialize_games(): void {
 	debug(log_now(), `    Found ${memory.num_games} games.`);
 }
 
-/// Initializes the server memory
-export function server_initialize(base_dir: string = path.join(__dirname, "../../database")): void {
+export function server_initialize_from_data(json_data: any): void {
+	const base_dir = json_data.base_directory;
+
+	debug(log_now(), `    Base directory: '${base_dir}'`);
+	debug(log_now(), `    Rating system: '${json_data.rating_system}'`);
 
 	ServerDirectories.initialize(base_dir);
-	RatingFormula.initialize(player_vs_player);
 
-	debug(log_now(), `Base directory: '${ServerDirectories.get_instance().base_directory}'`);
+	if (json_data.rating_system == 'Test') {
+		RatingFormula.initialize(Test);
+	}
+	else if (json_data.rating_system == 'Elo') {
+		RatingFormula.initialize(Elo);
+	}
+
 	debug(log_now(), `    Games directory: '${ServerDirectories.get_instance().games_directory}'`);
 	debug(log_now(), `    Users directory: '${ServerDirectories.get_instance().users_directory}'`);
 	debug(log_now(), `    Challenges directory: '${ServerDirectories.get_instance().challenges_directory}'`);
@@ -112,4 +121,17 @@ export function server_initialize(base_dir: string = path.join(__dirname, "../..
 	initialize_users();
 	initialize_challenges();
 	initialize_games();
+}
+
+/// Initializes the server memory
+export function server_initialize_from_configuration_file(): void {
+
+	const configuration_file = path.join(__dirname, "../../system_configuration.json");
+
+	debug(log_now(), `Reading configuration file '${configuration_file}'`);
+
+	const data = fs.readFileSync(configuration_file, 'utf8');
+	const json_data = JSON.parse(data);
+
+	server_initialize_from_data(json_data);
 }

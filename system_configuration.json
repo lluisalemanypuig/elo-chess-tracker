@@ -1,0 +1,4 @@
+{
+    "base_directory" : "/home/lluis/Documents/projects/elo-chess-tracker/database",
+    "rating_system" : "Elo"
+}
