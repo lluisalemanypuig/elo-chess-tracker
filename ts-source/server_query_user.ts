@@ -28,6 +28,7 @@ import { user_get_all_names_and_usernames, user_retrieve } from './server/users'
 import { is_user_logged_in } from './server/session';
 import { User } from './models/user';
 import { ServerMemory } from './server/configuration';
+import { UserRoleToAction } from './models/user_role';
 
 /// Returns the list of user full names and usernames sorted by name
 export async function query_user_list(req: any, res: any) {
@@ -71,7 +72,8 @@ export async function query_user_main(req: any, res: any) {
 		'r' : '1',
 		'fullname' : user.get_full_name(),
 		'classical' : user.get_classical_rating(),
-		'roles' : user.get_roles()
+		'roles' : user.get_roles(),
+		'actions' : user.get_actions()
 	});
 }
 

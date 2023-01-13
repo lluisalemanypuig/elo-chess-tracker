@@ -39,7 +39,6 @@ export const all_user_roles = [
 	TEACHER,
 	MEMBER,
 	STUDENT,
-
 ];
 
 /// All roles as type
@@ -118,24 +117,46 @@ export const all_actions = [
 export type Action = typeof all_actions[number];
 
 /// Relate each user role to a readable string
-export const user_role_to_action: { [key in UserRole]: Action[] } = {
-	admin: [
-		CREATE_USER, ASSIGN_ROLE_ADMIN, ASSIGN_ROLE_TEACHER, ASSIGN_ROLE_MEMBER, ASSIGN_ROLE_STUDENT,
-		EDIT_USER, EDIT_ADMIN, EDIT_TEACHER, EDIT_MEMBER, EDIT_STUDENT,
-		SEE_USER_GAMES, SEE_ADMIN_GAMES, SEE_TEACHER_GAMES, SEE_MEMBER_GAMES, SEE_STUDENT_GAMES,
-	],
-	
-	teacher: [
-		CREATE_USER, ASSIGN_ROLE_STUDENT,
-		EDIT_USER, EDIT_STUDENT,
-		SEE_USER_GAMES, SEE_STUDENT_GAMES,
-	],
+export class UserRoleToAction {
 
-	member: [
+	/// The data structure that relates user roles to actions
+	private relate: { [key in UserRole]: Action[] } = {};
 
-	],
+	/// The only instance of this class
+	private static instance: UserRoleToAction;
 
-	student: [
+	constructor() {
+		if (UserRoleToAction.instance) {
+			return UserRoleToAction.instance;
+		}
 
-	],
+		this.relate = {
+			admin: [],
+			teacher: [],
+			member: [],
+			student: [],
+		};
+
+		UserRoleToAction.instance = this;
+	}
+
+	/**
+	 * @brief Returns the only instance of this class
+	 * @returns The only instance of this class
+	 * @pre Method @ref initialize must have been called before
+	 */
+	static get_instance(): UserRoleToAction {
+		UserRoleToAction.instance = UserRoleToAction.instance || new UserRoleToAction();
+		return UserRoleToAction.instance;
+	}
+
+	/// Add action 'action' to role 'role'
+	add_to_role(role: UserRole, action: Action): void {
+		this.relate[role].push(action);
+	}
+
+	/// Return all actions for role 'role'
+	get_actions_role(role: UserRole): Action[] {
+		return this.relate[role];
+	}
 }

@@ -20,7 +20,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { CREATE_USER, EDIT_USER, SEE_USER_GAMES, user_role_to_action, user_role_to_string } from "./models/user_role";
+import { CREATE_USER, EDIT_USER, SEE_USER_GAMES, user_role_to_string } from "./models/user_role";
 import { make_cookie_string } from "./utils/cookies";
 
 export async function logout_link_clicked(event: any) {
@@ -47,26 +47,21 @@ export async function logout_link_clicked(event: any) {
 	window.location.href = "/";
 }
 
-function fill_action_links(user_roles: string[]) {
+function fill_action_links(user_actions: string[]) {
 	let action_links = document.getElementById("special_action_links") as HTMLDivElement;
 
 	let create_user = false;
 	let edit_user = false;
 	let see_user_games = false;
-
-	for (let i = 0; i < user_roles.length; ++i) {
-		let r = user_roles[i];
-		let allowed_actions = user_role_to_action[r];
-		
-		if (allowed_actions.includes(CREATE_USER)) {
-			create_user = true;
-		}
-		if (allowed_actions.includes(EDIT_USER)) {
-			edit_user = true;
-		}
-		if (allowed_actions.includes(SEE_USER_GAMES)) {
-			see_user_games = true;
-		}
+	
+	if (user_actions.includes(CREATE_USER)) {
+		create_user = true;
+	}
+	if (user_actions.includes(EDIT_USER)) {
+		edit_user = true;
+	}
+	if (user_actions.includes(SEE_USER_GAMES)) {
+		see_user_games = true;
 	}
 
 	if (create_user) {
@@ -111,16 +106,16 @@ async function fill_own_info() {
 		return;
 	}
 
-	// roles of user from the cookies
-	let user_roles = data.roles;
 	// add hrefs according to the user's permissions.
-	fill_action_links(user_roles);
+	fill_action_links(data.actions);
 
 	let div = document.getElementById("user_info") as HTMLDivElement;
 	{
 	let label_fullname = document.createElement("label");
 	label_fullname.textContent = data.fullname;
-	
+
+	// roles of user from the cookies
+	let user_roles = data.roles;
 	// add roles of user next to the name
 	label_fullname.textContent += " - ";
 	label_fullname.textContent += user_role_to_string[user_roles[0]];

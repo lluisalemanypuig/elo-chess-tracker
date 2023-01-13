@@ -25,7 +25,7 @@ import { assert } from 'console';
 import { Player } from './player';
 import { Password, password_from_json } from './password';
 import { Rating, rating_from_json } from './rating';
-import { Action, UserRole, user_role_to_action } from './user_role';
+import { Action, UserRole, UserRoleToAction } from './user_role';
 import { search, where_should_be_inserted } from '../utils/misc';
 
 /**
@@ -127,11 +127,33 @@ export class User extends Player {
 		}
 	}
 
+	/// Returns all actions this user
+	get_actions(): Action[] {
+		const role_to_action = UserRoleToAction.get_instance();
+		const roles = this.get_roles();
+		
+		let actions: Action[] = [];
+		for (let i = 0; i < roles.length; ++i) {
+			const r = roles[i];
+			const actions_from_role = role_to_action.get_actions_role(r);
+			
+			for (let j = 0; j < actions_from_role.length; ++j) {
+				const action = actions_from_role[j];
+				if (actions.indexOf(action) == -1) {
+					actions.push(action);
+				}
+			}
+		}
+
+		return actions;
+	}
 	/// Can a user perform a certain action?
 	can_do(a: Action): boolean {
+		const user_role_to_action = UserRoleToAction.get_instance();
+
 		for (let i = 0; i < this.roles.length; ++i) {
-			let r = this.roles[i];
-			if (user_role_to_action[r].includes(a)) {
+			const r = this.roles[i];
+			if (user_role_to_action.get_actions_role(r).includes(a)) {
 				return true;
 			}
 		}

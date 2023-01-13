@@ -33,6 +33,7 @@ import { game_set_from_json } from '../models/game';
 
 import { player_vs_player as Test } from '../rating_system/test';
 import { player_vs_player as Elo } from '../rating_system/Elo';
+import { ADMIN, MEMBER, STUDENT, TEACHER, UserRoleToAction } from '../models/user_role';
 
 function initialize_sessions(): void {
 	let memory = ServerMemory.get_instance();
@@ -98,25 +99,48 @@ function initialize_games(): void {
 	debug(log_now(), `    Found ${memory.num_games} games.`);
 }
 
-export function server_initialize_from_data(json_data: any): void {
-	const base_dir = json_data.base_directory;
+function initialize_permissions(permission_data: any): void {
+	let actions = UserRoleToAction.get_instance();
+
+	// ADMIN
+	for (let i = 0; i < permission_data.admin.length; ++i) {
+		actions.add_to_role(ADMIN, permission_data.admin[i]);
+	}
+	// TEACHER
+	for (let i = 0; i < permission_data.teacher.length; ++i) {
+		actions.add_to_role(TEACHER, permission_data.admin[i]);
+	}
+	// MEMBER
+	for (let i = 0; i < permission_data.member.length; ++i) {
+		actions.add_to_role(MEMBER, permission_data.admin[i]);
+	}
+	// STUDENT
+	for (let i = 0; i < permission_data.student.length; ++i) {
+		actions.add_to_role(STUDENT, permission_data.admin[i]);
+	}
+}
+
+export function server_initialize_from_data(configuration_data: any): void {
+	const base_dir = configuration_data.base_directory;
 
 	debug(log_now(), `    Base directory: '${base_dir}'`);
-	debug(log_now(), `    Rating system: '${json_data.rating_system}'`);
+	debug(log_now(), `    Rating system: '${configuration_data.rating_system}'`);
 
+	// initialize directories
 	ServerDirectories.initialize(base_dir);
-
-	if (json_data.rating_system == 'Test') {
-		RatingFormula.initialize(Test);
-	}
-	else if (json_data.rating_system == 'Elo') {
-		RatingFormula.initialize(Elo);
-	}
-
 	debug(log_now(), `    Games directory: '${ServerDirectories.get_instance().games_directory}'`);
 	debug(log_now(), `    Users directory: '${ServerDirectories.get_instance().users_directory}'`);
 	debug(log_now(), `    Challenges directory: '${ServerDirectories.get_instance().challenges_directory}'`);
 
+	// initialize rating formula
+	if (configuration_data.rating_system == 'Test') {
+		RatingFormula.initialize(Test);
+	}
+	else if (configuration_data.rating_system == 'Elo') {
+		RatingFormula.initialize(Elo);
+	}
+
+	initialize_permissions(configuration_data.permissions);
 	initialize_sessions();
 	initialize_users();
 	initialize_challenges();
