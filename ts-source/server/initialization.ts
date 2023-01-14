@@ -109,15 +109,15 @@ function initialize_permissions(permission_data: any): void {
 	}
 	// TEACHER
 	for (let i = 0; i < permission_data.teacher.length; ++i) {
-		actions.add_to_role(TEACHER, permission_data.admin[i]);
+		actions.add_to_role(TEACHER, permission_data.teacher[i]);
 	}
 	// MEMBER
 	for (let i = 0; i < permission_data.member.length; ++i) {
-		actions.add_to_role(MEMBER, permission_data.admin[i]);
+		actions.add_to_role(MEMBER, permission_data.member[i]);
 	}
 	// STUDENT
 	for (let i = 0; i < permission_data.student.length; ++i) {
-		actions.add_to_role(STUDENT, permission_data.admin[i]);
+		actions.add_to_role(STUDENT, permission_data.student[i]);
 	}
 }
 
