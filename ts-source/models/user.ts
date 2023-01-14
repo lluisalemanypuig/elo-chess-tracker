@@ -25,8 +25,10 @@ import { assert } from 'console';
 import { Player } from './player';
 import { Password, password_from_json } from './password';
 import { Rating, rating_from_json } from './rating';
-import { Action, UserRole, UserRoleToAction } from './user_role';
-import { search, where_should_be_inserted } from '../utils/misc';
+import { UserRole } from './user_role';
+import { UserAction } from './user_action';
+import { UserRoleToUserAction } from './user_role_action';
+import { where_should_be_inserted } from '../utils/misc';
 
 /**
  * @brief Simple class to encode a User
@@ -128,11 +130,11 @@ export class User extends Player {
 	}
 
 	/// Returns all actions this user
-	get_actions(): Action[] {
-		const role_to_action = UserRoleToAction.get_instance();
+	get_actions(): UserAction[] {
+		const role_to_action = UserRoleToUserAction.get_instance();
 		const roles = this.get_roles();
 		
-		let actions: Action[] = [];
+		let actions: UserAction[] = [];
 		for (let i = 0; i < roles.length; ++i) {
 			const r = roles[i];
 			const actions_from_role = role_to_action.get_actions_role(r);
@@ -148,8 +150,8 @@ export class User extends Player {
 		return actions;
 	}
 	/// Can a user perform a certain action?
-	can_do(a: Action): boolean {
-		const user_role_to_action = UserRoleToAction.get_instance();
+	can_do(a: UserAction): boolean {
+		const user_role_to_action = UserRoleToUserAction.get_instance();
 
 		for (let i = 0; i < this.roles.length; ++i) {
 			const r = this.roles[i];

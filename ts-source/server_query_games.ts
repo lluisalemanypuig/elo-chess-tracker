@@ -11,11 +11,10 @@ import { User } from './models/user';
 import { Game, game_set_from_json } from './models/game';
 import { RatingFormula } from './server/configuration';
 import { ServerDirectories } from './server/configuration';
+import { ADMIN, MEMBER, STUDENT, TEACHER, UserRole } from './models/user_role';
 import {
-	ADMIN, MEMBER, STUDENT, TEACHER,
 	SEE_USER_GAMES, SEE_ADMIN_GAMES, SEE_MEMBER_GAMES, SEE_STUDENT_GAMES, SEE_TEACHER_GAMES,
-	UserRole
-} from './models/user_role';
+} from './models/user_action'
 
 function increment(g: Game): any {
 	const formula = RatingFormula.get_instance().formula;

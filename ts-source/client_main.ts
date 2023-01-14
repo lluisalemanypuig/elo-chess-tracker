@@ -20,7 +20,8 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { CREATE_USER, EDIT_USER, SEE_USER_GAMES, user_role_to_string } from "./models/user_role";
+import { user_role_to_string } from "./models/user_role";
+import { CREATE_USER, EDIT_USER, SEE_USER_GAMES } from "./models/user_action";
 import { make_cookie_string } from "./utils/cookies";
 
 export async function logout_link_clicked(event: any) {

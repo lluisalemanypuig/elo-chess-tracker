@@ -33,7 +33,8 @@ import { game_set_from_json } from '../models/game';
 
 import { player_vs_player as Test } from '../rating_system/test';
 import { player_vs_player as Elo } from '../rating_system/Elo';
-import { ADMIN, MEMBER, STUDENT, TEACHER, UserRoleToAction } from '../models/user_role';
+import { ADMIN, MEMBER, STUDENT, TEACHER } from '../models/user_role';
+import { UserRoleToUserAction } from '../models/user_role_action';
 
 function initialize_sessions(): void {
 	let memory = ServerMemory.get_instance();
@@ -100,7 +101,7 @@ function initialize_games(): void {
 }
 
 function initialize_permissions(permission_data: any): void {
-	let actions = UserRoleToAction.get_instance();
+	let actions = UserRoleToUserAction.get_instance();
 
 	// ADMIN
 	for (let i = 0; i < permission_data.admin.length; ++i) {

@@ -30,18 +30,20 @@ import { is_user_logged_in } from './server/session';
 import { user_add_new, user_exists, user_retrieve } from './server/users';
 import { User } from './models/user';
 import {
-	ASSIGN_ROLE_ADMIN,
-	ASSIGN_ROLE_TEACHER,
-	ASSIGN_ROLE_MEMBER,
-	ASSIGN_ROLE_STUDENT,
 	is_role_string_correct,
-	CREATE_USER,
 	STUDENT,
 	MEMBER,
 	TEACHER,
 	ADMIN
 }
 from './models/user_role';
+import {
+	ASSIGN_ROLE_ADMIN,
+	ASSIGN_ROLE_TEACHER,
+	ASSIGN_ROLE_MEMBER,
+	ASSIGN_ROLE_STUDENT,
+	CREATE_USER,
+} from './models/user_action';
 import { encrypt_password_for_user } from './utils/encrypt';
 import { Password } from './models/password';
 import { Rating } from './models/rating';

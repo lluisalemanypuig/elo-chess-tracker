@@ -29,7 +29,8 @@ import { log_now } from './utils/misc';
 import { is_user_logged_in, session_id_exists } from './server/session';
 import { user_retrieve, user_rename_reassign_roles } from './server/users';
 import { User } from './models/user';
-import { ADMIN, EDIT_ADMIN, EDIT_MEMBER, EDIT_STUDENT, EDIT_TEACHER, MEMBER, STUDENT, TEACHER } from './models/user_role';
+import { ADMIN, MEMBER, STUDENT, TEACHER } from './models/user_role';
+import { EDIT_ADMIN, EDIT_MEMBER, EDIT_STUDENT, EDIT_TEACHER } from './models/user_action';
 
 export async function get_user_edit_page(req: any, res: any) {
 	debug(log_now(), "GET user_edit_page...");
