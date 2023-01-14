@@ -34,10 +34,12 @@ import {
 	challenge_send_new,
 	challenge_set_result,
 	challenge_unset_result,
-	challenge_agree_result
+	challenge_agree_result,
+	challenge_can_user_send
 } from './server/challenges';
 import { user_exists, user_retrieve } from './server/users';
 import { Challenge } from './models/challenge';
+import { User } from './models/user';
 
 export async function get_challenges_page(req: any, res: any) {
 	debug(log_now(), "GET challenges_page...");
@@ -87,6 +89,15 @@ export async function post_challenge_send(req: any, res: any) {
 		res.send({
 			'r' : '0',
 			'reason' : 'Self challenges are not allowed'
+		});
+		return;
+	}
+
+	if (!challenge_can_user_send(username, req.body.to)) {
+		debug(log_now(), `Sender '${username}' cannot challenge user '${req.body.to}'.`);
+		res.send({
+			'r' : '0',
+			'reason' : 'You cannot challenge this user'
 		});
 		return;
 	}

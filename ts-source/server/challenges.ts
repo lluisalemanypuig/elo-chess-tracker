@@ -32,6 +32,8 @@ import { GameType, GameResult } from '../models/game';
 import { game_new, game_insert_in_history } from './game_history';
 import { user_retrieve } from './users';
 import { User } from '../models/user';
+import { ADMIN, MEMBER, STUDENT, TEACHER } from '../models/user_role';
+import { CHALLENGE_ADMIN, CHALLENGE_MEMBER, CHALLENGE_STUDENT, CHALLENGE_TEACHER } from '../models/user_action';
 
 function challenge_get_index(id: string): number {
 	let mem = ServerMemory.get_instance();
@@ -39,6 +41,20 @@ function challenge_get_index(id: string): number {
 		if (mem.challenges[i].id == id) { return i; }
 	}
 	return -1;
+}
+
+export function challenge_can_user_send(_sender: string, _receiver: string): boolean {
+	// retrieve both users
+	const sender = user_retrieve(_sender) as User;
+	const receiver = user_retrieve(_receiver) as User;
+
+	if (receiver.is(ADMIN)) { return sender.can_do(CHALLENGE_ADMIN); }
+	if (receiver.is(MEMBER)) { return sender.can_do(CHALLENGE_MEMBER); }
+	if (receiver.is(STUDENT)) { return sender.can_do(CHALLENGE_STUDENT); }
+	if (receiver.is(TEACHER)) { return sender.can_do(CHALLENGE_TEACHER); }
+
+	debug(log_now(), `Receiver of challenge '${receiver}' does not seem to have a role...`);
+	return false;
 }
 
 /// Return challenge with identifier 'id'
