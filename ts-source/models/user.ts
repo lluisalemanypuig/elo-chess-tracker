@@ -149,10 +149,11 @@ export class User extends Player {
 
 		return actions;
 	}
+
 	/// Can a user perform a certain action?
 	can_do(a: UserAction): boolean {
 		const user_role_to_action = UserRoleToUserAction.get_instance();
-
+		
 		for (let i = 0; i < this.roles.length; ++i) {
 			const r = this.roles[i];
 			if (user_role_to_action.get_actions_role(r).includes(a)) {
