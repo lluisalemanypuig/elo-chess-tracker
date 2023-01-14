@@ -40,6 +40,8 @@ import {
 import { user_exists, user_retrieve } from './server/users';
 import { Challenge } from './models/challenge';
 import { User } from './models/user';
+import { CHALLENGE_USER } from './models/user_action';
+import { assert } from 'console';
 
 export async function get_challenges_page(req: any, res: any) {
 	debug(log_now(), "GET challenges_page...");
@@ -91,6 +93,20 @@ export async function post_challenge_send(req: any, res: any) {
 			'reason' : 'Self challenges are not allowed'
 		});
 		return;
+	}
+
+	assert(r[2] != null);
+
+	{
+	let sender = r[2] as User;
+	if (!sender.can_do(CHALLENGE_USER) ) {
+		debug(log_now(), `User '${username}' cannot challenge other users.`);
+		res.send({
+			'r' : '0',
+			'reason' : 'You cannot challenge other users'
+		});
+		return;
+	}
 	}
 
 	if (!challenge_can_user_send(username, req.body.to)) {
