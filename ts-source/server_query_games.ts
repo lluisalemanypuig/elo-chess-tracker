@@ -31,8 +31,8 @@ function increment(g: Game): any {
 		g.black.get_classical_rating().rating;
 
 	return {
-		'white_Elo_increment' : Math.round(white_Elo_increment).toFixed(2),
-		'black_Elo_increment' : Math.round(black_Elo_increment).toFixed(2)
+		'white_Elo_increment' : Math.round(white_Elo_increment),
+		'black_Elo_increment' : Math.round(black_Elo_increment)
 	};
 }
 
@@ -98,8 +98,8 @@ function filter_game_list(
 				'type': type,
 				'result': result,
 				'date' : g.when.replace('..', ' '),
-				'white_Elo': g.white.get_classical_rating().rating,
-				'black_Elo': g.black.get_classical_rating().rating,
+				'white_Elo': Math.round(g.white.get_classical_rating().rating),
+				'black_Elo': Math.round(g.black.get_classical_rating().rating),
 				'white_Elo_increment': (inc.white_Elo_increment < 0 ? inc.white_Elo_increment : "+" + inc.white_Elo_increment),
 				'black_Elo_increment': (inc.black_Elo_increment < 0 ? inc.black_Elo_increment : "+" + inc.black_Elo_increment)
 			});

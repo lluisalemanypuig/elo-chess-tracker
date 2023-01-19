@@ -67,10 +67,13 @@ export async function query_user_main(req: any, res: any) {
 	}
 
 	let user = r[2] as User;
+	let classical = user.get_classical_rating().clone();
+	classical.rating = Math.round(classical.rating);
+
 	res.send({
 		'r' : '1',
 		'fullname' : user.get_full_name(),
-		'classical' : user.get_classical_rating(),
+		'classical' : classical,
 		'roles' : user.get_roles(),
 		'actions' : user.get_actions()
 	});
@@ -127,7 +130,7 @@ export async function query_ranking_users(req: any, res: any) {
 	for (let i = 0; i < users_array.length; ++i) {
 		users.push({
 			'name' : users_array[i].get_full_name(),
-			'elo' : users_array[i].get_classical_rating().rating,
+			'elo' : Math.round(users_array[i].get_classical_rating().rating),
 			'total_games' : users_array[i].get_classical_rating().num_games,
 			'won' : users_array[i].get_classical_rating().won,
 			'drawn' : users_array[i].get_classical_rating().drawn,
