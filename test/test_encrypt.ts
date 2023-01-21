@@ -95,8 +95,6 @@ function Test3() {
 	}
 }
 
-import CryptoJS from 'crypto-js';
-
 function Test4() {
 	console.log("==========");
 	console.log("  Test 4  ");
