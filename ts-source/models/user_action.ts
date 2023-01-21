@@ -1,7 +1,8 @@
-import { UserRole } from "./user_role";
-
 /// Can create users
 export const CREATE_USER = 'create_user';
+
+/// Can create games
+export const CREATE_GAME = 'create_game';
 
 /// Edit a users
 export const EDIT_USER = 'edit_user';
@@ -48,6 +49,7 @@ export const CHALLENGE_STUDENT = 'challenge_student';
 /// All actions that can be performed in this web
 export const all_actions = [
 	CREATE_USER,
+	CREATE_GAME,
 	
 	EDIT_USER,
 	EDIT_ADMIN,

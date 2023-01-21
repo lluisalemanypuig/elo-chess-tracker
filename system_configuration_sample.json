@@ -4,6 +4,7 @@
     "permissions" : {
         "admin": [
             "create_user",
+            "create_game",
             "assign_role_admin", "assign_role_teacher", "assign_role_member", "assign_role_student",
             "edit_user", "edit_admin", "edit_teacher", "edit_member", "edit_student",
             "see_user_games", "see_admin_games", "see_teacher_games", "see_member_games", "see_student_games",
