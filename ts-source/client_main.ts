@@ -21,7 +21,7 @@ Contact:
 */
 
 import { user_role_to_string } from "./models/user_role";
-import { CREATE_USER, EDIT_USER, SEE_USER_GAMES } from "./models/user_action";
+import { CREATE_GAME, CREATE_USER, EDIT_USER, SEE_USER_GAMES } from "./models/user_action";
 import { make_cookie_string } from "./utils/cookies";
 
 export async function logout_link_clicked(event: any) {
@@ -53,6 +53,7 @@ function fill_action_links(user_actions: string[]) {
 
 	let create_user = false;
 	let edit_user = false;
+	let create_game = false;
 	let see_user_games = false;
 	
 	if (user_actions.includes(CREATE_USER)) {
@@ -60,6 +61,9 @@ function fill_action_links(user_actions: string[]) {
 	}
 	if (user_actions.includes(EDIT_USER)) {
 		edit_user = true;
+	}
+	if (user_actions.includes(CREATE_GAME)) {
+		create_game = true;
 	}
 	if (user_actions.includes(SEE_USER_GAMES)) {
 		see_user_games = true;
@@ -78,6 +82,14 @@ function fill_action_links(user_actions: string[]) {
 		user_edit_link.href = "/user_edit";
 		user_edit_link.text = "Edit user";
 		action_links.appendChild(user_edit_link);
+		action_links.appendChild(document.createElement("br"));
+		action_links.appendChild(document.createElement("br"));
+	}
+	if (create_game) {
+		let game_create_link = document.createElement("a") as HTMLAnchorElement;
+		game_create_link.href = "/games_create";
+		game_create_link.text = "Create new game";
+		action_links.appendChild(game_create_link);
 		action_links.appendChild(document.createElement("br"));
 		action_links.appendChild(document.createElement("br"));
 	}

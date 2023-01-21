@@ -58,6 +58,12 @@ export async function get_user_create_page(req: any, res: any) {
 		return;
 	}
 
+	if (!(r[2] as User).can_do(CREATE_USER)) {
+		debug(log_now(), `User '${username}' cannot create users.`);
+		res.send("403 - Forbidden");
+		return;
+	}
+
 	res.sendFile(path.join(__dirname, "../html/user_new.html"));
 }
 

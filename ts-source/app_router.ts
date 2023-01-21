@@ -113,6 +113,11 @@ import { get_change_password_page, post_change_password } from './server_change_
 router.get('/change_password', get_change_password_page);
 router.post('/change_password', post_change_password);
 
+// implement create a new game
+import { post_games_create, get_games_create_page } from './server_games';
+router.get('/games_create', get_games_create_page);
+router.post('/games_create', post_games_create);
+
 // implement retrieve list of games
 import { get_games_all_page, get_games_own_page } from './server_games';
 router.get('/games_own', get_games_own_page);
@@ -122,6 +127,7 @@ router.get('/games_all', get_games_all_page);
 import { get_ranking_users_page } from './server_ranking';
 router.get('/ranking_users', get_ranking_users_page);
 
+// implement challenges management
 import { get_challenges_page } from './server_challenges';
 router.get('/challenges', get_challenges_page);
 import { post_challenge_send } from './server_challenges';
