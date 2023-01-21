@@ -102,6 +102,16 @@ export function game_new(
 	);
 }
 
+export function game_add(g: Game, when: string): void {
+	debug(log_now(), `Add game into the list of games played by both users...`);
+	
+	(user_retrieve(g.white.get_username() as string) as User).add_game(when);
+	(user_retrieve(g.black.get_username() as string) as User).add_game(when);
+	
+	debug(log_now(), `Inserting the game into the history...`);
+	game_insert_in_history(g);
+}
+
 /// Return the game where player 'username' is involved with
 /// date after later than date 'when'.
 export function game_next_of_player(

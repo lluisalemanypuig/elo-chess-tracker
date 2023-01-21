@@ -29,7 +29,7 @@ import { log_now, number_to_string, long_date_to_short_date } from '../utils/mis
 import { ServerMemory, ServerDirectories } from "./configuration";
 import { Challenge } from '../models/challenge';
 import { GameType, GameResult } from '../models/game';
-import { game_new, game_insert_in_history } from './game_history';
+import { game_new, game_insert_in_history, game_add } from './game_history';
 import { user_retrieve } from './users';
 import { User } from '../models/user';
 import { ADMIN, MEMBER, STUDENT, TEACHER } from '../models/user_role';
@@ -210,16 +210,8 @@ export function challenge_agree_result(c: Challenge): void
 		c.get_when_result_set() as string
 	);
 	
-	debug(log_now(), `    Add game into the list of games played by both users...`);
-	{
-	let white = user_retrieve(c.get_white() as string) as User;
-	white.add_game(long_date_to_short_date(c.get_when_result_set() as string));
-	let black = user_retrieve(c.get_black() as string) as User;
-	black.add_game(long_date_to_short_date(c.get_when_result_set() as string));
-	}
-
-	debug(log_now(), `    Inserting the game into the history...`);
-	game_insert_in_history(g);
+	debug(log_now(), `    Adding game...`);
+	game_add(g, long_date_to_short_date(c.get_when_result_set() as string));
 
 	{
 	debug(log_now(), `    Deleting the challenge from the memory...`);
