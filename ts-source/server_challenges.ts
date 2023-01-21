@@ -253,7 +253,6 @@ export async function post_challenge_set_result(req: any, res: any) {
 
 	let c = _c as Challenge;
 
-
 	if (c.get_result_set_by() != null) {
 		debug(log_now(), `User '${this_username}' is trying to override the result of a challenge`);
 		res.send({
