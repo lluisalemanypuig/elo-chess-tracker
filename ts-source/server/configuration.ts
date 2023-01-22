@@ -20,9 +20,6 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import Debug from 'debug';
-const debug = Debug('ELO_TRACKER:server_setup');
-
 import path from "path";
 
 import { User } from "../models/user";
