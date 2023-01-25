@@ -122,22 +122,40 @@ function initialize_permissions(permission_data: any): void {
 }
 
 export function server_initialize_from_data(configuration_data: any): void {
-	const base_dir = configuration_data.base_directory;
+	const database_base_directory = configuration_data.database_base_directory;
+	debug(log_now(), `    Base directory: '${database_base_directory}'`);
 
-	debug(log_now(), `    Base directory: '${base_dir}'`);
-	debug(log_now(), `    Rating system: '${configuration_data.rating_system}'`);
+	const ssl_certificate_directory = configuration_data.ssl_certificate.directory;
+	const public_key_file = configuration_data.ssl_certificate.public_key_file;
+	const private_key_file = configuration_data.ssl_certificate.private_key_file;
+	const passphrase_file = configuration_data.ssl_certificate.passphrase_file;
+	debug(log_now(), `    SSL certificate directory: '${ssl_certificate_directory}'`);
+	debug(log_now(), `        Public key file: '${public_key_file}'`);
+	debug(log_now(), `        Private key file: '${private_key_file}'`);
+	debug(log_now(), `        Passphrase: '${passphrase_file}'`);
+
+	const rating_system = configuration_data.rating_system;
+	debug(log_now(), `    Rating system: '${rating_system}'`);
 
 	// initialize directories
-	ServerDirectories.initialize(base_dir);
+	ServerDirectories.initialize();
+	
+	ServerDirectories.get_instance().set_database_base_directory(database_base_directory);
 	debug(log_now(), `    Games directory: '${ServerDirectories.get_instance().games_directory}'`);
 	debug(log_now(), `    Users directory: '${ServerDirectories.get_instance().users_directory}'`);
 	debug(log_now(), `    Challenges directory: '${ServerDirectories.get_instance().challenges_directory}'`);
 
+	ServerDirectories.get_instance().set_SSL_info(ssl_certificate_directory, public_key_file, private_key_file, passphrase_file);
+	debug(log_now(), `    SSL base directory: '${ServerDirectories.get_instance().ssl_base_directory}'`);
+	debug(log_now(), `        Public key file: '${ServerDirectories.get_instance().public_key_file}'`);
+	debug(log_now(), `        Private key file: '${ServerDirectories.get_instance().private_key_file}'`);
+	debug(log_now(), `        Passphrase: '${ServerDirectories.get_instance().passphrase_file}'`);
+
 	// initialize rating formula
-	if (configuration_data.rating_system == 'Test') {
+	if (rating_system == 'Test') {
 		RatingFormula.initialize(Test);
 	}
-	else if (configuration_data.rating_system == 'Elo') {
+	else if (rating_system == 'Elo') {
 		RatingFormula.initialize(Elo);
 	}
 

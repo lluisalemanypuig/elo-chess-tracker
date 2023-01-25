@@ -1,7 +1,7 @@
 {
-    "base_directory" : "/home/lluis/Documents/projects/elo-chess-tracker/database",
-    "rating_system" : "Elo",
-    "permissions" : {
+    "database_base_directory": "/home/lluis/Documents/projects/elo-chess-tracker/database",
+    "rating_system": "Elo",
+    "permissions": {
         "admin": [
             "create_user",
             "create_game",
@@ -26,5 +26,11 @@
         "student" : [
             "challenge_user", "challenge_admin", "challenge_member", "challenge_teacher", "challenge_student"
         ]
+    },
+    "ssl_certificate": {
+        "directory": "/home/lluis/Documents/projects/elo-chess-tracker/certificate",
+        "public_key_file": "public.pem",
+        "private_key_file": "private.pem",
+        "passphrase_file": "passphrase.txt"
     }
 }

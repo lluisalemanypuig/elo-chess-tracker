@@ -2,3 +2,4 @@ node_modules/
 js-source/
 database/
 system_configuration.json
+certificate/

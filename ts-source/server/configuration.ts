@@ -60,34 +60,58 @@ export class RatingFormula {
  * - @ref users_directory: directory where player files are stored
  */
 export class ServerDirectories {
-	public base_directory: string = "";
+	// database directory
+	public database_base_directory: string = "";
 	public games_directory: string = "";
 	public users_directory: string = "";
 	public challenges_directory: string = "";
+
+	// SSL certificate info
+	public ssl_base_directory: string = "";
+	public public_key_file: string = "";
+	public private_key_file: string = "";
+	public passphrase_file: string = "";
 
 	/// The only instance of this class
 	private static instance: ServerDirectories;
 
 	/**
 	 * @brief Construct the server configuration
-	 * @param base_dir Base directory, pointing at the root of the databse/ directory
 	 */
-	constructor(base_dir: string) {
+	constructor() {
 		if (ServerDirectories.instance) {
 			return ServerDirectories.instance;
 		}
-
-		this.base_directory = base_dir;
-		this.games_directory = path.join(this.base_directory, "games");
-		this.users_directory = path.join(this.base_directory, "users");
-		this.challenges_directory = path.join(this.base_directory, "challenges");
 
 		ServerDirectories.instance = this;
 	}
 
 	/// Initializes the only instance with a base path
-	static initialize(base_dir: string): void {
-		ServerDirectories.instance = new ServerDirectories(base_dir);
+	static initialize(): void {
+		ServerDirectories.instance = new ServerDirectories();
+	}
+
+	/// Sets base directory of database
+	set_database_base_directory(base_dir: string): void {
+		this.database_base_directory = base_dir;
+		this.games_directory = path.join(this.database_base_directory, "games");
+		this.users_directory = path.join(this.database_base_directory, "users");
+		this.challenges_directory = path.join(this.database_base_directory, "challenges");
+	}
+
+	/// Sets all necessary SSL information
+	set_SSL_info(
+		base_dir: string,
+		public_key_file: string,
+		private_key_file: string,
+		passphrase_file: string
+	):
+	void
+	{
+		this.ssl_base_directory = base_dir;
+		this.public_key_file = path.join(this.ssl_base_directory, public_key_file);
+		this.private_key_file = path.join(this.ssl_base_directory, private_key_file);
+		this.passphrase_file = path.join(this.ssl_base_directory, passphrase_file);
 	}
 
 	/**

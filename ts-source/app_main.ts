@@ -30,6 +30,8 @@ Contact:
 
 import Debug from 'debug';
 const debug = Debug('ELO_TRACKER:app_main');
+
+import fs from 'fs';
 import { log_now } from './utils/misc';
 
 import { server_initialize_from_configuration_file } from './server/initialization';
@@ -45,9 +47,11 @@ import { app } from './app_build';
 debug(log_now(), "    Imported!");
 
 import http from 'http';
+import https from 'https';
 import { AddressInfo } from 'net';
+import { ServerDirectories } from './server/configuration';
 
-/// Normalize a port into a number, string, or false.
+// Normalize a port into a number, string, or false.
 function normalizePort(val: any): any {
 	let port = parseInt(val, 10);
 
@@ -64,15 +68,40 @@ function normalizePort(val: any): any {
 	return false;
 }
 
-/// Event listener for HTTP server "error" event.
-function onError(error: any): void {
+// Event listener for servers "error" event.
+/*
+function http_on_error(error: any): void {
 	if (error.syscall !== 'listen') {
 		throw error;
 	}
 
-	var bind = typeof port === 'string'
-		? 'Pipe ' + port
-		: 'Port ' + port;
+	var bind = typeof port_8080 === 'string'
+		? 'Pipe ' + port_8080
+		: 'Port ' + port_8080;
+
+	// handle specific listen errors with friendly messages
+	switch (error.code) {
+		case 'EACCES':
+			console.error(bind + ' requires elevated privileges');
+			process.exit(1);
+			break;
+		case 'EADDRINUSE':
+			console.error(bind + ' is already in use');
+			process.exit(1);
+			break;
+		default:
+			throw error;
+	}
+}
+*/
+function https_on_error(error: any): void {
+	if (error.syscall !== 'listen') {
+		throw error;
+	}
+
+	var bind = typeof port_8443 === 'string'
+		? 'Pipe ' + port_8443
+		: 'Port ' + port_8443;
 
 	// handle specific listen errors with friendly messages
 	switch (error.code) {
@@ -89,23 +118,55 @@ function onError(error: any): void {
 	}
 }
 
-/// Event listener for HTTP server "listening" event.
-function onListening(): void {
-	let addr = server.address();
+// Event listener for servers "listening" event.
+/*
+function http_on_listening(): void {
+	let addr = http_server.address();
+	let bind = typeof addr === 'string'
+		? 'pipe ' + addr
+		: 'port ' + (addr as AddressInfo).port;
+	debug(log_now(), 'Listening on ' + bind);
+}
+*/
+function https_on_listening(): void {
+	let addr = https_server.address();
 	let bind = typeof addr === 'string'
 		? 'pipe ' + addr
 		: 'port ' + (addr as AddressInfo).port;
 	debug(log_now(), 'Listening on ' + bind);
 }
 
-/// Get port from environment and store in Express.
-let port = normalizePort(process.env.PORT || '3000');
-app.set('port', port);
+/*
+// Get port from environment and store in Express.
+let port_8080 = normalizePort(process.env.PORT || '8080');
+app.set('port', port_8080);
+*/
+// Get port from environment and store in Express.
+let port_8443 = normalizePort(process.env.PORT || '8443');
+app.set('port', port_8443);
 
-/// Create HTTP server.
-let server = http.createServer(app);
+/*
+// Create HTTP server
+debug(log_now(), "Create http server");
+let http_server = http.createServer(app);
+http_server.listen(port_8080);
+http_server.on('error', http_on_error);
+http_server.on('listening', http_on_listening);
+*/
 
-/// Listen on provided port, on all network interfaces.
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
+// Create HTTPS server
+debug(log_now(), "Create https server");
+
+let passphrase = fs.readFileSync(ServerDirectories.get_instance().passphrase_file, 'utf8');
+let https_server = https.createServer(
+	{
+		key : fs.readFileSync(ServerDirectories.get_instance().private_key_file, 'utf8'),
+		cert : fs.readFileSync(ServerDirectories.get_instance().public_key_file, 'utf8'),
+		passphrase : passphrase.substring(0,passphrase.length - 1)
+	},
+	app
+);
+
+https_server.listen(port_8443);
+https_server.on('error', https_on_error);
+https_server.on('listening', https_on_listening);
