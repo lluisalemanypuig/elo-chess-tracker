@@ -68,105 +68,104 @@ function normalizePort(val: any): any {
 	return false;
 }
 
-// Event listener for servers "error" event.
-/*
-function http_on_error(error: any): void {
-	if (error.syscall !== 'listen') {
-		throw error;
+// create https server when possible
+if (ServerDirectories.get_instance().ssl_base_directory != "") {
+	// Create HTTPS server
+	debug(log_now(), "Create https server");
+
+	// Get port from environment and store in Express.
+	let port_8443 = normalizePort(process.env.PORT || '8443');
+	app.set('port', port_8443);
+
+	let passphrase = fs.readFileSync(ServerDirectories.get_instance().passphrase_file, 'utf8');
+	let https_server = https.createServer(
+		{
+			key : fs.readFileSync(ServerDirectories.get_instance().private_key_file, 'utf8'),
+			cert : fs.readFileSync(ServerDirectories.get_instance().public_key_file, 'utf8'),
+			passphrase : passphrase.substring(0,passphrase.length - 1)
+		},
+		app
+	);
+
+	function https_on_listening(): void {
+		let addr = https_server.address();
+		let bind = typeof addr === 'string'
+			? 'pipe ' + addr
+			: 'port ' + (addr as AddressInfo).port;
+		debug(log_now(), 'Listening on ' + bind);
 	}
-
-	var bind = typeof port_8080 === 'string'
-		? 'Pipe ' + port_8080
-		: 'Port ' + port_8080;
-
-	// handle specific listen errors with friendly messages
-	switch (error.code) {
-		case 'EACCES':
-			console.error(bind + ' requires elevated privileges');
-			process.exit(1);
-			break;
-		case 'EADDRINUSE':
-			console.error(bind + ' is already in use');
-			process.exit(1);
-			break;
-		default:
+	function https_on_error(error: any): void {
+		if (error.syscall !== 'listen') {
 			throw error;
+		}
+	
+		var bind = typeof port_8443 === 'string'
+			? 'Pipe ' + port_8443
+			: 'Port ' + port_8443;
+	
+		// handle specific listen errors with friendly messages
+		switch (error.code) {
+			case 'EACCES':
+				console.error(bind + ' requires elevated privileges');
+				process.exit(1);
+				break;
+			case 'EADDRINUSE':
+				console.error(bind + ' is already in use');
+				process.exit(1);
+				break;
+			default:
+				throw error;
+		}
 	}
+
+	https_server.listen(port_8443);
+	https_server.on('error', https_on_error);
+	https_server.on('listening', https_on_listening);
 }
-*/
-function https_on_error(error: any): void {
-	if (error.syscall !== 'listen') {
-		throw error;
-	}
+else {
+	// Create HTTP server
+	debug(log_now(), "Create http server");
 
-	var bind = typeof port_8443 === 'string'
-		? 'Pipe ' + port_8443
-		: 'Port ' + port_8443;
+	// Get port from environment and store in Express.
+	let port_8080 = normalizePort(process.env.PORT || '8080');
+	app.set('port', port_8080);
 
-	// handle specific listen errors with friendly messages
-	switch (error.code) {
-		case 'EACCES':
-			console.error(bind + ' requires elevated privileges');
-			process.exit(1);
-			break;
-		case 'EADDRINUSE':
-			console.error(bind + ' is already in use');
-			process.exit(1);
-			break;
-		default:
+	// Event listener for servers "error" event.
+	function http_on_error(error: any): void {
+		if (error.syscall !== 'listen') {
 			throw error;
+		}
+
+		var bind = typeof port_8080 === 'string'
+			? 'Pipe ' + port_8080
+			: 'Port ' + port_8080;
+
+		// handle specific listen errors with friendly messages
+		switch (error.code) {
+			case 'EACCES':
+				console.error(bind + ' requires elevated privileges');
+				process.exit(1);
+				break;
+			case 'EADDRINUSE':
+				console.error(bind + ' is already in use');
+				process.exit(1);
+				break;
+			default:
+				throw error;
+		}
 	}
+
+	// Event listener for servers "listening" event.
+	function http_on_listening(): void {
+		let addr = http_server.address();
+		let bind = typeof addr === 'string'
+			? 'pipe ' + addr
+			: 'port ' + (addr as AddressInfo).port;
+		debug(log_now(), 'Listening on ' + bind);
+	}
+
+	let http_server = http.createServer(app);
+	http_server.listen(port_8080);
+	http_server.on('error', http_on_error);
+	http_server.on('listening', http_on_listening);
 }
-
-// Event listener for servers "listening" event.
-/*
-function http_on_listening(): void {
-	let addr = http_server.address();
-	let bind = typeof addr === 'string'
-		? 'pipe ' + addr
-		: 'port ' + (addr as AddressInfo).port;
-	debug(log_now(), 'Listening on ' + bind);
-}
-*/
-function https_on_listening(): void {
-	let addr = https_server.address();
-	let bind = typeof addr === 'string'
-		? 'pipe ' + addr
-		: 'port ' + (addr as AddressInfo).port;
-	debug(log_now(), 'Listening on ' + bind);
-}
-
-/*
-// Get port from environment and store in Express.
-let port_8080 = normalizePort(process.env.PORT || '8080');
-app.set('port', port_8080);
-*/
-// Get port from environment and store in Express.
-let port_8443 = normalizePort(process.env.PORT || '8443');
-app.set('port', port_8443);
-
-/*
-// Create HTTP server
-debug(log_now(), "Create http server");
-let http_server = http.createServer(app);
-http_server.listen(port_8080);
-http_server.on('error', http_on_error);
-http_server.on('listening', http_on_listening);
-*/
-
-// Create HTTPS server
-debug(log_now(), "Create https server");
-
-let passphrase = fs.readFileSync(ServerDirectories.get_instance().passphrase_file, 'utf8');
-let https_server = https.createServer(
-	{
-		key : fs.readFileSync(ServerDirectories.get_instance().private_key_file, 'utf8'),
-		cert : fs.readFileSync(ServerDirectories.get_instance().public_key_file, 'utf8'),
-		passphrase : passphrase.substring(0,passphrase.length - 1)
-	},
-	app
-);
-
-https_server.listen(port_8443);
-https_server.on('error', https_on_error);
-https_server.on('listening', https_on_listening);
