@@ -20,7 +20,9 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { Rating, rating_from_json } from './rating';
+import { Rating } from '../rating_system/rating';
+import { any, copyarray, linear_find } from '../utils/misc';
+import { TimeControlRating, time_control_rating_from_json } from './time_control_rating';
 
 /**
  * @brief Simple class to encode a Player
@@ -29,9 +31,9 @@ export class Player {
 	/// The user name of the the player
 	protected readonly username: string;
 
-	/// Classical info of the player
-	protected classical: Rating;
-
+	/// Rating info of the player per time control id
+	protected ratings: TimeControlRating[];
+	
 	/**
 	 * @brief Constructor
 	 * @param username User name of the player.
@@ -39,28 +41,64 @@ export class Player {
 	 */
 	constructor(
 		username: string,
-		classical: Rating
+		ratings: TimeControlRating[]
 	) {
 		this.username = username;
-		this.classical = classical;
+		this.ratings = ratings;
 	}
 
 	/// Returns the username of this player
 	get_username(): string { return this.username; }
 
-	/// Returns the classical rating of the player
-	get_classical_rating(): Rating { return this.classical; }
+	/// Returns whether the rating under the given time control id exists
+	has_rating(time_control_id: string): boolean {
+		const index = this.index_time_control_id(time_control_id);
+		return index < this.ratings.length;
+	}
+
+	/**
+	 * @brief Adds a rating assuming it does not exist
+	 * @param time_control_id String
+	 * @param rating Rating object
+	 * @pre Rating does not exist
+	 */
+	add_rating(time_control_id: string, rating: Rating): void {
+		this.ratings.push(new TimeControlRating(time_control_id, rating));
+	}
+
+	/// Returns the rating of the player under the given time control id
+	get_rating(time_control_id: string): Rating {
+		const index = this.index_time_control_id(time_control_id);
+		if (index >= this.ratings.length) {
+			console.log(`Rating with id '${time_control_id}' does not exist!`);
+		}
+		return this.ratings[index].rating;
+	}
 
 	/// Sets the classical rating of the player
-	set_classical_rating(rating: Rating): void {
-		this.classical = rating;
+	set_rating(time_control_id: string, rating: Rating): void {
+		const index = this.index_time_control_id(time_control_id);
+		if (index >= this.ratings.length) {
+			console.log(`Rating with id '${time_control_id}' does not exist!`);
+			return;
+		}
+		this.ratings[index].rating = rating;
+	}
+
+	/// Returns all ratings
+	get_all_ratings(): TimeControlRating[] {
+		return this.ratings;
 	}
 
 	/// Creates a copy of this player.
 	clone(): Player {
-		return new Player(
-			this.username,
-			this.classical.clone()
+		return new Player(this.username, copyarray(this.ratings));
+	}
+
+	index_time_control_id(time_control_id: string): number {
+		return linear_find(
+			this.ratings,
+			(v: TimeControlRating): boolean => { return v.time_control == time_control_id; }
 		);
 	}
 }
@@ -72,15 +110,16 @@ export class Player {
  * @pre If @e json is a string then it cannot start with '['.
  */
 export function player_from_json(json: any): Player {
-	if (typeof json == "string") {
+	if (typeof json === "string") {
 		let json_parse = JSON.parse(json);
 		return player_from_json(json_parse);
 	}
 
-	return new Player(
-		json["username"],
-		rating_from_json(json["classical"])
-	);
+	let all_ratings: TimeControlRating[] = [];
+	for (var r in json.ratings) {
+		all_ratings.push( time_control_rating_from_json(json.ratings[r]) );
+	}
+	return new Player(json["username"], all_ratings);
 }
 
 /**
@@ -89,7 +128,7 @@ export function player_from_json(json: any): Player {
  * @returns An array of Player objects.
  */
 export function player_set_from_json(json: any): Player[] {
-	if (typeof json == "string") {
+	if (typeof json === "string") {
 		let json_parse = JSON.parse(json);
 		return player_set_from_json(json_parse);
 	}

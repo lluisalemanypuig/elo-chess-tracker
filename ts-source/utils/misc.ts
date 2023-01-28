@@ -102,6 +102,42 @@ export function string_to_short_date(date: string): Date {
 }
 
 /**
+ * @brief Deep-copy an array
+ * @param array Input array
+ * @returns A copy of an array and all of its elements.
+ */
+export function copyarray<T>(array: T[]): T[] {
+	return array.map( (k: T) => { return k; } );
+}
+
+/**
+ * @brief Finds the first element for which F evaluates to true
+ * @param arr Input array
+ * @param F Boolean function
+ */
+export function linear_find<T>(arr: T[], F: Function): number {
+	for (let i = 0; i < arr.length; ++i) {
+		if (F(arr[i])) { return i; }
+	}
+	return arr.length;
+}
+
+/**
+ * @brief Checks if function F is evaluated to true in any
+ * element of the array
+ * @param arr Input array
+ * @param F Boolean function (e: T) => boolean
+ * @returns True if F evaluates to true in any element of the array.
+ * Returns false if otherwise.
+ */
+export function any<T>(arr: T[], F: Function): boolean {
+	for (let i = 0; i < arr.length; ++i) {
+		if (F(arr[i])) { return true; }
+	}
+	return false;
+}
+
+/**
  * @brief Returns whether @e x is in @e arr or not.
  * @tparam T Type of elements in the array.
  * @param arr Array.

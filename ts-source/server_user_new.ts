@@ -46,7 +46,11 @@ import {
 } from './models/user_action';
 import { encrypt_password_for_user } from './utils/encrypt';
 import { Password } from './models/password';
-import { Rating } from './models/rating';
+import { EloRating } from './rating_system/Elo/rating';
+import { Rating } from './rating_system/rating';
+import { TimeControlRating } from './models/time_control_rating';
+import { RatingSystem } from './server/configuration';
+import { TimeControl } from './models/time_control';
 
 export async function get_user_create_page(req: any, res: any) {
 	debug(log_now(), "GET user_create_page...");
@@ -153,13 +157,23 @@ export async function post_user_create(req: any, res: any) {
 	// encrypt password
 	let _pass = encrypt_password_for_user(new_username, new_password);
 
+	let ratings: TimeControlRating[] = [];
+	const rating_system = RatingSystem.get_instance();
+	rating_system.all_time_controls.forEach(
+		(value: TimeControl) => {
+			ratings.push(new TimeControlRating(
+				value.id, rating_system.new_rating()
+			));
+		}
+	);
+	
 	let u = new User(
 		new_username,
 		new_firstname, new_lastname,
 		new Password(_pass[0], _pass[1]),
 		new_roles,
 		[], // empty set of games
-		new Rating(new_classical_rating, 0, 0, 0, 0, 40)
+		ratings
 	);
 
 	user_add_new(u);

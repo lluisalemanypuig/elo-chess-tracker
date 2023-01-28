@@ -28,6 +28,8 @@ import { user_get_all_names_and_usernames, user_retrieve } from './server/users'
 import { is_user_logged_in } from './server/session';
 import { User } from './models/user';
 import { ServerMemory } from './server/configuration';
+import { Rating } from './rating_system/rating';
+import { TimeControlRating } from './models/time_control_rating';
 
 /// Returns the list of user full names and usernames sorted by name
 export async function query_user_list(req: any, res: any) {
@@ -67,15 +69,24 @@ export async function query_user_main(req: any, res: any) {
 	}
 
 	let user = r[2] as User;
-	let classical = user.get_classical_rating().clone();
-	classical.rating = Math.round(classical.rating);
+
+	let ratings_user: any[] = [];
+	const all_ratings = user.get_all_ratings();
+	
+	all_ratings.forEach(
+		(value: TimeControlRating) => {
+			let R = value.rating.clone();
+			R.rating = Math.round(R.rating);
+			ratings_user.push({ 'id' : value.time_control, 'v' : R });
+		}
+	);
 
 	res.send({
 		'r' : '1',
 		'fullname' : user.get_full_name(),
-		'classical' : classical,
 		'roles' : user.get_roles(),
-		'actions' : user.get_actions()
+		'actions' : user.get_actions(),
+		'ratings' : ratings_user
 	});
 }
 
@@ -130,11 +141,11 @@ export async function query_ranking_users(req: any, res: any) {
 	for (let i = 0; i < users_array.length; ++i) {
 		users.push({
 			'name' : users_array[i].get_full_name(),
-			'elo' : Math.round(users_array[i].get_classical_rating().rating),
-			'total_games' : users_array[i].get_classical_rating().num_games,
-			'won' : users_array[i].get_classical_rating().won,
-			'drawn' : users_array[i].get_classical_rating().drawn,
-			'lost' : users_array[i].get_classical_rating().lost
+			'elo' : Math.round(users_array[i].get_rating("classical").rating),
+			'total_games' : users_array[i].get_rating("classical").num_games,
+			'won' : users_array[i].get_rating("classical").won,
+			'drawn' : users_array[i].get_rating("classical").drawn,
+			'lost' : users_array[i].get_rating("classical").lost
 		});
 	}
 	}

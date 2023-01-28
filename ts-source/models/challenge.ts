@@ -20,7 +20,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { GameType, GameResult } from "./game";
+import { GameResult } from "./game";
 
 /**
  * @brief Class enconding a challenge
@@ -57,7 +57,7 @@ export class Challenge {
 	private white: string | null = null;
 	private black: string | null = null;
 	private result: GameResult | null = null;
-	private type: GameType | null = null;
+	private time_control_id: string | null = null;
 
 	/**
 	 * @brief Constructor
@@ -74,7 +74,7 @@ export class Challenge {
 	 * @param white White player
 	 * @param black Black player
 	 * @param result Result of the game
-	 * @param type Type of the game
+	 * @param time_control_id Time control id of the game
 	 */
 	constructor(
 		id: string,
@@ -95,7 +95,7 @@ export class Challenge {
 		white: string | null = null,
 		black: string | null = null,
 		result: GameResult | null = null,
-		type: GameType | null = null
+		time_control_id: string | null = null
 	) {
 		this.id = id;
 
@@ -115,7 +115,7 @@ export class Challenge {
 		this.white = white;
 		this.black = black;
 		this.result = result;
-		this.type = type;
+		this.time_control_id = time_control_id;
 	}
 
 	/// Returns the id of the challenge
@@ -148,8 +148,8 @@ export class Challenge {
 	/// Result of the game
 	get_result(): GameResult | null { return this.result; }
 	/// Type of game
-	get_type(): GameType | null { return this.type; }
-
+	
+	get_time_control_id(): string | null { return this.time_control_id; }
 	/// Sets the date when the challenge was accepted
 	set_challenge_accepted(d: string): void { this.when_challenge_accepted = d; }
 
@@ -163,7 +163,7 @@ export class Challenge {
 		white: string,
 		black: string,
 		result: GameResult,
-		type: GameType
+		time_control_id: string
 
 	): void {
 		this.result_was_set = true;
@@ -172,7 +172,7 @@ export class Challenge {
 		this.white = white;
 		this.black = black;
 		this.result = result;
-		this.type = type;
+		this.time_control_id = time_control_id;
 	}
 
 	/// Unset the previous result
@@ -185,7 +185,7 @@ export class Challenge {
 		this.white = null;
 		this.black = null;
 		this.result = null;
-		this.type = null;
+		this.time_control_id = null;
 	}
 
 	/// Accepts the result
@@ -216,7 +216,9 @@ export function challenge_from_json(json: any): Challenge {
 
 		json["when_result_accepted"], json["result_accepted_by"],
 
-		json["white"], json["black"], json["result"], json["type"]
+		json["white"], json["black"], json["result"],
+		
+		json["type"]
 	);
 }
 

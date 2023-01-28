@@ -21,15 +21,14 @@ Contact:
 */
 
 import Debug from 'debug';
-const debug = Debug('ELO_TRACKER:server_ranking');
-
-import path from 'path';
+const debug = Debug('ELO_TRACKER:server_time_control');
 
 import { log_now } from './utils/misc';
 import { is_user_logged_in } from './server/session';
+import { RatingSystem } from './server/configuration';
 
-export async function get_ranking_users_page(req: any, res: any) {
-	debug(log_now(), "GET ranking_users_page...");
+export async function get_time_control(req: any, res: any) {
+	debug(log_now(), "GET time_control...");
 
 	const id = req.cookies.session_id;
 	const username = req.cookies.user;
@@ -40,5 +39,16 @@ export async function get_ranking_users_page(req: any, res: any) {
 		return;
 	}
 
-	res.sendFile(path.join(__dirname, "../html/ranking.html"));
+    const tcs = RatingSystem.get_instance().all_time_controls;
+    let all_time_controls: any[] = [];
+    for (let i = 0; i < tcs.length; ++i) {
+        all_time_controls.push({
+            'id' : tcs[i].id,
+            'name' : tcs[i].name
+        });
+    }
+	res.send({
+        'r' : '1',
+        'data' : all_time_controls
+    });
 }

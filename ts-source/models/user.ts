@@ -24,11 +24,11 @@ import { assert } from 'console';
 
 import { Player } from './player';
 import { Password, password_from_json } from './password';
-import { Rating, rating_from_json } from './rating';
 import { UserRole } from './user_role';
 import { UserAction } from './user_action';
 import { UserRoleToUserAction } from './user_role_action';
-import { where_should_be_inserted } from '../utils/misc';
+import { copyarray, where_should_be_inserted } from '../utils/misc';
+import { TimeControlRating, time_control_rating_set_from_json } from './time_control_rating';
 
 /**
  * @brief Simple class to encode a User
@@ -60,7 +60,7 @@ export class User extends Player {
 	 * @param password Password of the user.
 	 * @param roles User roles.
 	 * @param games The set of games played.
-	 * @param classical Classical rating of the player.
+	 * @param ratings Ratings for every time control
 	 */
 	constructor(
 		username: string,
@@ -69,11 +69,10 @@ export class User extends Player {
 		password: Password,
 		roles: UserRole[],
 		games: string[],
-		// ratings
-		classical: Rating
+		ratings: TimeControlRating[]
 	)
 	{
-		super(username, classical);
+		super(username, ratings);
 		this.first_name = first_name;
 		this.last_name = last_name;
 		this.password = password;
@@ -82,9 +81,7 @@ export class User extends Player {
 	}
 
 	as_player(): Player {
-		return new Player(
-			this.username, this.classical
-		);
+		return new Player(this.username, this.ratings);
 	}
 
 	/// Set first name of the user
@@ -176,24 +173,21 @@ export class User extends Player {
 		assert(this.username == p.get_username());
 
 		// copy all ratings
-		this.classical = p.get_classical_rating();
+		this.ratings = p.get_all_ratings();
 	}
 
 	/// Creates a copy of this user
 	clone(): User {
 		return new User(
 			this.username, this.first_name, this.last_name,
-			this.password.clone(), this.roles, this.games,
-
-			// copy all ratings!
-			this.classical.clone()
+			this.password.clone(),
+			copyarray(this.roles), copyarray(this.games),
+			copyarray(this.ratings)
 		);
 	}
 
 	clone_as_player(): Player {
-		return new Player(
-			this.username, this.classical.clone()
-		);
+		return new Player(this.username, copyarray(this.ratings));
 	}
 }
 
@@ -208,6 +202,7 @@ export function user_from_json(json: any): User {
 		let json_parse = JSON.parse(json);
 		return user_from_json(json_parse);
 	}
+
 	return new User(
 		json["username"],
 		json["first_name"],
@@ -215,7 +210,7 @@ export function user_from_json(json: any): User {
 		password_from_json(json["password"]),
 		json["roles"],
 		json["games"],
-		rating_from_json(json["classical"])
+		time_control_rating_set_from_json(json["ratings"])
 	);
 }
 

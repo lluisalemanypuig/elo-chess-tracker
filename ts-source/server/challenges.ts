@@ -28,8 +28,9 @@ const debug = Debug('ELO_TRACKER:server_challenges');
 import { log_now, number_to_string, long_date_to_short_date } from '../utils/misc';
 import { ServerMemory, ServerDirectories } from "./configuration";
 import { Challenge } from '../models/challenge';
-import { GameType, GameResult } from '../models/game';
-import { game_new, game_insert_in_history, game_add } from './game_history';
+import { GameResult } from '../models/game';
+import { TimeControl } from '../models/time_control';
+import { game_new, game_add } from './game_history';
 import { user_retrieve } from './users';
 import { User } from '../models/user';
 import { ADMIN, MEMBER, STUDENT, TEACHER } from '../models/user_role';
@@ -172,13 +173,13 @@ export function challenge_set_result(
 	white: string,
 	black: string,
 	result: GameResult,
-	type: GameType
+	time_control_id: string
 
 ): void
 {
 	debug(log_now(), `Set the result of the challenge '${c.id}'`);
 
-	c.set_result(by, when, white, black, result, type);
+	c.set_result(by, when, white, black, result, time_control_id);
 	
 	let challenge_dir = ServerDirectories.get_instance().challenges_directory;
 	let challenge_file = path.join(challenge_dir, c.id);
@@ -206,12 +207,12 @@ export function challenge_agree_result(c: Challenge): void
 	let g = game_new(
 		c.get_white() as string, c.get_black() as string,
 		c.get_result() as GameResult,
-		c.get_type() as GameType,
+		c.get_time_control_id() as string,
 		c.get_when_result_set() as string
 	);
 	
 	debug(log_now(), `    Adding game...`);
-	game_add(g, long_date_to_short_date(c.get_when_result_set() as string));
+	game_add(g);
 
 	{
 	debug(log_now(), `    Deleting the challenge from the memory...`);

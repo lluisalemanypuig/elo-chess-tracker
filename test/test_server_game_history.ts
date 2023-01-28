@@ -23,18 +23,13 @@ Contact:
 import { Game } from '../ts-source/models/game';
 import { User } from '../ts-source/models/user';
 import { ServerMemory } from '../ts-source/server/configuration';
-import { server_initialize_from_data } from '../ts-source/server/initialization';
-import { game_insert_in_history } from '../ts-source/server/game_history';
+import { server_initialize_from_configuration_file } from '../ts-source/server/initialization';
+import { game_add } from '../ts-source/server/game_history';
 import { user_retrieve } from '../ts-source/server/users';
 
 const prompt = require('prompt-sync')();
 
-server_initialize_from_data(
-	{
-		"base_directory" : "/home/lluis/Documents/projects/elo-chess-tracker/test/database",
-		"rating_system" : "Elo"
-	}
-);
+server_initialize_from_configuration_file("system_configuration.json");
 
 let mem = ServerMemory.get_instance();
 
@@ -49,16 +44,18 @@ console.log("Adding the first game with date '2022-12-15..18:00:00'")
 {
 	let game = new Game(
 		"1",
-		(user_retrieve("emanuel.lasker") as User).as_player(),
-		(user_retrieve("magnus.carlsen") as User).as_player(),
+		"emanuel.lasker", (user_retrieve("emanuel.lasker") as User).get_rating("Classical"),
+		"magnus.carlsen", (user_retrieve("magnus.carlsen") as User).get_rating("Classical"),
 		'black_wins',
-		'classical',
+		'Classical',
 		'2022-12-15..18:00:00'
 	);
-	game_insert_in_history(game);
+	game_add(game);
 }
 
+console.log("==================================");
 for (let i = 0; i < mem.users.length; ++i) {
+	console.log("----------------------------------");
 	console.log(mem.users[i]);
 }
 a = prompt("Add 2nd game:");
@@ -67,16 +64,18 @@ console.log("Adding the first game with date '2022-12-16..18:00:00'")
 {
 	let game = new Game(
 		"2",
-		(user_retrieve("bobby.fischer") as User).as_player(),
-		(user_retrieve("mikhail.botvinnik") as User).as_player(),
+		"bobby.fischer", (user_retrieve("bobby.fischer") as User).get_rating("Classical"),
+		"mikhail.botvinnik", (user_retrieve("mikhail.botvinnik") as User).get_rating("Classical"),
 		'black_wins',
-		'classical',
+		'Classical',
 		'2022-12-16..18:00:00'
 	);
-	game_insert_in_history(game);
+	game_add(game);
 }
 
+console.log("==================================");
 for (let i = 0; i < mem.users.length; ++i) {
+	console.log("----------------------------------");
 	console.log(mem.users[i]);
 }
 prompt("Add 3rd game:");
@@ -85,16 +84,18 @@ console.log("Adding the second game with date '2022-12-14..18:00:00'")
 {
 	let game = new Game(
 		"3",
-		jn2.as_player(),
-		al2.as_player(),
+		jn2.get_username(), jn2.get_rating("Classical"),
+		al2.get_username(), al2.get_rating("Classical"),
 		'black_wins',
-		'classical',
+		'Classical',
 		'2022-12-14..18:00:00'
 	);
-	game_insert_in_history(game);
+	game_add(game);
 }
 
+console.log("==================================");
 for (let i = 0; i < mem.users.length; ++i) {
+	console.log("----------------------------------");
 	console.log(mem.users[i]);
 }
 prompt("Add 4th game:");
@@ -103,11 +104,11 @@ console.log("Adding the second game with date '2022-12-14..16:00:00'")
 {
 	let game = new Game(
 		"4",
-		jn1.as_player(),
-		al1.as_player(),
+		jn1.get_username(), jn1.get_rating("Classical"),
+		al1.get_username(), al1.get_rating("Classical"),
 		'white_wins',
-		'classical',
+		'Classical',
 		'2022-12-14..16:00:00'
 	);
-	game_insert_in_history(game);
+	game_add(game);
 }

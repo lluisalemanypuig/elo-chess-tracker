@@ -105,7 +105,7 @@ export async function post_games_create(req: any, res: any) {
 	
 	debug(log_now(), `    Adding game...`);
 
-	game_add(g, long_date_to_short_date(right_now));
+	game_add(g);
 
 	res.send({ 'r' : '1' });
 	return;

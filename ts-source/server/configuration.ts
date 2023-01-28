@@ -24,21 +24,68 @@ import path from "path";
 
 import { User } from "../models/user";
 import { Challenge } from '../models/challenge';
+import { RatingSystemType } from "../rating_system/rating_system_type";
+import { TimeControl } from "../models/time_control";
+import { linear_find } from "../utils/misc";
 
-/// What formula 
-export class RatingFormula {
-	public formula: Function;
+/**
+ * @brief Rating system in the web
+ */
+export class RatingSystem {
+
+	/// Function to evaluate a game
+	public formula: Function = () => void {};
+	/// Function to read a single rating JSON object
+	public rating_from_JSON: Function = () => void {};
+	/// Function to read a single rating JSON object
+	public rating_set_from_JSON: Function = () => void {};
+	/// Function to create a new rating
+	public new_rating: Function = () => void {};
+	/// All ratings used in the web
+	public all_time_controls: TimeControl[] = [];
+	
+	/// Rating System type chosen
+	public type: RatingSystemType = "";
 
 	/// The only instance of this class
-	private static instance: RatingFormula;
+	private static instance: RatingSystem;
 
-	constructor(formula: Function) {
-		this.formula = formula;
+	constructor() {
+		if (RatingSystem.instance) {
+			return RatingSystem.instance;
+		}
+		RatingSystem.instance = this;
 	}
 
-	/// Initializes the only instance with a base path
-	static initialize(formula: Function): void {
-		RatingFormula.instance = new RatingFormula(formula);
+	set_formula_function(formula: Function): void {
+		this.formula = formula;
+	}
+	set_rating_from_JSON(read_rating: Function): void {
+		this.rating_from_JSON = read_rating;
+	}
+	set_rating_set_from_JSON(read_rating_set: Function): void {
+		this.rating_set_from_JSON = read_rating_set;
+	}
+	set_new_rating(new_rating: Function): void {
+		this.new_rating = new_rating;
+	}
+	set_time_controls(all_ratings: TimeControl[]): void {
+		this.all_time_controls = all_ratings;
+	}
+	get_name_time_control(time_control_id: string): string {
+		const index = linear_find(this.all_time_controls, (t: TimeControl): boolean => { return t.id == time_control_id; });
+		if (index >= this.all_time_controls.length) { return "?"; }
+		return this.all_time_controls[index].name;
+	}
+	set_type(type: RatingSystemType): void {
+		this.type = type;
+	}
+
+	is_time_control_id_valid(id: string): boolean {
+		for (let i = 0; i < this.all_time_controls.length; ++i) {
+			if (this.all_time_controls[i].id == id) { return true; }
+		}
+		return false;
 	}
 
 	/**
@@ -46,8 +93,9 @@ export class RatingFormula {
 	 * @returns The only instance of this class
 	 * @pre Method @ref initialize must have been called before
 	 */
-	static get_instance(): RatingFormula {
-		return RatingFormula.instance;
+	static get_instance(): RatingSystem {
+		RatingSystem.instance = RatingSystem.instance || new RatingSystem();
+		return RatingSystem.instance;
 	}
 }
 
@@ -86,11 +134,6 @@ export class ServerDirectories {
 		ServerDirectories.instance = this;
 	}
 
-	/// Initializes the only instance with a base path
-	static initialize(): void {
-		ServerDirectories.instance = new ServerDirectories();
-	}
-
 	/// Sets base directory of database
 	set_database_base_directory(base_dir: string): void {
 		this.database_base_directory = base_dir;
@@ -120,6 +163,7 @@ export class ServerDirectories {
 	 * @pre Method @ref initialize must have been called before
 	 */
 	static get_instance(): ServerDirectories {
+		ServerDirectories.instance = ServerDirectories.instance || new ServerDirectories();
 		return ServerDirectories.instance;
 	}
 }

@@ -20,13 +20,11 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { Player, player_from_json } from './player';
+import { Rating } from '../rating_system/rating';
+import { RatingSystem } from '../server/configuration';
 
 /// Result of a game
 export type GameResult = "white_wins" | "black_wins" | "draw";
-
-// Type of games
-export type GameType = "classical";
 
 /**
  * @brief Class to encode a chess game.
@@ -43,43 +41,57 @@ export type GameType = "classical";
 export class Game {
 	/// Identifier of the game
 	public readonly id: string;
+	/// White player username
+	public white: string;
 	/// White in the state before the game.
-	public white: Player;
-	/// Black in the state before the game.
-	public black: Player;
+	public white_rating: Rating;
+	/// White player username
+	public black: string;
+	/// White in the state before the game.
+	public black_rating: Rating;
 	/// Result of the game.
 	public result: GameResult;
-	/// Type of the game (classical, ...)
-	public game_type: GameType;
+	/// Type of the game (classical, blitz, ...)
+	public time_control_id: string;
 	/// Date when the game took place.
 	public when: string;
 
 	/**
 	 * @brief Constructor
 	 * @param white White player
+	 * @param white_rating White rating before the game
 	 * @param black Black player
+	 * @param black_rating Black rating before the game
 	 * @param result Result of the game (white_wins, draw, black_wins)
-	 * @param game_type Type of the game (classical, rapid, blitz, ...)
+	 * @param time_control_id Time control of the game
 	 * @param when Date
 	 */
 	constructor(
 		id: string,
-		white: Player,
-		black: Player,
+		white: string,
+		white_rating: Rating,
+		black: string,
+		black_rating: Rating,
 		result: GameResult,
-		game_type: GameType,
+		time_control_id: string,
 		when: string
 	) {
 		this.id = id;
 		this.white = white;
+		this.white_rating = white_rating;
 		this.black = black;
+		this.black_rating = black_rating;
 		this.result = result;
-		this.game_type = game_type;
+		this.time_control_id = time_control_id;
 		this.when = when;
 	}
 
 	is_user_involved(username: string): boolean {
-		return this.white.get_username() == username || this.black.get_username() == username;
+		return this.white == username || this.black == username;
+	}
+
+	has_time(time_control_id: string): boolean {
+		return this.time_control_id == time_control_id;
 	}
 }
 
@@ -95,12 +107,15 @@ export function game_from_json(json: any): Game {
 		return game_from_json(json_parse);
 	}
 
+	const rating_system = RatingSystem.get_instance();
 	return new Game(
 		json["id"],
-		player_from_json(json["white"]),
-		player_from_json(json["black"]),
+		json["white"],
+		rating_system.rating_from_JSON(json["white_rating"]),
+		json["black"],
+		rating_system.rating_from_JSON(json["black_rating"]),
 		json["result"],
-		json["game_type"],
+		json["time_control"],
 		json["when"]
 	);
 }

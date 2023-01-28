@@ -1,3 +1,25 @@
+/*
+Elo rating for a Chess Club
+Copyright (C) 2023  Lluís Alemany Puig
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published
+by the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+Contact:
+	Lluís Alemany Puig
+	https://github.com/lluisalemanypuig
+*/
+
 import Debug from 'debug';
 const debug = Debug('ELO_TRACKER:server_query_games');
 
@@ -9,7 +31,7 @@ import { is_user_logged_in } from './server/session';
 import { user_retrieve } from './server/users';
 import { User } from './models/user';
 import { Game, game_set_from_json } from './models/game';
-import { RatingFormula } from './server/configuration';
+import { RatingSystem } from './server/configuration';
 import { ServerDirectories } from './server/configuration';
 import { ADMIN, MEMBER, STUDENT, TEACHER, UserRole } from './models/user_role';
 import {
@@ -17,22 +39,12 @@ import {
 } from './models/user_action'
 
 function increment(g: Game): any {
-	const formula = RatingFormula.get_instance().formula;
-	let [white_after, black_after] = formula(g);
-
-	let white_Elo_increment: number;
-	white_Elo_increment =
-		white_after.get_classical_rating().rating -
-		g.white.get_classical_rating().rating;
-
-	let black_Elo_increment: number;
-	black_Elo_increment =
-		black_after.get_classical_rating().rating -
-		g.black.get_classical_rating().rating;
-
+	const [white_after, black_after] = RatingSystem.get_instance().formula(g);
+	const white_increment = white_after.rating - g.white_rating.rating;
+	const black_increment = black_after.rating - g.black_rating.rating;
 	return {
-		'white_Elo_increment' : Math.round(white_Elo_increment),
-		'black_Elo_increment' : Math.round(black_Elo_increment)
+		'white_increment' : Math.round(white_increment),
+		'black_increment' : Math.round(black_increment)
 	};
 }
 
@@ -74,12 +86,8 @@ function filter_game_list(
 
 			if (!filter_game(g)) { continue; }
 
-			let inc = increment(g);
-			
-			let type: string = "";
-			if (g.game_type == 'classical') {
-				type = "Classical";
-			}
+			const inc = increment(g);
+			const time_control_name: string = RatingSystem.get_instance().get_name_time_control(g.time_control_id);
 
 			let result: string;
 			if (g.result == 'white_wins') {
@@ -93,15 +101,15 @@ function filter_game_list(
 			}
 
 			data_to_return.push({
-				'white': (user_retrieve(g.white.get_username()) as User).get_full_name(),
-				'black': (user_retrieve(g.black.get_username()) as User).get_full_name(),
-				'type': type,
+				'white': (user_retrieve(g.white) as User).get_full_name(),
+				'black': (user_retrieve(g.black) as User).get_full_name(),
+				'time_control': time_control_name,
 				'result': result,
 				'date' : g.when.replace('..', ' '),
-				'white_Elo': Math.round(g.white.get_classical_rating().rating),
-				'black_Elo': Math.round(g.black.get_classical_rating().rating),
-				'white_Elo_increment': (inc.white_Elo_increment < 0 ? inc.white_Elo_increment : "+" + inc.white_Elo_increment),
-				'black_Elo_increment': (inc.black_Elo_increment < 0 ? inc.black_Elo_increment : "+" + inc.black_Elo_increment)
+				'white_rating': Math.round(g.white_rating.rating),
+				'black_rating': Math.round(g.black_rating.rating),
+				'white_increment': (inc.white_Elo_increment < 0 ? inc.white_increment : "+" + inc.white_increment),
+				'black_increment': (inc.black_Elo_increment < 0 ? inc.black_increment : "+" + inc.black_increment)
 			});
 		}
 	}
@@ -158,8 +166,8 @@ export async function query_games_list_all(req: any, res: any) {
 	}
 
 	const game_contains = function(g: Game, r: UserRole): boolean {
-		const white = user_retrieve(g.white.get_username()) as User;
-		const black = user_retrieve(g.black.get_username()) as User;
+		const white = user_retrieve(g.white) as User;
+		const black = user_retrieve(g.black) as User;
 		return white.is(r) || black.is(r);
 	}
 

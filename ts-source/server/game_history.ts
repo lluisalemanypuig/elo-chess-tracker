@@ -27,11 +27,12 @@ import Debug from 'debug';
 const debug = Debug('ELO_TRACKER:server_game_history');
 
 import { Player } from '../models/player';
-import { Game, GameResult, GameType, game_set_from_json } from '../models/game';
+import { Game, GameResult, game_set_from_json } from '../models/game';
 import { User } from '../models/user';
 import { log_now, where_should_be_inserted, long_date_to_short_date, number_to_string } from '../utils/misc';
-import { RatingFormula, ServerDirectories, ServerMemory } from './configuration';
+import { RatingSystem, ServerDirectories, ServerMemory } from './configuration';
 import { user_retrieve, user_update_from_players_data } from './users';
+import { Rating } from '../rating_system/rating';
 
 /// Returns g1 < g2 using dates
 function game_compare_dates(g1: Game, g2: Game): number {
@@ -44,52 +45,52 @@ function game_compare_dates(g1: Game, g2: Game): number {
 export function game_new(
 	white: string, black: string,
 	result: GameResult,
-	type: GameType,
+	time_control_id: string,
 	when: string
 
 ): Game
 {
-	let id = ServerMemory.get_instance().num_games + 1;
+	const id_str = number_to_string(ServerMemory.get_instance().num_games + 1);
 
-	let id_str = number_to_string(id);
-
-	let white_to_assign: Player;
-	let black_to_assign: Player;
+	let white_to_assign: Rating;
+	let black_to_assign: Rating;
 
 	{
 	// get white's next game in the history
-	let next = game_next_of_player(white, when);
+	let next = game_next_of_player(white, time_control_id, when);
 	if (next != null) {
-		if (next.white.get_username() == white) {
+		if (next.white == white) {
 			// white in this game is also white in the next game
-			white_to_assign = next.white.clone();
+			white_to_assign = next.white_rating.clone();
 		}
 		else {
 			// white in this game is black in the next game
-			white_to_assign = next.black.clone();
+			white_to_assign = next.black_rating.clone();
 		}
 	}
 	else {
 		// there is no next game for white
-		white_to_assign = (user_retrieve(white) as User).as_player().clone();
+		white_to_assign =
+			(user_retrieve(white) as User).get_rating(time_control_id).clone();
 	}
 	}
 
 	{
 	// get black's next game in the history
-	let next = game_next_of_player(black, when);
+	let next = game_next_of_player(black, time_control_id, when);
 	if (next != null) {
-		if (next.white.get_username() == black) {
+		if (next.white == black) {
 			// white in this game is white in the next game
-			black_to_assign = next.white.clone();
+			black_to_assign = next.white_rating.clone();
 		}
 		else {
 			// black in this game is also black in the next game
-			black_to_assign = next.black.clone();
+			black_to_assign = next.black_rating.clone();
 		}
 	}
 	else {
-		black_to_assign = (user_retrieve(black) as User).as_player().clone();
+		black_to_assign =
+			(user_retrieve(black) as User).get_rating(time_control_id).clone();
 	}
 	}
 
@@ -97,25 +98,17 @@ export function game_new(
 	ServerMemory.get_instance().num_games += 1;
 	return new Game(
 		id_str,
-		white_to_assign, black_to_assign,
-		result, type, when
+		white, white_to_assign,
+		black, black_to_assign,
+		result, time_control_id, when
 	);
-}
-
-export function game_add(g: Game, when: string): void {
-	debug(log_now(), `Add game into the list of games played by both users...`);
-	
-	(user_retrieve(g.white.get_username() as string) as User).add_game(when);
-	(user_retrieve(g.black.get_username() as string) as User).add_game(when);
-	
-	debug(log_now(), `Inserting the game into the history...`);
-	game_insert_in_history(g);
 }
 
 /// Return the game where player 'username' is involved with
 /// date after later than date 'when'.
-export function game_next_of_player(
+function game_next_of_player(
 	username: string,
+	time_control_id: string,
 	when: string
 
 ): Game | null {
@@ -172,7 +165,7 @@ export function game_next_of_player(
 
 		// try to find the game in the game set
 		for (let i = game_idx; i < game_set.length; ++i) {
-			if (game_set[i].is_user_involved(username)) {
+			if (game_set[i].is_user_involved(username) && game_set[i].has_time(time_control_id)) {
 				return game_set[i];
 			}
 		}
@@ -197,7 +190,7 @@ export function game_next_of_player(
 		let game_set = game_set_from_json(data);
 
 		for (let i = 0; i < game_set.length; ++i) {
-			if (game_set[i].is_user_involved(username)) {
+			if (game_set[i].is_user_involved(username) && game_set[i].has_time(time_control_id)) {
 				return game_set[i];
 			}
 		}
@@ -207,10 +200,17 @@ export function game_next_of_player(
 	return null;
 }
 
+function updated_player(time_control_id: string, player: string, rating: Rating): Player {
+	let p = (user_retrieve(player) as User).clone();
+	p.set_rating(time_control_id, rating);
+	return p;
+}
+
 /// Updates the given game record
 function update_game_record(
 	game_set: Game[],
 	start_at: number,
+	time_control_id: string,
 	updated_players: Player[],
 	player_to_index: Map<string, number>
 
@@ -220,39 +220,40 @@ function update_game_record(
 		(username: string): boolean => { return player_to_index.has(username); };
 
 	for (let i = start_at; i < game_set.length; ++i) {
+		if (! game_set[i].has_time(time_control_id)) { continue; }
+
 		debug(log_now(), `    Updating game '${i}'`);
 
-		let white = game_set[i].white;
-		let black = game_set[i].black;
+		const white = game_set[i].white;
+		const black = game_set[i].black;
 
-		let white_username = white.get_username();
-		let black_username = black.get_username();
+		const white_rating = game_set[i].white_rating;
+		const black_rating = game_set[i].black_rating;
 
 		// were White or Black updated in previous iterations?
-		const white_was_updated = was_updated(white_username);
-		const black_was_updated = was_updated(black_username);
+		const white_was_updated = was_updated(white);
+		const black_was_updated = was_updated(black);
 
-		let white_idx = player_to_index.get(white_username);
-		let black_idx = player_to_index.get(black_username);
+		const white_idx = player_to_index.get(white);
+		const black_idx = player_to_index.get(black);
 
 		// set the player information in the game to the most updated version
 		if (white_was_updated) {
-			debug(log_now(), `    White in the game: ${JSON.stringify(white)}`);
+			debug(log_now(), `    White rating in the game: ${JSON.stringify(white_rating)}`);
 			debug(log_now(), `        White updated: ${JSON.stringify(updated_players[white_idx as number])}`);
-			game_set[i].white = updated_players[white_idx as number].clone();
-			debug(log_now(), `        White in the game: ${JSON.stringify(game_set[i].white)}`);
+			game_set[i].white_rating = updated_players[white_idx as number].get_rating(time_control_id).clone();
+			debug(log_now(), `        White in the game: ${JSON.stringify(game_set[i].white_rating)}`);
 		}
 		if (black_was_updated) {
-			debug(log_now(), `    Black in the game: ${JSON.stringify(black)}`);
+			debug(log_now(), `    Black in the game: ${JSON.stringify(black_rating)}`);
 			debug(log_now(), `        Black updated: ${JSON.stringify(updated_players[black_idx as number])}`);
-			game_set[i].black = updated_players[black_idx as number].clone();
+			game_set[i].black_rating = updated_players[black_idx as number].get_rating(time_control_id).clone();
 			debug(log_now(), `        Black in the game: ${JSON.stringify(game_set[i].black)}`);
 		}
 
 		if (white_was_updated || black_was_updated) {
 			// calculate result of game
-			let formula = RatingFormula.get_instance().formula;
-			let [white_after, black_after] = formula(game_set[i]);
+			const [white_after, black_after] = RatingSystem.get_instance().formula(game_set[i]);
 
 			if (!white_was_updated) {
 				debug(log_now(), `    White has been updated for the first time: ${JSON.stringify(white_after)}`);
@@ -260,11 +261,11 @@ function update_game_record(
 				// White has been updated in this game for the first time:
 				// - should be updated in future games
 				// - should be inserted into the 'updated_players' set
-				updated_players.push(white_after.clone());
-				player_to_index.set(white_username, updated_players.length - 1);
+				updated_players.push(updated_player(time_control_id, white, white_after));
+				player_to_index.set(white, updated_players.length - 1);
 			}
 			else {
-				updated_players[white_idx as number] = white_after.clone();
+				updated_players[white_idx as number] = updated_player(time_control_id, white, white_after);
 			}
 
 			if (!black_was_updated) {
@@ -274,10 +275,10 @@ function update_game_record(
 				// - should be updated in future games
 				// - should be inserted into the 'updated_players' set
 				updated_players.push(black_after.clone());
-				player_to_index.set(black_username, updated_players.length - 1);
+				updated_players.push(updated_player(time_control_id, black, black_after));
 			}
 			else {
-				updated_players[black_idx as number] = black_after.clone();
+				updated_players[black_idx as number] = updated_player(time_control_id, black, black_after);
 			}
 		}
 	}
@@ -288,32 +289,32 @@ function update_game_record(
  * @param game Game to be inserted
  * @post Users in the server are update (both memory and user files)
  */
-export function game_insert_in_history(game: Game): void
+function game_insert_in_history(game: Game): void
 {
 	// some games will change and will have to be updated
 	let updated_players: Player[] = [];
 
-	// apply Elo or other rating formula
+	// apply rating formula
 	{
-	let [white_after, black_after] = RatingFormula.get_instance().formula(game);
-	updated_players.push(white_after);
-	updated_players.push(black_after);
+	let [white_after, black_after] = RatingSystem.get_instance().formula(game);
+	updated_players.push(updated_player(game.time_control_id, game.white, white_after));
+	updated_players.push(updated_player(game.time_control_id, game.black, black_after));
 	}
 
-	let games_dir = ServerDirectories.get_instance().games_directory;
+	const games_dir = ServerDirectories.get_instance().games_directory;
 
 	debug(log_now(), "Adding game into the history...");
 	debug(log_now(), `    Game '${JSON.stringify(game)}'`);
 
 	// The file into which we have to add the new game.
-	let game_record_string = long_date_to_short_date(game.when);
+	const game_record_string = long_date_to_short_date(game.when);
 	debug(log_now(), `    Date: '${game_record_string}'`);
-	let game_record_file: string = path.join(games_dir, game_record_string);
+	const game_record_file: string = path.join(games_dir, game_record_string);
 	debug(log_now(), `    File: '${game_record_file}'`);
 
 	// The files currently existing in the 'games_directory'
 	debug(log_now(), `Reading directory '${games_dir}'...`);
-	let all_record_strings = fs.readdirSync(games_dir);
+	const all_record_strings = fs.readdirSync(games_dir);
 	debug(log_now(), `    Directory contents: '${all_record_strings}'`);
 
 	// There are no game records. Create the file and dump the game into it.
@@ -359,8 +360,8 @@ export function game_insert_in_history(game: Game): void
 	}
 
 	let player_to_index: Map<string, number> = new Map();
-	player_to_index.set(game.white.get_username(), 0);
-	player_to_index.set(game.black.get_username(), 1);
+	player_to_index.set(game.white, 0);
+	player_to_index.set(game.black, 1);
 
 	if (record_exists) {
 		// Insert the current game in an existing record and update
@@ -389,7 +390,7 @@ export function game_insert_in_history(game: Game): void
 		debug(log_now(), `    Update game record '${game_record_string}'`);
 
 		// update record of the current game
-		update_game_record(game_set, game_idx + 1, updated_players, player_to_index);
+		update_game_record(game_set, game_idx + 1, game.time_control_id, updated_players, player_to_index);
 
 		debug(log_now(), `    Writing game record '${game_record_file}'...`);
 		fs.writeFileSync(game_record_file, JSON.stringify(game_set, null, 4), { flag: 'w' });
@@ -410,13 +411,13 @@ export function game_insert_in_history(game: Game): void
 
 		// read and parse the next file
 		debug(log_now(), `    Reading game record '${record_file}'...`);
-		let data = fs.readFileSync(record_file, 'utf8');
+		const data = fs.readFileSync(record_file, 'utf8');
 		debug(log_now(), `        Game record '${record_file}' read.`);
 		let game_set = game_set_from_json(data);
 
 		// update the current record
 		debug(log_now(), `    Updating game record '${record_file}'...`);
-		update_game_record(game_set, 0, updated_players, player_to_index);
+		update_game_record(game_set, 0, game.time_control_id, updated_players, player_to_index);
 		debug(log_now(), `        Amount of updated players: '${updated_players.length}'...`);
 		for (let j = 0; j < updated_players.length; ++j) {
 		debug(log_now(), `        Player: '${JSON.stringify(updated_players[j])}'...`);
@@ -429,4 +430,19 @@ export function game_insert_in_history(game: Game): void
 	}
 
 	user_update_from_players_data(updated_players);
+}
+
+/**
+ * @brief Add a game to the server
+ * @param g Game
+ */
+export function game_add(g: Game): void {
+	debug(log_now(), `Add game into the list of games played by both users...`);
+	
+	const when = long_date_to_short_date(g.when);
+	(user_retrieve(g.white) as User).add_game(when);
+	(user_retrieve(g.black) as User).add_game(when);
+	
+	debug(log_now(), `Inserting the game into the history...`);
+	game_insert_in_history(g);
 }

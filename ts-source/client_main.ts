@@ -139,22 +139,24 @@ async function fill_own_info() {
 	div.appendChild(label_fullname);
 	div.appendChild(document.createElement("br"));
 	}
-	let data_classical = data.classical;
-	div.appendChild(document.createTextNode("Classical:"));
-	div.appendChild(document.createElement("br"));
-	{
-	div.appendChild(document.createTextNode("Rating: " + data_classical.rating));
-	div.appendChild(document.createElement("br"));
-	}
-	{
-	div.appendChild(document.createTextNode("Games: " + data_classical.num_games));
-	div.appendChild(document.createElement("br"));
-	}
-	{
-	div.appendChild(document.createTextNode("K: " + data_classical.K));
-	div.appendChild(document.createElement("br"));
-	}
 
+	const ratings = data.ratings as any[];
+	for (let i = 0; i < ratings.length; ++i) {
+		const data_i = ratings[i];
+		div.appendChild(document.createTextNode(data_i.id + ":"));
+		div.appendChild(document.createElement("br"));
+
+		const rating_i = data_i.v;
+		{
+		div.appendChild(document.createTextNode("Rating: " + rating_i.rating));
+		div.appendChild(document.createElement("br"));
+		}
+		{
+		div.appendChild(document.createTextNode("Games: " + rating_i.num_games));
+		div.appendChild(document.createElement("br"));
+		}
+	}
+	
 	div.appendChild(document.createElement("br"));
 }
 

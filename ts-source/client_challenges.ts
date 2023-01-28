@@ -202,21 +202,31 @@ async function fill_challenges_sent_list() {
 }
 
 async function fill_challenges_pending_set_result_list() {
-	const response = await fetch(
+	const response_challenges_pending = await fetch(
 		"/query_challenges_pending_set_result",
 		{
 			method: 'GET',
 			headers: { 'Content-type': 'application/json; charset=UTF-8' }
 		}
 	);
-	const data = await response.json();
+	const challenges_pending = await response_challenges_pending.json();
 
-	if (data.r == '0') {
+	const response_time_control = await fetch(
+		"/query_time_controls",
+		{
+			method: 'GET',
+			headers: { 'Content-type': 'application/json; charset=UTF-8' }
+		}
+	);
+	const time_control = await response_time_control.json();
+
+	if (challenges_pending.r == '0') {
 		// something went wrong, do nothing
 		return;
 	}
 
-	const challenge_data = data.c as any[];
+	const challenge_data = challenges_pending.c as any[];
+	const time_control_data = time_control.data as any[];
 
 	let challenge_list = document.createElement("ul") as HTMLUListElement;
 	challenge_data.forEach(
@@ -292,6 +302,24 @@ async function fill_challenges_pending_set_result_list() {
 			challenge_list.appendChild(document.createTextNode("  "));
 			}
 
+			// Time control of the game
+			{
+			challenge_list.appendChild(document.createTextNode("Time control:"));
+			challenge_list.appendChild(document.createTextNode(" "));
+			let result_select = document.createElement("select");
+			result_select.id = "time_control_select_" + elem.id;
+			
+			for (let i = 0; i < time_control_data.length; ++i) {
+				let option_i = document.createElement("option");
+				option_i.text = time_control_data[i].name;
+				option_i.value = time_control_data[i].id;
+				result_select.appendChild(option_i);
+			}
+			
+			challenge_list.appendChild(result_select);
+			challenge_list.appendChild(document.createTextNode("  "));
+			}
+
 			challenge_list.appendChild(document.createElement("br"));
 			challenge_list.appendChild(document.createElement("br"));
 
@@ -318,10 +346,12 @@ async function submit_result_challenge_button_clicked(event: any) {
 	let white_select = document.getElementById("white_select_" + challenge_id) as HTMLSelectElement;
 	let black_select = document.getElementById("black_select_" + challenge_id) as HTMLSelectElement;
 	let result_select = document.getElementById("result_select_" + challenge_id) as HTMLSelectElement;
+	let time_control_select = document.getElementById("time_control_select_" + challenge_id) as HTMLSelectElement;
 
 	let white_username = white_select.options[white_select.selectedIndex].value;
 	let black_username = black_select.options[black_select.selectedIndex].value;
 	let result = result_select.options[result_select.selectedIndex].value;
+	let time_control = time_control_select.options[time_control_select.selectedIndex].value;
 
 	// "query" the server
 	const response = await fetch(
@@ -332,7 +362,8 @@ async function submit_result_challenge_button_clicked(event: any) {
 				'challenge_id' : challenge_id,
 				'white' : white_username,
 				'black' : black_username,
-				'result' : result
+				'result' : result,
+				'time_control' : time_control
 			}),
 			headers: { 'Content-type': 'application/json; charset=UTF-8' }
 		}
@@ -368,7 +399,8 @@ async function fill_challenges_result_set_by_me_list() {
 	challenge_data.forEach(
 		function (elem: any) {
 			let li = document.createElement("li") as HTMLLIElement;
-			li.textContent = `On ${elem.sent_when.replace('..', ' ')}. White: ${elem.white}. Black: ${elem.black}. Result: ${elem.result}`;
+			li.textContent =
+				`On ${elem.sent_when.replace('..', ' ')}. White: ${elem.white}. Black: ${elem.black}. Result: ${elem.result}. Time control: ${elem.time_control}`;
 
 			// append paragraph to element list
 			challenge_list.appendChild(li);
@@ -399,7 +431,8 @@ async function fill_challenges_result_set_by_opponent_list() {
 	challenge_data.forEach(
 		function (elem: any) {
 			let li = document.createElement("li") as HTMLLIElement;
-			li.textContent = `On ${elem.sent_when.replace('..', ' ')}. White: ${elem.white}. Black: ${elem.black}. Result: ${elem.result}. `;
+			li.textContent =
+				`On ${elem.sent_when.replace('..', ' ')}. White: ${elem.white}. Black: ${elem.black}. Result: ${elem.result}. Time control: ${elem.time_control}. `;
 
 			// add accept tag
 			let accept_tag = document.createElement("a") as HTMLAnchorElement;

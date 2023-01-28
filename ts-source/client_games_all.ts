@@ -33,10 +33,10 @@ window.onload = async function () {
 		row.appendChild(new_cell(games[i].result));
 		row.appendChild(new_cell(games[i].date));
 		row.appendChild(new_cell(games[i].type));
-		row.appendChild(new_cell(games[i].white_Elo));
-		row.appendChild(new_cell(games[i].white_Elo_increment));
-		row.appendChild(new_cell(games[i].black_Elo));
-		row.appendChild(new_cell(games[i].black_Elo_increment));
+		row.appendChild(new_cell(games[i].white_rating));
+		row.appendChild(new_cell(games[i].white_increment));
+		row.appendChild(new_cell(games[i].black_rating));
+		row.appendChild(new_cell(games[i].black_increment));
 
 		tbody.appendChild(row);
 	}

@@ -90,6 +90,10 @@ import { query_games_list_own, query_games_list_all } from './server_query_games
 router.get('/query_games_own', query_games_list_own);
 router.get('/query_games_all', query_games_list_all);
 
+// implement query time controls
+import { get_time_control } from './server_query_time_control';
+router.get('/query_time_controls', get_time_control);
+
 // implement user login
 import { user_log_in } from './server_login';
 router.post('/login', user_log_in);
@@ -109,7 +113,7 @@ router.get('/user_edit', get_user_edit_page);
 router.post('/user_edit', post_user_edit);
 
 // implement change of password
-import { get_change_password_page, post_change_password } from './server_change_password';
+import { get_change_password_page, post_change_password } from './server_password_change';
 router.get('/change_password', get_change_password_page);
 router.post('/change_password', post_change_password);
 

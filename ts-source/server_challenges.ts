@@ -37,7 +37,7 @@ import {
 	challenge_agree_result,
 	challenge_can_user_send
 } from './server/challenges';
-import { user_exists, user_retrieve } from './server/users';
+import { user_exists } from './server/users';
 import { Challenge } from './models/challenge';
 import { User } from './models/user';
 import { CHALLENGE_USER } from './models/user_action';
@@ -200,12 +200,14 @@ export async function post_challenge_set_result(req: any, res: any) {
 	const challenge_id = req.body.challenge_id;
 	const white_username = req.body.white;
 	const black_username = req.body.black;
+	const time_control = req.body.time_control;
 	const result = req.body.result;
 
 	debug(log_now(), `User '${this_username}' is trying to set the result of a challenge`);
 	debug(log_now(), `    Challenge id: '${challenge_id}'`);
 	debug(log_now(), `    White: '${white_username}'`);
 	debug(log_now(), `    Black: '${black_username}'`);
+	debug(log_now(), `    Time control: '${time_control}'`);
 	debug(log_now(), `    Result: '${result}'`);
 
 	if (white_username == black_username) {
@@ -271,7 +273,7 @@ export async function post_challenge_set_result(req: any, res: any) {
 			white_username,
 			black_username,
 			result,
-			"classical"
+			time_control
 		);
 	}
 	else {
@@ -283,7 +285,7 @@ export async function post_challenge_set_result(req: any, res: any) {
 			white_username,
 			black_username,
 			result,
-			"classical"
+			time_control
 		);
 	}
 

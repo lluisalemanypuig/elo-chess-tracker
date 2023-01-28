@@ -28,7 +28,7 @@ const debug = Debug('ELO_TRACKER:server_users');
 import { Player } from '../models/player';
 import { User } from '../models/user';
 import { ServerDirectories, ServerMemory } from './configuration';
-import { log_now, where_should_be_inserted } from '../utils/misc';
+import { log_now } from '../utils/misc';
 import { assert } from 'console';
 import { UserRole } from '../models/user_role';
 
@@ -137,8 +137,9 @@ export function user_update_from_players_data(players: Player[]): void {
 	for (let i = 0; i < players.length; ++i) {
 		let u = user_retrieve(players[i].get_username()) as User;
 		
-		// update 'u' only if necessary
-		u.copy_player_data(players[i]);
+		const all_ratings_u = players[i].get_all_ratings();
+		u.set_rating(all_ratings_u[0].time_control, all_ratings_u[0].rating);
+		
 		users_to_update.push(u);
 	}
 	
@@ -150,7 +151,7 @@ export function user_update_from_players_data(players: Player[]): void {
 	debug(log_now(), "Updating users...");
 	for (let i = 0; i < users_to_update.length; ++i) {
 		let u = users_to_update[i];
-		let user_filename = path.join(server_dirs.users_directory, u.get_username());
+		const user_filename = path.join(server_dirs.users_directory, u.get_username());
 
 		// update player file
 		debug(log_now(), `    User file '${user_filename}'...`);

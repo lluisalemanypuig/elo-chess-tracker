@@ -26,35 +26,51 @@ import Debug from 'debug';
 const debug = Debug('ELO_TRACKER:server_initialization');
 
 import { log_now } from '../utils/misc';
-import { ServerMemory, ServerDirectories, RatingFormula } from "./configuration";
+import { ServerMemory, ServerDirectories, RatingSystem } from "./configuration";
 import { user_from_json } from '../models/user';
 import { challenge_from_json } from '../models/challenge';
 import { game_set_from_json } from '../models/game';
-
-import { player_vs_player as Test } from '../rating_system/test';
-import { player_vs_player as Elo } from '../rating_system/Elo';
 import { ADMIN, MEMBER, STUDENT, TEACHER } from '../models/user_role';
 import { UserRoleToUserAction } from '../models/user_role_action';
+import { TimeControl } from '../models/time_control';
+
+import { player_vs_player as Elo } from '../rating_system/Elo/formula';
+import { Elo_rating_from_json, Elo_rating_set_from_json, Elo_rating_new } from '../rating_system/Elo/rating';
 
 function initialize_sessions(): void {
+	debug(log_now(), "Initialize sessions...");
+
 	let memory = ServerMemory.get_instance();
 	// Session ids. Empty
 	memory.session_ids = [];
 }
 
 function initialize_users(): void {
+	debug(log_now(), "Initialize users...");
+
+	let rating_system = RatingSystem.get_instance();
 	let memory = ServerMemory.get_instance();
 	let dir = ServerDirectories.get_instance().users_directory;
 
-	debug(log_now(), `Reading directory '${dir}'`);
+	debug(log_now(), `    Reading directory '${dir}'`);
 	let all_user_files = fs.readdirSync(dir);
 
 	for (let i = 0; i < all_user_files.length; ++i) {
 		let user_file = path.join(dir, all_user_files[i]);
 
-		debug(log_now(), `    Reading file '${user_file}'`);
+		debug(log_now(), `        Reading file '${user_file}'`);
 		let user_data = fs.readFileSync(user_file, 'utf8');
 		let user = user_from_json(user_data);
+
+		// make sure that all users have a rating for every time control
+		for (let i = 0; i < rating_system.all_time_controls.length; ++i) {
+			if (! user.has_rating(rating_system.all_time_controls[i].id)) {
+				user.add_rating(
+					rating_system.all_time_controls[i].id,
+					rating_system.new_rating()
+				);
+			}
+		}
 
 		memory.users.push(user);
 		memory.user_to_index.set(user.get_username(), i);
@@ -64,16 +80,18 @@ function initialize_users(): void {
 }
 
 function initialize_challenges(): void {
+	debug(log_now(), "Initialize challenges...");
+
 	let memory = ServerMemory.get_instance();
 	let dir = ServerDirectories.get_instance().challenges_directory;
 
-	debug(log_now(), `Reading directory '${dir}'`);
+	debug(log_now(), `    Reading directory '${dir}'`);
 	let all_challenges_files = fs.readdirSync(dir);
 
 	for (let i = 0; i < all_challenges_files.length; ++i) {
 		let challenge_file = path.join(dir, all_challenges_files[i]);
 
-		debug(log_now(), `    Reading file '${challenge_file}'`);
+		debug(log_now(), `        Reading file '${challenge_file}'`);
 		let challenge_data = fs.readFileSync(challenge_file, 'utf8');
 
 		memory.challenges.push(challenge_from_json(challenge_data));
@@ -82,16 +100,18 @@ function initialize_challenges(): void {
 }
 
 function initialize_games(): void {
+	debug(log_now(), "Initialize games...");
+
 	let memory = ServerMemory.get_instance();
 	let dir = ServerDirectories.get_instance().games_directory;
 
-	debug(log_now(), `Reading directory '${dir}'`);
+	debug(log_now(), `    Reading directory '${dir}'`);
 	let all_game_record_files = fs.readdirSync(dir);
 
 	for (let i = 0; i < all_game_record_files.length; ++i) {
 		let game_record_file = path.join(dir, all_game_record_files[i]);
 
-		debug(log_now(), `    Reading file '${game_record_file}'`);
+		debug(log_now(), `        Reading file '${game_record_file}'`);
 		let game_record_data = fs.readFileSync(game_record_file, 'utf8');
 		let game_set = game_set_from_json(game_record_data);
 
@@ -101,6 +121,8 @@ function initialize_games(): void {
 }
 
 function initialize_permissions(permission_data: any): void {
+	debug(log_now(), "Initialize permissions...");
+
 	let actions = UserRoleToUserAction.get_instance();
 
 	// ADMIN
@@ -121,9 +143,30 @@ function initialize_permissions(permission_data: any): void {
 	}
 }
 
+function initialize_time_controls(time_control_array: any): void {
+	debug(log_now(), "Initialize time controls...");
+	
+	let all_time_controls: TimeControl[] = [];
+	for (var time_control in time_control_array) {
+		let tc = time_control_array[time_control];
+		all_time_controls.push( new TimeControl(tc.id, tc.name) );
+	}
+	
+	RatingSystem.get_instance().set_time_controls(all_time_controls);
+
+	debug(log_now(), `    Found '${all_time_controls.length}' rating types:`);
+	for (let i = 0; i < all_time_controls.length; ++i) {
+		debug(log_now(), `        * Id '${all_time_controls[i].id}'`);
+		debug(log_now(), `          Name '${all_time_controls[i].name}'`);
+	}
+}
+
 export function server_initialize_from_data(configuration_data: any): void {
 	const database_base_directory = configuration_data.database_base_directory;
 	debug(log_now(), `    Base directory: '${database_base_directory}'`);
+
+	//
+	// initialize directories
 
 	const ssl_certificate_directory = configuration_data.ssl_certificate.directory;
 	const public_key_file = configuration_data.ssl_certificate.public_key_file;
@@ -134,12 +177,6 @@ export function server_initialize_from_data(configuration_data: any): void {
 	debug(log_now(), `        Private key file: '${private_key_file}'`);
 	debug(log_now(), `        Passphrase: '${passphrase_file}'`);
 
-	const rating_system = configuration_data.rating_system;
-	debug(log_now(), `    Rating system: '${rating_system}'`);
-
-	// initialize directories
-	ServerDirectories.initialize();
-	
 	ServerDirectories.get_instance().set_database_base_directory(database_base_directory);
 	debug(log_now(), `    Games directory: '${ServerDirectories.get_instance().games_directory}'`);
 	debug(log_now(), `    Users directory: '${ServerDirectories.get_instance().users_directory}'`);
@@ -151,15 +188,24 @@ export function server_initialize_from_data(configuration_data: any): void {
 	debug(log_now(), `        Private key file: '${ServerDirectories.get_instance().private_key_file}'`);
 	debug(log_now(), `        Passphrase: '${ServerDirectories.get_instance().passphrase_file}'`);
 
-	// initialize rating formula
-	if (rating_system == 'Test') {
-		RatingFormula.initialize(Test);
+	// initialize rating system
+	{
+	const rating_type = configuration_data.rating_system;
+	debug(log_now(), `    Rating system: '${rating_type}'`);
+	let rating_system = RatingSystem.get_instance();
+	if (rating_type == 'Elo') {
+		rating_system.set_formula_function(Elo);
+		rating_system.set_rating_from_JSON(Elo_rating_from_json);
+		rating_system.set_rating_set_from_JSON(Elo_rating_set_from_json);
+		rating_system.set_new_rating(Elo_rating_new);
 	}
-	else if (rating_system == 'Elo') {
-		RatingFormula.initialize(Elo);
+	else {
+		debug(log_now(), `Invalid rating system '${rating_type}'`);
+	}
 	}
 
 	initialize_permissions(configuration_data.permissions);
+	initialize_time_controls(configuration_data.time_controls);
 	initialize_sessions();
 	initialize_users();
 	initialize_challenges();
@@ -167,14 +213,15 @@ export function server_initialize_from_data(configuration_data: any): void {
 }
 
 /// Initializes the server memory
-export function server_initialize_from_configuration_file(): void {
-
-	const configuration_file = path.join(__dirname, "../../system_configuration.json");
-
+export function server_initialize_from_configuration_file(configuration_file: string): void {
 	debug(log_now(), `Reading configuration file '${configuration_file}'`);
 
 	const data = fs.readFileSync(configuration_file, 'utf8');
 	const json_data = JSON.parse(data);
 
 	server_initialize_from_data(json_data);
+}
+export function server_initialize_from_default_configuration_file(): void {
+	const configuration_file = path.join(__dirname, "../../system_configuration.json");
+	server_initialize_from_configuration_file(configuration_file);
 }

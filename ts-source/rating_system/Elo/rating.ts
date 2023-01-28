@@ -20,21 +20,12 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
+import { Rating } from "../rating";
+
 /**
  * @brief Simple class to encode a rating.
  */
-export class Rating {
-	/// Actual rating 
-	public rating: number;
-	/// Number of games
-	public num_games: number;
-	/// Number of won games
-	public won: number;
-	/// Number of drawn games
-	public drawn: number;
-	/// Number of lost games
-	public lost: number;
-
+export class EloRating extends Rating {
 	/// Constant
 	public K: number;
 
@@ -54,23 +45,25 @@ export class Rating {
 		drawn: number,
 		lost: number,
 		K: number
-	) {
-		this.rating = rating;
-		this.num_games = num_games;
-		this.won = won;
-		this.drawn = drawn;
-		this.lost = lost;
+	)
+	{
+		super(rating, num_games, won, drawn, lost);
+
 		this.K = K;
 	}
 
 	/// Clones the object.
-	clone(): Rating {
-		return new Rating(
+	clone(): EloRating {
+		return new EloRating(
 			this.rating,
 			this.num_games, this.won, this.drawn, this.lost,
 			this.K
 		);
 	}
+}
+
+export function Elo_rating_new(): EloRating {
+	return new EloRating(1500, 0, 0, 0, 0, 40);
 }
 
 /**
@@ -79,13 +72,13 @@ export class Rating {
  * @returns A new Player object.
  * @pre If @e json is a string then it cannot start with '['.
  */
-export function rating_from_json(json: any): Rating {
+export function Elo_rating_from_json(json: any): EloRating {
 	if (typeof json == "string") {
 		let json_parse = JSON.parse(json);
-		return rating_from_json(json_parse);
+		return Elo_rating_from_json(json_parse);
 	}
 
-	return new Rating(
+	return new EloRating(
 		json["rating"],
 		json["num_games"], json["won"], json["drawn"], json["lost"],
 		json["K"]
@@ -97,15 +90,15 @@ export function rating_from_json(json: any): Rating {
  * @param json A JSON string or object with data of several Rating.
  * @returns An array of Rating objects.
  */
-export function rating_set_from_json(json: any): Rating[] {
+export function Elo_rating_set_from_json(json: any): EloRating[] {
 	if (typeof json == "string") {
 		let json_parse = JSON.parse(json);
-		return rating_set_from_json(json_parse);
+		return Elo_rating_set_from_json(json_parse);
 	}
 
-	let rating_set: Rating[] = [];
+	let rating_set: EloRating[] = [];
 	for (var rating in json) {
-		rating_set.push(rating_from_json(json[rating]));
+		rating_set.push(Elo_rating_from_json(json[rating]));
 	}
 	return rating_set;
 }
