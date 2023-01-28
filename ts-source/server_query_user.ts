@@ -123,7 +123,7 @@ export async function query_user_modify(req: any, res: any) {
 }
 
 export async function query_ranking_users(req: any, res: any) {
-	debug(log_now(), "GET query_ranking_users...");
+	debug(log_now(), "POST query_ranking_users...");
 
 	const session_id = req.cookies.session_id;
 	const username = req.cookies.user;
@@ -134,6 +134,8 @@ export async function query_ranking_users(req: any, res: any) {
 		return;
 	}
 
+	const time_control_id = req.body.tc_i;
+
 	let users: any[] = [];
 
 	{
@@ -141,18 +143,18 @@ export async function query_ranking_users(req: any, res: any) {
 	for (let i = 0; i < users_array.length; ++i) {
 		users.push({
 			'name' : users_array[i].get_full_name(),
-			'elo' : Math.round(users_array[i].get_rating("classical").rating),
-			'total_games' : users_array[i].get_rating("classical").num_games,
-			'won' : users_array[i].get_rating("classical").won,
-			'drawn' : users_array[i].get_rating("classical").drawn,
-			'lost' : users_array[i].get_rating("classical").lost
+			'rating' : Math.round(users_array[i].get_rating(time_control_id).rating),
+			'total_games' : users_array[i].get_rating(time_control_id).num_games,
+			'won' : users_array[i].get_rating(time_control_id).won,
+			'drawn' : users_array[i].get_rating(time_control_id).drawn,
+			'lost' : users_array[i].get_rating(time_control_id).lost
 		});
 	}
 	}
 	users.sort(
 		(u1: any, u2: any): number => {
-			if (u1.elo < u2.elo) { return 1; }
-			if (u1.elo == u2.elo) { return 0; }
+			if (u1.rating < u2.rating) { return 1; }
+			if (u1.rating == u2.rating) { return 0; }
 			return -1;
 		}
 	);

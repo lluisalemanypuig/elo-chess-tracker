@@ -25,7 +25,7 @@ Contact:
 
 <head>
 	<meta charset="UTF-8">
-	<script type="text/javascript" src="js-source/bdl__client_ranking.js"> </script>
+	<script type="text/javascript" src="js-source/bdl__client_user_ranking.js"> </script>
 
 	<style>
 	table {
@@ -48,16 +48,24 @@ Contact:
 	<center>
 	<h1>Ranking</h1>
 
+	<label>Time control:</label>
+	<select id="time_control_select"></select>
+	<br><br>
+
 	<div id="users_ranking">
 		<table id="users_table">
+			<thead>
 			<tr>
 				<th>Player</th>
-				<th>Elo rating</th>
+				<th>Rating</th>
 				<th>Games played</th>
                 <th>Won</th>
                 <th>Drawn</th>
                 <th>Lost</th>
 			</tr>
+			</thead>
+			<tbody>
+			</tbody>
 		</table>
 	</div>
 	</center>

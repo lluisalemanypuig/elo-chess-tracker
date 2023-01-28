@@ -45,7 +45,7 @@ function game_compare_dates(g1: Game, g2: Game): number {
 export function game_new(
 	white: string, black: string,
 	result: GameResult,
-	time_control_id: string,
+	time_control_id: string, time_control_name: string,
 	when: string
 
 ): Game
@@ -100,7 +100,9 @@ export function game_new(
 		id_str,
 		white, white_to_assign,
 		black, black_to_assign,
-		result, time_control_id, when
+		result,
+		time_control_id, time_control_name,
+		when
 	);
 }
 

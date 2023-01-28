@@ -26,6 +26,22 @@ Contact:
 <head>
 	<meta charset="UTF-8">
 	<script type="text/javascript" src="js-source/bdl__client_main.js"> </script>
+
+	<style>
+	table {
+		border: 1px solid;
+			color: black
+	}
+	table, td, th {
+		border-collapse: collapse;
+		border-right: 1px solid;
+			color: black
+	}
+	td, th {
+		padding: 5px;
+		text-align: center;
+	}
+	</style>
 </head>
 
 <body>
@@ -33,6 +49,19 @@ Contact:
 	<h1>MAIN</h1>
 
 	<div id="user_info" class="text-center">
+		<div id="user_name" class="text-center"></div>
+		<div id="user_ratings" class="text-center">
+			<table id="user_ratings_table">
+				<tr>
+					<th>Time control</th>
+					<th>Rating</th>
+					<th>Total games</th>
+					<th>Won</th>
+					<th>Drawn</th>
+					<th>Lost</th>
+				</tr>
+			</table>
+		</div>
 	</div>
 
 	<div id="special_action_links">

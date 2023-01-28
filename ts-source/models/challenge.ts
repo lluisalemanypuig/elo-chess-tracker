@@ -58,6 +58,7 @@ export class Challenge {
 	private black: string | null = null;
 	private result: GameResult | null = null;
 	private time_control_id: string | null = null;
+	private time_control_name: string | null = null;
 
 	/**
 	 * @brief Constructor
@@ -75,6 +76,7 @@ export class Challenge {
 	 * @param black Black player
 	 * @param result Result of the game
 	 * @param time_control_id Time control id of the game
+	 * @param time_control_name Time control name of the game
 	 */
 	constructor(
 		id: string,
@@ -95,7 +97,8 @@ export class Challenge {
 		white: string | null = null,
 		black: string | null = null,
 		result: GameResult | null = null,
-		time_control_id: string | null = null
+		time_control_id: string | null = null,
+		time_control_name: string | null = null
 	) {
 		this.id = id;
 
@@ -116,6 +119,7 @@ export class Challenge {
 		this.black = black;
 		this.result = result;
 		this.time_control_id = time_control_id;
+		this.time_control_name = time_control_name;
 	}
 
 	/// Returns the id of the challenge
@@ -147,9 +151,10 @@ export class Challenge {
 	get_black(): string | null { return this.black; }
 	/// Result of the game
 	get_result(): GameResult | null { return this.result; }
-	/// Type of game
-	
+	/// Time control id of the game
 	get_time_control_id(): string | null { return this.time_control_id; }
+	/// Time control name of the game
+	get_time_control_name(): string | null { return this.time_control_name; }
 	/// Sets the date when the challenge was accepted
 	set_challenge_accepted(d: string): void { this.when_challenge_accepted = d; }
 
@@ -163,7 +168,8 @@ export class Challenge {
 		white: string,
 		black: string,
 		result: GameResult,
-		time_control_id: string
+		time_control_id: string,
+		time_control_name: string
 
 	): void {
 		this.result_was_set = true;
@@ -186,6 +192,7 @@ export class Challenge {
 		this.black = null;
 		this.result = null;
 		this.time_control_id = null;
+		this.time_control_name = null;
 	}
 
 	/// Accepts the result

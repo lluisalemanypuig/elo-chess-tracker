@@ -222,7 +222,7 @@ export async function query_challenges_result_set_by_me(req: any, res: any) {
 			'white' : (user_retrieve(c.get_white() as string) as User).get_full_name(),
 			'black' : (user_retrieve(c.get_black() as string) as User).get_full_name(),
 			'result' : nice_result,
-			'time_control' : c.get_time_control_id()
+			'time_control' : c.get_time_control_name()
 		});
 	}
 
@@ -286,7 +286,7 @@ export async function query_challenges_result_set_by_opponent(req: any, res: any
 			'white' : (user_retrieve(c.get_white() as string) as User).get_full_name(),
 			'black' : (user_retrieve(c.get_black() as string) as User).get_full_name(),
 			'result' : nice_result,
-			'time_control' : c.get_time_control_id()
+			'time_control' : c.get_time_control_name()
 		});
 	}
 

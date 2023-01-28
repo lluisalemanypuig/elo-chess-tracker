@@ -51,8 +51,10 @@ export class Game {
 	public black_rating: Rating;
 	/// Result of the game.
 	public result: GameResult;
-	/// Type of the game (classical, blitz, ...)
+	/// Time control id (Classical, Blitz, ...)
 	public time_control_id: string;
+	/// Time control name (Classical (90 + 30), Blitz (5 + 3), ...)
+	public time_control_name: string;
 	/// Date when the game took place.
 	public when: string;
 
@@ -63,7 +65,8 @@ export class Game {
 	 * @param black Black player
 	 * @param black_rating Black rating before the game
 	 * @param result Result of the game (white_wins, draw, black_wins)
-	 * @param time_control_id Time control of the game
+	 * @param time_control_id Time control id of the game
+	 * @param time_control_name Time control name of the game
 	 * @param when Date
 	 */
 	constructor(
@@ -74,6 +77,7 @@ export class Game {
 		black_rating: Rating,
 		result: GameResult,
 		time_control_id: string,
+		time_control_name: string,
 		when: string
 	) {
 		this.id = id;
@@ -83,6 +87,7 @@ export class Game {
 		this.black_rating = black_rating;
 		this.result = result;
 		this.time_control_id = time_control_id;
+		this.time_control_name = time_control_name;
 		this.when = when;
 	}
 
@@ -115,7 +120,8 @@ export function game_from_json(json: any): Game {
 		json["black"],
 		rating_system.rating_from_JSON(json["black_rating"]),
 		json["result"],
-		json["time_control"],
+		json["time_control_id"],
+		json["time_control_name"],
 		json["when"]
 	);
 }

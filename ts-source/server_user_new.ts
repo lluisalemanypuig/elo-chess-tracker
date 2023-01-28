@@ -93,14 +93,12 @@ export async function post_user_create(req: any, res: any) {
 	const new_lastname = req.body.ln;
 	const new_roles = req.body.r;
 	const new_password = req.body.p;
-	const new_classical_rating = req.body.cr;
 
 	debug(log_now(), `User '${req.cookies.user}' is trying to create a new user:`);
 	debug(log_now(), `    Username: '${new_username}'`);
 	debug(log_now(), `    First name: '${new_firstname}'`);
 	debug(log_now(), `    Last name: '${new_lastname}'`);
 	debug(log_now(), `    Roles: '${new_roles}'`);
-	debug(log_now(), `    Classical rating: '${new_classical_rating}'`);
 
 	if (user_exists(new_username)) {
 		res.send({

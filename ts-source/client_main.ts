@@ -122,8 +122,8 @@ async function fill_own_info() {
 	// add hrefs according to the user's permissions.
 	fill_action_links(data.actions);
 
-	let div = document.getElementById("user_info") as HTMLDivElement;
 	{
+	let div = document.getElementById("user_name") as HTMLDivElement;
 	let label_fullname = document.createElement("label");
 	label_fullname.textContent = data.fullname;
 
@@ -138,26 +138,40 @@ async function fill_own_info() {
 
 	div.appendChild(label_fullname);
 	div.appendChild(document.createElement("br"));
+	div.appendChild(document.createElement("br"));
 	}
+
+	{
+	const new_cell = function(text: string) {
+		let cell = document.createElement("td");
+		cell.innerHTML = text;
+		return cell;
+	}
+
+	let table = document.getElementById("user_ratings_table") as HTMLTableElement;
+    let tbody = table.getElementsByTagName("tbody")[0];
 
 	const ratings = data.ratings as any[];
 	for (let i = 0; i < ratings.length; ++i) {
 		const data_i = ratings[i];
-		div.appendChild(document.createTextNode(data_i.id + ":"));
-		div.appendChild(document.createElement("br"));
+		
+		let row = document.createElement("tr");
 
-		const rating_i = data_i.v;
-		{
-		div.appendChild(document.createTextNode("Rating: " + rating_i.rating));
-		div.appendChild(document.createElement("br"));
-		}
-		{
-		div.appendChild(document.createTextNode("Games: " + rating_i.num_games));
-		div.appendChild(document.createElement("br"));
-		}
+		row.appendChild(new_cell(data_i.id));
+		row.appendChild(new_cell(data_i.v.rating));
+		row.appendChild(new_cell(data_i.v.num_games));
+		row.appendChild(new_cell(data_i.v.won));
+		row.appendChild(new_cell(data_i.v.drawn));
+		row.appendChild(new_cell(data_i.v.lost));
+
+		tbody.appendChild(row);
+	}
 	}
 	
+	{
+	let div = document.getElementById("user_info") as HTMLDivElement;
 	div.appendChild(document.createElement("br"));
+	}
 }
 
 window.onload = function () {

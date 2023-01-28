@@ -200,14 +200,16 @@ export async function post_challenge_set_result(req: any, res: any) {
 	const challenge_id = req.body.challenge_id;
 	const white_username = req.body.white;
 	const black_username = req.body.black;
-	const time_control = req.body.time_control;
+	const time_control_id = req.body.time_control_id;
+	const time_control_name = req.body.time_control_name;
 	const result = req.body.result;
 
 	debug(log_now(), `User '${this_username}' is trying to set the result of a challenge`);
 	debug(log_now(), `    Challenge id: '${challenge_id}'`);
 	debug(log_now(), `    White: '${white_username}'`);
 	debug(log_now(), `    Black: '${black_username}'`);
-	debug(log_now(), `    Time control: '${time_control}'`);
+	debug(log_now(), `    Time control id: '${time_control_id}'`);
+	debug(log_now(), `    Time control name: '${time_control_name}'`);
 	debug(log_now(), `    Result: '${result}'`);
 
 	if (white_username == black_username) {
@@ -273,7 +275,8 @@ export async function post_challenge_set_result(req: any, res: any) {
 			white_username,
 			black_username,
 			result,
-			time_control
+			time_control_id,
+			time_control_name
 		);
 	}
 	else {
@@ -285,7 +288,8 @@ export async function post_challenge_set_result(req: any, res: any) {
 			white_username,
 			black_username,
 			result,
-			time_control
+			time_control_id,
+			time_control_name
 		);
 	}
 

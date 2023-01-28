@@ -69,7 +69,7 @@ import { query_user_modify, query_user_list, query_user_main, query_ranking_user
 router.get('/query_user_list', query_user_list);
 router.get('/query_user_main', query_user_main);
 router.post('/query_user_modify', query_user_modify);
-router.get('/query_ranking_users', query_ranking_users);
+router.post('/query_ranking_users', query_ranking_users);
 
 // implement sending, receiving, accepting, setting result of challenges
 import {
@@ -128,7 +128,7 @@ router.get('/games_own', get_games_own_page);
 router.get('/games_all', get_games_all_page);
 
 // implement retrieve ranking of players
-import { get_ranking_users_page } from './server_ranking';
+import { get_ranking_users_page } from './server_user_ranking';
 router.get('/ranking_users', get_ranking_users_page);
 
 // implement challenges management

@@ -103,8 +103,8 @@ function filter_game_list(
 			data_to_return.push({
 				'white': (user_retrieve(g.white) as User).get_full_name(),
 				'black': (user_retrieve(g.black) as User).get_full_name(),
-				'time_control': time_control_name,
 				'result': result,
+				'time_control': time_control_name,
 				'date' : g.when.replace('..', ' '),
 				'white_rating': Math.round(g.white_rating.rating),
 				'black_rating': Math.round(g.black_rating.rating),

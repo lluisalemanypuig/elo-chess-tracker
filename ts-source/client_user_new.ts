@@ -55,14 +55,6 @@ async function submit_new_user_clicked(event: any) {
 	}
 	const password_box = _password_box as HTMLInputElement;
 
-	// classical_rating box
-	const _classical_rating_box = document.getElementById("classical_rating_box");
-	if (_classical_rating_box == null) {
-		console.log("Element 'classical_rating_box' does not exist.");
-		return;
-	}
-	const classical_rating_box = _classical_rating_box as HTMLInputElement;
-
 	const username = username_box.value;
 	const firstname = first_name_box.value;
 	const lastname = last_name_box.value;
@@ -78,7 +70,6 @@ async function submit_new_user_clicked(event: any) {
 	);
 	
 	const password = password_box.value;
-	const classical_rating = classical_rating_box.value;
 
 	if (username == "") {
 		alert("Missing username");
@@ -100,10 +91,6 @@ async function submit_new_user_clicked(event: any) {
 		alert("Missing password");
 		return;
 	}
-	if (classical_rating == "") {
-		alert("Missing classical rating points");
-		return;
-	}
 	
 	const response = await fetch(
 		"/user_create",
@@ -114,8 +101,7 @@ async function submit_new_user_clicked(event: any) {
 				'fn' : firstname,
 				'ln' : lastname,
 				'r' : roles,
-				'p' : password,
-				'cr' : classical_rating
+				'p' : password
 			}),
 			headers: { 'Content-type': 'application/json; charset=UTF-8' }
 		}

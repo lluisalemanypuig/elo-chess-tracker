@@ -306,17 +306,17 @@ async function fill_challenges_pending_set_result_list() {
 			{
 			challenge_list.appendChild(document.createTextNode("Time control:"));
 			challenge_list.appendChild(document.createTextNode(" "));
-			let result_select = document.createElement("select");
-			result_select.id = "time_control_select_" + elem.id;
+			let time_control_select = document.createElement("select");
+			time_control_select.id = "time_control_select_" + elem.id;
 			
 			for (let i = 0; i < time_control_data.length; ++i) {
 				let option_i = document.createElement("option");
 				option_i.text = time_control_data[i].name;
 				option_i.value = time_control_data[i].id;
-				result_select.appendChild(option_i);
+				time_control_select.appendChild(option_i);
 			}
 			
-			challenge_list.appendChild(result_select);
+			challenge_list.appendChild(time_control_select);
 			challenge_list.appendChild(document.createTextNode("  "));
 			}
 
@@ -351,7 +351,8 @@ async function submit_result_challenge_button_clicked(event: any) {
 	let white_username = white_select.options[white_select.selectedIndex].value;
 	let black_username = black_select.options[black_select.selectedIndex].value;
 	let result = result_select.options[result_select.selectedIndex].value;
-	let time_control = time_control_select.options[time_control_select.selectedIndex].value;
+	let time_control_id = time_control_select.options[time_control_select.selectedIndex].value;
+	let time_control_name = time_control_select.options[time_control_select.selectedIndex].text;
 
 	// "query" the server
 	const response = await fetch(
@@ -363,7 +364,8 @@ async function submit_result_challenge_button_clicked(event: any) {
 				'white' : white_username,
 				'black' : black_username,
 				'result' : result,
-				'time_control' : time_control
+				'time_control_id' : time_control_id,
+				'time_control_name' : time_control_name
 			}),
 			headers: { 'Content-type': 'application/json; charset=UTF-8' }
 		}

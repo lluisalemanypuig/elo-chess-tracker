@@ -40,5 +40,5 @@ export async function get_ranking_users_page(req: any, res: any) {
 		return;
 	}
 
-	res.sendFile(path.join(__dirname, "../html/ranking.html"));
+	res.sendFile(path.join(__dirname, "../html/user_ranking.html"));
 }

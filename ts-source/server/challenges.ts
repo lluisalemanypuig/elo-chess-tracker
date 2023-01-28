@@ -29,7 +29,6 @@ import { log_now, number_to_string, long_date_to_short_date } from '../utils/mis
 import { ServerMemory, ServerDirectories } from "./configuration";
 import { Challenge } from '../models/challenge';
 import { GameResult } from '../models/game';
-import { TimeControl } from '../models/time_control';
 import { game_new, game_add } from './game_history';
 import { user_retrieve } from './users';
 import { User } from '../models/user';
@@ -173,13 +172,14 @@ export function challenge_set_result(
 	white: string,
 	black: string,
 	result: GameResult,
-	time_control_id: string
+	time_control_id: string,
+	time_control_name: string
 
 ): void
 {
 	debug(log_now(), `Set the result of the challenge '${c.id}'`);
 
-	c.set_result(by, when, white, black, result, time_control_id);
+	c.set_result(by, when, white, black, result, time_control_id, time_control_name);
 	
 	let challenge_dir = ServerDirectories.get_instance().challenges_directory;
 	let challenge_file = path.join(challenge_dir, c.id);
@@ -208,6 +208,7 @@ export function challenge_agree_result(c: Challenge): void
 		c.get_white() as string, c.get_black() as string,
 		c.get_result() as GameResult,
 		c.get_time_control_id() as string,
+		c.get_time_control_name() as string,
 		c.get_when_result_set() as string
 	);
 	

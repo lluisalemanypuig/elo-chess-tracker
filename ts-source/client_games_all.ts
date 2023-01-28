@@ -1,6 +1,6 @@
 window.onload = async function () {
 
-	let new_cell = function(text: string) {
+	const new_cell = function(text: string) {
 		let cell = document.createElement("td");
 		cell.innerHTML = text;
 		return cell;
@@ -31,8 +31,8 @@ window.onload = async function () {
 		row.appendChild(new_cell(games[i].white));
 		row.appendChild(new_cell(games[i].black));
 		row.appendChild(new_cell(games[i].result));
+		row.appendChild(new_cell(games[i].time_control));
 		row.appendChild(new_cell(games[i].date));
-		row.appendChild(new_cell(games[i].type));
 		row.appendChild(new_cell(games[i].white_rating));
 		row.appendChild(new_cell(games[i].white_increment));
 		row.appendChild(new_cell(games[i].black_rating));

@@ -82,10 +82,14 @@ export async function post_games_create(req: any, res: any) {
 	const white = req.body.w;
 	const black = req.body.b;
 	const result = req.body.r;
+	const time_control_id = req.body.tc_i;
+	const time_control_name = req.body.tc_n;
 
 	debug(log_now(), `    White: '${white}'`);
 	debug(log_now(), `    Black: '${black}'`);
 	debug(log_now(), `    Result: '${result}'`);
+	debug(log_now(), `    Time control id: '${time_control_id}'`);
+	debug(log_now(), `    Time control name: '${time_control_name}'`);
 
 	if (white == black) {
 		res.send({ 'r' : '0', 'reason' : 'The players cannot be the same' });
@@ -99,7 +103,7 @@ export async function post_games_create(req: any, res: any) {
 	let g = game_new(
 		white, black,
 		result as GameResult,
-		"classical",
+		time_control_id, time_control_name,
 		right_now
 	);
 	
