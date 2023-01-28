@@ -68,7 +68,7 @@ export async function get_user_create_page(req: any, res: any) {
 		return;
 	}
 
-	res.sendFile(path.join(__dirname, "../html/user_new.html"));
+	res.sendFile(path.join(__dirname, "../html/users_new.html"));
 }
 
 export async function post_user_create(req: any, res: any) {

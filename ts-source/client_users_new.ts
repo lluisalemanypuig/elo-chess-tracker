@@ -93,7 +93,7 @@ async function submit_new_user_clicked(event: any) {
 	}
 	
 	const response = await fetch(
-		"/user_create",
+		"/users_create",
 		{
 			method: 'POST',
 			body: JSON.stringify({

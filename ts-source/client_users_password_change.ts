@@ -9,7 +9,7 @@ async function submit_button_clicked() {
 	}
 
 	const response = await fetch(
-		"/change_password",
+		"/users_password_change",
 		{
 			method: 'POST',
 			body : JSON.stringify({'old' : old_password_box.value, 'new' : new_password_box.value}),

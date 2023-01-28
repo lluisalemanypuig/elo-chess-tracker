@@ -33,7 +33,7 @@ import { ADMIN, MEMBER, STUDENT, TEACHER } from './models/user_role';
 import { EDIT_ADMIN, EDIT_MEMBER, EDIT_STUDENT, EDIT_TEACHER } from './models/user_action';
 
 export async function get_user_edit_page(req: any, res: any) {
-	debug(log_now(), "GET user_edit_page...");
+	debug(log_now(), "GET users_edit_page...");
 
 	const id = req.cookies.session_id;
 	const username = req.cookies.user;
@@ -57,7 +57,7 @@ export async function get_user_edit_page(req: any, res: any) {
 		return;
 	}
 
-	res.sendFile(path.join(__dirname, "../html/user_edit.html"));
+	res.sendFile(path.join(__dirname, "../html/users_edit.html"));
 }
 
 export async function post_user_edit(req: any, res: any) {

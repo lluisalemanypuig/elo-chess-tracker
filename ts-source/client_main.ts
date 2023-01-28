@@ -71,7 +71,7 @@ function fill_action_links(user_actions: string[]) {
 
 	if (create_user) {
 		let user_create_link = document.createElement("a") as HTMLAnchorElement;
-		user_create_link.href = "/user_create";
+		user_create_link.href = "/users_create";
 		user_create_link.text = "Create new user";
 		action_links.appendChild(user_create_link);
 		action_links.appendChild(document.createElement("br"));
@@ -79,7 +79,7 @@ function fill_action_links(user_actions: string[]) {
 	}
 	if (edit_user) {
 		let user_edit_link = document.createElement("a") as HTMLAnchorElement;
-		user_edit_link.href = "/user_edit";
+		user_edit_link.href = "/users_edit";
 		user_edit_link.text = "Edit user";
 		action_links.appendChild(user_edit_link);
 		action_links.appendChild(document.createElement("br"));
@@ -106,7 +106,7 @@ function fill_action_links(user_actions: string[]) {
 async function fill_own_info() {
 	// "query" the server
 	const response = await fetch(
-		"/query_user_main",
+		"/query_users_main",
 		{
 			method: 'GET',
 			headers: { 'Content-type': 'application/json; charset=UTF-8' }

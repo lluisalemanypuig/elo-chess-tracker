@@ -119,7 +119,7 @@ async function submit_was_clicked(event: any) {
 	);
 
 	const response = await fetch(
-		"/user_edit",
+		"/users_edit",
 		{
 			method: 'POST',
 			body: JSON.stringify({'u' : username, 'f' : first_name, 'l' : last_name, 'r': selected_roles}),

@@ -28,12 +28,11 @@ import { user_get_all_names_and_usernames, user_retrieve } from './server/users'
 import { is_user_logged_in } from './server/session';
 import { User } from './models/user';
 import { ServerMemory } from './server/configuration';
-import { Rating } from './rating_system/rating';
 import { TimeControlRating } from './models/time_control_rating';
 
 /// Returns the list of user full names and usernames sorted by name
-export async function query_user_list(req: any, res: any) {
-	debug(log_now(), "GET query_user_list...");
+export async function query_users_list(req: any, res: any) {
+	debug(log_now(), "GET query_users_list...");
 
 	const session_id = req.cookies.session_id;
 	const username = req.cookies.user;
@@ -53,11 +52,11 @@ export async function query_user_list(req: any, res: any) {
 		}
 	);
 
-	res.send({ "data": list });
+	res.send({ "data" : list });
 }
 
-export async function query_user_main(req: any, res: any) {
-	debug(log_now(), "GET query_user_main...");
+export async function query_users_main(req: any, res: any) {
+	debug(log_now(), "GET query_users_main...");
 
 	const session_id = req.cookies.session_id;
 	const username = req.cookies.user;
@@ -96,8 +95,8 @@ export async function query_user_main(req: any, res: any) {
  * @param res 
  * @returns 
  */
-export async function query_user_modify(req: any, res: any) {
-	debug(log_now(), "POST query_user_modify...");
+export async function query_users_modify(req: any, res: any) {
+	debug(log_now(), "POST query_users_modify...");
 
 	const session_id = req.cookies.session_id;
 	const username = req.cookies.user;
@@ -122,8 +121,8 @@ export async function query_user_modify(req: any, res: any) {
 	});
 }
 
-export async function query_ranking_users(req: any, res: any) {
-	debug(log_now(), "POST query_ranking_users...");
+export async function query_users_ranking(req: any, res: any) {
+	debug(log_now(), "POST query_users_ranking...");
 
 	const session_id = req.cookies.session_id;
 	const username = req.cookies.user;

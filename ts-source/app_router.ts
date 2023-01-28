@@ -65,11 +65,11 @@ router.get('/js-source/*', (req: any, res: any) => {
 	res.sendFile(filepath);
 });
 
-import { query_user_modify, query_user_list, query_user_main, query_ranking_users } from './server_query_user';
-router.get('/query_user_list', query_user_list);
-router.get('/query_user_main', query_user_main);
-router.post('/query_user_modify', query_user_modify);
-router.post('/query_ranking_users', query_ranking_users);
+import { query_users_modify, query_users_list, query_users_main, query_users_ranking } from './server_query_user';
+router.get('/query_users_list', query_users_list);
+router.get('/query_users_main', query_users_main);
+router.post('/query_users_modify', query_users_modify);
+router.post('/query_users_ranking', query_users_ranking);
 
 // implement sending, receiving, accepting, setting result of challenges
 import {
@@ -103,19 +103,19 @@ import { user_log_out } from './server_logout';
 router.post('/logout', user_log_out);
 
 // implement creation of a new user
-import { post_user_create, get_user_create_page } from './server_user_new';
-router.get('/user_create', get_user_create_page);
-router.post('/user_create', post_user_create);
+import { post_user_create, get_user_create_page } from './server_users_new';
+router.get('/users_create', get_user_create_page);
+router.post('/users_create', post_user_create);
 
 // implement edition of an existing user
-import { post_user_edit, get_user_edit_page } from './server_user_edit';
-router.get('/user_edit', get_user_edit_page);
-router.post('/user_edit', post_user_edit);
+import { post_user_edit, get_user_edit_page } from './server_users_edit';
+router.get('/users_edit', get_user_edit_page);
+router.post('/users_edit', post_user_edit);
 
 // implement change of password
-import { get_change_password_page, post_change_password } from './server_password_change';
-router.get('/change_password', get_change_password_page);
-router.post('/change_password', post_change_password);
+import { get_users_password_change_page, post_users_password_change } from './server_users_password_change';
+router.get('/users_password_change', get_users_password_change_page);
+router.post('/users_password_change', post_users_password_change);
 
 // implement create a new game
 import { post_games_create, get_games_create_page } from './server_games';
@@ -128,7 +128,7 @@ router.get('/games_own', get_games_own_page);
 router.get('/games_all', get_games_all_page);
 
 // implement retrieve ranking of players
-import { get_ranking_users_page } from './server_user_ranking';
+import { get_ranking_users_page } from './server_users_ranking';
 router.get('/ranking_users', get_ranking_users_page);
 
 // implement challenges management

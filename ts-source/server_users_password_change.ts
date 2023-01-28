@@ -10,8 +10,8 @@ import { User } from './models/user';
 import { Password } from './models/password';
 import { user_overwrite } from './server/users';
 
-export async function get_change_password_page(req: any, res: any) {
-    debug(log_now(), "GET change_password_page...");
+export async function get_users_password_change_page(req: any, res: any) {
+    debug(log_now(), "GET users_password_change_page...");
 
 	const id = req.cookies.session_id;
 	const username = req.cookies.user;
@@ -22,11 +22,11 @@ export async function get_change_password_page(req: any, res: any) {
 		return;
 	}
 
-    res.sendFile(path.join(__dirname, "../html/user_password_change.html"));
+    res.sendFile(path.join(__dirname, "../html/users_password_change.html"));
 }
 
-export async function post_change_password(req: any, res: any) {
-    debug(log_now(), "POST change_password...");
+export async function post_users_password_change(req: any, res: any) {
+    debug(log_now(), "POST users_password_change...");
 
 	const id = req.cookies.session_id;
 	const username = req.cookies.user;
