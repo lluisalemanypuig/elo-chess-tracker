@@ -1,5 +1,7 @@
+system_configuration.json
+README.html
+
 node_modules/
 js-source/
 database/
-system_configuration.json
 certificate/

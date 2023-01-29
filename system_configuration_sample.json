@@ -1,5 +1,5 @@
 {
-	"database_base_directory": "/home/lluis/Documents/projects/elo-chess-tracker/database",
+	"database_base_directory": "$DATABASE_DIRECTORY",
 	"rating_system": "Elo",
 	"permissions": {
 		"admin": [
@@ -25,10 +25,10 @@
 		]
 	},
 	"ssl_certificate": {
-		"directory": "/home/lluis/Documents/projects/elo-chess-tracker/certificate",
-		"public_key_file": "public.pem",
-		"private_key_file": "private.pem",
-		"passphrase_file": "passphrase.txt"
+		"directory": "$SSL_CERTIFICATE_DIRECTORY",
+		"public_key_file": "$PUBLIC_PEM",
+		"private_key_file": "$PRIVATE_PEM",
+		"passphrase_file": "$PASSPHRASE_TXT"
 	},
 	"time_controls": [
 		{
