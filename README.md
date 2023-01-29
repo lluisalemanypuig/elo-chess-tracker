@@ -171,7 +171,7 @@ Available actions are
 	- *see_student_games*
 
 - Challenge other users to a game
-	- *challenge_user*: This first action is necessary for the others to work.^
+	- *challenge_user*: This first action is necessary for the others to work.
 	- *challenge_admin*
 	- *challenge_member*
 	- *challenge_teacher*
