@@ -47,6 +47,15 @@ router.get('/', (req: any, res: any) => {
 	}
 });
 
+// serve all *.css files
+router.get('/html/*.css', (req: any, res: any) => {
+	debug(log_now(), "GET css file...");
+	debug(log_now(), `    request: ${req.url}`);
+	let filepath = path.join(__dirname, "..", req.url);
+	debug(log_now(), `    file to send: ${filepath}`);
+	res.sendFile(filepath);
+});
+
 // 
 router.get('/favicon.ico', (req: any, res: any) => {
 	debug(log_now(), "GET favicon.ico...");
