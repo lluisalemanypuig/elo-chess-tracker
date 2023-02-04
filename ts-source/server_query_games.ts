@@ -40,11 +40,9 @@ import {
 
 function increment(g: Game): any {
 	const [white_after, black_after] = RatingSystem.get_instance().formula(g);
-	const white_increment = white_after.rating - g.white_rating.rating;
-	const black_increment = black_after.rating - g.black_rating.rating;
 	return {
-		'white_increment' : Math.round(white_increment),
-		'black_increment' : Math.round(black_increment)
+		'white_increment' : Math.round(white_after.rating - g.white_rating.rating),
+		'black_increment' : Math.round(black_after.rating - g.black_rating.rating)
 	};
 }
 
@@ -108,8 +106,8 @@ function filter_game_list(
 				'date' : g.when.replace('..', ' '),
 				'white_rating': Math.round(g.white_rating.rating),
 				'black_rating': Math.round(g.black_rating.rating),
-				'white_increment': (inc.white_Elo_increment < 0 ? inc.white_increment : "+" + inc.white_increment),
-				'black_increment': (inc.black_Elo_increment < 0 ? inc.black_increment : "+" + inc.black_increment)
+				'white_increment': (inc.white_increment < 0 ? inc.white_increment : "+" + inc.white_increment),
+				'black_increment': (inc.black_increment < 0 ? inc.black_increment : "+" + inc.black_increment)
 			});
 		}
 	}
