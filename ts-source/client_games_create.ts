@@ -33,7 +33,7 @@ async function initialize_window_client_games_create() {
 
 	// "query" the server
 	const response = await fetch(
-		"/query_user_list",
+		"/query_users_list",
 		{
 			method: 'GET',
 			headers: { 'Content-type': 'application/json; charset=UTF-8' }
@@ -82,17 +82,20 @@ async function initialize_window_client_games_create() {
 }
 
 async function submit_new_game(event: any) {
-	const white_list = document.getElementById("white_list") as HTMLInputElement;
-	const black_list = document.getElementById("black_list") as HTMLInputElement;
+	const white_input = document.getElementById("white_list") as HTMLInputElement;
+	const black_input = document.getElementById("black_list") as HTMLInputElement;
 	const result_select = document.getElementById("result_select") as HTMLSelectElement;
 	const time_control_select = document.getElementById("time_control_select") as HTMLSelectElement;
+	const game_date_input = document.getElementById("game_date_input") as HTMLInputElement;
+	const game_time_input = document.getElementById("game_time_input") as HTMLInputElement;
 
-	const white_option = document.querySelector('option[value="' + white_list.value + '"]');
-	const black_option = document.querySelector('option[value="' + black_list.value + '"]');
+	const white_option = document.querySelector('option[value="' + white_input.value + '"]');
+	const black_option = document.querySelector('option[value="' + black_input.value + '"]');
 	const result = result_select.options[result_select.selectedIndex].value;
 	const time_control_id = time_control_select.options[time_control_select.selectedIndex].value;
 	const time_control_name = time_control_select.options[time_control_select.selectedIndex].text;
-
+	const game_time = game_date_input.value + ".." + game_time_input.value + ":00";
+	
 	let white = "";
 	if (white_option != null) {
 		white = white_option.id;
@@ -103,12 +106,6 @@ async function submit_new_game(event: any) {
 		black = black_option.id;
 	}
 
-	console.log(`White:`, white);
-	console.log(`Black:`, black);
-	console.log(`Result: '${result}'`);
-	console.log(`Time control id: '${time_control_id}'`);
-	console.log(`Time control name: '${time_control_name}'`);
-
 	const response = await fetch(
 		"/games_create",
 		{
@@ -118,7 +115,8 @@ async function submit_new_game(event: any) {
 				'b' : black,
 				'r' : result,
 				'tc_i' : time_control_id,
-				'tc_n' : time_control_name
+				'tc_n' : time_control_name,
+				't' : game_time
 			}),
 			headers: { 'Content-type': 'application/json; charset=UTF-8' }
 		}
