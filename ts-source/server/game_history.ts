@@ -276,8 +276,8 @@ function update_game_record(
 				// Black has been updated in this game for the first time:
 				// - should be updated in future games
 				// - should be inserted into the 'updated_players' set
-				updated_players.push(black_after.clone());
 				updated_players.push(updated_player(time_control_id, black, black_after));
+				player_to_index.set(black, updated_players.length - 1);
 			}
 			else {
 				updated_players[black_idx as number] = updated_player(time_control_id, black, black_after);
