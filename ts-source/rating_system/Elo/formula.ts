@@ -31,6 +31,66 @@ function rating_adjustment(exp_score: number, score: number, k: number): number 
 	return k*(score - exp_score);
 }
 
+/*
+
+FROM FIDE REGULATIONS 2022 (https://www.fide.com/docs/regulations/FIDE%20Rating%20Regulations%202022.pdf)
+
+* K = 40 for a player new to the rating list until they have completed events
+  with at least 30 games.
+* K = 20 as long as a player's rating remains under 2400.
+* K = 10 once a player's published rating has reached 2400 and remains at
+  that level subsequently, even if the rating drops below 2400.
+* K = 40 for all players until the end of the year of their 18th birthday,
+  as long as their rating remains under 2300.
+* If the number of games (n) for a player on any list for a rating period
+  multiplied by K (as defined above) exceeds 700, then K shall be the
+  largest whole number such that K x n does not exceed 700.
+
+REGULATIONS IN THIS WAY
+
+- age has been completely disregarded
+
+- We selected the following bullet points from the list above
+
+	* K = 40 for a player new to the rating list until they have completed events
+	with at least 30 games.
+	* K = 20 as long as a player's rating remains under 2400.
+	* K = 10 once a player's published rating has reached 2400 and remains at
+	that level subsequently, even if the rating drops below 2400.
+	* If the number of games (n) for a player on any list for a rating period
+	multiplied by K (as defined above) exceeds 700, then K shall be the
+	largest whole number such that K x n does not exceed 700.
+
+- this is our interpretation in pseudocode
+
+	K = 40
+	if (resulting number of games >= 30) {
+		K = 20
+	}
+	if ((resulting number of games >= 30) and (resulting rating >= 2400)) {
+		K = 10
+	}
+	if (K*n > 700) {
+		K = 700/n;
+	}
+
+- rating is updated BEFORE changing the value of K
+
+*/
+
+function update_constant_K(rating: EloRating): EloRating {
+	if (rating.num_games >= 30) {
+		rating.K = 20;
+	}
+	if (rating.num_games >= 30 && rating.rating >= 2400) {
+		rating.K = 10;
+	}
+	if (rating.K*rating.num_games > 700) {
+		rating.K = 700/rating.num_games;
+	}
+	return rating;
+}
+
 export function player_vs_player(game: Game): [EloRating, EloRating] {
 	let white_rating = game.white_rating.clone() as EloRating;
 	let black_rating = game.black_rating.clone() as EloRating;
@@ -64,20 +124,10 @@ export function player_vs_player(game: Game): [EloRating, EloRating] {
 	++black_rating.num_games;
 
 	// update White's constant
-	if (white_rating.num_games >= 30) {
-		white_rating.K = 20;
-	}
-	if (white_rating.rating >= 2400) {
-		white_rating.K = 10;
-	}
+	white_rating = update_constant_K(white_rating);
 
 	// update Black's constant
-	if (black_rating.num_games >= 30) {
-		black_rating.K = 20;
-	}
-	if (black_rating.rating >= 2400) {
-		black_rating.K = 10;
-	}
+	black_rating = update_constant_K(black_rating);
 
 	return [white_rating, black_rating];
 }
