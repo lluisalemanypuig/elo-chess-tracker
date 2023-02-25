@@ -1,6 +1,16 @@
 #!/bin/bash
 
+echo "Make directory database/users"
+echo "Make directory database/games"
+
 mkdir -p database/users
 mkdir -p database/games
 
-tsc && ./browserify.sh
+echo "Compiling"
+
+tsc
+
+if [ "$?" == "0" ]; then
+    echo "Browserify"
+    ./browserify.sh
+fi
