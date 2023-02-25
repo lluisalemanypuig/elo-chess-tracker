@@ -23,7 +23,7 @@ async function submit_button_clicked() {
 		return;
 	}
 
-	// return to main page to login again
+	// return to login page
 	window.location.href = "/";
 }
 

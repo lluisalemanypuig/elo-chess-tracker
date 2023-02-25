@@ -37,7 +37,7 @@ router.get('/', (req: any, res: any) => {
 	if (session_id_exists(req.cookies.session_id, req.cookies.user)) {
 		debug(log_now(), `    Session id exists. Please, come in.`);
 		// User has a cookie proving that they logged into the web in the past
-		res.sendFile(path.join(__dirname, "../html/main.html"));
+		res.sendFile(path.join(__dirname, "../html/home.html"));
 	}
 	else {
 		debug(log_now(), `    Session id does not exist. Login!`);
@@ -74,9 +74,9 @@ router.get('/js-source/*', (req: any, res: any) => {
 	res.sendFile(filepath);
 });
 
-import { query_users_modify, query_users_list, query_users_main, query_users_ranking } from './server_query_user';
+import { query_users_modify, query_users_list, query_users_home, query_users_ranking } from './server_query_user';
 router.get('/query_users_list', query_users_list);
-router.get('/query_users_main', query_users_main);
+router.get('/query_users_home', query_users_home);
 router.post('/query_users_modify', query_users_modify);
 router.post('/query_users_ranking', query_users_ranking);
 
@@ -154,9 +154,9 @@ import { post_challenge_agree_result, post_challenge_disagree_result } from './s
 router.post('/challenge_agree_result', post_challenge_agree_result);
 router.post('/challenge_disagree_result', post_challenge_disagree_result);
 
-// retrieve main page
-router.get('/main', (req: any, res: any) => {
-	debug(log_now(), "GET main");
+// retrieve home page
+router.get('/home', (req: any, res: any) => {
+	debug(log_now(), "GET home");
 	
 	if (! session_id_exists(req.cookies.session_id, req.cookies.user)) {
 		debug(log_now(), "    Session id does not exist.");
@@ -165,7 +165,7 @@ router.get('/main', (req: any, res: any) => {
 	}
 	
 	debug(log_now(), "    Access granted");
-	res.sendFile(path.join(__dirname, "../html/main.html"));
+	res.sendFile(path.join(__dirname, "../html/home.html"));
 });
 
 export { router };

@@ -106,7 +106,7 @@ function fill_action_links(user_actions: string[]) {
 async function fill_own_info() {
 	// "query" the server
 	const response = await fetch(
-		"/query_users_main",
+		"/query_users_home",
 		{
 			method: 'GET',
 			headers: { 'Content-type': 'application/json; charset=UTF-8' }

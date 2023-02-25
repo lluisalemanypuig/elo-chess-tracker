@@ -63,7 +63,7 @@ async function login_button_clicked(event: any) {
 	for (let i = 0; i < cookies.length; ++i) {
 		document.cookie = cookies[i];
 	}
-	window.location.href = "/main";
+	window.location.href = "/home";
 }
 
 window.onload = function () {

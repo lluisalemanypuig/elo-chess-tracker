@@ -55,8 +55,8 @@ export async function query_users_list(req: any, res: any) {
 	res.send({ "data" : list });
 }
 
-export async function query_users_main(req: any, res: any) {
-	debug(log_now(), "GET query_users_main...");
+export async function query_users_home(req: any, res: any) {
+	debug(log_now(), "GET query_users_home...");
 
 	const session_id = req.cookies.session_id;
 	const username = req.cookies.user;
