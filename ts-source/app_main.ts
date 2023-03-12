@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 /*
 Elo rating for a Chess Club
 Copyright (C) 2023  Lluís Alemany Puig
