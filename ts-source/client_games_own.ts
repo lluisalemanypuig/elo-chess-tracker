@@ -24,7 +24,7 @@ window.onload = async function () {
 
 	let new_cell = function(text: string) {
 		let cell = document.createElement("td");
-		cell.innerHTML = text;
+		cell.textContent = text;
 		return cell;
 	}
 

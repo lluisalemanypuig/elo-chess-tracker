@@ -24,7 +24,7 @@ window.onload = async function () {
 
 	const new_cell = function(text: string) {
 		let cell = document.createElement("td");
-		cell.innerHTML = text;
+		cell.textContent = text;
 		return cell;
 	}
 
@@ -46,7 +46,7 @@ window.onload = async function () {
 
 	let table = document.getElementById("games_table") as HTMLTableElement;
     let tbody = table.getElementsByTagName("tbody")[0];
-
+	
 	for (let i = 0; i < games.length; i++) {
 		let row = document.createElement("tr");
 
