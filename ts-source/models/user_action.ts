@@ -16,15 +16,15 @@ export const EDIT_MEMBER = 'edit_member';
 export const EDIT_STUDENT = 'edit_student';
 
 /// Can edit user games
-export const EDIT_USER_GAME = 'edit_user_game';
+export const EDIT_USER_GAMES = 'edit_user_games';
 /// Can edit admin games
-export const EDIT_ADMIN_GAME = 'edit_admin_game';
+export const EDIT_ADMIN_GAMES = 'edit_admin_games';
 /// Can edit teacher games
-export const EDIT_TEACHER_GAME = 'edit_teacher_game';
+export const EDIT_TEACHER_GAMES = 'edit_teacher_games';
 /// Can edit member games
-export const EDIT_MEMBER_GAME = 'edit_member_game';
+export const EDIT_MEMBER_GAMES = 'edit_member_games';
 /// Can edit student games
-export const EDIT_STUDENT_GAME = 'edit_student_game';
+export const EDIT_STUDENT_GAMES = 'edit_student_games';
 
 /// Assign admin role
 export const ASSIGN_ROLE_ADMIN = 'assign_role_admin';
@@ -68,11 +68,11 @@ export const all_actions = [
 	EDIT_MEMBER,
 	EDIT_STUDENT,
 
-	EDIT_USER_GAME,
-	EDIT_ADMIN_GAME,
-	EDIT_TEACHER_GAME,
-	EDIT_MEMBER_GAME,
-	EDIT_STUDENT_GAME,
+	EDIT_USER_GAMES,
+	EDIT_ADMIN_GAMES,
+	EDIT_TEACHER_GAMES,
+	EDIT_MEMBER_GAMES,
+	EDIT_STUDENT_GAMES,
 
 	ASSIGN_ROLE_ADMIN,
 	ASSIGN_ROLE_TEACHER,
