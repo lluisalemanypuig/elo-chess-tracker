@@ -200,7 +200,7 @@ export class ServerMemory {
 	public challenges: Challenge[] = [];
 	
 	/// Number of games in the system
-	public num_games: number = 0;
+	public max_game_id: number = 0;
 
 	/// The only instance of this class
 	private static instance: ServerMemory;

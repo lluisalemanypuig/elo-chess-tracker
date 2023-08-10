@@ -102,8 +102,9 @@ function initialize_challenges(): void {
 function initialize_games(): void {
 	debug(log_now(), "Initialize games...");
 
-	let memory = ServerMemory.get_instance();
 	let dir = ServerDirectories.get_instance().games_directory;
+	let num_games: number = 0;
+	let max_game_id: number = 0;
 
 	debug(log_now(), `    Reading directory '${dir}'`);
 	let all_game_record_files = fs.readdirSync(dir);
@@ -115,9 +116,19 @@ function initialize_games(): void {
 		let game_record_data = fs.readFileSync(game_record_file, 'utf8');
 		let game_set = game_set_from_json(game_record_data);
 
-		memory.num_games += game_set.length;
+		for (let j = 0; j < game_set.length; ++j) {
+			const g = game_set[j];
+			const game_id = parseInt( g.get_id(), 10 );
+			max_game_id = max_game_id < game_id ? game_id : max_game_id;
+		}
+
+		num_games += game_set.length;
 	}
-	debug(log_now(), `    Found ${memory.num_games} games.`);
+
+	ServerMemory.get_instance().max_game_id = max_game_id;
+
+	debug(log_now(), `    Found ${num_games} games.`);
+	debug(log_now(), `    Maximum game id ${max_game_id}.`);
 }
 
 function initialize_permissions(permission_data: any): void {

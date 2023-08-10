@@ -50,7 +50,7 @@ export function game_new(
 
 ): Game
 {
-	const id_str = number_to_string(ServerMemory.get_instance().num_games + 1);
+	const id_str = number_to_string(ServerMemory.get_instance().max_game_id + 1);
 
 	let white_to_assign: Rating;
 	let black_to_assign: Rating;
@@ -95,7 +95,7 @@ export function game_new(
 	}
 
 	// increment number of games
-	ServerMemory.get_instance().num_games += 1;
+	ServerMemory.get_instance().max_game_id += 1;
 	return new Game(
 		id_str,
 		white, white_to_assign,
