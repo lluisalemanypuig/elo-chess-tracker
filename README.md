@@ -52,12 +52,13 @@ This will generate an empty database with the following pairs of users and passw
 
 	Username           | Password                          | Role
 	---------------------------------------------------------------------------------
-	emanuel.lasker     | "oh no, my queen"                 | Member
-	anatoly.karpov     | "always play king b1"             | Member, Student
-	magnus.carlsen     | "it's not playable... for black"  | Member, Teacher
-	vasily.smyslov     | "never play f6"                   | Member
+	anatoly.karpov     | "always play king b1"             | Member
+	bobby.fischer      | "I hate chess"                    | Member, Student
+	emanuel.lasker     | "oh no, my queen"                 | Member, Teacher
+	magnus.carlsen     | "it's not playable... for black"  | Member
 	mikhail.botvinnik  | "the science of logic"            | Member, Admin
-	bobby.fischer      | "I hate chess"                    | Member, Admin, Teacher
+	vasily.smyslov     | "never play f6"                   | Member, Admin, Teacher
+	
 	
 The passwords do not include the quote characters `"`; they are only used here as delimiters. Yes, passwords include spaces. Usernames correspond to famous chess players. Some of the passwords are quotes attributed to their corresponding chess player, other passwords are quotes attributed to different famous chess players.
 
