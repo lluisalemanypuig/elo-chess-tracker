@@ -47,7 +47,7 @@ window.onload = async function () {
 	let table = document.getElementById("games_table") as HTMLTableElement;
     let tbody = table.getElementsByTagName("tbody")[0];
 
-	for (var i = 0; i < games.length; i++) {
+	for (let i = 0; i < games.length; i++) {
 		let row = document.createElement("tr");
 
 		row.appendChild(new_cell(games[i].white));

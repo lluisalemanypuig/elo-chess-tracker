@@ -98,6 +98,10 @@ export class Game {
 	has_time(time_control_id: string): boolean {
 		return this.time_control_id == time_control_id;
 	}
+
+	get_id(): string {
+		return this.id;
+	}
 }
 
 /**

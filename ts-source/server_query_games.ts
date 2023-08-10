@@ -99,6 +99,7 @@ function filter_game_list(
 			}
 
 			data_to_return.push({
+				'id' : g.get_id(),
 				'white': (user_retrieve(g.white) as User).get_full_name(),
 				'black': (user_retrieve(g.black) as User).get_full_name(),
 				'result': result,
