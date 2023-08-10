@@ -36,6 +36,7 @@ import { ServerDirectories } from './server/configuration';
 import { ADMIN, MEMBER, STUDENT, TEACHER, UserRole } from './models/user_role';
 import {
 	SEE_USER_GAMES, SEE_ADMIN_GAMES, SEE_MEMBER_GAMES, SEE_STUDENT_GAMES, SEE_TEACHER_GAMES,
+	EDIT_USER_GAMES, EDIT_ADMIN_GAMES, EDIT_MEMBER_GAMES, EDIT_STUDENT_GAMES, EDIT_TEACHER_GAMES
 } from './models/user_action'
 
 function increment(g: Game): any {
@@ -55,7 +56,8 @@ function increment(g: Game): any {
  */
 function filter_game_list(
 	filter_game_record: Function,
-	filter_game: Function
+	filter_game: Function,
+	user: User
 
 ): any[]
 {
@@ -98,17 +100,47 @@ function filter_game_list(
 				result = "1/2 - 1/2"
 			}
 
+			const white = (user_retrieve(g.white) as User);
+			const black = (user_retrieve(g.black) as User);
+
+			const white_or_black_is = function(role: string) {
+				if (white.get_roles().includes(role)) { return true; }
+				if (black.get_roles().includes(role)) { return true; }
+				return false;
+			};
+
+			let is_editable: string = "N/A";
+			if (user.get_actions().includes(EDIT_USER_GAMES)) {
+				
+				let can_edit: boolean = false;
+				if (user.get_actions().includes(EDIT_ADMIN_GAMES) && white_or_black_is(ADMIN)) {
+					can_edit = true;
+				}
+				if (user.get_actions().includes(EDIT_MEMBER_GAMES) && white_or_black_is(MEMBER)) {
+					can_edit = true;
+				}
+				if (user.get_actions().includes(EDIT_TEACHER_GAMES) && white_or_black_is(TEACHER)) {
+					can_edit = true;
+				}
+				if (user.get_actions().includes(EDIT_STUDENT_GAMES) && white_or_black_is(STUDENT)) {
+					can_edit = true;
+				}
+
+				is_editable = can_edit ? "yes" : "no";
+			}
+
 			data_to_return.push({
 				'id' : g.get_id(),
-				'white': (user_retrieve(g.white) as User).get_full_name(),
-				'black': (user_retrieve(g.black) as User).get_full_name(),
+				'white': white.get_full_name(),
+				'black': black.get_full_name(),
 				'result': result,
 				'time_control': time_control_name,
 				'date' : g.when.replace('..', ' '),
 				'white_rating': Math.round(g.white_rating.rating),
 				'black_rating': Math.round(g.black_rating.rating),
 				'white_increment': (inc.white_increment < 0 ? inc.white_increment : "+" + inc.white_increment),
-				'black_increment': (inc.black_increment < 0 ? inc.black_increment : "+" + inc.black_increment)
+				'black_increment': (inc.black_increment < 0 ? inc.black_increment : "+" + inc.black_increment),
+				'editable' : is_editable
 			});
 		}
 	}
@@ -128,14 +160,16 @@ export async function query_games_list_own(req: any, res: any) {
 		return;
 	}
 
-	let u = user_retrieve(username) as User;
-	let data_to_return = filter_game_list(
+	const user = user_retrieve(username) as User;
+
+	const data_to_return = filter_game_list(
 		(game_record_file: string): boolean => {
-			return u.get_games().includes(game_record_file);
+			return user.get_games().includes(game_record_file);
 		},
 		(g: Game): boolean => {
 			return g.is_user_involved(username);
-		}
+		},
+		user
 	);
 
 	debug(log_now(), `Found '${data_to_return.length}' games involving '${username}'`);
@@ -157,9 +191,9 @@ export async function query_games_list_all(req: any, res: any) {
 		res.send({ 'r' : '0', 'reason' : r[1] });
 		return;
 	}
-	let u = user_retrieve(username) as User;
+	const user = user_retrieve(username) as User;
 
-	if (!u.can_do(SEE_USER_GAMES)) {
+	if (!user.can_do(SEE_USER_GAMES)) {
 		res.send('403 - Forbidden');
 		return;
 	}
@@ -170,21 +204,23 @@ export async function query_games_list_all(req: any, res: any) {
 		return white.is(r) || black.is(r);
 	}
 
-	let data_to_return = filter_game_list(
+	const data_to_return = filter_game_list(
 		(_: string): boolean => { return true; },
 		(g: Game): boolean => {
-			if (u.can_do(SEE_ADMIN_GAMES) && game_contains(g, ADMIN)) { return true; }
-			if (u.can_do(SEE_TEACHER_GAMES) && game_contains(g, TEACHER)) { return true; }
-			if (u.can_do(SEE_STUDENT_GAMES) && game_contains(g, STUDENT)) { return true; }
-			if (u.can_do(SEE_MEMBER_GAMES) && game_contains(g, MEMBER)) { return true; }
+			if (user.can_do(SEE_ADMIN_GAMES) && game_contains(g, ADMIN)) { return true; }
+			if (user.can_do(SEE_TEACHER_GAMES) && game_contains(g, TEACHER)) { return true; }
+			if (user.can_do(SEE_STUDENT_GAMES) && game_contains(g, STUDENT)) { return true; }
+			if (user.can_do(SEE_MEMBER_GAMES) && game_contains(g, MEMBER)) { return true; }
 			return false;
-		}
+		},
+		user
 	);
 
 	debug(log_now(), `Found '${data_to_return.length}' games involving '${username}'`);
 
 	res.send({
 		'r' : '1',
-		'games' : data_to_return
+		'games' : data_to_return,
+		'actions' : user.get_actions()
 	});
 }

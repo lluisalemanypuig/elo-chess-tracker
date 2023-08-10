@@ -26,6 +26,18 @@ const new_text_cell = function(text: string) {
 	return cell;
 }
 
+function edit_button_was_clicked(event: any) {
+	console.log(`Button ${event.target.id} was clicked!`);
+}
+
+const new_button_cell = function(text: string, id: string, row_num: number) {
+	var button = document.createElement("button");
+	button.textContent = text;
+	button.onclick = edit_button_was_clicked;
+	button.id = id + "-" + row_num;
+	return button;
+}
+
 window.onload = async function () {
 
 	const val = document.getElementById("type_of_list")?.getAttribute('value');
@@ -70,6 +82,10 @@ window.onload = async function () {
 		row.appendChild(new_text_cell(games[i].white_increment));
 		row.appendChild(new_text_cell(games[i].black_rating));
 		row.appendChild(new_text_cell(games[i].black_increment));
+
+		if (games[i].editable == "yes") {
+			row.appendChild(new_button_cell("Edit", games[i].id, i+1));
+		}
 
 		tbody.appendChild(row);
 	}
