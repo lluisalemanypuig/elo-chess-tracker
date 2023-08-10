@@ -4,7 +4,7 @@ export const CREATE_USER = 'create_user';
 /// Can create games
 export const CREATE_GAME = 'create_game';
 
-/// Edit a users
+/// Edit a user
 export const EDIT_USER = 'edit_user';
 /// Edit admin
 export const EDIT_ADMIN = 'edit_admin';
@@ -14,6 +14,17 @@ export const EDIT_TEACHER = 'edit_teacher';
 export const EDIT_MEMBER = 'edit_member';
 /// Edit students
 export const EDIT_STUDENT = 'edit_student';
+
+/// Can edit user games
+export const EDIT_USER_GAME = 'edit_user_game';
+/// Can edit admin games
+export const EDIT_ADMIN_GAME = 'edit_admin_game';
+/// Can edit teacher games
+export const EDIT_TEACHER_GAME = 'edit_teacher_game';
+/// Can edit member games
+export const EDIT_MEMBER_GAME = 'edit_member_game';
+/// Can edit student games
+export const EDIT_STUDENT_GAME = 'edit_student_game';
 
 /// Assign admin role
 export const ASSIGN_ROLE_ADMIN = 'assign_role_admin';
@@ -56,6 +67,12 @@ export const all_actions = [
 	EDIT_TEACHER,
 	EDIT_MEMBER,
 	EDIT_STUDENT,
+
+	EDIT_USER_GAME,
+	EDIT_ADMIN_GAME,
+	EDIT_TEACHER_GAME,
+	EDIT_MEMBER_GAME,
+	EDIT_STUDENT_GAME,
 
 	ASSIGN_ROLE_ADMIN,
 	ASSIGN_ROLE_TEACHER,
