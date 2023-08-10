@@ -124,7 +124,7 @@ export async function query_games_list_own(req: any, res: any) {
 
 	let r = is_user_logged_in(id, username);
 	if (!r[0]) {
-		res.send(r[1]);
+		res.send({ 'r' : '0', 'reason' : r[1] });
 		return;
 	}
 
@@ -154,7 +154,7 @@ export async function query_games_list_all(req: any, res: any) {
 
 	let r = is_user_logged_in(id, username);
 	if (!r[0]) {
-		res.send(r[1]);
+		res.send({ 'r' : '0', 'reason' : r[1] });
 		return;
 	}
 	let u = user_retrieve(username) as User;
