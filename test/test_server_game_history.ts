@@ -31,14 +31,22 @@ const prompt = require('prompt-sync')();
 
 server_initialize_from_configuration_file("system_configuration_test.json");
 
-let mem = ServerMemory.get_instance();
+function dump_memory() {
+	let mem = ServerMemory.get_instance();
+	console.log("==================================");
+	for (let i = 0; i < mem.users.length; ++i) {
+		console.log("----------------------------------");
+		console.log(mem.users[i]);
+	}
+}
 
 let jn1 = (user_retrieve("anatoly.karpov") as User).clone();
 let al1 = (user_retrieve("vasily.smyslov") as User).clone();
 let jn2 = (user_retrieve("anatoly.karpov") as User).clone();
 let al2 = (user_retrieve("vasily.smyslov") as User).clone();
 
-let a = prompt("Add 1st game:");
+///////////////////////////////////////////////////////////
+prompt("Add 1st game:");
 console.log("Adding the first game with date '2022-12-15..18:00:00'")
 
 {
@@ -54,13 +62,11 @@ console.log("Adding the first game with date '2022-12-15..18:00:00'")
 	game_add(game);
 }
 
-console.log("==================================");
-for (let i = 0; i < mem.users.length; ++i) {
-	console.log("----------------------------------");
-	console.log(mem.users[i]);
-}
-a = prompt("Add 2nd game:");
-console.log("Adding the first game with date '2022-12-16..18:00:00'")
+dump_memory();
+
+///////////////////////////////////////////////////////////
+prompt("Add 2nd game:");
+console.log("Adding game with date '2022-12-16..18:00:00'")
 
 {
 	let game = new Game(
@@ -75,13 +81,11 @@ console.log("Adding the first game with date '2022-12-16..18:00:00'")
 	game_add(game);
 }
 
-console.log("==================================");
-for (let i = 0; i < mem.users.length; ++i) {
-	console.log("----------------------------------");
-	console.log(mem.users[i]);
-}
+dump_memory();
+
+///////////////////////////////////////////////////////////
 prompt("Add 3rd game:");
-console.log("Adding the second game with date '2022-12-14..18:00:00'")
+console.log("Adding game with date '2022-12-14..18:00:00'")
 
 {
 	let game = new Game(
@@ -96,13 +100,11 @@ console.log("Adding the second game with date '2022-12-14..18:00:00'")
 	game_add(game);
 }
 
-console.log("==================================");
-for (let i = 0; i < mem.users.length; ++i) {
-	console.log("----------------------------------");
-	console.log(mem.users[i]);
-}
+dump_memory();
+
+///////////////////////////////////////////////////////////
 prompt("Add 4th game:");
-console.log("Adding the second game with date '2022-12-14..16:00:00'")
+console.log("Adding game with date '2022-12-14..16:00:00'")
 
 {
 	let game = new Game(
@@ -113,6 +115,25 @@ console.log("Adding the second game with date '2022-12-14..16:00:00'")
 		'Classical',
 		'Classical (90 + 30)',
 		'2022-12-14..16:00:00'
+	);
+	game_add(game);
+}
+
+dump_memory();
+
+///////////////////////////////////////////////////////////
+prompt("Add 5th game:");
+console.log("Adding game with date '2022-12-13..12:00:00'")
+
+{
+	let game = new Game(
+		"5",
+		"emanuel.lasker", (user_retrieve("emanuel.lasker") as User).get_rating("Classical"),
+		"magnus.carlsen", (user_retrieve("magnus.carlsen") as User).get_rating("Classical"),
+		'white_wins',
+		'Classical',
+		'Classical (90 + 30)',
+		'2022-12-13..12:00:00'
 	);
 	game_add(game);
 }
