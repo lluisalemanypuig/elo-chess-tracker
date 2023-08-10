@@ -5,23 +5,27 @@
 		"admin": [
 			"create_user",
 			"create_game",
-			"assign_role_admin", "assign_role_teacher", "assign_role_member", "assign_role_student",
-			"edit_user", "edit_admin", "edit_teacher", "edit_member", "edit_student",
-			"see_user_games", "see_admin_games", "see_teacher_games", "see_member_games", "see_student_games",
-			"challenge_user", "challenge_admin", "challenge_member", "challenge_teacher", "challenge_student"
+			"assign_role_admin",	"assign_role_teacher",	"assign_role_member",	"assign_role_student",
+
+			"edit_user",			"edit_admin",			"edit_teacher",			"edit_member",			"edit_student",
+			"edit_user_game",		"edit_admin_game",		"edit_teacher_game",	"edit_member_game",		"edit_student_game",
+			"see_user_games",		"see_admin_games",		"see_teacher_games",	"see_member_games",		"see_student_games",
+			"challenge_user",		"challenge_admin",		"challenge_member",		"challenge_teacher",	"challenge_student"
 		],
 		"teacher": [
 			"create_user",
 			"assign_role_student",
-			"edit_user", "edit_student",
-			"see_user_games", "see_student_games",
-			"challenge_user", "challenge_admin", "challenge_member", "challenge_teacher", "challenge_student"
+
+			"edit_user",			"edit_student",
+			"edit_user_game",		"edit_student_game",
+			"see_user_games",		"see_student_games",
+			"challenge_user",		"challenge_admin",		"challenge_member",		"challenge_teacher",	"challenge_student"
 		],
 		"member": [
-			"challenge_user", "challenge_admin", "challenge_member", "challenge_teacher", "challenge_student"
+			"challenge_user",		"challenge_admin",		"challenge_member",		"challenge_teacher",	"challenge_student"
 		],
 		"student": [
-			"challenge_user", "challenge_admin", "challenge_member", "challenge_teacher", "challenge_student"
+			"challenge_user",		"challenge_admin",		"challenge_member",		"challenge_teacher",	"challenge_student"
 		]
 	},
 	"ssl_certificate": {
