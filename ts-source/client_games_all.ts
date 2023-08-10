@@ -50,6 +50,7 @@ window.onload = async function () {
 	for (let i = 0; i < games.length; i++) {
 		let row = document.createElement("tr");
 
+		row.appendChild(new_cell(games[i].id));
 		row.appendChild(new_cell(games[i].white));
 		row.appendChild(new_cell(games[i].black));
 		row.appendChild(new_cell(games[i].result));
