@@ -29,7 +29,7 @@ import { user_retrieve } from '../ts-source/server/users';
 
 const prompt = require('prompt-sync')();
 
-server_initialize_from_configuration_file("system_configuration.json");
+server_initialize_from_configuration_file("system_configuration_test.json");
 
 let mem = ServerMemory.get_instance();
 
@@ -48,6 +48,7 @@ console.log("Adding the first game with date '2022-12-15..18:00:00'")
 		"magnus.carlsen", (user_retrieve("magnus.carlsen") as User).get_rating("Classical"),
 		'black_wins',
 		'Classical',
+		'Classical (90 + 30)',
 		'2022-12-15..18:00:00'
 	);
 	game_add(game);
@@ -68,6 +69,7 @@ console.log("Adding the first game with date '2022-12-16..18:00:00'")
 		"mikhail.botvinnik", (user_retrieve("mikhail.botvinnik") as User).get_rating("Classical"),
 		'black_wins',
 		'Classical',
+		'Classical (90 + 30)',
 		'2022-12-16..18:00:00'
 	);
 	game_add(game);
@@ -88,6 +90,7 @@ console.log("Adding the second game with date '2022-12-14..18:00:00'")
 		al2.get_username(), al2.get_rating("Classical"),
 		'black_wins',
 		'Classical',
+		'Classical (90 + 30)',
 		'2022-12-14..18:00:00'
 	);
 	game_add(game);
@@ -108,6 +111,7 @@ console.log("Adding the second game with date '2022-12-14..16:00:00'")
 		al1.get_username(), al1.get_rating("Classical"),
 		'white_wins',
 		'Classical',
+		'Classical (90 + 30)',
 		'2022-12-14..16:00:00'
 	);
 	game_add(game);
