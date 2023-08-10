@@ -20,17 +20,27 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
+const new_text_cell = function(text: string) {
+	let cell = document.createElement("td");
+	cell.textContent = text;
+	return cell;
+}
+
 window.onload = async function () {
 
-	let new_cell = function(text: string) {
-		let cell = document.createElement("td");
-		cell.textContent = text;
-		return cell;
+	const val = document.getElementById("type_of_list")?.getAttribute('value');
+
+	let query_to_server: string = "";
+	if (val == "all") {
+		query_to_server = "/query_games_all";
+	}
+	else if (val == "own") {
+		query_to_server = "/query_games_own";
 	}
 
 	// "query" the server
 	const response = await fetch(
-		"/query_games_own",
+		query_to_server,
 		{
 			method: 'GET',
 			headers: { 'Content-type': 'application/json; charset=UTF-8' }
@@ -46,20 +56,20 @@ window.onload = async function () {
 
 	let table = document.getElementById("games_table") as HTMLTableElement;
     let tbody = table.getElementsByTagName("tbody")[0];
-
-	for (var i = 0; i < games.length; i++) {
+	
+	for (let i = 0; i < games.length; i++) {
 		let row = document.createElement("tr");
 
-		row.appendChild(new_cell(games[i].id));
-		row.appendChild(new_cell(games[i].white));
-		row.appendChild(new_cell(games[i].black));
-		row.appendChild(new_cell(games[i].result));
-		row.appendChild(new_cell(games[i].time_control));
-		row.appendChild(new_cell(games[i].date));
-		row.appendChild(new_cell(games[i].white_rating));
-		row.appendChild(new_cell(games[i].white_increment));
-		row.appendChild(new_cell(games[i].black_rating));
-		row.appendChild(new_cell(games[i].black_increment));
+		row.appendChild(new_text_cell(games[i].id));
+		row.appendChild(new_text_cell(games[i].white));
+		row.appendChild(new_text_cell(games[i].black));
+		row.appendChild(new_text_cell(games[i].result));
+		row.appendChild(new_text_cell(games[i].time_control));
+		row.appendChild(new_text_cell(games[i].date));
+		row.appendChild(new_text_cell(games[i].white_rating));
+		row.appendChild(new_text_cell(games[i].white_increment));
+		row.appendChild(new_text_cell(games[i].black_rating));
+		row.appendChild(new_text_cell(games[i].black_increment));
 
 		tbody.appendChild(row);
 	}
