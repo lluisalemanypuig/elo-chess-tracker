@@ -20,7 +20,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-const new_text_cell = function(text: string) {
+function new_text_cell(text: string) {
 	let cell = document.createElement("td");
 	cell.textContent = text;
 	return cell;
@@ -30,11 +30,11 @@ function edit_button_was_clicked(event: any) {
 	console.log(`Button ${event.target.id} was clicked!`);
 }
 
-const new_button_cell = function(text: string, id: string, row_num: number) {
+function new_button_cell(text: string, id: string, row_num: number) {
 	var button = document.createElement("button");
 	button.textContent = text;
 	button.onclick = edit_button_was_clicked;
-	button.id = id + "-" + row_num;
+	button.id = "button-" + id + "-" + row_num;
 	return button;
 }
 
