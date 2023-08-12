@@ -134,3 +134,19 @@ console.log("Adding game with date '2022-12-13..12:00:00'")
 }
 
 dump_memory();
+
+///////////////////////////////////////////////////////////
+prompt("Add 6th game:");
+console.log("Adding game with date '2022-12-13..12:00:00'")
+
+{
+	let game = game_new(
+		botvinnik, fischer, 'white_wins',
+		'Classical',
+		'Classical (90 + 30)',
+		'2022-12-16..12:00:00'
+	);
+	game_add(game);
+}
+
+dump_memory();
