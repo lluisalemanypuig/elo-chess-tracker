@@ -48,10 +48,12 @@ function dump_memory() {
 	);
 }
 
-let jn1 = (user_retrieve("anatoly.karpov") as User).clone();
-let al1 = (user_retrieve("vasily.smyslov") as User).clone();
-let jn2 = (user_retrieve("anatoly.karpov") as User).clone();
-let al2 = (user_retrieve("vasily.smyslov") as User).clone();
+const karpov = "anatoly.karpov";
+const fischer = "bobby.fischer";
+const lasker = "manuel.lasker";
+const carlsen = "magnus.carlsen";
+const botvinnik = "mikhail.botvinnik";
+const smyslov = "vasily.smyslov";
 
 ///////////////////////////////////////////////////////////
 prompt("Add 1st game:");
@@ -59,9 +61,7 @@ console.log("Adding the first game with date '2022-12-15..18:00:00'")
 
 {
 	let game = game_new(
-		"emanuel.lasker",
-		"magnus.carlsen",
-		'black_wins',
+		lasker, carlsen, 'black_wins',
 		'Classical',
 		'Classical (90 + 30)',
 		'2022-12-15..18:00:00'
@@ -77,9 +77,7 @@ console.log("Adding game with date '2022-12-16..18:00:00'")
 
 {
 	let game = game_new(
-		"bobby.fischer",
-		"mikhail.botvinnik",
-		'black_wins',
+		fischer, botvinnik, 'black_wins',
 		'Classical',
 		'Classical (90 + 30)',
 		'2022-12-16..18:00:00'
@@ -95,9 +93,7 @@ console.log("Adding game with date '2022-12-14..18:00:00'")
 
 {
 	let game = game_new(
-		jn2.get_username(),
-		al2.get_username(),
-		'black_wins',
+		karpov, smyslov, 'black_wins',
 		'Classical',
 		'Classical (90 + 30)',
 		'2022-12-14..18:00:00'
@@ -113,9 +109,7 @@ console.log("Adding game with date '2022-12-14..16:00:00'")
 
 {
 	let game = game_new(
-		jn1.get_username(),
-		al1.get_username(),
-		'white_wins',
+		karpov, smyslov, 'white_wins',
 		'Classical',
 		'Classical (90 + 30)',
 		'2022-12-14..16:00:00'
@@ -131,9 +125,7 @@ console.log("Adding game with date '2022-12-13..12:00:00'")
 
 {
 	let game = game_new(
-		"emanuel.lasker",
-		"magnus.carlsen",
-		'white_wins',
+		lasker, carlsen, 'white_wins',
 		'Classical',
 		'Classical (90 + 30)',
 		'2022-12-13..12:00:00'
@@ -142,3 +134,4 @@ console.log("Adding game with date '2022-12-13..12:00:00'")
 }
 
 dump_memory();
+
