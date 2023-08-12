@@ -254,13 +254,13 @@ function update_game_record(
 			debug(log_now(), `    White rating in the game: ${JSON.stringify(white_rating)}`);
 			debug(log_now(), `        White updated: ${JSON.stringify(updated_players[white_idx as number])}`);
 			game_set[i].set_white_rating( updated_players[white_idx as number].get_rating(time_control_id).clone() );
-			debug(log_now(), `        White in the game: ${JSON.stringify(game_set[i].get_white())}`);
+			debug(log_now(), `        White in the game: ${JSON.stringify(game_set[i].get_white_rating())}`);
 		}
 		if (black_was_updated) {
 			debug(log_now(), `    Black in the game: ${JSON.stringify(black_rating)}`);
 			debug(log_now(), `        Black updated: ${JSON.stringify(updated_players[black_idx as number])}`);
 			game_set[i].set_black_rating( updated_players[black_idx as number].get_rating(time_control_id).clone() );
-			debug(log_now(), `        Black in the game: ${JSON.stringify(game_set[i].get_black())}`);
+			debug(log_now(), `        Black in the game: ${JSON.stringify(game_set[i].get_black_rating())}`);
 		}
 
 		if (white_was_updated || black_was_updated) {
