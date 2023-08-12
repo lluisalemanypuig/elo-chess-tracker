@@ -42,8 +42,8 @@ import {
 function increment(g: Game): any {
 	const [white_after, black_after] = RatingSystem.get_instance().formula(g);
 	return {
-		'white_increment' : Math.round(white_after.rating - g.white_rating.rating),
-		'black_increment' : Math.round(black_after.rating - g.black_rating.rating)
+		'white_increment' : Math.round(white_after.rating - g.get_white_rating().rating),
+		'black_increment' : Math.round(black_after.rating - g.get_black_rating().rating)
 	};
 }
 
@@ -87,21 +87,21 @@ function filter_game_list(
 			if (!filter_game(g)) { continue; }
 
 			const inc = increment(g);
-			const time_control_name: string = RatingSystem.get_instance().get_name_time_control(g.time_control_id);
+			const time_control_name: string = RatingSystem.get_instance().get_name_time_control(g.get_time_control_id());
 
 			let result: string;
-			if (g.result == 'white_wins') {
+			if (g.get_result() == 'white_wins') {
 				result = "1 - 0";
 			}
-			else if (g.result == 'black_wins') {
+			else if (g.get_result() == 'black_wins') {
 				result = "0 - 1";
 			}
 			else {
 				result = "1/2 - 1/2"
 			}
 
-			const white = (user_retrieve(g.white) as User);
-			const black = (user_retrieve(g.black) as User);
+			const white = (user_retrieve(g.get_white()) as User);
+			const black = (user_retrieve(g.get_black()) as User);
 
 			const white_or_black_is = function(role: string) {
 				if (white.get_roles().includes(role)) { return true; }
@@ -135,9 +135,9 @@ function filter_game_list(
 				'black': black.get_full_name(),
 				'result': result,
 				'time_control': time_control_name,
-				'date' : g.when.replace('..', ' '),
-				'white_rating': Math.round(g.white_rating.rating),
-				'black_rating': Math.round(g.black_rating.rating),
+				'date' : g.get_date().replace('..', ' '),
+				'white_rating': Math.round(g.get_white_rating().rating),
+				'black_rating': Math.round(g.get_black_rating().rating),
 				'white_increment': (inc.white_increment < 0 ? inc.white_increment : "+" + inc.white_increment),
 				'black_increment': (inc.black_increment < 0 ? inc.black_increment : "+" + inc.black_increment),
 				'editable' : is_editable
@@ -199,8 +199,8 @@ export async function query_games_list_all(req: any, res: any) {
 	}
 
 	const game_contains = function(g: Game, r: UserRole): boolean {
-		const white = user_retrieve(g.white) as User;
-		const black = user_retrieve(g.black) as User;
+		const white = user_retrieve(g.get_white()) as User;
+		const black = user_retrieve(g.get_black()) as User;
 		return white.is(r) || black.is(r);
 	}
 

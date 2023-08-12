@@ -40,23 +40,23 @@ export type GameResult = "white_wins" | "black_wins" | "draw";
  */
 export class Game {
 	/// Identifier of the game
-	public readonly id: string;
+	private readonly id: string;
 	/// White player username
-	public white: string;
+	private white: string;
 	/// White in the state before the game.
-	public white_rating: Rating;
+	private white_rating: Rating;
 	/// White player username
-	public black: string;
+	private black: string;
 	/// White in the state before the game.
-	public black_rating: Rating;
+	private black_rating: Rating;
 	/// Result of the game.
-	public result: GameResult;
+	private result: GameResult;
 	/// Time control id (Classical, Blitz, ...)
-	public time_control_id: string;
+	private time_control_id: string;
 	/// Time control name (Classical (90 + 30), Blitz (5 + 3), ...)
-	public time_control_name: string;
+	private time_control_name: string;
 	/// Date when the game took place.
-	public when: string;
+	private when: string;
 
 	/**
 	 * @brief Constructor
@@ -91,17 +91,41 @@ export class Game {
 		this.when = when;
 	}
 
+	/// Return white's username
+	get_white(): string { return this.white; }
+	/// Return white's rating
+	get_white_rating(): Rating { return this.white_rating; }
+	/// Set white's rating
+	set_white_rating(r: Rating) { this.white_rating = r; }
+
+	/// Return black's username
+	get_black(): string { return this.black; }
+	/// Return black's rating
+	get_black_rating(): Rating { return this.black_rating; }
+	/// Set black's rating
+	set_black_rating(r: Rating) { this.black_rating = r; }
+	
+	/// Return this game's time control id.
+	get_time_control_id(): string { return this.time_control_id; }
+
+	/// Returns game's result
+	get_result(): string { return this.result; }
+
+	/// Return game's date
+	get_date(): string { return this.when; }
+
+	/// Is user 'username' in this game?
 	is_user_involved(username: string): boolean {
 		return this.white == username || this.black == username;
 	}
 
+	/// Is this game of time control 'time_control_id'
 	has_time(time_control_id: string): boolean {
 		return this.time_control_id == time_control_id;
 	}
 
-	get_id(): string {
-		return this.id;
-	}
+	/// Returns the game's ID
+	get_id(): string { return this.id; }
 }
 
 /**

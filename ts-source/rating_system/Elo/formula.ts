@@ -92,9 +92,9 @@ function update_constant_K(rating: EloRating): EloRating {
 }
 
 export function player_vs_player(game: Game): [EloRating, EloRating] {
-	let white_rating = game.white_rating.clone() as EloRating;
-	let black_rating = game.black_rating.clone() as EloRating;
-	const result = game.result;
+	let white_rating = game.get_white_rating().clone() as EloRating;
+	let black_rating = game.get_black_rating().clone() as EloRating;
+	const result = game.get_result();
 
 	let exp_score_a = get_exp_score(white_rating.rating, black_rating.rating);
 	if (result == 'white_wins') {
