@@ -20,12 +20,9 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { Game } from '../ts-source/models/game';
-import { User } from '../ts-source/models/user';
 import { ServerMemory } from '../ts-source/server/configuration';
 import { server_initialize_from_configuration_file } from '../ts-source/server/initialization';
-import { game_add, game_new } from '../ts-source/server/game_history';
-import { user_retrieve } from '../ts-source/server/users';
+import { game_add, game_edit_result, game_new } from '../ts-source/server/game_history';
 
 const prompt = require('prompt-sync')();
 
@@ -59,6 +56,7 @@ const smyslov = "vasily.smyslov";
 prompt("Add 1st game:");
 console.log("Adding the first game with date '2022-12-15..18:00:00'")
 
+let id_game_1: string;
 {
 	let game = game_new(
 		lasker, carlsen, 'black_wins',
@@ -66,6 +64,7 @@ console.log("Adding the first game with date '2022-12-15..18:00:00'")
 		'Classical (90 + 30)',
 		'2022-12-15..18:00:00'
 	);
+	id_game_1 = game.get_id();
 	game_add(game);
 }
 
@@ -75,6 +74,7 @@ dump_memory();
 prompt("Add 2nd game:");
 console.log("Adding game with date '2022-12-16..18:00:00'")
 
+let id_game_2: string;
 {
 	let game = game_new(
 		fischer, botvinnik, 'black_wins',
@@ -82,6 +82,7 @@ console.log("Adding game with date '2022-12-16..18:00:00'")
 		'Classical (90 + 30)',
 		'2022-12-16..18:00:00'
 	);
+	id_game_2 = game.get_id();
 	game_add(game);
 }
 
@@ -91,6 +92,7 @@ dump_memory();
 prompt("Add 3rd game:");
 console.log("Adding game with date '2022-12-14..18:00:00'")
 
+let id_game_3: string;
 {
 	let game = game_new(
 		karpov, smyslov, 'black_wins',
@@ -98,6 +100,7 @@ console.log("Adding game with date '2022-12-14..18:00:00'")
 		'Classical (90 + 30)',
 		'2022-12-14..18:00:00'
 	);
+	id_game_3 = game.get_id();
 	game_add(game);
 }
 
@@ -107,6 +110,7 @@ dump_memory();
 prompt("Add 4th game:");
 console.log("Adding game with date '2022-12-14..16:00:00'")
 
+let id_game_4: string;
 {
 	let game = game_new(
 		karpov, smyslov, 'white_wins',
@@ -114,6 +118,7 @@ console.log("Adding game with date '2022-12-14..16:00:00'")
 		'Classical (90 + 30)',
 		'2022-12-14..16:00:00'
 	);
+	id_game_4 = game.get_id();
 	game_add(game);
 }
 
@@ -123,6 +128,7 @@ dump_memory();
 prompt("Add 5th game:");
 console.log("Adding game with date '2022-12-13..12:00:00'")
 
+let id_game_5: string;
 {
 	let game = game_new(
 		lasker, carlsen, 'white_wins',
@@ -130,6 +136,7 @@ console.log("Adding game with date '2022-12-13..12:00:00'")
 		'Classical (90 + 30)',
 		'2022-12-13..12:00:00'
 	);
+	id_game_5 = game.get_id();
 	game_add(game);
 }
 
@@ -139,6 +146,7 @@ dump_memory();
 prompt("Add 6th game:");
 console.log("Adding game with date '2022-12-13..12:00:00'")
 
+let id_game_6: string;
 {
 	let game = game_new(
 		botvinnik, fischer, 'white_wins',
@@ -146,7 +154,16 @@ console.log("Adding game with date '2022-12-13..12:00:00'")
 		'Classical (90 + 30)',
 		'2022-12-16..12:00:00'
 	);
+	id_game_6 = game.get_id();
 	game_add(game);
 }
+
+dump_memory();
+
+///////////////////////////////////////////////////////////
+prompt("Edit 5th game:");
+console.log("Editing 5th game")
+
+game_edit_result(id_game_5, "black_wins");
 
 dump_memory();
