@@ -131,6 +131,10 @@ import { post_games_create, get_games_create_page } from './server_games';
 router.get('/games_create', get_games_create_page);
 router.post('/games_create', post_games_create);
 
+// implement editing a game's result
+import { post_games_edit_result } from './server_games';
+router.post('/games_edit_result', post_games_edit_result);
+
 // implement retrieve list of games
 import { get_games_all_page, get_games_own_page } from './server_games';
 router.get('/games_own', get_games_own_page);

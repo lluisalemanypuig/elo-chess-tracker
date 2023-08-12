@@ -26,16 +26,39 @@ function new_text_cell(text: string) {
 	return cell;
 }
 
-function edit_button_was_clicked(event: any) {
-	console.log(`Button ${event.target.id} was clicked!`);
+async function edit_button_was_clicked(event: any) {
+	let button = event.target as HTMLButtonElement;
+
+	const game_id = button.getAttribute("game_id");
+	const new_result = (document.getElementById(button.getAttribute("select_id") as string) as HTMLSelectElement).value;
+
+	const response = await fetch(
+		"/games_edit_result",
+		{
+			method: 'POST',
+			body: JSON.stringify({
+				'game_id' : game_id,
+				'new_result' : new_result
+			}),
+			headers: { 'Content-type': 'application/json; charset=UTF-8' }
+		}
+	);
+
+	const data = await response.json();
+	if (data.r == '0') {
+		alert(data.reason);
+		return;
+	}
+
+	location.reload();
 }
 
-function new_button_cell(text: string, game_id: string, row_num: number) {
+function new_button_cell(text: string, game_id: string) {
 	let button = document.createElement("button") as HTMLButtonElement;
 	button.textContent = text;
-	button.id = "button-" + game_id + "-" + row_num;
+	button.id = "button_edit-" + game_id;
 	button.setAttribute("game_id", game_id);
-	button.setAttribute("row_num", String(row_num));
+	button.setAttribute("select_id", "select_result-" + game_id);
 	button.onclick = edit_button_was_clicked;
 	button.disabled = true;
 	return button;
@@ -55,7 +78,7 @@ function result_selection_changed(event: any) {
 	}
 }
 
-function new_select_cell_result(original_result: string, game_id: string, row_num: number) {
+function new_select_cell_result(original_result: string, game_id: string) {
 	let select_result = document.createElement("select") as HTMLSelectElement;
 
 	const result_from_text_to_value = function(text: string) {
@@ -77,10 +100,11 @@ function new_select_cell_result(original_result: string, game_id: string, row_nu
 	add_result_option("0 - 1");
 	}
 
+	select_result.id = "select_result-" + game_id;
 	select_result.value = result_from_text_to_value(original_result);
 	select_result.onchange = result_selection_changed;
 	select_result.setAttribute("original_value", result_from_text_to_value(original_result));
-	select_result.setAttribute("button_id", "button-" + game_id + "-" + row_num);
+	select_result.setAttribute("button_id", "button_edit-" + game_id);
 
 	return select_result;
 }
@@ -122,7 +146,7 @@ window.onload = async function () {
 		row.appendChild(new_text_cell(games[i].white));
 		row.appendChild(new_text_cell(games[i].black));
 		
-		row.appendChild(new_select_cell_result(games[i].result, games[i].id, i + 1));
+		row.appendChild(new_select_cell_result(games[i].result, games[i].id));
 		
 		row.appendChild(new_text_cell(games[i].time_control));
 		row.appendChild(new_text_cell(games[i].date));
@@ -132,7 +156,7 @@ window.onload = async function () {
 		row.appendChild(new_text_cell(games[i].black_increment));
 
 		if (games[i].editable == "yes") {
-			row.appendChild(new_button_cell("Edit", games[i].id, i + 1));
+			row.appendChild(new_button_cell("Edit", games[i].id));
 		}
 
 		tbody.appendChild(row);

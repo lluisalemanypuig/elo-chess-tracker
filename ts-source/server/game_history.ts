@@ -451,15 +451,13 @@ export function game_add(g: Game): void {
 	ServerMemory.get_instance().game_id_to_record_file.set(g.get_id(), when);
 }
 
-/**
- * @brief Edit a game
- * @param game_id The ID of the game to edit
- * @param new_result The (new) result of the game
- */
-export function game_edit_result(game_id: string, new_result: GameResult): void {
-	debug(log_now(), `Editing game '${game_id}'`);
-	
-	const game_record_string = ServerMemory.get_instance().game_id_to_record_file.get(game_id) as string;
+export function game_find_by_id(game_id: string): [string[], string, Game[], number, number] | null {
+	const game_record_string_ = ServerMemory.get_instance().game_id_to_record_file.get(game_id);
+	// game_id does not exist
+	if (game_record_string_ == null) {
+		return null;
+	}
+	const game_record_string = game_record_string_ as string;
 
 	const games_dir = ServerDirectories.get_instance().games_directory;
 	const game_record_file: string = path.join(games_dir, game_record_string);
@@ -475,8 +473,8 @@ export function game_edit_result(game_id: string, new_result: GameResult): void 
 
 	// check that the file actually exists
 	debug(log_now(), `Searching '${game_record_string}' in '${all_record_strings}'.`);
-	const record_index_in_list = search(all_record_strings, game_record_string);
-	assert(record_index_in_list != -1);
+	const record_idx_in_list = search(all_record_strings, game_record_string);
+	assert(record_idx_in_list != -1);
 
 	// read games in record
 	const game_set = read_game_record(game_record_file);
@@ -485,11 +483,26 @@ export function game_edit_result(game_id: string, new_result: GameResult): void 
 	const game_idx = linear_find(game_set, (g: Game): boolean => { return g.get_id() == game_id });
 	assert(game_idx < game_set.length);
 
-	let game = game_set[game_idx];
+	const game = game_set[game_idx];
 	assert(game.get_id() == game_id);
 
-	// nothing to do
-	if (game.get_result() == new_result) { return; }
+	return [all_record_strings, game_record_file, game_set, record_idx_in_list, game_idx];
+}
+
+/**
+ * @brief Edit a game
+ * @param game_id The ID of the game to edit
+ * @param new_result The (new) result of the game
+ */
+export function game_edit_result(game_id: string, new_result: GameResult): void {
+	const games_dir = ServerDirectories.get_instance().games_directory;
+
+	debug(log_now(), `Editing game '${game_id}'`);
+	
+	const r = game_find_by_id(game_id);
+	if (r == null) { return; }
+	let [all_record_strings, game_record_file, game_set, record_idx_in_list, game_idx] = r as [string[], string, Game[], number, number];
+	let game = game_set[record_idx_in_list];
 
 	// ---------------------------------------------------------
 	// actually apply changes
@@ -517,7 +530,7 @@ export function game_edit_result(game_id: string, new_result: GameResult): void 
 	debug(log_now(), `        Game record '${game_record_file}' written.`);
 
 	debug(log_now(), "Update the rest of the records...");
-	for (let idx = record_index_in_list + 1; idx < all_record_strings.length; ++idx) {
+	for (let idx = record_idx_in_list + 1; idx < all_record_strings.length; ++idx) {
 		const record_string = all_record_strings[idx];
 
 		// files already contain the '.json' extension
