@@ -109,24 +109,21 @@ function filter_game_list(
 				return false;
 			};
 
-			let is_editable: string = "N/A";
-			if (user.get_actions().includes(EDIT_USER_GAMES)) {
+			let is_editable: boolean = false;
+			if (user.can_do(EDIT_USER_GAMES)) {
 				
-				let can_edit: boolean = false;
-				if (user.get_actions().includes(EDIT_ADMIN_GAMES) && white_or_black_is(ADMIN)) {
-					can_edit = true;
+				if (user.can_do(EDIT_ADMIN_GAMES) && white_or_black_is(ADMIN)) {
+					is_editable = true;
 				}
-				if (user.get_actions().includes(EDIT_MEMBER_GAMES) && white_or_black_is(MEMBER)) {
-					can_edit = true;
+				if (user.can_do(EDIT_MEMBER_GAMES) && white_or_black_is(MEMBER)) {
+					is_editable = true;
 				}
-				if (user.get_actions().includes(EDIT_TEACHER_GAMES) && white_or_black_is(TEACHER)) {
-					can_edit = true;
+				if (user.can_do(EDIT_TEACHER_GAMES) && white_or_black_is(TEACHER)) {
+					is_editable = true;
 				}
-				if (user.get_actions().includes(EDIT_STUDENT_GAMES) && white_or_black_is(STUDENT)) {
-					can_edit = true;
+				if (user.can_do(EDIT_STUDENT_GAMES) && white_or_black_is(STUDENT)) {
+					is_editable = true;
 				}
-
-				is_editable = can_edit ? "yes" : "no";
 			}
 
 			data_to_return.push({
@@ -140,7 +137,7 @@ function filter_game_list(
 				'black_rating': Math.round(g.get_black_rating().rating),
 				'white_increment': (inc.white_increment < 0 ? inc.white_increment : "+" + inc.white_increment),
 				'black_increment': (inc.black_increment < 0 ? inc.black_increment : "+" + inc.black_increment),
-				'editable' : is_editable
+				'editable' : is_editable ? "yes" : "no"
 			});
 		}
 	}
