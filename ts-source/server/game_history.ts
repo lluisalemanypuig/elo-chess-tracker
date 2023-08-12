@@ -41,6 +41,14 @@ function game_compare_dates(g1: Game, g2: Game): number {
 	return 1;
 }
 
+function make_record_string_str(when: string): string {
+	return long_date_to_short_date(when);
+}
+
+function make_record_string_game(g: Game): string {
+	return make_record_string_str(g.when);
+}
+
 /// Creates a new game with no players using the parameters given
 export function game_new(
 	white: string, black: string,
@@ -50,7 +58,10 @@ export function game_new(
 
 ): Game
 {
-	const id_str = number_to_string(ServerMemory.get_instance().max_game_id + 1);
+	// retrieve next id and increment maximum id
+	const id_number = ServerMemory.get_instance().max_game_id + 1;
+	const id_str = number_to_string(id_number);
+	ServerMemory.get_instance().max_game_id += 1;
 
 	let white_to_assign: Rating;
 	let black_to_assign: Rating;
@@ -94,8 +105,6 @@ export function game_new(
 	}
 	}
 
-	// increment number of games
-	ServerMemory.get_instance().max_game_id += 1;
 	return new Game(
 		id_str,
 		white, white_to_assign,
@@ -117,17 +126,17 @@ function game_next_of_player(
 
 	debug(log_now(), `Find the game of user '${username}' right after date '${when}'`);
 
-	let games_dir = ServerDirectories.get_instance().games_directory;
+	const games_dir = ServerDirectories.get_instance().games_directory;
 
 	// The file into which we have to add the new game.
-	let game_record_string = long_date_to_short_date(when);
+	const game_record_string = make_record_string_str(when);
 	debug(log_now(), `    Date: '${game_record_string}'`);
-	let game_record_file: string = path.join(games_dir, game_record_string);
+	const game_record_file: string = path.join(games_dir, game_record_string);
 	debug(log_now(), `    File: '${game_record_file}'`);
 
 	// The files currently existing in the 'games_directory'
 	debug(log_now(), `Reading directory '${games_dir}'...`);
-	let all_record_strings = fs.readdirSync(games_dir);
+	const all_record_strings = fs.readdirSync(games_dir);
 	debug(log_now(), `    Directory contents: '${all_record_strings}'`);
 
 	// There are no game records. There is no next game
@@ -147,7 +156,7 @@ function game_next_of_player(
 		debug(log_now(), `Inspecting existing record '${game_record_file}'...`);
 
 		debug(log_now(), `    Read game record file '${game_record_file}'...`);
-		let data = fs.readFileSync(game_record_file, 'utf8');
+		const data = fs.readFileSync(game_record_file, 'utf8');
 		debug(log_now(), `        Game record '${game_record_file}' read.`);
 
 		// convert data into an array
@@ -180,14 +189,14 @@ function game_next_of_player(
 
 	debug(log_now(), "Inspecting the rest of the records...");
 	for (let idx = record_index_in_list; idx < all_record_strings.length; ++idx) {
-		let record_string = all_record_strings[idx];
+		const record_string = all_record_strings[idx];
 
 		// files already contain the '.json' extension
-		let record_file = path.join(games_dir, record_string);
+		const record_file = path.join(games_dir, record_string);
 
 		// read and parse the next file
 		debug(log_now(), `    Reading game record '${record_file}'...`);
-		let data = fs.readFileSync(record_file, 'utf8');
+		const data = fs.readFileSync(record_file, 'utf8');
 		debug(log_now(), `        Game record '${record_file}' read.`);
 		let game_set = game_set_from_json(data);
 
@@ -289,9 +298,10 @@ function update_game_record(
 /**
  * @brief Inserts a game into the entire history
  * @param game Game to be inserted
+ * @param game_record_string The file into which we have to add the new game
  * @post Users in the server are update (both memory and user files)
  */
-function game_insert_in_history(game: Game): void
+function game_insert_in_history(game: Game, game_record_string: string): void
 {
 	// some games will change and will have to be updated
 	let updated_players: Player[] = [];
@@ -308,9 +318,7 @@ function game_insert_in_history(game: Game): void
 	debug(log_now(), "Adding game into the history...");
 	debug(log_now(), `    Game '${JSON.stringify(game)}'`);
 
-	// The file into which we have to add the new game.
-	const game_record_string = long_date_to_short_date(game.when);
-	debug(log_now(), `    Date: '${game_record_string}'`);
+	debug(log_now(), `    Game record string: '${game_record_string}'`);
 	const game_record_file: string = path.join(games_dir, game_record_string);
 	debug(log_now(), `    File: '${game_record_file}'`);
 
@@ -372,14 +380,14 @@ function game_insert_in_history(game: Game): void
 		debug(log_now(), `Update existing record '${game_record_file}'...`);
 
 		debug(log_now(), `    Read game record file '${game_record_file}'...`);
-		let data = fs.readFileSync(game_record_file, 'utf8');
+		const data = fs.readFileSync(game_record_file, 'utf8');
 		debug(log_now(), `        Game record '${game_record_file}' read.`);
 
 		// convert data into an array
-		let game_set = game_set_from_json(data);
+		const game_set = game_set_from_json(data);
 
 		// where should the current game be inserted
-		let [game_idx, game_exists] = where_should_be_inserted(game_set, game, game_compare_dates);
+		const [game_idx, game_exists] = where_should_be_inserted(game_set, game, game_compare_dates);
 
 		// The game should not exist in its record.
 		// This assumes that different games will never
@@ -406,16 +414,16 @@ function game_insert_in_history(game: Game): void
 
 	debug(log_now(), "Update the rest of the records...");
 	for (let idx = record_index_in_list; idx < all_record_strings.length; ++idx) {
-		let record_string = all_record_strings[idx];
+		const record_string = all_record_strings[idx];
 
 		// files already contain the '.json' extension
-		let record_file = path.join(games_dir, record_string);
+		const record_file = path.join(games_dir, record_string);
 
 		// read and parse the next file
 		debug(log_now(), `    Reading game record '${record_file}'...`);
 		const data = fs.readFileSync(record_file, 'utf8');
 		debug(log_now(), `        Game record '${record_file}' read.`);
-		let game_set = game_set_from_json(data);
+		const game_set = game_set_from_json(data);
 
 		// update the current record
 		debug(log_now(), `    Updating game record '${record_file}'...`);
@@ -441,10 +449,10 @@ function game_insert_in_history(game: Game): void
 export function game_add(g: Game): void {
 	debug(log_now(), `Add game into the list of games played by both users...`);
 	
-	const when = long_date_to_short_date(g.when);
+	const when = make_record_string_game(g);
 	(user_retrieve(g.white) as User).add_game(when);
 	(user_retrieve(g.black) as User).add_game(when);
 	
 	debug(log_now(), `Inserting the game into the history...`);
-	game_insert_in_history(g);
+	game_insert_in_history(g, when);
 }
