@@ -178,7 +178,7 @@ Available actions are
 	- *challenge_teacher*
 	- *challenge_student*
 
-## Run the website
+## Running the website
 
 Once the configuration file has been properly edited, now we can run the website.
 
