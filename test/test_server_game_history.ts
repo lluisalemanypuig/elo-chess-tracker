@@ -50,7 +50,7 @@ function dump_memory() {
 
 const karpov = "anatoly.karpov";
 const fischer = "bobby.fischer";
-const lasker = "manuel.lasker";
+const lasker = "emanuel.lasker";
 const carlsen = "magnus.carlsen";
 const botvinnik = "mikhail.botvinnik";
 const smyslov = "vasily.smyslov";
@@ -134,4 +134,3 @@ console.log("Adding game with date '2022-12-13..12:00:00'")
 }
 
 dump_memory();
-
