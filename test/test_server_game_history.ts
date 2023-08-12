@@ -24,7 +24,7 @@ import { Game } from '../ts-source/models/game';
 import { User } from '../ts-source/models/user';
 import { ServerMemory } from '../ts-source/server/configuration';
 import { server_initialize_from_configuration_file } from '../ts-source/server/initialization';
-import { game_add } from '../ts-source/server/game_history';
+import { game_add, game_new } from '../ts-source/server/game_history';
 import { user_retrieve } from '../ts-source/server/users';
 
 const prompt = require('prompt-sync')();
@@ -32,12 +32,20 @@ const prompt = require('prompt-sync')();
 server_initialize_from_configuration_file("system_configuration_test.json");
 
 function dump_memory() {
-	let mem = ServerMemory.get_instance();
+	const memory = ServerMemory.get_instance();
 	console.log("==================================");
-	for (let i = 0; i < mem.users.length; ++i) {
+	console.log("Users");
+	for (let i = 0; i < memory.users.length; ++i) {
 		console.log("----------------------------------");
-		console.log(mem.users[i]);
+		console.log(memory.users[i]);
 	}
+	console.log("==================================");
+	console.log("Game IDs to record files");
+	memory.game_id_to_record_file.forEach(
+		(record: string, id: string) => {
+			console.log(`ID '${id}' -> '${record}'`);
+		}
+	);
 }
 
 let jn1 = (user_retrieve("anatoly.karpov") as User).clone();
@@ -50,10 +58,9 @@ prompt("Add 1st game:");
 console.log("Adding the first game with date '2022-12-15..18:00:00'")
 
 {
-	let game = new Game(
-		"1",
-		"emanuel.lasker", (user_retrieve("emanuel.lasker") as User).get_rating("Classical"),
-		"magnus.carlsen", (user_retrieve("magnus.carlsen") as User).get_rating("Classical"),
+	let game = game_new(
+		"emanuel.lasker",
+		"magnus.carlsen",
 		'black_wins',
 		'Classical',
 		'Classical (90 + 30)',
@@ -69,10 +76,9 @@ prompt("Add 2nd game:");
 console.log("Adding game with date '2022-12-16..18:00:00'")
 
 {
-	let game = new Game(
-		"2",
-		"bobby.fischer", (user_retrieve("bobby.fischer") as User).get_rating("Classical"),
-		"mikhail.botvinnik", (user_retrieve("mikhail.botvinnik") as User).get_rating("Classical"),
+	let game = game_new(
+		"bobby.fischer",
+		"mikhail.botvinnik",
 		'black_wins',
 		'Classical',
 		'Classical (90 + 30)',
@@ -88,10 +94,9 @@ prompt("Add 3rd game:");
 console.log("Adding game with date '2022-12-14..18:00:00'")
 
 {
-	let game = new Game(
-		"3",
-		jn2.get_username(), jn2.get_rating("Classical"),
-		al2.get_username(), al2.get_rating("Classical"),
+	let game = game_new(
+		jn2.get_username(),
+		al2.get_username(),
 		'black_wins',
 		'Classical',
 		'Classical (90 + 30)',
@@ -107,10 +112,9 @@ prompt("Add 4th game:");
 console.log("Adding game with date '2022-12-14..16:00:00'")
 
 {
-	let game = new Game(
-		"4",
-		jn1.get_username(), jn1.get_rating("Classical"),
-		al1.get_username(), al1.get_rating("Classical"),
+	let game = game_new(
+		jn1.get_username(),
+		al1.get_username(),
 		'white_wins',
 		'Classical',
 		'Classical (90 + 30)',
@@ -126,10 +130,9 @@ prompt("Add 5th game:");
 console.log("Adding game with date '2022-12-13..12:00:00'")
 
 {
-	let game = new Game(
-		"5",
-		"emanuel.lasker", (user_retrieve("emanuel.lasker") as User).get_rating("Classical"),
-		"magnus.carlsen", (user_retrieve("magnus.carlsen") as User).get_rating("Classical"),
+	let game = game_new(
+		"emanuel.lasker",
+		"magnus.carlsen",
 		'white_wins',
 		'Classical',
 		'Classical (90 + 30)',
@@ -137,3 +140,5 @@ console.log("Adding game with date '2022-12-13..12:00:00'")
 	);
 	game_add(game);
 }
+
+dump_memory();
