@@ -29,7 +29,7 @@ import { log_now } from '../utils/misc';
 import { ServerMemory, ServerDirectories, RatingSystem } from "./configuration";
 import { user_from_json } from '../models/user';
 import { challenge_from_json } from '../models/challenge';
-import { game_set_from_json } from '../models/game';
+import { Game, game_set_from_json } from '../models/game';
 import { ADMIN, MEMBER, STUDENT, TEACHER } from '../models/user_role';
 import { UserRoleToUserAction } from '../models/user_role_action';
 import { TimeControl } from '../models/time_control';
@@ -102,7 +102,8 @@ function initialize_challenges(): void {
 function initialize_games(): void {
 	debug(log_now(), "Initialize games...");
 
-	let dir = ServerDirectories.get_instance().games_directory;
+	let memory = ServerMemory.get_instance();
+	const dir = ServerDirectories.get_instance().games_directory;
 	let num_games: number = 0;
 	let max_game_id: number = 0;
 
@@ -110,22 +111,24 @@ function initialize_games(): void {
 	let all_game_record_files = fs.readdirSync(dir);
 
 	for (let i = 0; i < all_game_record_files.length; ++i) {
-		let game_record_file = path.join(dir, all_game_record_files[i]);
+		const game_record_file = path.join(dir, all_game_record_files[i]);
 
 		debug(log_now(), `        Reading file '${game_record_file}'`);
-		let game_record_data = fs.readFileSync(game_record_file, 'utf8');
-		let game_set = game_set_from_json(game_record_data);
+		const game_record_data = fs.readFileSync(game_record_file, 'utf8');
+		const game_set = game_set_from_json(game_record_data);
 
 		for (let j = 0; j < game_set.length; ++j) {
-			const g = game_set[j];
+			const g = game_set[j] as Game;
 			const game_id = parseInt( g.get_id(), 10 );
 			max_game_id = max_game_id < game_id ? game_id : max_game_id;
+
+			memory.game_id_to_record_file.set(g.get_id(), all_game_record_files[i]);
 		}
 
 		num_games += game_set.length;
 	}
 
-	ServerMemory.get_instance().max_game_id = max_game_id;
+	memory.max_game_id = max_game_id;
 
 	debug(log_now(), `    Found ${num_games} games.`);
 	debug(log_now(), `    Maximum game id ${max_game_id}.`);

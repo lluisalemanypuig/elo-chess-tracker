@@ -201,6 +201,8 @@ export class ServerMemory {
 	
 	/// Number of games in the system
 	public max_game_id: number = 0;
+	/// Map from game ID to game record (file)
+	public game_id_to_record_file: Map<string, string> = new Map();
 
 	/// The only instance of this class
 	private static instance: ServerMemory;

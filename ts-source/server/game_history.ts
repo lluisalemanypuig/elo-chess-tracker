@@ -61,6 +61,7 @@ export function game_new(
 	// retrieve next id and increment maximum id
 	const id_number = ServerMemory.get_instance().max_game_id + 1;
 	const id_str = number_to_string(id_number);
+	debug(log_now(), `ID for new game: ${id_str}`);
 	ServerMemory.get_instance().max_game_id += 1;
 
 	let white_to_assign: Rating;
@@ -455,4 +456,6 @@ export function game_add(g: Game): void {
 	
 	debug(log_now(), `Inserting the game into the history...`);
 	game_insert_in_history(g, when);
+	debug(log_now(), `Updating the hash table (game id |--> game record)`);
+	ServerMemory.get_instance().game_id_to_record_file.set(g.get_id(), when);
 }
