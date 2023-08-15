@@ -457,36 +457,36 @@ export function game_find_by_id(game_id: string): [string[], string, Game[], num
 	if (game_record_string_ == null) {
 		return null;
 	}
-	const game_record_string = game_record_string_ as string;
+	const game_record_name = game_record_string_ as string;
 
 	const games_dir = ServerDirectories.get_instance().games_directory;
-	const game_record_file: string = path.join(games_dir, game_record_string);
-	debug(log_now(), `    File: '${game_record_file}'`);
+	const game_record_filename: string = path.join(games_dir, game_record_name);
+	debug(log_now(), `    File: '${game_record_filename}'`);
 
 	// The files currently existing in the 'games_directory'
 	debug(log_now(), `Reading directory '${games_dir}'...`);
-	const all_record_strings = fs.readdirSync(games_dir);
-	debug(log_now(), `    Directory contents: '${all_record_strings}'`);
+	const record_name_list = fs.readdirSync(games_dir);
+	debug(log_now(), `    Directory contents: '${record_name_list}'`);
 
 	// Ensure there are game records
-	assert(all_record_strings.length != 0);
+	assert(record_name_list.length != 0);
 
 	// check that the file actually exists
-	debug(log_now(), `Searching '${game_record_string}' in '${all_record_strings}'.`);
-	const record_idx_in_list = search(all_record_strings, game_record_string);
-	assert(record_idx_in_list != -1);
+	debug(log_now(), `Searching '${game_record_name}' in '${record_name_list}'.`);
+	const idx_in_record_list = search(record_name_list, game_record_name);
+	assert(idx_in_record_list != -1);
 
 	// read games in record
-	const game_set = read_game_record(game_record_file);
+	const game_set = read_game_record(game_record_filename);
 
 	// find the game 'game_id' in the array 'game_set' and check that it exists
-	const game_idx = linear_find(game_set, (g: Game): boolean => { return g.get_id() == game_id });
-	assert(game_idx < game_set.length);
+	const game_idx_in_game_set = linear_find(game_set, (g: Game): boolean => { return g.get_id() == game_id });
+	assert(game_idx_in_game_set < game_set.length);
 
-	const game = game_set[game_idx];
+	const game = game_set[game_idx_in_game_set];
 	assert(game.get_id() == game_id);
 
-	return [all_record_strings, game_record_file, game_set, record_idx_in_list, game_idx];
+	return [record_name_list, game_record_filename, game_set, idx_in_record_list, game_idx_in_game_set];
 }
 
 /**
@@ -501,8 +501,10 @@ export function game_edit_result(game_id: string, new_result: GameResult): void 
 	
 	const r = game_find_by_id(game_id);
 	if (r == null) { return; }
-	let [all_record_strings, game_record_file, game_set, record_idx_in_list, game_idx] = r as [string[], string, Game[], number, number];
-	let game = game_set[record_idx_in_list];
+	let [record_name_list, game_record_filename, game_set, idx_in_record_list, game_idx_in_game_set]
+		= r as [string[], string, Game[], number, number];
+		
+	let game = game_set[game_idx_in_game_set];
 
 	// ---------------------------------------------------------
 	// actually apply changes
@@ -524,23 +526,23 @@ export function game_edit_result(game_id: string, new_result: GameResult): void 
 	player_to_index.set(game.get_black(), 1);
 
 	// update record of the current game
-	update_game_record(game_set, game_idx + 1, game.get_time_control_id(), updated_players, player_to_index);
-	debug(log_now(), `    Writing game record '${game_record_file}'...`);
-	fs.writeFileSync(game_record_file, JSON.stringify(game_set, null, 4), { flag: 'w' });
-	debug(log_now(), `        Game record '${game_record_file}' written.`);
+	update_game_record(game_set, game_idx_in_game_set + 1, game.get_time_control_id(), updated_players, player_to_index);
+	debug(log_now(), `    Writing game record '${game_record_filename}'...`);
+	fs.writeFileSync(game_record_filename, JSON.stringify(game_set, null, 4), { flag: 'w' });
+	debug(log_now(), `        Game record '${game_record_filename}' written.`);
 
 	debug(log_now(), "Update the rest of the records...");
-	for (let idx = record_idx_in_list + 1; idx < all_record_strings.length; ++idx) {
-		const record_string = all_record_strings[idx];
+	for (let idx = idx_in_record_list + 1; idx < record_name_list.length; ++idx) {
+		const record_name = record_name_list[idx];
 
 		// files already contain the '.json' extension
-		const game_record_file = path.join(games_dir, record_string);
+		const game_record_filename = path.join(games_dir, record_name);
 
 		// read and parse the next file
-		const game_set = read_game_record(game_record_file);
+		const game_set = read_game_record(game_record_filename);
 
 		// update the current record
-		debug(log_now(), `    Updating game record '${game_record_file}'...`);
+		debug(log_now(), `    Updating game record '${game_record_filename}'...`);
 		update_game_record(game_set, 0, game.get_time_control_id(), updated_players, player_to_index);
 		debug(log_now(), `        Amount of updated players: '${updated_players.length}'...`);
 		for (let j = 0; j < updated_players.length; ++j) {
@@ -548,9 +550,9 @@ export function game_edit_result(game_id: string, new_result: GameResult): void 
 		}
 
 		// update the record file
-		debug(log_now(), `    Writing game record '${game_record_file}'...`);
-		fs.writeFileSync(game_record_file, JSON.stringify(game_set, null, 4), { flag: 'w' });
-		debug(log_now(), `        Game record '${game_record_file}' written.`);
+		debug(log_now(), `    Writing game record '${game_record_filename}'...`);
+		fs.writeFileSync(game_record_filename, JSON.stringify(game_set, null, 4), { flag: 'w' });
+		debug(log_now(), `        Game record '${game_record_filename}' written.`);
 	}
 
 	user_update_from_players_data(updated_players);
