@@ -32,7 +32,7 @@ async function fill_username_datalist() {
 
 	// "query" the server
 	const response = await fetch(
-		"/query_user_list",
+		"/query_users_list",
 		{
 			method: 'GET',
 			headers: { 'Content-type': 'application/json; charset=UTF-8' }
