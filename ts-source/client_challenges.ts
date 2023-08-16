@@ -66,7 +66,7 @@ async function submit_challenge_button_clicked(event: any) {
 
 		// "query" the server
 		const response = await fetch(
-			"/challenge_send",
+			"/challenges_send",
 			{
 				method: 'POST',
 				body : JSON.stringify({ 'to' : username }),
@@ -89,7 +89,7 @@ async function accept_challenge_tag_clicked(event: any) {
 	let challenge_id = tag_clicked.id;
 
 	const response = await fetch(
-		"/challenge_accept",
+		"/challenges_accept",
 		{
 			method: 'POST',
 			body: JSON.stringify({ 'challenge_id' : challenge_id }),
@@ -108,7 +108,7 @@ async function decline_challenge_tag_clicked(event: any) {
 	let challenge_id = tag_clicked.id;
 
 	const response = await fetch(
-		"/challenge_decline",
+		"/challenges_decline",
 		{
 			method: 'POST',
 			body: JSON.stringify({ 'challenge_id' : challenge_id }),
@@ -356,7 +356,7 @@ async function submit_result_challenge_button_clicked(event: any) {
 
 	// "query" the server
 	const response = await fetch(
-		"/challenge_set_result",
+		"/challenges_set_result",
 		{
 			method: 'POST',
 			body: JSON.stringify({
@@ -470,7 +470,7 @@ async function agree_challenge_result_tag_clicked(event: any) {
 	let challenge_id = tag_clicked.id;
 
 	const response = await fetch(
-		"/challenge_agree_result",
+		"/challenges_agree_result",
 		{
 			method: 'POST',
 			body: JSON.stringify({ 'challenge_id' : challenge_id }),
@@ -489,7 +489,7 @@ async function disagree_challenge_result_tag_clicked(event: any) {
 	let challenge_id = tag_clicked.id;
 
 	const response = await fetch(
-		"/challenge_disagree_result",
+		"/challenges_disagree_result",
 		{
 			method: 'POST',
 			body: JSON.stringify({ 'challenge_id' : challenge_id }),

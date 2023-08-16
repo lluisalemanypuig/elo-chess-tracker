@@ -148,15 +148,15 @@ router.get('/ranking_users', get_ranking_users_page);
 import { get_challenges_page } from './server_challenges';
 router.get('/challenges', get_challenges_page);
 import { post_challenge_send } from './server_challenges';
-router.post('/challenge_send', post_challenge_send);
+router.post('/challenges_send', post_challenge_send);
 import { post_challenge_accept, post_challenge_decline } from './server_challenges';
-router.post('/challenge_accept', post_challenge_accept);
-router.post('/challenge_decline', post_challenge_decline);
+router.post('/challenges_accept', post_challenge_accept);
+router.post('/challenges_decline', post_challenge_decline);
 import { post_challenge_set_result } from './server_challenges';
-router.post('/challenge_set_result', post_challenge_set_result);
+router.post('/challenges_set_result', post_challenge_set_result);
 import { post_challenge_agree_result, post_challenge_disagree_result } from './server_challenges';
-router.post('/challenge_agree_result', post_challenge_agree_result);
-router.post('/challenge_disagree_result', post_challenge_disagree_result);
+router.post('/challenges_agree_result', post_challenge_agree_result);
+router.post('/challenges_disagree_result', post_challenge_disagree_result);
 
 // retrieve home page
 router.get('/home', (req: any, res: any) => {
