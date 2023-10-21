@@ -29,7 +29,7 @@ import { user_retrieve } from './server/users';
 import { User } from './models/user';
 import { make_cookie_string } from './utils/cookies';
 import { shuffle } from "./utils/shuffle_random";
-import { session_id_exists, session_id_add } from './server/session';
+import { session_id_exists, session_id_add, session_id_delete } from './server/session';
 
 let character_samples = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+-*/ª!·$%&/()=?¿¡'º\|@#~€¬^{},;.:_";
 
@@ -64,7 +64,7 @@ function random_session_id(str: string): string {
  * @returns Data
  * @post Creates a new session id for the user.
  */
-export async function user_log_in(req: any, res:any) {
+export async function post_user_log_in(req: any, res:any) {
 	debug(log_now(), `POST /log_in`);
 	
 	const username = req.body.u;
@@ -128,4 +128,33 @@ export async function user_log_in(req: any, res:any) {
 			})
 		]
 	});
+}
+
+/**
+ * @brief Logs a user out of the website.
+ * @param req 
+ * @param res 
+ * @post Deletes the user's session id.
+ */
+export async function post_user_log_out(req: any, res: any) {
+    debug(log_now(), `POST /logout`);
+    debug(log_now(), `    Cookie:`);
+    debug(log_now(), `        Username:   '${req.cookies.user}'`);
+    debug(log_now(), `        Session ID: '${req.cookies.session_id}'`);
+
+	// in order to log out a user, they must have been logged in
+    if (! session_id_exists(req.cookies.session_id, req.cookies.user)) {
+        debug(log_now(), `    User '${req.cookies.user}' was never logged in.`);
+        res.status(200).send("");
+    }
+    else {
+        debug(log_now(), `    User '${req.cookies.user}' was logged in.`);
+        debug(log_now(), `    Deleting session id of user '${req.cookies.user}'...`);
+        session_id_delete(req.cookies.session_id, req.cookies.user);
+        debug(log_now(), `        Deleted.`);
+        // send response
+        res.status(200).send("success");
+    }
+
+    return;
 }

@@ -20,7 +20,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { user_role_to_string } from "./models/user_role";
+import { ADMIN, user_role_to_string } from "./models/user_role";
 import { CREATE_GAME, CREATE_USER, EDIT_USER, SEE_USER_GAMES } from "./models/user_action";
 import { make_cookie_string } from "./utils/cookies";
 
@@ -48,28 +48,10 @@ export async function logout_link_clicked(event: any) {
 	window.location.href = "/";
 }
 
-function fill_action_links(user_actions: string[]) {
+function fill_action_links(user_actions: string[], user_roles: string[]) {
 	let action_links = document.getElementById("special_action_links") as HTMLDivElement;
 
-	let create_user = false;
-	let edit_user = false;
-	let create_game = false;
-	let see_user_games = false;
-	
 	if (user_actions.includes(CREATE_USER)) {
-		create_user = true;
-	}
-	if (user_actions.includes(EDIT_USER)) {
-		edit_user = true;
-	}
-	if (user_actions.includes(CREATE_GAME)) {
-		create_game = true;
-	}
-	if (user_actions.includes(SEE_USER_GAMES)) {
-		see_user_games = true;
-	}
-
-	if (create_user) {
 		let user_create_link = document.createElement("a") as HTMLAnchorElement;
 		user_create_link.href = "/users_create";
 		user_create_link.text = "Create new user";
@@ -77,7 +59,7 @@ function fill_action_links(user_actions: string[]) {
 		action_links.appendChild(document.createElement("br"));
 		action_links.appendChild(document.createElement("br"));
 	}
-	if (edit_user) {
+	if (user_actions.includes(EDIT_USER)) {
 		let user_edit_link = document.createElement("a") as HTMLAnchorElement;
 		user_edit_link.href = "/users_edit";
 		user_edit_link.text = "Edit user";
@@ -85,7 +67,7 @@ function fill_action_links(user_actions: string[]) {
 		action_links.appendChild(document.createElement("br"));
 		action_links.appendChild(document.createElement("br"));
 	}
-	if (create_game) {
+	if (user_actions.includes(CREATE_GAME)) {
 		let game_create_link = document.createElement("a") as HTMLAnchorElement;
 		game_create_link.href = "/games_create";
 		game_create_link.text = "Create new game";
@@ -93,7 +75,7 @@ function fill_action_links(user_actions: string[]) {
 		action_links.appendChild(document.createElement("br"));
 		action_links.appendChild(document.createElement("br"));
 	}
-	if (see_user_games) {
+	if (user_actions.includes(SEE_USER_GAMES)) {
 		let see_user_games_link = document.createElement("a") as HTMLAnchorElement;
 		see_user_games_link.href = "/games_all";
 		see_user_games_link.text = "See all games";
@@ -120,7 +102,7 @@ async function fill_own_info() {
 	}
 
 	// add hrefs according to the user's permissions.
-	fill_action_links(data.actions);
+	fill_action_links(data.actions, data.roles);
 
 	{
 	let div = document.getElementById("user_name") as HTMLDivElement;
@@ -174,7 +156,7 @@ async function fill_own_info() {
 	}
 }
 
-window.onload = function () {
+window.onload = function() {
 	// display user info
 	fill_own_info();
 

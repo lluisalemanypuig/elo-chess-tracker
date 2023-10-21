@@ -151,12 +151,19 @@ Available actions are
 - Creation of games
 	- *create_game*: can create a game. This adds a game into the system even if the players involved are not aware of this.
 
-- Edition of users: whichever role is granted one of the following actions, will be able to edit user's information, except for passwords and ratings.
+- Edition of users: to be able to edit user's information, except for passwords and ratings.
 	- *edit_user*: This first action is necessary for the others to work.
 	- *edit_admin*
 	- *edit_teacher*
 	- *edit_member*
 	- *edit_student*
+
+- Edition of a user's game: to change the result of a game.
+	- *edit_user_games*: This first action is necessary for the others to work.
+	- *edit_admin_games*
+	- *edit_teacher_games*
+	- *edit_member_games*
+	- *edit_student_games*
 
 - Assignment of roles to another user
 	- *assign_role_admin*

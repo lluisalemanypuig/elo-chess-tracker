@@ -31,7 +31,7 @@ import { ServerMemory } from './server/configuration';
 import { TimeControlRating } from './models/time_control_rating';
 
 /// Returns the list of user full names and usernames sorted by name
-export async function query_users_list(req: any, res: any) {
+export async function get_users_list(req: any, res: any) {
 	debug(log_now(), "GET query_users_list...");
 
 	const session_id = req.cookies.session_id;
@@ -55,7 +55,7 @@ export async function query_users_list(req: any, res: any) {
 	res.send({ "data" : list });
 }
 
-export async function query_users_home(req: any, res: any) {
+export async function get_users_home(req: any, res: any) {
 	debug(log_now(), "GET query_users_home...");
 
 	const session_id = req.cookies.session_id;
@@ -95,7 +95,7 @@ export async function query_users_home(req: any, res: any) {
  * @param res 
  * @returns 
  */
-export async function query_users_modify(req: any, res: any) {
+export async function post_users_modify(req: any, res: any) {
 	debug(log_now(), "POST query_users_modify...");
 
 	const session_id = req.cookies.session_id;
@@ -121,7 +121,7 @@ export async function query_users_modify(req: any, res: any) {
 	});
 }
 
-export async function query_users_ranking(req: any, res: any) {
+export async function post_users_ranking(req: any, res: any) {
 	debug(log_now(), "POST query_users_ranking...");
 
 	const session_id = req.cookies.session_id;
