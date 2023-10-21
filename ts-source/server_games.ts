@@ -7,7 +7,7 @@ import { log_now, long_date_to_short_date } from './utils/misc';
 import { is_user_logged_in } from './server/session';
 import { CREATE_GAME, EDIT_ADMIN_GAMES, EDIT_MEMBER_GAMES, EDIT_STUDENT_GAMES, EDIT_TEACHER_GAMES, EDIT_USER_GAMES } from './models/user_action';
 import { User } from './models/user';
-import { game_add, game_edit_result, game_find_by_id, game_new } from './server/game_history';
+import { game_add, game_edit_result, game_find_by_id, game_new, recalculate_Elo_ratings } from './server/game_history';
 import { Game, GameResult } from './models/game';
 import { user_retrieve } from './server/users';
 import { ADMIN, MEMBER, STUDENT, TEACHER } from './models/user_role';
@@ -183,6 +183,34 @@ export async function post_games_edit_result(req: any, res: any) {
 
 	// actually edit the game now
 	game_edit_result(game_id, new_result);
+
+	res.send({ 'r' : '1' });
+	return;
+}
+
+export async function post_recalculate_Elo_ratings(req: any, res: any) {
+	debug(log_now(), "POST recalculate_Elo_ratings...");
+
+	const id = req.cookies.session_id;
+	const username = req.cookies.user;
+
+	let r = is_user_logged_in(id, username);
+	if (!r[0]) {
+		res.send(r[1]);
+		return;
+	}
+
+	const user = r[2] as User;
+	if (!user.is(ADMIN)) {
+		debug(log_now(), `User '${username}' cannot recalculate Elo ratings.`);
+		res.send("403 - Forbidden");
+		return;
+	}
+
+	debug(log_now(), `Recalculating Elo ratings...`);
+
+	// actually recalculating Elo ratings
+	recalculate_Elo_ratings();
 
 	res.send({ 'r' : '1' });
 	return;

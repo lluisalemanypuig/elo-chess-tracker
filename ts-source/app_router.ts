@@ -155,6 +155,10 @@ import { post_challenge_agree_result, post_challenge_disagree_result } from './s
 router.post('/challenges_agree_result', post_challenge_agree_result);
 router.post('/challenges_disagree_result', post_challenge_disagree_result);
 
+// recalculation of all Elo ratings
+import { post_recalculate_Elo_ratings } from './server_games';
+router.post('/recalculate_Elo_ratings', post_recalculate_Elo_ratings);
+
 // retrieve home page
 router.get('/home', (req: any, res: any) => {
 	debug(log_now(), "GET home");

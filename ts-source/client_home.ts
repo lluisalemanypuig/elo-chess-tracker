@@ -83,6 +83,24 @@ function fill_action_links(user_actions: string[], user_roles: string[]) {
 		action_links.appendChild(document.createElement("br"));
 		action_links.appendChild(document.createElement("br"));
 	}
+	if (user_roles.includes(ADMIN)) {
+		let recalculate_Elo_ratings_link = document.createElement("button") as HTMLButtonElement;
+		recalculate_Elo_ratings_link.textContent = "Recalculate Elo ratings";
+		recalculate_Elo_ratings_link.onclick = async function() {
+			const response = await fetch(
+				"/recalculate_Elo_ratings",
+				{
+					method: 'POST',
+					headers: { 'Content-type': 'application/json; charset=UTF-8' }
+				}
+			);
+		
+			const data = await response.json();
+		}
+		action_links.appendChild(recalculate_Elo_ratings_link);
+		action_links.appendChild(document.createElement("br"));
+		action_links.appendChild(document.createElement("br"));
+	}
 }
 
 async function fill_own_info() {

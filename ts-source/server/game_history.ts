@@ -33,6 +33,7 @@ import { log_now, search, where_should_be_inserted, long_date_to_short_date, num
 import { RatingSystem, ServerDirectories, ServerMemory } from './configuration';
 import { user_retrieve, user_update_from_players_data } from './users';
 import { Rating } from '../rating_system/rating';
+import { TimeControlRating } from '../models/time_control_rating';
 
 /// Returns g1 < g2 using dates
 function game_compare_dates(g1: Game, g2: Game): number {
@@ -179,7 +180,7 @@ function game_next_of_player(
 
 		// try to find the game in the game set
 		for (let i = game_idx; i < game_set.length; ++i) {
-			if (game_set[i].is_user_involved(username) && game_set[i].has_time(time_control_id)) {
+			if (game_set[i].is_user_involved(username) && game_set[i].is_time_control(time_control_id)) {
 				return game_set[i];
 			}
 		}
@@ -201,7 +202,7 @@ function game_next_of_player(
 		let game_set = read_game_record(record_file);
 
 		for (let i = 0; i < game_set.length; ++i) {
-			if (game_set[i].is_user_involved(username) && game_set[i].has_time(time_control_id)) {
+			if (game_set[i].is_user_involved(username) && game_set[i].is_time_control(time_control_id)) {
 				return game_set[i];
 			}
 		}
@@ -231,7 +232,7 @@ function update_game_record(
 		(username: string): boolean => { return player_to_index.has(username); };
 
 	for (let i = start_at; i < game_set.length; ++i) {
-		if (! game_set[i].has_time(time_control_id)) { continue; }
+		if (! game_set[i].is_time_control(time_control_id)) { continue; }
 
 		debug(log_now(), `    Updating game '${i}'`);
 
@@ -511,7 +512,7 @@ export function game_edit_result(game_id: string, new_result: GameResult): void 
 	
 	game.set_result(new_result);
 
-	// some games will change and will have to be updated
+	// some games will change and users will have to be updated
 	let updated_players: Player[] = [];
 
 	// apply rating formula
@@ -547,6 +548,70 @@ export function game_edit_result(game_id: string, new_result: GameResult): void 
 		debug(log_now(), `        Amount of updated players: '${updated_players.length}'...`);
 		for (let j = 0; j < updated_players.length; ++j) {
 		debug(log_now(), `        Player: '${JSON.stringify(updated_players[j])}'...`);
+		}
+
+		// update the record file
+		debug(log_now(), `    Writing game record '${game_record_filename}'...`);
+		fs.writeFileSync(game_record_filename, JSON.stringify(game_set, null, 4), { flag: 'w' });
+		debug(log_now(), `        Game record '${game_record_filename}' written.`);
+	}
+
+	user_update_from_players_data(updated_players);
+}
+
+export function recalculate_Elo_ratings() {
+	const games_dir = ServerDirectories.get_instance().games_directory;
+	const all_time_controls = RatingSystem.get_instance().all_time_controls;
+
+	// initialize all players to a freshly created player since all
+	// users 
+	let updated_players: Player[] = [];
+	let player_to_index: Map<string, number> = new Map();
+	{
+	const all_users = ServerMemory.get_instance().users;
+	for (let i = 0; i < all_users.length; ++i) {
+		const username = all_users[i].get_username();
+
+		let ratings: TimeControlRating[] = [];
+		// update the current record for all time controls
+		for (let k = 0; k < all_time_controls.length; ++k) {
+			let tcr = new TimeControlRating(
+				all_time_controls[k].id,
+				RatingSystem.get_instance().new_rating()
+			);
+			ratings.push(tcr);
+		}
+
+		updated_players.push(new Player(username, ratings));
+		player_to_index.set(username, i);
+	}
+	}
+
+	// The files currently existing in the 'games_directory'
+	debug(log_now(), `Reading directory '${games_dir}'...`);
+	const record_name_list = fs.readdirSync(games_dir);
+	debug(log_now(), `    Directory contents: '${record_name_list}'`);
+
+	for (let i = 0; i < record_name_list.length; ++i) {
+		const record_name = record_name_list[i];
+
+		// files already contain the '.json' extension
+		const game_record_filename = path.join(games_dir, record_name);
+
+		// read and parse the next file
+		const game_set = read_game_record(game_record_filename);
+
+		
+		// update the current record for all time controls
+		for (let k = 0; k < all_time_controls.length; ++k) {
+			const time_control = all_time_controls[k];
+
+			debug(log_now(), `    Updating game record '${game_record_filename}'...`);
+			update_game_record(game_set, 0, time_control.id, updated_players, player_to_index);
+			debug(log_now(), `        Amount of updated players: '${updated_players.length}'...`);
+				for (let j = 0; j < updated_players.length; ++j) {
+				debug(log_now(), `        Player: '${JSON.stringify(updated_players[j])}'...`);
+			}
 		}
 
 		// update the record file

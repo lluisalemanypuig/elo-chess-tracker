@@ -124,7 +124,7 @@ export function user_get_all_names_and_usernames(): [string,string][] {
 }
 
 /**
- * @brief Updates all user information using data from Players
+ * @brief Updates all user information using data from "players"
  * @param players Set of players to be updated
  * @post Users in the server (memory and database) are updated.
  */

@@ -43,19 +43,19 @@ export class Game {
 	private readonly id: string;
 	/// White player username
 	private white: string;
-	/// White in the state before the game.
+	/// White in the state before the game
 	private white_rating: Rating;
 	/// White player username
 	private black: string;
-	/// White in the state before the game.
+	/// White in the state before the game
 	private black_rating: Rating;
-	/// Result of the game.
+	/// Result of the game
 	private result: GameResult;
 	/// Time control id (Classical, Blitz, ...)
 	private time_control_id: string;
 	/// Time control name (Classical (90 + 30), Blitz (5 + 3), ...)
 	private time_control_name: string;
-	/// Date when the game took place.
+	/// Date when the game took place
 	private when: string;
 
 	/**
@@ -122,7 +122,7 @@ export class Game {
 	}
 
 	/// Is this game of time control 'time_control_id'
-	has_time(time_control_id: string): boolean {
+	is_time_control(time_control_id: string): boolean {
 		return this.time_control_id == time_control_id;
 	}
 
