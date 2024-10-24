@@ -67,7 +67,7 @@ The passwords do not include the quote characters `"`; they are only used here a
 Edit the configuration file `system_configuration.json` appropriately. Said file contains the following fields
 
 	{
-		"database_base_directory": "$DATABASE_DIRECTORY",
+		"base_directory": "$DATABASE_DIRECTORY",
 		"rating_system": "Elo",
 		"permissions": {
 			"admin": [ ],
@@ -76,7 +76,6 @@ Edit the configuration file `system_configuration.json` appropriately. Said file
 			"student": [ ]
 		},
 		"ssl_certificate": {
-			"directory": "$SSL_CERTIFICATE_DIRECTORY",
 			"public_key_file": "$PUBLIC_PEM",
 			"private_key_file": "$PRIVATE_PEM",
 			"passphrase_file": "$PASSPHRASE_TXT"
