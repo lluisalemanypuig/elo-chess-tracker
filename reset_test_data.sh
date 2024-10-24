@@ -2,7 +2,7 @@
 
 ### Clean test database
 
-rm -rf test/webpage/database/*
+rm -rf test/webpage/*
 mkdir -p test/webpage/database
 mkdir -p test/webpage/database/users
 mkdir -p test/webpage/database/games
