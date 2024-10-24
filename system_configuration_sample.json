@@ -1,5 +1,5 @@
 {
-	"base_directory": "$DATABASE_DIRECTORY",
+	"base_directory": "$WEBPAGE_BASE_DIRECTORY",
 	"rating_system": "Elo",
 	"permissions": {
 		"admin": [
