@@ -235,7 +235,19 @@ export function server_initialize_from_configuration_file(configuration_file: st
 
 	server_initialize_from_data(json_data);
 }
-export function server_initialize_from_default_configuration_file(): void {
-	const configuration_file = path.join(__dirname, "../../system_configuration.json");
+
+export function server_initialize_from_default_configuration_file(args: string[]): void {
+
+	let configuration_file: string = "";
+	for (let i = 0; i < args.length; ++i) {
+		if (args[i] == "--configuration-file") {
+			configuration_file = args[i + 1];
+			++i;
+		}
+		else {
+			debug(log_now(), "Error: invalid option '" + configuration_file + "'.");
+		}
+	}
+
 	server_initialize_from_configuration_file(configuration_file);
 }

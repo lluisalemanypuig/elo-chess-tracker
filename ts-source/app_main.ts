@@ -36,7 +36,7 @@ import { server_initialize_from_default_configuration_file } from './server/init
 
 debug(log_now(), "Initialize server...");
 
-server_initialize_from_default_configuration_file();
+server_initialize_from_default_configuration_file(process.argv.slice(2));
 
 debug(log_now(), "Import app...");
 
