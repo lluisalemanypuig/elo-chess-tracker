@@ -1,5 +1,5 @@
 {
-	"database_base_directory": "$DATABASE_DIRECTORY",
+	"base_directory": "$DATABASE_DIRECTORY",
 	"rating_system": "Elo",
 	"permissions": {
 		"admin": [
@@ -29,7 +29,6 @@
 		]
 	},
 	"ssl_certificate": {
-		"directory": "$SSL_CERTIFICATE_DIRECTORY",
 		"public_key_file": "$PUBLIC_PEM",
 		"private_key_file": "$PRIVATE_PEM",
 		"passphrase_file": "$PASSPHRASE_TXT"

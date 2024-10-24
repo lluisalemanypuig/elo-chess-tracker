@@ -176,27 +176,26 @@ function initialize_time_controls(time_control_array: any): void {
 }
 
 export function server_initialize_from_data(configuration_data: any): void {
-	const database_base_directory = configuration_data.database_base_directory;
-	debug(log_now(), `    Base directory: '${database_base_directory}'`);
+	const base_directory = configuration_data.base_directory;
+	debug(log_now(), `    Base directory: '${base_directory}'`);
 
 	//
 	// initialize directories
 
-	const ssl_certificate_directory = configuration_data.ssl_certificate.directory;
+	const database_directory = path.join(base_directory, "/database");
+	ServerDirectories.get_instance().set_database_base_directory(database_directory);
+	
+	debug(log_now(), `    Database directory: '${ServerDirectories.get_instance().database_base_directory}'`);
+	debug(log_now(), `        Games directory: '${ServerDirectories.get_instance().games_directory}'`);
+	debug(log_now(), `        Users directory: '${ServerDirectories.get_instance().users_directory}'`);
+	debug(log_now(), `        Challenges directory: '${ServerDirectories.get_instance().challenges_directory}'`);
+
+	const ssl_certificate_directory = path.join(base_directory, "/ssl");
 	const public_key_file = configuration_data.ssl_certificate.public_key_file;
 	const private_key_file = configuration_data.ssl_certificate.private_key_file;
 	const passphrase_file = configuration_data.ssl_certificate.passphrase_file;
-	debug(log_now(), `    SSL certificate directory: '${ssl_certificate_directory}'`);
-	debug(log_now(), `        Public key file: '${public_key_file}'`);
-	debug(log_now(), `        Private key file: '${private_key_file}'`);
-	debug(log_now(), `        Passphrase: '${passphrase_file}'`);
-
-	ServerDirectories.get_instance().set_database_base_directory(database_base_directory);
-	debug(log_now(), `    Games directory: '${ServerDirectories.get_instance().games_directory}'`);
-	debug(log_now(), `    Users directory: '${ServerDirectories.get_instance().users_directory}'`);
-	debug(log_now(), `    Challenges directory: '${ServerDirectories.get_instance().challenges_directory}'`);
-
 	ServerDirectories.get_instance().set_SSL_info(ssl_certificate_directory, public_key_file, private_key_file, passphrase_file);
+
 	debug(log_now(), `    SSL base directory: '${ServerDirectories.get_instance().ssl_base_directory}'`);
 	debug(log_now(), `        Public key file: '${ServerDirectories.get_instance().public_key_file}'`);
 	debug(log_now(), `        Private key file: '${ServerDirectories.get_instance().private_key_file}'`);
@@ -240,7 +239,7 @@ export function server_initialize_from_default_configuration_file(args: string[]
 
 	let configuration_file: string = "";
 	for (let i = 0; i < args.length; ++i) {
-		if (args[i] == "--configuration-file") {
+		if (args[i] == "configuration-file") {
 			configuration_file = args[i + 1];
 			++i;
 		}

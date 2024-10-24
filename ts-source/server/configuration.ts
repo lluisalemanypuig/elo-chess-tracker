@@ -27,6 +27,7 @@ import { Challenge } from '../models/challenge';
 import { RatingSystemType } from "../rating_system/rating_system_type";
 import { TimeControl } from "../models/time_control";
 import { linear_find } from "../utils/misc";
+import { ADMIN } from "../models/user_role";
 
 /**
  * @brief Rating system in the web
@@ -152,9 +153,22 @@ export class ServerDirectories {
 	void
 	{
 		this.ssl_base_directory = base_dir;
-		this.public_key_file = path.join(this.ssl_base_directory, public_key_file);
-		this.private_key_file = path.join(this.ssl_base_directory, private_key_file);
-		this.passphrase_file = path.join(this.ssl_base_directory, passphrase_file);
+		if (public_key_file != "") {
+			this.public_key_file = path.join(this.ssl_base_directory, public_key_file);
+		}
+		if (private_key_file != "") {
+			this.private_key_file = path.join(this.ssl_base_directory, private_key_file);
+		}
+		if (passphrase_file != "") {
+			this.passphrase_file = path.join(this.ssl_base_directory, passphrase_file);
+		}
+	}
+
+	is_SSL_info_valid(): boolean {
+		return this.ssl_base_directory != "" &&
+			this.public_key_file != "" &&
+			this.private_key_file != "" &&
+			this.passphrase_file != "";
 	}
 
 	/**

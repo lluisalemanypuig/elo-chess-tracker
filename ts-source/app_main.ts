@@ -67,7 +67,7 @@ function normalizePort(val: any): any {
 }
 
 // create https server when possible
-if (ServerDirectories.get_instance().ssl_base_directory != "") {
+if (ServerDirectories.get_instance().is_SSL_info_valid()) {
 	// Create HTTPS server
 	debug(log_now(), "Create https server");
 
