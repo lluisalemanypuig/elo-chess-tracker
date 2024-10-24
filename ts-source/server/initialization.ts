@@ -185,7 +185,7 @@ export function server_initialize_from_data(configuration_data: any): void {
 	const database_directory = path.join(base_directory, "/database");
 	ServerDirectories.get_instance().set_database_base_directory(database_directory);
 	
-	debug(log_now(), `    Database directory: '${ServerDirectories.get_instance().database_base_directory}'`);
+	debug(log_now(), `    Database directory: '${ServerDirectories.get_instance().database_directory}'`);
 	debug(log_now(), `        Games directory: '${ServerDirectories.get_instance().games_directory}'`);
 	debug(log_now(), `        Users directory: '${ServerDirectories.get_instance().users_directory}'`);
 	debug(log_now(), `        Challenges directory: '${ServerDirectories.get_instance().challenges_directory}'`);
@@ -196,7 +196,7 @@ export function server_initialize_from_data(configuration_data: any): void {
 	const passphrase_file = configuration_data.ssl_certificate.passphrase_file;
 	ServerDirectories.get_instance().set_SSL_info(ssl_certificate_directory, public_key_file, private_key_file, passphrase_file);
 
-	debug(log_now(), `    SSL base directory: '${ServerDirectories.get_instance().ssl_base_directory}'`);
+	debug(log_now(), `    SSL base directory: '${ServerDirectories.get_instance().ssl_directory}'`);
 	debug(log_now(), `        Public key file: '${ServerDirectories.get_instance().public_key_file}'`);
 	debug(log_now(), `        Private key file: '${ServerDirectories.get_instance().private_key_file}'`);
 	debug(log_now(), `        Passphrase: '${ServerDirectories.get_instance().passphrase_file}'`);

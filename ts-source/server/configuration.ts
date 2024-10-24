@@ -110,16 +110,19 @@ export class RatingSystem {
  */
 export class ServerDirectories {
 	// database directory
-	public database_base_directory: string = "";
+	public database_directory: string = "";
 	public games_directory: string = "";
 	public users_directory: string = "";
 	public challenges_directory: string = "";
 
 	// SSL certificate info
-	public ssl_base_directory: string = "";
+	public ssl_directory: string = "";
 	public public_key_file: string = "";
 	public private_key_file: string = "";
 	public passphrase_file: string = "";
+
+	// icons
+	public icons_directory: string = "";
 
 	/// The only instance of this class
 	private static instance: ServerDirectories;
@@ -137,10 +140,10 @@ export class ServerDirectories {
 
 	/// Sets base directory of database
 	set_database_base_directory(base_dir: string): void {
-		this.database_base_directory = base_dir;
-		this.games_directory = path.join(this.database_base_directory, "games");
-		this.users_directory = path.join(this.database_base_directory, "users");
-		this.challenges_directory = path.join(this.database_base_directory, "challenges");
+		this.database_directory = base_dir;
+		this.games_directory = path.join(this.database_directory, "games");
+		this.users_directory = path.join(this.database_directory, "users");
+		this.challenges_directory = path.join(this.database_directory, "challenges");
 	}
 
 	/// Sets all necessary SSL information
@@ -152,20 +155,20 @@ export class ServerDirectories {
 	):
 	void
 	{
-		this.ssl_base_directory = base_dir;
+		this.ssl_directory = base_dir;
 		if (public_key_file != "") {
-			this.public_key_file = path.join(this.ssl_base_directory, public_key_file);
+			this.public_key_file = path.join(this.ssl_directory, public_key_file);
 		}
 		if (private_key_file != "") {
-			this.private_key_file = path.join(this.ssl_base_directory, private_key_file);
+			this.private_key_file = path.join(this.ssl_directory, private_key_file);
 		}
 		if (passphrase_file != "") {
-			this.passphrase_file = path.join(this.ssl_base_directory, passphrase_file);
+			this.passphrase_file = path.join(this.ssl_directory, passphrase_file);
 		}
 	}
 
 	is_SSL_info_valid(): boolean {
-		return this.ssl_base_directory != "" &&
+		return this.ssl_directory != "" &&
 			this.public_key_file != "" &&
 			this.private_key_file != "" &&
 			this.passphrase_file != "";
