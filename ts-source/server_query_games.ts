@@ -110,7 +110,7 @@ function filter_game_list(
 			};
 
 			let is_editable: boolean = function() {
-				if (!user.can_do(EDIT_USER_GAMES)) {
+				if (user.can_do(EDIT_USER_GAMES)) {
 					if (white_or_black_is(ADMIN)) {
 						return user.can_do(EDIT_ADMIN_GAMES);
 					}
