@@ -146,7 +146,7 @@ function filter_game_list(
 	return data_to_return;
 }
 
-export async function get_games_list_own(req: any, res: any) {
+export async function get_query_games_list_own(req: any, res: any) {
 	debug(log_now(), "GET query_games_list_own...");
 
 	const id = req.cookies.session_id;
@@ -178,7 +178,7 @@ export async function get_games_list_own(req: any, res: any) {
 	});
 }
 
-export async function get_games_list_all(req: any, res: any) {
+export async function get_query_games_list_all(req: any, res: any) {
 	debug(log_now(), "GET query_games_list_all...");
 
 	const id = req.cookies.session_id;

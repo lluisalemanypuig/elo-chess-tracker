@@ -72,7 +72,7 @@ function fill_action_links(user_actions: string[], user_roles: string[]) {
 	}
 	if (user_actions.includes(CREATE_USER)) {
 		let user_create_link = document.createElement("a") as HTMLAnchorElement;
-		user_create_link.href = "/users_create";
+		user_create_link.href = "/users_create_page";
 		user_create_link.text = "Create new user";
 		
 		action_links.insertBefore(user_create_link, action_links.children[index++]);
@@ -81,7 +81,7 @@ function fill_action_links(user_actions: string[], user_roles: string[]) {
 	}
 	if (user_actions.includes(EDIT_USER)) {
 		let user_edit_link = document.createElement("a") as HTMLAnchorElement;
-		user_edit_link.href = "/users_edit";
+		user_edit_link.href = "/users_edit_page";
 		user_edit_link.text = "Edit user";
 		action_links.insertBefore(user_edit_link, action_links.children[index++]);
 		action_links.insertBefore(document.createElement("br"), action_links.children[index++]);
@@ -89,7 +89,7 @@ function fill_action_links(user_actions: string[], user_roles: string[]) {
 	}
 	if (user_actions.includes(CREATE_GAME)) {
 		let game_create_link = document.createElement("a") as HTMLAnchorElement;
-		game_create_link.href = "/games_create";
+		game_create_link.href = "/games_create_page";
 		game_create_link.text = "Create new game";
 		action_links.insertBefore(game_create_link, action_links.children[index++]);
 		action_links.insertBefore(document.createElement("br"), action_links.children[index++]);
@@ -97,7 +97,7 @@ function fill_action_links(user_actions: string[], user_roles: string[]) {
 	}
 	if (user_actions.includes(SEE_USER_GAMES)) {
 		let see_user_games_link = document.createElement("a") as HTMLAnchorElement;
-		see_user_games_link.href = "/games_all";
+		see_user_games_link.href = "/games_all_page";
 		see_user_games_link.text = "See all games";
 		action_links.insertBefore(see_user_games_link, action_links.children[index++]);
 		action_links.insertBefore(document.createElement("br"), action_links.children[index++]);

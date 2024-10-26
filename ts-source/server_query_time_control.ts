@@ -27,7 +27,7 @@ import { log_now } from './utils/misc';
 import { is_user_logged_in } from './server/session';
 import { RatingSystem } from './server/configuration';
 
-export async function get_time_control(req: any, res: any) {
+export async function get_query_time_control(req: any, res: any) {
 	debug(log_now(), "GET time_control...");
 
 	const id = req.cookies.session_id;

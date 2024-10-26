@@ -52,8 +52,8 @@ import { TimeControlRating } from './models/time_control_rating';
 import { RatingSystem } from './server/configuration';
 import { TimeControl } from './models/time_control';
 
-export async function get_user_create_page(req: any, res: any) {
-	debug(log_now(), "GET user_create_page...");
+export async function get_users_create_page(req: any, res: any) {
+	debug(log_now(), "GET users_create_page...");
 
 	const username = req.cookies.user;
 	const r = is_user_logged_in(req.cookies.session_id, username);
@@ -71,8 +71,8 @@ export async function get_user_create_page(req: any, res: any) {
 	res.sendFile(path.join(__dirname, "../html/users_new.html"));
 }
 
-export async function post_user_create(req: any, res: any) {
-	debug(log_now(), "POST user_create");
+export async function post_users_create(req: any, res: any) {
+	debug(log_now(), "POST users_create");
 
 	const username = req.cookies.user;
 	const r = is_user_logged_in(req.cookies.session_id, username);
