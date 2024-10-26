@@ -27,7 +27,7 @@ import { server_initialize_from_configuration_file } from '../ts-source/server/i
 import { EloRating } from '../ts-source/rating_system/Elo/rating';
 import { TimeControlRating } from '../ts-source/models/time_control_rating';
 
-server_initialize_from_configuration_file("system_configuration.json");
+server_initialize_from_configuration_file("configuration.json");
 
 function flatten(obj: Object): Object {
     var result = Object.create(obj);

@@ -26,7 +26,7 @@ import { game_add, game_edit_result, game_new } from '../ts-source/server/game_h
 
 const prompt = require('prompt-sync')();
 
-server_initialize_from_configuration_file("system_configuration_test.json");
+server_initialize_from_configuration_file("configuration_test.json");
 
 function dump_memory() {
 	const memory = ServerMemory.get_instance();

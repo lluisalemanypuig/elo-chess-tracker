@@ -26,7 +26,7 @@ import { player_vs_player } from "../ts-source/rating_system/Elo/formula"
 import { EloRating } from "../ts-source/rating_system/Elo/rating";
 import { server_initialize_from_configuration_file } from "../ts-source/server/initialization";
 
-server_initialize_from_configuration_file("system_configuration.json");
+server_initialize_from_configuration_file("configuration.json");
 
 function Test1() {
 	console.log("==========");
@@ -40,7 +40,7 @@ function Test1() {
 	console.log(p2);
 
 	let [after_p1, after_p2] = player_vs_player(
-		new Game("0", "p1", p1, "p2", p2, "white_wins", "Classical", "2022-12-18")
+		new Game("0", "p1", p1, "p2", p2, "white_wins", "classical_90_30", "Classical", "2022-12-18")
 	);
 
 	console.log(after_p1);
@@ -59,7 +59,7 @@ function Test2() {
 	console.log(p2);
 
 	let [after_p1, after_p2] = player_vs_player(
-		new Game("0", "p1", p1, "p2", p2, "draw", "Classical", "2022-12-18")
+		new Game("0", "p1", p1, "p2", p2, "draw", "classical_90_30", "Classical", "2022-12-18")
 	);
 
 	console.log(after_p1);
@@ -78,7 +78,7 @@ function Test3() {
 	console.log(p2);
 
 	let [after_p1, after_p2] = player_vs_player(
-		new Game("0", "p1", p1, "p2", p2, "black_wins", "Classical", "2022-12-18")
+		new Game("0", "p1", p1, "p2", p2, "black_wins", "classical_90_30", "Classical", "2022-12-18")
 	);
 
 	console.log(after_p1);
@@ -98,7 +98,7 @@ function Test4() {
 		console.log("Rating p2:", p2);
 
 		let [after_p1, after_p2] = player_vs_player(
-			new Game("0", "p1", p1, "p2", p2, "black_wins", "Classical", "2022-12-18")
+			new Game("0", "p1", p1, "p2", p2, "black_wins", "classical_90_30", "Classical", "2022-12-18")
 		);
 
 		p1 = after_p1;
@@ -119,7 +119,7 @@ function Test5() {
 		console.log("Rating p2:", p2);
 
 		let [after_p1, after_p2] = player_vs_player(
-			new Game("0", "p1", p1, "p2", p2, "white_wins", "Classical", "2022-12-18")
+			new Game("0", "p1", p1, "p2", p2, "white_wins", "classical_90_30", "Classical", "2022-12-18")
 		);
 
 		p1 = after_p1;
@@ -140,7 +140,7 @@ function Test6() {
 		console.log("Rating p2:", p2);
 
 		let [after_p1, after_p2] = player_vs_player(
-			new Game("0", "p1", p1, "p2", p2, "draw", "Classical", "2022-12-18")
+			new Game("0", "p1", p1, "p2", p2, "draw", "classical_90_30", "Classical", "2022-12-18")
 		);
 
 		p1 = after_p1;

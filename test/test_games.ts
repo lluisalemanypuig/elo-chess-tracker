@@ -23,7 +23,7 @@ Contact:
 import { game_from_json, game_set_from_json } from "../ts-source/models/game";
 import { server_initialize_from_configuration_file } from "../ts-source/server/initialization";
 
-server_initialize_from_configuration_file("system_configuration.json");
+server_initialize_from_configuration_file("webpage/configuration.json");
 
 function Test1() {
 	console.log("==========");
