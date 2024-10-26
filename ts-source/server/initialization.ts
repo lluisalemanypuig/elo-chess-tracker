@@ -175,8 +175,7 @@ function initialize_time_controls(time_control_array: any): void {
 	}
 }
 
-export function server_initialize_from_data(configuration_data: any): void {
-	const base_directory = configuration_data.base_directory;
+export function server_initialize_from_data(base_directory: string, configuration_data: any): void {
 	debug(log_now(), `    Base directory: '${base_directory}'`);
 
 	//
@@ -232,7 +231,8 @@ export function server_initialize_from_configuration_file(configuration_file: st
 	const data = fs.readFileSync(configuration_file, 'utf8');
 	const json_data = JSON.parse(data);
 
-	server_initialize_from_data(json_data);
+	const base_path = configuration_file.substring(0, configuration_file.lastIndexOf("/"));
+	server_initialize_from_data(base_path, json_data);
 }
 
 export function server_initialize_from_default_configuration_file(args: string[]): void {

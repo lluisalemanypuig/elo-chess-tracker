@@ -1,0 +1,53 @@
+{
+	"rating_system": "Elo",
+	"permissions": {
+		"admin": [
+			"create_user",
+			"create_game",
+			"assign_role_admin",	"assign_role_teacher",	"assign_role_member",	"assign_role_student",
+
+			"edit_user",			"edit_admin",			"edit_teacher",			"edit_member",			"edit_student",
+			"edit_user_games",		"edit_admin_games",		"edit_teacher_games",	"edit_member_games",	"edit_student_games",
+			"see_user_games",		"see_admin_games",		"see_teacher_games",	"see_member_games",		"see_student_games",
+			"challenge_user",		"challenge_admin",		"challenge_member",		"challenge_teacher",	"challenge_student"
+		],
+		"teacher": [
+			"create_user",
+			"assign_role_student",
+
+			"edit_user",			"edit_student",
+			"edit_user_games",		"edit_student_games",
+			"see_user_games",		"see_student_games",
+			"challenge_user",		"challenge_admin",		"challenge_member",		"challenge_teacher",	"challenge_student"
+		],
+		"member": [
+			"challenge_user",		"challenge_admin",		"challenge_member",		"challenge_teacher",	"challenge_student"
+		],
+		"student": [
+			"challenge_user",		"challenge_admin",		"challenge_member",		"challenge_teacher",	"challenge_student"
+		]
+	},
+	"ssl_certificate": {
+		"public_key_file": "$PUBLIC_PEM",
+		"private_key_file": "$PRIVATE_PEM",
+		"passphrase_file": "$PASSPHRASE_TXT"
+	},
+	"time_controls": [
+		{
+			"id": "Classical",
+			"name": "Classical (90 + 30)"
+		},
+		{
+			"id": "Rapid",
+			"name": "Rapid (12 + 5)"
+		},
+		{
+			"id": "Rapid",
+			"name": "Rapid (10 + 0)"
+		},
+		{
+			"id": "Blitz",
+			"name": "Blitz (5 + 3)"
+		}
+	]
+}

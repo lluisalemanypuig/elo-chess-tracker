@@ -3,9 +3,6 @@
 ### Clean test database
 
 rm -rf test/webpage/*
-mkdir -p test/webpage/database
-mkdir -p test/webpage/database/users
-mkdir -p test/webpage/database/games
-mkdir -p test/webpage/database/challenges
-cp -r webpage-test/database/* test/webpage/database/
+cp -r webpage-test/* test/webpage/
 
+mv test/webpage/configuration_test.json test/webpage/configuration.json

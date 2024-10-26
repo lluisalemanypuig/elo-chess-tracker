@@ -67,7 +67,6 @@ The passwords do not include the quote characters `"`; they are only used here a
 Edit the configuration file `system_configuration.json` appropriately. Said file contains the following fields
 
 	{
-		"base_directory": "$DATABASE_DIRECTORY",
 		"rating_system": "Elo",
 		"permissions": {
 			"admin": [ ],
@@ -190,9 +189,9 @@ Once the configuration file has been properly edited, now we can run the website
 
 To run the website, use **one** of the following commands (we recommend using the last one)
 
-	$ node ./js-source/app_main.js configuration-file system_configuration.json
-	$ DEBUG=ELO_TRACKER:* nodemon ./js-source/app_main.js configuration-file system_configuration.json
-	$ DEBUG=ELO_TRACKER:* npm run devstart configuration-file system_configuration.json
+	$ node ./js-source/app_main.js configuration-file /path/to/configuration.json
+	$ DEBUG=ELO_TRACKER:* nodemon ./js-source/app_main.js configuration-file /path/to/configuration.json
+	$ DEBUG=ELO_TRACKER:* npm run devstart configuration-file /path/to/configuration.json
 	
 To access it, open a web browser and type in one of the following addresses depending on whether you used a SSL certificate or not.
 
