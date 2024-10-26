@@ -170,8 +170,7 @@ export class ServerDirectories {
 	is_SSL_info_valid(): boolean {
 		return this.ssl_directory != "" &&
 			this.public_key_file != "" &&
-			this.private_key_file != "" &&
-			this.passphrase_file != "";
+			this.private_key_file != "";
 	}
 
 	/**

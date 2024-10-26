@@ -72,18 +72,29 @@ if (ServerDirectories.get_instance().is_SSL_info_valid()) {
 	debug(log_now(), "Create https server");
 
 	// Get port from environment and store in Express.
-	let port_8443 = normalizePort(process.env.PORT || '8443');
-	app.set('port', port_8443);
+	let port = normalizePort(process.env.PORT || '8443');
+	app.set('port', port);
 
-	let passphrase = fs.readFileSync(ServerDirectories.get_instance().passphrase_file, 'utf8');
-	let https_server = https.createServer(
-		{
-			key : fs.readFileSync(ServerDirectories.get_instance().private_key_file, 'utf8'),
-			cert : fs.readFileSync(ServerDirectories.get_instance().public_key_file, 'utf8'),
-			passphrase : passphrase.substring(0,passphrase.length - 1)
-		},
-		app
-	);
+	let https_server = function() {
+		const private_key = fs.readFileSync(ServerDirectories.get_instance().private_key_file, 'utf8');
+		const certificate = fs.readFileSync(ServerDirectories.get_instance().public_key_file, 'utf8');
+
+		if (ServerDirectories.get_instance().passphrase_file != "") {
+			debug(log_now(), "Passphrase file found...");
+			let passphrase = fs.readFileSync(ServerDirectories.get_instance().passphrase_file, 'utf8');
+			return https.createServer(
+				{
+					key : private_key,
+					cert : certificate,
+					passphrase : passphrase.substring(0, passphrase.length - 1)
+				},
+				app
+			);
+		}
+		
+		debug(log_now(), "No passphrase file given...");
+		return https.createServer({key : private_key, cert : certificate}, app);
+	}();
 
 	function https_on_listening(): void {
 		let addr = https_server.address();
@@ -97,9 +108,9 @@ if (ServerDirectories.get_instance().is_SSL_info_valid()) {
 			throw error;
 		}
 	
-		var bind = typeof port_8443 === 'string'
-			? 'Pipe ' + port_8443
-			: 'Port ' + port_8443;
+		var bind = typeof port === 'string'
+			? 'Pipe ' + port
+			: 'Port ' + port;
 	
 		// handle specific listen errors with friendly messages
 		switch (error.code) {
@@ -116,7 +127,7 @@ if (ServerDirectories.get_instance().is_SSL_info_valid()) {
 		}
 	}
 
-	https_server.listen(port_8443);
+	https_server.listen(port);
 	https_server.on('error', https_on_error);
 	https_server.on('listening', https_on_listening);
 }
@@ -125,8 +136,8 @@ else {
 	debug(log_now(), "Create http server");
 
 	// Get port from environment and store in Express.
-	let port_8080 = normalizePort(process.env.PORT || '8080');
-	app.set('port', port_8080);
+	let port = normalizePort(process.env.PORT || '8080');
+	app.set('port', port);
 
 	// Event listener for servers "error" event.
 	function http_on_error(error: any): void {
@@ -134,9 +145,9 @@ else {
 			throw error;
 		}
 
-		var bind = typeof port_8080 === 'string'
-			? 'Pipe ' + port_8080
-			: 'Port ' + port_8080;
+		var bind = typeof port === 'string'
+			? 'Pipe ' + port
+			: 'Port ' + port;
 
 		// handle specific listen errors with friendly messages
 		switch (error.code) {
@@ -163,7 +174,7 @@ else {
 	}
 
 	let http_server = http.createServer(app);
-	http_server.listen(port_8080);
+	http_server.listen(port);
 	http_server.on('error', http_on_error);
 	http_server.on('listening', http_on_listening);
 }
