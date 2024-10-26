@@ -95,8 +95,8 @@ export async function get_users_home(req: any, res: any) {
  * @param res 
  * @returns 
  */
-export async function post_users_modify(req: any, res: any) {
-	debug(log_now(), "POST query_users_modify...");
+export async function post_users_edit(req: any, res: any) {
+	debug(log_now(), "POST query_users_edit...");
 
 	const session_id = req.cookies.session_id;
 	const username = req.cookies.user;

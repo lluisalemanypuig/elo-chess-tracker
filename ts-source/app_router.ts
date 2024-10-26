@@ -74,10 +74,10 @@ router.get('/js-source/*', (req: any, res: any) => {
 	res.sendFile(filepath);
 });
 
-import { post_users_modify, get_users_list, get_users_home, post_users_ranking } from './server_query_user';
+import { post_users_edit, get_users_list, get_users_home, post_users_ranking } from './server_query_user';
 router.get('/query_users_list', get_users_list);
 router.get('/query_users_home', get_users_home);
-router.post('/query_users_modify', post_users_modify);
+router.post('/query_users_edit', post_users_edit);
 router.post('/query_users_ranking', post_users_ranking);
 
 // sending, receiving, accepting, setting result of challenges

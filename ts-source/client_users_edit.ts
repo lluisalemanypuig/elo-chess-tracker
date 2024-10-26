@@ -70,7 +70,7 @@ async function user_was_changed(event: any) {
 	if (username_option != null) {
 		const username = (username_option as HTMLOptionElement).id;
 		const response = await fetch(
-			"/query_user_modify",
+			"/query_users_edit",
 			{
 				method: 'POST',
 				body: JSON.stringify({'u' : username}),
