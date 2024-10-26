@@ -109,22 +109,23 @@ function filter_game_list(
 				return false;
 			};
 
-			let is_editable: boolean = false;
-			if (user.can_do(EDIT_USER_GAMES)) {
-				
-				if (user.can_do(EDIT_ADMIN_GAMES) && white_or_black_is(ADMIN)) {
-					is_editable = true;
+			let is_editable: boolean = function() {
+				if (!user.can_do(EDIT_USER_GAMES)) {
+					if (white_or_black_is(ADMIN)) {
+						return user.can_do(EDIT_ADMIN_GAMES);
+					}
+					if (white_or_black_is(TEACHER)) {
+						return user.can_do(EDIT_TEACHER_GAMES);
+					}
+					if (white_or_black_is(MEMBER)) {
+						return user.can_do(EDIT_MEMBER_GAMES);
+					}
+					if (white_or_black_is(STUDENT)) {
+						return user.can_do(EDIT_STUDENT_GAMES);
+					}
 				}
-				if (user.can_do(EDIT_MEMBER_GAMES) && white_or_black_is(MEMBER)) {
-					is_editable = true;
-				}
-				if (user.can_do(EDIT_TEACHER_GAMES) && white_or_black_is(TEACHER)) {
-					is_editable = true;
-				}
-				if (user.can_do(EDIT_STUDENT_GAMES) && white_or_black_is(STUDENT)) {
-					is_editable = true;
-				}
-			}
+				return false;
+			}();
 
 			data_to_return.push({
 				'id' : g.get_id(),

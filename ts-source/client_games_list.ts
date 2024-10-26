@@ -146,7 +146,12 @@ window.onload = async function () {
 		row.appendChild(new_text_cell(games[i].white));
 		row.appendChild(new_text_cell(games[i].black));
 		
-		row.appendChild(new_select_cell_result(games[i].result, games[i].id));
+		if (games[i].editable == "yes") {
+			row.appendChild(new_select_cell_result(games[i].result, games[i].id));
+		}
+		else {
+			row.appendChild(new_text_cell(games[i].result));
+		}
 		
 		row.appendChild(new_text_cell(games[i].time_control));
 		row.appendChild(new_text_cell(games[i].date));
