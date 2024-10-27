@@ -47,7 +47,7 @@ debug(log_now(), "    Imported!");
 import http from 'http';
 import https from 'https';
 import { AddressInfo } from 'net';
-import { ServerDirectories } from './server/configuration';
+import { ServerEnvironment } from './server/configuration';
 
 // Normalize a port into a number, string, or false.
 function normalizePort(val: any): any {
@@ -67,7 +67,7 @@ function normalizePort(val: any): any {
 }
 
 // create https server when possible
-if (ServerDirectories.get_instance().is_SSL_info_valid()) {
+if (ServerEnvironment.get_instance().is_SSL_info_valid()) {
 	// Create HTTPS server
 	debug(log_now(), "Create https server");
 
@@ -76,12 +76,12 @@ if (ServerDirectories.get_instance().is_SSL_info_valid()) {
 	app.set('port', port);
 
 	let https_server = function() {
-		const private_key = fs.readFileSync(ServerDirectories.get_instance().private_key_file, 'utf8');
-		const certificate = fs.readFileSync(ServerDirectories.get_instance().public_key_file, 'utf8');
+		const private_key = fs.readFileSync(ServerEnvironment.get_instance().private_key_file, 'utf8');
+		const certificate = fs.readFileSync(ServerEnvironment.get_instance().public_key_file, 'utf8');
 
-		if (ServerDirectories.get_instance().passphrase_file != "") {
+		if (ServerEnvironment.get_instance().passphrase_file != "") {
 			debug(log_now(), "Passphrase file found...");
-			let passphrase = fs.readFileSync(ServerDirectories.get_instance().passphrase_file, 'utf8');
+			let passphrase = fs.readFileSync(ServerEnvironment.get_instance().passphrase_file, 'utf8');
 			return https.createServer(
 				{
 					key : private_key,

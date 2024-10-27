@@ -27,7 +27,7 @@ const debug = Debug('ELO_TRACKER:server_users');
 
 import { Player } from '../models/player';
 import { User } from '../models/user';
-import { ServerDirectories, ServerMemory } from './configuration';
+import { ServerEnvironment, ServerMemory } from './configuration';
 import { log_now } from '../utils/misc';
 import { assert } from 'console';
 import { UserRole } from '../models/user_role';
@@ -48,7 +48,7 @@ export function user_retrieve(username: string): (User | null) {
 }
 
 export function user_overwrite(user: User): void {
-	let user_dir = ServerDirectories.get_instance().users_directory;
+	let user_dir = ServerEnvironment.get_instance().users_directory;
 	let user_file = path.join(user_dir, user.get_username());
 
 	debug(log_now(), `Overwriting file '${user_file}' of user '${user.get_username()}'`);
@@ -101,7 +101,7 @@ export function user_get_all(): User[] {
  */
 export function user_add_new(u: User): void
 {
-	let user_dir = ServerDirectories.get_instance().users_directory;
+	let user_dir = ServerEnvironment.get_instance().users_directory;
 	let user_file = path.join(user_dir, u.get_username());
 
 	debug(log_now(), `Writing file '${user_file}' of new user '${u.get_username()}'`);
@@ -129,7 +129,7 @@ export function user_get_all_names_and_usernames(): [string,string][] {
  * @post Users in the server (memory and database) are updated.
  */
 export function user_update_from_players_data(players: Player[]): void {
-	let server_dirs = ServerDirectories.get_instance();
+	let server_dirs = ServerEnvironment.get_instance();
 
 	let users_to_update: User[] = [];
 

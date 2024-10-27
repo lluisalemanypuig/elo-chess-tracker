@@ -30,7 +30,7 @@ import { Player } from '../models/player';
 import { Game, GameResult, game_set_from_json } from '../models/game';
 import { User } from '../models/user';
 import { log_now, search, where_should_be_inserted, long_date_to_short_date, number_to_string, linear_find } from '../utils/misc';
-import { RatingSystem, ServerDirectories, ServerMemory } from './configuration';
+import { RatingSystem, ServerEnvironment, ServerMemory } from './configuration';
 import { user_retrieve, user_update_from_players_data } from './users';
 import { Rating } from '../rating_system/rating';
 import { TimeControlRating } from '../models/time_control_rating';
@@ -135,7 +135,7 @@ function game_next_of_player(
 
 	debug(log_now(), `Find the game of user '${username}' right after date '${when}'`);
 
-	const games_dir = ServerDirectories.get_instance().games_directory;
+	const games_dir = ServerEnvironment.get_instance().games_directory;
 
 	// The file into which we have to add the new game.
 	const game_record_string = make_record_string_str(when);
@@ -314,7 +314,7 @@ function game_insert_in_history(game: Game, game_record_string: string): void
 	updated_players.push(updated_player(game.get_time_control_id(), game.get_black(), black_after));
 	}
 
-	const games_dir = ServerDirectories.get_instance().games_directory;
+	const games_dir = ServerEnvironment.get_instance().games_directory;
 
 	debug(log_now(), "Adding game into the history...");
 	debug(log_now(), `    Game '${JSON.stringify(game)}'`);
@@ -460,7 +460,7 @@ export function game_find_by_id(game_id: string): [string[], string, Game[], num
 	}
 	const game_record_name = game_record_string_ as string;
 
-	const games_dir = ServerDirectories.get_instance().games_directory;
+	const games_dir = ServerEnvironment.get_instance().games_directory;
 	const game_record_filename: string = path.join(games_dir, game_record_name);
 	debug(log_now(), `    File: '${game_record_filename}'`);
 
@@ -496,7 +496,7 @@ export function game_find_by_id(game_id: string): [string[], string, Game[], num
  * @param new_result The (new) result of the game
  */
 export function game_edit_result(game_id: string, new_result: GameResult): void {
-	const games_dir = ServerDirectories.get_instance().games_directory;
+	const games_dir = ServerEnvironment.get_instance().games_directory;
 
 	debug(log_now(), `Editing game '${game_id}'`);
 	
@@ -560,7 +560,7 @@ export function game_edit_result(game_id: string, new_result: GameResult): void 
 }
 
 export function recalculate_Elo_ratings() {
-	const games_dir = ServerDirectories.get_instance().games_directory;
+	const games_dir = ServerEnvironment.get_instance().games_directory;
 	const all_time_controls = RatingSystem.get_instance().all_time_controls;
 
 	// initialize all players to a freshly created player since all

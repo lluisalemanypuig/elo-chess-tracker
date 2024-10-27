@@ -26,7 +26,7 @@ import Debug from 'debug';
 const debug = Debug('ELO_TRACKER:server_initialization');
 
 import { log_now } from '../utils/misc';
-import { ServerMemory, ServerDirectories, RatingSystem } from "./configuration";
+import { ServerMemory, ServerEnvironment, RatingSystem } from "./configuration";
 import { user_from_json } from '../models/user';
 import { challenge_from_json } from '../models/challenge';
 import { Game, game_set_from_json } from '../models/game';
@@ -51,7 +51,7 @@ function initialize_users(): void {
 
 	let rating_system = RatingSystem.get_instance();
 	let memory = ServerMemory.get_instance();
-	let dir = ServerDirectories.get_instance().users_directory;
+	let dir = ServerEnvironment.get_instance().users_directory;
 
 	debug(log_now(), `    Reading directory '${dir}'`);
 	let all_user_files = fs.readdirSync(dir);
@@ -84,7 +84,7 @@ function initialize_challenges(): void {
 	debug(log_now(), "Initialize challenges...");
 
 	let memory = ServerMemory.get_instance();
-	let dir = ServerDirectories.get_instance().challenges_directory;
+	let dir = ServerEnvironment.get_instance().challenges_directory;
 
 	debug(log_now(), `    Reading directory '${dir}'`);
 	let all_challenges_files = fs.readdirSync(dir);
@@ -104,7 +104,7 @@ function initialize_games(): void {
 	debug(log_now(), "Initialize games...");
 
 	let memory = ServerMemory.get_instance();
-	const dir = ServerDirectories.get_instance().games_directory;
+	const dir = ServerEnvironment.get_instance().games_directory;
 	let num_games: number = 0;
 	let max_game_id: number = 0;
 
@@ -181,35 +181,35 @@ export function server_initialize_from_data(base_directory: string, configuratio
 
 	// initialize directories
 
-	ServerDirectories.get_instance().set_database_base_directory(
+	ServerEnvironment.get_instance().set_database_base_directory(
 		path.join(base_directory, "/database")
 	);
-	debug(log_now(), `    Database directory: '${ServerDirectories.get_instance().database_directory}'`);
-	debug(log_now(), `        Games directory: '${ServerDirectories.get_instance().games_directory}'`);
-	debug(log_now(), `        Users directory: '${ServerDirectories.get_instance().users_directory}'`);
-	debug(log_now(), `        Challenges directory: '${ServerDirectories.get_instance().challenges_directory}'`);
+	debug(log_now(), `    Database directory: '${ServerEnvironment.get_instance().database_directory}'`);
+	debug(log_now(), `        Games directory: '${ServerEnvironment.get_instance().games_directory}'`);
+	debug(log_now(), `        Users directory: '${ServerEnvironment.get_instance().users_directory}'`);
+	debug(log_now(), `        Challenges directory: '${ServerEnvironment.get_instance().challenges_directory}'`);
 
 	//	initialize SSL certificate files
 
-	ServerDirectories.get_instance().set_SSL_info(
+	ServerEnvironment.get_instance().set_SSL_info(
 		path.join(base_directory, "/ssl"),
 		configuration_data.ssl_certificate.public_key_file,
 		configuration_data.ssl_certificate.private_key_file,
 		configuration_data.ssl_certificate.passphrase_file
 	);
-	debug(log_now(), `    SSL base directory: '${ServerDirectories.get_instance().ssl_directory}'`);
-	debug(log_now(), `        Public key file: '${ServerDirectories.get_instance().public_key_file}'`);
-	debug(log_now(), `        Private key file: '${ServerDirectories.get_instance().private_key_file}'`);
-	debug(log_now(), `        Passphrase: '${ServerDirectories.get_instance().passphrase_file}'`);
+	debug(log_now(), `    SSL base directory: '${ServerEnvironment.get_instance().ssl_directory}'`);
+	debug(log_now(), `        Public key file: '${ServerEnvironment.get_instance().public_key_file}'`);
+	debug(log_now(), `        Private key file: '${ServerEnvironment.get_instance().private_key_file}'`);
+	debug(log_now(), `        Passphrase: '${ServerEnvironment.get_instance().passphrase_file}'`);
 
 	// initialize icon file paths
-	ServerDirectories.get_instance().set_icons_info(
+	ServerEnvironment.get_instance().set_icons_info(
 		path.join(base_directory, "/icons"),
 		"/" + configuration_data.login_page.icon
 	);
 
 	// initialize page titles
-	ServerDirectories.get_instance().title_login_page = configuration_data.login_page.title;
+	ServerEnvironment.get_instance().title_login_page = configuration_data.login_page.title;
 	
 	// initialize rating system
 	{

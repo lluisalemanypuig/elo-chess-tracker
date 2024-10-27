@@ -32,7 +32,7 @@ import { user_retrieve } from './server/users';
 import { User } from './models/user';
 import { Game, game_set_from_json } from './models/game';
 import { RatingSystem } from './server/configuration';
-import { ServerDirectories } from './server/configuration';
+import { ServerEnvironment } from './server/configuration';
 import { ADMIN, MEMBER, STUDENT, TEACHER, UserRole } from './models/user_role';
 import {
 	SEE_USER_GAMES, SEE_ADMIN_GAMES, SEE_MEMBER_GAMES, SEE_STUDENT_GAMES, SEE_TEACHER_GAMES,
@@ -61,7 +61,7 @@ function filter_game_list(
 
 ): any[]
 {
-	const games_dir = ServerDirectories.get_instance().games_directory;
+	const games_dir = ServerEnvironment.get_instance().games_directory;
 
 	let data_to_return: any[] = [];
 	

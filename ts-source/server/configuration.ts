@@ -103,7 +103,7 @@ export class RatingSystem {
 /**
  * @brief Directories and other parameters of the server environment
  */
-export class ServerDirectories {
+export class ServerEnvironment {
 	// database directory
 	public database_directory: string = "";
 	public games_directory: string = "";
@@ -124,17 +124,17 @@ export class ServerDirectories {
 	public title_login_page: string = "";
 
 	/// The only instance of this class
-	private static instance: ServerDirectories;
+	private static instance: ServerEnvironment;
 
 	/**
 	 * @brief Construct the server configuration
 	 */
 	constructor() {
-		if (ServerDirectories.instance) {
-			return ServerDirectories.instance;
+		if (ServerEnvironment.instance) {
+			return ServerEnvironment.instance;
 		}
 
-		ServerDirectories.instance = this;
+		ServerEnvironment.instance = this;
 	}
 
 	/// Sets base directory of database
@@ -186,9 +186,9 @@ export class ServerDirectories {
 	 * @returns The only instance of this class
 	 * @pre Method @ref initialize must have been called before
 	 */
-	static get_instance(): ServerDirectories {
-		ServerDirectories.instance = ServerDirectories.instance || new ServerDirectories();
-		return ServerDirectories.instance;
+	static get_instance(): ServerEnvironment {
+		ServerEnvironment.instance = ServerEnvironment.instance || new ServerEnvironment();
+		return ServerEnvironment.instance;
 	}
 }
 
