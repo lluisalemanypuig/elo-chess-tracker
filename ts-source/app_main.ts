@@ -131,50 +131,49 @@ if (ServerDirectories.get_instance().is_SSL_info_valid()) {
 	https_server.on('error', https_on_error);
 	https_server.on('listening', https_on_listening);
 }
-else {
-	// Create HTTP server
-	debug(log_now(), "Create http server");
 
-	// Get port from environment and store in Express.
-	let port = normalizePort(process.env.PORT || '8080');
-	app.set('port', port);
+// Create HTTP server
+debug(log_now(), "Create http server");
 
-	// Event listener for servers "error" event.
-	function http_on_error(error: any): void {
-		if (error.syscall !== 'listen') {
+// Get port from environment and store in Express.
+let port = normalizePort(process.env.PORT || '8080');
+app.set('port', port);
+
+// Event listener for servers "error" event.
+function http_on_error(error: any): void {
+	if (error.syscall !== 'listen') {
+		throw error;
+	}
+
+	var bind = typeof port === 'string'
+		? 'Pipe ' + port
+		: 'Port ' + port;
+
+	// handle specific listen errors with friendly messages
+	switch (error.code) {
+		case 'EACCES':
+			console.error(bind + ' requires elevated privileges');
+			process.exit(1);
+			break;
+		case 'EADDRINUSE':
+			console.error(bind + ' is already in use');
+			process.exit(1);
+			break;
+		default:
 			throw error;
-		}
-
-		var bind = typeof port === 'string'
-			? 'Pipe ' + port
-			: 'Port ' + port;
-
-		// handle specific listen errors with friendly messages
-		switch (error.code) {
-			case 'EACCES':
-				console.error(bind + ' requires elevated privileges');
-				process.exit(1);
-				break;
-			case 'EADDRINUSE':
-				console.error(bind + ' is already in use');
-				process.exit(1);
-				break;
-			default:
-				throw error;
-		}
 	}
-
-	// Event listener for servers "listening" event.
-	function http_on_listening(): void {
-		let addr = http_server.address();
-		let bind = typeof addr === 'string'
-			? 'pipe ' + addr
-			: 'port ' + (addr as AddressInfo).port;
-		debug(log_now(), 'Listening on ' + bind);
-	}
-
-	let http_server = http.createServer(app);
-	http_server.listen(port);
-	http_server.on('error', http_on_error);
-	http_server.on('listening', http_on_listening);
 }
+
+// Event listener for servers "listening" event.
+function http_on_listening(): void {
+	let addr = http_server.address();
+	let bind = typeof addr === 'string'
+		? 'pipe ' + addr
+		: 'port ' + (addr as AddressInfo).port;
+	debug(log_now(), 'Listening on ' + bind);
+}
+
+let http_server = http.createServer(app);
+http_server.listen(port);
+http_server.on('error', http_on_error);
+http_server.on('listening', http_on_listening);
