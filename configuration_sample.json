@@ -7,7 +7,11 @@
 	},
 	
 	"login_page": {
-		"title": "My webpage title",
+		"title": "My webpage title (login page)",
+		"icon": "path/to/icon.png"
+	},
+	"home_page": {
+		"title": "My webpage title (home page)",
 		"icon": "path/to/icon.png"
 	},
 	

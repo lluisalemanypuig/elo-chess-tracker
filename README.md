@@ -64,21 +64,33 @@ The passwords do not include the quote characters `"`; they are only used here a
 
 ### Edit the configuration file
 
-Edit the configuration file `system_configuration.json` appropriately. Said file contains the following fields
+Edit the configuration file `configuration_sample.json` appropriately. Said file contains the following fields
 
 	{
 		"rating_system": "Elo",
+		
+		"ssl_certificate": {
+			"public_key_file": "$PUBLIC_PEM",
+			"private_key_file": "$PRIVATE_PEM",
+			"passphrase_file": "$PASSPHRASE_TXT"
+		},
+		
+		"login_page": {
+			"title": "My webpage title (login page)",
+			"icon": "path/to/icon.png"
+		},
+		"home_page": {
+			"title": "My webpage title (home page)",
+			"icon": "CET.png"
+		},
+		
 		"permissions": {
 			"admin": [ ],
 			"teacher": [ ],
 			"member": [ ],
 			"student": [ ]
 		},
-		"ssl_certificate": {
-			"public_key_file": "$PUBLIC_PEM",
-			"private_key_file": "$PRIVATE_PEM",
-			"passphrase_file": "$PASSPHRASE_TXT"
-		},
+		
 		"time_controls": [ ]
 	}
 
