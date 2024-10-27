@@ -205,11 +205,13 @@ export function server_initialize_from_data(base_directory: string, configuratio
 	// initialize icon file paths
 	ServerEnvironment.get_instance().set_icons_info(
 		path.join(base_directory, "/icons"),
-		"/" + configuration_data.login_page.icon
+		"/" + configuration_data.login_page.icon,
+		"/" + configuration_data.home_page.icon
 	);
 
 	// initialize page titles
 	ServerEnvironment.get_instance().title_login_page = configuration_data.login_page.title;
+	ServerEnvironment.get_instance().title_home_page = configuration_data.home_page.title;
 	
 	// initialize rating system
 	{

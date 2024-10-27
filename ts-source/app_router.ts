@@ -80,6 +80,11 @@ router.get('/login_page_title', (req:any, res: any) => {
 	debug(log_now(), `    request: ${req.url}`);
 	res.send({ "text": ServerEnvironment.get_instance().title_login_page });
 });
+router.get('/home_page_title', (req:any, res: any) => {
+	debug(log_now(), "GET login_page_title...");
+	debug(log_now(), `    request: ${req.url}`);
+	res.send({ "text": ServerEnvironment.get_instance().title_home_page });
+});
 
 /* ************************************************************************** */
 

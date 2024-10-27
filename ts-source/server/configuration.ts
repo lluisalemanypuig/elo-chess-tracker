@@ -119,9 +119,11 @@ export class ServerEnvironment {
 	// icons
 	public icon_directory: string = "";
 	public icon_login_page: string = "";
+	public icon_home_page: string = "";
 
 	// titles
 	public title_login_page: string = "";
+	public title_home_page: string = "";
 
 	/// The only instance of this class
 	private static instance: ServerEnvironment;
@@ -174,11 +176,13 @@ export class ServerEnvironment {
 
 	set_icons_info(
 		base_dir: string,
-		login_page_main: string
+		login_page: string,
+		home_page: string
 	)
 	{
 		this.icon_directory = base_dir;
-		this.icon_login_page = path.join(base_dir, login_page_main);
+		this.icon_login_page = path.join(base_dir, login_page);
+		this.icon_home_page = path.join(base_dir, home_page);
 	}
 
 	/**
