@@ -1,5 +1,16 @@
 {
 	"rating_system": "Elo",
+	"ssl_certificate": {
+		"public_key_file": "$PUBLIC_PEM",
+		"private_key_file": "$PRIVATE_PEM",
+		"passphrase_file": "$PASSPHRASE_TXT"
+	},
+	
+	"login_page": {
+		"title": "My webpage title",
+		"icon": "path/to/icon.png"
+	},
+	
 	"permissions": {
 		"admin": [
 			"create_user",
@@ -27,11 +38,7 @@
 			"challenge_user",		"challenge_admin",		"challenge_member",		"challenge_teacher",	"challenge_student"
 		]
 	},
-	"ssl_certificate": {
-		"public_key_file": "$PUBLIC_PEM",
-		"private_key_file": "$PRIVATE_PEM",
-		"passphrase_file": "$PASSPHRASE_TXT"
-	},
+	
 	"time_controls": [
 		{
 			"id": "Classical",
