@@ -57,7 +57,8 @@ router.get('/html/*.css', (req: any, res: any) => {
 	res.sendFile(filepath);
 });
 
-// 
+/* ************************************************************************** */
+/* ICONS */
 router.get('/favicon.ico', (req: any, res: any) => {
 	debug(log_now(), "GET favicon.ico...");
 	debug(log_now(), `    request: ${req.url}`);
@@ -68,10 +69,19 @@ router.get('/favicon.ico', (req: any, res: any) => {
 router.get('/login_page_icon', (req:any, res: any) => {
 	debug(log_now(), "GET login_page_icon...");
 	debug(log_now(), `    request: ${req.url}`);
-	let filepath = ServerDirectories.get_instance().icon_login_page_main;
+	let filepath = ServerDirectories.get_instance().icon_login_page;
 	debug(log_now(), `    file to send: ${filepath}`);
 	res.sendFile(filepath);
 });
+
+/* PAGE TITLES */
+router.get('/login_page_title', (req:any, res: any) => {
+	debug(log_now(), "GET login_page_title...");
+	debug(log_now(), `    request: ${req.url}`);
+	res.send({ "text": ServerDirectories.get_instance().title_login_page });
+});
+
+/* ************************************************************************** */
 
 // serve all javascript files!
 router.get('/js-source/*', (req: any, res: any) => {

@@ -36,6 +36,7 @@ import { TimeControl } from '../models/time_control';
 
 import { player_vs_player as Elo } from '../rating_system/Elo/formula';
 import { Elo_rating_from_json, Elo_rating_set_from_json, Elo_rating_new } from '../rating_system/Elo/rating';
+import { Server } from 'http';
 
 function initialize_sessions(): void {
 	debug(log_now(), "Initialize sessions...");
@@ -201,11 +202,14 @@ export function server_initialize_from_data(base_directory: string, configuratio
 	debug(log_now(), `        Private key file: '${ServerDirectories.get_instance().private_key_file}'`);
 	debug(log_now(), `        Passphrase: '${ServerDirectories.get_instance().passphrase_file}'`);
 
-	//	initialize icon file paths
+	// initialize icon file paths
 	ServerDirectories.get_instance().set_icons_info(
 		path.join(base_directory, "/icons"),
 		"/" + configuration_data.login_page.icon
 	);
+
+	// initialize page titles
+	ServerDirectories.get_instance().title_login_page = configuration_data.login_page.title;
 	
 	// initialize rating system
 	{

@@ -66,8 +66,25 @@ async function login_button_clicked(event: any) {
 	window.location.href = "/home";
 }
 
+async function set_login_page_title() {
+	const response = await fetch(
+		"/login_page_title",
+		{
+			method: 'GET',
+			headers: { 'Content-type': 'application/json; charset=UTF-8' }
+		}
+	);
+	const data = await response.json();
+
+	// set the title of the page
+	let title = document.getElementById("login_page_title") as HTMLElement;
+	title.textContent = data.text as string;
+}
+
 window.onload = function () {
 	// define behaviour of login button
 	let login_button = document.getElementById("login_button") as HTMLButtonElement;
 	login_button.onclick = login_button_clicked;
+
+	set_login_page_title();
 }

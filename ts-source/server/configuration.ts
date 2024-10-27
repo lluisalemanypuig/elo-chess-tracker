@@ -102,11 +102,6 @@ export class RatingSystem {
 
 /**
  * @brief Directories and other parameters of the server environment
- * 
- * Directories:
- * - @ref base_directory: base directory of the server
- * - @ref games_directory: directory where games are stored
- * - @ref users_directory: directory where player files are stored
  */
 export class ServerDirectories {
 	// database directory
@@ -123,7 +118,10 @@ export class ServerDirectories {
 
 	// icons
 	public icon_directory: string = "";
-	public icon_login_page_main: string = "";
+	public icon_login_page: string = "";
+
+	// titles
+	public title_login_page: string = "";
 
 	/// The only instance of this class
 	private static instance: ServerDirectories;
@@ -180,7 +178,7 @@ export class ServerDirectories {
 	)
 	{
 		this.icon_directory = base_dir;
-		this.icon_login_page_main = path.join(base_dir, login_page_main);
+		this.icon_login_page = path.join(base_dir, login_page_main);
 	}
 
 	/**
