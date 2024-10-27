@@ -178,7 +178,7 @@ async function fill_own_info() {
 
 async function set_home_page_title() {
 	const response = await fetch(
-		"/home_page_title",
+		"/title_home_page",
 		{
 			method: 'GET',
 			headers: { 'Content-type': 'application/json; charset=UTF-8' }
@@ -187,7 +187,7 @@ async function set_home_page_title() {
 	const data = await response.json();
 
 	// set the title of the page
-	let title = document.getElementById("home_page_title") as HTMLElement;
+	let title = document.getElementById("title_home_page") as HTMLElement;
 	title.textContent = data.text as string;
 }
 

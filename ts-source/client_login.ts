@@ -68,7 +68,7 @@ async function login_button_clicked(event: any) {
 
 async function set_login_page_title() {
 	const response = await fetch(
-		"/login_page_title",
+		"/title_login_page",
 		{
 			method: 'GET',
 			headers: { 'Content-type': 'application/json; charset=UTF-8' }
@@ -77,7 +77,7 @@ async function set_login_page_title() {
 	const data = await response.json();
 
 	// set the title of the page
-	let title = document.getElementById("login_page_title") as HTMLElement;
+	let title = document.getElementById("title_login_page") as HTMLElement;
 	title.textContent = data.text as string;
 }
 
