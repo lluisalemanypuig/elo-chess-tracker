@@ -178,28 +178,35 @@ function initialize_time_controls(time_control_array: any): void {
 export function server_initialize_from_data(base_directory: string, configuration_data: any): void {
 	debug(log_now(), `    Base directory: '${base_directory}'`);
 
-	//
 	// initialize directories
 
-	const database_directory = path.join(base_directory, "/database");
-	ServerDirectories.get_instance().set_database_base_directory(database_directory);
-	
+	ServerDirectories.get_instance().set_database_base_directory(
+		path.join(base_directory, "/database")
+	);
 	debug(log_now(), `    Database directory: '${ServerDirectories.get_instance().database_directory}'`);
 	debug(log_now(), `        Games directory: '${ServerDirectories.get_instance().games_directory}'`);
 	debug(log_now(), `        Users directory: '${ServerDirectories.get_instance().users_directory}'`);
 	debug(log_now(), `        Challenges directory: '${ServerDirectories.get_instance().challenges_directory}'`);
 
-	const ssl_certificate_directory = path.join(base_directory, "/ssl");
-	const public_key_file = configuration_data.ssl_certificate.public_key_file;
-	const private_key_file = configuration_data.ssl_certificate.private_key_file;
-	const passphrase_file = configuration_data.ssl_certificate.passphrase_file;
-	ServerDirectories.get_instance().set_SSL_info(ssl_certificate_directory, public_key_file, private_key_file, passphrase_file);
+	//	initialize SSL certificate files
 
+	ServerDirectories.get_instance().set_SSL_info(
+		path.join(base_directory, "/ssl"),
+		configuration_data.ssl_certificate.public_key_file,
+		configuration_data.ssl_certificate.private_key_file,
+		configuration_data.ssl_certificate.passphrase_file
+	);
 	debug(log_now(), `    SSL base directory: '${ServerDirectories.get_instance().ssl_directory}'`);
 	debug(log_now(), `        Public key file: '${ServerDirectories.get_instance().public_key_file}'`);
 	debug(log_now(), `        Private key file: '${ServerDirectories.get_instance().private_key_file}'`);
 	debug(log_now(), `        Passphrase: '${ServerDirectories.get_instance().passphrase_file}'`);
 
+	//	initialize icon file paths
+	ServerDirectories.get_instance().set_icons_info(
+		path.join(base_directory, "/icons"),
+		"/" + configuration_data.login_page.icon
+	);
+	
 	// initialize rating system
 	{
 	const rating_type = configuration_data.rating_system;

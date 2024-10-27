@@ -122,7 +122,8 @@ export class ServerDirectories {
 	public passphrase_file: string = "";
 
 	// icons
-	public icons_directory: string = "";
+	public icon_directory: string = "";
+	public icon_login_page_main: string = "";
 
 	/// The only instance of this class
 	private static instance: ServerDirectories;
@@ -171,6 +172,15 @@ export class ServerDirectories {
 		return this.ssl_directory != "" &&
 			this.public_key_file != "" &&
 			this.private_key_file != "";
+	}
+
+	set_icons_info(
+		base_dir: string,
+		login_page_main: string
+	)
+	{
+		this.icon_directory = base_dir;
+		this.icon_login_page_main = path.join(base_dir, login_page_main);
 	}
 
 	/**

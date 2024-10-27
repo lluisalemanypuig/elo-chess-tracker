@@ -28,6 +28,7 @@ const debug = Debug('ELO_TRACKER:app_router');
 import { log_now } from './utils/misc';
 
 import { session_id_exists } from './server/session';
+import { ServerDirectories } from './server/configuration';
 
 let router = express.Router();
 router.get('/', (req: any, res: any) => {
@@ -61,6 +62,13 @@ router.get('/favicon.ico', (req: any, res: any) => {
 	debug(log_now(), "GET favicon.ico...");
 	debug(log_now(), `    request: ${req.url}`);
 	let filepath = path.join(__dirname, "../public/favicon.ico");
+	debug(log_now(), `    file to send: ${filepath}`);
+	res.sendFile(filepath);
+});
+router.get('/login_page_icon', (req:any, res: any) => {
+	debug(log_now(), "GET login_page_icon...");
+	debug(log_now(), `    request: ${req.url}`);
+	let filepath = ServerDirectories.get_instance().icon_login_page_main;
 	debug(log_now(), `    file to send: ${filepath}`);
 	res.sendFile(filepath);
 });
