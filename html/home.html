@@ -27,62 +27,69 @@ Contact:
 	<meta charset="UTF-8">
 	<script type="text/javascript" src="js-source/bdl__client_home.js"> </script>
 
+	<link rel="stylesheet" href="html/main_style.css">
 	<link rel="stylesheet" href="html/footer_copyright_notice.css">
 	<link rel="stylesheet" href="html/elo_table_style.css">
 </head>
 
 <body>
-	<center>
-	<h1 id="title_home_page"></h1>
-
-	<p>
-		<img src="/icon_home_page">
-	</p>
-
-	<div id="user_info" class="text-center">
-		<div id="user_name" class="text-center"></div>
-		<div id="user_ratings" class="text-center">
-			<table id="user_ratings_table">
-				<tr>
-					<th>Time control</th>
-					<th>Rating</th>
-					<th>Total games</th>
-					<th>Won</th>
-					<th>Drawn</th>
-					<th>Lost</th>
-				</tr>
-			</table>
+	<meta name="viewport" content="width=device-width,initial-scale=1"/>
+	<div class="page-wrapper">
+		
+		<div class="main-content">
+			<center>
+				<h1 id="title_home_page"></h1>
+			
+				<p>
+					<img src="/icon_home_page">
+				</p>
+			
+				<div id="user_info" class="text-center">
+					<div id="user_name" class="text-center"></div>
+					<div id="user_ratings" class="text-center">
+						<table id="user_ratings_table">
+							<tr>
+								<th>Time control</th>
+								<th>Rating</th>
+								<th>Total games</th>
+								<th>Won</th>
+								<th>Drawn</th>
+								<th>Lost</th>
+							</tr>
+						</table>
+					</div>
+				</div>
+			
+				<div id="challenges">
+					<!-- Challenge a user to a game. -->
+					<a href="/challenges_page">Challenges</a>
+					<br><br>
+				</div>
+			
+				<div id="games">
+					<!-- List the user's own games. -->
+					<a href="/games_own_page">My games</a>
+					<br><br>
+				</div>
+			
+				<div id="ranking">
+					<!-- Ranking of all the players. -->
+					<a href="/ranking_users_page">Ranking</a>
+					<br><br>
+				</div>
+			
+				<div id="special_action_links">
+					<a href="/users_password_change">Change my password</a><br><br>
+					<u id="logout_link" style="color:blue;cursor:pointer">Logout</u><br><br>
+				</div>
+			</center>
 		</div>
-	</div>
+		
+		<footer class="footer_copyright_notice">
+			Elo chess tracker: Copyright © Lluís Alemany Puig.
+			Code: <a href="https://github.com/lluisalemanypuig/elo-chess-tracker">https://github.com/lluisalemanypuig/elo-chess-tracker</a>
+		</footer>
 
-	<div id="challenges">
-		<!-- Challenge a user to a game. -->
-		<a href="/challenges_page">Challenges</a>
-		<br><br>
 	</div>
-
-	<div id="games">
-		<!-- List the user's own games. -->
-		<a href="/games_own_page">My games</a>
-		<br><br>
-	</div>
-	
-	<div id="ranking">
-		<!-- Ranking of all the players. -->
-		<a href="/ranking_users_page">Ranking</a>
-		<br><br>
-	</div>
-
-	<div id="special_action_links">
-		<a href="/users_password_change">Change my password</a><br><br>
-		<u id="logout_link" style="color:blue;cursor:pointer">Logout</u><br><br>
-	</div>
-	</center>
-	
-	<div class="footer_copyright_notice">
-		Elo chess tracker: Copyright © Lluís Alemany Puig.
-		Code: <a href="https://github.com/lluisalemanypuig/elo-chess-tracker">https://github.com/lluisalemanypuig/elo-chess-tracker</a>
-	</div>
-
 </body>
 </html>

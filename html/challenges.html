@@ -27,49 +27,56 @@ Contact:
 	<meta charset="UTF-8">
 	<script type="text/javascript" src="js-source/bdl__client_challenges.js"> </script>
 
+	<link rel="stylesheet" href="html/main_style.css">
 	<link rel="stylesheet" href="html/footer_copyright_notice.css">
 </head>
 
 <body>
-	<center>
-		<h1>Challenges</h1>
+	<meta name="viewport" content="width=device-width,initial-scale=1"/>
+	<div class="page-wrapper">
+	
+		<div class="main-content">
+			<center>
+			<h1>Challenges</h1>
 
-		<div id="challenges_send">
-			<h2>Challenge a user</h2>
+			<div id="challenges_send">
+				<h2>Challenge a user</h2>
 
-			<label>Select a user:</label>
-			<input list="username_datalist" id="username_list" name="username_list">
-			<datalist id="username_datalist"></datalist><br><br>
+				<label>Select a user:</label>
+				<input list="username_datalist" id="username_list" name="username_list">
+				<datalist id="username_datalist"></datalist><br><br>
 
-			<!-- submit challenge -->
-			<button type="button" id="send_challenge_button" name="send_challenge_button">Submit challenge</button><br><br>
+				<!-- submit challenge -->
+				<button type="button" id="send_challenge_button" name="send_challenge_button">Submit challenge</button><br><br>
+			</div>
+
+			<div id="challenges_received_list">
+				<h2>Challenges sent to me</h2>
+			</div>
+
+			<div id="challenges_sent_list">
+				<h2>Challenges sent to others</h2>
+			</div>
+
+			<div id="challenges_pending_result_set">
+				<h2>Set the result of a challenge</h2>
+			</div>
+
+			<div id="challenges_result_set_by_me">
+				<h2>Results to be confirmed by my opponents</h2>
+			</div>
+
+			<div id="challenges_result_set_by_opponent">
+				<h2>Results I have to confirm</h2>
+			</div>
+			</center>
 		</div>
 
-		<div id="challenges_received_list">
-			<h2>Challenges sent to me</h2>
-		</div>
+		<footer class="footer_copyright_notice">
+			Elo chess tracker: Copyright © Lluís Alemany Puig.
+			Code: <a href="https://github.com/lluisalemanypuig/elo-chess-tracker">https://github.com/lluisalemanypuig/elo-chess-tracker</a>
+		</footer>
 
-		<div id="challenges_sent_list">
-			<h2>Challenges sent to others</h2>
-		</div>
-
-		<div id="challenges_pending_result_set">
-			<h2>Set the result of a challenge</h2>
-		</div>
-
-		<div id="challenges_result_set_by_me">
-			<h2>Results to be confirmed by my opponents</h2>
-		</div>
-
-		<div id="challenges_result_set_by_opponent">
-			<h2>Results I have to confirm</h2>
-		</div>
-	</center>
-
-	<div class="footer_copyright_notice">
-		Elo chess tracker: Copyright © Lluís Alemany Puig.
-		Code: <a href="https://github.com/lluisalemanypuig/elo-chess-tracker">https://github.com/lluisalemanypuig/elo-chess-tracker</a>
 	</div>
-
 </body>
 </html>

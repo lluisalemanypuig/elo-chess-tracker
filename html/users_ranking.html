@@ -27,40 +27,47 @@ Contact:
 	<meta charset="UTF-8">
 	<script type="text/javascript" src="js-source/bdl__client_users_ranking.js"> </script>
 
+	<link rel="stylesheet" href="html/main_style.css">
 	<link rel="stylesheet" href="html/footer_copyright_notice.css">
 	<link rel="stylesheet" href="html/elo_table_style.css">
 </head>
 
 <body>
-	<center>
-	<h1>Ranking</h1>
+	<meta name="viewport" content="width=device-width,initial-scale=1" />
+	<div class="page-wrapper">
+		
+		<div class="main-content">
+			<center>
+				<h1>Ranking</h1>
+			
+				<label>Time control:</label>
+				<select id="time_control_select"></select>
+				<br><br>
+			
+				<div id="users_ranking">
+					<table id="users_table">
+						<thead>
+							<tr>
+								<th>Player</th>
+								<th>Rating</th>
+								<th>Games played</th>
+								<th>Won</th>
+								<th>Drawn</th>
+								<th>Lost</th>
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
+				</div>
+			</center>
+		</div>
 
-	<label>Time control:</label>
-	<select id="time_control_select"></select>
-	<br><br>
+		<footer class="footer_copyright_notice">
+			Elo chess tracker: Copyright © Lluís Alemany Puig.
+			Code: <a href="https://github.com/lluisalemanypuig/elo-chess-tracker">https://github.com/lluisalemanypuig/elo-chess-tracker</a>
+		</footer>
 
-	<div id="users_ranking">
-		<table id="users_table">
-			<thead>
-			<tr>
-				<th>Player</th>
-				<th>Rating</th>
-				<th>Games played</th>
-                <th>Won</th>
-                <th>Drawn</th>
-                <th>Lost</th>
-			</tr>
-			</thead>
-			<tbody>
-			</tbody>
-		</table>
 	</div>
-	</center>
-
-	<div class="footer_copyright_notice">
-		Elo chess tracker: Copyright © Lluís Alemany Puig.
-		Code: <a href="https://github.com/lluisalemanypuig/elo-chess-tracker">https://github.com/lluisalemanypuig/elo-chess-tracker</a>
-	</div>
-
 </body>
 </html>

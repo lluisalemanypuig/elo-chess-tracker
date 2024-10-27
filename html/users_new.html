@@ -27,44 +27,51 @@ Contact:
 	<meta charset="UTF-8">
 	<script type="text/javascript" src="js-source/bdl__client_users_new.js"> </script>
 
+	<link rel="stylesheet" href="html/main_style.css">
 	<link rel="stylesheet" href="html/footer_copyright_notice.css">
 </head>
 
 <body>
-	<center>
-	<h1 id="user_new_title">CREATE A NEW USER</h1>
+	<meta name="viewport" content="width=device-width,initial-scale=1"/>
+	<div class="page-wrapper">
+	
+		<div class="main-content">
+			<center>
+				<h1 id="user_new_title">CREATE A NEW USER</h1>
 
-	<div id="user_creation_area">
-		<!-- username box -->
-		<label>Username:</label>
-		<input type="text" id="username_box" name="username_box"><br><br>
-		
-		<!-- First Name -->
-		<label>First name:</label>
-		<input type="text" id="first_name_box" name="first_name_box"><br><br>
+				<div id="user_creation_area">
+					<!-- username box -->
+					<label>Username:</label>
+					<input type="text" id="username_box" name="username_box"><br><br>
 
-		<!-- Last Name -->
-		<label>Last name:</label>
-		<input type="text" id="last_name_box" name="last_name_box"><br><br>
+					<!-- First Name -->
+					<label>First name:</label>
+					<input type="text" id="first_name_box" name="first_name_box"><br><br>
 
-		<!-- Role -->
-		<label>Role:</label><br><br>
-		<div id="role_checkboxes">
+					<!-- Last Name -->
+					<label>Last name:</label>
+					<input type="text" id="last_name_box" name="last_name_box"><br><br>
+
+					<!-- Role -->
+					<label>Role:</label><br><br>
+					<div id="role_checkboxes">
+					</div>
+
+					<!-- Password -->
+					<label>Password:</label>
+					<input type="password" id="password_box" name="password_box"><br><br>
+
+					<!-- submit data -->
+					<button type="button" id="submit_new_user_button" name="submit_new_user_button">Submit</button><br><br>
+				</div>
+			</center>
 		</div>
 
-		<!-- Password -->
-		<label>Password:</label>
-		<input type="password" id="password_box" name="password_box"><br><br>
-		
-		<!-- submit data -->
-		<button type="button" id="submit_new_user_button" name="submit_new_user_button">Submit</button><br><br>
-	</div>
-	</center>
+		<footer class="footer_copyright_notice">
+			Elo chess tracker: Copyright © Lluís Alemany Puig.
+			Code: <a href="https://github.com/lluisalemanypuig/elo-chess-tracker">https://github.com/lluisalemanypuig/elo-chess-tracker</a>
+		</footer>
 
-	<div class="footer_copyright_notice">
-		Elo chess tracker: Copyright © Lluís Alemany Puig.
-		Code: <a href="https://github.com/lluisalemanypuig/elo-chess-tracker">https://github.com/lluisalemanypuig/elo-chess-tracker</a>
 	</div>
-
 </body>
 </html>
