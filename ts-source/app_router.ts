@@ -67,9 +67,16 @@ router.get('/favicon.ico', (req: any, res: any) => {
 	res.sendFile(filepath);
 });
 router.get('/icon_login_page', (req:any, res: any) => {
-	debug(log_now(), "GET login_page_icon...");
+	debug(log_now(), "GET icon_login_page...");
 	debug(log_now(), `    request: ${req.url}`);
 	let filepath = ServerEnvironment.get_instance().icon_login_page;
+	debug(log_now(), `    file to send: ${filepath}`);
+	res.sendFile(filepath);
+});
+router.get('/icon_home_page', (req:any, res: any) => {
+	debug(log_now(), "GET icon_home_page...");
+	debug(log_now(), `    request: ${req.url}`);
+	let filepath = ServerEnvironment.get_instance().icon_home_page;
 	debug(log_now(), `    file to send: ${filepath}`);
 	res.sendFile(filepath);
 });
