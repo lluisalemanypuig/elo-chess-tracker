@@ -27,7 +27,7 @@ import path from 'path';
 
 import { log_now } from './utils/misc';
 import { is_user_logged_in } from './server/session';
-import { user_add_new, user_exists, user_retrieve } from './server/users';
+import { user_add_new, user_exists } from './server/users';
 import { User } from './models/user';
 import {
 	is_role_string_correct,
@@ -46,8 +46,6 @@ import {
 } from './models/user_action';
 import { encrypt_password_for_user } from './utils/encrypt';
 import { Password } from './models/password';
-import { EloRating } from './rating_system/Elo/rating';
-import { Rating } from './rating_system/rating';
 import { TimeControlRating } from './models/time_control_rating';
 import { RatingSystem } from './server/configuration';
 import { TimeControl } from './models/time_control';

@@ -101,7 +101,7 @@ export function encrypt_password_for_user(
 		{
 			iv: iv,
 			mode: CryptoJS.mode.CBC,
-    		padding: CryptoJS.pad.Pkcs7
+			padding: CryptoJS.pad.Pkcs7
 		}
 	);
 	return [encrypted.toString(), iv.toString(CryptoJS.enc.Base64)];

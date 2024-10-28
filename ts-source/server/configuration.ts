@@ -27,7 +27,6 @@ import { Challenge } from '../models/challenge';
 import { RatingSystemType } from "../rating_system/rating_system_type";
 import { TimeControl } from "../models/time_control";
 import { linear_find } from "../utils/misc";
-import { ADMIN } from "../models/user_role";
 
 /**
  * @brief Rating system in the web

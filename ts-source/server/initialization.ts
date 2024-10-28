@@ -36,7 +36,6 @@ import { TimeControl } from '../models/time_control';
 
 import { player_vs_player as Elo } from '../rating_system/Elo/formula';
 import { Elo_rating_from_json, Elo_rating_set_from_json, Elo_rating_new } from '../rating_system/Elo/rating';
-import { Server } from 'http';
 
 function initialize_sessions(): void {
 	debug(log_now(), "Initialize sessions...");

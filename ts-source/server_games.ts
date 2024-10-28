@@ -3,7 +3,7 @@ const debug = Debug('ELO_TRACKER:server_games');
 
 import path from 'path';
 
-import { log_now, long_date_to_short_date } from './utils/misc';
+import { log_now } from './utils/misc';
 import { is_user_logged_in } from './server/session';
 import { CREATE_GAME, EDIT_ADMIN_GAMES, EDIT_MEMBER_GAMES, EDIT_STUDENT_GAMES, EDIT_TEACHER_GAMES, EDIT_USER_GAMES } from './models/user_action';
 import { User } from './models/user';

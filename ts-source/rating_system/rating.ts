@@ -20,8 +20,6 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { RatingSystem } from "../server/configuration";
-
 /// Generic class for a rating.
 export class Rating {
 	/// Actual rating 
