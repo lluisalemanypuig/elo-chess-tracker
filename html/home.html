@@ -27,9 +27,10 @@ Contact:
 	<meta charset="UTF-8">
 	<script type="text/javascript" src="js-source/bdl__client_home.js"> </script>
 
-	<link rel="stylesheet" href="html/main_style.css">
-	<link rel="stylesheet" href="html/footer_copyright_notice.css">
-	<link rel="stylesheet" href="html/elo_table_style.css">
+	<link rel="stylesheet" href="html/css/main.css">
+	<link rel="stylesheet" href="html/css/home.css">
+	<link rel="stylesheet" href="html/css/elo_table.css">
+	<link rel="stylesheet" href="html/css/footer_copyright_notice.css">
 </head>
 
 <body>
@@ -37,53 +38,29 @@ Contact:
 	<div class="page-wrapper">
 		
 		<div class="main-content">
-			<center>
-				<h1 id="title_home_page"></h1>
-			
-				<p>
-					<img src="/icon_home_page">
-				</p>
-			
-				<div id="user_info" class="text-center">
-					<div id="user_name" class="text-center">
-					</div>
-					<div id="user_ratings" class="text-center">
-						<table id="user_ratings_table">
-							<tr>
-								<th>Time control</th>
-								<th>Rating</th>
-								<th>Total games</th>
-								<th>Won</th>
-								<th>Drawn</th>
-								<th>Lost</th>
-							</tr>
-						</table>
-					</div>
-				</div>
-			
-				<div id="challenges">
-					<!-- Challenge a user to a game. -->
-					<a href="/challenges_page">Challenges</a>
-					<br><br>
-				</div>
-			
-				<div id="games">
-					<!-- List the user's own games. -->
-					<a href="/games_own_page">My games</a>
-					<br><br>
-				</div>
-			
-				<div id="ranking">
-					<!-- Ranking of all the players. -->
-					<a href="/ranking_users_page">Ranking</a>
-					<br><br>
-				</div>
-			
-				<div id="special_action_links">
-					<a href="/users_password_change">Change my password</a><br><br>
-					<u id="logout_link" style="color:blue;cursor:pointer">Logout</u><br><br>
-				</div>
-			</center>
+			<h1 id="title_home_page" align="center"></h1>
+		
+			<p><img src="/icon_home_page"></p>
+		
+			<label id="user_name_and_roles"></label>
+		
+			<table id="user_ratings_table">
+				<tr>
+					<th>Time control</th>
+					<th>Rating</th>
+					<th>Total games</th>
+					<th>Won</th>
+					<th>Drawn</th>
+					<th>Lost</th>
+				</tr>
+			</table>
+		
+			<a href="/challenges_page">Challenges</a>
+			<a href="/games_own_page">My games</a>
+			<a href="/ranking_users_page">Ranking</a>
+			<div id="special_action_links" class="main-content"></div>
+			<a href="/users_password_change">Change my password</a>
+			<u id="logout_link">Logout</u>
 		</div>
 		
 		<footer class="footer_copyright_notice">

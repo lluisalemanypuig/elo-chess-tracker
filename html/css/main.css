@@ -25,16 +25,22 @@ html, body {
 	margin: 0;
 }
 
+/* Page style */
+
 .page-wrapper {
 	display: flex;
 	flex-direction: column;
 	min-height: 100vh;
-	/* Makes the wrapper take up the full viewport height */
+	justify-content: center;
+	align-items: center;
 }
 
 .main-content {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 	flex: 1;
-	/* This makes the main content grow to fill available space */
+	width: 100%;
 }
 
 @media (max-width: 768px) {
@@ -51,4 +57,58 @@ html, body {
 		margin-left: 10px;
 		margin-right: 10px;
 	}
+}
+
+/* Button styles */
+
+.login-button {
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+	width: 100px;
+	height: 30px;
+}
+
+/* Label and input text box */
+
+.label-and-input {
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	gap: 10px;
+	margin-bottom: 10px;
+}
+
+.label-and-input label {
+	width: 150px;
+	text-align: center;
+}
+
+.label-and-input input {
+	max-height: 25px;
+	width: 200px;
+	padding: 5px;
+	box-sizing: border-box;
+}
+
+/* Label and dropdown select */
+
+.label-and-select {
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	gap: 10px;
+	margin-bottom: 10px;
+}
+
+.label-and-select label {
+	width: 150px;
+	text-align: center;
+}
+
+.label-and-select select {
+	max-height: 25px;
+	width: 200px;
+	padding: 5px;
+	box-sizing: border-box;
 }

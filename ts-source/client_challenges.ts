@@ -118,7 +118,7 @@ async function decline_challenge_tag_clicked(event: any) {
 	const data = await response.json();
 
 	if (data.r == '1') {
-		window.location.href = "/challenges";
+		window.location.href = "/challenges_page";
 	}
 }
 

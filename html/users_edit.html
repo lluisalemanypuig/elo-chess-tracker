@@ -27,8 +27,8 @@ Contact:
 	<meta charset="UTF-8">
 	<script type="text/javascript" src="js-source/bdl__client_users_edit.js"> </script>
 
-	<link rel="stylesheet" href="html/main_style.css">
-	<link rel="stylesheet" href="html/footer_copyright_notice.css">
+	<link rel="stylesheet" href="html/css/main.css">
+	<link rel="stylesheet" href="html/css/footer_copyright_notice.css">
 </head>
 
 <body>
@@ -36,36 +36,36 @@ Contact:
 	<div class="page-wrapper">
 
 		<div class="main-content">
-			<center>
-				<h1 id="user_edit_title">EDIT USER</h1>
+			<h1 id="user_edit_title">EDIT USER</h1>
 
-				<div id="user_edition_area">
-					<!-- User selection  -->
-					<label for="username_datalist">Select user:</label>
-					<input list="username_datalist" id="username_list" name="username_list">
-					<datalist id="username_datalist">
-						<option value="asdf">
-					</datalist><br><br>
+			<!-- User selection  -->
+			<div class="label-and-input">
+				<label for="username_datalist">Select user:</label>
+				<input list="username_datalist" id="username_list" name="username_list">
+				<datalist id="username_datalist">
+					<option value="asdf">
+				</datalist>
+			</div>
 
-					<!-- First Name -->
-					<label for="first_name_box">First name:</label>
-					<input type="text" id="first_name_box" name="first_name_box">
-					<br><br>
+			<!-- First Name -->
+			<div class="label-and-input">
+				<label for="first_name_box">First name:</label>
+				<input type="text" id="first_name_box" name="first_name_box">
+			</div>
 
-					<!-- Last Name -->
-					<label for="last_name_box">Last name:</label>
-					<input type="text" id="last_name_box" name="last_name_box">
-					<br><br>
+			<!-- Last Name -->
+			<div class="label-and-input">
+				<label for="last_name_box">Last name:</label>
+				<input type="text" id="last_name_box" name="last_name_box">
+			</div>
 
-					<!-- Role -->
-					<label>Role:</label><br><br>
-					<div id="role_checkboxes">
-					</div>
+			<!-- Role -->
+			<label>Role:</label><br><br>
+			<div id="role_checkboxes">
+			</div>
 
-					<!-- submit data -->
-					<button type="button" id="submit_button" name="submit_button">Submit</button><br><br>
-				</div>
-			</center>
+			<!-- submit data -->
+			<button type="button" id="submit_button" name="submit_button">Submit</button><br><br>
 		</div>
 
 		<footer class="footer_copyright_notice">

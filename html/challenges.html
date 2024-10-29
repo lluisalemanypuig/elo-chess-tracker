@@ -27,8 +27,8 @@ Contact:
 	<meta charset="UTF-8">
 	<script type="text/javascript" src="js-source/bdl__client_challenges.js"> </script>
 
-	<link rel="stylesheet" href="html/main_style.css">
-	<link rel="stylesheet" href="html/footer_copyright_notice.css">
+	<link rel="stylesheet" href="html/css/main.css">
+	<link rel="stylesheet" href="html/css/footer_copyright_notice.css">
 </head>
 
 <body>
@@ -36,19 +36,18 @@ Contact:
 	<div class="page-wrapper">
 	
 		<div class="main-content">
-			<center>
 			<h1>Challenges</h1>
 
-			<div id="challenges_send">
-				<h2>Challenge a user</h2>
+			<h2>Challenge a user</h2>
 
+			<div class="label-and-input">
 				<label>Select a user:</label>
 				<input list="username_datalist" id="username_list" name="username_list">
 				<datalist id="username_datalist"></datalist><br><br>
-
-				<!-- submit challenge -->
-				<button type="button" id="send_challenge_button" name="send_challenge_button">Submit challenge</button><br><br>
 			</div>
+
+			<!-- submit challenge -->
+			<button type="button" id="send_challenge_button" name="send_challenge_button">Submit challenge</button><br><br>
 
 			<div id="challenges_received_list">
 				<h2>Challenges sent to me</h2>
@@ -69,7 +68,6 @@ Contact:
 			<div id="challenges_result_set_by_opponent">
 				<h2>Results I have to confirm</h2>
 			</div>
-			</center>
 		</div>
 
 		<footer class="footer_copyright_notice">
