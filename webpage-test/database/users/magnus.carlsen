@@ -1,5 +1,51 @@
 {
 	"username" : "magnus.carlsen",
+	"ratings": [
+		{
+			"time_control": "Classical",
+			"rating": {
+				"rating": 1500,
+				"num_games": 0,
+				"won": 0,
+				"drawn": 0,
+				"lost": 0,
+				"K": 40
+			}
+		},
+		{
+			"time_control": "Rapid",
+			"rating": {
+				"rating": 1500,
+				"num_games": 0,
+				"won": 0,
+				"drawn": 0,
+				"lost": 0,
+				"K": 40
+			}
+		},
+		{
+			"time_control": "Rapid",
+			"rating": {
+				"rating": 1500,
+				"num_games": 0,
+				"won": 0,
+				"drawn": 0,
+				"lost": 0,
+				"K": 40
+			}
+		},
+		{
+			"time_control": "Blitz",
+			"rating": {
+				"rating": 1500,
+				"num_games": 0,
+				"won": 0,
+				"drawn": 0,
+				"lost": 0,
+				"K": 40
+			}
+		}
+	],
 	"first_name" : "Magnus",
 	"last_name" : "Carlsen",
 	"password" : {
