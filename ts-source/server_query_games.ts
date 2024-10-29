@@ -214,8 +214,6 @@ export async function get_query_games_list_all(req: any, res: any) {
 		user
 	);
 
-	debug(log_now(), `Found '${data_to_return.length}' games involving '${username}'`);
-
 	res.send({
 		'r' : '1',
 		'games' : data_to_return,
