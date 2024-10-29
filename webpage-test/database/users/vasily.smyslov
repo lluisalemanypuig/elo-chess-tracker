@@ -3,8 +3,8 @@
 	"first_name" : "Vasily",
 	"last_name" : "Smyslov",
 	"password" : {
-		"encrypted" : "E58+UFM7FbTwbJKWaITp+bwDqPIvz6bMvFxtPB9kL3Y=",
-		"iv" : "5xdIVti+3mJyVXrskEoGGA=="
+		"encrypted" : "ngtUXhatBO/5G3o/XblRsSa/Hs3VFZIZY74Cgnx5uPw=",
+		"iv" : "uKjl/UWVlVJlLmeaf8hzqA=="
 	},
 	"roles" : ["member", "teacher", "admin"],
 	"games" : [],

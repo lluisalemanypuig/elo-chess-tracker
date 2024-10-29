@@ -3,8 +3,8 @@
 	"first_name" : "Magnus",
 	"last_name" : "Carlsen",
 	"password" : {
-		"encrypted" : "pnCCiauE6OLqcJblFnd6MGo57rbxhnWNe52qQKKB/u4cp4F9yB5tZU6yJt3Ql1q1",
-		"iv" : "HGsurqnLuVeC8ZnQXdDJAg=="
+		"encrypted" : "ECKZeTh5OWzXtsE46mPUS7830u93/hP1VQM4/hUJqJsdw7yXhbFS6e3xR0zRk3ci",
+		"iv" : "ILx/2Yi8+kvbTzeViNo/UA=="
 	},
 	"roles" : ["member"],
 	"games" : [],

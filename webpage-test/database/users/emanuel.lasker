@@ -3,8 +3,8 @@
 	"first_name" : "Emanuel",
 	"last_name" : "Lasker",
 	"password" : {
-		"encrypted" : "z7A7j5F91yU4aDWKGFO442sG4BiAZDaozuV8DnPKH9s=",
-		"iv" : "HKWsa7MNUz/cbN7lelyPQA=="
+		"encrypted" : "TYJmPKcI9egW625KwHemIqYK4yUPl7PGGyLHLQwNS2o=",
+		"iv" : "e+sMiOadrOn1WHP+b8+jIA=="
 	},
 	"roles" : ["member", "teacher"],
 	"games" : [],

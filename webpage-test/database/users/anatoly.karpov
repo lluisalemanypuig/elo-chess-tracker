@@ -3,8 +3,8 @@
 	"first_name" : "Anatoly",
 	"last_name" : "Karpov",
 	"password" : {
-		"encrypted" : "giIonuFQn++gHJee5CDig/6chUsfob2AApnfMlCQTdTrI01hujbUb3UtXDoVti0C",
-		"iv" : "VT+asIAhIDPQ7kZwYAf1fw=="
+		"encrypted" : "N2dlDxaOyxH23RCf1YcBOz8McvLGIipJLk1HDJkX1T3BOJ1fqJq4P1f1Gw9W5W+d",
+		"iv" : "mH6PgUY2ahuC59m+8o0T5g=="
 	},
 	"roles" : ["member"],
 	"games" : [],
