@@ -94,6 +94,16 @@ async function submit_new_game(event: any) {
 	const result = result_select.options[result_select.selectedIndex].value;
 	const time_control_id = time_control_select.options[time_control_select.selectedIndex].value;
 	const time_control_name = time_control_select.options[time_control_select.selectedIndex].text;
+
+	if (game_date_input.value == "") {
+		alert("Invalid date");
+		return;
+	}
+	if (game_time_input.value == "") {
+		alert("Invalid time");
+		return;
+	}
+
 	const game_time = game_date_input.value + ".." + game_time_input.value + ":00";
 	
 	let white = "";
