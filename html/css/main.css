@@ -30,17 +30,25 @@ html, body {
 .page-wrapper {
 	display: flex;
 	flex-direction: column;
-	min-height: 100vh;
-	justify-content: center;
+
 	align-items: center;
+
+	min-height: 100vh;
 }
 
 .main-content {
 	display: flex;
 	flex-direction: column;
+	flex-grow: 1;
+
 	align-items: center;
-	flex: 1;
+
 	width: 100%;
+	padding-bottom: 20px;
+}
+
+.main-content > * {
+	margin-bottom: 15px;
 }
 
 @media (max-width: 768px) {

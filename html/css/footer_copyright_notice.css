@@ -21,10 +21,15 @@ Contact:
 */
 
 .footer_copyright_notice {
+	background-color: blanchedalmond;
+	color: black;
+	
+	padding: 20px;
 	left: 0;
 	bottom: 0;
 	width: 100%;
-	background-color:blanchedalmond;
-	color: black;
 	text-align: center;
+
+	position: relative;
+	margin-top: auto;
 }

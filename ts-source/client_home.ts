@@ -52,7 +52,9 @@ function fill_action_links(user_actions: string[], user_roles: string[]) {
 	let action_links = document.getElementById("special_action_links") as HTMLDivElement;
 
 	if (user_roles.includes(ADMIN)) {
-		let recalculate_Elo_ratings_link = document.createElement("button") as HTMLButtonElement;
+		let recalculate_Elo_ratings_link = document.createElement("u") as HTMLElement;
+		
+		recalculate_Elo_ratings_link.id = "recalculate_Elo_ratings_link";
 		recalculate_Elo_ratings_link.textContent = "Recalculate Elo ratings";
 		recalculate_Elo_ratings_link.onclick = async function() {
 			const response = await fetch(
