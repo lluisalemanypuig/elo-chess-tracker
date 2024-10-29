@@ -58,21 +58,24 @@ function next_power_of_2(n: number): number {
 /**
  * @brief Padds a string (password) until its length is a power of 2
  * @param password A string
- * @returns A longer string padded with the letter 'l'
+ * @returns A longer string padded with random characters
  */
 function normalize_password(password: string): string {
+	let next_length = 0;
 	if (password.length < 4) {
-		const next = next_power_of_2(next_power_of_2(password.length));
-		for (let i = password.length; i < next; ++i) {
-			password += "l";
-		}
+		next_length = next_power_of_2(next_power_of_2(password.length));
 	}
-	else if (! is_power_of_2(password.length)) {
-		const next = next_power_of_2(password.length);
-		for (let i = password.length; i < next; ++i) {
-			password += "l";
-		}
+	else {
+		next_length = next_power_of_2(password.length);
 	}
+
+	const allowed_symbols = "a!b·c$d%e&f/g(h)i=j?k¿l|m@n#o~p¬qr's[¡]t{u}v/w*x-y+zºAªB\"C,D.E;F:G_HIJKLMNOPQRSTUVWXYZ0123456789 ";
+	for (let i = password.length; i < next_length; ++i) {
+		const rand_idx = (i - password.length)%allowed_symbols.length;
+		const rand_char = allowed_symbols.charAt(rand_idx);
+		password += rand_char;
+	}
+
 	return password;
 }
 
@@ -164,5 +167,5 @@ export function is_password_of_user_correct(
 boolean
 {
 	const decr = decrypt_password_for_user(encrypted_msg, password, iv);
-	return decr == interleave_strings(username, password);	
+	return decr == interleave_strings(username, password);
 }
