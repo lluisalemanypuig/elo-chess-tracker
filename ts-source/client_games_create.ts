@@ -128,7 +128,7 @@ async function submit_new_game(event: any) {
 		return;
 	}
 
-	window.location.href = "/games_create";
+	window.location.href = "/games_create_page";
 }
 
 window.onload = async function () {
