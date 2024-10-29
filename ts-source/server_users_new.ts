@@ -79,8 +79,8 @@ export async function post_users_create(req: any, res: any) {
 		return;
 	}
 
-	let registrerer = r[2] as User;
-	if (!registrerer.can_do(CREATE_USER)) {
+	let registerer = r[2] as User;
+	if (!registerer.can_do(CREATE_USER)) {
 		debug(log_now(), `User '${username}' cannot create users.`);
 		res.send("403 - Forbidden");
 		return;
@@ -118,26 +118,26 @@ export async function post_users_create(req: any, res: any) {
 
 	let can_create: boolean = true;
 	if (new_roles.includes(ADMIN)) {
-		can_create = can_create && registrerer.can_do(ASSIGN_ROLE_ADMIN);
-		if (!registrerer.can_do(ASSIGN_ROLE_ADMIN)) {
+		can_create = can_create && registerer.can_do(ASSIGN_ROLE_ADMIN);
+		if (!registerer.can_do(ASSIGN_ROLE_ADMIN)) {
 			debug(log_now(), `User '${username}' cannot create admins.`);
 		}
 	}
 	if (new_roles.includes(TEACHER)) {
-		can_create = can_create && registrerer.can_do(ASSIGN_ROLE_TEACHER);
-		if (!registrerer.can_do(ASSIGN_ROLE_TEACHER)) {
+		can_create = can_create && registerer.can_do(ASSIGN_ROLE_TEACHER);
+		if (!registerer.can_do(ASSIGN_ROLE_TEACHER)) {
 			debug(log_now(), `User '${username}' cannot create teachers.`);
 		}
 	}
 	if (new_roles.includes(MEMBER)) {
-		can_create = can_create && registrerer.can_do(ASSIGN_ROLE_MEMBER);
-		if (!registrerer.can_do(ASSIGN_ROLE_MEMBER)) {
+		can_create = can_create && registerer.can_do(ASSIGN_ROLE_MEMBER);
+		if (!registerer.can_do(ASSIGN_ROLE_MEMBER)) {
 			debug(log_now(), `User '${username}' cannot create members.`);
 		}
 	}
 	if (new_roles.includes(STUDENT)) {
-		can_create = can_create && registrerer.can_do(ASSIGN_ROLE_STUDENT);
-		if (!registrerer.can_do(ASSIGN_ROLE_STUDENT)) {
+		can_create = can_create && registerer.can_do(ASSIGN_ROLE_STUDENT);
+		if (!registerer.can_do(ASSIGN_ROLE_STUDENT)) {
 			debug(log_now(), `User '${username}' cannot create students.`);
 		}
 	}
