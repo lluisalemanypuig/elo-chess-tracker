@@ -100,6 +100,18 @@ export async function post_games_create(req: any, res: any) {
 		return;
 	}
 	
+	{
+	const split = game_time.split("..");
+	if (split[0] == "") {
+		res.send({ 'r': '0', 'reason': 'The selected date is incorrect' });
+		return;
+	}
+	if (split[1] == "") {
+		res.send({ 'r': '0', 'reason': 'The selected time is incorrect' });
+		return;
+	}
+	}
+
 	debug(log_now(), `Adding the new game`);
 
 	let g = game_new(
