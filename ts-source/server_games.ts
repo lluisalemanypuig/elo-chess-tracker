@@ -86,6 +86,7 @@ export async function post_games_create(req: any, res: any) {
 	const result = req.body.r;
 	const time_control_id = req.body.tc_i;
 	const time_control_name = req.body.tc_n;
+	const game_date = req.body.d;
 	const game_time = req.body.t;
 
 	debug(log_now(), `    White: '${white}'`);
@@ -93,6 +94,7 @@ export async function post_games_create(req: any, res: any) {
 	debug(log_now(), `    Result: '${result}'`);
 	debug(log_now(), `    Time control id: '${time_control_id}'`);
 	debug(log_now(), `    Time control name: '${time_control_name}'`);
+	debug(log_now(), `    Date of game: '${game_date}'`);
 	debug(log_now(), `    Time of game: '${game_time}'`);
 
 	if (white == black) {
@@ -100,25 +102,22 @@ export async function post_games_create(req: any, res: any) {
 		return;
 	}
 	
-	{
-	const split = game_time.split("..");
-	if (split[0] == "") {
+	if (game_date == "") {
 		res.send({ 'r': '0', 'reason': 'The selected date is incorrect' });
 		return;
 	}
-	if (split[1] == "") {
+	if (game_time == "") {
 		res.send({ 'r': '0', 'reason': 'The selected time is incorrect' });
 		return;
 	}
-	}
-
+	
 	debug(log_now(), `Adding the new game`);
 
 	let g = game_new(
 		white, black,
 		result as GameResult,
 		time_control_id, time_control_name,
-		game_time
+		game_date + ".." + game_time
 	);
 	
 	debug(log_now(), `    Adding game...`);

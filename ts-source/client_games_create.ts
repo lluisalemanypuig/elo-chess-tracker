@@ -104,8 +104,6 @@ async function submit_new_game(event: any) {
 		return;
 	}
 
-	const game_time = game_date_input.value + ".." + game_time_input.value + ":00";
-	
 	let white = "";
 	if (white_option != null) {
 		white = white_option.id;
@@ -126,7 +124,8 @@ async function submit_new_game(event: any) {
 				'r' : result,
 				'tc_i' : time_control_id,
 				'tc_n' : time_control_name,
-				't' : game_time
+				'd': game_date_input.value,
+				't': game_time_input.value
 			}),
 			headers: { 'Content-type': 'application/json; charset=UTF-8' }
 		}
