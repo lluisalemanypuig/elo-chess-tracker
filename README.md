@@ -81,7 +81,7 @@ Edit the configuration file `configuration_sample.json` appropriately. Said file
 		},
 		"home_page": {
 			"title": "My webpage title (home page)",
-			"icon": "CET.png"
+			"icon": "path/to/icon.png"
 		},
 		
 		"permissions": {
