@@ -31,8 +31,8 @@ import { is_user_logged_in } from './server/session';
 import { user_retrieve } from './server/users';
 import { User } from './models/user';
 import { Game, game_set_from_json } from './models/game';
-import { RatingSystem } from './server/configuration';
-import { ServerEnvironment } from './server/configuration';
+import { RatingSystem } from './server/rating_system';
+import { ServerEnvironment } from './server/environment';
 import { ADMIN, MEMBER, STUDENT, TEACHER, UserRole } from './models/user_role';
 import {
 	SEE_USER_GAMES, SEE_ADMIN_GAMES, SEE_MEMBER_GAMES, SEE_STUDENT_GAMES, SEE_TEACHER_GAMES,

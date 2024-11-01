@@ -25,7 +25,8 @@ import { User } from '../models/user';
 import { log_now } from '../utils/misc';
 const debug = Debug('ELO_TRACKER:server_session');
 
-import { ServerMemory, SessionID } from "./configuration";
+import { ServerMemory } from "./memory";
+import { SessionID } from './session_id';
 import { user_retrieve } from './users';
 
 /// Add a new session id

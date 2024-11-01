@@ -47,7 +47,7 @@ import {
 import { encrypt_password_for_user } from './utils/encrypt';
 import { Password } from './models/password';
 import { TimeControlRating } from './models/time_control_rating';
-import { RatingSystem } from './server/configuration';
+import { RatingSystem } from './server/rating_system';
 import { TimeControl } from './models/time_control';
 
 export async function get_users_create_page(req: any, res: any) {

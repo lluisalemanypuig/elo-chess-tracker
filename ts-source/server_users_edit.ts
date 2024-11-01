@@ -32,7 +32,7 @@ import { User } from './models/user';
 import { ADMIN, MEMBER, STUDENT, TEACHER } from './models/user_role';
 import { EDIT_ADMIN, EDIT_MEMBER, EDIT_STUDENT, EDIT_TEACHER } from './models/user_action';
 
-import { ServerMemory } from './server/configuration';
+import { ServerMemory } from './server/memory';
 
 export async function get_users_edit_page(req: any, res: any) {
 	debug(log_now(), "GET users_edit_page...");

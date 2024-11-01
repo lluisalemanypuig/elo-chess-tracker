@@ -27,7 +27,8 @@ import Debug from 'debug';
 const debug = Debug('ELO_TRACKER:app_router');
 import { log_now } from './utils/misc';
 
-import { ServerMemory, ServerEnvironment } from './server/configuration';
+import { ServerMemory } from './server/memory';
+import { ServerEnvironment } from './server/environment';
 
 let router = express.Router();
 router.get('/', (req: any, res: any) => {

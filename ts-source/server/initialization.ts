@@ -26,7 +26,9 @@ import Debug from 'debug';
 const debug = Debug('ELO_TRACKER:server_initialization');
 
 import { log_now } from '../utils/misc';
-import { ServerMemory, ServerEnvironment, RatingSystem } from "./configuration";
+import { ServerMemory } from "./memory";
+import { ServerEnvironment } from './environment';
+import { RatingSystem } from './rating_system';
 import { user_from_json } from '../models/user';
 import { challenge_from_json } from '../models/challenge';
 import { Game, game_set_from_json } from '../models/game';
@@ -34,8 +36,8 @@ import { ADMIN, MEMBER, STUDENT, TEACHER } from '../models/user_role';
 import { UserRoleToUserAction } from '../models/user_role_action';
 import { TimeControl } from '../models/time_control';
 
-import { player_vs_player as Elo } from '../rating_system/Elo/formula';
-import { Elo_rating_from_json, Elo_rating_new } from '../rating_system/Elo/rating';
+import { player_vs_player as Elo } from '../rating_framework/Elo/formula';
+import { Elo_rating_from_json, Elo_rating_new } from '../rating_framework/Elo/rating';
 
 function initialize_sessions(): void {
 	debug(log_now(), "Initialize sessions...");

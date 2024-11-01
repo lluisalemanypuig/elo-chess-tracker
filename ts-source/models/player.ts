@@ -20,7 +20,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { Rating } from '../rating_system/rating';
+import { Rating } from '../rating_framework/rating';
 import { copyarray, linear_find } from '../utils/misc';
 import { TimeControlRating, time_control_rating_from_json } from './time_control_rating';
 

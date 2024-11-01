@@ -30,7 +30,7 @@ import { User } from './models/user';
 import { make_cookie_string } from './utils/cookies';
 import { shuffle } from "./utils/shuffle_random";
 import { session_id_add, session_id_delete } from './server/session';
-import { ServerMemory } from './server/configuration';
+import { ServerMemory } from './server/memory';
 
 let character_samples = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+-*/ª!·$%&/()=?¿¡'º\|@#~€¬^{},;.:_";
 

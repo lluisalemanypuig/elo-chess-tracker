@@ -20,8 +20,8 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { Rating } from '../rating_system/rating';
-import { RatingSystem } from '../server/configuration';
+import { Rating } from '../rating_framework/rating';
+import { RatingSystem } from '../server/rating_system';
 
 /// Result of a game
 export type GameResult = "white_wins" | "black_wins" | "draw";

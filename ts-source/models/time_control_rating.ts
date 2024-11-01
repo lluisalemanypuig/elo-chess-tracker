@@ -20,8 +20,8 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { RatingSystem } from "../server/configuration";
-import { Rating } from "../rating_system/rating";
+import { RatingSystem } from "../server/rating_system";
+import { Rating } from "../rating_framework/rating";
 
 /**
  * @brief A pair of time control id and rating

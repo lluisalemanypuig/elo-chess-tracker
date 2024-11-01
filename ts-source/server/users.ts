@@ -27,7 +27,8 @@ const debug = Debug('ELO_TRACKER:server_users');
 
 import { Player } from '../models/player';
 import { User } from '../models/user';
-import { ServerEnvironment, ServerMemory } from './configuration';
+import { ServerMemory } from './memory';
+import { ServerEnvironment } from './environment';
 import { log_now } from '../utils/misc';
 import { assert } from 'console';
 import { UserRole } from '../models/user_role';

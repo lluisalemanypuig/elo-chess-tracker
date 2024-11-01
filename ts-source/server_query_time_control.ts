@@ -25,7 +25,7 @@ const debug = Debug('ELO_TRACKER:server_time_control');
 
 import { log_now } from './utils/misc';
 import { is_user_logged_in } from './server/session';
-import { RatingSystem } from './server/configuration';
+import { RatingSystem } from './server/rating_system';
 
 export async function get_query_time_control(req: any, res: any) {
 	debug(log_now(), "GET time_control...");

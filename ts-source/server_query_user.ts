@@ -27,7 +27,7 @@ import { log_now } from './utils/misc';
 import { user_get_all_names_and_usernames, user_retrieve } from './server/users';
 import { is_user_logged_in } from './server/session';
 import { User } from './models/user';
-import { ServerMemory } from './server/configuration';
+import { ServerMemory } from './server/memory';
 import { TimeControlRating } from './models/time_control_rating';
 
 /// Returns the list of user full names and usernames sorted by name

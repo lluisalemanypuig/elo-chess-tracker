@@ -21,4 +21,4 @@ Contact:
 */
 
 /// Result of a game
-export type RatingSystemType = "" | "Elo";
+export type RatingFrameworkType = "" | "Elo";

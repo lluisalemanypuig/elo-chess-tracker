@@ -26,7 +26,8 @@ import Debug from 'debug';
 const debug = Debug('ELO_TRACKER:server_challenges');
 
 import { log_now, number_to_string } from '../utils/misc';
-import { ServerMemory, ServerEnvironment } from "./configuration";
+import { ServerMemory } from "./memory";
+import { ServerEnvironment } from './environment';
 import { Challenge } from '../models/challenge';
 import { GameResult } from '../models/game';
 import { game_new, game_add } from './game_history';

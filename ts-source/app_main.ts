@@ -47,7 +47,7 @@ debug(log_now(), "    Imported!");
 import http from 'http';
 import https from 'https';
 import { AddressInfo } from 'net';
-import { ServerEnvironment } from './server/configuration';
+import { ServerEnvironment } from './server/environment';
 
 // Normalize a port into a number, string, or false.
 function normalizePort(val: any): any {

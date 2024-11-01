@@ -30,9 +30,11 @@ import { Player } from '../models/player';
 import { Game, GameResult, game_set_from_json } from '../models/game';
 import { User } from '../models/user';
 import { log_now, search, where_should_be_inserted, long_date_to_short_date, number_to_string, linear_find } from '../utils/misc';
-import { RatingSystem, ServerEnvironment, ServerMemory } from './configuration';
+import { ServerMemory } from './memory';
+import { RatingSystem } from './rating_system';
+import { ServerEnvironment } from './environment';
 import { user_retrieve, user_update_from_players_data } from './users';
-import { Rating } from '../rating_system/rating';
+import { Rating } from '../rating_framework/rating';
 import { TimeControlRating } from '../models/time_control_rating';
 
 /// Returns g1 < g2 using dates
