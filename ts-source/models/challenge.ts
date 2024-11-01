@@ -179,6 +179,7 @@ export class Challenge {
 		this.black = black;
 		this.result = result;
 		this.time_control_id = time_control_id;
+		this.time_control_name = time_control_name;
 	}
 
 	/// Unset the previous result
