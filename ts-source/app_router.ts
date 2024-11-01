@@ -32,7 +32,6 @@ import { ServerEnvironment } from './server/configuration';
 
 let router = express.Router();
 router.get('/', (req: any, res: any) => {
-
 	debug(log_now(), `Username received in cookie: '${req.cookies.user}'`);
 
 	if (session_id_exists(req.cookies.session_id, req.cookies.user)) {
@@ -62,7 +61,7 @@ router.get('/html/*.css', (req: any, res: any) => {
 router.get('/favicon.ico', (req: any, res: any) => {
 	debug(log_now(), "GET favicon.ico...");
 	debug(log_now(), `    request: ${req.url}`);
-	let filepath = path.join(__dirname, "../public/favicon.ico");
+	let filepath = ServerEnvironment.get_instance().icon_favicon;
 	debug(log_now(), `    file to send: ${filepath}`);
 	res.sendFile(filepath);
 });
