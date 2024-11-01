@@ -75,6 +75,7 @@ Edit the configuration file `configuration_sample.json` appropriately. Said file
 			"passphrase_file": "$PASSPHRASE_TXT"
 		},
 		
+		"favicon": "path/to/icon.png",
 		"login_page": {
 			"title": "My webpage title (login page)",
 			"icon": "path/to/icon.png"
