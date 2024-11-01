@@ -30,26 +30,26 @@ import { user_retrieve } from './users';
 
 /// Add a new session id
 export function session_id_add(id: string, username: string): void {
-    let mem = ServerMemory.get_instance();
-    mem.add_session_id( new SessionID(id, username) );
-    debug(log_now(), `Currently, '${mem.num_session_ids()}' sessions`);
+	let mem = ServerMemory.get_instance();
+	mem.add_session_id( new SessionID(id, username) );
+	debug(log_now(), `Currently, '${mem.num_session_ids()}' sessions`);
 }
 
 /// Deletes a session id.
 export function session_id_delete(id: string, username: string): void {
-    let mem = ServerMemory.get_instance();
+	let mem = ServerMemory.get_instance();
 
-    debug(log_now(), `Before deleting, '${mem.num_session_ids()}' sessions`);
-    let idx = mem.index_session_id(id, username);
-    if (idx != -1) {
-        debug(log_now(), `    Session of user '${username}' was found. Deleting...`);
+	debug(log_now(), `Before deleting, '${mem.num_session_ids()}' sessions`);
+	let idx = mem.index_session_id(id, username);
+	if (idx != -1) {
+		debug(log_now(), `    Session of user '${username}' was found. Deleting...`);
 		mem.remove_session_id(idx);
-    }
-    else {
-        debug(log_now(), `    Session of user '${username}' was not found.`);
-    }
+	}
+	else {
+		debug(log_now(), `    Session of user '${username}' was not found.`);
+	}
 
-    debug(log_now(), `Currently, '${mem.num_session_ids()}' sessions`);
+	debug(log_now(), `Currently, '${mem.num_session_ids()}' sessions`);
 }
 
 /**
