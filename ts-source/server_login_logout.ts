@@ -29,8 +29,9 @@ import { user_retrieve } from './server/users';
 import { User } from './models/user';
 import { make_cookie_string } from './utils/cookies';
 import { shuffle } from "./utils/shuffle_random";
-import { session_id_add, session_id_delete } from './server/session';
+import { session_id_delete } from './server/session';
 import { ServerMemory } from './server/memory';
+import { SessionID } from './models/session_id';
 
 let character_samples = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+-*/ª!·$%&/()=?¿¡'º\|@#~€¬^{},;.:_";
 
@@ -106,7 +107,7 @@ export async function post_user_log_in(req: any, res:any) {
 	// store session id
 	let mem = ServerMemory.get_instance();
 	if (! mem.has_session_id(token, user.get_username())) {
-		session_id_add(token, user.get_username());
+		mem.add_session_id(new SessionID(token, user.get_username()));
 	}
 
 	// send response

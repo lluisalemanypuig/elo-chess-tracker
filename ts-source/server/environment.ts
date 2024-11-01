@@ -30,19 +30,19 @@ export class ServerEnvironment {
 	 * @brief Construct the server configuration
 	 */
 	constructor() {
-		if (ServerEnvironment.m_instance) {
-			return ServerEnvironment.m_instance;
+		if (ServerEnvironment.instance) {
+			return ServerEnvironment.instance;
 		}
 
-		ServerEnvironment.m_instance = this;
+		ServerEnvironment.instance = this;
 	}
 
 	/// The only instance of this class
-	private static m_instance: ServerEnvironment;
+	private static instance: ServerEnvironment;
 
 	static get_instance(): ServerEnvironment {
-		ServerEnvironment.m_instance = ServerEnvironment.m_instance || new ServerEnvironment();
-		return ServerEnvironment.m_instance;
+		ServerEnvironment.instance = ServerEnvironment.instance || new ServerEnvironment();
+		return ServerEnvironment.instance;
 	}
 
 	// database directory

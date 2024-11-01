@@ -31,13 +31,13 @@ import { linear_find } from "../utils/misc";
 export class RatingSystem {
 
 	/// The only instance of this class
-	private static m_instance: RatingSystem;
+	private static instance: RatingSystem;
 
 	constructor() {
-		if (RatingSystem.m_instance) {
-			return RatingSystem.m_instance;
+		if (RatingSystem.instance) {
+			return RatingSystem.instance;
 		}
-		RatingSystem.m_instance = this;
+		RatingSystem.instance = this;
 	}
 
 	/// Function to evaluate a game
@@ -56,8 +56,8 @@ export class RatingSystem {
 	 * @pre Method @ref initialize must have been called before
 	 */
 	static get_instance(): RatingSystem {
-		RatingSystem.m_instance = RatingSystem.m_instance || new RatingSystem();
-		return RatingSystem.m_instance;
+		RatingSystem.instance = RatingSystem.instance || new RatingSystem();
+		return RatingSystem.instance;
 	}
 
 	set_rating_formula(formula: Function): void {

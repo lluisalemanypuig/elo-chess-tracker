@@ -22,7 +22,7 @@ Contact:
 
 import { User } from "../models/user";
 import { Challenge } from '../models/challenge';
-import { SessionID } from "./session_id";
+import { SessionID } from "../models/session_id";
 
 /**
  * @brief A singleton class to store data at runtime
@@ -32,18 +32,18 @@ import { SessionID } from "./session_id";
 export class ServerMemory {
 
 	/// The only instance of this class
-	private static m_instance: ServerMemory;
+	private static instance: ServerMemory;
 
 	constructor() {
-		if (ServerMemory.m_instance) {
-			return ServerMemory.m_instance;
+		if (ServerMemory.instance) {
+			return ServerMemory.instance;
 		}
-		ServerMemory.m_instance = this;
+		ServerMemory.instance = this;
 	}
 
 	static get_instance(): ServerMemory {
-		ServerMemory.m_instance = ServerMemory.m_instance || new ServerMemory();
-		return ServerMemory.m_instance;
+		ServerMemory.instance = ServerMemory.instance || new ServerMemory();
+		return ServerMemory.instance;
 	}
 
 	/// Set of users

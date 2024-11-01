@@ -26,22 +26,14 @@ import { log_now } from '../utils/misc';
 const debug = Debug('ELO_TRACKER:server_session');
 
 import { ServerMemory } from "./memory";
-import { SessionID } from './session_id';
 import { user_retrieve } from './users';
-
-/// Add a new session id
-export function session_id_add(id: string, username: string): void {
-	let mem = ServerMemory.get_instance();
-	mem.add_session_id( new SessionID(id, username) );
-	debug(log_now(), `Currently, '${mem.num_session_ids()}' sessions`);
-}
 
 /// Deletes a session id.
 export function session_id_delete(id: string, username: string): void {
 	let mem = ServerMemory.get_instance();
 
 	debug(log_now(), `Before deleting, '${mem.num_session_ids()}' sessions`);
-	let idx = mem.index_session_id(id, username);
+	const idx = mem.index_session_id(id, username);
 	if (idx != -1) {
 		debug(log_now(), `    Session of user '${username}' was found. Deleting...`);
 		mem.remove_session_id(idx);
@@ -66,7 +58,7 @@ export function is_user_logged_in(session_id: string, username: string): [boolea
 		debug(log_now(), `Session does not exist for user '${username}'.`);
 		return [false, "403 - Forbidden", null];
 	}
-	let user = user_retrieve(username);
+	const user = user_retrieve(username);
 	if (user == null) {
 		debug(log_now(), `User '${username}' does not exist.`);
 		return [false, "403 - Forbidden", null];
