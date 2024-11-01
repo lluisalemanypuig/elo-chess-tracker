@@ -50,7 +50,7 @@ function initialize_users(): void {
 
 	let rating_system = RatingSystem.get_instance();
 	let memory = ServerMemory.get_instance();
-	let dir = ServerEnvironment.get_instance().users_directory;
+	let dir = ServerEnvironment.get_instance().get_dir_users();
 
 	debug(log_now(), `    Reading directory '${dir}'`);
 	let all_user_files = fs.readdirSync(dir);
@@ -83,7 +83,7 @@ function initialize_challenges(): void {
 	debug(log_now(), "Initialize challenges...");
 
 	let memory = ServerMemory.get_instance();
-	let dir = ServerEnvironment.get_instance().challenges_directory;
+	let dir = ServerEnvironment.get_instance().get_dir_challenges();
 
 	debug(log_now(), `    Reading directory '${dir}'`);
 	let all_challenges_files = fs.readdirSync(dir);
@@ -103,7 +103,7 @@ function initialize_games(): void {
 	debug(log_now(), "Initialize games...");
 
 	let mem = ServerMemory.get_instance();
-	const dir = ServerEnvironment.get_instance().games_directory;
+	const dir = ServerEnvironment.get_instance().get_dir_games();
 	let num_games: number = 0;
 	let max_game_id: number = 0;
 
@@ -183,10 +183,10 @@ export function server_initialize_from_data(base_directory: string, configuratio
 	ServerEnvironment.get_instance().set_database_base_directory(
 		path.join(base_directory, "/database")
 	);
-	debug(log_now(), `    Database directory: '${ServerEnvironment.get_instance().database_directory}'`);
-	debug(log_now(), `        Games directory: '${ServerEnvironment.get_instance().games_directory}'`);
-	debug(log_now(), `        Users directory: '${ServerEnvironment.get_instance().users_directory}'`);
-	debug(log_now(), `        Challenges directory: '${ServerEnvironment.get_instance().challenges_directory}'`);
+	debug(log_now(), `    Database directory: '${ServerEnvironment.get_instance().get_dir_database()}'`);
+	debug(log_now(), `        Games directory: '${ServerEnvironment.get_instance().get_dir_games()}'`);
+	debug(log_now(), `        Users directory: '${ServerEnvironment.get_instance().get_dir_users()}'`);
+	debug(log_now(), `        Challenges directory: '${ServerEnvironment.get_instance().get_dir_challenges()}'`);
 
 	//	initialize SSL certificate files
 
@@ -196,10 +196,10 @@ export function server_initialize_from_data(base_directory: string, configuratio
 		configuration_data.ssl_certificate.private_key_file,
 		configuration_data.ssl_certificate.passphrase_file
 	);
-	debug(log_now(), `    SSL base directory: '${ServerEnvironment.get_instance().ssl_directory}'`);
-	debug(log_now(), `        Public key file: '${ServerEnvironment.get_instance().public_key_file}'`);
-	debug(log_now(), `        Private key file: '${ServerEnvironment.get_instance().private_key_file}'`);
-	debug(log_now(), `        Passphrase: '${ServerEnvironment.get_instance().passphrase_file}'`);
+	debug(log_now(), `    SSL base directory: '${ServerEnvironment.get_instance().get_dir_ssl()}'`);
+	debug(log_now(), `        Public key file: '${ServerEnvironment.get_instance().get_ssl_public_key_file()}'`);
+	debug(log_now(), `        Private key file: '${ServerEnvironment.get_instance().get_ssl_private_key_file()}'`);
+	debug(log_now(), `        Passphrase: '${ServerEnvironment.get_instance().get_ssl_passphrase_file()}'`);
 
 	// initialize icon file paths
 	ServerEnvironment.get_instance().set_icons_info(
@@ -210,8 +210,10 @@ export function server_initialize_from_data(base_directory: string, configuratio
 	);
 
 	// initialize page titles
-	ServerEnvironment.get_instance().title_login_page = configuration_data.login_page.title;
-	ServerEnvironment.get_instance().title_home_page = configuration_data.home_page.title;
+	ServerEnvironment.get_instance().set_titles_info(
+		configuration_data.login_page.title,
+		configuration_data.home_page.title
+	);
 	
 	// initialize rating system
 	{

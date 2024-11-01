@@ -48,7 +48,7 @@ export function user_retrieve(username: string): (User | null) {
 }
 
 export function user_overwrite(user: User): void {
-	let user_dir = ServerEnvironment.get_instance().users_directory;
+	let user_dir = ServerEnvironment.get_instance().get_dir_users();
 	let user_file = path.join(user_dir, user.get_username());
 
 	debug(log_now(), `Overwriting file '${user_file}' of user '${user.get_username()}'`);
@@ -101,7 +101,7 @@ export function user_get_all(): User[] {
  */
 export function user_add_new(u: User): void
 {
-	let user_dir = ServerEnvironment.get_instance().users_directory;
+	let user_dir = ServerEnvironment.get_instance().get_dir_users();
 	let user_file = path.join(user_dir, u.get_username());
 
 	debug(log_now(), `Writing file '${user_file}' of new user '${u.get_username()}'`);
@@ -152,7 +152,7 @@ export function user_update_from_players_data(players: Player[]): void {
 	debug(log_now(), "Updating users...");
 	for (let i = 0; i < users_to_update.length; ++i) {
 		let u = users_to_update[i];
-		const user_filename = path.join(server_dirs.users_directory, u.get_username());
+		const user_filename = path.join(server_dirs.get_dir_users(), u.get_username());
 
 		// update player file
 		debug(log_now(), `    User file '${user_filename}'...`);

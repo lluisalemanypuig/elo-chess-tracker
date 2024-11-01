@@ -129,23 +129,33 @@ export class ServerEnvironment {
 	}
 
 	// database directory
-	public database_directory: string = "";
-	public games_directory: string = "";
-	public users_directory: string = "";
-	public challenges_directory: string = "";
+	private directory_database: string = "";
+	private directory_games: string = "";
+	private directory_users: string = "";
+	private directory_challenges: string = "";
+
+	get_dir_database(): string { return this.directory_games; }
+	get_dir_games(): string { return this.directory_games; }
+	get_dir_users(): string { return this.directory_users; }
+	get_dir_challenges(): string { return this.directory_challenges; }
 
 	set_database_base_directory(base_dir: string): void {
-		this.database_directory = base_dir;
-		this.games_directory = path.join(this.database_directory, "games");
-		this.users_directory = path.join(this.database_directory, "users");
-		this.challenges_directory = path.join(this.database_directory, "challenges");
+		this.directory_database = base_dir;
+		this.directory_games = path.join(this.directory_database, "games");
+		this.directory_users = path.join(this.directory_database, "users");
+		this.directory_challenges = path.join(this.directory_database, "challenges");
 	}
 
 	// SSL certificate info
-	public ssl_directory: string = "";
-	public public_key_file: string = "";
-	public private_key_file: string = "";
-	public passphrase_file: string = "";
+	private directory_ssl: string = "";
+	private ssl_public_key_file: string = "";
+	private ssl_private_key_file: string = "";
+	private ssl_passphrase_file: string = "";
+
+	get_dir_ssl(): string { return this.ssl_public_key_file; }
+	get_ssl_public_key_file(): string { return this.ssl_public_key_file; }
+	get_ssl_private_key_file(): string { return this.ssl_private_key_file; }
+	get_ssl_passphrase_file(): string { return this.ssl_passphrase_file; }
 
 	set_SSL_info(
 		base_dir: string,
@@ -155,29 +165,34 @@ export class ServerEnvironment {
 	):
 	void
 	{
-		this.ssl_directory = base_dir;
+		this.directory_ssl = base_dir;
 		if (public_key_file != "") {
-			this.public_key_file = path.join(this.ssl_directory, public_key_file);
+			this.ssl_public_key_file = path.join(this.directory_ssl, public_key_file);
 		}
 		if (private_key_file != "") {
-			this.private_key_file = path.join(this.ssl_directory, private_key_file);
+			this.ssl_private_key_file = path.join(this.directory_ssl, private_key_file);
 		}
 		if (passphrase_file != "") {
-			this.passphrase_file = path.join(this.ssl_directory, passphrase_file);
+			this.ssl_passphrase_file = path.join(this.directory_ssl, passphrase_file);
 		}
 	}
 
 	is_SSL_info_valid(): boolean {
-		return this.ssl_directory != "" &&
-			this.public_key_file != "" &&
-			this.private_key_file != "";
+		return this.directory_ssl != "" &&
+			this.ssl_public_key_file != "" &&
+			this.ssl_private_key_file != "";
 	}
 
 	// icons
-	public icon_directory: string = "";
-	public icon_favicon: string = "";
-	public icon_login_page: string = "";
-	public icon_home_page: string = "";
+	private directory_icon: string = "";
+	private icon_favicon: string = "";
+	private icon_login_page: string = "";
+	private icon_home_page: string = "";
+
+	get_dir_icons(): string { return this.directory_icon; }
+	get_icon_favicon(): string { return this.icon_favicon; }
+	get_icon_login_page(): string { return this.icon_login_page; }
+	get_icon_home_page(): string { return this.icon_home_page; }
 
 	set_icons_info(
 		base_dir: string,
@@ -186,15 +201,23 @@ export class ServerEnvironment {
 		home_page: string
 	)
 	{
-		this.icon_directory = base_dir;
+		this.directory_icon = base_dir;
 		this.icon_favicon = path.join(base_dir, favicon);
 		this.icon_login_page = path.join(base_dir, login_page);
 		this.icon_home_page = path.join(base_dir, home_page);
 	}
 
 	// titles
-	public title_login_page: string = "";
-	public title_home_page: string = "";
+	private title_login_page: string = "";
+	private title_home_page: string = "";
+
+	get_title_login_page(): string { return this.title_login_page; }
+	get_title_home_page(): string { return this.title_home_page; }
+
+	set_titles_info(login_page: string, home_page: string): void {
+		this.title_login_page = login_page;
+		this.title_home_page = home_page;
+	}
 }
 
 /**

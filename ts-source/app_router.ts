@@ -61,21 +61,21 @@ router.get('/html/*.css', (req: any, res: any) => {
 router.get('/favicon.ico', (req: any, res: any) => {
 	debug(log_now(), "GET favicon.ico...");
 	debug(log_now(), `    request: ${req.url}`);
-	let filepath = ServerEnvironment.get_instance().icon_favicon;
+	let filepath = ServerEnvironment.get_instance().get_icon_favicon();
 	debug(log_now(), `    file to send: ${filepath}`);
 	res.sendFile(filepath);
 });
 router.get('/icon_login_page', (req:any, res: any) => {
 	debug(log_now(), "GET icon_login_page...");
 	debug(log_now(), `    request: ${req.url}`);
-	let filepath = ServerEnvironment.get_instance().icon_login_page;
+	let filepath = ServerEnvironment.get_instance().get_icon_login_page();
 	debug(log_now(), `    file to send: ${filepath}`);
 	res.sendFile(filepath);
 });
 router.get('/icon_home_page', (req:any, res: any) => {
 	debug(log_now(), "GET icon_home_page...");
 	debug(log_now(), `    request: ${req.url}`);
-	let filepath = ServerEnvironment.get_instance().icon_home_page;
+	let filepath = ServerEnvironment.get_instance().get_icon_home_page();
 	debug(log_now(), `    file to send: ${filepath}`);
 	res.sendFile(filepath);
 });
@@ -84,12 +84,12 @@ router.get('/icon_home_page', (req:any, res: any) => {
 router.get('/title_login_page', (req:any, res: any) => {
 	debug(log_now(), "GET title_login_page...");
 	debug(log_now(), `    request: ${req.url}`);
-	res.send({ "text": ServerEnvironment.get_instance().title_login_page });
+	res.send({ "text": ServerEnvironment.get_instance().get_title_login_page() });
 });
 router.get('/title_home_page', (req:any, res: any) => {
 	debug(log_now(), "GET title_home_page...");
 	debug(log_now(), `    request: ${req.url}`);
-	res.send({ "text": ServerEnvironment.get_instance().title_home_page });
+	res.send({ "text": ServerEnvironment.get_instance().get_title_home_page() });
 });
 
 /* ************************************************************************** */

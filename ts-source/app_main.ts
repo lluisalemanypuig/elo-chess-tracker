@@ -76,12 +76,12 @@ if (ServerEnvironment.get_instance().is_SSL_info_valid()) {
 	app.set('port', port);
 
 	let https_server = function() {
-		const private_key = fs.readFileSync(ServerEnvironment.get_instance().private_key_file, 'utf8');
-		const certificate = fs.readFileSync(ServerEnvironment.get_instance().public_key_file, 'utf8');
+		const private_key = fs.readFileSync(ServerEnvironment.get_instance().get_ssl_private_key_file(), 'utf8');
+		const certificate = fs.readFileSync(ServerEnvironment.get_instance().get_ssl_public_key_file(), 'utf8');
 
-		if (ServerEnvironment.get_instance().passphrase_file != "") {
+		if (ServerEnvironment.get_instance().get_ssl_passphrase_file() != "") {
 			debug(log_now(), "Passphrase file found...");
-			let passphrase = fs.readFileSync(ServerEnvironment.get_instance().passphrase_file, 'utf8');
+			let passphrase = fs.readFileSync(ServerEnvironment.get_instance().get_ssl_passphrase_file(), 'utf8');
 			return https.createServer(
 				{
 					key : private_key,

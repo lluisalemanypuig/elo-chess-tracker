@@ -134,7 +134,7 @@ function game_next_of_player(
 
 	debug(log_now(), `Find the game of user '${username}' right after date '${when}'`);
 
-	const games_dir = ServerEnvironment.get_instance().games_directory;
+	const games_dir = ServerEnvironment.get_instance().get_dir_games();
 
 	// The file into which we have to add the new game.
 	const date_record_str = make_game_date_record_name_str(when);
@@ -315,7 +315,7 @@ function game_insert_in_history(game: Game, date_record_str: string): void
 	updated_players.push(updated_player(game.get_time_control_id(), game.get_black(), black_after));
 	}
 
-	const games_dir = ServerEnvironment.get_instance().games_directory;
+	const games_dir = ServerEnvironment.get_instance().get_dir_games();
 
 	debug(log_now(), "Adding game into the history...");
 	debug(log_now(), `    Game '${JSON.stringify(game)}'`);
@@ -461,7 +461,7 @@ export function game_find_by_id(game_id: string): [string[], string, Game[], num
 	}
 	const date_record_str = __date_record_str as string;
 
-	const games_dir = ServerEnvironment.get_instance().games_directory;
+	const games_dir = ServerEnvironment.get_instance().get_dir_games();
 	const date_record_filename: string = path.join(games_dir, date_record_str);
 	debug(log_now(), `    File: '${date_record_filename}'`);
 
@@ -497,7 +497,7 @@ export function game_find_by_id(game_id: string): [string[], string, Game[], num
  * @param new_result The (new) result of the game
  */
 export function game_edit_result(game_id: string, new_result: GameResult): void {
-	const games_dir = ServerEnvironment.get_instance().games_directory;
+	const games_dir = ServerEnvironment.get_instance().get_dir_games();
 
 	debug(log_now(), `Editing game '${game_id}'`);
 
@@ -561,7 +561,7 @@ export function game_edit_result(game_id: string, new_result: GameResult): void 
 }
 
 export function recalculate_Elo_ratings() {
-	const games_dir = ServerEnvironment.get_instance().games_directory;
+	const games_dir = ServerEnvironment.get_instance().get_dir_games();
 	const all_time_controls = RatingSystem.get_instance().get_time_controls();
 
 	// initialize all players to a freshly created player

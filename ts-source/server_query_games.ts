@@ -61,7 +61,7 @@ function filter_game_list(
 
 ): any[]
 {
-	const games_dir = ServerEnvironment.get_instance().games_directory;
+	const games_dir = ServerEnvironment.get_instance().get_dir_games();
 
 	let data_to_return: any[] = [];
 	
