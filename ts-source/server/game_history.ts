@@ -503,7 +503,7 @@ export function game_edit_result(game_id: string, new_result: GameResult): void 
 
 	const r = game_find_by_id(game_id);
 	if (r == null) { return; }
-	let [record_name_list, game_record_filename, game_set, idx_in_record_list, idx_in_game_set]
+	let [all_date_records, date_record_filename, game_set, idx_in_record_list, idx_in_game_set]
 		= r as [string[], string, Game[], number, number];
 
 	let game = game_set[idx_in_game_set];
@@ -529,22 +529,22 @@ export function game_edit_result(game_id: string, new_result: GameResult): void 
 
 	// update record of the current game
 	update_game_record(game_set, idx_in_game_set + 1, game.get_time_control_id(), updated_players, player_to_index);
-	debug(log_now(), `    Writing game record '${game_record_filename}'...`);
-	fs.writeFileSync(game_record_filename, JSON.stringify(game_set, null, 4), { flag: 'w' });
-	debug(log_now(), `        Game record '${game_record_filename}' written.`);
+	debug(log_now(), `    Writing game record '${date_record_filename}'...`);
+	fs.writeFileSync(date_record_filename, JSON.stringify(game_set, null, 4), { flag: 'w' });
+	debug(log_now(), `        Game record '${date_record_filename}' written.`);
 
 	debug(log_now(), "Update the rest of the records...");
-	for (let idx = idx_in_record_list + 1; idx < record_name_list.length; ++idx) {
-		const record_name = record_name_list[idx];
+	for (let idx = idx_in_record_list + 1; idx < all_date_records.length; ++idx) {
+		const date_record_str = all_date_records[idx];
 
 		// files already contain the '.json' extension
-		const game_record_filename = path.join(games_dir, record_name);
+		const date_record_filename = path.join(games_dir, date_record_str);
 
 		// read and parse the next file
-		const game_set = read_game_date_record(game_record_filename);
+		const game_set = read_game_date_record(date_record_filename);
 
 		// update the current record
-		debug(log_now(), `    Updating game record '${game_record_filename}'...`);
+		debug(log_now(), `    Updating game record '${date_record_filename}'...`);
 		update_game_record(game_set, 0, game.get_time_control_id(), updated_players, player_to_index);
 		debug(log_now(), `        Number of updated players: '${updated_players.length}'...`);
 		for (let j = 0; j < updated_players.length; ++j) {
@@ -552,9 +552,9 @@ export function game_edit_result(game_id: string, new_result: GameResult): void 
 		}
 
 		// update the record file
-		debug(log_now(), `    Writing game record '${game_record_filename}'...`);
-		fs.writeFileSync(game_record_filename, JSON.stringify(game_set, null, 4), { flag: 'w' });
-		debug(log_now(), `        Game record '${game_record_filename}' written.`);
+		debug(log_now(), `    Writing game record '${date_record_filename}'...`);
+		fs.writeFileSync(date_record_filename, JSON.stringify(game_set, null, 4), { flag: 'w' });
+		debug(log_now(), `        Game record '${date_record_filename}' written.`);
 	}
 
 	user_update_from_players_data(updated_players);
@@ -589,24 +589,23 @@ export function recalculate_Elo_ratings() {
 
 	// The files currently existing in the 'games_directory'
 	debug(log_now(), `Reading directory '${games_dir}'...`);
-	const record_name_list = fs.readdirSync(games_dir);
-	debug(log_now(), `    Directory contents: '${record_name_list}'`);
+	const all_date_records = fs.readdirSync(games_dir);
+	debug(log_now(), `    Directory contents: '${all_date_records}'`);
 
-	for (let i = 0; i < record_name_list.length; ++i) {
-		const record_name = record_name_list[i];
+	for (let i = 0; i < all_date_records.length; ++i) {
+		const date_record_str = all_date_records[i];
 
 		// files already contain the '.json' extension
-		const game_record_filename = path.join(games_dir, record_name);
+		const date_record_filename = path.join(games_dir, date_record_str);
 
 		// read and parse the next file
-		const game_set = read_game_date_record(game_record_filename);
-
+		const game_set = read_game_date_record(date_record_filename);
 		
 		// update the current record for all time controls
 		for (let k = 0; k < all_time_controls.length; ++k) {
 			const time_control = all_time_controls[k];
 
-			debug(log_now(), `    Updating game record '${game_record_filename}'...`);
+			debug(log_now(), `    Updating game record '${date_record_filename}'...`);
 			update_game_record(game_set, 0, time_control.id, updated_players, player_to_index);
 			debug(log_now(), `        Number of updated players: '${updated_players.length}'...`);
 				for (let j = 0; j < updated_players.length; ++j) {
@@ -615,9 +614,9 @@ export function recalculate_Elo_ratings() {
 		}
 
 		// update the record file
-		debug(log_now(), `    Writing game record '${game_record_filename}'...`);
-		fs.writeFileSync(game_record_filename, JSON.stringify(game_set, null, 4), { flag: 'w' });
-		debug(log_now(), `        Game record '${game_record_filename}' written.`);
+		debug(log_now(), `    Writing game record '${date_record_filename}'...`);
+		fs.writeFileSync(date_record_filename, JSON.stringify(game_set, null, 4), { flag: 'w' });
+		debug(log_now(), `        Game record '${date_record_filename}' written.`);
 	}
 
 	user_update_from_players_data(updated_players);
