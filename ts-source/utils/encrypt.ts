@@ -43,13 +43,6 @@ function log_base(x: number, base: number): number {
 	return Math.log(x)/Math.log(base);
 };
 
-/// Is a number a power of 2?
-function is_power_of_2(n: number): boolean {
-	if (n == 0) { return false; }
-	if (n <= 2) { return true; }
-	return Math.pow( 2, Math.floor(log_base(n, 2)) ) == n;
-}
-
 /// Next power of 2
 function next_power_of_2(n: number): number {
 	return Math.pow( 2, Math.floor(log_base(n, 2)) + 1 );

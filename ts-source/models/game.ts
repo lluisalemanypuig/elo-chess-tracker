@@ -107,6 +107,8 @@ export class Game {
 	
 	/// Return this game's time control id.
 	get_time_control_id(): string { return this.time_control_id; }
+	/// Return this game's time control name.
+	get_time_control_name(): string { return this.time_control_name; }
 
 	/// Sets the game's result
 	set_result(result: GameResult): void { this.result = result; }

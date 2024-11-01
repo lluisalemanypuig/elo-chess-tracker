@@ -66,7 +66,6 @@ function new_button_cell(text: string, game_id: string) {
 
 function result_selection_changed(event: any) {
 	const select = event.target;
-	const id = select.id as string;
 	
 	let button = document.getElementById( select.getAttribute("button_id") ) as HTMLButtonElement;
 

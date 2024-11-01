@@ -24,9 +24,9 @@ import { ADMIN, user_role_to_string } from "./models/user_role";
 import { CREATE_GAME, CREATE_USER, EDIT_USER, SEE_USER_GAMES } from "./models/user_action";
 import { make_cookie_string } from "./utils/cookies";
 
-export async function logout_link_clicked(event: any) {
+export async function logout_link_clicked(_event: any) {
 	// "query" the server
-	const response = await fetch("/logout", {method: 'POST'});
+	await fetch("/logout", {method: 'POST'});
 
 	// whether logout was successful or not, empty the cookies
 	document.cookie = make_cookie_string({
@@ -65,7 +65,7 @@ function fill_action_links(user_actions: string[], user_roles: string[]) {
 				}
 			);
 		
-			const data = await response.json();
+			await response.json();
 		}
 		action_links.appendChild(recalculate_Elo_ratings_link);
 	}

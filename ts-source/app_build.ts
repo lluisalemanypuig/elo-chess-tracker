@@ -63,11 +63,11 @@ app.use("/", router);
 debug(log_now(), "    Error handlers...");
 
 // catch 404 and forward to error handler
-app.use(function (req: any, res: any, next: Function) {
+app.use(function (_req: any, _res: any, next: Function) {
 	next(createError(404));
 });
 // error handler
-app.use(function (err: any, req: any, res: any, next: Function) {
+app.use(function (err: any, req: any, res: any, _next: Function) {
 	debug(log_now(), "The request could not be served");
 	let R = req as Request;
 	debug(log_now(), `    method: ${R.method}`);

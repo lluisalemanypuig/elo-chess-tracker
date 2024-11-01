@@ -51,10 +51,10 @@ async function fill_time_controls() {
 	}
 }
 
-async function fill_ranking(event: any) {
+async function fill_ranking(_event: any) {
 	const time_control_select = document.getElementById("time_control_select") as HTMLSelectElement;
 	const time_control_id = time_control_select.options[time_control_select.selectedIndex].value;
-	const time_control_name = time_control_select.options[time_control_select.selectedIndex].text;
+	
 	if (time_control_id == "") {
 		return;
 	}

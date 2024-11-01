@@ -25,7 +25,7 @@ import path from 'path';
 import Debug from 'debug';
 const debug = Debug('ELO_TRACKER:server_challenges');
 
-import { log_now, number_to_string, long_date_to_short_date } from '../utils/misc';
+import { log_now, number_to_string } from '../utils/misc';
 import { ServerMemory, ServerEnvironment } from "./configuration";
 import { Challenge } from '../models/challenge';
 import { GameResult } from '../models/game';
@@ -71,7 +71,7 @@ export function challenge_retrieve(id: string): Challenge | null {
  * @returns A set of challenges according to function @e by.
  */
 export function challenge_set_retrieve(
-	by: Function = (c: Challenge): boolean => { return true; }
+	by: Function = (_c: Challenge): boolean => { return true; }
 
 ) : Challenge[]
 {

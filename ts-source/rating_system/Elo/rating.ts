@@ -53,7 +53,7 @@ export class EloRating extends Rating {
 	}
 
 	/// Clones the object.
-	clone(): EloRating {
+	override clone(): EloRating {
 		return new EloRating(
 			this.rating,
 			this.num_games, this.won, this.drawn, this.lost,

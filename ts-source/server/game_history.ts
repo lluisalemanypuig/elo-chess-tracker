@@ -411,10 +411,10 @@ function game_insert_in_history(game: Game, date_record_str: string): void
 
 	debug(log_now(), "Update the rest of the records...");
 	for (let idx = idx_in_record_list; idx < all_date_record_strs.length; ++idx) {
-		const record_string = all_date_record_strs[idx];
+		const date_record_str = all_date_record_strs[idx];
 
 		// files already contain the '.json' extension
-		const date_record_file = path.join(games_dir, record_string);
+		const date_record_file = path.join(games_dir, date_record_str);
 
 		// read and parse the next file
 		let game_set = read_game_date_record(date_record_file);

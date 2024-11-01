@@ -177,7 +177,7 @@ export class User extends Player {
 	}
 
 	/// Creates a copy of this user
-	clone(): User {
+	override clone(): User {
 		return new User(
 			this.username, this.first_name, this.last_name,
 			this.password.clone(),

@@ -22,7 +22,7 @@ Contact:
 
 import { UserRole, all_user_roles, user_role_to_string } from "./models/user_role";
 
-async function submit_new_user_clicked(event: any) {
+async function submit_new_user_clicked(_event: any) {
 	// username box
 	const _username_box = document.getElementById("username_box");
 	if (_username_box == null) {

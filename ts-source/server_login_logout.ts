@@ -76,11 +76,6 @@ export async function post_user_log_in(req: any, res:any) {
 	// user data, which might be null
 	const _user_data = user_retrieve(username);
 
-	let response_data = {
-		"r" : true,
-		"t" : "n"
-	};
-	
 	// nonexistent user
 	if (_user_data == null) {
         debug(log_now(), `    User ${username} does not exist`);

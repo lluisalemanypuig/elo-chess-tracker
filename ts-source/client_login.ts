@@ -20,7 +20,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-async function login_button_clicked(event: any) {
+async function login_button_clicked(_event: any) {
 	// username box
 	const _username_box = document.getElementById("username_box");
 	if (_username_box == null) {

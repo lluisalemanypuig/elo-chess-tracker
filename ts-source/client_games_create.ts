@@ -81,7 +81,7 @@ async function initialize_window_client_games_create() {
 	}
 }
 
-async function submit_new_game(event: any) {
+async function submit_new_game(_event: any) {
 	const white_input = document.getElementById("white_list") as HTMLInputElement;
 	const black_input = document.getElementById("black_list") as HTMLInputElement;
 	const result_select = document.getElementById("result_select") as HTMLSelectElement;

@@ -52,7 +52,7 @@ async function fill_username_datalist() {
 	username_datalist.innerHTML = options;
 }
 
-async function user_was_changed(event: any) {
+async function user_was_changed(_event: any) {
 	all_user_roles.forEach(
 		function(role: string) {
 			let checkbox_role = document.getElementById("checkbox_" + role) as HTMLInputElement;
@@ -98,7 +98,7 @@ async function user_was_changed(event: any) {
 	}
 }
 
-async function submit_was_clicked(event: any) {
+async function submit_was_clicked(_event: any) {
 	// username
 	let username_list_input = document.getElementById("username_list") as HTMLInputElement;
 	const username = (document.querySelector('option[value="' + username_list_input.value + '"]') as HTMLOptionElement).id;

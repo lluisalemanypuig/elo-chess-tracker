@@ -56,7 +56,7 @@ async function fill_username_datalist() {
 	username_datalist.innerHTML = options;
 }
 
-async function submit_challenge_button_clicked(event: any) {
+async function submit_challenge_button_clicked(_event: any) {
 	
 	let username_list_input = document.getElementById("username_list") as HTMLInputElement;
 	const username_option = document.querySelector('option[value="' + username_list_input.value + '"]');

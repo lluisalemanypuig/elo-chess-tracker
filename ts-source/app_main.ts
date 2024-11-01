@@ -72,7 +72,7 @@ if (ServerEnvironment.get_instance().is_SSL_info_valid()) {
 	debug(log_now(), "Create https server");
 
 	// Get port from environment and store in Express.
-	let port = normalizePort(process.env.PORT || '8443');
+	let port = normalizePort(process.env['PORT'] || '8443');
 	app.set('port', port);
 
 	let https_server = function() {
@@ -136,7 +136,7 @@ if (ServerEnvironment.get_instance().is_SSL_info_valid()) {
 debug(log_now(), "Create http server");
 
 // Get port from environment and store in Express.
-let port = normalizePort(process.env.PORT || '8080');
+let port = normalizePort(process.env['PORT'] || '8080');
 app.set('port', port);
 
 // Event listener for servers "error" event.
