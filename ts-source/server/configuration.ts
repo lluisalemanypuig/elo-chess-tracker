@@ -24,7 +24,8 @@ import path from "path";
 
 import { User } from "../models/user";
 import { Challenge } from '../models/challenge';
-import { RatingSystemType } from "../rating_system/rating_system_type";
+import { Game } from '../models/game';
+import { Rating } from '../rating_system/rating';
 import { TimeControl } from "../models/time_control";
 import { linear_find } from "../utils/misc";
 
@@ -33,39 +34,53 @@ import { linear_find } from "../utils/misc";
  */
 export class RatingSystem {
 
-	/// Function to evaluate a game
-	public formula: Function = () => void {};
-	/// Function to read a single rating JSON object
-	public rating_from_JSON: Function = () => void {};
-	/// Function to read a single rating JSON object
-	public rating_set_from_JSON: Function = () => void {};
-	/// Function to create a new rating
-	public new_rating: Function = () => void {};
-	/// All ratings used in the web
-	public all_time_controls: TimeControl[] = [];
-	
-	/// Rating System type chosen
-	public type: RatingSystemType = "";
-
 	/// The only instance of this class
-	private static instance: RatingSystem;
+	private static m_instance: RatingSystem;
 
 	constructor() {
-		if (RatingSystem.instance) {
-			return RatingSystem.instance;
+		if (RatingSystem.m_instance) {
+			return RatingSystem.m_instance;
 		}
-		RatingSystem.instance = this;
+		RatingSystem.m_instance = this;
 	}
 
-	set_formula_function(formula: Function): void {
-		this.formula = formula;
+	/// Function to evaluate a game
+	private rating_formula: Function = () => void {};
+	/// Function to create a new rating
+	private new_rating: Function = () => void {};
+
+	/// Function to read a single rating JSON object
+	private rating_from_JSON: Function = () => void {};
+	/// All ratings used in the web
+	private all_time_controls: TimeControl[] = [];
+
+	/**
+	 * @brief Returns the only instance of this class
+	 * @returns The only instance of this class
+	 * @pre Method @ref initialize must have been called before
+	 */
+	static get_instance(): RatingSystem {
+		RatingSystem.m_instance = RatingSystem.m_instance || new RatingSystem();
+		return RatingSystem.m_instance;
 	}
-	set_rating_from_JSON(read_rating: Function): void {
+
+	set_rating_formula(formula: Function): void {
+		this.rating_formula = formula;
+	}
+	apply_rating_formula(game: Game): [Rating, Rating] {
+		return this.rating_formula(game);
+	}
+	get_new_rating(): Rating {
+		return this.new_rating();
+	}
+
+	set_rating_from_JSON_formula(read_rating: Function): void {
 		this.rating_from_JSON = read_rating;
 	}
-	set_rating_set_from_JSON(read_rating_set: Function): void {
-		this.rating_set_from_JSON = read_rating_set;
+	get_rating_from_json(json: any): Rating {
+		return this.rating_from_JSON(json);
 	}
+
 	set_new_rating(new_rating: Function): void {
 		this.new_rating = new_rating;
 	}
@@ -77,9 +92,6 @@ export class RatingSystem {
 		if (index >= this.all_time_controls.length) { return "?"; }
 		return this.all_time_controls[index].name;
 	}
-	set_type(type: RatingSystemType): void {
-		this.type = type;
-	}
 
 	is_time_control_id_valid(id: string): boolean {
 		for (let i = 0; i < this.all_time_controls.length; ++i) {
@@ -88,14 +100,8 @@ export class RatingSystem {
 		return false;
 	}
 
-	/**
-	 * @brief Returns the only instance of this class
-	 * @returns The only instance of this class
-	 * @pre Method @ref initialize must have been called before
-	 */
-	static get_instance(): RatingSystem {
-		RatingSystem.instance = RatingSystem.instance || new RatingSystem();
-		return RatingSystem.instance;
+	get_time_controls(): TimeControl[] {
+		return this.all_time_controls;
 	}
 }
 
@@ -103,43 +109,31 @@ export class RatingSystem {
  * @brief Directories and other parameters of the server environment
  */
 export class ServerEnvironment {
+	/**
+	 * @brief Construct the server configuration
+	 */
+	constructor() {
+		if (ServerEnvironment.m_instance) {
+			return ServerEnvironment.m_instance;
+		}
+
+		ServerEnvironment.m_instance = this;
+	}
+
+	/// The only instance of this class
+	private static m_instance: ServerEnvironment;
+
+	static get_instance(): ServerEnvironment {
+		ServerEnvironment.m_instance = ServerEnvironment.m_instance || new ServerEnvironment();
+		return ServerEnvironment.m_instance;
+	}
+
 	// database directory
 	public database_directory: string = "";
 	public games_directory: string = "";
 	public users_directory: string = "";
 	public challenges_directory: string = "";
 
-	// SSL certificate info
-	public ssl_directory: string = "";
-	public public_key_file: string = "";
-	public private_key_file: string = "";
-	public passphrase_file: string = "";
-
-	// icons
-	public icon_directory: string = "";
-	public icon_favicon: string = "";
-	public icon_login_page: string = "";
-	public icon_home_page: string = "";
-
-	// titles
-	public title_login_page: string = "";
-	public title_home_page: string = "";
-
-	/// The only instance of this class
-	private static instance: ServerEnvironment;
-
-	/**
-	 * @brief Construct the server configuration
-	 */
-	constructor() {
-		if (ServerEnvironment.instance) {
-			return ServerEnvironment.instance;
-		}
-
-		ServerEnvironment.instance = this;
-	}
-
-	/// Sets base directory of database
 	set_database_base_directory(base_dir: string): void {
 		this.database_directory = base_dir;
 		this.games_directory = path.join(this.database_directory, "games");
@@ -147,7 +141,12 @@ export class ServerEnvironment {
 		this.challenges_directory = path.join(this.database_directory, "challenges");
 	}
 
-	/// Sets all necessary SSL information
+	// SSL certificate info
+	public ssl_directory: string = "";
+	public public_key_file: string = "";
+	public private_key_file: string = "";
+	public passphrase_file: string = "";
+
 	set_SSL_info(
 		base_dir: string,
 		public_key_file: string,
@@ -174,6 +173,12 @@ export class ServerEnvironment {
 			this.private_key_file != "";
 	}
 
+	// icons
+	public icon_directory: string = "";
+	public icon_favicon: string = "";
+	public icon_login_page: string = "";
+	public icon_home_page: string = "";
+
 	set_icons_info(
 		base_dir: string,
 		favicon: string,
@@ -187,15 +192,9 @@ export class ServerEnvironment {
 		this.icon_home_page = path.join(base_dir, home_page);
 	}
 
-	/**
-	 * @brief Returns the only instance of this class
-	 * @returns The only instance of this class
-	 * @pre Method @ref initialize must have been called before
-	 */
-	static get_instance(): ServerEnvironment {
-		ServerEnvironment.instance = ServerEnvironment.instance || new ServerEnvironment();
-		return ServerEnvironment.instance;
-	}
+	// titles
+	public title_login_page: string = "";
+	public title_home_page: string = "";
 }
 
 /**
@@ -219,34 +218,121 @@ export class SessionID {
  */
 export class ServerMemory {
 
-	/// Session ids of the server.
-	public session_ids: SessionID[] = [];
-	
-	/// Set of users
-	public users: User[] = [];
-	public user_to_index: Map<string, number> = new Map();
-
-	/// The challenges in the system
-	public challenges: Challenge[] = [];
-	
-	/// Number of games in the system
-	public max_game_id: number = 0;
-	/// Map from game ID to game record (file)
-	public game_id_to_record_file: Map<string, string> = new Map();
-
 	/// The only instance of this class
-	private static instance: ServerMemory;
+	private static m_instance: ServerMemory;
 
 	constructor() {
-		if (ServerMemory.instance) {
-			return ServerMemory.instance;
+		if (ServerMemory.m_instance) {
+			return ServerMemory.m_instance;
 		}
-		ServerMemory.instance = this;
+		ServerMemory.m_instance = this;
 	}
 
-	/// Returns the only instance of this class
 	static get_instance(): ServerMemory {
-		ServerMemory.instance = ServerMemory.instance || new ServerMemory();
-		return ServerMemory.instance;
+		ServerMemory.m_instance = ServerMemory.m_instance || new ServerMemory();
+		return ServerMemory.m_instance;
+	}
+
+	/// Set of users
+	private users: User[] = [];
+	private user_to_index: Map<string, number> = new Map();
+
+	add_user(u: User): void {
+		this.users.push(u);
+	}
+	add_user_index(u: User, i: number): void {
+		this.users.push(u);
+		this.user_to_index.set(u.get_username(), i);
+	}
+	replace_user(u: User, i: number): void {
+		delete this.users[i];
+		this.users[i] = u;
+	}
+	get_user(i: number): User {
+		return this.users[i];
+	}
+	get_user_index(username: string): number | undefined {
+		return this.user_to_index.get(username);
+	}
+	num_users(): number {
+		return this.users.length;
+	}
+
+	/// Session ids of the server.
+	private session_ids: SessionID[] = [];
+
+	add_session_id(id: SessionID): void {
+		this.session_ids.push(id);
+	}
+	num_session_ids(): number {
+		return this.session_ids.length;
+	}
+	index_session_id(id: string, username: string): number {
+		if (id == undefined || username == undefined) { return -1; }
+		for (let i = 0; i < this.session_ids.length; ++i) {
+			if (this.session_ids[i].id == id &&
+				this.session_ids[i].username == username
+			)
+			{
+				return i;
+			}
+		}
+		return -1;
+	}
+	has_session_id(id: string, username: string): boolean {
+		return this.index_session_id(id, username) != -1;
+	}
+	remove_session_id(i: number): void {
+		this.session_ids.splice(i, 1);
+	}
+	clear_session_ids(): void {
+		this.session_ids = [];
+	}
+
+	/// The challenges in the system
+	private challenges: Challenge[] = [];
+
+	add_challenge(c: Challenge): void {
+		this.challenges.push(c);
+	}
+	remove_challenge(i: number): void {
+		this.challenges.splice(i, 1);
+	}
+	num_challenges(): number {
+		return this.challenges.length;
+	}
+	get_challenge(i: number): Challenge {
+		return this.challenges[i];
+	}
+	last_challenge(): Challenge {
+		return this.challenges[this.challenges.length - 1];
+	}
+
+	/// Number of games in the system
+	private max_game_id: number = 0;
+	/// Map from game ID to game record (file)
+	private game_id_to_record_date: Map<string, string> = new Map();
+
+	/// Current maximum game ID
+	get_max_game_id(): number {
+		return this.max_game_id;
+	}
+	/// Sets the maximum game ID
+	set_max_game_id(id: number): void {
+		this.max_game_id = id;
+	}
+	/// Current maximum game ID
+	new_max_game_id(): number {
+		this.max_game_id += 1;
+		return this.max_game_id;
+	}
+
+	/// Returns the date record file in which we find the game ID passed as parameter.
+	get_game_id_record_date(game_id: string): string | undefined {
+		return this.game_id_to_record_date.get(game_id);
+	}
+	// Sets the date record file 'when' in which we find the game ID passed as parameter.
+	set_game_id_record_date(game_id: string, when: string): void {
+		this.game_id_to_record_date.set(game_id, when);
 	}
 }

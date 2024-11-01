@@ -27,14 +27,14 @@ import Debug from 'debug';
 const debug = Debug('ELO_TRACKER:app_router');
 import { log_now } from './utils/misc';
 
-import { session_id_exists } from './server/session';
-import { ServerEnvironment } from './server/configuration';
+import { ServerMemory, ServerEnvironment } from './server/configuration';
 
 let router = express.Router();
 router.get('/', (req: any, res: any) => {
 	debug(log_now(), `Username received in cookie: '${req.cookies.user}'`);
 
-	if (session_id_exists(req.cookies.session_id, req.cookies.user)) {
+	let mem = ServerMemory.get_instance();
+	if (mem.has_session_id(req.cookies.session_id, req.cookies.user)) {
 		debug(log_now(), `    Session id exists. Please, come in.`);
 		// User has a cookie proving that they logged into the web in the past
 		res.sendFile(path.join(__dirname, "../html/home.html"));
@@ -194,7 +194,8 @@ router.post('/recalculate_Elo_ratings', post_recalculate_Elo_ratings);
 router.get('/home', (req: any, res: any) => {
 	debug(log_now(), "GET home");
 	
-	if (! session_id_exists(req.cookies.session_id, req.cookies.user)) {
+	let mem = ServerMemory.get_instance();
+	if (! mem.has_session_id(req.cookies.session_id, req.cookies.user)) {
 		debug(log_now(), "    Session id does not exist.");
 		res.send("Computer says no");
 		return;

@@ -78,7 +78,7 @@ REGULATIONS IN THIS WAY
 
 */
 
-function update_constant_K(rating: EloRating): EloRating {
+function update_constant_K(rating: EloRating): void {
 	if (rating.num_games >= 30) {
 		rating.K = 20;
 	}
@@ -88,7 +88,6 @@ function update_constant_K(rating: EloRating): EloRating {
 	if (rating.K*rating.num_games > 700) {
 		rating.K = 700/rating.num_games;
 	}
-	return rating;
 }
 
 export function player_vs_player(game: Game): [EloRating, EloRating] {
@@ -119,15 +118,11 @@ export function player_vs_player(game: Game): [EloRating, EloRating] {
 		black_rating.drawn += 1;
 	}
 
-	// update White's and Black's number of games
 	++white_rating.num_games;
 	++black_rating.num_games;
 
-	// update White's constant
-	white_rating = update_constant_K(white_rating);
-
-	// update Black's constant
-	black_rating = update_constant_K(black_rating);
+	update_constant_K(white_rating);
+	update_constant_K(black_rating);
 
 	return [white_rating, black_rating];
 }

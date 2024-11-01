@@ -84,21 +84,3 @@ export function Elo_rating_from_json(json: any): EloRating {
 		json["K"]
 	);
 }
-
-/**
- * @brief Parses a JSON string or object and returns a set of Rating.
- * @param json A JSON string or object with data of several Rating.
- * @returns An array of Rating objects.
- */
-export function Elo_rating_set_from_json(json: any): EloRating[] {
-	if (typeof json == "string") {
-		let json_parse = JSON.parse(json);
-		return Elo_rating_set_from_json(json_parse);
-	}
-
-	let rating_set: EloRating[] = [];
-	for (var rating in json) {
-		rating_set.push(Elo_rating_from_json(json[rating]));
-	}
-	return rating_set;
-}

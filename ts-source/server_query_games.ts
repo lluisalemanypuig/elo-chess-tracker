@@ -40,7 +40,7 @@ import {
 } from './models/user_action'
 
 function increment(g: Game): any {
-	const [white_after, black_after] = RatingSystem.get_instance().formula(g);
+	const [white_after, black_after] = RatingSystem.get_instance().apply_rating_formula(g);
 	return {
 		'white_increment' : Math.round(white_after.rating - g.get_white_rating().rating),
 		'black_increment' : Math.round(black_after.rating - g.get_black_rating().rating)

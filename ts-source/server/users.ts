@@ -39,9 +39,9 @@ import { UserRole } from '../models/user_role';
  * @returns Null or a User if the user exists.
  */
 export function user_retrieve(username: string): (User | null) {
-	let memory = ServerMemory.get_instance();
-	for (let i = 0; i < memory.users.length; ++i) {
-		const user: User = memory.users[i];
+	let mem = ServerMemory.get_instance();
+	for (let i = 0; i < mem.num_users(); ++i) {
+		const user: User = mem.get_user(i);
 		if (user.get_username() == username) { return user; }
 	}
 	return null;
@@ -73,9 +73,9 @@ export function user_rename_reassign_roles(
 
 /// Does a user exist?
 export function user_exists(username: string): boolean {
-	let memory = ServerMemory.get_instance();
-	for (let i = 0; i < memory.users.length; ++i) {
-		const user: User = memory.users[i];
+	let mem = ServerMemory.get_instance();
+	for (let i = 0; i < mem.num_users(); ++i) {
+		const user: User = mem.get_user(i);
 		if (user.get_username() == username) { return true; }
 	}
 	return false;
@@ -83,10 +83,10 @@ export function user_exists(username: string): boolean {
 
 /// Returns a copy of all users
 export function user_get_all(): User[] {
-	let users = ServerMemory.get_instance().users;
 	let all_users: User[] = [];
-	for (let i = 0; i < users.length; ++i) {
-		all_users.push(users[i].clone());
+	let mem = ServerMemory.get_instance();
+	for (let i = 0; i < mem.num_users(); ++i) {
+		all_users.push(mem.get_user(i).clone());
 	}
 	return all_users;
 }
@@ -108,17 +108,18 @@ export function user_add_new(u: User): void
 	fs.writeFileSync(user_file, JSON.stringify(u, null, 4));
 
 	debug(log_now(), `Adding user to memory`);
-	let memory = ServerMemory.get_instance();
-	memory.users.push(u);
-	memory.user_to_index.set(u.get_username(), memory.users.length - 1);
+	let mem = ServerMemory.get_instance();
+	mem.add_user_index(u, mem.num_users() - 1);
 }
 
 /// Returns the list of all names and usernames
 export function user_get_all_names_and_usernames(): [string,string][] {
 	let res: [string,string][] = [];
-	let users = ServerMemory.get_instance().users;
-	for (let i = 0; i < users.length; ++i) {
-		res.push([ users[i].get_full_name(), users[i].get_username() ]);
+
+	let mem = ServerMemory.get_instance();
+	for (let i = 0; i < mem.num_users(); ++i) {
+		const user = mem.get_user(i);
+		res.push([ user.get_full_name(), user.get_username() ]);
 	}
 	return res;
 }
@@ -146,7 +147,7 @@ export function user_update_from_players_data(players: Player[]): void {
 	// lengths must be equal
 	assert(users_to_update.length == players.length);
 
-	let memory = ServerMemory.get_instance();
+	let mem = ServerMemory.get_instance();
 
 	debug(log_now(), "Updating users...");
 	for (let i = 0; i < users_to_update.length; ++i) {
@@ -159,9 +160,8 @@ export function user_update_from_players_data(players: Player[]): void {
 		debug(log_now(), `        User file '${user_filename}' written.`);
 
 		debug(log_now(), "    Server memory...");
-		let u_idx = memory.user_to_index.get(u.get_username()) as number;
+		const u_idx = mem.get_user_index(u.get_username()) as number;
 		debug(log_now(), `        User '${u.get_username()}' is at index '${u_idx}'`);
-		delete memory.users[u_idx];
-		memory.users[u_idx] = u;
+		mem.replace_user(u, u_idx);
 	}
 }

@@ -37,8 +37,8 @@ import { CHALLENGE_ADMIN, CHALLENGE_MEMBER, CHALLENGE_STUDENT, CHALLENGE_TEACHER
 
 function challenge_get_index(id: string): number {
 	let mem = ServerMemory.get_instance();
-	for (let i = mem.challenges.length - 1; i >= 0; --i) {
-		if (mem.challenges[i].id == id) { return i; }
+	for (let i = mem.num_challenges() - 1; i >= 0; --i) {
+		if (mem.get_challenge(i).id == id) { return i; }
 	}
 	return -1;
 }
@@ -62,7 +62,7 @@ export function challenge_retrieve(id: string): Challenge | null {
 	let mem = ServerMemory.get_instance();
 	let idx = challenge_get_index(id);
 	if (idx == -1) { return null; }
-	return mem.challenges[idx];
+	return mem.get_challenge(idx);
 }
 
 /**
@@ -77,8 +77,8 @@ export function challenge_set_retrieve(
 {
 	let res: Challenge[] = [];
 	let mem = ServerMemory.get_instance();
-	for (let i = 0; i < mem.challenges.length; ++i) {
-		let c = mem.challenges[i];
+	for (let i = 0; i < mem.num_challenges(); ++i) {
+		let c = mem.get_challenge(i);
 		if (by(c)) {
 			res.push(c);
 		}
@@ -102,17 +102,17 @@ export function challenge_send_new(
 	
 	let mem = ServerMemory.get_instance();
 	let new_id: string = "";
-	if (mem.challenges.length == 0) {
+	if (mem.num_challenges() == 0) {
 		new_id = number_to_string(1);
 	}
 	else {
-		let last_id = mem.challenges[mem.challenges.length - 1].id;
+		let last_id = mem.last_challenge().id;
 		new_id = number_to_string(parseInt(last_id, 10) + 1);
 	}
 
 	let c = new Challenge(new_id, u1, u2, log_now());
 
-	mem.challenges.push(c);
+	mem.add_challenge(c);
 
 	let challenge_dir = ServerEnvironment.get_instance().challenges_directory;
 	let challenge_file = path.join(challenge_dir, new_id);
@@ -150,8 +150,7 @@ export function challenge_decline(c: Challenge): void {
 	debug(log_now(), `Declining challenge '${c.id}'`);
 
 	let idx = challenge_get_index(c.id);
-	let challenges = ServerMemory.get_instance().challenges;
-	challenges.splice(idx, 1);
+	ServerMemory.get_instance().remove_challenge(idx);
 	
 	let challenge_dir = ServerEnvironment.get_instance().challenges_directory;
 	let challenge_file = path.join(challenge_dir, c.id);
@@ -218,8 +217,7 @@ export function challenge_agree_result(c: Challenge): void
 	{
 	debug(log_now(), `    Deleting the challenge from the memory...`);
 	const index = challenge_get_index(c.id);
-	let challenges = ServerMemory.get_instance().challenges;
-	challenges.splice(index, 1);
+	ServerMemory.get_instance().remove_challenge(index);
 	}
 }
 

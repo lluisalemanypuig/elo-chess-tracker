@@ -122,8 +122,8 @@ export class Game {
 	}
 
 	/// Is this game of time control 'time_control_id'
-	is_time_control(time_control_id: string): boolean {
-		return this.time_control_id == time_control_id;
+	get_time_control(): string {
+		return this.time_control_id;
 	}
 
 	/// Returns the game's ID
@@ -146,9 +146,9 @@ export function game_from_json(json: any): Game {
 	return new Game(
 		json["id"],
 		json["white"],
-		rating_system.rating_from_JSON(json["white_rating"]),
+		rating_system.get_rating_from_json(json["white_rating"]),
 		json["black"],
-		rating_system.rating_from_JSON(json["black_rating"]),
+		rating_system.get_rating_from_json(json["black_rating"]),
 		json["result"],
 		json["time_control_id"],
 		json["time_control_name"],

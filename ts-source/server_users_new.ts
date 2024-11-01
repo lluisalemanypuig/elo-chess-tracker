@@ -155,10 +155,10 @@ export async function post_users_create(req: any, res: any) {
 
 	let ratings: TimeControlRating[] = [];
 	const rating_system = RatingSystem.get_instance();
-	rating_system.all_time_controls.forEach(
+	rating_system.get_time_controls().forEach(
 		(value: TimeControl) => {
 			ratings.push(new TimeControlRating(
-				value.id, rating_system.new_rating()
+				value.id, rating_system.get_new_rating()
 			));
 		}
 	);

@@ -35,14 +35,14 @@ import { UserRoleToUserAction } from '../models/user_role_action';
 import { TimeControl } from '../models/time_control';
 
 import { player_vs_player as Elo } from '../rating_system/Elo/formula';
-import { Elo_rating_from_json, Elo_rating_set_from_json, Elo_rating_new } from '../rating_system/Elo/rating';
+import { Elo_rating_from_json, Elo_rating_new } from '../rating_system/Elo/rating';
 
 function initialize_sessions(): void {
 	debug(log_now(), "Initialize sessions...");
 
 	let memory = ServerMemory.get_instance();
 	// Session ids. Empty
-	memory.session_ids = [];
+	memory.clear_session_ids();
 }
 
 function initialize_users(): void {
@@ -63,20 +63,20 @@ function initialize_users(): void {
 		let user = user_from_json(user_data);
 
 		// make sure that all users have a rating for every time control
-		for (let i = 0; i < rating_system.all_time_controls.length; ++i) {
-			if (! user.has_rating(rating_system.all_time_controls[i].id)) {
+		const all_time_controls = rating_system.get_time_controls();
+		for (let i = 0; i < all_time_controls.length; ++i) {
+			if (! user.has_rating(all_time_controls[i].id)) {
 				user.add_rating(
-					rating_system.all_time_controls[i].id,
-					rating_system.new_rating()
+					all_time_controls[i].id,
+					rating_system.get_new_rating()
 				);
 			}
 		}
 
-		memory.users.push(user);
-		memory.user_to_index.set(user.get_username(), i);
+		memory.add_user_index(user, i);
 		debug(log_now(), `    User '${user.get_username()}' is at index '${i}'`);
 	}
-	debug(log_now(), `    Found ${memory.users.length} users.`);
+	debug(log_now(), `    Found ${memory.num_users()} users.`);
 }
 
 function initialize_challenges(): void {
@@ -94,24 +94,24 @@ function initialize_challenges(): void {
 		debug(log_now(), `        Reading file '${challenge_file}'`);
 		let challenge_data = fs.readFileSync(challenge_file, 'utf8');
 
-		memory.challenges.push(challenge_from_json(challenge_data));
+		memory.add_challenge(challenge_from_json(challenge_data));
 	}
-	debug(log_now(), `    Found ${memory.challenges.length} challenges.`);
+	debug(log_now(), `    Found ${memory.num_challenges()} challenges.`);
 }
 
 function initialize_games(): void {
 	debug(log_now(), "Initialize games...");
 
-	let memory = ServerMemory.get_instance();
+	let mem = ServerMemory.get_instance();
 	const dir = ServerEnvironment.get_instance().games_directory;
 	let num_games: number = 0;
 	let max_game_id: number = 0;
 
 	debug(log_now(), `    Reading directory '${dir}'`);
-	let all_game_record_files = fs.readdirSync(dir);
+	let all_date_record_files = fs.readdirSync(dir);
 
-	for (let i = 0; i < all_game_record_files.length; ++i) {
-		const game_record_file = path.join(dir, all_game_record_files[i]);
+	for (let i = 0; i < all_date_record_files.length; ++i) {
+		const game_record_file = path.join(dir, all_date_record_files[i]);
 
 		debug(log_now(), `        Reading file '${game_record_file}'`);
 		const game_record_data = fs.readFileSync(game_record_file, 'utf8');
@@ -122,13 +122,13 @@ function initialize_games(): void {
 			const game_id = parseInt( g.get_id(), 10 );
 			max_game_id = max_game_id < game_id ? game_id : max_game_id;
 
-			memory.game_id_to_record_file.set(g.get_id(), all_game_record_files[i]);
+			mem.set_game_id_record_date(g.get_id(), all_date_record_files[i]);
 		}
 
 		num_games += game_set.length;
 	}
 
-	memory.max_game_id = max_game_id;
+	mem.set_max_game_id(max_game_id);
 
 	debug(log_now(), `    Found ${num_games} games.`);
 	debug(log_now(), `    Maximum game id ${max_game_id}.`);
@@ -219,9 +219,8 @@ export function server_initialize_from_data(base_directory: string, configuratio
 	debug(log_now(), `    Rating system: '${rating_type}'`);
 	let rating_system = RatingSystem.get_instance();
 	if (rating_type == 'Elo') {
-		rating_system.set_formula_function(Elo);
-		rating_system.set_rating_from_JSON(Elo_rating_from_json);
-		rating_system.set_rating_set_from_JSON(Elo_rating_set_from_json);
+		rating_system.set_rating_formula(Elo);
+		rating_system.set_rating_from_JSON_formula(Elo_rating_from_json);
 		rating_system.set_new_rating(Elo_rating_new);
 	}
 	else {
