@@ -51,7 +51,7 @@ router.get('/', (req: any, res: any) => {
 router.get('/html/*.css', (req: any, res: any) => {
 	debug(log_now(), "GET css file...");
 	debug(log_now(), `    request: ${req.url}`);
-	let filepath = path.join(__dirname, "..", req.url);
+	const filepath = path.join(__dirname, "..", req.url);
 	debug(log_now(), `    file to send: ${filepath}`);
 	res.sendFile(filepath);
 });
@@ -61,21 +61,21 @@ router.get('/html/*.css', (req: any, res: any) => {
 router.get('/favicon.ico', (req: any, res: any) => {
 	debug(log_now(), "GET favicon.ico...");
 	debug(log_now(), `    request: ${req.url}`);
-	let filepath = ServerEnvironment.get_instance().get_icon_favicon();
+	const filepath = ServerEnvironment.get_instance().get_icon_favicon();
 	debug(log_now(), `    file to send: ${filepath}`);
 	res.sendFile(filepath);
 });
 router.get('/icon_login_page', (req:any, res: any) => {
 	debug(log_now(), "GET icon_login_page...");
 	debug(log_now(), `    request: ${req.url}`);
-	let filepath = ServerEnvironment.get_instance().get_icon_login_page();
+	const filepath = ServerEnvironment.get_instance().get_icon_login_page();
 	debug(log_now(), `    file to send: ${filepath}`);
 	res.sendFile(filepath);
 });
 router.get('/icon_home_page', (req:any, res: any) => {
 	debug(log_now(), "GET icon_home_page...");
 	debug(log_now(), `    request: ${req.url}`);
-	let filepath = ServerEnvironment.get_instance().get_icon_home_page();
+	const filepath = ServerEnvironment.get_instance().get_icon_home_page();
 	debug(log_now(), `    file to send: ${filepath}`);
 	res.sendFile(filepath);
 });
@@ -98,7 +98,7 @@ router.get('/title_home_page', (req:any, res: any) => {
 router.get('/js-source/*', (req: any, res: any) => {
 	debug(log_now(), "GET a file in js-source...");
 	debug(log_now(), `    request: ${req.url}`);
-	let filepath = path.join(__dirname, "..", req.url);
+	const filepath = path.join(__dirname, "..", req.url);
 	debug(log_now(), `    file to send: ${filepath}`);
 	res.sendFile(filepath);
 });
