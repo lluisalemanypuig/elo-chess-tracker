@@ -445,9 +445,6 @@ async function fill_challenges_result_set_by_opponent_list() {
 
 			// append paragraph to element list
 			challenge_list.appendChild(li);
-
-			// append paragraph to element list
-			challenge_list.appendChild(li);
 		}
 	);
 	(document.getElementById("challenges_result_set_by_opponent") as HTMLDivElement).appendChild(challenge_list);
