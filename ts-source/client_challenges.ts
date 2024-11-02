@@ -235,10 +235,16 @@ async function fill_challenges_pending_set_result_list() {
 			// append paragraph to element list
 			challenge_list.appendChild(li);
 
+			let main_div = document.createElement("div") as HTMLDivElement;
+			main_div.className = "challenge-result-set";
+
 			// Who is the white player?
 			{
-			challenge_list.appendChild(document.createTextNode("White:"));
-			challenge_list.appendChild(document.createTextNode(" "));
+			let div = document.createElement("div") as HTMLDivElement;
+			div.className = "label-and-select";
+
+			div.appendChild(document.createTextNode("White:"));
+
 			let player_select = document.createElement("select");
 			player_select.id = "white_select_" + elem.id;
 
@@ -251,14 +257,17 @@ async function fill_challenges_pending_set_result_list() {
 				option_2.value = elem.sent_by_username;
 				player_select.appendChild(option_2);
 
-			challenge_list.appendChild(player_select);
-			challenge_list.appendChild(document.createTextNode("  "));
+			div.appendChild(player_select);
+			main_div.appendChild(div);
 			}
 
 			// Who is the black player?
 			{
-			challenge_list.appendChild(document.createTextNode("Black:"));
-			challenge_list.appendChild(document.createTextNode(" "));
+			let div = document.createElement("div") as HTMLDivElement;
+			div.className = "label-and-select";
+			
+			div.appendChild(document.createTextNode("Black:"));
+			
 			let player_select = document.createElement("select");
 			player_select.id = "black_select_" + elem.id;
 
@@ -271,14 +280,17 @@ async function fill_challenges_pending_set_result_list() {
 				option_2.value = elem.sent_to_username;
 				player_select.appendChild(option_2);
 
-			challenge_list.appendChild(player_select);
-			challenge_list.appendChild(document.createTextNode("  "));
+			div.appendChild(player_select);
+			main_div.appendChild(div);
 			}
 
 			// Result of the game
 			{
-			challenge_list.appendChild(document.createTextNode("Result game:"));
-			challenge_list.appendChild(document.createTextNode(" "));
+			let div = document.createElement("div") as HTMLDivElement;
+			div.className = "label-and-select";
+
+			div.appendChild(document.createTextNode("Result game:"));
+			
 			let result_select = document.createElement("select");
 			result_select.id = "result_select_" + elem.id;
 
@@ -295,14 +307,17 @@ async function fill_challenges_pending_set_result_list() {
 				option_3.value = "black_wins";
 				result_select.appendChild(option_3);
 
-			challenge_list.appendChild(result_select);
-			challenge_list.appendChild(document.createTextNode("  "));
+			div.appendChild(result_select);
+			main_div.appendChild(div);
 			}
 
 			// Time control of the game
 			{
-			challenge_list.appendChild(document.createTextNode("Time control:"));
-			challenge_list.appendChild(document.createTextNode(" "));
+			let div = document.createElement("div") as HTMLDivElement;
+			div.className = "label-and-select";
+
+			div.appendChild(document.createTextNode("Time control:"));
+			
 			let time_control_select = document.createElement("select");
 			time_control_select.id = "time_control_select_" + elem.id;
 			
@@ -313,10 +328,11 @@ async function fill_challenges_pending_set_result_list() {
 				time_control_select.appendChild(option_i);
 			}
 			
-			challenge_list.appendChild(time_control_select);
-			challenge_list.appendChild(document.createTextNode("  "));
+			div.appendChild(time_control_select);
+			main_div.appendChild(div);
 			}
 
+			challenge_list.appendChild(main_div);
 			// submit button
 			{
 			let submit_result_button_clicked = document.createElement("button");
