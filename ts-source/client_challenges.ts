@@ -80,7 +80,7 @@ async function submit_challenge_button_clicked(_event: any) {
 			return;
 		}
 
-		window.location.href = "/challenges";
+		window.location.href = "/challenges_page";
 	}
 }
 
@@ -99,7 +99,7 @@ async function accept_challenge_tag_clicked(event: any) {
 	const data = await response.json();
 
 	if (data.r == '1') {
-		window.location.href = "/challenges";
+		window.location.href = "/challenges_page";
 	}
 }
 
@@ -377,7 +377,7 @@ async function submit_result_challenge_button_clicked(event: any) {
 		return;
 	}
 
-	window.location.href = "/challenges";
+	window.location.href = "/challenges_page";
 }
 
 async function fill_challenges_result_set_by_me_list() {
@@ -480,7 +480,7 @@ async function agree_challenge_result_tag_clicked(event: any) {
 	const data = await response.json();
 
 	if (data.r == '1') {
-		window.location.href = "/challenges";
+		window.location.href = "/challenges_page";
 	}
 }
 
@@ -499,7 +499,7 @@ async function disagree_challenge_result_tag_clicked(event: any) {
 	const data = await response.json();
 
 	if (data.r == '1') {
-		window.location.href = "/challenges";
+		window.location.href = "/challenges_page";
 	}
 }
 
