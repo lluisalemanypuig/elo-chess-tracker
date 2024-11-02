@@ -164,7 +164,6 @@ async function fill_challenges_received_list() {
 
 			// append paragraph to element list
 			challenge_list.appendChild(li);
-			challenge_list.appendChild(document.createElement("br"));
 		}
 	);
 	(document.getElementById("challenges_received_list") as HTMLDivElement).appendChild(challenge_list);
@@ -195,7 +194,6 @@ async function fill_challenges_sent_list() {
 
 			// append paragraph to element list
 			challenge_list.appendChild(li);
-			challenge_list.appendChild(document.createElement("br"));
 		}
 	);
 	(document.getElementById("challenges_sent_list") as HTMLDivElement).appendChild(challenge_list);
@@ -236,7 +234,6 @@ async function fill_challenges_pending_set_result_list() {
 
 			// append paragraph to element list
 			challenge_list.appendChild(li);
-			challenge_list.appendChild(document.createElement("br"));
 
 			// Who is the white player?
 			{
@@ -320,9 +317,6 @@ async function fill_challenges_pending_set_result_list() {
 			challenge_list.appendChild(document.createTextNode("  "));
 			}
 
-			challenge_list.appendChild(document.createElement("br"));
-			challenge_list.appendChild(document.createElement("br"));
-
 			// submit button
 			{
 			let submit_result_button_clicked = document.createElement("button");
@@ -331,9 +325,6 @@ async function fill_challenges_pending_set_result_list() {
 			submit_result_button_clicked.onclick = submit_result_challenge_button_clicked;
 			challenge_list.appendChild(submit_result_button_clicked);
 			}
-			
-			challenge_list.appendChild(document.createElement("br"));
-			challenge_list.appendChild(document.createElement("br"));
 		}
 	);
 	(document.getElementById("challenges_pending_result_set") as HTMLDivElement).appendChild(challenge_list);
@@ -406,7 +397,6 @@ async function fill_challenges_result_set_by_me_list() {
 
 			// append paragraph to element list
 			challenge_list.appendChild(li);
-			challenge_list.appendChild(document.createElement("br"));
 		}
 	);
 	(document.getElementById("challenges_result_set_by_me") as HTMLDivElement).appendChild(challenge_list);
@@ -455,11 +445,9 @@ async function fill_challenges_result_set_by_opponent_list() {
 
 			// append paragraph to element list
 			challenge_list.appendChild(li);
-			challenge_list.appendChild(document.createElement("br"));
 
 			// append paragraph to element list
 			challenge_list.appendChild(li);
-			challenge_list.appendChild(document.createElement("br"));
 		}
 	);
 	(document.getElementById("challenges_result_set_by_opponent") as HTMLDivElement).appendChild(challenge_list);
