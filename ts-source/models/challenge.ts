@@ -226,7 +226,7 @@ export function challenge_from_json(json: any): Challenge {
 
 		json["white"], json["black"], json["result"],
 		
-		json["type"]
+		json["time_control_id"], json["time_control_name"]
 	);
 }
 
