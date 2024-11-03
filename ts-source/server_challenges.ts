@@ -188,10 +188,9 @@ export async function post_challenge_decline(req: any, res: any) {
 export async function post_challenge_set_result(req: any, res: any) {
 	debug(log_now(), "POST challenge_set_result...");
 
-	const id = req.cookies.session_id;
-	const this_username = req.cookies.user;
-
-	let r = is_user_logged_in(id, this_username);
+	const session_id = req.cookies.session_id;
+	const setter_user = req.cookies.user;
+	const r = is_user_logged_in(session_id, setter_user);
 	if (!r[0]) {
 		res.send(r[1]);
 		return;
@@ -204,7 +203,7 @@ export async function post_challenge_set_result(req: any, res: any) {
 	const time_control_name = req.body.time_control_name;
 	const result = req.body.result;
 
-	debug(log_now(), `User '${this_username}' is trying to set the result of a challenge`);
+	debug(log_now(), `User '${setter_user}' is trying to set the result of a challenge`);
 	debug(log_now(), `    Challenge id: '${challenge_id}'`);
 	debug(log_now(), `    White: '${white_username}'`);
 	debug(log_now(), `    Black: '${black_username}'`);
@@ -219,58 +218,65 @@ export async function post_challenge_set_result(req: any, res: any) {
 		});
 		return;
 	}
-
-	let _c = challenge_retrieve(challenge_id);
-	if (_c == null) {
-		res.send({
-			'r' : '0',
-			'reason' : 'Challenge does not exist'
-		});
-		return;
-	}
-
-	debug(log_now(), "Challenge exists");
-	
 	if (!user_exists(white_username)) {
 		res.send({
-			'r' : '0',
-			'reason' : `White '${white_username}' does not exist.`
+			'r': '0',
+			'reason': `White user does not exist.`
 		});
 		return;
 	}
 	if (!user_exists(black_username)) {
 		res.send({
-			'r' : '0',
-			'reason' : `White '${black_username}' does not exist.`
+			'r': '0',
+			'reason': `Black user does not exist.`
 		});
 		return;
 	}
 
-	if (white_username != this_username && black_username != this_username) {
-		debug(log_now(), `User '${this_username}' is trying to set the result of a challenge where he/she is not involved`);
+	if (setter_user != white_username && setter_user != black_username) {
+		debug(log_now(), `User '${setter_user}' is trying to set the result of a challenge where he/she is not involved`);
 		res.send({
-			'r' : '0',
-			'reason' : "You cannot set the result of this challenge"
+			'r': '0',
+			'reason': "You are not part of this challenge."
 		});
 		return;
 	}
+
+	let _c = challenge_retrieve(challenge_id);
+	if (_c == null) {
+		res.send({
+			'r' : '0',
+			'reason' : `Challenge '${challenge_id}' does not exist.`
+		});
+		return;
+	}
+
+	debug(log_now(), `Challenge '${challenge_id}' exists`);
 
 	let c = _c as Challenge;
 
+	{
+	const original_setter = c.get_result_set_by();
 	if (c.get_result_set_by() != null) {
-		debug(log_now(), `User '${this_username}' is trying to override the result of a challenge`);
+		debug(
+			log_now(),
+			`User '${setter_user}' is trying to override the result of
+			challenge '${challenge_id}' which was set by '${original_setter}'
+			on '${c.get_when_result_set()}'`
+		);
 		res.send({
-			'r' : '0',
-			'reason' : "The result of this challenge is already set."
+			'r': '0',
+			'reason': "The result of this challenge has to be set by the original setter, which you are not."
 		});
 		return;
 	}
-	
+	}
+
 	if (c.was_result_set()) {
 		// result was set for the first time before
 		challenge_set_result(
 			c,
-			this_username,
+			setter_user,
 			c.get_when_result_set() as string,
 			white_username,
 			black_username,
@@ -283,7 +289,7 @@ export async function post_challenge_set_result(req: any, res: any) {
 		// result is about to be set for the first time
 		challenge_set_result(
 			c,
-			this_username,
+			setter_user,
 			log_now(),
 			white_username,
 			black_username,
