@@ -93,7 +93,7 @@ export async function post_user_log_in(req: any, res:any) {
 		(pwd.encrypted, username, password, pwd.iv);
 
 	// correct password
-	if (! is_password_correct) {
+	if (!is_password_correct) {
 		debug(log_now(), `    Password for '${username}' is incorrect`);
 		res.status(404).send({ "r" : "0" });
 		return;
@@ -106,7 +106,7 @@ export async function post_user_log_in(req: any, res:any) {
 
 	// store session id
 	let mem = ServerMemory.get_instance();
-	if (! mem.has_session_id(token, user.get_username())) {
+	if (!mem.has_session_id(token, user.get_username())) {
 		mem.add_session_id(new SessionID(token, user.get_username()));
 	}
 
@@ -141,8 +141,8 @@ export async function post_user_log_out(req: any, res: any) {
     debug(log_now(), `        Session ID: '${req.cookies.session_id}'`);
 
 	// in order to log out a user, they must have been logged in
-	let mem = ServerMemory.get_instance();
-    if (! mem.has_session_id(req.cookies.session_id, req.cookies.user)) {
+	const mem = ServerMemory.get_instance();
+    if (!mem.has_session_id(req.cookies.session_id, req.cookies.user)) {
         debug(log_now(), `    User '${req.cookies.user}' was never logged in.`);
         res.status(200).send("");
     }

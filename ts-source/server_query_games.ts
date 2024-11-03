@@ -152,7 +152,7 @@ export async function get_query_games_list_own(req: any, res: any) {
 	const id = req.cookies.session_id;
 	const username = req.cookies.user;
 
-	let r = is_user_logged_in(id, username);
+	const r = is_user_logged_in(id, username);
 	if (!r[0]) {
 		res.send({ 'r' : '0', 'reason' : r[1] });
 		return;
@@ -184,7 +184,7 @@ export async function get_query_games_list_all(req: any, res: any) {
 	const id = req.cookies.session_id;
 	const username = req.cookies.user;
 
-	let r = is_user_logged_in(id, username);
+	const r = is_user_logged_in(id, username);
 	if (!r[0]) {
 		res.send({ 'r' : '0', 'reason' : r[1] });
 		return;

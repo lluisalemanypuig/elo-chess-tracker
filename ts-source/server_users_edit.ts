@@ -37,7 +37,7 @@ import { ServerMemory } from './server/memory';
 export async function get_users_edit_page(req: any, res: any) {
 	debug(log_now(), "GET users_edit_page...");
 
-	let mem = ServerMemory.get_instance();
+	const mem = ServerMemory.get_instance();
 
 	const id = req.cookies.session_id;
 	const username = req.cookies.user;

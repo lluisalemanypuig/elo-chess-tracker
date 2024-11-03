@@ -37,7 +37,7 @@ export async function get_query_challenges_received(req: any, res: any) {
 	const session_id = req.cookies.session_id;
 	const username = req.cookies.user;
 
-	let r = is_user_logged_in(session_id, username);
+	const r = is_user_logged_in(session_id, username);
 	if (!r[0]) {
 		res.send({ 'r': '0', 'reason': r[1] });
 		return;
@@ -77,7 +77,7 @@ export async function get_query_challenges_sent(req: any, res: any) {
 	const session_id = req.cookies.session_id;
 	const username = req.cookies.user;
 
-	let r = is_user_logged_in(session_id, username);
+	const r = is_user_logged_in(session_id, username);
 	if (!r[0]) {
 		res.send({ 'r': '0', 'reason': r[1] });
 		return;
@@ -117,7 +117,7 @@ export async function get_query_challenges_pending_set_result(req: any, res: any
 	const session_id = req.cookies.session_id;
 	const username = req.cookies.user;
 
-	let r = is_user_logged_in(session_id, username);
+	const r = is_user_logged_in(session_id, username);
 	if (!r[0]) {
 		res.send({ 'r': '0', 'reason': r[1] });
 		return;
@@ -174,7 +174,7 @@ export async function get_query_challenges_result_set_by_me(req: any, res: any) 
 	const session_id = req.cookies.session_id;
 	const username = req.cookies.user;
 
-	let r = is_user_logged_in(session_id, username);
+	const r = is_user_logged_in(session_id, username);
 	if (!r[0]) {
 		res.send({ 'r': '0', 'reason': r[1] });
 		return;
@@ -238,7 +238,7 @@ export async function get_query_challenges_result_set_by_opponent(req: any, res:
 	const session_id = req.cookies.session_id;
 	const username = req.cookies.user;
 
-	let r = is_user_logged_in(session_id, username);
+	const r = is_user_logged_in(session_id, username);
 	if (!r[0]) {
 		res.send({ 'r': '0', 'reason': r[1] });
 		return;

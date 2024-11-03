@@ -37,10 +37,10 @@ import { ADMIN, MEMBER, STUDENT, TEACHER } from './models/user_role';
 export async function get_games_own_page(req: any, res: any) {
 	debug(log_now(), "GET games_own_page...");
 
-	const id = req.cookies.session_id;
+	const session_id = req.cookies.session_id;
 	const username = req.cookies.user;
 
-	let r = is_user_logged_in(id, username);
+	const r = is_user_logged_in(session_id, username);
 	if (!r[0]) {
 		res.send(r[1]);
 		return;
@@ -52,10 +52,10 @@ export async function get_games_own_page(req: any, res: any) {
 export async function get_games_all_page(req: any, res: any) {
 	debug(log_now(), "GET games_all_page...");
 
-	const id = req.cookies.session_id;
+	const session_id = req.cookies.session_id;
 	const username = req.cookies.user;
 
-	let r = is_user_logged_in(id, username);
+	const r = is_user_logged_in(session_id, username);
 	if (!r[0]) {
 		res.send(r[1]);
 		return;
@@ -67,10 +67,10 @@ export async function get_games_all_page(req: any, res: any) {
 export async function get_games_create_page(req: any, res: any) {
 	debug(log_now(), "GET games_create_page...");
 
-	const id = req.cookies.session_id;
+	const session_id = req.cookies.session_id;
 	const username = req.cookies.user;
 
-	let r = is_user_logged_in(id, username);
+	const r = is_user_logged_in(session_id, username);
 	if (!r[0]) {
 		res.send(r[1]);
 		return;
@@ -88,10 +88,10 @@ export async function get_games_create_page(req: any, res: any) {
 export async function post_games_create(req: any, res: any) {
 	debug(log_now(), "POST games_create...");
 
-	const id = req.cookies.session_id;
+	const session_id = req.cookies.session_id;
 	const username = req.cookies.user;
 
-	let r = is_user_logged_in(id, username);
+	const r = is_user_logged_in(session_id, username);
 	if (!r[0]) {
 		res.send(r[1]);
 		return;
@@ -153,10 +153,10 @@ export async function post_games_create(req: any, res: any) {
 export async function post_games_edit_result(req: any, res: any) {
 	debug(log_now(), "POST games_edit_result...");
 
-	const id = req.cookies.session_id;
+	const session_id = req.cookies.session_id;
 	const username = req.cookies.user;
 
-	let r = is_user_logged_in(id, username);
+	const r = is_user_logged_in(session_id, username);
 	if (!r[0]) {
 		res.send(r[1]);
 		return;
@@ -224,10 +224,10 @@ export async function post_games_edit_result(req: any, res: any) {
 export async function post_recalculate_Elo_ratings(req: any, res: any) {
 	debug(log_now(), "POST recalculate_Elo_ratings...");
 
-	const id = req.cookies.session_id;
+	const session_id = req.cookies.session_id;
 	const username = req.cookies.user;
 
-	let r = is_user_logged_in(id, username);
+	const r = is_user_logged_in(session_id, username);
 	if (!r[0]) {
 		res.send(r[1]);
 		return;

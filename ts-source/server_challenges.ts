@@ -49,7 +49,7 @@ export async function get_challenges_page(req: any, res: any) {
 	const id = req.cookies.session_id;
 	const username = req.cookies.user;
 
-	let r = is_user_logged_in(id, username);
+	const r = is_user_logged_in(id, username);
 	if (!r[0]) {
 		res.send(r[1]);
 		return;
@@ -61,13 +61,13 @@ export async function get_challenges_page(req: any, res: any) {
 export async function post_challenge_send(req: any, res: any) {
 	debug(log_now(), "POST challenge_send...");
 
-	const id = req.cookies.session_id;
+	const session_id = req.cookies.session_id;
 	const username = req.cookies.user;
 	const to_user = req.body.to;
 
 	debug(log_now(), `Trying to send challenge from '${username}' to '${to_user}'.`);
 
-	let r = is_user_logged_in(id, username);
+	let r = is_user_logged_in(session_id, username);
 	if (!r[0]) {
 		debug(log_now(), `User '${username}' is not logged in or does not exist.`);
 		res.send({
@@ -128,10 +128,10 @@ export async function post_challenge_send(req: any, res: any) {
 export async function post_challenge_accept(req: any, res: any) {
 	debug(log_now(), "POST challenge_accept...");
 
-	const id = req.cookies.session_id;
+	const session_id = req.cookies.session_id;
 	const username = req.cookies.user;
 
-	let r = is_user_logged_in(id, username);
+	const r = is_user_logged_in(session_id, username);
 	if (!r[0]) {
 		res.send(r[1]);
 		return;
@@ -141,13 +141,23 @@ export async function post_challenge_accept(req: any, res: any) {
 
 	debug(log_now(), `User '${username}' wants to accept challenge '${challenge_id}'`);
 
-	let c = challenge_retrieve(challenge_id) as Challenge;
+	const _c = challenge_retrieve(challenge_id);
+	if (_c == null) {
+		res.send({
+			'r': '0',
+			'reason': 'Challenge does not exist'
+		});
+		return;
+	}
+	const c = _c as Challenge;
 
-	debug(log_now(), `Challenge '${challenge_id}' involves players '${c.get_sent_by()}' and '${c.get_sent_to()}'`);
+	debug(log_now(), `Challenge '${challenge_id}' involves players '${c?.get_sent_by()}' and '${c.get_sent_to()}'`);
 
 	if (username != c.get_sent_to()) {
-		// nothing else to do
-		res.send({ 'r' : '0', 'reason' : 'This user cannot accept this challenge' });
+		res.send({
+			'r' : '0',
+			'reason' : 'You cannot accept this challenge'
+		});
 		return;
 	}
 
@@ -158,10 +168,10 @@ export async function post_challenge_accept(req: any, res: any) {
 export async function post_challenge_decline(req: any, res: any) {
 	debug(log_now(), "POST challenge_decline...");
 
-	const id = req.cookies.session_id;
+	const session_id = req.cookies.session_id;
 	const username = req.cookies.user;
 
-	let r = is_user_logged_in(id, username);
+	const r = is_user_logged_in(session_id, username);
 	if (!r[0]) {
 		res.send(r[1]);
 		return;
@@ -171,13 +181,23 @@ export async function post_challenge_decline(req: any, res: any) {
 
 	debug(log_now(), `User '${username}' wants to decline challenge '${challenge_id}'`);
 
-	let c = challenge_retrieve(challenge_id) as Challenge;
+	const _c = challenge_retrieve(challenge_id);
+	if (_c == null) {
+		res.send({
+			'r': '0',
+			'reason': 'Challenge does not exist'
+		});
+		return;
+	}
+	const c = _c as Challenge;
 
 	debug(log_now(), `Challenge '${challenge_id}' involves players '${c.get_sent_by()}' and '${c.get_sent_to()}'`);
 
 	if (username != c.get_sent_to()) {
-		// nothing else to do
-		res.send({ 'r' : '0', 'reason' : 'This user cannot decline this challenge' });
+		res.send({
+			'r' : '0',
+			'reason' : 'You cannot decline this challenge'
+		});
 		return;
 	}
 
@@ -250,9 +270,6 @@ export async function post_challenge_set_result(req: any, res: any) {
 		});
 		return;
 	}
-
-	debug(log_now(), `Challenge '${challenge_id}' exists`);
-
 	let c = _c as Challenge;
 
 	{
@@ -322,10 +339,10 @@ export async function post_challenge_set_result(req: any, res: any) {
 export async function post_challenge_agree_result(req: any, res: any) {
 	debug(log_now(), "POST challenge_agree_result...");
 
-	const id = req.cookies.session_id;
-	const this_username = req.cookies.user;
+	const session_id = req.cookies.session_id;
+	const username = req.cookies.user;
 
-	let r = is_user_logged_in(id, this_username);
+	const r = is_user_logged_in(session_id, username);
 	if (!r[0]) {
 		res.send(r[1]);
 		return;
@@ -348,10 +365,10 @@ export async function post_challenge_agree_result(req: any, res: any) {
 export async function post_challenge_disagree_result(req: any, res: any) {
 	debug(log_now(), "POST challenge_disagree_result...");
 
-	const id = req.cookies.session_id;
-	const this_username = req.cookies.user;
+	const session_id = req.cookies.session_id;
+	const username = req.cookies.user;
 
-	let r = is_user_logged_in(id, this_username);
+	const r = is_user_logged_in(session_id, username);
 	if (!r[0]) {
 		res.send(r[1]);
 		return;

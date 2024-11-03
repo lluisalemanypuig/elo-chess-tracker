@@ -79,7 +79,7 @@ export async function post_users_create(req: any, res: any) {
 		return;
 	}
 
-	let registerer = r[2] as User;
+	const registerer = r[2] as User;
 	if (!registerer.can_do(CREATE_USER)) {
 		debug(log_now(), `User '${username}' cannot create users.`);
 		res.send("403 - Forbidden");

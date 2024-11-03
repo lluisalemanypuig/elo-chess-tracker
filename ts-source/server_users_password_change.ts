@@ -35,10 +35,10 @@ import { user_overwrite } from './server/users';
 export async function get_users_password_change_page(req: any, res: any) {
     debug(log_now(), "GET users_password_change_page...");
 
-	const id = req.cookies.session_id;
+	const session_id = req.cookies.session_id;
 	const username = req.cookies.user;
 
-	let r = is_user_logged_in(id, username);
+	let r = is_user_logged_in(session_id, username);
 	if (!r[0]) {
 		res.send(r[1]);
 		return;
@@ -55,12 +55,12 @@ export async function post_users_password_change(req: any, res: any) {
     const old_password = req.body.old;
     const new_password = req.body.new;
 
-	let r = is_user_logged_in(id, username);
+	const r = is_user_logged_in(id, username);
 	if (!r[0]) {
 		res.send(r[1]);
 		return;
 	}
-    let user = r[2] as User;
+    const user = r[2] as User;
 
     // check if password is correct
     const old_pwd = user.get_password();
@@ -78,7 +78,7 @@ export async function post_users_password_change(req: any, res: any) {
     session_id_delete(id, username);
 
     // make new password
-    let _pass = encrypt_password_for_user(username, new_password);
+    const _pass = encrypt_password_for_user(username, new_password);
     user.set_password(new Password(_pass[0], _pass[1]));    
 
     // overwrite user data
