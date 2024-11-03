@@ -289,7 +289,7 @@ async function fill_challenges_pending_set_result_list() {
 			let div = document.createElement("div") as HTMLDivElement;
 			div.className = "label-and-select";
 
-			div.appendChild(document.createTextNode("Result game:"));
+			div.appendChild(document.createTextNode("Result:"));
 			
 			let result_select = document.createElement("select");
 			result_select.id = "result_select_" + elem.id;
