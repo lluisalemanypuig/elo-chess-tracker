@@ -35,8 +35,8 @@ async function set_footer_version_number() {
 			headers: { 'Content-type': 'application/json; charset=UTF-8' }
 		}
 	);
-	const data = await response.json();
+	const data = await response.text();
 	
-	version_number.textContent = data.text as string;
+	version_number.textContent = data as string;
 }
 

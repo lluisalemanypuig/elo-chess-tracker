@@ -62,7 +62,7 @@ router.get('/html/*.css', (req: any, res: any) => {
 router.get('/version_number', (req: any, res: any) => {
 	debug(log_now(), "GET version_number...");
 	debug(log_now(), `    request: ${req.url}`);
-	res.send({"text": "XX.YY"});
+	res.send("XX.YY");
 });
 
 /* ************************************************************************** */
@@ -93,12 +93,12 @@ router.get('/icon_home_page', (req:any, res: any) => {
 router.get('/title_login_page', (req:any, res: any) => {
 	debug(log_now(), "GET title_login_page...");
 	debug(log_now(), `    request: ${req.url}`);
-	res.send({ "text": ServerEnvironment.get_instance().get_title_login_page() });
+	res.send(ServerEnvironment.get_instance().get_title_login_page());
 });
 router.get('/title_home_page', (req:any, res: any) => {
 	debug(log_now(), "GET title_home_page...");
 	debug(log_now(), `    request: ${req.url}`);
-	res.send({ "text": ServerEnvironment.get_instance().get_title_home_page() });
+	res.send(ServerEnvironment.get_instance().get_title_home_page());
 });
 
 /* ************************************************************************** */

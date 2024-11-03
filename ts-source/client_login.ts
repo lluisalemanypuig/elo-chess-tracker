@@ -74,11 +74,11 @@ async function set_login_page_title() {
 			headers: { 'Content-type': 'application/json; charset=UTF-8' }
 		}
 	);
-	const data = await response.json();
+	const data = await response.text();
 
 	// set the title of the page
 	let title = document.getElementById("title_login_page") as HTMLElement;
-	title.textContent = data.text as string;
+	title.textContent = data as string;
 }
 
 window.onload = function () {
