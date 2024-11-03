@@ -20,7 +20,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-.challenge_list > * {
+.challenge-list > * {
 	display: flex;
 	flex-direction: column;
 	flex-grow: 1;
@@ -32,5 +32,14 @@ Contact:
 }
 
 .challenge-result-set {
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+
+	align-items: center;
+
+	width: 100%;
+
 	margin-top: 10px;
+	margin-bottom: 20px;
 }
