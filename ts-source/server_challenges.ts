@@ -272,6 +272,23 @@ export async function post_challenge_set_result(req: any, res: any) {
 	}
 	}
 
+	if (white_username != c.get_sent_by() && white_username != c.get_sent_to()) {
+		debug(log_now(), `White '${white_username}' is not part of challenge '${challenge_id}'.`);
+		res.send({
+			'r': '0',
+			'reason': `White user sent is not part of this challenge.`
+		});
+		return;
+	}
+	if (black_username != c.get_sent_by() && black_username != c.get_sent_to()) {
+		debug(log_now(), `Black '${black_username}' is not part of challenge '${challenge_id}'.`);
+		res.send({
+			'r': '0',
+			'reason': `Black user sent is not part of this challenge.`
+		});
+		return;
+	}
+	
 	if (c.was_result_set()) {
 		// result was set for the first time before
 		challenge_set_result(
