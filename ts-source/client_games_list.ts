@@ -165,4 +165,6 @@ window.onload = async function () {
 
 		tbody.appendChild(row);
 	}
+
+	set_footer_version_number();
 }

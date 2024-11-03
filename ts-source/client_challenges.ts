@@ -518,4 +518,6 @@ window.onload = function () {
 	fill_challenges_pending_set_result_list();
 	fill_challenges_result_set_by_me_list();
 	fill_challenges_result_set_by_opponent_list();
+
+	set_footer_version_number();
 }

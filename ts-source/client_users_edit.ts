@@ -167,4 +167,6 @@ window.onload = function () {
 		}
 	);
 	role_div.appendChild(document.createElement("br"));
+
+	set_footer_version_number();
 }

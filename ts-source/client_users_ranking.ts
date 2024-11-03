@@ -110,4 +110,6 @@ window.onload = async function () {
 
 	let time_control_select = document.getElementById("time_control_select") as HTMLSelectElement;
 	time_control_select.onchange = fill_ranking;
+
+	set_footer_version_number();
 }

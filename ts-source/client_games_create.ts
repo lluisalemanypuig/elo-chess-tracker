@@ -145,4 +145,6 @@ window.onload = async function () {
 
 	let submit = document.getElementById("submit_new_game_button") as HTMLButtonElement;
 	submit.onclick = submit_new_game;
+
+	set_footer_version_number();
 }

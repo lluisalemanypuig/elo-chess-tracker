@@ -58,6 +58,14 @@ router.get('/html/*.css', (req: any, res: any) => {
 });
 
 /* ************************************************************************** */
+/* Version number */
+router.get('/version_number', (req: any, res: any) => {
+	debug(log_now(), "GET version_number...");
+	debug(log_now(), `    request: ${req.url}`);
+	res.send({"text": "XX.YY"});
+});
+
+/* ************************************************************************** */
 /* ICONS */
 router.get('/favicon.ico', (req: any, res: any) => {
 	debug(log_now(), "GET favicon.ico...");

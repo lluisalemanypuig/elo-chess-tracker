@@ -52,4 +52,6 @@ async function submit_button_clicked() {
 window.onload = function () {
 	let submit_button = document.getElementById("submit_button") as HTMLButtonElement;
 	submit_button.onclick = submit_button_clicked;
+
+	set_footer_version_number();
 }

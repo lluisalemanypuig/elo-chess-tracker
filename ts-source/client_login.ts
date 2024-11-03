@@ -87,4 +87,6 @@ window.onload = function () {
 	login_button.onclick = login_button_clicked;
 
 	set_login_page_title();
+	
+	set_footer_version_number();
 }

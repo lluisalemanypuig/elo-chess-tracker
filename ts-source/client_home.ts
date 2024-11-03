@@ -179,4 +179,6 @@ window.onload = function() {
 	logout_link.onclick = logout_link_clicked;
 
 	set_home_page_title();
+
+	set_footer_version_number();
 }
