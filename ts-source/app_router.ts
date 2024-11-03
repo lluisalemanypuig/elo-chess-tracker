@@ -62,6 +62,7 @@ router.get('/html/*.css', (req: any, res: any) => {
 router.get('/version_number', (req: any, res: any) => {
 	debug(log_now(), "GET version_number...");
 	debug(log_now(), `    request: ${req.url}`);
+	res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
 	res.send("XX.YY");
 });
 
@@ -72,6 +73,7 @@ router.get('/favicon.ico', (req: any, res: any) => {
 	debug(log_now(), `    request: ${req.url}`);
 	const filepath = ServerEnvironment.get_instance().get_icon_favicon();
 	debug(log_now(), `    file to send: ${filepath}`);
+	res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
 	res.sendFile(filepath);
 });
 router.get('/icon_login_page', (req:any, res: any) => {
@@ -79,6 +81,7 @@ router.get('/icon_login_page', (req:any, res: any) => {
 	debug(log_now(), `    request: ${req.url}`);
 	const filepath = ServerEnvironment.get_instance().get_icon_login_page();
 	debug(log_now(), `    file to send: ${filepath}`);
+	res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
 	res.sendFile(filepath);
 });
 router.get('/icon_home_page', (req:any, res: any) => {
@@ -86,6 +89,7 @@ router.get('/icon_home_page', (req:any, res: any) => {
 	debug(log_now(), `    request: ${req.url}`);
 	const filepath = ServerEnvironment.get_instance().get_icon_home_page();
 	debug(log_now(), `    file to send: ${filepath}`);
+	res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
 	res.sendFile(filepath);
 });
 
@@ -93,11 +97,13 @@ router.get('/icon_home_page', (req:any, res: any) => {
 router.get('/title_login_page', (req:any, res: any) => {
 	debug(log_now(), "GET title_login_page...");
 	debug(log_now(), `    request: ${req.url}`);
+	res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
 	res.send(ServerEnvironment.get_instance().get_title_login_page());
 });
 router.get('/title_home_page', (req:any, res: any) => {
 	debug(log_now(), "GET title_home_page...");
 	debug(log_now(), `    request: ${req.url}`);
+	res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
 	res.send(ServerEnvironment.get_instance().get_title_home_page());
 });
 
