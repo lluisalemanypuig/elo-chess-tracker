@@ -1,20 +1,41 @@
 {
-	"rating_system": "Elo",
+	
 	"ssl_certificate": {
 		"public_key_file": "$PUBLIC_PEM",
 		"private_key_file": "$PRIVATE_PEM",
 		"passphrase_file": "$PASSPHRASE_TXT"
 	},
 	
-	"favicon": "path/to/icon.png",
+	"favicon": "icon_name.png",
 	"login_page": {
 		"title": "My webpage title (login page)",
-		"icon": "path/to/icon.png"
+		"icon": "icon_name.png"
 	},
 	"home_page": {
 		"title": "My webpage title (home page)",
-		"icon": "path/to/icon.png"
+		"icon": "icon_name.png"
 	},
+	
+	"rating_system": "Elo",
+	
+	"time_controls": [
+		{
+			"id": "Classical",
+			"name": "Classical (90 + 30)"
+		},
+		{
+			"id": "Rapid",
+			"name": "Rapid (12 + 5)"
+		},
+		{
+			"id": "Rapid",
+			"name": "Rapid (10 + 0)"
+		},
+		{
+			"id": "Blitz",
+			"name": "Blitz (5 + 3)"
+		}
+	],
 	
 	"permissions": {
 		"admin": [
@@ -42,24 +63,5 @@
 		"student": [
 			"challenge_user",		"challenge_admin",		"challenge_member",		"challenge_teacher",	"challenge_student"
 		]
-	},
-	
-	"time_controls": [
-		{
-			"id": "Classical",
-			"name": "Classical (90 + 30)"
-		},
-		{
-			"id": "Rapid",
-			"name": "Rapid (12 + 5)"
-		},
-		{
-			"id": "Rapid",
-			"name": "Rapid (10 + 0)"
-		},
-		{
-			"id": "Blitz",
-			"name": "Blitz (5 + 3)"
-		}
-	]
+	}
 }
