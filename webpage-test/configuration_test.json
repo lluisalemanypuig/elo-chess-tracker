@@ -1,5 +1,5 @@
 {
-	"database_base_directory": "/home/lluis/Documents/projects/elo-chess-tracker/test/database",
+	"database_base_directory": "~/Documents/projects/elo-chess-tracker/test/database",
 	"rating_system": "Elo",
 	"permissions": {
 		"admin": [
