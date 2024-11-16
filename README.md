@@ -44,11 +44,32 @@ Run the following command to turn all typescript source files into javascript so
 
 ### Initialize the database
 
-First, in the root directory of the repository, first initialize the sample database and system configuration file with the following command
+First, in the root directory of the repository, initialize the sample database and system configuration file with the following command
 
 	$ ./initialize.sh
 
-This will generate an empty database with the following pairs of users and passwords:
+This will prompt you to create a self-signed SSL certificate. Fill in the fields with the appropriate data. The script will set any necessary files in the `configuration.json` file.
+
+The database generated will have the following directory structure:
+
+	webpage
+	├── configuration.json
+	├── database
+	│   ├── challenges
+	│   ├── games
+	│   └── users
+	│       ├── anatoly.karpov
+	│       ├── bobby.fischer
+	│       ├── emanuel.lasker
+	│       ├── magnus.carlsen
+	│       ├── mikhail.botvinnik
+	│       └── vasily.smyslov
+	├── icons
+	└── ssl
+		├── server.cert
+		└── server.key
+
+The directory `webpage` can be renamed with any name. The default users in the database are the following:
 
 	Username           | Password                          | Role
 	---------------------------------------------------------------------------------
@@ -59,18 +80,17 @@ This will generate an empty database with the following pairs of users and passw
 	mikhail.botvinnik  | "the science of logic"            | Member, Admin
 	vasily.smyslov     | "never play f6"                   | Member, Admin, Teacher
 	
-	
-The passwords do not include the quote characters `"`; they are only used here as delimiters. Yes, passwords include spaces. Usernames correspond to famous chess players. Some of the passwords are quotes attributed to their corresponding chess player, other passwords are quotes attributed to different famous chess players.
+The actual passwords do not include the quote characters `"`; they are only used here as delimiters. Yes, passwords include spaces. Usernames correspond to famous chess players. Some of the passwords are quotes attributed to their corresponding chess player, other passwords are quotes attributed to different famous chess players.
 
 ### Edit the configuration file
 
-Edit the configuration file `configuration_sample.json` appropriately. Said file contains the following fields
+Edit the configuration file `webpage/configuration.json` appropriately. This file contains the following fields
 
 	{
 		"ssl_certificate": {
-			"public_key_file": "$PUBLIC_PEM",
-			"private_key_file": "$PRIVATE_PEM",
-			"passphrase_file": "$PASSPHRASE_TXT"
+			"public_key_file": "server.cert",
+			"private_key_file": "server.key",
+			"passphrase_file": ""
 		},
 		
 		"favicon": "path/to/icon.png",
@@ -95,36 +115,19 @@ Edit the configuration file `configuration_sample.json` appropriately. Said file
 		}
 	}
 
-Each field within `time_controls` has to be filled with the options [explained below](https://github.com/lluisalemanypuig/elo-chess-tracker?tab=readme-ov-file#time-controls). Each field within `permissions` has to be filled with the options [explained below](https://github.com/lluisalemanypuig/elo-chess-tracker?tab=readme-ov-file#permissions).
+The configuration file can be edited at any time, even after the website has been used for some time. For the modifications to take effect, the server has to be reset.
 
-#### Directories
+#### Icons and titles
 
-If the command abovein the previous section did not fail in any step, the strings headed with `$` should have been replaced with a default value.
+Write the names of the icons and titles of the sections of your webpage:
 
-- "\$DATABASE_DIRECTORY" is replaced with "\$PWD/database" (where $PWD is the working directory of the command line that executed the script `initialize.sh`). This directory indicates the path to the database root directory. This directory should contain three subfolders (whose name cannot be changed)
-	- users
-	- games
-	- challenges
-
-- "\$SSL_CERTIFICATE_DIRECTORY" is replaced with "\$PWD/certificate"
-	
-	Indicates the path to the directory that contains the SSL certificate of the webpage. When this field is filled with some value, then the webpage will try to setup the `https` server with the information provided below.
-	
-- "\$PUBLIC_PEM" is replaced with "public.pem"
-	
-	Public key file of the certificate
-	
-- "\$PRIVATE_PEM" is replaced with "private.pem"
-
-    Private key file of the certificate
-	
-- "\$PASSPHRASE_TXT" is replaced with "passphrase.txt"
-	
-	Plain text file that contains the certificate's passphrase (if any was specified when creating the certificate)
+- `favicon`: this is a small icon (typically, `48x48`) that shows up in the tab of a desktop's internet browser.
+- `login_page`: this is the icon that shows up in the login page of your site. The `title` field is the title of login page as well.
+- `home_page`: this is the icon that shows up in the home page of your site. The `title` field is the title of home page as well.
 
 #### Rating system
 
-This project only implements Elo's rating system (see this section of [lichess](https://lichess.org/page/rating-systems) for further information on rating systems used by chess websites and chess federations).
+Currently, this project only implements Elo's rating system (see this section of [lichess](https://lichess.org/page/rating-systems) for further information on rating systems used by chess websites and chess federations).
 
 #### Time controls
 
@@ -148,7 +151,9 @@ Players will have to play their games with time control `90 + 30`. But, optional
 
 If two players play two games, first with time control `90 + 30` and immediately afterwards another game with time control `30 + 30` the result of both games will affect the same rating because both time controls are associated to the same `id`, in this case *Classical*.
 
-#### Permissions
+#### User permissions
+
+*Note*: the configuration file created by the `initialize.sh` script already provides permissions for each user type. These can be modified at any time.
 
 The site implements four different roles a user can have. To each role we can associate a series of actions that a user with said role can perform. All roles implemented are
 
@@ -200,20 +205,37 @@ Available actions are
 
 ## Running the website
 
-Once the configuration file has been properly edited, now we can run the website.
-
-To run the website, use **one** of the following commands (we recommend using the last one)
+Once the configuration file has been properly edited, now we can run the website. To do so, use **one** of the following commands (we recommend using the last one)
 
 	$ node ./js-source/app_main.js configuration-file /path/to/configuration.json
 	$ DEBUG=ELO_TRACKER:* nodemon ./js-source/app_main.js configuration-file /path/to/configuration.json
 	$ DEBUG=ELO_TRACKER:* npm run devstart configuration-file /path/to/configuration.json
-	
-To access it, open a web browser and type in one of the following addresses depending on whether you used a SSL certificate or not.
 
-### Without SSL certificate
+## Access the website from a local network
+
+### From the localhost
+
+To access the site from the *same* computer the webpage it is running on, open a web browser and type in the address one of the following two options:
 
 	http://localhost:8080
-
-### With SSL certificate
-
 	https://localhost:8443
+
+### From any other machine
+
+To access the webpage from a different machine, one has to first find out the IP address of the machine the webpage is running on. For this, run the command
+
+	$ hostname -I
+	
+This will output the local IP address. For example,
+
+	192.168.1.76
+
+To access the webpage from a different machine, open a web browser and type in
+
+	https://192.168.1.76:8443
+
+This address is the same for *all* other machines.
+
+## Adding new users
+
+To log into the site for the first time, use a default admin user, such as `mikhail.botvinnik`. Then, create a new admin user. Log out of the website, stop the server process, and then remove the files of the default users. This will leave the site with a single user, the one you have just created.
