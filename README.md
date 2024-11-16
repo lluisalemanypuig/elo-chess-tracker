@@ -67,8 +67,6 @@ The passwords do not include the quote characters `"`; they are only used here a
 Edit the configuration file `configuration_sample.json` appropriately. Said file contains the following fields
 
 	{
-		"rating_system": "Elo",
-		
 		"ssl_certificate": {
 			"public_key_file": "$PUBLIC_PEM",
 			"private_key_file": "$PRIVATE_PEM",
@@ -85,15 +83,19 @@ Edit the configuration file `configuration_sample.json` appropriately. Said file
 			"icon": "path/to/icon.png"
 		},
 		
+		"rating_system": "Elo",
+		
+		"time_controls": [ ],
+
 		"permissions": {
 			"admin": [ ],
 			"teacher": [ ],
 			"member": [ ],
 			"student": [ ]
-		},
-		
-		"time_controls": [ ]
+		}
 	}
+
+Each field within `time_controls` has to be filled with the options [explained below](https://github.com/lluisalemanypuig/elo-chess-tracker?tab=readme-ov-file#time-controls). Each field within `permissions` has to be filled with the options [explained below](https://github.com/lluisalemanypuig/elo-chess-tracker?tab=readme-ov-file#permissions).
 
 #### Directories
 
