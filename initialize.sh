@@ -7,52 +7,31 @@ function escape_string {
 	echo $replaceEscaped
 }
 
-### Clean actual database
+function configure_ssl_certificate {
+	cd webpage/ssl
+	
+	# First create the certificate. This prompts the user!
+	openssl req -nodes -new -x509 -keyout server.key -out server.cert -days 365
+	
+	cd ..
+	
+	# now replace the appropriate fields in the configuration file
+	sed -i "s/\$PUBLIC_PEM/$(escape_string "server.cert")/g" configuration.json
+	sed -i "s/\$PRIVATE_PEM/$(escape_string "server.key")/g" configuration.json
+	sed -i "s/\$PASSPHRASE_TXT/$(escape_string "")/g" configuration.json
+	
+	cd ..
+}
 
-rm -rf database/*
-mkdir -p database/
-mkdir -p database/users
-mkdir -p database/games
-mkdir -p database/challenges
-cp -r database-test/* database/
+## Initialize the webpage configuration files with some preconfigured users
 
-### Set system configuration file
+rm -rf webpage/
+cp -r webpage-test/ webpage/
+rm webpage/configuration_test.json
+mkdir webpage/database/challenges
+mkdir webpage/database/games
+mkdir webpage/ssl
+mkdir webpage/icons
+cp configuration_sample.json webpage/configuration.json
 
-cp system_configuration_sample.json system_configuration.json
-
-## database directory
-
-database_directory=$PWD/database
-echo "Use database directory: $database_directory"
-
-sed -i "s/\$DATABASE_DIRECTORY/$(escape_string "$database_directory")/g" system_configuration.json
-
-## SSL certificate
-
-# directory
-
-ssl_certificate_directory=$PWD/certificate
-echo "Use SSL certificate directory: $ssl_certificate_directory"
-
-sed -i "s/\$SSL_CERTIFICATE_DIRECTORY/$(escape_string "$ssl_certificate_directory")/g" system_configuration.json
-
-# public key file
-
-public_pem=public.pem
-echo "Use SSL public PEM file: $public_pem"
-
-sed -i "s/\$PUBLIC_PEM/$(escape_string "$public_pem")/g" system_configuration.json
-
-# private key file
-
-private_pem=private.pem
-echo "Use SSL private PEM file: $private_pem"
-
-sed -i "s/\$PRIVATE_PEM/$(escape_string "$private_pem")/g" system_configuration.json
-
-# passphrase file
-
-passphrase_pem=passphrase.txt
-echo "Use SSL passphrase TXT file: $passphrase_pem"
-
-sed -i "s/\$PASSPHRASE_TXT/$(escape_string "$passphrase_pem")/g" system_configuration.json
+configure_ssl_certificate
