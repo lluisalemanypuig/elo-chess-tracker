@@ -1,6 +1,41 @@
 {
-	"database_base_directory": "~/Documents/projects/elo-chess-tracker/test/database",
+	"ssl_certificate": {
+		"public_key_file": "$PUBLIC_PEM",
+		"private_key_file": "$PRIVATE_PEM",
+		"passphrase_file": "$PASSPHRASE_TXT"
+	},
+	
+	"favicon": "icon_name.png",
+	"login_page": {
+		"title": "My webpage title (login page)",
+		"icon": "icon_name.png"
+	},
+	"home_page": {
+		"title": "My webpage title (home page)",
+		"icon": "icon_name.png"
+	},
+
 	"rating_system": "Elo",
+
+	"time_controls": [
+		{
+			"id": "Classical",
+			"name": "Classical (90 + 30)"
+		},
+		{
+			"id": "Rapid",
+			"name": "Rapid (12 + 5)"
+		},
+		{
+			"id": "Rapid",
+			"name": "Rapid (10 + 0)"
+		},
+		{
+			"id": "Blitz",
+			"name": "Blitz (5 + 3)"
+		}
+	],
+
 	"permissions": {
 		"admin": [
 			"create_user",
@@ -27,29 +62,6 @@
 		"student": [
 			"challenge_user",		"challenge_admin",		"challenge_member",		"challenge_teacher",	"challenge_student"
 		]
-	},
-	"ssl_certificate": {
-		"directory": "",
-		"public_key_file": "",
-		"private_key_file": "",
-		"passphrase_file": ""
-	},
-	"time_controls": [
-		{
-			"id": "Classical",
-			"name": "Classical (90 + 30)"
-		},
-		{
-			"id": "Rapid",
-			"name": "Rapid (12 + 5)"
-		},
-		{
-			"id": "Rapid",
-			"name": "Rapid (10 + 0)"
-		},
-		{
-			"id": "Blitz",
-			"name": "Blitz (5 + 3)"
-		}
-	]
+	}
+
 }
