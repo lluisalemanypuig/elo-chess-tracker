@@ -33,6 +33,7 @@ import fs from 'fs';
 import { log_now } from './utils/misc';
 
 import { server_initialize_from_default_configuration_file } from './server/initialization';
+import { ServerConfiguration } from './server/environment';
 
 debug(log_now(), "Initialize server...");
 
@@ -67,14 +68,16 @@ function normalizePort(val: any): any {
 }
 
 let server_environment = ServerEnvironment.get_instance();
+let server_configuration = ServerConfiguration.get_instance();
 
 // create https server when possible
 if (server_environment.is_SSL_info_valid()) {
-	// Create HTTPS server
-	debug(log_now(), "Create https server");
+	const port_https = server_configuration.get_port_https();
+	
+	debug(log_now(), `Create https server at port '${port_https}'`);
 
 	// Get port from environment and store in Express.
-	let port = normalizePort(process.env['PORT'] || '8443');
+	let port = normalizePort(process.env['PORT'] || port_https);
 	app.set('port', port);
 
 	let https_server = function() {
@@ -135,10 +138,12 @@ if (server_environment.is_SSL_info_valid()) {
 }
 
 // Create HTTP server
-debug(log_now(), "Create http server");
+const port_http = server_configuration.get_port_http();
+
+debug(log_now(), `Create http server at port '${port_http}'`);
 
 // Get port from environment and store in Express.
-let port = normalizePort(process.env['PORT'] || '8080');
+let port = normalizePort(process.env['PORT'] || port_http);
 app.set('port', port);
 
 // Event listener for servers "error" event.

@@ -27,7 +27,7 @@ const debug = Debug('ELO_TRACKER:server_initialization');
 
 import { log_now } from '../utils/misc';
 import { ServerMemory } from "./memory";
-import { ServerEnvironment } from './environment';
+import { ServerConfiguration, ServerEnvironment } from './environment';
 import { RatingSystem } from './rating_system';
 import { user_from_json } from '../models/user';
 import { challenge_from_json } from '../models/challenge';
@@ -230,11 +230,18 @@ function initialize_rating_system(configuration_data: any): void {
 	}
 }
 
+function initialize_server_ports(configuration_data: any): void {
+	let server_configuration = ServerConfiguration.get_instance();
+	server_configuration.set_port_http(configuration_data.ports.http);
+	server_configuration.set_port_https(configuration_data.ports.https);
+}
+
 export function server_initialize_from_data(base_directory: string, configuration_data: any): void {
 	debug(log_now(), `    Base directory: '${base_directory}'`);
 
 	initialize_directories(base_directory);
 	initialize_SSL_files(base_directory, configuration_data);
+	initialize_server_ports(configuration_data);
 	initialize_icon_file_paths(base_directory, configuration_data);
 	initialize_page_titles(configuration_data);
 	initialize_rating_system(configuration_data);
