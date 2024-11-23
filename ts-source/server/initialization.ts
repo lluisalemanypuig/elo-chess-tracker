@@ -177,11 +177,7 @@ function initialize_time_controls(time_control_array: any): void {
 	}
 }
 
-export function server_initialize_from_data(base_directory: string, configuration_data: any): void {
-	debug(log_now(), `    Base directory: '${base_directory}'`);
-
-	// initialize directories
-
+function initialize_directories(base_directory: string): void {
 	ServerEnvironment.get_instance().set_database_base_directory(
 		path.join(base_directory, "/database")
 	);
@@ -189,9 +185,9 @@ export function server_initialize_from_data(base_directory: string, configuratio
 	debug(log_now(), `        Games directory: '${ServerEnvironment.get_instance().get_dir_games()}'`);
 	debug(log_now(), `        Users directory: '${ServerEnvironment.get_instance().get_dir_users()}'`);
 	debug(log_now(), `        Challenges directory: '${ServerEnvironment.get_instance().get_dir_challenges()}'`);
+}
 
-	//	initialize SSL certificate files
-
+function initialize_SSL_files(base_directory: string, configuration_data: any): void {
 	ServerEnvironment.get_instance().set_SSL_info(
 		path.join(base_directory, "/ssl"),
 		configuration_data.ssl_certificate.public_key_file,
@@ -202,23 +198,25 @@ export function server_initialize_from_data(base_directory: string, configuratio
 	debug(log_now(), `        Public key file: '${ServerEnvironment.get_instance().get_ssl_public_key_file()}'`);
 	debug(log_now(), `        Private key file: '${ServerEnvironment.get_instance().get_ssl_private_key_file()}'`);
 	debug(log_now(), `        Passphrase: '${ServerEnvironment.get_instance().get_ssl_passphrase_file()}'`);
+}
 
-	// initialize icon file paths
+function initialize_icon_file_paths(base_directory: string, configuration_data: any): void {
 	ServerEnvironment.get_instance().set_icons_info(
 		path.join(base_directory, "/icons"),
 		"/" + configuration_data.favicon,
 		"/" + configuration_data.login_page.icon,
 		"/" + configuration_data.home_page.icon
 	);
+}
 
-	// initialize page titles
+function initialize_page_titles(configuration_data: any): void {
 	ServerEnvironment.get_instance().set_titles_info(
 		configuration_data.login_page.title,
 		configuration_data.home_page.title
 	);
-	
-	// initialize rating system
-	{
+}
+
+function initialize_rating_system(configuration_data: any): void {
 	const rating_type = configuration_data.rating_system;
 	debug(log_now(), `    Rating system: '${rating_type}'`);
 	let rating_system = RatingSystem.get_instance();
@@ -230,10 +228,19 @@ export function server_initialize_from_data(base_directory: string, configuratio
 	else {
 		debug(log_now(), `Invalid rating system '${rating_type}'`);
 	}
-	}
+}
 
+export function server_initialize_from_data(base_directory: string, configuration_data: any): void {
+	debug(log_now(), `    Base directory: '${base_directory}'`);
+
+	initialize_directories(base_directory);
+	initialize_SSL_files(base_directory, configuration_data);
+	initialize_icon_file_paths(base_directory, configuration_data);
+	initialize_page_titles(configuration_data);
+	initialize_rating_system(configuration_data);
 	initialize_permissions(configuration_data.permissions);
 	initialize_time_controls(configuration_data.time_controls);
+
 	initialize_sessions();
 	initialize_users();
 	initialize_challenges();
@@ -262,6 +269,11 @@ export function server_initialize_from_default_configuration_file(args: string[]
 		else {
 			debug(log_now(), "Error: invalid option '" + configuration_file + "'.");
 		}
+	}
+
+	if (configuration_file == "") {
+		debug(log_now(), "Error: configuration file parameter is missing");
+		return;
 	}
 
 	server_initialize_from_configuration_file(configuration_file);
