@@ -66,8 +66,10 @@ function normalizePort(val: any): any {
 	return false;
 }
 
+let server_environment = ServerEnvironment.get_instance();
+
 // create https server when possible
-if (ServerEnvironment.get_instance().is_SSL_info_valid()) {
+if (server_environment.is_SSL_info_valid()) {
 	// Create HTTPS server
 	debug(log_now(), "Create https server");
 
@@ -76,12 +78,12 @@ if (ServerEnvironment.get_instance().is_SSL_info_valid()) {
 	app.set('port', port);
 
 	let https_server = function() {
-		const private_key = fs.readFileSync(ServerEnvironment.get_instance().get_ssl_private_key_file(), 'utf8');
-		const certificate = fs.readFileSync(ServerEnvironment.get_instance().get_ssl_public_key_file(), 'utf8');
+		const private_key = fs.readFileSync(server_environment.get_ssl_private_key_file(), 'utf8');
+		const certificate = fs.readFileSync(server_environment.get_ssl_public_key_file(), 'utf8');
 
-		if (ServerEnvironment.get_instance().get_ssl_passphrase_file() != "") {
+		if (server_environment.get_ssl_passphrase_file() != "") {
 			debug(log_now(), "Passphrase file found...");
-			let passphrase = fs.readFileSync(ServerEnvironment.get_instance().get_ssl_passphrase_file(), 'utf8');
+			let passphrase = fs.readFileSync(server_environment.get_ssl_passphrase_file(), 'utf8');
 			return https.createServer(
 				{
 					key : private_key,
