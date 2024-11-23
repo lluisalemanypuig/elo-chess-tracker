@@ -92,6 +92,10 @@ Edit the configuration file `webpage/configuration.json` appropriately. This fil
 			"private_key_file": "server.key",
 			"passphrase_file": ""
 		},
+		"ports": {
+			"http": "8080",
+			"https": "8443",
+		},
 		
 		"favicon": "path/to/icon.png",
 		"login_page": {
@@ -116,6 +120,10 @@ Edit the configuration file `webpage/configuration.json` appropriately. This fil
 	}
 
 The configuration file can be edited at any time, even after the website has been used for some time. For the modifications to take effect, the server has to be reset.
+
+#### HTTP and HTTPS ports
+
+These are st by default to `8080` for HTTP and to `8443` for HTTPS. Change them to whichever ports you like if these do not suit your needs. This step is _optional_.
 
 #### Icons and titles
 
