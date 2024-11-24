@@ -25,43 +25,42 @@ import { User } from '../models/user';
 import { log_now } from '../utils/misc';
 const debug = Debug('ELO_TRACKER:server_session');
 
-import { ServerMemory } from "./memory";
+import { ServerMemory } from './memory';
 import { user_retrieve } from './users';
 
 /// Deletes a session id.
 export function session_id_delete(id: string, username: string): void {
-	let mem = ServerMemory.get_instance();
+    let mem = ServerMemory.get_instance();
 
-	debug(log_now(), `Before deleting, '${mem.num_session_ids()}' sessions`);
-	const idx = mem.index_session_id(id, username);
-	if (idx != -1) {
-		debug(log_now(), `    Session of user '${username}' was found. Deleting...`);
-		mem.remove_session_id(idx);
-	}
-	else {
-		debug(log_now(), `    Session of user '${username}' was not found.`);
-	}
+    debug(log_now(), `Before deleting, '${mem.num_session_ids()}' sessions`);
+    const idx = mem.index_session_id(id, username);
+    if (idx != -1) {
+        debug(log_now(), `    Session of user '${username}' was found. Deleting...`);
+        mem.remove_session_id(idx);
+    } else {
+        debug(log_now(), `    Session of user '${username}' was not found.`);
+    }
 
-	debug(log_now(), `Currently, '${mem.num_session_ids()}' sessions`);
+    debug(log_now(), `Currently, '${mem.num_session_ids()}' sessions`);
 }
 
 /**
  * @brief Is a user logged in?
- * 
+ *
  * Checks that a user logged in or not using the cookies.
  * @param session_id Session id string.
  * @param username Username string.
- * @returns 
+ * @returns
  */
-export function is_user_logged_in(session_id: string, username: string): [boolean,string,User|null] {
-	if (!ServerMemory.get_instance() .has_session_id(session_id, username)) {
-		debug(log_now(), `Session does not exist for user '${username}'.`);
-		return [false, "403 - Forbidden", null];
-	}
-	const user = user_retrieve(username);
-	if (user == null) {
-		debug(log_now(), `User '${username}' does not exist.`);
-		return [false, "403 - Forbidden", null];
-	}
-    return [true, "", user as User];
+export function is_user_logged_in(session_id: string, username: string): [boolean, string, User | null] {
+    if (!ServerMemory.get_instance().has_session_id(session_id, username)) {
+        debug(log_now(), `Session does not exist for user '${username}'.`);
+        return [false, '403 - Forbidden', null];
+    }
+    const user = user_retrieve(username);
+    if (user == null) {
+        debug(log_now(), `User '${username}' does not exist.`);
+        return [false, '403 - Forbidden', null];
+    }
+    return [true, '', user as User];
 }

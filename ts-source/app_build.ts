@@ -31,17 +31,17 @@ import Debug from 'debug';
 const debug = Debug('ELO_TRACKER:app_build');
 import { log_now } from './utils/misc';
 
-debug(log_now(), "Create app object");
+debug(log_now(), 'Create app object');
 
 let app = express();
 
-debug(log_now(), "Building app...");
+debug(log_now(), 'Building app...');
 
 /* connect POST and GET queries with actual code */
 //let indexRouter = require('../js-source/routes/index');
 //app.use('/', indexRouter);
 
-debug(log_now(), "    Set stuff...");
+debug(log_now(), '    Set stuff...');
 
 // view engine setup
 app.set('views', './views');
@@ -55,35 +55,35 @@ app.use(cookieParser());
 app.use(helmet());
 app.use(compression()); // Compress all routes
 
-debug(log_now(), "    GETs and POSTs...");
+debug(log_now(), '    GETs and POSTs...');
 
-import { router } from "./app_router";
-app.use("/", router);
+import { router } from './app_router';
+app.use('/', router);
 
-debug(log_now(), "    Error handlers...");
+debug(log_now(), '    Error handlers...');
 
 // catch 404 and forward to error handler
 app.use(function (_req: any, _res: any, next: Function) {
-	next(createError(404));
+    next(createError(404));
 });
 // error handler
 app.use(function (err: any, req: any, res: any, _next: Function) {
-	debug(log_now(), "The request could not be served");
-	let R = req as Request;
-	debug(log_now(), `    method: ${R.method}`);
-	debug(log_now(), `    text: ${R.text}`);
-	debug(log_now(), `    referrer: ${R.referrer}`);
-	debug(log_now(), `    url: ${R.url}`);
+    debug(log_now(), 'The request could not be served');
+    let R = req as Request;
+    debug(log_now(), `    method: ${R.method}`);
+    debug(log_now(), `    text: ${R.text}`);
+    debug(log_now(), `    referrer: ${R.referrer}`);
+    debug(log_now(), `    url: ${R.url}`);
 
-	// set locals, only providing error in development
-	res.locals.message = err.message;
-	res.locals.error = req.app.get('env') === 'development' ? err : {};
+    // set locals, only providing error in development
+    res.locals.message = err.message;
+    res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-	// render the error page
-	res.status(err.status || 500);
-	res.render('error');
+    // render the error page
+    res.status(err.status || 500);
+    res.render('error');
 });
 
-debug(log_now(), "    Done!");
+debug(log_now(), '    Done!');
 
 export { app };

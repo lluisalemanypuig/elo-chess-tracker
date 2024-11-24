@@ -20,50 +20,38 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { Rating } from "../rating";
+import { Rating } from '../rating';
 
 /**
  * @brief Simple class to encode a rating.
  */
 export class EloRating extends Rating {
-	/// Constant
-	public K: number;
+    /// Constant
+    public K: number;
 
-	/**
-	 * @brief Constructor
-	 * @param rating Actual rating points
-	 * @param num_games Number of games
-	 * @param won Number of won games
-	 * @param drawn Number of drawn games
-	 * @param lost Number of lost games
-	 * @param K Constant
-	 */
-	constructor(
-		rating: number,
-		num_games: number,
-		won: number,
-		drawn: number,
-		lost: number,
-		K: number
-	)
-	{
-		super(rating, num_games, won, drawn, lost);
+    /**
+     * @brief Constructor
+     * @param rating Actual rating points
+     * @param num_games Number of games
+     * @param won Number of won games
+     * @param drawn Number of drawn games
+     * @param lost Number of lost games
+     * @param K Constant
+     */
+    constructor(rating: number, num_games: number, won: number, drawn: number, lost: number, K: number) {
+        super(rating, num_games, won, drawn, lost);
 
-		this.K = K;
-	}
+        this.K = K;
+    }
 
-	/// Clones the object.
-	override clone(): EloRating {
-		return new EloRating(
-			this.rating,
-			this.num_games, this.won, this.drawn, this.lost,
-			this.K
-		);
-	}
+    /// Clones the object.
+    override clone(): EloRating {
+        return new EloRating(this.rating, this.num_games, this.won, this.drawn, this.lost, this.K);
+    }
 }
 
 export function Elo_rating_new(): EloRating {
-	return new EloRating(1500, 0, 0, 0, 0, 40);
+    return new EloRating(1500, 0, 0, 0, 0, 40);
 }
 
 /**
@@ -73,14 +61,10 @@ export function Elo_rating_new(): EloRating {
  * @pre If @e json is a string then it cannot start with '['.
  */
 export function Elo_rating_from_json(json: any): EloRating {
-	if (typeof json == "string") {
-		let json_parse = JSON.parse(json);
-		return Elo_rating_from_json(json_parse);
-	}
+    if (typeof json == 'string') {
+        let json_parse = JSON.parse(json);
+        return Elo_rating_from_json(json_parse);
+    }
 
-	return new EloRating(
-		json["rating"],
-		json["num_games"], json["won"], json["drawn"], json["lost"],
-		json["K"]
-	);
+    return new EloRating(json['rating'], json['num_games'], json['won'], json['drawn'], json['lost'], json['K']);
 }

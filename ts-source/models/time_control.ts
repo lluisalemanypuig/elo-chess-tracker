@@ -22,23 +22,23 @@ Contact:
 
 /**
  * @brief Time control as a tuple.
- * 
+ *
  * Examples:
  * - id: "blitz_5_p_3", name: "Blitz (5 + 3)"
  * - id: "blitz_5_p_0", name: "Blitz (5 + 0)"
- * 
+ *
  * Also:
  * - id: "blitz", name: "Blitz (5 + 3)"
  * - id: "blitz", name: "Blitz (5 + 0)"
  */
 export class TimeControl {
-	public id: string;
-	public name: string;
+    public id: string;
+    public name: string;
 
-	constructor(id: string, name: string) {
-		this.id = id;
-		this.name = name;
-	}
+    constructor(id: string, name: string) {
+        this.id = id;
+        this.name = name;
+    }
 }
 
 /**
@@ -48,12 +48,12 @@ export class TimeControl {
  * @pre If @e json is a string, then it cannot start with '['.
  */
 export function time_control_from_json(json: any): TimeControl {
-	if (typeof json === "string") {
-		let json_parse = JSON.parse(json);
-		return time_control_from_json(json_parse);
-	}
+    if (typeof json === 'string') {
+        let json_parse = JSON.parse(json);
+        return time_control_from_json(json_parse);
+    }
 
-	return new TimeControl(json["id"], json["name"]);
+    return new TimeControl(json['id'], json['name']);
 }
 
 /**
@@ -62,14 +62,14 @@ export function time_control_from_json(json: any): TimeControl {
  * @returns An array of TimeControl objects.
  */
 export function time_control_set_from_json(json: any): TimeControl[] {
-	if (typeof json === "string") {
-		let json_parse = JSON.parse(json);
-		return time_control_set_from_json(json_parse);
-	}
+    if (typeof json === 'string') {
+        let json_parse = JSON.parse(json);
+        return time_control_set_from_json(json_parse);
+    }
 
-	let time_control_set: TimeControl[] = [];
-	for (var game_type in json) {
-		time_control_set.push(time_control_from_json(json[game_type]));
-	}
-	return time_control_set;
+    let time_control_set: TimeControl[] = [];
+    for (var game_type in json) {
+        time_control_set.push(time_control_from_json(json[game_type]));
+    }
+    return time_control_set;
 }

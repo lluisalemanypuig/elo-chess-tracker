@@ -21,72 +21,66 @@ Contact:
 */
 
 async function login_button_clicked(_event: any) {
-	// username box
-	const _username_box = document.getElementById("username_box");
-	if (_username_box == null) {
-		console.log("Element 'username_box' does not exist.");
-		return;
-	}
-	
-	// password box
-	const _password_box = document.getElementById("password_box");
-	if (_password_box == null) {
-		console.log("Element 'password_box' does not exist.");
-		return;
-	}
+    // username box
+    const _username_box = document.getElementById('username_box');
+    if (_username_box == null) {
+        console.log("Element 'username_box' does not exist.");
+        return;
+    }
 
-	const username = (_username_box as HTMLInputElement).value;
-	const password = (_password_box as HTMLInputElement).value;
+    // password box
+    const _password_box = document.getElementById('password_box');
+    if (_password_box == null) {
+        console.log("Element 'password_box' does not exist.");
+        return;
+    }
 
-	if (username == "" || password == "") {
-		return;
-	}
+    const username = (_username_box as HTMLInputElement).value;
+    const password = (_password_box as HTMLInputElement).value;
 
-	// "query" the server
-	const response = await fetch(
-		"/login",
-		{
-			method: 'POST',
-			body: JSON.stringify({ 'u' : username, 'p' : password }),
-			headers: { 'Content-type': 'application/json; charset=UTF-8' }
-		}
-	);
+    if (username == '' || password == '') {
+        return;
+    }
 
-	const data = await response.json();
-	if (data.r == "0") {
-		alert("Incorrect user or password.");
-		return;
-	}
+    // "query" the server
+    const response = await fetch('/login', {
+        method: 'POST',
+        body: JSON.stringify({ u: username, p: password }),
+        headers: { 'Content-type': 'application/json; charset=UTF-8' }
+    });
 
-	// put identity cookies
-	let cookies = data["cookies"];
-	for (let i = 0; i < cookies.length; ++i) {
-		document.cookie = cookies[i];
-	}
-	window.location.href = "/home";
+    const data = await response.json();
+    if (data.r == '0') {
+        alert('Incorrect user or password.');
+        return;
+    }
+
+    // put identity cookies
+    let cookies = data['cookies'];
+    for (let i = 0; i < cookies.length; ++i) {
+        document.cookie = cookies[i];
+    }
+    window.location.href = '/home';
 }
 
 async function set_login_page_title() {
-	const response = await fetch(
-		"/title_login_page",
-		{
-			method: 'GET',
-			headers: { 'Content-type': 'application/json; charset=UTF-8' }
-		}
-	);
-	const data = await response.text();
+    const response = await fetch('/title_login_page', {
+        method: 'GET',
+        headers: { 'Content-type': 'application/json; charset=UTF-8' }
+    });
+    const data = await response.text();
 
-	// set the title of the page
-	let title = document.getElementById("title_login_page") as HTMLElement;
-	title.textContent = data as string;
+    // set the title of the page
+    let title = document.getElementById('title_login_page') as HTMLElement;
+    title.textContent = data as string;
 }
 
 window.onload = function () {
-	// define behaviour of login button
-	let login_button = document.getElementById("login_button") as HTMLButtonElement;
-	login_button.onclick = login_button_clicked;
+    // define behaviour of login button
+    let login_button = document.getElementById('login_button') as HTMLButtonElement;
+    login_button.onclick = login_button_clicked;
 
-	set_login_page_title();
-	
-	set_footer_version_number();
-}
+    set_login_page_title();
+
+    set_footer_version_number();
+};

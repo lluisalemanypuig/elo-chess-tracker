@@ -20,29 +20,23 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { RatingSystem } from "../server/rating_system";
-import { Rating } from "../rating_framework/rating";
+import { RatingSystem } from '../server/rating_system';
+import { Rating } from '../rating_framework/rating';
 
 /**
  * @brief A pair of time control id and rating
  */
 export class TimeControlRating {
-	public time_control: string;
-	public rating: Rating;
+    public time_control: string;
+    public rating: Rating;
 
-	constructor(
-		time_control: string,
-		data: Rating
-	) {
-		this.time_control = time_control;
-		this.rating = data;
-	}
+    constructor(time_control: string, data: Rating) {
+        this.time_control = time_control;
+        this.rating = data;
+    }
 
     clone(): TimeControlRating {
-        return new TimeControlRating(
-            this.time_control,
-            this.rating.clone()
-        );
+        return new TimeControlRating(this.time_control, this.rating.clone());
     }
 }
 
@@ -52,16 +46,13 @@ export class TimeControlRating {
  * @returns An array of TimeControlRating objects.
  */
 export function time_control_rating_from_json(json: any): TimeControlRating {
-	if (typeof json === "string") {
-		let json_parse = JSON.parse(json);
-		return time_control_rating_from_json(json_parse);
-	}
+    if (typeof json === 'string') {
+        let json_parse = JSON.parse(json);
+        return time_control_rating_from_json(json_parse);
+    }
 
     const rating_system = RatingSystem.get_instance();
-	return new TimeControlRating(
-		json["time_control"],
-		rating_system.get_rating_from_json(json["rating"]),
-	);
+    return new TimeControlRating(json['time_control'], rating_system.get_rating_from_json(json['rating']));
 }
 
 /**
@@ -70,14 +61,14 @@ export function time_control_rating_from_json(json: any): TimeControlRating {
  * @returns An array of TimeControlRating objects.
  */
 export function time_control_rating_set_from_json(json: any): TimeControlRating[] {
-	if (typeof json === "string") {
-		let json_parse = JSON.parse(json);
-		return time_control_rating_set_from_json(json_parse);
-	}
+    if (typeof json === 'string') {
+        let json_parse = JSON.parse(json);
+        return time_control_rating_set_from_json(json_parse);
+    }
 
-	let time_control_rating: TimeControlRating[] = [];
-	for (var player in json) {
-		time_control_rating.push(time_control_rating_from_json(json[player]));
-	}
-	return time_control_rating;
+    let time_control_rating: TimeControlRating[] = [];
+    for (var player in json) {
+        time_control_rating.push(time_control_rating_from_json(json[player]));
+    }
+    return time_control_rating;
 }

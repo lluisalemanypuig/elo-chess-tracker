@@ -29,20 +29,13 @@ import { log_now } from './utils/misc';
 import { is_user_logged_in } from './server/session';
 import { user_add_new, user_exists } from './server/users';
 import { User } from './models/user';
+import { is_role_string_correct, STUDENT, MEMBER, TEACHER, ADMIN } from './models/user_role';
 import {
-	is_role_string_correct,
-	STUDENT,
-	MEMBER,
-	TEACHER,
-	ADMIN
-}
-from './models/user_role';
-import {
-	ASSIGN_ROLE_ADMIN,
-	ASSIGN_ROLE_TEACHER,
-	ASSIGN_ROLE_MEMBER,
-	ASSIGN_ROLE_STUDENT,
-	CREATE_USER,
+    ASSIGN_ROLE_ADMIN,
+    ASSIGN_ROLE_TEACHER,
+    ASSIGN_ROLE_MEMBER,
+    ASSIGN_ROLE_STUDENT,
+    CREATE_USER
 } from './models/user_action';
 import { encrypt_password_for_user } from './utils/encrypt';
 import { Password } from './models/password';
@@ -51,127 +44,124 @@ import { RatingSystem } from './server/rating_system';
 import { TimeControl } from './models/time_control';
 
 export async function get_users_create_page(req: any, res: any) {
-	debug(log_now(), "GET users_create_page...");
+    debug(log_now(), 'GET users_create_page...');
 
-	const username = req.cookies.user;
-	const r = is_user_logged_in(req.cookies.session_id, username);
-	if (! r[0]) {
-		res.send(r[1]);
-		return;
-	}
+    const username = req.cookies.user;
+    const r = is_user_logged_in(req.cookies.session_id, username);
+    if (!r[0]) {
+        res.send(r[1]);
+        return;
+    }
 
-	if (!(r[2] as User).can_do(CREATE_USER)) {
-		debug(log_now(), `User '${username}' cannot create users.`);
-		res.send("403 - Forbidden");
-		return;
-	}
+    if (!(r[2] as User).can_do(CREATE_USER)) {
+        debug(log_now(), `User '${username}' cannot create users.`);
+        res.send('403 - Forbidden');
+        return;
+    }
 
-	res.sendFile(path.join(__dirname, "../html/users_new.html"));
+    res.sendFile(path.join(__dirname, '../html/users_new.html'));
 }
 
 export async function post_users_create(req: any, res: any) {
-	debug(log_now(), "POST users_create");
+    debug(log_now(), 'POST users_create');
 
-	const username = req.cookies.user;
-	const r = is_user_logged_in(req.cookies.session_id, username);
-	if (! r[0]) {
-		res.send(r[1]);
-		return;
-	}
+    const username = req.cookies.user;
+    const r = is_user_logged_in(req.cookies.session_id, username);
+    if (!r[0]) {
+        res.send(r[1]);
+        return;
+    }
 
-	const registerer = r[2] as User;
-	if (!registerer.can_do(CREATE_USER)) {
-		debug(log_now(), `User '${username}' cannot create users.`);
-		res.send("403 - Forbidden");
-		return;
-	}
+    const registerer = r[2] as User;
+    if (!registerer.can_do(CREATE_USER)) {
+        debug(log_now(), `User '${username}' cannot create users.`);
+        res.send('403 - Forbidden');
+        return;
+    }
 
-	const new_username = req.body.u;
-	const new_firstname = req.body.fn;
-	const new_lastname = req.body.ln;
-	const new_roles = req.body.r;
-	const new_password = req.body.p;
+    const new_username = req.body.u;
+    const new_firstname = req.body.fn;
+    const new_lastname = req.body.ln;
+    const new_roles = req.body.r;
+    const new_password = req.body.p;
 
-	debug(log_now(), `User '${req.cookies.user}' is trying to create a new user:`);
-	debug(log_now(), `    Username: '${new_username}'`);
-	debug(log_now(), `    First name: '${new_firstname}'`);
-	debug(log_now(), `    Last name: '${new_lastname}'`);
-	debug(log_now(), `    Roles: '${new_roles}'`);
+    debug(log_now(), `User '${req.cookies.user}' is trying to create a new user:`);
+    debug(log_now(), `    Username: '${new_username}'`);
+    debug(log_now(), `    First name: '${new_firstname}'`);
+    debug(log_now(), `    Last name: '${new_lastname}'`);
+    debug(log_now(), `    Roles: '${new_roles}'`);
 
-	if (user_exists(new_username)) {
-		res.send({
-			"r": "0",
-			"reason": `User '${new_username}' already exists`
-		});
-		return;
-	}
+    if (user_exists(new_username)) {
+        res.send({
+            r: '0',
+            reason: `User '${new_username}' already exists`
+        });
+        return;
+    }
 
-	for (let i = 0; i < new_roles.length; ++i) {
-		if (!is_role_string_correct(new_roles[i])) {
-			res.send({
-				"r": "0",
-				"reason": `Role string '${new_roles[i]}' is not correct.`
-			});
-			return;
-		}
-	}
+    for (let i = 0; i < new_roles.length; ++i) {
+        if (!is_role_string_correct(new_roles[i])) {
+            res.send({
+                r: '0',
+                reason: `Role string '${new_roles[i]}' is not correct.`
+            });
+            return;
+        }
+    }
 
-	let can_create: boolean = true;
-	if (new_roles.includes(ADMIN)) {
-		can_create = can_create && registerer.can_do(ASSIGN_ROLE_ADMIN);
-		if (!registerer.can_do(ASSIGN_ROLE_ADMIN)) {
-			debug(log_now(), `User '${username}' cannot create admins.`);
-		}
-	}
-	if (new_roles.includes(TEACHER)) {
-		can_create = can_create && registerer.can_do(ASSIGN_ROLE_TEACHER);
-		if (!registerer.can_do(ASSIGN_ROLE_TEACHER)) {
-			debug(log_now(), `User '${username}' cannot create teachers.`);
-		}
-	}
-	if (new_roles.includes(MEMBER)) {
-		can_create = can_create && registerer.can_do(ASSIGN_ROLE_MEMBER);
-		if (!registerer.can_do(ASSIGN_ROLE_MEMBER)) {
-			debug(log_now(), `User '${username}' cannot create members.`);
-		}
-	}
-	if (new_roles.includes(STUDENT)) {
-		can_create = can_create && registerer.can_do(ASSIGN_ROLE_STUDENT);
-		if (!registerer.can_do(ASSIGN_ROLE_STUDENT)) {
-			debug(log_now(), `User '${username}' cannot create students.`);
-		}
-	}
+    let can_create: boolean = true;
+    if (new_roles.includes(ADMIN)) {
+        can_create = can_create && registerer.can_do(ASSIGN_ROLE_ADMIN);
+        if (!registerer.can_do(ASSIGN_ROLE_ADMIN)) {
+            debug(log_now(), `User '${username}' cannot create admins.`);
+        }
+    }
+    if (new_roles.includes(TEACHER)) {
+        can_create = can_create && registerer.can_do(ASSIGN_ROLE_TEACHER);
+        if (!registerer.can_do(ASSIGN_ROLE_TEACHER)) {
+            debug(log_now(), `User '${username}' cannot create teachers.`);
+        }
+    }
+    if (new_roles.includes(MEMBER)) {
+        can_create = can_create && registerer.can_do(ASSIGN_ROLE_MEMBER);
+        if (!registerer.can_do(ASSIGN_ROLE_MEMBER)) {
+            debug(log_now(), `User '${username}' cannot create members.`);
+        }
+    }
+    if (new_roles.includes(STUDENT)) {
+        can_create = can_create && registerer.can_do(ASSIGN_ROLE_STUDENT);
+        if (!registerer.can_do(ASSIGN_ROLE_STUDENT)) {
+            debug(log_now(), `User '${username}' cannot create students.`);
+        }
+    }
 
-	if (!can_create) {
-		res.send({
-			"r": "0",
-			"reason": `You do not have enough permissions to create a user with the selected roles.`
-		});
-		return;
-	}
+    if (!can_create) {
+        res.send({
+            r: '0',
+            reason: `You do not have enough permissions to create a user with the selected roles.`
+        });
+        return;
+    }
 
-	// encrypt password
-	let _pass = encrypt_password_for_user(new_username, new_password);
+    // encrypt password
+    let _pass = encrypt_password_for_user(new_username, new_password);
 
-	let ratings: TimeControlRating[] = [];
-	const rating_system = RatingSystem.get_instance();
-	rating_system.get_time_controls().forEach(
-		(value: TimeControl) => {
-			ratings.push(new TimeControlRating(
-				value.id, rating_system.get_new_rating()
-			));
-		}
-	);
-	
-	let u = new User(
-		new_username,
-		new_firstname, new_lastname,
-		new Password(_pass[0], _pass[1]),
-		new_roles,
-		[], // empty set of games
-		ratings
-	);
+    let ratings: TimeControlRating[] = [];
+    const rating_system = RatingSystem.get_instance();
+    rating_system.get_time_controls().forEach((value: TimeControl) => {
+        ratings.push(new TimeControlRating(value.id, rating_system.get_new_rating()));
+    });
 
-	user_add_new(u);
-	res.send({ "r": "1" });
+    let u = new User(
+        new_username,
+        new_firstname,
+        new_lastname,
+        new Password(_pass[0], _pass[1]),
+        new_roles,
+        [], // empty set of games
+        ratings
+    );
+
+    user_add_new(u);
+    res.send({ r: '1' });
 }
