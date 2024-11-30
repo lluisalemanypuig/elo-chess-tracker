@@ -37,178 +37,178 @@ import { TimeControlRating, time_control_rating_set_from_json } from './time_con
  * strings to store actual name and surnames, and the password of the player.
  */
 export class User extends Player {
-    /// First name
-    private first_name: string;
-    /// Last name
-    private last_name: string;
-    /// Password
-    private password: Password;
-    /// Roles of this user
-    private roles: UserRole[];
-    /**
-     * @brief The set of games this user has played
-     *
-     * The data points to the game records.
-     */
-    private games: string[];
+	/// First name
+	private first_name: string;
+	/// Last name
+	private last_name: string;
+	/// Password
+	private password: Password;
+	/// Roles of this user
+	private roles: UserRole[];
+	/**
+	 * @brief The set of games this user has played
+	 *
+	 * The data points to the game records.
+	 */
+	private games: string[];
 
-    /**
-     * @brief Constructor
-     * @param username User name of the player.
-     * @param first_name First name of the player.
-     * @param last_name Last name of the player.
-     * @param password Password of the user.
-     * @param roles User roles.
-     * @param games The set of games played.
-     * @param ratings Ratings for every time control
-     */
-    constructor(
-        username: string,
-        first_name: string,
-        last_name: string,
-        password: Password,
-        roles: UserRole[],
-        games: string[],
-        ratings: TimeControlRating[]
-    ) {
-        super(username, ratings);
-        this.first_name = first_name;
-        this.last_name = last_name;
-        this.password = password;
-        this.roles = roles;
-        this.games = games;
-    }
+	/**
+	 * @brief Constructor
+	 * @param username User name of the player.
+	 * @param first_name First name of the player.
+	 * @param last_name Last name of the player.
+	 * @param password Password of the user.
+	 * @param roles User roles.
+	 * @param games The set of games played.
+	 * @param ratings Ratings for every time control
+	 */
+	constructor(
+		username: string,
+		first_name: string,
+		last_name: string,
+		password: Password,
+		roles: UserRole[],
+		games: string[],
+		ratings: TimeControlRating[]
+	) {
+		super(username, ratings);
+		this.first_name = first_name;
+		this.last_name = last_name;
+		this.password = password;
+		this.roles = roles;
+		this.games = games;
+	}
 
-    as_player(): Player {
-        return new Player(this.username, this.ratings);
-    }
+	as_player(): Player {
+		return new Player(this.username, this.ratings);
+	}
 
-    /// Set first name of the user
-    set_first_name(f: string): void {
-        this.first_name = f;
-    }
-    /// Set last name of the user
-    set_last_name(l: string): void {
-        this.last_name = l;
-    }
-    /// Set roles to the user
-    set_roles(rs: UserRole[]): void {
-        this.roles = rs;
-    }
+	/// Set first name of the user
+	set_first_name(f: string): void {
+		this.first_name = f;
+	}
+	/// Set last name of the user
+	set_last_name(l: string): void {
+		this.last_name = l;
+	}
+	/// Set roles to the user
+	set_roles(rs: UserRole[]): void {
+		this.roles = rs;
+	}
 
-    /// Return last name of the user
-    get_first_name(): string {
-        return this.first_name;
-    }
-    /// Return last name of the user
-    get_last_name(): string {
-        return this.last_name;
-    }
-    /// Returns the full name of this user
-    get_full_name(): string {
-        return `${this.first_name} ${this.last_name}`;
-    }
+	/// Return last name of the user
+	get_first_name(): string {
+		return this.first_name;
+	}
+	/// Return last name of the user
+	get_last_name(): string {
+		return this.last_name;
+	}
+	/// Returns the full name of this user
+	get_full_name(): string {
+		return `${this.first_name} ${this.last_name}`;
+	}
 
-    set_password(pwd: Password) {
-        this.password = pwd;
-    }
-    /// Returns the password of this user
-    get_password(): Password {
-        return this.password;
-    }
+	set_password(pwd: Password) {
+		this.password = pwd;
+	}
+	/// Returns the password of this user
+	get_password(): Password {
+		return this.password;
+	}
 
-    /// Returns the role of this user.
-    get_roles(): UserRole[] {
-        return this.roles;
-    }
+	/// Returns the role of this user.
+	get_roles(): UserRole[] {
+		return this.roles;
+	}
 
-    /**
-     * @brief Returns the set of games played by this user.
-     * @returns A list of strings pointing to game records.
-     */
-    get_games(): string[] {
-        return this.games;
-    }
+	/**
+	 * @brief Returns the set of games played by this user.
+	 * @returns A list of strings pointing to game records.
+	 */
+	get_games(): string[] {
+		return this.games;
+	}
 
-    /**
-     * @brief Inserts a new game record string into @ref games.
-     *
-     * If the record string already exists, does nothing.
-     * @param g New game record string.
-     */
-    add_game(g: string): void {
-        let [index, exists] = where_should_be_inserted(this.games, g);
-        if (!exists) {
-            this.games.splice(index, 0, g);
-        }
-    }
+	/**
+	 * @brief Inserts a new game record string into @ref games.
+	 *
+	 * If the record string already exists, does nothing.
+	 * @param g New game record string.
+	 */
+	add_game(g: string): void {
+		let [index, exists] = where_should_be_inserted(this.games, g);
+		if (!exists) {
+			this.games.splice(index, 0, g);
+		}
+	}
 
-    /// Returns all actions this user
-    get_actions(): UserAction[] {
-        const role_to_action = UserRoleToUserAction.get_instance();
-        const roles = this.get_roles();
+	/// Returns all actions this user
+	get_actions(): UserAction[] {
+		const role_to_action = UserRoleToUserAction.get_instance();
+		const roles = this.get_roles();
 
-        let actions: UserAction[] = [];
-        for (let i = 0; i < roles.length; ++i) {
-            const r = roles[i];
-            const actions_from_role = role_to_action.get_actions_role(r);
+		let actions: UserAction[] = [];
+		for (let i = 0; i < roles.length; ++i) {
+			const r = roles[i];
+			const actions_from_role = role_to_action.get_actions_role(r);
 
-            for (let j = 0; j < actions_from_role.length; ++j) {
-                const action = actions_from_role[j];
-                if (actions.indexOf(action) == -1) {
-                    actions.push(action);
-                }
-            }
-        }
+			for (let j = 0; j < actions_from_role.length; ++j) {
+				const action = actions_from_role[j];
+				if (actions.indexOf(action) == -1) {
+					actions.push(action);
+				}
+			}
+		}
 
-        return actions;
-    }
+		return actions;
+	}
 
-    /// Can a user perform a certain action?
-    can_do(a: UserAction): boolean {
-        const user_role_to_action = UserRoleToUserAction.get_instance();
+	/// Can a user perform a certain action?
+	can_do(a: UserAction): boolean {
+		const user_role_to_action = UserRoleToUserAction.get_instance();
 
-        for (let i = 0; i < this.roles.length; ++i) {
-            const r = this.roles[i];
-            if (user_role_to_action.get_actions_role(r).includes(a)) {
-                return true;
-            }
-        }
-        return false;
-    }
-    /// Does a user have a certain role?
-    is(r: UserRole): boolean {
-        return this.roles.includes(r);
-    }
+		for (let i = 0; i < this.roles.length; ++i) {
+			const r = this.roles[i];
+			if (user_role_to_action.get_actions_role(r).includes(a)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	/// Does a user have a certain role?
+	is(r: UserRole): boolean {
+		return this.roles.includes(r);
+	}
 
-    /**
-     * @brief Copy the values of the members of the player
-     * @param p Player object
-     * @pre Usernames are equal
-     */
-    copy_player_data(p: Player): void {
-        assert(this.username == p.get_username());
+	/**
+	 * @brief Copy the values of the members of the player
+	 * @param p Player object
+	 * @pre Usernames are equal
+	 */
+	copy_player_data(p: Player): void {
+		assert(this.username == p.get_username());
 
-        // copy all ratings
-        this.ratings = p.get_all_ratings();
-    }
+		// copy all ratings
+		this.ratings = p.get_all_ratings();
+	}
 
-    /// Creates a copy of this user
-    override clone(): User {
-        return new User(
-            this.username,
-            this.first_name,
-            this.last_name,
-            this.password.clone(),
-            copyarray(this.roles),
-            copyarray(this.games),
-            copyarray(this.ratings)
-        );
-    }
+	/// Creates a copy of this user
+	override clone(): User {
+		return new User(
+			this.username,
+			this.first_name,
+			this.last_name,
+			this.password.clone(),
+			copyarray(this.roles),
+			copyarray(this.games),
+			copyarray(this.ratings)
+		);
+	}
 
-    clone_as_player(): Player {
-        return new Player(this.username, copyarray(this.ratings));
-    }
+	clone_as_player(): Player {
+		return new Player(this.username, copyarray(this.ratings));
+	}
 }
 
 /**
@@ -218,20 +218,20 @@ export class User extends Player {
  * @pre If @e json is a string then it cannot start with '['.
  */
 export function user_from_json(json: any): User {
-    if (typeof json === 'string') {
-        let json_parse = JSON.parse(json);
-        return user_from_json(json_parse);
-    }
+	if (typeof json === 'string') {
+		let json_parse = JSON.parse(json);
+		return user_from_json(json_parse);
+	}
 
-    return new User(
-        json['username'],
-        json['first_name'],
-        json['last_name'],
-        password_from_json(json['password']),
-        json['roles'],
-        json['games'],
-        time_control_rating_set_from_json(json['ratings'])
-    );
+	return new User(
+		json['username'],
+		json['first_name'],
+		json['last_name'],
+		password_from_json(json['password']),
+		json['roles'],
+		json['games'],
+		time_control_rating_set_from_json(json['ratings'])
+	);
 }
 
 /**
@@ -240,14 +240,14 @@ export function user_from_json(json: any): User {
  * @returns An array of User objects.
  */
 export function user_set_from_json(json: any): User[] {
-    if (typeof json === 'string') {
-        let json_parse = JSON.parse(json);
-        return user_set_from_json(json_parse);
-    }
+	if (typeof json === 'string') {
+		let json_parse = JSON.parse(json);
+		return user_set_from_json(json_parse);
+	}
 
-    let player_set: User[] = [];
-    for (var player in json) {
-        player_set.push(user_from_json(json[player]));
-    }
-    return player_set;
+	let player_set: User[] = [];
+	for (var player in json) {
+		player_set.push(user_from_json(json[player]));
+	}
+	return player_set;
 }

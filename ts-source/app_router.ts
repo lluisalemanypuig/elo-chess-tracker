@@ -32,96 +32,96 @@ import { ServerEnvironment } from './server/environment';
 
 let router = express.Router();
 router.get('/', (req: any, res: any) => {
-    debug(log_now(), `Username received in cookie: '${req.cookies.user}'`);
+	debug(log_now(), `Username received in cookie: '${req.cookies.user}'`);
 
-    let mem = ServerMemory.get_instance();
-    if (mem.has_session_id(req.cookies.session_id, req.cookies.user)) {
-        debug(log_now(), `    Session id exists. Please, come in.`);
-        // User has a cookie proving that they logged into the web in the past
-        res.sendFile(path.join(__dirname, '../html/home.html'));
-    } else {
-        debug(log_now(), `    Session id does not exist. Login!`);
-        // User does not have an appropriate cookie. They must provide
-        // identity credentials to log in.
-        res.sendFile(path.join(__dirname, '../html/login_screen.html'));
-    }
+	let mem = ServerMemory.get_instance();
+	if (mem.has_session_id(req.cookies.session_id, req.cookies.user)) {
+		debug(log_now(), `    Session id exists. Please, come in.`);
+		// User has a cookie proving that they logged into the web in the past
+		res.sendFile(path.join(__dirname, '../html/home.html'));
+	} else {
+		debug(log_now(), `    Session id does not exist. Login!`);
+		// User does not have an appropriate cookie. They must provide
+		// identity credentials to log in.
+		res.sendFile(path.join(__dirname, '../html/login_screen.html'));
+	}
 });
 
 // serve all *.css files
 router.get('/html/*.css', (req: any, res: any) => {
-    debug(log_now(), 'GET css file...');
-    debug(log_now(), `    request: ${req.url}`);
-    const filepath = path.join(__dirname, '..', req.url);
-    debug(log_now(), `    file to send: ${filepath}`);
-    res.sendFile(filepath);
+	debug(log_now(), 'GET css file...');
+	debug(log_now(), `    request: ${req.url}`);
+	const filepath = path.join(__dirname, '..', req.url);
+	debug(log_now(), `    file to send: ${filepath}`);
+	res.sendFile(filepath);
 });
 
 /* ************************************************************************** */
 /* Version number */
 router.get('/version_number', (req: any, res: any) => {
-    debug(log_now(), 'GET version_number...');
-    debug(log_now(), `    request: ${req.url}`);
-    res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
-    res.send('XX.YY');
+	debug(log_now(), 'GET version_number...');
+	debug(log_now(), `    request: ${req.url}`);
+	res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
+	res.send('XX.YY');
 });
 
 /* ************************************************************************** */
 /* ICONS */
 router.get('/favicon.ico', (req: any, res: any) => {
-    debug(log_now(), 'GET favicon.ico...');
-    debug(log_now(), `    request: ${req.url}`);
-    const filepath = ServerEnvironment.get_instance().get_icon_favicon();
-    debug(log_now(), `    file to send: ${filepath}`);
-    res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
-    res.sendFile(filepath);
+	debug(log_now(), 'GET favicon.ico...');
+	debug(log_now(), `    request: ${req.url}`);
+	const filepath = ServerEnvironment.get_instance().get_icon_favicon();
+	debug(log_now(), `    file to send: ${filepath}`);
+	res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
+	res.sendFile(filepath);
 });
 router.get('/icon_login_page', (req: any, res: any) => {
-    debug(log_now(), 'GET icon_login_page...');
-    debug(log_now(), `    request: ${req.url}`);
-    const filepath = ServerEnvironment.get_instance().get_icon_login_page();
-    debug(log_now(), `    file to send: ${filepath}`);
-    res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
-    res.sendFile(filepath);
+	debug(log_now(), 'GET icon_login_page...');
+	debug(log_now(), `    request: ${req.url}`);
+	const filepath = ServerEnvironment.get_instance().get_icon_login_page();
+	debug(log_now(), `    file to send: ${filepath}`);
+	res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
+	res.sendFile(filepath);
 });
 router.get('/icon_home_page', (req: any, res: any) => {
-    debug(log_now(), 'GET icon_home_page...');
-    debug(log_now(), `    request: ${req.url}`);
-    const filepath = ServerEnvironment.get_instance().get_icon_home_page();
-    debug(log_now(), `    file to send: ${filepath}`);
-    res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
-    res.sendFile(filepath);
+	debug(log_now(), 'GET icon_home_page...');
+	debug(log_now(), `    request: ${req.url}`);
+	const filepath = ServerEnvironment.get_instance().get_icon_home_page();
+	debug(log_now(), `    file to send: ${filepath}`);
+	res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
+	res.sendFile(filepath);
 });
 
 /* PAGE TITLES */
 router.get('/title_login_page', (req: any, res: any) => {
-    debug(log_now(), 'GET title_login_page...');
-    debug(log_now(), `    request: ${req.url}`);
-    res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
-    res.send(ServerEnvironment.get_instance().get_title_login_page());
+	debug(log_now(), 'GET title_login_page...');
+	debug(log_now(), `    request: ${req.url}`);
+	res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
+	res.send(ServerEnvironment.get_instance().get_title_login_page());
 });
 router.get('/title_home_page', (req: any, res: any) => {
-    debug(log_now(), 'GET title_home_page...');
-    debug(log_now(), `    request: ${req.url}`);
-    res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
-    res.send(ServerEnvironment.get_instance().get_title_home_page());
+	debug(log_now(), 'GET title_home_page...');
+	debug(log_now(), `    request: ${req.url}`);
+	res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
+	res.send(ServerEnvironment.get_instance().get_title_home_page());
 });
 
 /* ************************************************************************** */
 
 // serve all javascript files!
 router.get('/js-source/*', (req: any, res: any) => {
-    debug(log_now(), 'GET a file in js-source...');
-    debug(log_now(), `    request: ${req.url}`);
-    const filepath = path.join(__dirname, '..', req.url);
-    debug(log_now(), `    file to send: ${filepath}`);
-    res.sendFile(filepath);
+	debug(log_now(), 'GET a file in js-source...');
+	debug(log_now(), `    request: ${req.url}`);
+	const filepath = path.join(__dirname, '..', req.url);
+	debug(log_now(), `    file to send: ${filepath}`);
+	res.sendFile(filepath);
 });
 
 import {
-    post_query_users_edit,
-    get_query_users_list,
-    get_query_users_home,
-    post_query_users_ranking
+	post_query_users_edit,
+	get_query_users_list,
+	get_query_users_home,
+	post_query_users_ranking
 } from './server_query_user';
 router.get('/query_users_list', get_query_users_list);
 router.get('/query_users_home', get_query_users_home);
@@ -132,11 +132,11 @@ router.post('/query_users_ranking', post_query_users_ranking);
 
 // sending, receiving, accepting, setting result of challenges
 import {
-    get_query_challenges_received,
-    get_query_challenges_sent,
-    get_query_challenges_pending_set_result,
-    get_query_challenges_result_set_by_me,
-    get_query_challenges_result_set_by_opponent
+	get_query_challenges_received,
+	get_query_challenges_sent,
+	get_query_challenges_pending_set_result,
+	get_query_challenges_result_set_by_me,
+	get_query_challenges_result_set_by_opponent
 } from './server_query_challenges';
 router.get('/query_challenges_received', get_query_challenges_received);
 router.get('/query_challenges_sent', get_query_challenges_sent);
@@ -210,17 +210,17 @@ router.post('/recalculate_Elo_ratings', post_recalculate_Elo_ratings);
 
 // retrieve home page
 router.get('/home', (req: any, res: any) => {
-    debug(log_now(), 'GET home');
+	debug(log_now(), 'GET home');
 
-    let mem = ServerMemory.get_instance();
-    if (!mem.has_session_id(req.cookies.session_id, req.cookies.user)) {
-        debug(log_now(), '    Session id does not exist.');
-        res.send('Computer says no');
-        return;
-    }
+	let mem = ServerMemory.get_instance();
+	if (!mem.has_session_id(req.cookies.session_id, req.cookies.user)) {
+		debug(log_now(), '    Session id does not exist.');
+		res.send('Computer says no');
+		return;
+	}
 
-    debug(log_now(), '    Access granted');
-    res.sendFile(path.join(__dirname, '../html/home.html'));
+	debug(log_now(), '    Access granted');
+	res.sendFile(path.join(__dirname, '../html/home.html'));
 });
 
 export { router };

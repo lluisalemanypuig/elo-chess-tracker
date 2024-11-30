@@ -64,24 +64,24 @@ debug(log_now(), '    Error handlers...');
 
 // catch 404 and forward to error handler
 app.use(function (_req: any, _res: any, next: Function) {
-    next(createError(404));
+	next(createError(404));
 });
 // error handler
 app.use(function (err: any, req: any, res: any, _next: Function) {
-    debug(log_now(), 'The request could not be served');
-    let R = req as Request;
-    debug(log_now(), `    method: ${R.method}`);
-    debug(log_now(), `    text: ${R.text}`);
-    debug(log_now(), `    referrer: ${R.referrer}`);
-    debug(log_now(), `    url: ${R.url}`);
+	debug(log_now(), 'The request could not be served');
+	let R = req as Request;
+	debug(log_now(), `    method: ${R.method}`);
+	debug(log_now(), `    text: ${R.text}`);
+	debug(log_now(), `    referrer: ${R.referrer}`);
+	debug(log_now(), `    url: ${R.url}`);
 
-    // set locals, only providing error in development
-    res.locals.message = err.message;
-    res.locals.error = req.app.get('env') === 'development' ? err : {};
+	// set locals, only providing error in development
+	res.locals.message = err.message;
+	res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-    // render the error page
-    res.status(err.status || 500);
-    res.render('error');
+	// render the error page
+	res.status(err.status || 500);
+	res.render('error');
 });
 
 debug(log_now(), '    Done!');

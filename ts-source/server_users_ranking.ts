@@ -29,16 +29,16 @@ import { log_now } from './utils/misc';
 import { is_user_logged_in } from './server/session';
 
 export async function get_ranking_users_page(req: any, res: any) {
-    debug(log_now(), 'GET users_ranking_page...');
+	debug(log_now(), 'GET users_ranking_page...');
 
-    const session_id = req.cookies.session_id;
-    const username = req.cookies.user;
+	const session_id = req.cookies.session_id;
+	const username = req.cookies.user;
 
-    const r = is_user_logged_in(session_id, username);
-    if (!r[0]) {
-        res.send(r[1]);
-        return;
-    }
+	const r = is_user_logged_in(session_id, username);
+	if (!r[0]) {
+		res.send(r[1]);
+		return;
+	}
 
-    res.sendFile(path.join(__dirname, '../html/users_ranking.html'));
+	res.sendFile(path.join(__dirname, '../html/users_ranking.html'));
 }

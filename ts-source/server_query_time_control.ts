@@ -28,27 +28,27 @@ import { is_user_logged_in } from './server/session';
 import { RatingSystem } from './server/rating_system';
 
 export async function get_query_time_control(req: any, res: any) {
-    debug(log_now(), 'GET time_control...');
+	debug(log_now(), 'GET time_control...');
 
-    const id = req.cookies.session_id;
-    const username = req.cookies.user;
+	const id = req.cookies.session_id;
+	const username = req.cookies.user;
 
-    const r = is_user_logged_in(id, username);
-    if (!r[0]) {
-        res.send(r[1]);
-        return;
-    }
+	const r = is_user_logged_in(id, username);
+	if (!r[0]) {
+		res.send(r[1]);
+		return;
+	}
 
-    const tcs = RatingSystem.get_instance().get_time_controls();
-    let all_time_controls: any[] = [];
-    for (let i = 0; i < tcs.length; ++i) {
-        all_time_controls.push({
-            id: tcs[i].id,
-            name: tcs[i].name
-        });
-    }
-    res.send({
-        r: '1',
-        data: all_time_controls
-    });
+	const tcs = RatingSystem.get_instance().get_time_controls();
+	let all_time_controls: any[] = [];
+	for (let i = 0; i < tcs.length; ++i) {
+		all_time_controls.push({
+			id: tcs[i].id,
+			name: tcs[i].name
+		});
+	}
+	res.send({
+		r: '1',
+		data: all_time_controls
+	});
 }

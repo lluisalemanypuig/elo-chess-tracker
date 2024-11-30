@@ -22,34 +22,34 @@ Contact:
 
 /// Generic class for a rating.
 export class Rating {
-    /// Actual rating
-    public rating: number;
-    /// Number of games
-    public num_games: number;
-    /// Number of won games
-    public won: number;
-    /// Number of drawn games
-    public drawn: number;
-    /// Number of lost games
-    public lost: number;
+	/// Actual rating
+	public rating: number;
+	/// Number of games
+	public num_games: number;
+	/// Number of won games
+	public won: number;
+	/// Number of drawn games
+	public drawn: number;
+	/// Number of lost games
+	public lost: number;
 
-    /**
-     * @brief Constructor
-     * @param rating Actual rating points
-     * @param num_games Number of games
-     * @param won Number of won games
-     * @param drawn Number of drawn games
-     * @param lost Number of lost games
-     */
-    constructor(rating: number, num_games: number, won: number, drawn: number, lost: number) {
-        this.rating = rating;
-        this.num_games = num_games;
-        this.won = won;
-        this.drawn = drawn;
-        this.lost = lost;
-    }
+	/**
+	 * @brief Constructor
+	 * @param rating Actual rating points
+	 * @param num_games Number of games
+	 * @param won Number of won games
+	 * @param drawn Number of drawn games
+	 * @param lost Number of lost games
+	 */
+	constructor(rating: number, num_games: number, won: number, drawn: number, lost: number) {
+		this.rating = rating;
+		this.num_games = num_games;
+		this.won = won;
+		this.drawn = drawn;
+		this.lost = lost;
+	}
 
-    clone(): Rating {
-        return new Rating(this.rating, this.num_games, this.won, this.drawn, this.lost);
-    }
+	clone(): Rating {
+		return new Rating(this.rating, this.num_games, this.won, this.drawn, this.lost);
+	}
 }

@@ -26,10 +26,10 @@ Contact:
  * It consists of an id and a username
  */
 export class SessionID {
-    public readonly id: string;
-    public readonly username: string;
-    constructor(id: string, username: string) {
-        this.id = id;
-        this.username = username;
-    }
+	public readonly id: string;
+	public readonly username: string;
+	constructor(id: string, username: string) {
+		this.id = id;
+		this.username = username;
+	}
 }

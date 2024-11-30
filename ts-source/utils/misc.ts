@@ -24,29 +24,29 @@ import moment from 'moment';
 
 /// Convert a number to a string of 8 digits
 export function number_to_string(n: number): string {
-    let str = Number(n).toString();
-    if (n < 10) {
-        return '0000000' + str;
-    }
-    if (n < 100) {
-        return '000000' + str;
-    }
-    if (n < 1000) {
-        return '00000' + str;
-    }
-    if (n < 10000) {
-        return '0000' + str;
-    }
-    if (n < 100000) {
-        return '000' + str;
-    }
-    if (n < 1000000) {
-        return '00' + str;
-    }
-    if (n < 10000000) {
-        return '0' + str;
-    }
-    return str;
+	let str = Number(n).toString();
+	if (n < 10) {
+		return '0000000' + str;
+	}
+	if (n < 100) {
+		return '000000' + str;
+	}
+	if (n < 1000) {
+		return '00000' + str;
+	}
+	if (n < 10000) {
+		return '0000' + str;
+	}
+	if (n < 100000) {
+		return '000' + str;
+	}
+	if (n < 1000000) {
+		return '00' + str;
+	}
+	if (n < 10000000) {
+		return '0' + str;
+	}
+	return str;
 }
 
 /**
@@ -55,12 +55,12 @@ export function number_to_string(n: number): string {
  * @returns A string.
  */
 export function date_to_string(date: Date): string {
-    return moment.utc(date).local().format('YYYY-MM-DD..HH:mm:ss');
+	return moment.utc(date).local().format('YYYY-MM-DD..HH:mm:ss');
 }
 
 /// Returns the current date in string format "YYYY-MM-DD..HH:mm:ss"
 export function log_now(): string {
-    return date_to_string(new Date());
+	return date_to_string(new Date());
 }
 
 /**
@@ -69,7 +69,7 @@ export function log_now(): string {
  * @returns A string.
  */
 export function short_date_to_string(date: string): string {
-    return moment.utc(date).local().format('YYYY-MM-DD');
+	return moment.utc(date).local().format('YYYY-MM-DD');
 }
 
 /**
@@ -78,19 +78,19 @@ export function short_date_to_string(date: string): string {
  * @returns A Date object.
  */
 export function string_to_date(date: string): Date {
-    let info = date.split('..');
+	let info = date.split('..');
 
-    let YYYY_MM_DD = info[0].split('-');
-    let year = Number(YYYY_MM_DD[0]);
-    let month = Number(YYYY_MM_DD[1]);
-    let day = Number(YYYY_MM_DD[2]);
+	let YYYY_MM_DD = info[0].split('-');
+	let year = Number(YYYY_MM_DD[0]);
+	let month = Number(YYYY_MM_DD[1]);
+	let day = Number(YYYY_MM_DD[2]);
 
-    let HH_MM_SS = info[1].split(':');
-    let hours = Number(HH_MM_SS[0]);
-    let minutes = Number(HH_MM_SS[1]);
-    let seconds = Number(HH_MM_SS[2]);
+	let HH_MM_SS = info[1].split(':');
+	let hours = Number(HH_MM_SS[0]);
+	let minutes = Number(HH_MM_SS[1]);
+	let seconds = Number(HH_MM_SS[2]);
 
-    return new Date(year, month - 1, day, hours, minutes, seconds);
+	return new Date(year, month - 1, day, hours, minutes, seconds);
 }
 
 /**
@@ -99,7 +99,7 @@ export function string_to_date(date: string): Date {
  * @returns A string object containing a date formatted with YYYY-MM-DD.
  */
 export function long_date_to_short_date(date: string): string {
-    return date.split('..')[0];
+	return date.split('..')[0];
 }
 
 /**
@@ -108,11 +108,11 @@ export function long_date_to_short_date(date: string): string {
  * @returns A Date object.
  */
 export function string_to_short_date(date: string): Date {
-    let YYYY_MM_DD = date.split('-');
-    let year = Number(YYYY_MM_DD[0]);
-    let month = Number(YYYY_MM_DD[1]);
-    let day = Number(YYYY_MM_DD[2]);
-    return new Date(year, month - 1, day);
+	let YYYY_MM_DD = date.split('-');
+	let year = Number(YYYY_MM_DD[0]);
+	let month = Number(YYYY_MM_DD[1]);
+	let day = Number(YYYY_MM_DD[2]);
+	return new Date(year, month - 1, day);
 }
 
 /**
@@ -121,9 +121,9 @@ export function string_to_short_date(date: string): Date {
  * @returns A copy of an array and all of its elements.
  */
 export function copyarray<T>(array: T[]): T[] {
-    return array.map((k: T) => {
-        return k;
-    });
+	return array.map((k: T) => {
+		return k;
+	});
 }
 
 /**
@@ -132,12 +132,12 @@ export function copyarray<T>(array: T[]): T[] {
  * @param F Boolean function
  */
 export function linear_find<T>(arr: T[], F: Function): number {
-    for (let i = 0; i < arr.length; ++i) {
-        if (F(arr[i])) {
-            return i;
-        }
-    }
-    return arr.length;
+	for (let i = 0; i < arr.length; ++i) {
+		if (F(arr[i])) {
+			return i;
+		}
+	}
+	return arr.length;
 }
 
 /**
@@ -149,12 +149,12 @@ export function linear_find<T>(arr: T[], F: Function): number {
  * Returns false if otherwise.
  */
 export function any<T>(arr: T[], F: Function): boolean {
-    for (let i = 0; i < arr.length; ++i) {
-        if (F(arr[i])) {
-            return true;
-        }
-    }
-    return false;
+	for (let i = 0; i < arr.length; ++i) {
+		if (F(arr[i])) {
+			return true;
+		}
+	}
+	return false;
 }
 
 /**
@@ -170,47 +170,47 @@ export function any<T>(arr: T[], F: Function): boolean {
  * @pre Elements in @e arr are sorted by @e F.
  */
 export function search<T>(
-    arr: T[],
-    x: T,
-    F: Function = (e1: T, e2: T): number => {
-        if (e1 < e2) {
-            return -1;
-        }
-        if (e1 == e2) {
-            return 0;
-        }
-        return 1;
-    }
+	arr: T[],
+	x: T,
+	F: Function = (e1: T, e2: T): number => {
+		if (e1 < e2) {
+			return -1;
+		}
+		if (e1 == e2) {
+			return 0;
+		}
+		return 1;
+	}
 ): number {
-    if (arr.length == 0) {
-        return -1;
-    }
+	if (arr.length == 0) {
+		return -1;
+	}
 
-    const lt = (e1: T, e2: T): boolean => {
-        return F(e1, e2) < 0;
-    };
-    const equal = (e1: T, e2: T): boolean => {
-        return F(e1, e2) == 0;
-    };
-    //const gt = (e1: T, e2: T): boolean => { return F(e1,e2) > 0; };
+	const lt = (e1: T, e2: T): boolean => {
+		return F(e1, e2) < 0;
+	};
+	const equal = (e1: T, e2: T): boolean => {
+		return F(e1, e2) == 0;
+	};
+	//const gt = (e1: T, e2: T): boolean => { return F(e1,e2) > 0; };
 
-    let i: number = 0;
-    let j: number = arr.length - 1;
-    while (i < j) {
-        let m: number = Math.floor((i + j) / 2);
-        if (equal(x, arr[m])) {
-            return m;
-        }
-        if (lt(x, arr[m])) {
-            j = m - 1;
-        } else {
-            i = m + 1;
-        }
-    }
-    if (i == j && equal(x, arr[i])) {
-        return i;
-    }
-    return -1;
+	let i: number = 0;
+	let j: number = arr.length - 1;
+	while (i < j) {
+		let m: number = Math.floor((i + j) / 2);
+		if (equal(x, arr[m])) {
+			return m;
+		}
+		if (lt(x, arr[m])) {
+			j = m - 1;
+		} else {
+			i = m + 1;
+		}
+	}
+	if (i == j && equal(x, arr[i])) {
+		return i;
+	}
+	return -1;
 }
 
 /**
@@ -230,66 +230,66 @@ export function search<T>(
  * 'search(arr, x, F)' returns false.
  */
 export function where_should_be_inserted<T>(
-    arr: T[],
-    x: T,
-    F: Function = (e1: T, e2: T): number => {
-        if (e1 < e2) {
-            return -1;
-        }
-        if (e1 == e2) {
-            return 0;
-        }
-        return 1;
-    }
+	arr: T[],
+	x: T,
+	F: Function = (e1: T, e2: T): number => {
+		if (e1 < e2) {
+			return -1;
+		}
+		if (e1 == e2) {
+			return 0;
+		}
+		return 1;
+	}
 ): [number, boolean] {
-    const lt = (e1: T, e2: T): boolean => {
-        return F(e1, e2) < 0;
-    };
-    const equal = (e1: T, e2: T): boolean => {
-        return F(e1, e2) == 0;
-    };
-    //const gt = (e1: T, e2: T): boolean => { return F(e1,e2) > 0; };
+	const lt = (e1: T, e2: T): boolean => {
+		return F(e1, e2) < 0;
+	};
+	const equal = (e1: T, e2: T): boolean => {
+		return F(e1, e2) == 0;
+	};
+	//const gt = (e1: T, e2: T): boolean => { return F(e1,e2) > 0; };
 
-    let i: number = 0;
-    let j: number = arr.length - 1;
-    while (i + 1 < j) {
-        let m: number = Math.floor((i + j) / 2);
-        if (equal(x, arr[m])) {
-            return [m, true];
-        }
-        if (lt(x, arr[m])) {
-            j = m - 1;
-        } else {
-            i = m + 1;
-        }
-    }
+	let i: number = 0;
+	let j: number = arr.length - 1;
+	while (i + 1 < j) {
+		let m: number = Math.floor((i + j) / 2);
+		if (equal(x, arr[m])) {
+			return [m, true];
+		}
+		if (lt(x, arr[m])) {
+			j = m - 1;
+		} else {
+			i = m + 1;
+		}
+	}
 
-    if (i + 1 == j) {
-        if (equal(x, arr[i])) {
-            return [i, true];
-        }
-        if (equal(x, arr[i + 1])) {
-            return [i + 1, true];
-        }
+	if (i + 1 == j) {
+		if (equal(x, arr[i])) {
+			return [i, true];
+		}
+		if (equal(x, arr[i + 1])) {
+			return [i + 1, true];
+		}
 
-        if (lt(x, arr[i])) {
-            return [i, false];
-        }
-        if (lt(arr[i], x) && lt(x, arr[i + 1])) {
-            return [i + 1, false];
-        }
-        if (lt(arr[i + 1], x)) {
-            return [i + 2, false];
-        }
-    }
+		if (lt(x, arr[i])) {
+			return [i, false];
+		}
+		if (lt(arr[i], x) && lt(x, arr[i + 1])) {
+			return [i + 1, false];
+		}
+		if (lt(arr[i + 1], x)) {
+			return [i + 2, false];
+		}
+	}
 
-    if (equal(x, arr[i])) {
-        return [i, true];
-    }
-    if (lt(x, arr[i])) {
-        return [i, false];
-    }
-    return [i + 1, false];
+	if (equal(x, arr[i])) {
+		return [i, true];
+	}
+	if (lt(x, arr[i])) {
+		return [i, false];
+	}
+	return [i + 1, false];
 }
 
 /**
@@ -305,18 +305,18 @@ export function where_should_be_inserted<T>(
  * @returns A string containing @e s1 and @e s2 but interleaved.
  */
 export function interleave_strings(s1: string, s2: string): string {
-    let r: string = '';
-    let i = 0;
-    while (i < s1.length && i < s2.length) {
-        r += s1[i];
-        r += s2[i];
-        ++i;
-    }
-    for (let j = i; j < s1.length; ++j) {
-        r += s1[j];
-    }
-    for (let j = i; j < s2.length; ++j) {
-        r += s2[j];
-    }
-    return r;
+	let r: string = '';
+	let i = 0;
+	while (i < s1.length && i < s2.length) {
+		r += s1[i];
+		r += s2[i];
+		++i;
+	}
+	for (let j = i; j < s1.length; ++j) {
+		r += s1[j];
+	}
+	for (let j = i; j < s2.length; ++j) {
+		r += s2[j];
+	}
+	return r;
 }

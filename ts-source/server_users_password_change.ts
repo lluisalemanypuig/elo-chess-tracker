@@ -33,58 +33,58 @@ import { Password } from './models/password';
 import { user_overwrite } from './server/users';
 
 export async function get_users_password_change_page(req: any, res: any) {
-    debug(log_now(), 'GET users_password_change_page...');
+	debug(log_now(), 'GET users_password_change_page...');
 
-    const session_id = req.cookies.session_id;
-    const username = req.cookies.user;
+	const session_id = req.cookies.session_id;
+	const username = req.cookies.user;
 
-    let r = is_user_logged_in(session_id, username);
-    if (!r[0]) {
-        res.send(r[1]);
-        return;
-    }
+	let r = is_user_logged_in(session_id, username);
+	if (!r[0]) {
+		res.send(r[1]);
+		return;
+	}
 
-    res.sendFile(path.join(__dirname, '../html/users_password_change.html'));
+	res.sendFile(path.join(__dirname, '../html/users_password_change.html'));
 }
 
 export async function post_users_password_change(req: any, res: any) {
-    debug(log_now(), 'POST users_password_change...');
+	debug(log_now(), 'POST users_password_change...');
 
-    const id = req.cookies.session_id;
-    const username = req.cookies.user;
-    const old_password = req.body.old;
-    const new_password = req.body.new;
+	const id = req.cookies.session_id;
+	const username = req.cookies.user;
+	const old_password = req.body.old;
+	const new_password = req.body.new;
 
-    const r = is_user_logged_in(id, username);
-    if (!r[0]) {
-        res.send(r[1]);
-        return;
-    }
-    const user = r[2] as User;
+	const r = is_user_logged_in(id, username);
+	if (!r[0]) {
+		res.send(r[1]);
+		return;
+	}
+	const user = r[2] as User;
 
-    // check if password is correct
-    const old_pwd = user.get_password();
-    const is_password_correct = is_password_of_user_correct(old_pwd.encrypted, username, old_password, old_pwd.iv);
+	// check if password is correct
+	const old_pwd = user.get_password();
+	const is_password_correct = is_password_of_user_correct(old_pwd.encrypted, username, old_password, old_pwd.iv);
 
-    // is the password correct?
-    if (!is_password_correct) {
-        debug(log_now(), `    Password for '${username}' is incorrect`);
-        res.status(404).send({
-            r: '0',
-            reason: 'Old password is not correct.'
-        });
-        return;
-    }
+	// is the password correct?
+	if (!is_password_correct) {
+		debug(log_now(), `    Password for '${username}' is incorrect`);
+		res.status(404).send({
+			r: '0',
+			reason: 'Old password is not correct.'
+		});
+		return;
+	}
 
-    // delete old session id
-    session_id_delete(id, username);
+	// delete old session id
+	session_id_delete(id, username);
 
-    // make new password
-    const _pass = encrypt_password_for_user(username, new_password);
-    user.set_password(new Password(_pass[0], _pass[1]));
+	// make new password
+	const _pass = encrypt_password_for_user(username, new_password);
+	user.set_password(new Password(_pass[0], _pass[1]));
 
-    // overwrite user data
-    user_overwrite(user);
+	// overwrite user data
+	user_overwrite(user);
 
-    res.send({ r: '1' });
+	res.send({ r: '1' });
 }

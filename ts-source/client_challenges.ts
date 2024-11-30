@@ -21,457 +21,457 @@ Contact:
 */
 
 function create_label_text(text: string): HTMLLabelElement {
-    let label = document.createElement('label') as HTMLLabelElement;
-    label.textContent = text;
-    return label;
+	let label = document.createElement('label') as HTMLLabelElement;
+	label.textContent = text;
+	return label;
 }
 
 async function fill_username_datalist() {
-    let username_datalist = document.getElementById('username_datalist') as HTMLDataListElement;
+	let username_datalist = document.getElementById('username_datalist') as HTMLDataListElement;
 
-    {
-        let opt = document.createElement('option');
-        opt.text = '';
-        opt.value = '';
-        username_datalist.appendChild(opt);
-    }
+	{
+		let opt = document.createElement('option');
+		opt.text = '';
+		opt.value = '';
+		username_datalist.appendChild(opt);
+	}
 
-    // "query" the server
-    const response = await fetch('/query_users_list', {
-        method: 'GET',
-        headers: { 'Content-type': 'application/json; charset=UTF-8' }
-    });
+	// "query" the server
+	const response = await fetch('/query_users_list', {
+		method: 'GET',
+		headers: { 'Content-type': 'application/json; charset=UTF-8' }
+	});
 
-    const data = await response.json();
-    if (data.r == '0') {
-        alert(data.reason);
-        return;
-    }
+	const data = await response.json();
+	if (data.r == '0') {
+		alert(data.reason);
+		return;
+	}
 
-    const list = data.data as [string, string][];
+	const list = data.data as [string, string][];
 
-    let options = '';
-    list.forEach(function (elem: [string, string]) {
-        options += '<option id="' + elem[1] + '" value="' + elem[0] + '">';
-    });
-    username_datalist.innerHTML = options;
+	let options = '';
+	list.forEach(function (elem: [string, string]) {
+		options += '<option id="' + elem[1] + '" value="' + elem[0] + '">';
+	});
+	username_datalist.innerHTML = options;
 }
 
 async function submit_challenge_button_clicked(_event: any) {
-    let username_list_input = document.getElementById('username_list') as HTMLInputElement;
-    const username_option = document.querySelector('option[value="' + username_list_input.value + '"]');
+	let username_list_input = document.getElementById('username_list') as HTMLInputElement;
+	const username_option = document.querySelector('option[value="' + username_list_input.value + '"]');
 
-    if (username_option != null) {
-        const username = username_option.id;
+	if (username_option != null) {
+		const username = username_option.id;
 
-        // "query" the server
-        const response = await fetch('/challenges_send', {
-            method: 'POST',
-            body: JSON.stringify({ to: username }),
-            headers: { 'Content-type': 'application/json; charset=UTF-8' }
-        });
+		// "query" the server
+		const response = await fetch('/challenges_send', {
+			method: 'POST',
+			body: JSON.stringify({ to: username }),
+			headers: { 'Content-type': 'application/json; charset=UTF-8' }
+		});
 
-        const data = await response.json();
-        if (data.r == '0') {
-            alert(data.reason);
-            return;
-        }
+		const data = await response.json();
+		if (data.r == '0') {
+			alert(data.reason);
+			return;
+		}
 
-        window.location.href = '/challenges_page';
-    }
+		window.location.href = '/challenges_page';
+	}
 }
 
 async function accept_challenge_tag_clicked(event: any) {
-    let tag_clicked = event.explicitOriginalTarget;
-    let challenge_id = tag_clicked.id;
+	let tag_clicked = event.explicitOriginalTarget;
+	let challenge_id = tag_clicked.id;
 
-    const response = await fetch('/challenges_accept', {
-        method: 'POST',
-        body: JSON.stringify({ challenge_id: challenge_id }),
-        headers: { 'Content-type': 'application/json; charset=UTF-8' }
-    });
-    const data = await response.json();
+	const response = await fetch('/challenges_accept', {
+		method: 'POST',
+		body: JSON.stringify({ challenge_id: challenge_id }),
+		headers: { 'Content-type': 'application/json; charset=UTF-8' }
+	});
+	const data = await response.json();
 
-    if (data.r == '1') {
-        window.location.href = '/challenges_page';
-    }
+	if (data.r == '1') {
+		window.location.href = '/challenges_page';
+	}
 }
 
 async function decline_challenge_tag_clicked(event: any) {
-    let tag_clicked = event.explicitOriginalTarget;
-    let challenge_id = tag_clicked.id;
+	let tag_clicked = event.explicitOriginalTarget;
+	let challenge_id = tag_clicked.id;
 
-    const response = await fetch('/challenges_decline', {
-        method: 'POST',
-        body: JSON.stringify({ challenge_id: challenge_id }),
-        headers: { 'Content-type': 'application/json; charset=UTF-8' }
-    });
-    const data = await response.json();
+	const response = await fetch('/challenges_decline', {
+		method: 'POST',
+		body: JSON.stringify({ challenge_id: challenge_id }),
+		headers: { 'Content-type': 'application/json; charset=UTF-8' }
+	});
+	const data = await response.json();
 
-    if (data.r == '1') {
-        window.location.href = '/challenges_page';
-    }
+	if (data.r == '1') {
+		window.location.href = '/challenges_page';
+	}
 }
 
 async function fill_challenges_received_list() {
-    const response = await fetch('/query_challenges_received', {
-        method: 'GET',
-        headers: { 'Content-type': 'application/json; charset=UTF-8' }
-    });
-    const data = await response.json();
+	const response = await fetch('/query_challenges_received', {
+		method: 'GET',
+		headers: { 'Content-type': 'application/json; charset=UTF-8' }
+	});
+	const data = await response.json();
 
-    if (data.r == '0') {
-        // something went wrong, do nothing
-        return;
-    }
+	if (data.r == '0') {
+		// something went wrong, do nothing
+		return;
+	}
 
-    const challenge_data = data.c as any[];
+	const challenge_data = data.c as any[];
 
-    let challenge_list = document.createElement('ul') as HTMLUListElement;
-    challenge_data.forEach(function (elem: any) {
-        let li = document.createElement('li') as HTMLLIElement;
-        li.appendChild(
-            document.createTextNode(`Challenge sent by ${elem.sent_by}. Sent on ${elem.sent_when.replace('..', ' ')}. `)
-        );
+	let challenge_list = document.createElement('ul') as HTMLUListElement;
+	challenge_data.forEach(function (elem: any) {
+		let li = document.createElement('li') as HTMLLIElement;
+		li.appendChild(
+			document.createTextNode(`Challenge sent by ${elem.sent_by}. Sent on ${elem.sent_when.replace('..', ' ')}. `)
+		);
 
-        // add accept tag
-        let accept_tag = document.createElement('a') as HTMLAnchorElement;
-        accept_tag.id = elem.id;
-        accept_tag.onclick = accept_challenge_tag_clicked;
-        accept_tag.setAttribute('style', 'color:blue;text-decoration:underline;cursor:pointer');
-        accept_tag.textContent = 'Accept.';
-        li.appendChild(accept_tag);
-        li.appendChild(document.createTextNode(' '));
+		// add accept tag
+		let accept_tag = document.createElement('a') as HTMLAnchorElement;
+		accept_tag.id = elem.id;
+		accept_tag.onclick = accept_challenge_tag_clicked;
+		accept_tag.setAttribute('style', 'color:blue;text-decoration:underline;cursor:pointer');
+		accept_tag.textContent = 'Accept.';
+		li.appendChild(accept_tag);
+		li.appendChild(document.createTextNode(' '));
 
-        // add decline tag
-        let decline_tag = document.createElement('a') as HTMLAnchorElement;
-        decline_tag.id = elem.id;
-        decline_tag.onclick = decline_challenge_tag_clicked;
-        decline_tag.setAttribute('style', 'color:blue;text-decoration:underline;cursor:pointer');
-        decline_tag.textContent = 'Decline.';
-        li.appendChild(decline_tag);
+		// add decline tag
+		let decline_tag = document.createElement('a') as HTMLAnchorElement;
+		decline_tag.id = elem.id;
+		decline_tag.onclick = decline_challenge_tag_clicked;
+		decline_tag.setAttribute('style', 'color:blue;text-decoration:underline;cursor:pointer');
+		decline_tag.textContent = 'Decline.';
+		li.appendChild(decline_tag);
 
-        // append paragraph to element list
-        challenge_list.appendChild(li);
-    });
-    (document.getElementById('challenges_received_list') as HTMLDivElement).appendChild(challenge_list);
+		// append paragraph to element list
+		challenge_list.appendChild(li);
+	});
+	(document.getElementById('challenges_received_list') as HTMLDivElement).appendChild(challenge_list);
 }
 
 async function fill_challenges_sent_list() {
-    const response = await fetch('/query_challenges_sent', {
-        method: 'GET',
-        headers: { 'Content-type': 'application/json; charset=UTF-8' }
-    });
-    const data = await response.json();
+	const response = await fetch('/query_challenges_sent', {
+		method: 'GET',
+		headers: { 'Content-type': 'application/json; charset=UTF-8' }
+	});
+	const data = await response.json();
 
-    if (data.r == '0') {
-        // something went wrong, do nothing
-        return;
-    }
+	if (data.r == '0') {
+		// something went wrong, do nothing
+		return;
+	}
 
-    const challenge_data = data.c as any[];
+	const challenge_data = data.c as any[];
 
-    let challenge_list = document.createElement('ul') as HTMLUListElement;
-    challenge_data.forEach(function (elem: any) {
-        let li = document.createElement('li') as HTMLLIElement;
-        li.textContent = `Challenge sent to ${elem.sent_to}. Sent on ${elem.sent_when.replace('..', ' ')}.`;
+	let challenge_list = document.createElement('ul') as HTMLUListElement;
+	challenge_data.forEach(function (elem: any) {
+		let li = document.createElement('li') as HTMLLIElement;
+		li.textContent = `Challenge sent to ${elem.sent_to}. Sent on ${elem.sent_when.replace('..', ' ')}.`;
 
-        // append paragraph to element list
-        challenge_list.appendChild(li);
-    });
-    (document.getElementById('challenges_sent_list') as HTMLDivElement).appendChild(challenge_list);
+		// append paragraph to element list
+		challenge_list.appendChild(li);
+	});
+	(document.getElementById('challenges_sent_list') as HTMLDivElement).appendChild(challenge_list);
 }
 
 async function fill_challenges_pending_set_result_list() {
-    const response_challenges_pending = await fetch('/query_challenges_pending_set_result', {
-        method: 'GET',
-        headers: { 'Content-type': 'application/json; charset=UTF-8' }
-    });
-    const challenges_pending = await response_challenges_pending.json();
+	const response_challenges_pending = await fetch('/query_challenges_pending_set_result', {
+		method: 'GET',
+		headers: { 'Content-type': 'application/json; charset=UTF-8' }
+	});
+	const challenges_pending = await response_challenges_pending.json();
 
-    const response_time_control = await fetch('/query_time_controls', {
-        method: 'GET',
-        headers: { 'Content-type': 'application/json; charset=UTF-8' }
-    });
-    const time_control = await response_time_control.json();
+	const response_time_control = await fetch('/query_time_controls', {
+		method: 'GET',
+		headers: { 'Content-type': 'application/json; charset=UTF-8' }
+	});
+	const time_control = await response_time_control.json();
 
-    if (challenges_pending.r == '0') {
-        // something went wrong, do nothing
-        return;
-    }
+	if (challenges_pending.r == '0') {
+		// something went wrong, do nothing
+		return;
+	}
 
-    const challenge_data = challenges_pending.c as any[];
-    const time_control_data = time_control.data as any[];
+	const challenge_data = challenges_pending.c as any[];
+	const time_control_data = time_control.data as any[];
 
-    let all_challenges_list = document.getElementById('challenges_result_to_be_set_list') as HTMLDivElement;
-    challenge_data.forEach(function (elem: any) {
-        let li = document.createElement('li') as HTMLLIElement;
-        li.textContent = `Challenge with ${elem.opponent}, sent on ${elem.sent_when.replace('..', ' ')}.`;
+	let all_challenges_list = document.getElementById('challenges_result_to_be_set_list') as HTMLDivElement;
+	challenge_data.forEach(function (elem: any) {
+		let li = document.createElement('li') as HTMLLIElement;
+		li.textContent = `Challenge with ${elem.opponent}, sent on ${elem.sent_when.replace('..', ' ')}.`;
 
-        // append paragraph to element list
-        all_challenges_list.appendChild(li);
+		// append paragraph to element list
+		all_challenges_list.appendChild(li);
 
-        let challenge_div = document.createElement('div') as HTMLDivElement;
-        challenge_div.classList.add('challenge-result-set');
+		let challenge_div = document.createElement('div') as HTMLDivElement;
+		challenge_div.classList.add('challenge-result-set');
 
-        // Who is the white player?
-        {
-            let div = document.createElement('div') as HTMLDivElement;
-            div.className = 'label-and-select';
+		// Who is the white player?
+		{
+			let div = document.createElement('div') as HTMLDivElement;
+			div.className = 'label-and-select';
 
-            div.appendChild(create_label_text('White:'));
+			div.appendChild(create_label_text('White:'));
 
-            let select = document.createElement('select');
-            select.id = 'white_select_' + elem.id;
+			let select = document.createElement('select');
+			select.id = 'white_select_' + elem.id;
 
-            let option_1 = document.createElement('option') as HTMLOptionElement;
-            option_1.text = elem.sent_to_name;
-            option_1.value = elem.sent_to_username;
-            select.appendChild(option_1);
-            let option_2 = document.createElement('option') as HTMLOptionElement;
-            option_2.text = elem.sent_by_name;
-            option_2.value = elem.sent_by_username;
-            select.appendChild(option_2);
+			let option_1 = document.createElement('option') as HTMLOptionElement;
+			option_1.text = elem.sent_to_name;
+			option_1.value = elem.sent_to_username;
+			select.appendChild(option_1);
+			let option_2 = document.createElement('option') as HTMLOptionElement;
+			option_2.text = elem.sent_by_name;
+			option_2.value = elem.sent_by_username;
+			select.appendChild(option_2);
 
-            div.appendChild(select);
-            challenge_div.appendChild(div);
-        }
+			div.appendChild(select);
+			challenge_div.appendChild(div);
+		}
 
-        // Who is the black player?
-        {
-            let div = document.createElement('div') as HTMLDivElement;
-            div.className = 'label-and-select';
+		// Who is the black player?
+		{
+			let div = document.createElement('div') as HTMLDivElement;
+			div.className = 'label-and-select';
 
-            div.appendChild(create_label_text('Black:'));
+			div.appendChild(create_label_text('Black:'));
 
-            let select = document.createElement('select');
-            select.id = 'black_select_' + elem.id;
+			let select = document.createElement('select');
+			select.id = 'black_select_' + elem.id;
 
-            let option_1 = document.createElement('option') as HTMLOptionElement;
-            option_1.text = elem.sent_by_name;
-            option_1.value = elem.sent_by_username;
-            select.appendChild(option_1);
-            let option_2 = document.createElement('option') as HTMLOptionElement;
-            option_2.text = elem.sent_to_name;
-            option_2.value = elem.sent_to_username;
-            select.appendChild(option_2);
+			let option_1 = document.createElement('option') as HTMLOptionElement;
+			option_1.text = elem.sent_by_name;
+			option_1.value = elem.sent_by_username;
+			select.appendChild(option_1);
+			let option_2 = document.createElement('option') as HTMLOptionElement;
+			option_2.text = elem.sent_to_name;
+			option_2.value = elem.sent_to_username;
+			select.appendChild(option_2);
 
-            div.appendChild(select);
-            challenge_div.appendChild(div);
-        }
+			div.appendChild(select);
+			challenge_div.appendChild(div);
+		}
 
-        // Result of the game
-        {
-            let div = document.createElement('div') as HTMLDivElement;
-            div.className = 'label-and-select';
+		// Result of the game
+		{
+			let div = document.createElement('div') as HTMLDivElement;
+			div.className = 'label-and-select';
 
-            div.appendChild(create_label_text('Result:'));
+			div.appendChild(create_label_text('Result:'));
 
-            let select = document.createElement('select');
-            select.id = 'result_select_' + elem.id;
+			let select = document.createElement('select');
+			select.id = 'result_select_' + elem.id;
 
-            let option_1 = document.createElement('option') as HTMLOptionElement;
-            option_1.text = '1 - 0';
-            option_1.value = 'white_wins';
-            select.appendChild(option_1);
-            let option_2 = document.createElement('option') as HTMLOptionElement;
-            option_2.text = '1/2 - 1/2';
-            option_2.value = 'draw';
-            select.appendChild(option_2);
-            let option_3 = document.createElement('option') as HTMLOptionElement;
-            option_3.text = '0 - 1';
-            option_3.value = 'black_wins';
-            select.appendChild(option_3);
+			let option_1 = document.createElement('option') as HTMLOptionElement;
+			option_1.text = '1 - 0';
+			option_1.value = 'white_wins';
+			select.appendChild(option_1);
+			let option_2 = document.createElement('option') as HTMLOptionElement;
+			option_2.text = '1/2 - 1/2';
+			option_2.value = 'draw';
+			select.appendChild(option_2);
+			let option_3 = document.createElement('option') as HTMLOptionElement;
+			option_3.text = '0 - 1';
+			option_3.value = 'black_wins';
+			select.appendChild(option_3);
 
-            div.appendChild(select);
-            challenge_div.appendChild(div);
-        }
+			div.appendChild(select);
+			challenge_div.appendChild(div);
+		}
 
-        // Time control of the game
-        {
-            let div = document.createElement('div') as HTMLDivElement;
-            div.className = 'label-and-select';
+		// Time control of the game
+		{
+			let div = document.createElement('div') as HTMLDivElement;
+			div.className = 'label-and-select';
 
-            div.appendChild(create_label_text('Time control:'));
+			div.appendChild(create_label_text('Time control:'));
 
-            let select = document.createElement('select');
-            select.id = 'time_control_select_' + elem.id;
+			let select = document.createElement('select');
+			select.id = 'time_control_select_' + elem.id;
 
-            for (let i = 0; i < time_control_data.length; ++i) {
-                let option_i = document.createElement('option') as HTMLOptionElement;
-                option_i.text = time_control_data[i].name;
-                option_i.value = time_control_data[i].id;
-                select.appendChild(option_i);
-            }
+			for (let i = 0; i < time_control_data.length; ++i) {
+				let option_i = document.createElement('option') as HTMLOptionElement;
+				option_i.text = time_control_data[i].name;
+				option_i.value = time_control_data[i].id;
+				select.appendChild(option_i);
+			}
 
-            div.appendChild(select);
-            challenge_div.appendChild(div);
-        }
+			div.appendChild(select);
+			challenge_div.appendChild(div);
+		}
 
-        all_challenges_list.appendChild(challenge_div);
-        // submit button
-        {
-            let submit_result_button_clicked = document.createElement('button');
-            submit_result_button_clicked.textContent = 'Submit result';
-            submit_result_button_clicked.id = elem.id;
-            submit_result_button_clicked.onclick = submit_result_challenge_button_clicked;
-            all_challenges_list.appendChild(submit_result_button_clicked);
-        }
-    });
-    (document.getElementById('challenges_pending_result_set') as HTMLDivElement).appendChild(all_challenges_list);
+		all_challenges_list.appendChild(challenge_div);
+		// submit button
+		{
+			let submit_result_button_clicked = document.createElement('button');
+			submit_result_button_clicked.textContent = 'Submit result';
+			submit_result_button_clicked.id = elem.id;
+			submit_result_button_clicked.onclick = submit_result_challenge_button_clicked;
+			all_challenges_list.appendChild(submit_result_button_clicked);
+		}
+	});
+	(document.getElementById('challenges_pending_result_set') as HTMLDivElement).appendChild(all_challenges_list);
 }
 
 async function submit_result_challenge_button_clicked(event: any) {
-    let button_clicked = event.explicitOriginalTarget;
-    let challenge_id = button_clicked.id;
+	let button_clicked = event.explicitOriginalTarget;
+	let challenge_id = button_clicked.id;
 
-    let white_select = document.getElementById('white_select_' + challenge_id) as HTMLSelectElement;
-    let black_select = document.getElementById('black_select_' + challenge_id) as HTMLSelectElement;
-    let result_select = document.getElementById('result_select_' + challenge_id) as HTMLSelectElement;
-    let time_control_select = document.getElementById('time_control_select_' + challenge_id) as HTMLSelectElement;
+	let white_select = document.getElementById('white_select_' + challenge_id) as HTMLSelectElement;
+	let black_select = document.getElementById('black_select_' + challenge_id) as HTMLSelectElement;
+	let result_select = document.getElementById('result_select_' + challenge_id) as HTMLSelectElement;
+	let time_control_select = document.getElementById('time_control_select_' + challenge_id) as HTMLSelectElement;
 
-    let white_username = white_select.options[white_select.selectedIndex].value;
-    let black_username = black_select.options[black_select.selectedIndex].value;
-    let result = result_select.options[result_select.selectedIndex].value;
-    let time_control_id = time_control_select.options[time_control_select.selectedIndex].value;
-    let time_control_name = time_control_select.options[time_control_select.selectedIndex].text;
+	let white_username = white_select.options[white_select.selectedIndex].value;
+	let black_username = black_select.options[black_select.selectedIndex].value;
+	let result = result_select.options[result_select.selectedIndex].value;
+	let time_control_id = time_control_select.options[time_control_select.selectedIndex].value;
+	let time_control_name = time_control_select.options[time_control_select.selectedIndex].text;
 
-    // "query" the server
-    const response = await fetch('/challenges_set_result', {
-        method: 'POST',
-        body: JSON.stringify({
-            challenge_id: challenge_id,
-            white: white_username,
-            black: black_username,
-            result: result,
-            time_control_id: time_control_id,
-            time_control_name: time_control_name
-        }),
-        headers: { 'Content-type': 'application/json; charset=UTF-8' }
-    });
+	// "query" the server
+	const response = await fetch('/challenges_set_result', {
+		method: 'POST',
+		body: JSON.stringify({
+			challenge_id: challenge_id,
+			white: white_username,
+			black: black_username,
+			result: result,
+			time_control_id: time_control_id,
+			time_control_name: time_control_name
+		}),
+		headers: { 'Content-type': 'application/json; charset=UTF-8' }
+	});
 
-    const data = await response.json();
-    if (data.r == '0') {
-        alert(data.reason);
-        return;
-    }
+	const data = await response.json();
+	if (data.r == '0') {
+		alert(data.reason);
+		return;
+	}
 
-    window.location.href = '/challenges_page';
+	window.location.href = '/challenges_page';
 }
 
 async function fill_challenges_result_set_by_me_list() {
-    const response = await fetch('/query_challenges_result_set_by_me', {
-        method: 'GET',
-        headers: { 'Content-type': 'application/json; charset=UTF-8' }
-    });
-    const data = await response.json();
+	const response = await fetch('/query_challenges_result_set_by_me', {
+		method: 'GET',
+		headers: { 'Content-type': 'application/json; charset=UTF-8' }
+	});
+	const data = await response.json();
 
-    if (data.r == '0') {
-        // something went wrong, do nothing
-        return;
-    }
+	if (data.r == '0') {
+		// something went wrong, do nothing
+		return;
+	}
 
-    const challenge_data = data.c as any[];
+	const challenge_data = data.c as any[];
 
-    let challenge_list = document.createElement('ul') as HTMLUListElement;
-    challenge_data.forEach(function (elem: any) {
-        let li = document.createElement('li') as HTMLLIElement;
-        li.textContent = `On ${elem.sent_when.replace('..', ' ')}. White: ${elem.white}. Black: ${elem.black}. Result: ${elem.result}. Time control: ${elem.time_control}`;
+	let challenge_list = document.createElement('ul') as HTMLUListElement;
+	challenge_data.forEach(function (elem: any) {
+		let li = document.createElement('li') as HTMLLIElement;
+		li.textContent = `On ${elem.sent_when.replace('..', ' ')}. White: ${elem.white}. Black: ${elem.black}. Result: ${elem.result}. Time control: ${elem.time_control}`;
 
-        // append paragraph to element list
-        challenge_list.appendChild(li);
-    });
-    (document.getElementById('challenges_result_set_by_me') as HTMLDivElement).appendChild(challenge_list);
+		// append paragraph to element list
+		challenge_list.appendChild(li);
+	});
+	(document.getElementById('challenges_result_set_by_me') as HTMLDivElement).appendChild(challenge_list);
 }
 
 async function fill_challenges_result_set_by_opponent_list() {
-    const response = await fetch('/query_challenges_result_set_by_opponent', {
-        method: 'GET',
-        headers: { 'Content-type': 'application/json; charset=UTF-8' }
-    });
-    const data = await response.json();
+	const response = await fetch('/query_challenges_result_set_by_opponent', {
+		method: 'GET',
+		headers: { 'Content-type': 'application/json; charset=UTF-8' }
+	});
+	const data = await response.json();
 
-    if (data.r == '0') {
-        // something went wrong, do nothing
-        return;
-    }
+	if (data.r == '0') {
+		// something went wrong, do nothing
+		return;
+	}
 
-    const challenge_data = data.c as any[];
+	const challenge_data = data.c as any[];
 
-    let challenge_list = document.createElement('ul') as HTMLUListElement;
-    challenge_data.forEach(function (elem: any) {
-        let li = document.createElement('li') as HTMLLIElement;
-        li.textContent = `On ${elem.sent_when.replace('..', ' ')}. White: ${elem.white}. Black: ${elem.black}. Result: ${elem.result}. Time control: ${elem.time_control}. `;
+	let challenge_list = document.createElement('ul') as HTMLUListElement;
+	challenge_data.forEach(function (elem: any) {
+		let li = document.createElement('li') as HTMLLIElement;
+		li.textContent = `On ${elem.sent_when.replace('..', ' ')}. White: ${elem.white}. Black: ${elem.black}. Result: ${elem.result}. Time control: ${elem.time_control}. `;
 
-        // add accept tag
-        let accept_tag = document.createElement('a') as HTMLAnchorElement;
-        accept_tag.id = elem.id;
-        accept_tag.onclick = agree_challenge_result_tag_clicked;
-        accept_tag.setAttribute('style', 'color:blue;text-decoration:underline;cursor:pointer');
-        accept_tag.textContent = 'Agree.';
-        li.appendChild(accept_tag);
-        li.appendChild(document.createTextNode(' '));
+		// add accept tag
+		let accept_tag = document.createElement('a') as HTMLAnchorElement;
+		accept_tag.id = elem.id;
+		accept_tag.onclick = agree_challenge_result_tag_clicked;
+		accept_tag.setAttribute('style', 'color:blue;text-decoration:underline;cursor:pointer');
+		accept_tag.textContent = 'Agree.';
+		li.appendChild(accept_tag);
+		li.appendChild(document.createTextNode(' '));
 
-        // add decline tag
-        let decline_tag = document.createElement('a') as HTMLAnchorElement;
-        decline_tag.id = elem.id;
-        decline_tag.onclick = disagree_challenge_result_tag_clicked;
-        decline_tag.setAttribute('style', 'color:blue;text-decoration:underline;cursor:pointer');
-        decline_tag.textContent = 'Disagree.';
-        li.appendChild(decline_tag);
+		// add decline tag
+		let decline_tag = document.createElement('a') as HTMLAnchorElement;
+		decline_tag.id = elem.id;
+		decline_tag.onclick = disagree_challenge_result_tag_clicked;
+		decline_tag.setAttribute('style', 'color:blue;text-decoration:underline;cursor:pointer');
+		decline_tag.textContent = 'Disagree.';
+		li.appendChild(decline_tag);
 
-        // append paragraph to element list
-        challenge_list.appendChild(li);
-    });
-    (document.getElementById('challenges_result_set_by_opponent') as HTMLDivElement).appendChild(challenge_list);
+		// append paragraph to element list
+		challenge_list.appendChild(li);
+	});
+	(document.getElementById('challenges_result_set_by_opponent') as HTMLDivElement).appendChild(challenge_list);
 }
 
 async function agree_challenge_result_tag_clicked(event: any) {
-    let tag_clicked = event.explicitOriginalTarget;
-    let challenge_id = tag_clicked.id;
+	let tag_clicked = event.explicitOriginalTarget;
+	let challenge_id = tag_clicked.id;
 
-    const response = await fetch('/challenges_agree_result', {
-        method: 'POST',
-        body: JSON.stringify({ challenge_id: challenge_id }),
-        headers: { 'Content-type': 'application/json; charset=UTF-8' }
-    });
-    const data = await response.json();
+	const response = await fetch('/challenges_agree_result', {
+		method: 'POST',
+		body: JSON.stringify({ challenge_id: challenge_id }),
+		headers: { 'Content-type': 'application/json; charset=UTF-8' }
+	});
+	const data = await response.json();
 
-    if (data.r == '1') {
-        window.location.href = '/challenges_page';
-    }
+	if (data.r == '1') {
+		window.location.href = '/challenges_page';
+	}
 }
 
 async function disagree_challenge_result_tag_clicked(event: any) {
-    let tag_clicked = event.explicitOriginalTarget;
-    let challenge_id = tag_clicked.id;
+	let tag_clicked = event.explicitOriginalTarget;
+	let challenge_id = tag_clicked.id;
 
-    const response = await fetch('/challenges_disagree_result', {
-        method: 'POST',
-        body: JSON.stringify({ challenge_id: challenge_id }),
-        headers: { 'Content-type': 'application/json; charset=UTF-8' }
-    });
-    const data = await response.json();
+	const response = await fetch('/challenges_disagree_result', {
+		method: 'POST',
+		body: JSON.stringify({ challenge_id: challenge_id }),
+		headers: { 'Content-type': 'application/json; charset=UTF-8' }
+	});
+	const data = await response.json();
 
-    if (data.r == '1') {
-        window.location.href = '/challenges_page';
-    }
+	if (data.r == '1') {
+		window.location.href = '/challenges_page';
+	}
 }
 
 window.onload = function () {
-    // fill in username dropdown with values
-    fill_username_datalist();
+	// fill in username dropdown with values
+	fill_username_datalist();
 
-    // link button 'submit_challenge' click behaviour
-    let submit_challenge_button = document.getElementById('send_challenge_button') as HTMLButtonElement;
-    submit_challenge_button.onclick = submit_challenge_button_clicked;
+	// link button 'submit_challenge' click behaviour
+	let submit_challenge_button = document.getElementById('send_challenge_button') as HTMLButtonElement;
+	submit_challenge_button.onclick = submit_challenge_button_clicked;
 
-    // add list of challenges
-    fill_challenges_received_list();
-    fill_challenges_sent_list();
-    fill_challenges_pending_set_result_list();
-    fill_challenges_result_set_by_me_list();
-    fill_challenges_result_set_by_opponent_list();
+	// add list of challenges
+	fill_challenges_received_list();
+	fill_challenges_sent_list();
+	fill_challenges_pending_set_result_list();
+	fill_challenges_result_set_by_me_list();
+	fill_challenges_result_set_by_opponent_list();
 
-    set_footer_version_number();
+	set_footer_version_number();
 };

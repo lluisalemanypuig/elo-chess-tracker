@@ -34,30 +34,30 @@ import { ServerMemory } from './server/memory';
 import { SessionID } from './models/session_id';
 
 let character_samples =
-    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+-*/ª!·$%&/()=?¿¡'º|@#~€¬^{},;.:_";
+	"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+-*/ª!·$%&/()=?¿¡'º|@#~€¬^{},;.:_";
 
 /// Makes a random session id from a starting string.
 function random_session_id(str: string): string {
-    // convert string to number array
-    let string_array: string[] = [];
-    for (let i = 0; i < str.length; ++i) {
-        string_array.push(str[i]);
-    }
-    // put more characters until the array is at least 128 characters
-    while (string_array.length < 128) {
-        let rand = Math.floor(Math.random() * character_samples.length);
-        string_array.push(character_samples[rand]);
-    }
+	// convert string to number array
+	let string_array: string[] = [];
+	for (let i = 0; i < str.length; ++i) {
+		string_array.push(str[i]);
+	}
+	// put more characters until the array is at least 128 characters
+	while (string_array.length < 128) {
+		let rand = Math.floor(Math.random() * character_samples.length);
+		string_array.push(character_samples[rand]);
+	}
 
-    shuffle(string_array);
+	shuffle(string_array);
 
-    // the array put together
-    let shuffled: string = '';
-    for (let i = 0; i < str.length; ++i) {
-        shuffled += string_array[i];
-    }
+	// the array put together
+	let shuffled: string = '';
+	for (let i = 0; i < str.length; ++i) {
+		shuffled += string_array[i];
+	}
 
-    return shuffled;
+	return shuffled;
 }
 
 /**
@@ -68,64 +68,64 @@ function random_session_id(str: string): string {
  * @post Creates a new session id for the user.
  */
 export async function post_user_log_in(req: any, res: any) {
-    debug(log_now(), `POST /log_in`);
+	debug(log_now(), `POST /log_in`);
 
-    const username = req.body.u;
-    const password = req.body.p;
+	const username = req.body.u;
+	const password = req.body.p;
 
-    debug(log_now(), `    Username '${username}'`);
+	debug(log_now(), `    Username '${username}'`);
 
-    // user data, which might be null
-    const _user_data = user_retrieve(username);
+	// user data, which might be null
+	const _user_data = user_retrieve(username);
 
-    // nonexistent user
-    if (_user_data == null) {
-        debug(log_now(), `    User ${username} does not exist`);
-        res.status(404).send({ r: '0' });
-        return;
-    }
+	// nonexistent user
+	if (_user_data == null) {
+		debug(log_now(), `    User ${username} does not exist`);
+		res.status(404).send({ r: '0' });
+		return;
+	}
 
-    // user exists
-    const user = _user_data as User;
-    const pwd = user.get_password();
+	// user exists
+	const user = _user_data as User;
+	const pwd = user.get_password();
 
-    // check if password is correct
-    const is_password_correct = is_password_of_user_correct(pwd.encrypted, username, password, pwd.iv);
+	// check if password is correct
+	const is_password_correct = is_password_of_user_correct(pwd.encrypted, username, password, pwd.iv);
 
-    // correct password
-    if (!is_password_correct) {
-        debug(log_now(), `    Password for '${username}' is incorrect`);
-        res.status(404).send({ r: '0' });
-        return;
-    }
+	// correct password
+	if (!is_password_correct) {
+		debug(log_now(), `    Password for '${username}' is incorrect`);
+		res.status(404).send({ r: '0' });
+		return;
+	}
 
-    debug(log_now(), `    Password for '${username}' is correct`);
+	debug(log_now(), `    Password for '${username}' is correct`);
 
-    // generate "random" "session id"
-    let token = random_session_id(interleave_strings(pwd.encrypted, pwd.iv));
+	// generate "random" "session id"
+	let token = random_session_id(interleave_strings(pwd.encrypted, pwd.iv));
 
-    // store session id
-    let mem = ServerMemory.get_instance();
-    if (!mem.has_session_id(token, user.get_username())) {
-        mem.add_session_id(new SessionID(token, user.get_username()));
-    }
+	// store session id
+	let mem = ServerMemory.get_instance();
+	if (!mem.has_session_id(token, user.get_username())) {
+		mem.add_session_id(new SessionID(token, user.get_username()));
+	}
 
-    // send response
-    res.status(200).send({
-        r: '1', // result of trying to log in
-        cookies: [
-            make_cookie_string({
-                name: 'session_id',
-                value: token,
-                days: 28
-            }),
-            make_cookie_string({
-                name: 'user',
-                value: user.get_username(),
-                days: 28
-            })
-        ]
-    });
+	// send response
+	res.status(200).send({
+		r: '1', // result of trying to log in
+		cookies: [
+			make_cookie_string({
+				name: 'session_id',
+				value: token,
+				days: 28
+			}),
+			make_cookie_string({
+				name: 'user',
+				value: user.get_username(),
+				days: 28
+			})
+		]
+	});
 }
 
 /**
@@ -135,24 +135,24 @@ export async function post_user_log_in(req: any, res: any) {
  * @post Deletes the user's session id.
  */
 export async function post_user_log_out(req: any, res: any) {
-    debug(log_now(), `POST /logout`);
-    debug(log_now(), `    Cookie:`);
-    debug(log_now(), `        Username:   '${req.cookies.user}'`);
-    debug(log_now(), `        Session ID: '${req.cookies.session_id}'`);
+	debug(log_now(), `POST /logout`);
+	debug(log_now(), `    Cookie:`);
+	debug(log_now(), `        Username:   '${req.cookies.user}'`);
+	debug(log_now(), `        Session ID: '${req.cookies.session_id}'`);
 
-    // in order to log out a user, they must have been logged in
-    const mem = ServerMemory.get_instance();
-    if (!mem.has_session_id(req.cookies.session_id, req.cookies.user)) {
-        debug(log_now(), `    User '${req.cookies.user}' was never logged in.`);
-        res.status(200).send('');
-    } else {
-        debug(log_now(), `    User '${req.cookies.user}' was logged in.`);
-        debug(log_now(), `    Deleting session id of user '${req.cookies.user}'...`);
-        session_id_delete(req.cookies.session_id, req.cookies.user);
-        debug(log_now(), `        Deleted.`);
-        // send response
-        res.status(200).send('success');
-    }
+	// in order to log out a user, they must have been logged in
+	const mem = ServerMemory.get_instance();
+	if (!mem.has_session_id(req.cookies.session_id, req.cookies.user)) {
+		debug(log_now(), `    User '${req.cookies.user}' was never logged in.`);
+		res.status(200).send('');
+	} else {
+		debug(log_now(), `    User '${req.cookies.user}' was logged in.`);
+		debug(log_now(), `    Deleting session id of user '${req.cookies.user}'...`);
+		session_id_delete(req.cookies.session_id, req.cookies.user);
+		debug(log_now(), `        Deleted.`);
+		// send response
+		res.status(200).send('success');
+	}
 
-    return;
+	return;
 }

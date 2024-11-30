@@ -21,18 +21,18 @@ Contact:
 */
 
 async function set_footer_version_number() {
-    // set the title of the page
-    let version_number_ = document.getElementById('version_number');
-    if (version_number_ == null) {
-        return;
-    }
-    let version_number = version_number_ as HTMLElement;
+	// set the title of the page
+	let version_number_ = document.getElementById('version_number');
+	if (version_number_ == null) {
+		return;
+	}
+	let version_number = version_number_ as HTMLElement;
 
-    const response = await fetch('/version_number', {
-        method: 'GET',
-        headers: { 'Content-type': 'application/json; charset=UTF-8' }
-    });
-    const data = await response.text();
+	const response = await fetch('/version_number', {
+		method: 'GET',
+		headers: { 'Content-type': 'application/json; charset=UTF-8' }
+	});
+	const data = await response.text();
 
-    version_number.textContent = data as string;
+	version_number.textContent = data as string;
 }

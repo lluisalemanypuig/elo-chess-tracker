@@ -27,19 +27,19 @@ Contact:
  * and the initialization vector 'iv'.
  */
 export class Password {
-    /// Encrypted password
-    public readonly encrypted: string;
-    /// Initialization vector of AES
-    public readonly iv: string;
+	/// Encrypted password
+	public readonly encrypted: string;
+	/// Initialization vector of AES
+	public readonly iv: string;
 
-    constructor(password: string, iv: string) {
-        this.encrypted = password;
-        this.iv = iv;
-    }
+	constructor(password: string, iv: string) {
+		this.encrypted = password;
+		this.iv = iv;
+	}
 
-    clone(): Password {
-        return new Password(this.encrypted, this.iv);
-    }
+	clone(): Password {
+		return new Password(this.encrypted, this.iv);
+	}
 }
 
 /**
@@ -49,11 +49,11 @@ export class Password {
  * @pre If @e json is a string then it cannot start with '['.
  */
 export function password_from_json(json: any): Password {
-    if (typeof json === 'string') {
-        let json_parse = JSON.parse(json);
-        return password_from_json(json_parse);
-    }
-    return new Password(json['encrypted'], json['iv']);
+	if (typeof json === 'string') {
+		let json_parse = JSON.parse(json);
+		return password_from_json(json_parse);
+	}
+	return new Password(json['encrypted'], json['iv']);
 }
 
 /**
@@ -62,14 +62,14 @@ export function password_from_json(json: any): Password {
  * @returns An array of Password objects.
  */
 export function password_set_from_json(json: any): Password[] {
-    if (typeof json === 'string') {
-        let json_parse = JSON.parse(json);
-        return password_set_from_json(json_parse);
-    }
+	if (typeof json === 'string') {
+		let json_parse = JSON.parse(json);
+		return password_set_from_json(json_parse);
+	}
 
-    let player_set: Password[] = [];
-    for (var player in json) {
-        player_set.push(password_from_json(json[player]));
-    }
-    return player_set;
+	let player_set: Password[] = [];
+	for (var player in json) {
+		player_set.push(password_from_json(json[player]));
+	}
+	return player_set;
 }

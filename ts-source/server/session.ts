@@ -30,18 +30,18 @@ import { user_retrieve } from './users';
 
 /// Deletes a session id.
 export function session_id_delete(id: string, username: string): void {
-    let mem = ServerMemory.get_instance();
+	let mem = ServerMemory.get_instance();
 
-    debug(log_now(), `Before deleting, '${mem.num_session_ids()}' sessions`);
-    const idx = mem.index_session_id(id, username);
-    if (idx != -1) {
-        debug(log_now(), `    Session of user '${username}' was found. Deleting...`);
-        mem.remove_session_id(idx);
-    } else {
-        debug(log_now(), `    Session of user '${username}' was not found.`);
-    }
+	debug(log_now(), `Before deleting, '${mem.num_session_ids()}' sessions`);
+	const idx = mem.index_session_id(id, username);
+	if (idx != -1) {
+		debug(log_now(), `    Session of user '${username}' was found. Deleting...`);
+		mem.remove_session_id(idx);
+	} else {
+		debug(log_now(), `    Session of user '${username}' was not found.`);
+	}
 
-    debug(log_now(), `Currently, '${mem.num_session_ids()}' sessions`);
+	debug(log_now(), `Currently, '${mem.num_session_ids()}' sessions`);
 }
 
 /**
@@ -53,14 +53,14 @@ export function session_id_delete(id: string, username: string): void {
  * @returns
  */
 export function is_user_logged_in(session_id: string, username: string): [boolean, string, User | null] {
-    if (!ServerMemory.get_instance().has_session_id(session_id, username)) {
-        debug(log_now(), `Session does not exist for user '${username}'.`);
-        return [false, '403 - Forbidden', null];
-    }
-    const user = user_retrieve(username);
-    if (user == null) {
-        debug(log_now(), `User '${username}' does not exist.`);
-        return [false, '403 - Forbidden', null];
-    }
-    return [true, '', user as User];
+	if (!ServerMemory.get_instance().has_session_id(session_id, username)) {
+		debug(log_now(), `Session does not exist for user '${username}'.`);
+		return [false, '403 - Forbidden', null];
+	}
+	const user = user_retrieve(username);
+	if (user == null) {
+		debug(log_now(), `User '${username}' does not exist.`);
+		return [false, '403 - Forbidden', null];
+	}
+	return [true, '', user as User];
 }
