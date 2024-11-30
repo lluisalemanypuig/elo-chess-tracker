@@ -165,7 +165,9 @@ function initialize_time_controls(time_control_array: any): void {
         all_time_controls.push(new TimeControl(tc.id, tc.name));
     }
 
-    RatingSystem.get_instance().set_time_controls(all_time_controls);
+    let rating_system = RatingSystem.get_instance();
+    rating_system.set_time_controls(all_time_controls);
+    rating_system.make_unique_time_controls();
 
     debug(log_now(), `    Found '${all_time_controls.length}' rating types:`);
     for (let i = 0; i < all_time_controls.length; ++i) {

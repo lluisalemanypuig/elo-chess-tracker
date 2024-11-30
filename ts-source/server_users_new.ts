@@ -41,7 +41,6 @@ import { encrypt_password_for_user } from './utils/encrypt';
 import { Password } from './models/password';
 import { TimeControlRating } from './models/time_control_rating';
 import { RatingSystem } from './server/rating_system';
-import { TimeControl } from './models/time_control';
 
 export async function get_users_create_page(req: any, res: any) {
     debug(log_now(), 'GET users_create_page...');
@@ -148,8 +147,10 @@ export async function post_users_create(req: any, res: any) {
 
     let ratings: TimeControlRating[] = [];
     const rating_system = RatingSystem.get_instance();
-    rating_system.get_time_controls().forEach((value: TimeControl) => {
-        ratings.push(new TimeControlRating(value.id, rating_system.get_new_rating()));
+
+    debug(rating_system.get_unique_time_controls_ids());
+    rating_system.get_unique_time_controls_ids().forEach((id: string) => {
+        ratings.push(new TimeControlRating(id, rating_system.get_new_rating()));
     });
 
     let u = new User(

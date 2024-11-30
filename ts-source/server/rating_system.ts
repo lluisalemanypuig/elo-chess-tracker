@@ -48,6 +48,8 @@ export class RatingSystem {
     private rating_from_JSON: Function = () => void {};
     /// All ratings used in the web
     private all_time_controls: TimeControl[] = [];
+    /// All unique rating ids used in the web
+    private all_unique_time_controls: string[] = [];
 
     /**
      * @brief Returns the only instance of this class
@@ -82,6 +84,11 @@ export class RatingSystem {
     set_time_controls(all_ratings: TimeControl[]): void {
         this.all_time_controls = all_ratings;
     }
+    make_unique_time_controls(): void {
+        this.all_unique_time_controls = [
+            ...new Set(this.all_time_controls.map<string>((value: TimeControl): string => value.id))
+        ];
+    }
     get_name_time_control(time_control_id: string): string {
         const index = linear_find(this.all_time_controls, (t: TimeControl): boolean => {
             return t.id == time_control_id;
@@ -103,5 +110,9 @@ export class RatingSystem {
 
     get_time_controls(): TimeControl[] {
         return this.all_time_controls;
+    }
+
+    get_unique_time_controls_ids(): string[] {
+        return this.all_unique_time_controls;
     }
 }
