@@ -123,7 +123,7 @@ The configuration file can be edited at any time, even after the website has bee
 
 #### HTTP and HTTPS ports
 
-These are st by default to `8080` for HTTP and to `8443` for HTTPS. Change them to whichever ports you like if these do not suit your needs. This step is _optional_.
+These are st by default to `8080` for HTTP and to `8443` for HTTPS. Change them to whichever ports you like if these do not suit your needs. This step is _optional_, and so you can leave the default port configuration as is.
 
 #### Icons and titles
 
@@ -228,6 +228,8 @@ To access the site from the *same* computer the webpage it is running on, open a
 	http://localhost:8080
 	https://localhost:8443
 
+The `8080` and `8443` are the default ports. Change them here if you changed them in the `configuration.json` file.
+
 ### From any other machine
 
 To access the webpage from a different machine, one has to first find out the IP address of the machine the webpage is running on. For this, run the command
@@ -242,7 +244,7 @@ To access the webpage from a different machine, open a web browser and type in
 
 	https://192.168.1.76:8443
 
-This address is the same for *all* other machines.
+This address is the same for *all* other machines. Remember to use the right https port you set in the `configuration.json` file.
 
 ## Adding new users
 
