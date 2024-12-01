@@ -82,7 +82,7 @@ async function submit_challenge_button_clicked(_event: any) {
 }
 
 async function accept_challenge_tag_clicked(event: any) {
-	let tag_clicked = event.explicitOriginalTarget;
+	let tag_clicked = event.target;
 	let challenge_id = tag_clicked.id;
 
 	const response = await fetch('/challenges_accept', {
@@ -98,7 +98,7 @@ async function accept_challenge_tag_clicked(event: any) {
 }
 
 async function decline_challenge_tag_clicked(event: any) {
-	let tag_clicked = event.explicitOriginalTarget;
+	let tag_clicked = event.target;
 	let challenge_id = tag_clicked.id;
 
 	const response = await fetch('/challenges_decline', {
@@ -322,7 +322,7 @@ async function fill_challenges_pending_set_result_list() {
 }
 
 async function submit_result_challenge_button_clicked(event: any) {
-	let button_clicked = event.explicitOriginalTarget;
+	let button_clicked = event.target;
 	let challenge_id = button_clicked.id;
 
 	let white_select = document.getElementById('white_select_' + challenge_id) as HTMLSelectElement;
@@ -376,7 +376,9 @@ async function fill_challenges_result_set_by_me_list() {
 	let challenge_list = document.createElement('ul') as HTMLUListElement;
 	challenge_data.forEach(function (elem: any) {
 		let li = document.createElement('li') as HTMLLIElement;
-		li.textContent = `On ${elem.sent_when.replace('..', ' ')}. White: ${elem.white}. Black: ${elem.black}. Result: ${elem.result}. Time control: ${elem.time_control}`;
+		li.textContent = `On ${elem.sent_when.replace('..', ' ')}. White: ${elem.white}. Black: ${
+			elem.black
+		}. Result: ${elem.result}. Time control: ${elem.time_control}`;
 
 		// append paragraph to element list
 		challenge_list.appendChild(li);
@@ -401,7 +403,9 @@ async function fill_challenges_result_set_by_opponent_list() {
 	let challenge_list = document.createElement('ul') as HTMLUListElement;
 	challenge_data.forEach(function (elem: any) {
 		let li = document.createElement('li') as HTMLLIElement;
-		li.textContent = `On ${elem.sent_when.replace('..', ' ')}. White: ${elem.white}. Black: ${elem.black}. Result: ${elem.result}. Time control: ${elem.time_control}. `;
+		li.textContent = `On ${elem.sent_when.replace('..', ' ')}. White: ${elem.white}. Black: ${
+			elem.black
+		}. Result: ${elem.result}. Time control: ${elem.time_control}. `;
 
 		// add accept tag
 		let accept_tag = document.createElement('a') as HTMLAnchorElement;
@@ -427,7 +431,7 @@ async function fill_challenges_result_set_by_opponent_list() {
 }
 
 async function agree_challenge_result_tag_clicked(event: any) {
-	let tag_clicked = event.explicitOriginalTarget;
+	let tag_clicked = event.target;
 	let challenge_id = tag_clicked.id;
 
 	const response = await fetch('/challenges_agree_result', {
@@ -443,7 +447,7 @@ async function agree_challenge_result_tag_clicked(event: any) {
 }
 
 async function disagree_challenge_result_tag_clicked(event: any) {
-	let tag_clicked = event.explicitOriginalTarget;
+	let tag_clicked = event.target;
 	let challenge_id = tag_clicked.id;
 
 	const response = await fetch('/challenges_disagree_result', {
