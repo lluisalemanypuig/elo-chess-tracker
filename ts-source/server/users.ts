@@ -75,14 +75,7 @@ export function user_rename_reassign_roles(
 
 /// Does a user exist?
 export function user_exists(username: string): boolean {
-	let mem = ServerMemory.get_instance();
-	for (let i = 0; i < mem.num_users(); ++i) {
-		const user: User = mem.get_user(i);
-		if (user.get_username() == username) {
-			return true;
-		}
-	}
-	return false;
+	return user_retrieve(username) != null;
 }
 
 /// Returns a copy of all users
