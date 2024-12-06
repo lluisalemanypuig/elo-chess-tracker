@@ -100,11 +100,11 @@ export function challenge_set_retrieve(
 
 /**
  * @brief Send a challenge from a user to another
- * @param u1 Username of sender
- * @param u2 Username of receiver
+ * @param sender Username of sender
+ * @param receiver Username of receiver
  * @returns The id of the challenge
  */
-export function challenge_send_new(u1: string, u2: string): string {
+export function challenge_send_new(sender: string, receiver: string): string {
 	debug(log_now(), 'Adding a new challenge...');
 
 	let mem = ServerMemory.get_instance();
@@ -116,12 +116,12 @@ export function challenge_send_new(u1: string, u2: string): string {
 		new_id = number_to_string(parseInt(last_id, 10) + 1);
 	}
 
-	let c = new Challenge(new_id, u1, u2, log_now());
+	let c = new Challenge(new_id, sender, receiver, log_now());
 
 	mem.add_challenge(c);
 
-	let challenge_dir = ServerEnvironment.get_instance().get_dir_challenges();
-	let challenge_file = path.join(challenge_dir, new_id);
+	const challenge_dir = ServerEnvironment.get_instance().get_dir_challenges();
+	const challenge_file = path.join(challenge_dir, new_id);
 	debug(log_now(), `    writing challenge into file '${challenge_file}'`);
 	fs.writeFileSync(challenge_file, JSON.stringify(c, null, 4));
 
