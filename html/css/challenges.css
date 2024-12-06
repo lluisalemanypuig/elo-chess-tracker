@@ -29,3 +29,8 @@ Contact:
 
 	width: 100%;
 }
+
+.challenge-list-item {
+	margin-top: 10px;
+	margin-bottom: 20px;
+}

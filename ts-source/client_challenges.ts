@@ -204,12 +204,13 @@ async function fill_challenges_pending_result() {
 	const time_control_data = time_control.data as any[];
 
 	let all_challenges_list = document.getElementById('challenges_pending_result__list') as HTMLDivElement;
-	challenge_data.forEach(function (elem: any) {
+	challenge_data.forEach(function (elem: any, index: number) {
 		let li = document.createElement('li') as HTMLLIElement;
 		li.textContent = `Challenge with ${elem.opponent}, sent on ${elem.sent_when.replace('..', ' ')}.`;
 
 		// append paragraph to element list
 		all_challenges_list.appendChild(li);
+		li.classList.add('challenge-list-item');
 
 		let challenge_div = document.createElement('div') as HTMLDivElement;
 
@@ -308,12 +309,18 @@ async function fill_challenges_pending_result() {
 		}
 
 		all_challenges_list.appendChild(challenge_div);
+
 		// submit button
 		{
 			let submit_result_button_clicked = document.createElement('button');
 			submit_result_button_clicked.textContent = 'Submit result';
 			submit_result_button_clicked.id = elem.id;
 			submit_result_button_clicked.onclick = submit_result_challenge_button_clicked;
+			submit_result_button_clicked.style.marginTop = '5px';
+			if (index < challenge_data.length - 1) {
+				submit_result_button_clicked.style.marginBottom = '20px';
+			}
+
 			all_challenges_list.appendChild(submit_result_button_clicked);
 		}
 	});
