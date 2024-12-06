@@ -59,7 +59,7 @@ export function user_overwrite(user: User): void {
 }
 
 /// Overwrites user data
-export function user_rename_reassign_roles(
+export function user_rename_and_reassign_roles(
 	username: string,
 	first_name: string,
 	last_name: string,

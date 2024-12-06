@@ -27,10 +27,10 @@ import path from 'path';
 
 import { log_now } from './utils/misc';
 import { is_user_logged_in } from './server/session';
-import { user_retrieve, user_rename_reassign_roles } from './server/users';
+import { user_retrieve, user_rename_and_reassign_roles } from './server/users';
 import { User } from './models/user';
 import { ADMIN, MEMBER, STUDENT, TEACHER } from './models/user_role';
-import { EDIT_ADMIN, EDIT_MEMBER, EDIT_STUDENT, EDIT_TEACHER } from './models/user_action';
+import { EDIT_ADMIN, EDIT_MEMBER, EDIT_STUDENT, EDIT_TEACHER, EDIT_USER } from './models/user_action';
 
 import { ServerMemory } from './server/memory';
 
@@ -48,14 +48,14 @@ export async function get_users_edit_page(req: any, res: any) {
 		return;
 	}
 
-	let _user = user_retrieve(username);
+	const _user = user_retrieve(username);
 	if (_user == null) {
 		debug(log_now(), `    User '${username}' does not exist.`);
 		res.send('403 - Forbidden');
 		return;
 	}
 
-	let user = _user as User;
+	const user = _user as User;
 	if (!user.can_do(EDIT_MEMBER) && !user.can_do(EDIT_STUDENT)) {
 		debug(log_now(), `    User '${username}' does not have sufficient permissions.`);
 		res.send('403 - Forbidden');
@@ -71,38 +71,31 @@ export async function post_users_edit(req: any, res: any) {
 	const session_id = req.cookies.session_id;
 	const username = req.cookies.user;
 
-	let r = is_user_logged_in(session_id, username);
+	const r = is_user_logged_in(session_id, username);
 	if (!r[0]) {
 		res.send({ r: '0', reason: r[1] });
 		return;
 	}
-	let modifier = r[2] as User;
+	const editor = r[2] as User;
 
-	let _modified = user_retrieve(req.body.u);
-	if (_modified == null) {
+	const _edited = user_retrieve(req.body.u);
+	if (_edited == null) {
 		res.send({
 			r: '0',
 			reason: `User '${req.body.u}' to be modified does not exist.`
 		});
 		return;
 	}
-	let modified = _modified as User;
+	const edited = _edited as User;
 
-	debug(log_now(), `User '${modifier.get_username()}' is trying to modify user '${modified.get_username()}'`);
+	debug(log_now(), `User '${editor.get_username()}' is trying to modify user '${edited.get_username()}'`);
 
-	let enough_permissions: boolean = true;
-	if (modified.get_roles().includes(ADMIN) && !modifier.can_do(EDIT_ADMIN)) {
-		enough_permissions = false;
-	}
-	if (modified.get_roles().includes(TEACHER) && !modifier.can_do(EDIT_TEACHER)) {
-		enough_permissions = false;
-	}
-	if (modified.get_roles().includes(MEMBER) && !modifier.can_do(EDIT_MEMBER)) {
-		enough_permissions = false;
-	}
-	if (modified.get_roles().includes(STUDENT) && !modifier.can_do(EDIT_STUDENT)) {
-		enough_permissions = false;
-	}
+	const enough_permissions: boolean =
+		editor.can_do(EDIT_USER) &&
+		((edited.get_roles().includes(ADMIN) && editor.can_do(EDIT_ADMIN)) ||
+			(edited.get_roles().includes(TEACHER) && editor.can_do(EDIT_TEACHER)) ||
+			(edited.get_roles().includes(MEMBER) && editor.can_do(EDIT_MEMBER)) ||
+			(edited.get_roles().includes(STUDENT) && editor.can_do(EDIT_STUDENT)));
 
 	if (!enough_permissions) {
 		res.send({
@@ -116,7 +109,7 @@ export async function post_users_edit(req: any, res: any) {
 	debug(log_now(), `    Last name: '${req.body.l}'`);
 	debug(log_now(), `    Roles: '${req.body.r}'`);
 
-	user_rename_reassign_roles(modified.get_username(), req.body.f, req.body.l, req.body.r);
+	user_rename_and_reassign_roles(edited.get_username(), req.body.f, req.body.l, req.body.r);
 
 	res.send({ r: '1' });
 }

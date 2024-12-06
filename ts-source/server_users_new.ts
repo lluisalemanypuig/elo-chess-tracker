@@ -108,31 +108,12 @@ export async function post_users_create(req: any, res: any) {
 		}
 	}
 
-	let can_create: boolean = true;
-	if (new_roles.includes(ADMIN)) {
-		can_create = can_create && registerer.can_do(ASSIGN_ROLE_ADMIN);
-		if (!registerer.can_do(ASSIGN_ROLE_ADMIN)) {
-			debug(log_now(), `User '${username}' cannot create admins.`);
-		}
-	}
-	if (new_roles.includes(TEACHER)) {
-		can_create = can_create && registerer.can_do(ASSIGN_ROLE_TEACHER);
-		if (!registerer.can_do(ASSIGN_ROLE_TEACHER)) {
-			debug(log_now(), `User '${username}' cannot create teachers.`);
-		}
-	}
-	if (new_roles.includes(MEMBER)) {
-		can_create = can_create && registerer.can_do(ASSIGN_ROLE_MEMBER);
-		if (!registerer.can_do(ASSIGN_ROLE_MEMBER)) {
-			debug(log_now(), `User '${username}' cannot create members.`);
-		}
-	}
-	if (new_roles.includes(STUDENT)) {
-		can_create = can_create && registerer.can_do(ASSIGN_ROLE_STUDENT);
-		if (!registerer.can_do(ASSIGN_ROLE_STUDENT)) {
-			debug(log_now(), `User '${username}' cannot create students.`);
-		}
-	}
+	const can_create: boolean =
+		registerer.get_roles().includes(ADMIN) &&
+		((new_roles.includes(ADMIN) && registerer.can_do(ASSIGN_ROLE_ADMIN)) ||
+			(new_roles.includes(TEACHER) && registerer.can_do(ASSIGN_ROLE_TEACHER)) ||
+			(new_roles.includes(MEMBER) && registerer.can_do(ASSIGN_ROLE_MEMBER)) ||
+			(new_roles.includes(STUDENT) && registerer.can_do(ASSIGN_ROLE_STUDENT)));
 
 	if (!can_create) {
 		res.send({
@@ -143,10 +124,10 @@ export async function post_users_create(req: any, res: any) {
 	}
 
 	// encrypt password
-	let _pass = encrypt_password_for_user(new_username, new_password);
+	const password = encrypt_password_for_user(new_username, new_password);
 
-	let ratings: TimeControlRating[] = [];
 	const rating_system = RatingSystem.get_instance();
+	let ratings: TimeControlRating[] = [];
 
 	debug(rating_system.get_unique_time_controls_ids());
 	rating_system.get_unique_time_controls_ids().forEach((id: string) => {
@@ -157,7 +138,7 @@ export async function post_users_create(req: any, res: any) {
 		new_username,
 		new_firstname,
 		new_lastname,
-		new Password(_pass[0], _pass[1]),
+		new Password(password[0], password[1]),
 		new_roles,
 		[], // empty set of games
 		ratings
