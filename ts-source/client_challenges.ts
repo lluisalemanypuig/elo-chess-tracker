@@ -57,7 +57,7 @@ async function fill_username_datalist() {
 	username_datalist.innerHTML = options;
 }
 
-async function submit_challenge_button_clicked(_event: any) {
+async function send_challenge_button_clicked(_event: any) {
 	let username_list_input = document.getElementById('username_list') as HTMLInputElement;
 	const username_option = document.querySelector('option[value="' + username_list_input.value + '"]');
 
@@ -113,7 +113,7 @@ async function decline_challenge_tag_clicked(event: any) {
 	}
 }
 
-async function fill_challenges_received_list() {
+async function fill_challenges_received() {
 	const response = await fetch('/query_challenges_received', {
 		method: 'GET',
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
@@ -154,10 +154,10 @@ async function fill_challenges_received_list() {
 		// append paragraph to element list
 		challenge_list.appendChild(li);
 	});
-	(document.getElementById('challenges_received_list') as HTMLDivElement).appendChild(challenge_list);
+	(document.getElementById('challenges_received') as HTMLDivElement).appendChild(challenge_list);
 }
 
-async function fill_challenges_sent_list() {
+async function fill_challenges_sent() {
 	const response = await fetch('/query_challenges_sent', {
 		method: 'GET',
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
@@ -179,11 +179,11 @@ async function fill_challenges_sent_list() {
 		// append paragraph to element list
 		challenge_list.appendChild(li);
 	});
-	(document.getElementById('challenges_sent_list') as HTMLDivElement).appendChild(challenge_list);
+	(document.getElementById('challenges_sent') as HTMLDivElement).appendChild(challenge_list);
 }
 
-async function fill_challenges_pending_set_result_list() {
-	const response_challenges_pending = await fetch('/query_challenges_pending_set_result', {
+async function fill_challenges_pending_result() {
+	const response_challenges_pending = await fetch('/query_challenges_pending_result', {
 		method: 'GET',
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
@@ -203,7 +203,7 @@ async function fill_challenges_pending_set_result_list() {
 	const challenge_data = challenges_pending.c as any[];
 	const time_control_data = time_control.data as any[];
 
-	let all_challenges_list = document.getElementById('challenges_result_to_be_set_list') as HTMLDivElement;
+	let all_challenges_list = document.getElementById('challenges_pending_result__list') as HTMLDivElement;
 	challenge_data.forEach(function (elem: any) {
 		let li = document.createElement('li') as HTMLLIElement;
 		li.textContent = `Challenge with ${elem.opponent}, sent on ${elem.sent_when.replace('..', ' ')}.`;
@@ -212,7 +212,6 @@ async function fill_challenges_pending_set_result_list() {
 		all_challenges_list.appendChild(li);
 
 		let challenge_div = document.createElement('div') as HTMLDivElement;
-		challenge_div.classList.add('challenge-result-set');
 
 		// Who is the white player?
 		{
@@ -318,7 +317,7 @@ async function fill_challenges_pending_set_result_list() {
 			all_challenges_list.appendChild(submit_result_button_clicked);
 		}
 	});
-	(document.getElementById('challenges_pending_result_set') as HTMLDivElement).appendChild(all_challenges_list);
+	(document.getElementById('challenges_pending_result') as HTMLDivElement).appendChild(all_challenges_list);
 }
 
 async function submit_result_challenge_button_clicked(event: any) {
@@ -359,8 +358,8 @@ async function submit_result_challenge_button_clicked(event: any) {
 	window.location.href = '/challenges_page';
 }
 
-async function fill_challenges_result_set_by_me_list() {
-	const response = await fetch('/query_challenges_result_set_by_me', {
+async function fill_challenges_confirm_result_other() {
+	const response = await fetch('/query_challenges_confirm_result_other', {
 		method: 'GET',
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
@@ -383,11 +382,11 @@ async function fill_challenges_result_set_by_me_list() {
 		// append paragraph to element list
 		challenge_list.appendChild(li);
 	});
-	(document.getElementById('challenges_result_set_by_me') as HTMLDivElement).appendChild(challenge_list);
+	(document.getElementById('challenges_confirm_result_other') as HTMLDivElement).appendChild(challenge_list);
 }
 
-async function fill_challenges_result_set_by_opponent_list() {
-	const response = await fetch('/query_challenges_result_set_by_opponent', {
+async function fill_challenges_confirm_result_self() {
+	const response = await fetch('/query_challenges_confirm_result_self', {
 		method: 'GET',
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
@@ -427,7 +426,7 @@ async function fill_challenges_result_set_by_opponent_list() {
 		// append paragraph to element list
 		challenge_list.appendChild(li);
 	});
-	(document.getElementById('challenges_result_set_by_opponent') as HTMLDivElement).appendChild(challenge_list);
+	(document.getElementById('challenges_confirm_result_self') as HTMLDivElement).appendChild(challenge_list);
 }
 
 async function agree_challenge_result_tag_clicked(event: any) {
@@ -467,15 +466,15 @@ window.onload = function () {
 	fill_username_datalist();
 
 	// link button 'submit_challenge' click behaviour
-	let submit_challenge_button = document.getElementById('send_challenge_button') as HTMLButtonElement;
-	submit_challenge_button.onclick = submit_challenge_button_clicked;
+	let send_challenge_button = document.getElementById('send_challenge_button') as HTMLButtonElement;
+	send_challenge_button.onclick = send_challenge_button_clicked;
 
 	// add list of challenges
-	fill_challenges_received_list();
-	fill_challenges_sent_list();
-	fill_challenges_pending_set_result_list();
-	fill_challenges_result_set_by_me_list();
-	fill_challenges_result_set_by_opponent_list();
+	fill_challenges_received();
+	fill_challenges_sent();
+	fill_challenges_pending_result();
+	fill_challenges_confirm_result_other();
+	fill_challenges_confirm_result_self();
 
 	set_footer_version_number();
 };

@@ -115,8 +115,8 @@ export async function get_query_challenges_sent(req: any, res: any) {
 }
 
 /// Query the server for accepted challenges whose result has not been set yet.
-export async function get_query_challenges_pending_set_result(req: any, res: any) {
-	debug(log_now(), 'GET query_challenges_pending_set_result...');
+export async function get_query_challenges_pending_result(req: any, res: any) {
+	debug(log_now(), 'GET query_challenges_pending_result...');
 
 	const session_id = req.cookies.session_id;
 	const username = req.cookies.user;
@@ -175,8 +175,8 @@ export async function get_query_challenges_pending_set_result(req: any, res: any
 }
 
 /// Query the server for accepted challenges whose result has been set by me
-export async function get_query_challenges_result_set_by_me(req: any, res: any) {
-	debug(log_now(), 'GET query_challenges_result_set_by_me...');
+export async function get_query_challenges_confirm_result_other(req: any, res: any) {
+	debug(log_now(), 'GET query_challenges_confirm_result_other...');
 
 	const session_id = req.cookies.session_id;
 	const username = req.cookies.user;
@@ -248,8 +248,8 @@ export async function get_query_challenges_result_set_by_me(req: any, res: any) 
 }
 
 /// Query the server for accepted challenges whose result has been set by my opponent
-export async function get_query_challenges_result_set_by_opponent(req: any, res: any) {
-	debug(log_now(), 'GET query_challenges_result_set_by_opponent...');
+export async function get_query_challenges_confirm_result_self(req: any, res: any) {
+	debug(log_now(), 'GET query_challenges_confirm_result_self...');
 
 	const session_id = req.cookies.session_id;
 	const username = req.cookies.user;

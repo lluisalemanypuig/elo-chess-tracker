@@ -134,15 +134,15 @@ router.post('/query_users_ranking', post_query_users_ranking);
 import {
 	get_query_challenges_received,
 	get_query_challenges_sent,
-	get_query_challenges_pending_set_result,
-	get_query_challenges_result_set_by_me,
-	get_query_challenges_result_set_by_opponent
+	get_query_challenges_pending_result,
+	get_query_challenges_confirm_result_other,
+	get_query_challenges_confirm_result_self
 } from './server_query_challenges';
 router.get('/query_challenges_received', get_query_challenges_received);
 router.get('/query_challenges_sent', get_query_challenges_sent);
-router.get('/query_challenges_pending_set_result', get_query_challenges_pending_set_result);
-router.get('/query_challenges_result_set_by_me', get_query_challenges_result_set_by_me);
-router.get('/query_challenges_result_set_by_opponent', get_query_challenges_result_set_by_opponent);
+router.get('/query_challenges_pending_result', get_query_challenges_pending_result);
+router.get('/query_challenges_confirm_result_other', get_query_challenges_confirm_result_other);
+router.get('/query_challenges_confirm_result_self', get_query_challenges_confirm_result_self);
 
 import { get_query_games_list_own, get_query_games_list_all } from './server_query_games';
 router.get('/query_games_own', get_query_games_list_own);
