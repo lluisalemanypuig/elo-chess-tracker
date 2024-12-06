@@ -37,11 +37,10 @@ import {
 	challenge_agree_result,
 	challenge_can_user_send
 } from './server/challenges';
-import { user_exists } from './server/users';
+import { user_exists, user_retrieve } from './server/users';
 import { Challenge } from './models/challenge';
 import { User } from './models/user';
 import { CHALLENGE_USER } from './models/user_action';
-import { assert } from 'console';
 
 export async function get_challenges_page(req: any, res: any) {
 	debug(log_now(), 'GET challenges_page...');
@@ -77,7 +76,19 @@ export async function post_challenge_send(req: any, res: any) {
 		return;
 	}
 
-	if (!user_exists(to_user)) {
+	let sender = r[2] as User;
+	if (!sender.can_do(CHALLENGE_USER)) {
+		debug(log_now(), `User '${username}' cannot challenge other users.`);
+		res.send({
+			r: '0',
+			reason: 'You cannot challenge other users'
+		});
+		return;
+	}
+
+	let _receiver = user_retrieve(to_user);
+
+	if (_receiver == null) {
 		debug(log_now(), `User receiver of the challenge '${to_user}' does not exist.`);
 		res.send({
 			r: '0',
@@ -95,21 +106,9 @@ export async function post_challenge_send(req: any, res: any) {
 		return;
 	}
 
-	assert(r[2] != null);
+	let receiver = _receiver as User;
 
-	{
-		let sender = r[2] as User;
-		if (!sender.can_do(CHALLENGE_USER)) {
-			debug(log_now(), `User '${username}' cannot challenge other users.`);
-			res.send({
-				r: '0',
-				reason: 'You cannot challenge other users'
-			});
-			return;
-		}
-	}
-
-	if (!challenge_can_user_send(username, req.body.to)) {
+	if (!challenge_can_user_send(sender, receiver)) {
 		debug(log_now(), `Sender '${username}' cannot challenge user '${req.body.to}'.`);
 		res.send({
 			r: '0',
@@ -151,7 +150,7 @@ export async function post_challenge_accept(req: any, res: any) {
 	}
 	const c = _c as Challenge;
 
-	debug(log_now(), `Challenge '${challenge_id}' involves players '${c?.get_sent_by()}' and '${c.get_sent_to()}'`);
+	debug(log_now(), `Challenge '${challenge_id}' involves players '${c.get_sent_by()}' and '${c.get_sent_to()}'`);
 
 	if (username != c.get_sent_to()) {
 		res.send({
