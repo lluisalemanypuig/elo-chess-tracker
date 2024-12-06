@@ -74,19 +74,18 @@ function normalize_password(password: string): string {
 
 /**
  * @brief Encrypts a password for a user
- * @param username User name
- * @param password Password in plain text
- * @returns A pair of strings: encrypted text, and random initialization vector of AES (length 32 bytes)
+ * @param username User name.
+ * @param user_password Password in plain text set by the user.
+ * @returns A pair of strings: encrypted text, and random initialization vector of AES (length 16 bytes)
  */
-export function encrypt_password_for_user(username: string, password: string): [string, string] {
-	const text = interleave_strings(username, password);
+export function encrypt_password_for_user(username: string, user_password: string): [string, string] {
+	const actual_password = interleave_strings(username, user_password);
+	const normalized_user_password = normalize_password(user_password);
 
-	password = normalize_password(password);
-	const key = CryptoJS.enc.Utf8.parse(password);
-
+	const key_to_encrypt = CryptoJS.enc.Utf8.parse(normalized_user_password);
 	const iv = CryptoJS.lib.WordArray.random(16);
 
-	const encrypted = CryptoJS.AES.encrypt(text, key, {
+	const encrypted = CryptoJS.AES.encrypt(actual_password, key_to_encrypt, {
 		iv: iv,
 		mode: CryptoJS.mode.CBC,
 		padding: CryptoJS.pad.Pkcs7
