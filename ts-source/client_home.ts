@@ -123,29 +123,20 @@ async function fill_own_info() {
 	}
 
 	{
-		const new_cell = function (text: string) {
-			let cell = document.createElement('td');
-			cell.innerHTML = text;
-			return cell;
-		};
-
 		let table = document.getElementById('user_ratings_table') as HTMLTableElement;
-		let tbody = table.getElementsByTagName('tbody')[0];
 
 		const ratings = data.ratings as any[];
 		for (let i = 0; i < ratings.length; ++i) {
 			const data_i = ratings[i];
 
-			let row = document.createElement('tr');
+			let row = table.insertRow(-1);
 
-			row.appendChild(new_cell(data_i.id));
-			row.appendChild(new_cell(data_i.v.rating));
-			row.appendChild(new_cell(data_i.v.num_games));
-			row.appendChild(new_cell(data_i.v.won));
-			row.appendChild(new_cell(data_i.v.drawn));
-			row.appendChild(new_cell(data_i.v.lost));
-
-			tbody.appendChild(row);
+			row.insertCell(-1).appendChild(document.createTextNode(data_i.id));
+			row.insertCell(-1).appendChild(document.createTextNode(data_i.v.rating));
+			row.insertCell(-1).appendChild(document.createTextNode(data_i.v.num_games));
+			row.insertCell(-1).appendChild(document.createTextNode(data_i.v.won));
+			row.insertCell(-1).appendChild(document.createTextNode(data_i.v.drawn));
+			row.insertCell(-1).appendChild(document.createTextNode(data_i.v.lost));
 		}
 	}
 }
