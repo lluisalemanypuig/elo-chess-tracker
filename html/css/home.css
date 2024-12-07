@@ -26,7 +26,7 @@ Contact:
 	justify-content: center;
 }
 
-#user_ratings_table {
+.ratings-table {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
@@ -40,7 +40,7 @@ a, #logout_link, #recalculate_Elo_ratings_link {
 	cursor: pointer
 }
 
-#special_action_links {
+.special-links {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -48,6 +48,6 @@ a, #logout_link, #recalculate_Elo_ratings_link {
 	margin-bottom: 0px;
 }
 
-#special_action_links > * {
+.special-links > * {
 	margin-bottom: 15px;
 }
