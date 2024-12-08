@@ -26,7 +26,7 @@ const debug = Debug('ELO_TRACKER:server_games');
 import path from 'path';
 
 import { log_now } from './utils/misc';
-import { is_user_logged_in, session_id_delete } from './server/session';
+import { is_user_logged_in, session_user_delete_all } from './server/session';
 import { encrypt_password_for_user, is_password_of_user_correct } from './utils/encrypt';
 import { User } from './models/user';
 import { Password } from './models/password';
@@ -81,7 +81,7 @@ export async function post_users_password_change(req: any, res: any) {
 	}
 
 	// delete all session ids of this user
-	session_id_delete(session);
+	session_user_delete_all(session);
 
 	// make new password
 	const _pass = encrypt_password_for_user(session.username, new_password);

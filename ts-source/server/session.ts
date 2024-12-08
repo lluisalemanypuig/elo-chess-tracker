@@ -45,6 +45,17 @@ export function session_id_delete(session: SessionID): void {
 	debug(log_now(), `Currently, '${mem.num_session_ids()}' sessions`);
 }
 
+/// Deletes a session id.
+export function session_user_delete_all(session: SessionID): void {
+	let mem = ServerMemory.get_instance();
+
+	debug(log_now(), `Before deleting, '${mem.num_session_ids()}' sessions`);
+
+	mem.remove_user_sessions(session.username);
+
+	debug(log_now(), `Currently, '${mem.num_session_ids()}' sessions`);
+}
+
 /**
  * @brief Is a user logged in?
  *

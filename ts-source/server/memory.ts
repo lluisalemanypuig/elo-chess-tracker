@@ -96,6 +96,13 @@ export class ServerMemory {
 	clear_session_ids(): void {
 		this.session_ids = [];
 	}
+	remove_user_sessions(username: string): void {
+		for (let i = this.session_ids.length - 1; i >= 0; --i) {
+			if (this.session_ids[i].username == username) {
+				this.remove_session_id(i);
+			}
+		}
+	}
 
 	/// The challenges in the system
 	private challenges: Challenge[] = [];
