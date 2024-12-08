@@ -80,9 +80,6 @@ export class ServerMemory {
 		return this.session_ids.length;
 	}
 	index_session_id(id: string, username: string): number {
-		if (id == undefined || username == undefined) {
-			return -1;
-		}
 		for (let i = 0; i < this.session_ids.length; ++i) {
 			if (this.session_ids[i].id == id && this.session_ids[i].username == username) {
 				return i;
