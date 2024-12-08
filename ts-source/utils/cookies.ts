@@ -69,7 +69,7 @@ export function make_cookie_string(values: any): string {
 	// Secure
 	let secure = 'secure';
 	if (values['secure'] != undefined) {
-		same_site = values['secure'];
+		secure = values['secure'];
 	}
 	cookie += ';' + encodeURIComponent(secure);
 
@@ -82,8 +82,8 @@ export function make_cookie_string(values: any): string {
  * @returns A string object, containing the value of the cookie
  */
 export function get_cookie(name: string): string {
-	let _name = name + '=';
-	let ca = document.cookie.split(';');
+	const _name = name + '=';
+	const ca = document.cookie.split(';');
 	for (let i = 0; i < ca.length; i++) {
 		let c = ca[i];
 		while (c.charAt(0) == ' ') {
