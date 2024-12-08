@@ -60,7 +60,7 @@ export async function post_users_password_change(req: any, res: any) {
 		res.send(r[1]);
 		return;
 	}
-	const user = r[2] as User;
+	let user = r[2] as User;
 
 	// check if password is correct
 	const old_pwd = user.get_password();
