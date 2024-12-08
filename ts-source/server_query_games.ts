@@ -46,6 +46,7 @@ import {
 	EDIT_STUDENT_GAMES,
 	EDIT_TEACHER_GAMES
 } from './models/user_action';
+import { SessionID } from './models/session_id';
 
 function increment(g: Game): any {
 	const [white_after, black_after] = RatingSystem.get_instance().apply_rating_formula(g);
@@ -159,28 +160,27 @@ function filter_game_list(filter_game_record: Function, filter_game: Function, u
 export async function get_query_games_list_own(req: any, res: any) {
 	debug(log_now(), 'GET query_games_list_own...');
 
-	const id = req.cookies.session_id;
-	const username = req.cookies.user;
+	const session = new SessionID(req.cookies.session_id, req.cookies.user);
+	const r = is_user_logged_in(session);
 
-	const r = is_user_logged_in(id, username);
 	if (!r[0]) {
 		res.send({ r: '0', reason: r[1] });
 		return;
 	}
 
-	const user = user_retrieve(username) as User;
+	const user = user_retrieve(session.username) as User;
 
 	const data_to_return = filter_game_list(
 		(game_record_file: string): boolean => {
 			return user.get_games().includes(game_record_file);
 		},
 		(g: Game): boolean => {
-			return g.is_user_involved(username);
+			return g.is_user_involved(session.username);
 		},
 		user
 	);
 
-	debug(log_now(), `Found '${data_to_return.length}' games involving '${username}'`);
+	debug(log_now(), `Found '${data_to_return.length}' games involving '${session.username}'`);
 
 	res.send({
 		r: '1',
@@ -191,15 +191,14 @@ export async function get_query_games_list_own(req: any, res: any) {
 export async function get_query_games_list_all(req: any, res: any) {
 	debug(log_now(), 'GET query_games_list_all...');
 
-	const id = req.cookies.session_id;
-	const username = req.cookies.user;
+	const session = new SessionID(req.cookies.session_id, req.cookies.user);
+	const r = is_user_logged_in(session);
 
-	const r = is_user_logged_in(id, username);
 	if (!r[0]) {
 		res.send({ r: '0', reason: r[1] });
 		return;
 	}
-	const user = user_retrieve(username) as User;
+	const user = user_retrieve(session.username) as User;
 
 	if (!user.can_do(SEE_USER_GAMES)) {
 		res.send('403 - Forbidden');

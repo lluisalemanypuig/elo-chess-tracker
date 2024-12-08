@@ -79,16 +79,16 @@ export class ServerMemory {
 	num_session_ids(): number {
 		return this.session_ids.length;
 	}
-	index_session_id(id: string, username: string): number {
+	index_session_id(session: SessionID): number {
 		for (let i = 0; i < this.session_ids.length; ++i) {
-			if (this.session_ids[i].id == id && this.session_ids[i].username == username) {
+			if (this.session_ids[i].id == session.id && this.session_ids[i].username == session.username) {
 				return i;
 			}
 		}
 		return -1;
 	}
-	has_session_id(id: string, username: string): boolean {
-		return this.index_session_id(id, username) != -1;
+	has_session_id(session: SessionID): boolean {
+		return this.index_session_id(session) != -1;
 	}
 	remove_session_id(i: number): void {
 		this.session_ids.splice(i, 1);

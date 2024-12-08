@@ -29,15 +29,15 @@ import { is_user_logged_in } from './server/session';
 import { User } from './models/user';
 import { ServerMemory } from './server/memory';
 import { TimeControlRating } from './models/time_control_rating';
+import { SessionID } from './models/session_id';
 
 /// Returns the list of user full names and usernames sorted by name
 export async function get_query_users_list(req: any, res: any) {
 	debug(log_now(), 'GET query_users_list...');
 
-	const session_id = req.cookies.session_id;
-	const username = req.cookies.user;
+	const session = new SessionID(req.cookies.session_id, req.cookies.user);
+	const r = is_user_logged_in(session);
 
-	const r = is_user_logged_in(session_id, username);
 	if (!r[0]) {
 		req.send({ r: '0', reason: r[1] });
 		return;
@@ -60,10 +60,9 @@ export async function get_query_users_list(req: any, res: any) {
 export async function get_query_users_home(req: any, res: any) {
 	debug(log_now(), 'GET query_users_home...');
 
-	const session_id = req.cookies.session_id;
-	const username = req.cookies.user;
+	const session = new SessionID(req.cookies.session_id, req.cookies.user);
+	const r = is_user_logged_in(session);
 
-	const r = is_user_logged_in(session_id, username);
 	if (!r[0]) {
 		res.send({ r: '0', reason: r[1] });
 		return;
@@ -98,10 +97,9 @@ export async function get_query_users_home(req: any, res: any) {
 export async function post_query_users_edit(req: any, res: any) {
 	debug(log_now(), 'POST query_users_edit...');
 
-	const session_id = req.cookies.session_id;
-	const username = req.cookies.user;
+	const session = new SessionID(req.cookies.session_id, req.cookies.user);
+	const r = is_user_logged_in(session);
 
-	const r = is_user_logged_in(session_id, username);
 	if (!r[0]) {
 		res.send({ r: '0', reason: r[1] });
 		return;
@@ -127,10 +125,9 @@ export async function post_query_users_edit(req: any, res: any) {
 export async function post_query_users_ranking(req: any, res: any) {
 	debug(log_now(), 'POST query_users_ranking...');
 
-	const session_id = req.cookies.session_id;
-	const username = req.cookies.user;
+	const session = new SessionID(req.cookies.session_id, req.cookies.user);
+	const r = is_user_logged_in(session);
 
-	const r = is_user_logged_in(session_id, username);
 	if (!r[0]) {
 		res.send({ r: '0', reason: r[1] });
 		return;

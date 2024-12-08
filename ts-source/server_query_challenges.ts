@@ -29,15 +29,15 @@ import { user_retrieve } from './server/users';
 import { User } from './models/user';
 import { challenge_set_retrieve } from './server/challenges';
 import { Challenge } from './models/challenge';
+import { SessionID } from './models/session_id';
 
 /// Query the server for challenges sent by me
 export async function get_query_challenges_received(req: any, res: any) {
 	debug(log_now(), 'GET query_challenges_received...');
 
-	const session_id = req.cookies.session_id;
-	const username = req.cookies.user;
+	const session = new SessionID(req.cookies.session_id, req.cookies.user);
+	const r = is_user_logged_in(session);
 
-	const r = is_user_logged_in(session_id, username);
 	if (!r[0]) {
 		res.send({ r: '0', reason: r[1] });
 		return;
@@ -45,7 +45,7 @@ export async function get_query_challenges_received(req: any, res: any) {
 
 	// challenges to be returned
 	const to_return = challenge_set_retrieve((c: Challenge): boolean => {
-		if (c.get_sent_to() != username) {
+		if (c.get_sent_to() != session.username) {
 			return false;
 		}
 		if (c.get_when_challenge_accepted() != null) {
@@ -76,10 +76,9 @@ export async function get_query_challenges_received(req: any, res: any) {
 export async function get_query_challenges_sent(req: any, res: any) {
 	debug(log_now(), 'GET query_challenges_sent...');
 
-	const session_id = req.cookies.session_id;
-	const username = req.cookies.user;
+	const session = new SessionID(req.cookies.session_id, req.cookies.user);
+	const r = is_user_logged_in(session);
 
-	const r = is_user_logged_in(session_id, username);
 	if (!r[0]) {
 		res.send({ r: '0', reason: r[1] });
 		return;
@@ -87,7 +86,7 @@ export async function get_query_challenges_sent(req: any, res: any) {
 
 	// challenges to be returned
 	const to_return = challenge_set_retrieve((c: Challenge): boolean => {
-		if (c.get_sent_by() != username) {
+		if (c.get_sent_by() != session.username) {
 			return false;
 		}
 		if (c.get_when_challenge_accepted() != null) {
@@ -118,10 +117,9 @@ export async function get_query_challenges_sent(req: any, res: any) {
 export async function get_query_challenges_pending_result(req: any, res: any) {
 	debug(log_now(), 'GET query_challenges_pending_result...');
 
-	const session_id = req.cookies.session_id;
-	const username = req.cookies.user;
+	const session = new SessionID(req.cookies.session_id, req.cookies.user);
+	const r = is_user_logged_in(session);
 
-	const r = is_user_logged_in(session_id, username);
 	if (!r[0]) {
 		res.send({ r: '0', reason: r[1] });
 		return;
@@ -130,7 +128,7 @@ export async function get_query_challenges_pending_result(req: any, res: any) {
 	// challenges to be returned
 	const to_return = challenge_set_retrieve((c: Challenge): boolean => {
 		// this user must be involved in the challenge
-		if (c.get_sent_by() != username && c.get_sent_to() != username) {
+		if (c.get_sent_by() != session.username && c.get_sent_to() != session.username) {
 			return false;
 		}
 		// must have been accepted
@@ -151,7 +149,7 @@ export async function get_query_challenges_pending_result(req: any, res: any) {
 		let user_sent_by = user_retrieve(c.get_sent_by()) as User;
 
 		let opponent: string;
-		if (user_sent_by.get_username() == username) {
+		if (user_sent_by.get_username() == session.username) {
 			opponent = user_sent_to.get_full_name();
 		} else {
 			opponent = user_sent_by.get_full_name();
@@ -178,10 +176,9 @@ export async function get_query_challenges_pending_result(req: any, res: any) {
 export async function get_query_challenges_confirm_result_other(req: any, res: any) {
 	debug(log_now(), 'GET query_challenges_confirm_result_other...');
 
-	const session_id = req.cookies.session_id;
-	const username = req.cookies.user;
+	const session = new SessionID(req.cookies.session_id, req.cookies.user);
+	const r = is_user_logged_in(session);
 
-	const r = is_user_logged_in(session_id, username);
 	if (!r[0]) {
 		res.send({ r: '0', reason: r[1] });
 		return;
@@ -190,7 +187,7 @@ export async function get_query_challenges_confirm_result_other(req: any, res: a
 	// challenges to be returned
 	const to_return = challenge_set_retrieve((c: Challenge): boolean => {
 		// this user must be involved in the challenge
-		if (c.get_sent_by() != username && c.get_sent_to() != username) {
+		if (c.get_sent_by() != session.username && c.get_sent_to() != session.username) {
 			return false;
 		}
 		// must have been accepted
@@ -202,7 +199,7 @@ export async function get_query_challenges_confirm_result_other(req: any, res: a
 			return false;
 		}
 		// result should have been set by this user
-		if (c.get_result_set_by() != username) {
+		if (c.get_result_set_by() != session.username) {
 			return false;
 		}
 		return true;
@@ -215,7 +212,7 @@ export async function get_query_challenges_confirm_result_other(req: any, res: a
 		let user_sent_by = user_retrieve(c.get_sent_by()) as User;
 
 		let opponent: string;
-		if (user_sent_by.get_username() == username) {
+		if (user_sent_by.get_username() == session.username) {
 			opponent = user_sent_to.get_full_name();
 		} else {
 			opponent = user_sent_by.get_full_name();
@@ -251,10 +248,9 @@ export async function get_query_challenges_confirm_result_other(req: any, res: a
 export async function get_query_challenges_confirm_result_self(req: any, res: any) {
 	debug(log_now(), 'GET query_challenges_confirm_result_self...');
 
-	const session_id = req.cookies.session_id;
-	const username = req.cookies.user;
+	const session = new SessionID(req.cookies.session_id, req.cookies.user);
+	const r = is_user_logged_in(session);
 
-	const r = is_user_logged_in(session_id, username);
 	if (!r[0]) {
 		res.send({ r: '0', reason: r[1] });
 		return;
@@ -263,7 +259,7 @@ export async function get_query_challenges_confirm_result_self(req: any, res: an
 	// challenges to be returned
 	const to_return = challenge_set_retrieve((c: Challenge): boolean => {
 		// this user must be involved in the challenge
-		if (c.get_sent_by() != username && c.get_sent_to() != username) {
+		if (c.get_sent_by() != session.username && c.get_sent_to() != session.username) {
 			return false;
 		}
 		// must have been accepted
@@ -275,7 +271,7 @@ export async function get_query_challenges_confirm_result_self(req: any, res: an
 			return false;
 		}
 		// result should NOT have been set by this user
-		if (c.get_result_set_by() == username) {
+		if (c.get_result_set_by() == session.username) {
 			return false;
 		}
 		return true;
@@ -288,7 +284,7 @@ export async function get_query_challenges_confirm_result_self(req: any, res: an
 		let user_sent_by = user_retrieve(c.get_sent_by()) as User;
 
 		let opponent: string;
-		if (user_sent_by.get_username() == username) {
+		if (user_sent_by.get_username() == session.username) {
 			opponent = user_sent_to.get_full_name();
 		} else {
 			opponent = user_sent_by.get_full_name();

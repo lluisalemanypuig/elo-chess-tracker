@@ -27,14 +27,14 @@ import path from 'path';
 
 import { log_now } from './utils/misc';
 import { is_user_logged_in } from './server/session';
+import { SessionID } from './models/session_id';
 
 export async function get_ranking_users_page(req: any, res: any) {
 	debug(log_now(), 'GET users_ranking_page...');
 
-	const session_id = req.cookies.session_id;
-	const username = req.cookies.user;
+	const session = new SessionID(req.cookies.session_id, req.cookies.user);
+	const r = is_user_logged_in(session);
 
-	const r = is_user_logged_in(session_id, username);
 	if (!r[0]) {
 		res.send(r[1]);
 		return;

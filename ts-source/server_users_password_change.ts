@@ -31,14 +31,14 @@ import { encrypt_password_for_user, is_password_of_user_correct } from './utils/
 import { User } from './models/user';
 import { Password } from './models/password';
 import { user_overwrite } from './server/users';
+import { SessionID } from './models/session_id';
 
 export async function get_users_password_change_page(req: any, res: any) {
 	debug(log_now(), 'GET users_password_change_page...');
 
-	const session_id = req.cookies.session_id;
-	const username = req.cookies.user;
+	const session = new SessionID(req.cookies.session_id, req.cookies.user);
 
-	let r = is_user_logged_in(session_id, username);
+	let r = is_user_logged_in(session);
 	if (!r[0]) {
 		res.send(r[1]);
 		return;
@@ -50,12 +50,11 @@ export async function get_users_password_change_page(req: any, res: any) {
 export async function post_users_password_change(req: any, res: any) {
 	debug(log_now(), 'POST users_password_change...');
 
-	const id = req.cookies.session_id;
-	const username = req.cookies.user;
+	const session = new SessionID(req.cookies.session_id, req.cookies.user);
 	const old_password = req.body.old;
 	const new_password = req.body.new;
 
-	const r = is_user_logged_in(id, username);
+	const r = is_user_logged_in(session);
 	if (!r[0]) {
 		res.send(r[1]);
 		return;
@@ -64,11 +63,16 @@ export async function post_users_password_change(req: any, res: any) {
 
 	// check if password is correct
 	const old_pwd = user.get_password();
-	const is_password_correct = is_password_of_user_correct(old_pwd.encrypted, username, old_password, old_pwd.iv);
+	const is_password_correct = is_password_of_user_correct(
+		old_pwd.encrypted,
+		session.username,
+		old_password,
+		old_pwd.iv
+	);
 
 	// is the password correct?
 	if (!is_password_correct) {
-		debug(log_now(), `    Password for '${username}' is incorrect`);
+		debug(log_now(), `    Password for '${session.username}' is incorrect`);
 		res.status(404).send({
 			r: '0',
 			reason: 'Old password is not correct.'
@@ -76,11 +80,11 @@ export async function post_users_password_change(req: any, res: any) {
 		return;
 	}
 
-	// delete old session id
-	session_id_delete(id, username);
+	// delete all session ids of this user
+	session_id_delete(session);
 
 	// make new password
-	const _pass = encrypt_password_for_user(username, new_password);
+	const _pass = encrypt_password_for_user(session.username, new_password);
 	user.set_password(new Password(_pass[0], _pass[1]));
 
 	// overwrite user data

@@ -23,7 +23,7 @@ Contact:
 /**
  * @brief A structure that encodes a session.
  *
- * It consists of an id and a username
+ * It consists of an identifier string and a username
  */
 export class SessionID {
 	public readonly id: string;

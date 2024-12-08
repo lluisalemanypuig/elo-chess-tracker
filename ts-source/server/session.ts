@@ -27,18 +27,19 @@ const debug = Debug('ELO_TRACKER:server_session');
 
 import { ServerMemory } from './memory';
 import { user_retrieve } from './users';
+import { SessionID } from '../models/session_id';
 
 /// Deletes a session id.
-export function session_id_delete(id: string, username: string): void {
+export function session_id_delete(session: SessionID): void {
 	let mem = ServerMemory.get_instance();
 
 	debug(log_now(), `Before deleting, '${mem.num_session_ids()}' sessions`);
-	const idx = mem.index_session_id(id, username);
+	const idx = mem.index_session_id(session);
 	if (idx != -1) {
-		debug(log_now(), `    Session of user '${username}' was found. Deleting...`);
+		debug(log_now(), `    Session of user '${session.username}' was found. Deleting...`);
 		mem.remove_session_id(idx);
 	} else {
-		debug(log_now(), `    Session of user '${username}' was not found.`);
+		debug(log_now(), `    Session of user '${session.username}' was not found.`);
 	}
 
 	debug(log_now(), `Currently, '${mem.num_session_ids()}' sessions`);
@@ -48,18 +49,15 @@ export function session_id_delete(id: string, username: string): void {
  * @brief Is a user logged in?
  *
  * Checks that a user logged in or not using the cookies.
- * @param session_id Session id string.
- * @param username Username string.
- * @returns
  */
-export function is_user_logged_in(session_id: string, username: string): [boolean, string, User | null] {
-	if (!ServerMemory.get_instance().has_session_id(session_id, username)) {
-		debug(log_now(), `Session does not exist for user '${username}'.`);
+export function is_user_logged_in(session: SessionID): [boolean, string, User | null] {
+	if (!ServerMemory.get_instance().has_session_id(session)) {
+		debug(log_now(), `Session does not exist for user '${session.username}'.`);
 		return [false, '403 - Forbidden', null];
 	}
-	const user = user_retrieve(username);
+	const user = user_retrieve(session.username);
 	if (user == null) {
-		debug(log_now(), `User '${username}' does not exist.`);
+		debug(log_now(), `User '${session.username}' does not exist.`);
 		return [false, '403 - Forbidden', null];
 	}
 	return [true, '', user as User];

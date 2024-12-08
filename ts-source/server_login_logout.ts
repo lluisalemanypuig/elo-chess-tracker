@@ -97,10 +97,12 @@ export async function post_user_log_in(req: any, res: any) {
 	// generate "random" "session id"
 	const token = random_session_id(interleave_strings(pwd.encrypted, pwd.iv));
 
+	const session = new SessionID(token, user.get_username());
+
 	// store session id
 	let mem = ServerMemory.get_instance();
-	if (!mem.has_session_id(token, user.get_username())) {
-		mem.add_session_id(new SessionID(token, user.get_username()));
+	if (!mem.has_session_id(session)) {
+		mem.add_session_id(session);
 	}
 
 	// send response
@@ -130,23 +132,22 @@ export async function post_user_log_in(req: any, res: any) {
 export async function post_user_log_out(req: any, res: any) {
 	debug(log_now(), `POST /logout`);
 
-	const username = req.cookies.user;
-	const session_id = req.cookies.session_id;
+	const session = new SessionID(req.cookies.session_id, req.cookies.user);
 
 	debug(log_now(), `    Cookie:`);
-	debug(log_now(), `        Username:   '${username}'`);
-	debug(log_now(), `        Session ID: '${session_id}'`);
+	debug(log_now(), `        Username:   '${session.username}'`);
+	debug(log_now(), `        Session ID: '${session.id}'`);
 
 	// in order to log out a user, the must have been logged in with the given
 	// session id token
 	const mem = ServerMemory.get_instance();
-	if (!mem.has_session_id(session_id, username)) {
-		debug(log_now(), `    User '${username}' was never logged in with this session id.`);
+	if (!mem.has_session_id(session)) {
+		debug(log_now(), `    User '${session.username}' was never logged in with this session id.`);
 		res.status(200).send('error');
 	} else {
-		debug(log_now(), `    User '${username}' was logged in.`);
-		debug(log_now(), `    Deleting session id of user '${username}'...`);
-		session_id_delete(session_id, username);
+		debug(log_now(), `    User '${session.username}' was logged in.`);
+		debug(log_now(), `    Deleting session id of user '${session.username}'...`);
+		session_id_delete(session);
 		debug(log_now(), `        Deleted.`);
 		// send response
 		res.status(200).send('success');

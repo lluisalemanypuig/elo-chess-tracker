@@ -41,19 +41,21 @@ import { encrypt_password_for_user } from './utils/encrypt';
 import { Password } from './models/password';
 import { TimeControlRating } from './models/time_control_rating';
 import { RatingSystem } from './server/rating_system';
+import { SessionID } from './models/session_id';
 
 export async function get_users_create_page(req: any, res: any) {
 	debug(log_now(), 'GET users_create_page...');
 
-	const username = req.cookies.user;
-	const r = is_user_logged_in(req.cookies.session_id, username);
+	const session = new SessionID(req.cookies.session_id, req.cookies.user);
+	const r = is_user_logged_in(session);
+
 	if (!r[0]) {
 		res.send(r[1]);
 		return;
 	}
 
 	if (!(r[2] as User).can_do(CREATE_USER)) {
-		debug(log_now(), `User '${username}' cannot create users.`);
+		debug(log_now(), `User '${session.username}' cannot create users.`);
 		res.send('403 - Forbidden');
 		return;
 	}
@@ -64,8 +66,9 @@ export async function get_users_create_page(req: any, res: any) {
 export async function post_users_create(req: any, res: any) {
 	debug(log_now(), 'POST users_create');
 
-	const username = req.cookies.user;
-	const r = is_user_logged_in(req.cookies.session_id, username);
+	const session = new SessionID(req.cookies.session_id, req.cookies.user);
+	const r = is_user_logged_in(session);
+
 	if (!r[0]) {
 		res.send(r[1]);
 		return;
@@ -73,7 +76,7 @@ export async function post_users_create(req: any, res: any) {
 
 	const registerer = r[2] as User;
 	if (!registerer.can_do(CREATE_USER)) {
-		debug(log_now(), `User '${username}' cannot create users.`);
+		debug(log_now(), `User '${session.username}' cannot create users.`);
 		res.send('403 - Forbidden');
 		return;
 	}

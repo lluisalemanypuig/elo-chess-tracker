@@ -40,14 +40,14 @@ import { game_add, game_edit_result, game_find_by_id, game_new, recalculate_Elo_
 import { Game, GameResult } from './models/game';
 import { user_retrieve } from './server/users';
 import { ADMIN, MEMBER, STUDENT, TEACHER } from './models/user_role';
+import { SessionID } from './models/session_id';
 
 export async function get_games_own_page(req: any, res: any) {
 	debug(log_now(), 'GET games_own_page...');
 
-	const session_id = req.cookies.session_id;
-	const username = req.cookies.user;
+	const session = new SessionID(req.cookies.session_id, req.cookies.user);
+	const r = is_user_logged_in(session);
 
-	const r = is_user_logged_in(session_id, username);
 	if (!r[0]) {
 		res.send(r[1]);
 		return;
@@ -59,10 +59,9 @@ export async function get_games_own_page(req: any, res: any) {
 export async function get_games_all_page(req: any, res: any) {
 	debug(log_now(), 'GET games_all_page...');
 
-	const session_id = req.cookies.session_id;
-	const username = req.cookies.user;
+	const session = new SessionID(req.cookies.session_id, req.cookies.user);
+	const r = is_user_logged_in(session);
 
-	const r = is_user_logged_in(session_id, username);
 	if (!r[0]) {
 		res.send(r[1]);
 		return;
@@ -74,17 +73,16 @@ export async function get_games_all_page(req: any, res: any) {
 export async function get_games_create_page(req: any, res: any) {
 	debug(log_now(), 'GET games_create_page...');
 
-	const session_id = req.cookies.session_id;
-	const username = req.cookies.user;
+	const session = new SessionID(req.cookies.session_id, req.cookies.user);
+	const r = is_user_logged_in(session);
 
-	const r = is_user_logged_in(session_id, username);
 	if (!r[0]) {
 		res.send(r[1]);
 		return;
 	}
 
 	if (!(r[2] as User).can_do(CREATE_GAME)) {
-		debug(log_now(), `User '${username}' cannot create users.`);
+		debug(log_now(), `User '${session.username}' cannot create users.`);
 		res.send('403 - Forbidden');
 		return;
 	}
@@ -95,17 +93,16 @@ export async function get_games_create_page(req: any, res: any) {
 export async function post_games_create(req: any, res: any) {
 	debug(log_now(), 'POST games_create...');
 
-	const session_id = req.cookies.session_id;
-	const username = req.cookies.user;
+	const session = new SessionID(req.cookies.session_id, req.cookies.user);
+	const r = is_user_logged_in(session);
 
-	const r = is_user_logged_in(session_id, username);
 	if (!r[0]) {
 		res.send(r[1]);
 		return;
 	}
 
 	if (!(r[2] as User).can_do(CREATE_GAME)) {
-		debug(log_now(), `User '${username}' cannot create users.`);
+		debug(log_now(), `User '${session.username}' cannot create users.`);
 		res.send('403 - Forbidden');
 		return;
 	}
@@ -162,10 +159,9 @@ export async function post_games_create(req: any, res: any) {
 export async function post_games_edit_result(req: any, res: any) {
 	debug(log_now(), 'POST games_edit_result...');
 
-	const session_id = req.cookies.session_id;
-	const username = req.cookies.user;
+	const session = new SessionID(req.cookies.session_id, req.cookies.user);
+	const r = is_user_logged_in(session);
 
-	const r = is_user_logged_in(session_id, username);
 	if (!r[0]) {
 		res.send(r[1]);
 		return;
@@ -173,7 +169,7 @@ export async function post_games_edit_result(req: any, res: any) {
 
 	const user = r[2] as User;
 	if (!user.can_do(EDIT_USER_GAMES)) {
-		debug(log_now(), `User '${username}' cannot create users.`);
+		debug(log_now(), `User '${session.username}' cannot create users.`);
 		res.send('403 - Forbidden');
 		return;
 	}
@@ -239,10 +235,9 @@ export async function post_games_edit_result(req: any, res: any) {
 export async function post_recalculate_Elo_ratings(req: any, res: any) {
 	debug(log_now(), 'POST recalculate_Elo_ratings...');
 
-	const session_id = req.cookies.session_id;
-	const username = req.cookies.user;
+	const session = new SessionID(req.cookies.session_id, req.cookies.user);
+	const r = is_user_logged_in(session);
 
-	const r = is_user_logged_in(session_id, username);
 	if (!r[0]) {
 		res.send(r[1]);
 		return;
@@ -250,7 +245,7 @@ export async function post_recalculate_Elo_ratings(req: any, res: any) {
 
 	const user = r[2] as User;
 	if (!user.is(ADMIN)) {
-		debug(log_now(), `User '${username}' cannot recalculate Elo ratings.`);
+		debug(log_now(), `User '${session.username}' cannot recalculate Elo ratings.`);
 		res.send('403 - Forbidden');
 		return;
 	}

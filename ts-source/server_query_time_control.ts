@@ -26,14 +26,14 @@ const debug = Debug('ELO_TRACKER:server_time_control');
 import { log_now } from './utils/misc';
 import { is_user_logged_in } from './server/session';
 import { RatingSystem } from './server/rating_system';
+import { SessionID } from './models/session_id';
 
 export async function get_query_time_control(req: any, res: any) {
 	debug(log_now(), 'GET time_control...');
 
-	const id = req.cookies.session_id;
-	const username = req.cookies.user;
+	const session = new SessionID(req.cookies.session_id, req.cookies.user);
+	const r = is_user_logged_in(session);
 
-	const r = is_user_logged_in(id, username);
 	if (!r[0]) {
 		res.send(r[1]);
 		return;

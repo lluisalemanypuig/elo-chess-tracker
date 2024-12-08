@@ -34,8 +34,9 @@ let router = express.Router();
 router.get('/', (req: any, res: any) => {
 	debug(log_now(), `Username received in cookie: '${req.cookies.user}'`);
 
+	const session = new SessionID(req.cookies.session_id, req.cookies.user);
 	let mem = ServerMemory.get_instance();
-	if (mem.has_session_id(req.cookies.session_id, req.cookies.user)) {
+	if (mem.has_session_id(session)) {
 		debug(log_now(), `    Session id exists. Please, come in.`);
 		// User has a cookie proving that they logged into the web in the past
 		res.sendFile(path.join(__dirname, '../html/home.html'));
@@ -206,14 +207,16 @@ router.post('/challenges_disagree_result', post_challenge_disagree_result);
 
 // recalculation of all Elo ratings
 import { post_recalculate_Elo_ratings } from './server_games';
+import { SessionID } from './models/session_id';
 router.post('/recalculate_Elo_ratings', post_recalculate_Elo_ratings);
 
 // retrieve home page
 router.get('/home', (req: any, res: any) => {
 	debug(log_now(), 'GET home');
 
+	const session = new SessionID(req.cookies.session_id, req.cookies.user);
 	let mem = ServerMemory.get_instance();
-	if (!mem.has_session_id(req.cookies.session_id, req.cookies.user)) {
+	if (!mem.has_session_id(session)) {
 		debug(log_now(), '    Session id does not exist.');
 		res.send('Computer says no');
 		return;
