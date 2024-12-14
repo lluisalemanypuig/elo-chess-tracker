@@ -63,7 +63,7 @@ router.get('/version_number', (req: any, res: any) => {
 	debug(log_now(), 'GET version_number...');
 	debug(log_now(), `    request: ${req.url}`);
 	res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
-	res.send('XX.YY');
+	res.send('24.12');
 });
 
 /* ************************************************************************** */
