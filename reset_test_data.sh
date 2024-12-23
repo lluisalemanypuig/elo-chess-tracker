@@ -3,10 +3,10 @@
 ### Clean test database
 
 rm -rf test/webpage/*
-cp -r webpage-test/* test/webpage/
+cp -r webpage-sample/* test/webpage/
 
 # these directories may not be created in the 'cp -r' above
-mkdir -p test/webpage/databse/challenges
-mkdir -p test/webpage/databse/games
+mkdir -p test/webpage/database/challenges
+mkdir -p test/webpage/database/games
 
-mv test/webpage/configuration_test.json test/webpage/configuration.json
+mv test/webpage/configuration_sample.json test/webpage/configuration.json
