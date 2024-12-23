@@ -20,6 +20,8 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
+import { set_footer_version_number } from './client_load_version_number';
+
 function new_text_cell(text: string) {
 	let cell = document.createElement('td');
 	cell.textContent = text;

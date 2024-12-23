@@ -20,7 +20,7 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-async function set_footer_version_number() {
+export async function set_footer_version_number() {
 	// set the title of the page
 	let version_number_ = document.getElementById('version_number');
 	if (version_number_ == null) {

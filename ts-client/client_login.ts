@@ -20,6 +20,8 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
+import { set_footer_version_number } from './client_load_version_number';
+
 async function login_button_clicked(_event: any) {
 	// username box
 	const _username_box = document.getElementById('username_box');

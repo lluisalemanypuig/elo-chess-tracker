@@ -20,6 +20,8 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
+import { set_footer_version_number } from './client_load_version_number';
+
 function create_label_text(text: string): HTMLLabelElement {
 	let label = document.createElement('label') as HTMLLabelElement;
 	label.textContent = text;

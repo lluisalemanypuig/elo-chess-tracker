@@ -81,7 +81,7 @@ This command needs not be run inside the directory for `elo-chess-tracker`.
 
 Run the following command to turn all typescript source files into javascript source files.
 
-    $ ./compile.sh
+    $ build/compile.sh
 
 ## Prepare the website
 

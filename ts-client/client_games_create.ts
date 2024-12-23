@@ -20,6 +20,8 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
+import { set_footer_version_number } from './client_load_version_number';
+
 async function initialize_window_client_games_create() {
 	let white_datalist = document.getElementById('white_datalist') as HTMLDataListElement;
 	let black_datalist = document.getElementById('black_datalist') as HTMLDataListElement;

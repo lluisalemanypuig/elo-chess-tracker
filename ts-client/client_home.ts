@@ -20,9 +20,10 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { ADMIN, user_role_to_string } from './models/user_role';
-import { CREATE_GAME, CREATE_USER, EDIT_USER, SEE_USER_GAMES } from './models/user_action';
-import { make_cookie_string } from './utils/cookies';
+import { set_footer_version_number } from './client_load_version_number';
+import { ADMIN, user_role_to_string } from '../ts-server/models/user_role';
+import { CREATE_GAME, CREATE_USER, EDIT_USER, SEE_USER_GAMES } from '../ts-server/models/user_action';
+import { make_cookie_string } from '../ts-server/utils/cookies';
 
 export async function logout_link_clicked(_event: any) {
 	// "query" the server
