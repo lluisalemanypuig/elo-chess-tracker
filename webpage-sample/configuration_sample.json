@@ -11,14 +11,14 @@
 		"https": "8443"
 	},
 	
-	"favicon": "icon_name.png",
+	"favicon": "favicon.png",
 	"login_page": {
-		"title": "My webpage title (login page)",
-		"icon": "icon_name.png"
+		"title": "Login into My Chess Club",
+		"icon": "login.png"
 	},
 	"home_page": {
-		"title": "My webpage title (home page)",
-		"icon": "icon_name.png"
+		"title": "My Chess Club",
+		"icon": "home.png"
 	},
 	
 	"rating_system": "Elo",
