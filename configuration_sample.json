@@ -8,7 +8,7 @@
 	
 	"ports": {
 		"http": "8080",
-		"https": "8443",
+		"https": "8443"
 	},
 	
 	"favicon": "icon_name.png",
