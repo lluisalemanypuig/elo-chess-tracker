@@ -1,6 +1,6 @@
 {
   "name": "chess-elo-tracker",
-  "version": "2022.12.00",
+  "version": "20xx.yy.00",
   "scripts": {
     "start": "node ./js-source/app_main.js",
     "devstart": "DEBUG=ELO_TRACKER:* nodemon ./js-source/app_main.js",
