@@ -31,6 +31,6 @@ mkdir webpage/database/challenges
 mkdir webpage/database/games
 mkdir webpage/ssl
 mkdir webpage/icons
-mv webpage/configuration_sample.json configuration.json
+mv webpage/configuration_sample.json webpage/configuration.json
 
 configure_ssl_certificate
