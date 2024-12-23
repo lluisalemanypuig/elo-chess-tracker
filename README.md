@@ -91,7 +91,7 @@ First, in the root directory of the repository, initialize the sample database a
 
     $ ./initialize.sh
 
-This will prompt you to create a self-signed SSL certificate. Fill in the fields with the appropriate data. The script will set any necessary files in the `configuration.json` file.
+This will prompt you to create a self-signed SSL certificate. Fill in the fields with the appropriate data. The script will set any necessary files in the [`configuration.json`](webpage-sample/configuration_sampe.json) file.
 
 The database generated will have the following directory structure:
 
@@ -108,6 +108,9 @@ The database generated will have the following directory structure:
     │       ├── mikhail.botvinnik
     │       └── vasily.smyslov
     ├── icons
+    │   ├── favicon.png
+    │   ├── home.png
+    │   └── login.png
     └── ssl
     	├── server.cert
     	└── server.key
@@ -137,17 +140,17 @@ Edit the configuration file `webpage/configuration.json` appropriately. This fil
     	},
     	"ports": {
     		"http": "8080",
-    		"https": "8443",
+    		"https": "8443"
     	},
 
-    	"favicon": "path/to/icon.png",
+    	"favicon": "favicon.png",
     	"login_page": {
-    		"title": "My webpage title (login page)",
-    		"icon": "path/to/icon.png"
+    		"title": "Login into My Chess Club",
+    		"icon": "login.png"
     	},
     	"home_page": {
-    		"title": "My webpage title (home page)",
-    		"icon": "path/to/icon.png"
+    		"title": "My Chess Club",
+    		"icon": "home.png"
     	},
 
     	"rating_system": "Elo",
