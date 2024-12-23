@@ -26,12 +26,11 @@ function configure_ssl_certificate {
 ## Initialize the webpage configuration files with some preconfigured users
 
 rm -rf webpage/
-cp -r webpage-test/ webpage/
-rm webpage/configuration_test.json
+cp -r webpage-sample/ webpage/
 mkdir webpage/database/challenges
 mkdir webpage/database/games
 mkdir webpage/ssl
 mkdir webpage/icons
-cp configuration_sample.json webpage/configuration.json
+mv webpage/configuration_sample.json configuration.json
 
 configure_ssl_certificate
