@@ -131,7 +131,7 @@ export class Game {
 		this.result = result;
 	}
 	/// Returns game's result
-	get_result(): string {
+	get_result(): GameResult {
 		return this.result;
 	}
 
