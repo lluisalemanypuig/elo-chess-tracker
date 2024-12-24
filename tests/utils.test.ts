@@ -25,9 +25,8 @@ import { search, where_should_be_inserted } from '../ts-server/utils/misc';
 describe('Searching in an array of numbers -- locate a number', () => {
 	test('Dense (existent)', () => {
 		const arr = [1, 2, 3, 5, 6, 7];
-		const search_ = [1, 2, 3, 5, 6, 7];
-		for (let i = 0; i < search_.length; ++i) {
-			expect(search(arr, search_[i])).toBe(i);
+		for (let i = 0; i < arr.length; ++i) {
+			expect(search(arr, arr[i])).toBe(i);
 		}
 	});
 
@@ -44,9 +43,8 @@ describe('Searching in an array of numbers -- locate a number', () => {
 
 	test('Sparse (existent)', () => {
 		const arr = [10, 30, 50, 70, 90];
-		const search_ = [10, 30, 50, 70, 90];
-		for (let i = 0; i < search_.length; ++i) {
-			expect(search(arr, search_[i])).toBe(i);
+		for (let i = 0; i < arr.length; ++i) {
+			expect(search(arr, arr[i])).toBe(i);
 		}
 	});
 
@@ -76,15 +74,13 @@ describe('Searching in an array of numbers -- locate a number', () => {
 describe('Searching in an array of numbers -- where to insert a number', () => {
 	test('Dense 1 (existent)', () => {
 		const arr = [1, 2, 3, 5, 6, 7];
-		const search_ = [1, 2, 3, 5, 6, 7];
-		for (let i = 0; i < search_.length; ++i) {
-			expect(where_should_be_inserted(arr, search_[i])).toEqual([i, true]);
+		for (let i = 0; i < arr.length; ++i) {
+			expect(where_should_be_inserted(arr, arr[i])).toEqual([i, true]);
 		}
 	});
 
 	test('Dense 1 (non-existent)', () => {
 		const arr = [1, 2, 3, 5, 6, 7];
-
 		for (let i = -10; i <= 0; ++i) {
 			expect(where_should_be_inserted(arr, i)).toEqual([0, false]);
 		}
@@ -96,15 +92,13 @@ describe('Searching in an array of numbers -- where to insert a number', () => {
 
 	test('Dense 2 (existent)', () => {
 		const arr = [2, 4, 6, 8];
-		const search_ = [2, 4, 6, 8];
-		for (let i = 0; i < search_.length; ++i) {
-			expect(where_should_be_inserted(arr, search_[i])).toEqual([i, true]);
+		for (let i = 0; i < arr.length; ++i) {
+			expect(where_should_be_inserted(arr, arr[i])).toEqual([i, true]);
 		}
 	});
 
 	test('Dense 2 (non-existent)', () => {
 		const arr = [2, 4, 6, 8];
-
 		for (let i = -10; i <= 1; ++i) {
 			expect(where_should_be_inserted(arr, i)).toEqual([0, false]);
 		}
@@ -118,9 +112,8 @@ describe('Searching in an array of numbers -- where to insert a number', () => {
 
 	test('Sparse (existent)', () => {
 		const arr = [10, 30, 50, 70, 90];
-		const search_ = [10, 30, 50, 70, 90];
-		for (let i = 0; i < search_.length; ++i) {
-			expect(where_should_be_inserted(arr, search_[i])).toEqual([i, true]);
+		for (let i = 0; i < arr.length; ++i) {
+			expect(where_should_be_inserted(arr, arr[i])).toEqual([i, true]);
 		}
 	});
 
