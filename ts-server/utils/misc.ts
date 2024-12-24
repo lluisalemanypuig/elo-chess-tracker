@@ -182,14 +182,45 @@ export function search<T>(
 		return 1;
 	}
 ): number {
+	return search_by_key(arr, x, F, function (e1: T) {
+		return e1;
+	});
+}
+
+/**
+ * @brief Returns whether @e x is in @e arr or not.
+ * @tparam T Type of elements in the array.
+ * @param arr Array.
+ * @param x Element of type @e T.
+ * @param F Takes two elements of type @e T, F(e1,e2), and returns:
+ * - a value < 0 if "e1 < e2",
+ * - a value = 0 if "e1 == e2",
+ * - a value > 0 if "e1 > e2".
+ * @returns The index of the element if it is in the array. Returns -1 if it is not.
+ * @pre Elements in @e arr are sorted by @e F.
+ */
+export function search_by_key<T, U>(
+	arr: T[],
+	x: U,
+	F: Function = (e1: U, e2: U): number => {
+		if (e1 < e2) {
+			return -1;
+		}
+		if (e1 == e2) {
+			return 0;
+		}
+		return 1;
+	},
+	M: (input: T) => U
+): number {
 	if (arr.length == 0) {
 		return -1;
 	}
 
-	const lt = (e1: T, e2: T): boolean => {
+	const lt = (e1: U, e2: U): boolean => {
 		return F(e1, e2) < 0;
 	};
-	const equal = (e1: T, e2: T): boolean => {
+	const equal = (e1: U, e2: U): boolean => {
 		return F(e1, e2) == 0;
 	};
 	//const gt = (e1: T, e2: T): boolean => { return F(e1,e2) > 0; };
@@ -198,16 +229,17 @@ export function search<T>(
 	let j: number = arr.length - 1;
 	while (i < j) {
 		let m: number = Math.floor((i + j) / 2);
-		if (equal(x, arr[m])) {
+		const M_m = M(arr[m]);
+		if (equal(x, M_m)) {
 			return m;
 		}
-		if (lt(x, arr[m])) {
+		if (lt(x, M_m)) {
 			j = m - 1;
 		} else {
 			i = m + 1;
 		}
 	}
-	if (i == j && equal(x, arr[i])) {
+	if (i == j && equal(x, M(arr[i]))) {
 		return i;
 	}
 	return -1;
