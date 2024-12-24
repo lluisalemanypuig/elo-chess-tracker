@@ -22,7 +22,7 @@ Contact:
 
 import { search, where_should_be_inserted } from '../ts-server/utils/misc';
 
-describe('Searching a number in a sorted vector', () => {
+describe('Searching in an array of numbers -- locate a number', () => {
 	test('Dense (existent)', () => {
 		const arr = [1, 2, 3, 5, 6, 7];
 		const search_ = [1, 2, 3, 5, 6, 7];
@@ -73,7 +73,7 @@ describe('Searching a number in a sorted vector', () => {
 	});
 });
 
-describe('Searching the position where a new number should be inserted', () => {
+describe('Searching in an array of numbers -- where to insert a number', () => {
 	test('Dense 1 (existent)', () => {
 		const arr = [1, 2, 3, 5, 6, 7];
 		const search_ = [1, 2, 3, 5, 6, 7];
