@@ -78,17 +78,17 @@ export function short_date_to_string(date: string): string {
  * @returns A Date object.
  */
 export function string_to_date(date: string): Date {
-	let info = date.split('..');
+	const info = date.split('..');
 
-	let YYYY_MM_DD = info[0].split('-');
-	let year = Number(YYYY_MM_DD[0]);
-	let month = Number(YYYY_MM_DD[1]);
-	let day = Number(YYYY_MM_DD[2]);
+	const YYYY_MM_DD = info[0].split('-');
+	const year = parseInt(YYYY_MM_DD[0]);
+	const month = parseInt(YYYY_MM_DD[1]);
+	const day = parseInt(YYYY_MM_DD[2]);
 
-	let HH_MM_SS = info[1].split(':');
-	let hours = Number(HH_MM_SS[0]);
-	let minutes = Number(HH_MM_SS[1]);
-	let seconds = Number(HH_MM_SS[2]);
+	const HH_MM_SS = info[1].split(':');
+	const hours = parseInt(HH_MM_SS[0]);
+	const minutes = parseInt(HH_MM_SS[1]);
+	const seconds = parseInt(HH_MM_SS[2]);
 
 	return new Date(year, month - 1, day, hours, minutes, seconds);
 }
