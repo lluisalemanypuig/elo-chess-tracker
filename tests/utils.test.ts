@@ -20,7 +20,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { search, where_should_be_inserted } from '../ts-server/utils/misc';
+import { search, search_by_key, where_should_be_inserted } from '../ts-server/utils/misc';
 
 describe('Searching in an array of numbers -- locate a number', () => {
 	test('Dense (existent)', () => {
@@ -68,6 +68,96 @@ describe('Searching in an array of numbers -- locate a number', () => {
 		for (let i = 91; i <= 120; ++i) {
 			expect(search(arr, i)).toBe(-1);
 		}
+	});
+});
+
+describe('Searching in an array of structs -- locate an element', () => {
+	class pair {
+		name: string;
+		size: number;
+		constructor(n: string, s: number) {
+			this.name = n;
+			this.size = s;
+		}
+	}
+
+	test('Sorted by name', () => {
+		const arr = [
+			new pair('A', 3),
+			new pair('B', 50),
+			new pair('C', 1),
+			new pair('D', 0),
+			new pair('M', 100),
+			new pair('Z', -9)
+		];
+		const search_func = function (p: pair, q: pair) {
+			if (p.name < q.name) {
+				return -1;
+			}
+			if (p.name == q.name) {
+				return 0;
+			}
+			return 1;
+		};
+
+		expect(search(arr, new pair('A', 3), search_func)).toBe(0);
+		expect(search(arr, new pair('A', 10), search_func)).toBe(0);
+		expect(search(arr, new pair('B', 3), search_func)).toBe(1);
+		expect(search(arr, new pair('B', 50), search_func)).toBe(1);
+		expect(search(arr, new pair('C', 1), search_func)).toBe(2);
+		expect(search(arr, new pair('C', 10), search_func)).toBe(2);
+		expect(search(arr, new pair('D', 0), search_func)).toBe(3);
+		expect(search(arr, new pair('D', 20), search_func)).toBe(3);
+		expect(search(arr, new pair('M', 0), search_func)).toBe(4);
+		expect(search(arr, new pair('M', 100), search_func)).toBe(4);
+		expect(search(arr, new pair('Z', -9), search_func)).toBe(5);
+		expect(search(arr, new pair('Z', 10), search_func)).toBe(5);
+
+		expect(search(arr, new pair('a', 0), search_func)).toBe(-1);
+		expect(search(arr, new pair('E', 0), search_func)).toBe(-1);
+		expect(search(arr, new pair('F', 0), search_func)).toBe(-1);
+		expect(search(arr, new pair('G', 0), search_func)).toBe(-1);
+		expect(search(arr, new pair('H', 0), search_func)).toBe(-1);
+		expect(search(arr, new pair('Q', 0), search_func)).toBe(-1);
+		expect(search(arr, new pair('z', 0), search_func)).toBe(-1);
+	});
+
+	test('Sorted by (key) name', () => {
+		const arr = [
+			new pair('A', 3),
+			new pair('B', 50),
+			new pair('C', 1),
+			new pair('D', 0),
+			new pair('M', 100),
+			new pair('Z', -9)
+		];
+		const search_func = function (p: string, q: string) {
+			if (p < q) {
+				return -1;
+			}
+			if (p == q) {
+				return 0;
+			}
+			return 1;
+		};
+		const key_func = function (p: pair) {
+			return p.name;
+		};
+
+		expect(search_by_key(arr, 'A', search_func, key_func)).toBe(0);
+		expect(search_by_key(arr, 'B', search_func, key_func)).toBe(1);
+		expect(search_by_key(arr, 'C', search_func, key_func)).toBe(2);
+		expect(search_by_key(arr, 'D', search_func, key_func)).toBe(3);
+		expect(search_by_key(arr, 'M', search_func, key_func)).toBe(4);
+		expect(search_by_key(arr, 'Z', search_func, key_func)).toBe(5);
+
+		expect(search_by_key(arr, 'a', search_func, key_func)).toBe(-1);
+		expect(search_by_key(arr, 'E', search_func, key_func)).toBe(-1);
+		expect(search_by_key(arr, 'F', search_func, key_func)).toBe(-1);
+		expect(search_by_key(arr, 'G', search_func, key_func)).toBe(-1);
+		expect(search_by_key(arr, 'H', search_func, key_func)).toBe(-1);
+		expect(search_by_key(arr, 'Q', search_func, key_func)).toBe(-1);
+		expect(search_by_key(arr, 'z', search_func, key_func)).toBe(-1);
 	});
 });
 
