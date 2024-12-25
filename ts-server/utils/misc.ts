@@ -37,17 +37,12 @@ export function date_to_string(date: Date): string {
 	return moment.utc(date).local().format('YYYY-MM-DD..HH:mm:ss');
 }
 
-/// Returns the current date in string format "YYYY-MM-DD..HH:mm:ss"
-export function log_now(): string {
-	return date_to_string(new Date());
-}
-
 /**
  * @brief Formats a date into a string YYYY-MM-DD
  * @param date A Date object.
  * @returns A string.
  */
-export function short_date_to_string(date: string): string {
+export function short_date_to_string(date: Date): string {
 	return moment.utc(date).local().format('YYYY-MM-DD');
 }
 
@@ -73,6 +68,25 @@ export function string_to_date(date: string): Date {
 }
 
 /**
+ * @brief Parses a string containing a date with the format YYYY-MM-DD.
+ * @param date A string object.
+ * @returns A Date object.
+ */
+export function string_to_short_date(date: string): Date {
+	const YYYY_MM_DD: string[] = (function (): string[] {
+		if (date.includes('..')) {
+			return date.split('..')[0].split('-');
+		}
+		return date.split('-');
+	})();
+
+	const year = parseInt(YYYY_MM_DD[0]);
+	const month = parseInt(YYYY_MM_DD[1]);
+	const day = parseInt(YYYY_MM_DD[2]);
+	return new Date(year, month - 1, day);
+}
+
+/**
  * @brief Converts a YYYY-MM-DD..HH:mm:ss string into a YYYY-MM-DD string.
  * @param date A string object containing a date formatted with YYYY-MM-DD..HH:mm:ss.
  * @returns A string object containing a date formatted with YYYY-MM-DD.
@@ -81,18 +95,12 @@ export function long_date_to_short_date(date: string): string {
 	return date.split('..')[0];
 }
 
-/**
- * @brief Parses a string containing a date with the format YYYY-MM-DD.
- * @param date A string object.
- * @returns A Date object.
- */
-export function string_to_short_date(date: string): Date {
-	let YYYY_MM_DD = date.split('-');
-	let year = Number(YYYY_MM_DD[0]);
-	let month = Number(YYYY_MM_DD[1]);
-	let day = Number(YYYY_MM_DD[2]);
-	return new Date(year, month - 1, day);
+/// Returns the current date in string format "YYYY-MM-DD..HH:mm:ss"
+export function log_now(): string {
+	return date_to_string(new Date());
 }
+
+// ------------
 
 /**
  * @brief Deep-copy an array
