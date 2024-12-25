@@ -30,19 +30,17 @@ Contact:
  * @param array Input array
  * @returns A shuffled array
  */
-export function shuffle<T>(array: T[]): T[] {
-	let currentIndex = array.length;
-	let randomIndex = 0;
+export function shuffle<T>(array: T[]): void {
+	let cur_idx = array.length;
+	let rnd_idx = 0;
 
 	// While there remain elements to shuffle.
-	while (currentIndex != 0) {
+	while (cur_idx != 0) {
 		// Pick a remaining element
-		randomIndex = Math.floor(Math.random() * currentIndex);
-		currentIndex--;
+		rnd_idx = Math.floor(Math.random() * cur_idx);
+		cur_idx--;
 
 		// And swap it with the current element
-		[array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+		[array[cur_idx], array[rnd_idx]] = [array[rnd_idx], array[cur_idx]];
 	}
-
-	return array;
 }
