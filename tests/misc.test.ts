@@ -20,7 +20,14 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { date_to_string, interleave_strings, number_to_string, short_date_to_string } from '../ts-server/utils/misc';
+import {
+	date_to_string,
+	interleave_strings,
+	long_date_to_short_date,
+	number_to_string,
+	short_date_to_string,
+	string_to_date
+} from '../ts-server/utils/misc';
 
 describe('Number to string', () => {
 	test('1 digit', () => {
@@ -111,7 +118,7 @@ describe('Number to string', () => {
 	});
 });
 
-describe('Number to string', () => {
+describe('date-to-string conversions', () => {
 	test('Short date to string', () => {
 		expect(short_date_to_string(new Date(2022, 0, 1))).toBe('2022-01-01');
 		expect(short_date_to_string(new Date(2022, 0, 10))).toBe('2022-01-10');
@@ -129,6 +136,18 @@ describe('Number to string', () => {
 		expect(date_to_string(new Date(2022, 0, 10, 10, 1, 10))).toBe('2022-01-10..10:01:10');
 		expect(date_to_string(new Date(2022, 10, 1, 10, 10, 1))).toBe('2022-11-01..10:10:01');
 		expect(date_to_string(new Date(2022, 10, 10, 10, 10, 10))).toBe('2022-11-10..10:10:10');
+	});
+
+	test('string to date', () => {
+		expect(string_to_date('2022-10-01..01:01:01')).toEqual(new Date(2022, 9, 1, 1, 1, 1));
+		expect(string_to_date('2022-10-01..01:01:10')).toEqual(new Date(2022, 9, 1, 1, 1, 10));
+		expect(string_to_date('2022-10-01..10:01:10')).toEqual(new Date(2022, 9, 1, 10, 1, 10));
+	});
+
+	test('long date to short date', () => {
+		expect(long_date_to_short_date('2022-10-01..01:01:01')).toBe('2022-10-01');
+		expect(long_date_to_short_date('2022-10-01..01:01:10')).toBe('2022-10-01');
+		expect(long_date_to_short_date('2022-10-21..10:01:10')).toBe('2022-10-21');
 	});
 });
 
