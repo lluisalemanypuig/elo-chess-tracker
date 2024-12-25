@@ -21,7 +21,7 @@ Contact:
 */
 
 import { Rating } from '../rating_framework/rating';
-import { copyarray, linear_find } from '../utils/misc';
+import { copyarray, search_linear } from '../utils/misc';
 import { TimeControlRating, time_control_rating_from_json } from './time_control_rating';
 
 /**
@@ -95,7 +95,7 @@ export class Player {
 	}
 
 	index_time_control_id(time_control_id: string): number {
-		return linear_find(this.ratings, (v: TimeControlRating): boolean => {
+		return search_linear(this.ratings, (v: TimeControlRating): boolean => {
 			return v.time_control == time_control_id;
 		});
 	}

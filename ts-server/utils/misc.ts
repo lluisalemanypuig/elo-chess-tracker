@@ -131,7 +131,7 @@ export function copyarray<T>(array: T[]): T[] {
  * @param arr Input array
  * @param F Boolean function
  */
-export function linear_find<T>(
+export function search_linear<T>(
 	arr: T[],
 	F: Function = (e1: T, e2: T) => {
 		return e1 == e2;

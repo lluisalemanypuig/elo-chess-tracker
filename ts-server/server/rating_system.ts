@@ -23,7 +23,7 @@ Contact:
 import { Game } from '../models/game';
 import { Rating } from '../rating_framework/rating';
 import { TimeControl } from '../models/time_control';
-import { linear_find } from '../utils/misc';
+import { search_linear } from '../utils/misc';
 
 /**
  * @brief Rating system in the web
@@ -90,7 +90,7 @@ export class RatingSystem {
 		];
 	}
 	get_name_time_control(time_control_id: string): string {
-		const index = linear_find(this.all_time_controls, (t: TimeControl): boolean => {
+		const index = search_linear(this.all_time_controls, (t: TimeControl): boolean => {
 			return t.id == time_control_id;
 		});
 		if (index >= this.all_time_controls.length) {
