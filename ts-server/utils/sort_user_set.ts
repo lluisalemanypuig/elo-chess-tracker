@@ -24,22 +24,10 @@ import { User } from '../models/user';
 
 /// Compare two users using their username
 export function username_sort(a: User, b: User): number {
-	if (a.get_username() < b.get_username()) {
-		return -1;
-	}
-	if (a.get_username() == b.get_username()) {
-		return 0;
-	}
-	return 1;
+	return a.get_username().localeCompare(b.get_username());
 }
 
 /// Compare two users using their username
 export function full_name_sort(a: User, b: User): number {
-	if (a.get_full_name() < b.get_full_name()) {
-		return -1;
-	}
-	if (a.get_full_name() == b.get_full_name()) {
-		return 0;
-	}
-	return 1;
+	return a.get_full_name().localeCompare(b.get_full_name());
 }
