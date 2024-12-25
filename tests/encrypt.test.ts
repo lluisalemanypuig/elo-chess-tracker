@@ -48,9 +48,18 @@ describe('Encrypt password for users', () => {
 		const [encrypted, iv] = encrypt_password_for_user(user, pass);
 		expect(is_password_of_user_correct(encrypted, user, pass, iv)).toBe(true);
 	});
+
+	test('Several users', () => {
+		const user_array = ['a', 'asdf', 'qwer', 'admin', 'administrator', 'qwer ppp'];
+		const pass = 'QQQQQQQ';
+		for (const user of user_array) {
+			const [encrypted, iv] = encrypt_password_for_user(user, pass);
+			expect(is_password_of_user_correct(encrypted, user, pass, iv)).toBe(true);
+		}
+	});
 });
 
-describe('Encryption and decryption of messages with a plain password', () => {
+describe('Encryption and decryption of messages with a (correct) plain password', () => {
 	test('1', () => {
 		const msg = '';
 		const pass = 'admin';
@@ -77,5 +86,89 @@ describe('Encryption and decryption of messages with a plain password', () => {
 		const pass = 'admin';
 		const enc = encrypt_message(msg, pass);
 		expect(decrypt_message(enc, pass)).toBe(msg);
+	});
+});
+
+describe('Encryption and decryption with a (correct) plain password', () => {
+	test('1', () => {
+		const msg = '';
+		const pass = 'admin';
+		const enc = encrypt_message(msg, pass);
+		expect(decrypt_message(enc, pass)).toBe(msg);
+	});
+
+	test('2.1', () => {
+		const msg = 'a';
+		const pass = 'admin';
+		const enc = encrypt_message(msg, pass);
+		expect(decrypt_message(enc, pass)).toBe(msg);
+	});
+
+	test('2', () => {
+		const msg = 'as';
+		const pass = 'admin';
+		const enc = encrypt_message(msg, pass);
+		expect(decrypt_message(enc, pass)).toBe(msg);
+	});
+
+	test('3', () => {
+		const msg = 'asdf fqrfwrf';
+		const pass = 'admin';
+		const enc = encrypt_message(msg, pass);
+		expect(decrypt_message(enc, pass)).toBe(msg);
+	});
+
+	test('4', () => {
+		const msg = 'QW  2424guhgnj gk rfr';
+		const pass = 'admin';
+		const enc = encrypt_message(msg, pass);
+		expect(decrypt_message(enc, pass)).toBe(msg);
+	});
+});
+
+describe('Encryption and decryption with a (wrong) plain password', () => {
+	test('1', () => {
+		const msg = '';
+		const pass = 'admin';
+		const enc1 = encrypt_message(msg, pass);
+		expect(decrypt_message(enc1, 'admin!')).toBe(msg);
+		const enc2 = encrypt_message(msg, pass);
+		expect(decrypt_message(enc2, 'admi')).toBe(msg);
+	});
+
+	test('2.1', () => {
+		const msg = 'a';
+		const pass = 'admin';
+		const enc1 = encrypt_message(msg, pass);
+		expect(decrypt_message(enc1, 'admin!')).not.toBe(msg);
+		const enc2 = encrypt_message(msg, pass);
+		expect(decrypt_message(enc2, 'admi')).not.toBe(msg);
+	});
+
+	test('2', () => {
+		const msg = 'as';
+		const pass = 'admin';
+		const enc1 = encrypt_message(msg, pass);
+		expect(decrypt_message(enc1, 'admin!')).not.toBe(msg);
+		const enc2 = encrypt_message(msg, pass);
+		expect(decrypt_message(enc2, 'admi')).not.toBe(msg);
+	});
+
+	test('3', () => {
+		const msg = 'asdf fqrfwrf';
+		const pass = 'admin';
+		const enc1 = encrypt_message(msg, pass);
+		expect(decrypt_message(enc1, 'admin!')).not.toBe(msg);
+		const enc2 = encrypt_message(msg, pass);
+		expect(decrypt_message(enc2, 'admi')).not.toBe(msg);
+	});
+
+	test('4', () => {
+		const msg = 'QW  2424guhgnj gk rfr';
+		const pass = 'admin';
+		const enc1 = encrypt_message(msg, pass);
+		expect(decrypt_message(enc1, 'admin!')).not.toBe(msg);
+		const enc2 = encrypt_message(msg, pass);
+		expect(decrypt_message(enc2, 'admi')).not.toBe(msg);
 	});
 });
