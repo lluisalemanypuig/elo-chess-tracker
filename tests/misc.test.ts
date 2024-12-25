@@ -21,6 +21,7 @@ Contact:
 */
 
 import {
+	any,
 	date_to_string,
 	interleave_strings,
 	long_date_to_short_date,
@@ -178,5 +179,44 @@ describe('Interleave strings', () => {
 		expect(interleave_strings('qw', 'asdf')).toBe('qawsdf');
 		expect(interleave_strings('q', 'asdf')).toBe('qasdf');
 		expect(interleave_strings('', 'asdf')).toBe('asdf');
+	});
+});
+
+describe('Any function tests', () => {
+	test('Empty array', () => {
+		const array: number[] = [];
+		expect(
+			any(array, (i: number): boolean => {
+				return i % 2 == 0;
+			})
+		).toBe(false);
+	});
+
+	test('Always false', () => {
+		const array: number[] = [1, 3, 5, 7, 9];
+		expect(
+			any(array, (i: number): boolean => {
+				return i % 2 == 0;
+			})
+		).toBe(false);
+		expect(
+			any(array, (i: number): boolean => {
+				return i >= 10;
+			})
+		).toBe(false);
+	});
+
+	test('Always true', () => {
+		const array: number[] = [1, 3, 5, 7, 9];
+		expect(
+			any(array, (i: number): boolean => {
+				return i % 2 == 1;
+			})
+		).toBe(true);
+		expect(
+			any(array, (i: number): boolean => {
+				return i < 10;
+			})
+		).toBe(true);
 	});
 });
