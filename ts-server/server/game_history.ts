@@ -35,7 +35,7 @@ import {
 	where_should_be_inserted,
 	long_date_to_short_date,
 	number_to_string,
-	search_linear
+	search_linear_by_key
 } from '../utils/misc';
 import { ServerMemory } from './memory';
 import { RatingSystem } from './rating_system';
@@ -498,7 +498,7 @@ export function game_find_by_id(game_id: string): [string[], string, Game[], num
 	const game_set = read_game_date_record(date_record_filename);
 
 	// find the game 'game_id' in the array 'game_set' and check that it exists
-	const game_idx_in_game_set = search_linear(game_set, (g: Game): boolean => {
+	const game_idx_in_game_set = search_linear_by_key(game_set, (g: Game): boolean => {
 		return g.get_id() == game_id;
 	});
 	assert(game_idx_in_game_set < game_set.length);

@@ -131,7 +131,18 @@ export function copyarray<T>(array: T[]): T[] {
  * @param arr Input array
  * @param F Boolean function
  */
-export function search_linear<T>(
+export function search_linear<T>(arr: T[], x: T): number {
+	return search_linear_by_key(arr, (y: T) => {
+		return x == y;
+	});
+}
+
+/**
+ * @brief Finds the first element for which F evaluates to true
+ * @param arr Input array
+ * @param F Boolean function
+ */
+export function search_linear_by_key<T>(
 	arr: T[],
 	F: Function = (e1: T, e2: T) => {
 		return e1 == e2;
@@ -142,7 +153,7 @@ export function search_linear<T>(
 			return i;
 		}
 	}
-	return arr.length;
+	return -1;
 }
 
 /**
