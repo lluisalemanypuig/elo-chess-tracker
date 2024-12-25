@@ -23,6 +23,13 @@ Contact:
 import { search, search_by_key, where_should_be_inserted } from '../ts-server/utils/misc';
 
 describe('Searching in an array of numbers -- locate a number', () => {
+	test('Empty', () => {
+		const arr: number[] = [];
+		for (let i = -10; i <= 10; ++i) {
+			expect(search(arr, i)).toBe(-1);
+		}
+	});
+
 	test('Dense (existent)', () => {
 		const arr = [1, 2, 3, 5, 6, 7];
 		for (let i = 0; i < arr.length; ++i) {
@@ -162,6 +169,13 @@ describe('Searching in an array of structs -- locate an element', () => {
 });
 
 describe('Searching in an array of numbers -- where to insert a number', () => {
+	test('Empty', () => {
+		const arr: number[] = [];
+		for (let i = -10; i <= 10; ++i) {
+			expect(where_should_be_inserted(arr, i)).toEqual([1, false]);
+		}
+	});
+
 	test('Dense 1 (existent)', () => {
 		const arr = [1, 2, 3, 5, 6, 7];
 		for (let i = 0; i < arr.length; ++i) {
