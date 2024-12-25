@@ -20,7 +20,13 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { search, search_by_key, search_linear, where_should_be_inserted } from '../ts-server/utils/misc';
+import {
+	search,
+	search_by_key,
+	search_linear,
+	search_linear_by_key,
+	where_should_be_inserted
+} from '../ts-server/utils/misc';
 
 describe('Searching in an array of numbers -- locate a number', () => {
 	test('Empty', () => {
@@ -99,6 +105,71 @@ describe('Searching in an array of structs -- locate an element', () => {
 		}
 	}
 
+	test('Empty', () => {
+		const arr: pair[] = [];
+		const search_func = (p: pair, q: pair) => {
+			if (p.name < q.name) {
+				return -1;
+			}
+			if (p.name == q.name) {
+				return 0;
+			}
+			return 1;
+		};
+
+		expect(search(arr, new pair('A', 3), search_func)).toBe(-1);
+		expect(search(arr, new pair('A', 10), search_func)).toBe(-1);
+		expect(search(arr, new pair('B', 3), search_func)).toBe(-1);
+		expect(search(arr, new pair('B', 50), search_func)).toBe(-1);
+		expect(search(arr, new pair('C', 1), search_func)).toBe(-1);
+		expect(search(arr, new pair('C', 10), search_func)).toBe(-1);
+		expect(search(arr, new pair('D', 0), search_func)).toBe(-1);
+		expect(search(arr, new pair('D', 20), search_func)).toBe(-1);
+		expect(search(arr, new pair('M', 0), search_func)).toBe(-1);
+		expect(search(arr, new pair('M', 100), search_func)).toBe(-1);
+		expect(search(arr, new pair('Z', -9), search_func)).toBe(-1);
+		expect(search(arr, new pair('Z', 10), search_func)).toBe(-1);
+	});
+
+	test('Empty (key)', () => {
+		const arr: pair[] = [];
+		const search_func = (p: pair, q: pair) => {
+			if (p.name < q.name) {
+				return -1;
+			}
+			if (p.name == q.name) {
+				return 0;
+			}
+			return 1;
+		};
+		const key_func = function (p: pair) {
+			return p.name;
+		};
+
+		expect(search_by_key(arr, 'A', search_func, key_func)).toBe(-1);
+		expect(search_by_key(arr, 'B', search_func, key_func)).toBe(-1);
+		expect(search_by_key(arr, 'C', search_func, key_func)).toBe(-1);
+		expect(search_by_key(arr, 'D', search_func, key_func)).toBe(-1);
+		expect(search_by_key(arr, 'M', search_func, key_func)).toBe(-1);
+		expect(search_by_key(arr, 'Z', search_func, key_func)).toBe(-1);
+
+		expect(
+			search_linear_by_key(arr, (p: pair): boolean => {
+				return p.name == 'A';
+			})
+		).toBe(-1);
+		expect(
+			search_linear_by_key(arr, (p: pair): boolean => {
+				return p.name == 'B';
+			})
+		).toBe(-1);
+		expect(
+			search_linear_by_key(arr, (p: pair): boolean => {
+				return p.name == 'C';
+			})
+		).toBe(-1);
+	});
+
 	test('Sorted by name', () => {
 		const arr = [
 			new pair('A', 3),
@@ -138,6 +209,10 @@ describe('Searching in an array of structs -- locate an element', () => {
 		expect(search(arr, new pair('H', 0), search_func)).toBe(-1);
 		expect(search(arr, new pair('Q', 0), search_func)).toBe(-1);
 		expect(search(arr, new pair('z', 0), search_func)).toBe(-1);
+
+		// 'search_linear' cannot be tested here since the equality operator '=='
+		// is funny in typescript/javascript. 'search_linear_by_key' is needed
+		// and is tested below
 	});
 
 	test('Sorted by (key) name', () => {
@@ -176,6 +251,73 @@ describe('Searching in an array of structs -- locate an element', () => {
 		expect(search_by_key(arr, 'H', search_func, key_func)).toBe(-1);
 		expect(search_by_key(arr, 'Q', search_func, key_func)).toBe(-1);
 		expect(search_by_key(arr, 'z', search_func, key_func)).toBe(-1);
+
+		expect(
+			search_linear_by_key(arr, (p: pair): boolean => {
+				return p.name == 'A';
+			})
+		).toBe(0);
+		expect(
+			search_linear_by_key(arr, (p: pair): boolean => {
+				return p.name == 'B';
+			})
+		).toBe(1);
+		expect(
+			search_linear_by_key(arr, (p: pair): boolean => {
+				return p.name == 'C';
+			})
+		).toBe(2);
+		expect(
+			search_linear_by_key(arr, (p: pair): boolean => {
+				return p.name == 'D';
+			})
+		).toBe(3);
+		expect(
+			search_linear_by_key(arr, (p: pair): boolean => {
+				return p.name == 'M';
+			})
+		).toBe(4);
+		expect(
+			search_linear_by_key(arr, (p: pair): boolean => {
+				return p.name == 'Z';
+			})
+		).toBe(5);
+
+		expect(
+			search_linear_by_key(arr, (p: pair): boolean => {
+				return p.name == 'a';
+			})
+		).toBe(-1);
+		expect(
+			search_linear_by_key(arr, (p: pair): boolean => {
+				return p.name == 'E';
+			})
+		).toBe(-1);
+		expect(
+			search_linear_by_key(arr, (p: pair): boolean => {
+				return p.name == 'F';
+			})
+		).toBe(-1);
+		expect(
+			search_linear_by_key(arr, (p: pair): boolean => {
+				return p.name == 'G';
+			})
+		).toBe(-1);
+		expect(
+			search_linear_by_key(arr, (p: pair): boolean => {
+				return p.name == 'H';
+			})
+		).toBe(-1);
+		expect(
+			search_linear_by_key(arr, (p: pair): boolean => {
+				return p.name == 'Q';
+			})
+		).toBe(-1);
+		expect(
+			search_linear_by_key(arr, (p: pair): boolean => {
+				return p.name == 'z';
+			})
+		).toBe(-1);
 	});
 });
 
