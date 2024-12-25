@@ -20,7 +20,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { number_to_string } from '../ts-server/utils/misc';
+import { date_to_string, interleave_strings, number_to_string, short_date_to_string } from '../ts-server/utils/misc';
 
 describe('Number to string', () => {
 	test('1 digit', () => {
@@ -108,5 +108,26 @@ describe('Number to string', () => {
 		expect(number_to_string(2100000010)).toBe('2100000010');
 		expect(number_to_string(2120970340)).toBe('2120970340');
 		expect(number_to_string(2147483647)).toBe('2147483647');
+	});
+});
+
+describe('Number to string', () => {
+	test('Short date to string', () => {
+		expect(short_date_to_string(new Date(2022, 0, 1))).toBe('2022-01-01');
+		expect(short_date_to_string(new Date(2022, 0, 10))).toBe('2022-01-10');
+		expect(short_date_to_string(new Date(2022, 10, 1))).toBe('2022-11-01');
+		expect(short_date_to_string(new Date(2022, 10, 10))).toBe('2022-11-10');
+	});
+
+	test('Date to string', () => {
+		expect(date_to_string(new Date(2022, 0, 1, 1, 1, 1))).toBe('2022-01-01..01:01:01');
+		expect(date_to_string(new Date(2022, 0, 10, 1, 1, 10))).toBe('2022-01-10..01:01:10');
+		expect(date_to_string(new Date(2022, 10, 1, 1, 10, 1))).toBe('2022-11-01..01:10:01');
+		expect(date_to_string(new Date(2022, 10, 10, 1, 10, 10))).toBe('2022-11-10..01:10:10');
+
+		expect(date_to_string(new Date(2022, 0, 1, 10, 1, 1))).toBe('2022-01-01..10:01:01');
+		expect(date_to_string(new Date(2022, 0, 10, 10, 1, 10))).toBe('2022-01-10..10:01:10');
+		expect(date_to_string(new Date(2022, 10, 1, 10, 10, 1))).toBe('2022-11-01..10:10:01');
+		expect(date_to_string(new Date(2022, 10, 10, 10, 10, 10))).toBe('2022-11-10..10:10:10');
 	});
 });
