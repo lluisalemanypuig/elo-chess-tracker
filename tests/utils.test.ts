@@ -20,13 +20,14 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { search, search_by_key, where_should_be_inserted } from '../ts-server/utils/misc';
+import { search, search_by_key, search_linear, where_should_be_inserted } from '../ts-server/utils/misc';
 
 describe('Searching in an array of numbers -- locate a number', () => {
 	test('Empty', () => {
 		const arr: number[] = [];
 		for (let i = -10; i <= 10; ++i) {
 			expect(search(arr, i)).toBe(-1);
+			expect(search_linear(arr, i)).toBe(-1);
 		}
 	});
 
@@ -34,6 +35,7 @@ describe('Searching in an array of numbers -- locate a number', () => {
 		const arr = [1, 2, 3, 5, 6, 7];
 		for (let i = 0; i < arr.length; ++i) {
 			expect(search(arr, arr[i])).toBe(i);
+			expect(search_linear(arr, arr[i])).toBe(i);
 		}
 	});
 
@@ -41,10 +43,12 @@ describe('Searching in an array of numbers -- locate a number', () => {
 		const arr = [1, 2, 3, 5, 6, 7];
 		for (let i = -10; i <= 0; ++i) {
 			expect(search(arr, i)).toBe(-1);
+			expect(search_linear(arr, i)).toBe(-1);
 		}
 		expect(search(arr, 4)).toBe(-1);
 		for (let i = 8; i <= 20; ++i) {
 			expect(search(arr, i)).toBe(-1);
+			expect(search_linear(arr, i)).toBe(-1);
 		}
 	});
 
@@ -52,6 +56,7 @@ describe('Searching in an array of numbers -- locate a number', () => {
 		const arr = [10, 30, 50, 70, 90];
 		for (let i = 0; i < arr.length; ++i) {
 			expect(search(arr, arr[i])).toBe(i);
+			expect(search_linear(arr, arr[i])).toBe(i);
 		}
 	});
 
@@ -59,21 +64,27 @@ describe('Searching in an array of numbers -- locate a number', () => {
 		const arr = [10, 30, 50, 70, 90];
 		for (let i = -20; i <= 9; ++i) {
 			expect(search(arr, i)).toBe(-1);
+			expect(search_linear(arr, i)).toBe(-1);
 		}
 		for (let i = 11; i <= 29; ++i) {
 			expect(search(arr, i)).toBe(-1);
+			expect(search_linear(arr, i)).toBe(-1);
 		}
 		for (let i = 31; i <= 49; ++i) {
 			expect(search(arr, i)).toBe(-1);
+			expect(search_linear(arr, i)).toBe(-1);
 		}
 		for (let i = 51; i <= 69; ++i) {
 			expect(search(arr, i)).toBe(-1);
+			expect(search_linear(arr, i)).toBe(-1);
 		}
 		for (let i = 71; i <= 89; ++i) {
 			expect(search(arr, i)).toBe(-1);
+			expect(search_linear(arr, i)).toBe(-1);
 		}
 		for (let i = 91; i <= 120; ++i) {
 			expect(search(arr, i)).toBe(-1);
+			expect(search_linear(arr, i)).toBe(-1);
 		}
 	});
 });
@@ -97,7 +108,7 @@ describe('Searching in an array of structs -- locate an element', () => {
 			new pair('M', 100),
 			new pair('Z', -9)
 		];
-		const search_func = function (p: pair, q: pair) {
+		const search_func = (p: pair, q: pair) => {
 			if (p.name < q.name) {
 				return -1;
 			}
