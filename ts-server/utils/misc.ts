@@ -127,6 +127,23 @@ export function copyarray<T>(array: T[]): T[] {
 }
 
 /**
+ * @brief Checks if function F is evaluated to true in any
+ * element of the array
+ * @param arr Input array
+ * @param F Boolean function (e: T) => boolean
+ * @returns True if F evaluates to true in any element of the array.
+ * Returns false if otherwise.
+ */
+export function any<T>(arr: T[], F: (e1: T) => boolean): boolean {
+	for (let i = 0; i < arr.length; ++i) {
+		if (F(arr[i])) {
+			return true;
+		}
+	}
+	return false;
+}
+
+/**
  * @brief Finds the first element for which F evaluates to true
  * @param arr Input array
  * @param F Boolean function
@@ -157,23 +174,6 @@ export function search_linear_by_key<T>(
 }
 
 /**
- * @brief Checks if function F is evaluated to true in any
- * element of the array
- * @param arr Input array
- * @param F Boolean function (e: T) => boolean
- * @returns True if F evaluates to true in any element of the array.
- * Returns false if otherwise.
- */
-export function any<T>(arr: T[], F: (e1: T) => boolean): boolean {
-	for (let i = 0; i < arr.length; ++i) {
-		if (F(arr[i])) {
-			return true;
-		}
-	}
-	return false;
-}
-
-/**
  * @brief Returns whether @e x is in @e arr or not.
  * @tparam T Type of elements in the array.
  * @param arr Array.
@@ -198,7 +198,7 @@ export function search<T>(
 		return 1;
 	}
 ): number {
-	return search_by_key(arr, x, Comparison, function (e1: T) {
+	return search_by_key(arr, x, Comparison, (e1: T) => {
 		return e1;
 	});
 }
