@@ -162,7 +162,7 @@ export function any<T>(arr: T[], F: Function): boolean {
  * @tparam T Type of elements in the array.
  * @param arr Array.
  * @param x Element of type @e T.
- * @param F Takes two elements of type @e T, F(e1,e2), and returns:
+ * @param Comparison Takes two elements of type @e T, F(e1,e2), and returns:
  * - a value < 0 if "e1 < e2",
  * - a value = 0 if "e1 == e2",
  * - a value > 0 if "e1 > e2".
@@ -172,7 +172,7 @@ export function any<T>(arr: T[], F: Function): boolean {
 export function search<T>(
 	arr: T[],
 	x: T,
-	F: Function = (e1: T, e2: T): number => {
+	Comparison: Function = (e1: T, e2: T): number => {
 		if (e1 < e2) {
 			return -1;
 		}
@@ -182,7 +182,7 @@ export function search<T>(
 		return 1;
 	}
 ): number {
-	return search_by_key(arr, x, F, function (e1: T) {
+	return search_by_key(arr, x, Comparison, function (e1: T) {
 		return e1;
 	});
 }
@@ -192,7 +192,7 @@ export function search<T>(
  * @tparam T Type of elements in the array.
  * @param arr Array.
  * @param x Element of type @e T.
- * @param F Takes two elements of type @e T, F(e1,e2), and returns:
+ * @param Comparison Takes two elements of type @e T, F(e1,e2), and returns:
  * - a value < 0 if "e1 < e2",
  * - a value = 0 if "e1 == e2",
  * - a value > 0 if "e1 > e2".
@@ -202,7 +202,7 @@ export function search<T>(
 export function search_by_key<T, U>(
 	arr: T[],
 	x: U,
-	F: Function = (e1: U, e2: U): number => {
+	Comparison: Function = (e1: U, e2: U): number => {
 		if (e1 < e2) {
 			return -1;
 		}
@@ -213,33 +213,25 @@ export function search_by_key<T, U>(
 	},
 	M: (input: T) => U
 ): number {
-	if (arr.length == 0) {
-		return -1;
-	}
-
-	const lt = (e1: U, e2: U): boolean => {
-		return F(e1, e2) < 0;
-	};
-	const equal = (e1: U, e2: U): boolean => {
-		return F(e1, e2) == 0;
-	};
-	//const gt = (e1: T, e2: T): boolean => { return F(e1,e2) > 0; };
-
 	let i: number = 0;
 	let j: number = arr.length - 1;
 	while (i < j) {
-		let m: number = Math.floor((i + j) / 2);
-		const M_m = M(arr[m]);
-		if (equal(x, M_m)) {
+		const m: number = Math.floor((i + j) / 2);
+
+		const comp = Comparison(x, M(arr[m]));
+		const is_equal = comp == 0;
+		const is_less_than = comp == -1;
+
+		if (is_equal) {
 			return m;
 		}
-		if (lt(x, M_m)) {
+		if (is_less_than) {
 			j = m - 1;
 		} else {
 			i = m + 1;
 		}
 	}
-	if (i == j && equal(x, M(arr[i]))) {
+	if (i == j && Comparison(x, M(arr[i])) == 0) {
 		return i;
 	}
 	return -1;
@@ -250,7 +242,7 @@ export function search_by_key<T, U>(
  * @tparam T Type of elements in the array.
  * @param arr Array.
  * @param x Element not in @e arr.
- * @param F Takes two elements of type @e T, F(e1,e2), and returns:
+ * @param Comparison Takes two elements of type @e T, F(e1,e2), and returns:
  * - a value < 0 if "e1 < e2",
  * - a value = 0 if "e1 == e2",
  * - a value > 0 if "e1 > e2".
@@ -264,7 +256,7 @@ export function search_by_key<T, U>(
 export function where_should_be_inserted<T>(
 	arr: T[],
 	x: T,
-	F: Function = (e1: T, e2: T): number => {
+	Comparison: Function = (e1: T, e2: T): number => {
 		if (e1 < e2) {
 			return -1;
 		}
@@ -274,51 +266,33 @@ export function where_should_be_inserted<T>(
 		return 1;
 	}
 ): [number, boolean] {
-	const lt = (e1: T, e2: T): boolean => {
-		return F(e1, e2) < 0;
-	};
-	const equal = (e1: T, e2: T): boolean => {
-		return F(e1, e2) == 0;
-	};
-	//const gt = (e1: T, e2: T): boolean => { return F(e1,e2) > 0; };
-
 	let i: number = 0;
 	let j: number = arr.length - 1;
-	while (i + 1 < j) {
-		let m: number = Math.floor((i + j) / 2);
-		if (equal(x, arr[m])) {
+	while (i < j) {
+		const m: number = Math.floor((i + j) / 2);
+
+		const comp = Comparison(x, arr[m]);
+		const is_equal = comp == 0;
+		const is_less_than = comp == -1;
+
+		if (is_equal) {
 			return [m, true];
 		}
-		if (lt(x, arr[m])) {
+		if (is_less_than) {
 			j = m - 1;
 		} else {
 			i = m + 1;
 		}
 	}
 
-	if (i + 1 == j) {
-		if (equal(x, arr[i])) {
-			return [i, true];
-		}
-		if (equal(x, arr[i + 1])) {
-			return [i + 1, true];
-		}
+	const comp = Comparison(x, arr[i]);
+	const is_equal = comp == 0;
+	const is_less_than = comp == -1;
 
-		if (lt(x, arr[i])) {
-			return [i, false];
-		}
-		if (lt(arr[i], x) && lt(x, arr[i + 1])) {
-			return [i + 1, false];
-		}
-		if (lt(arr[i + 1], x)) {
-			return [i + 2, false];
-		}
-	}
-
-	if (equal(x, arr[i])) {
+	if (is_equal) {
 		return [i, true];
 	}
-	if (lt(x, arr[i])) {
+	if (is_less_than) {
 		return [i, false];
 	}
 	return [i + 1, false];
