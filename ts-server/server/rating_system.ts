@@ -23,7 +23,7 @@ Contact:
 import { Game } from '../models/game';
 import { Rating } from '../rating_framework/rating';
 import { TimeControl } from '../models/time_control';
-import { search_linear_by_key } from '../utils/misc';
+import { search_linear_by_key } from '../utils/searching';
 
 /**
  * @brief Rating system in the web

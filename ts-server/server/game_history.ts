@@ -29,14 +29,8 @@ const debug = Debug('ELO_TRACKER:server_game_history');
 import { Player } from '../models/player';
 import { Game, GameResult, game_set_from_json } from '../models/game';
 import { User } from '../models/user';
-import {
-	log_now,
-	search,
-	where_should_be_inserted,
-	long_date_to_short_date,
-	number_to_string,
-	search_linear_by_key
-} from '../utils/misc';
+import { log_now, long_date_to_short_date, number_to_string } from '../utils/misc';
+import { search, where_should_be_inserted, search_linear_by_key } from '../utils/searching';
 import { ServerMemory } from './memory';
 import { RatingSystem } from './rating_system';
 import { ServerEnvironment } from './environment';

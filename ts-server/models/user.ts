@@ -27,7 +27,8 @@ import { Password, password_from_json } from './password';
 import { UserRole } from './user_role';
 import { UserAction } from './user_action';
 import { UserRoleToUserAction } from './user_role_action';
-import { copyarray, where_should_be_inserted } from '../utils/misc';
+import { copyarray } from '../utils/misc';
+import { where_should_be_inserted } from '../utils/searching';
 import { TimeControlRating, time_control_rating_set_from_json } from './time_control_rating';
 
 /**

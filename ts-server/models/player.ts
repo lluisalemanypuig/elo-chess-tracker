@@ -21,7 +21,8 @@ Contact:
 */
 
 import { Rating } from '../rating_framework/rating';
-import { copyarray, search_linear_by_key } from '../utils/misc';
+import { copyarray } from '../utils/misc';
+import { search_linear_by_key } from '../utils/searching';
 import { TimeControlRating, time_control_rating_from_json } from './time_control_rating';
 
 /**

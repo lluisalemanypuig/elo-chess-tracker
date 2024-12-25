@@ -21,7 +21,7 @@ Contact:
 */
 
 import { assert } from 'console';
-import { search_by_key, where_should_be_inserted } from '../utils/misc';
+import { search_by_key, where_should_be_inserted } from '../utils/searching';
 import { Game, GameResult } from './game';
 
 /**
