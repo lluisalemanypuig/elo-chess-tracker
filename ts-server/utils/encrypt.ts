@@ -54,12 +54,12 @@ function next_power_of_2(n: number): number {
  * @returns A longer string padded with random characters
  */
 function normalize_password(password: string): string {
-	let next_length = 0;
-	if (password.length < 4) {
-		next_length = next_power_of_2(next_power_of_2(password.length));
-	} else {
-		next_length = next_power_of_2(password.length);
-	}
+	const next_length = (function () {
+		if (password.length < 4) {
+			return next_power_of_2(next_power_of_2(password.length));
+		}
+		return next_power_of_2(password.length);
+	})();
 
 	const allowed_symbols =
 		'a!b·c$d%e&f/g(h)i=j?k¿l|m@n#o~p¬qr\'s[¡]t{u}v/w*x-y+zºAªB"C,D.E;F:G_HIJKLMNOPQRSTUVWXYZ0123456789 ';
@@ -104,7 +104,7 @@ export function decrypt_password_for_user(encrypted_msg: string, password: strin
 	password = normalize_password(password);
 	const key = CryptoJS.enc.Utf8.parse(password);
 
-	let dec = CryptoJS.AES.decrypt(encrypted_msg, key, {
+	const dec = CryptoJS.AES.decrypt(encrypted_msg, key, {
 		iv: CryptoJS.enc.Base64.parse(iv),
 		mode: CryptoJS.mode.CBC,
 		padding: CryptoJS.pad.Pkcs7
