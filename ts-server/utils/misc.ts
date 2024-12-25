@@ -131,7 +131,12 @@ export function copyarray<T>(array: T[]): T[] {
  * @param arr Input array
  * @param F Boolean function
  */
-export function linear_find<T>(arr: T[], F: Function): number {
+export function linear_find<T>(
+	arr: T[],
+	F: Function = (e1: T, e2: T) => {
+		return e1 == e2;
+	}
+): number {
 	for (let i = 0; i < arr.length; ++i) {
 		if (F(arr[i])) {
 			return i;
@@ -148,7 +153,7 @@ export function linear_find<T>(arr: T[], F: Function): number {
  * @returns True if F evaluates to true in any element of the array.
  * Returns false if otherwise.
  */
-export function any<T>(arr: T[], F: Function): boolean {
+export function any<T>(arr: T[], F: (e1: T) => boolean): boolean {
 	for (let i = 0; i < arr.length; ++i) {
 		if (F(arr[i])) {
 			return true;
