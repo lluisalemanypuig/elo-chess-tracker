@@ -131,3 +131,25 @@ describe('Number to string', () => {
 		expect(date_to_string(new Date(2022, 10, 10, 10, 10, 10))).toBe('2022-11-10..10:10:10');
 	});
 });
+
+describe('Interleave strings', () => {
+	test('Empty strings', () => {
+		expect(interleave_strings('', '')).toBe('');
+	});
+
+	test('length(A) >= length(B)', () => {
+		expect(interleave_strings('asdf', 'qwer')).toBe('aqswdefr');
+		expect(interleave_strings('asdf', 'qwe')).toBe('aqswdef');
+		expect(interleave_strings('asdf', 'qw')).toBe('aqswdf');
+		expect(interleave_strings('asdf', 'q')).toBe('aqsdf');
+		expect(interleave_strings('asdf', '')).toBe('asdf');
+	});
+
+	test('length(A) <= length(B)', () => {
+		expect(interleave_strings('qwer', 'asdf')).toBe('qawsedrf');
+		expect(interleave_strings('qwe', 'asdf')).toBe('qawsedf');
+		expect(interleave_strings('qw', 'asdf')).toBe('qawsdf');
+		expect(interleave_strings('q', 'asdf')).toBe('qasdf');
+		expect(interleave_strings('', 'asdf')).toBe('asdf');
+	});
+});
