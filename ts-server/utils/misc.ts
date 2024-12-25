@@ -22,31 +22,10 @@ Contact:
 
 import moment from 'moment';
 
-/// Convert a number to a string of 8 digits
+/// Convert a number to a string of 10 digits
 export function number_to_string(n: number): string {
-	let str = Number(n).toString();
-	if (n < 10) {
-		return '0000000' + str;
-	}
-	if (n < 100) {
-		return '000000' + str;
-	}
-	if (n < 1000) {
-		return '00000' + str;
-	}
-	if (n < 10000) {
-		return '0000' + str;
-	}
-	if (n < 100000) {
-		return '000' + str;
-	}
-	if (n < 1000000) {
-		return '00' + str;
-	}
-	if (n < 10000000) {
-		return '0' + str;
-	}
-	return str;
+	const str = Number(n).toString();
+	return '0'.repeat(10 - str.length) + str;
 }
 
 /**
