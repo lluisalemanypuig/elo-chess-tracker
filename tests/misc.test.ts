@@ -26,7 +26,8 @@ import {
 	long_date_to_short_date,
 	number_to_string,
 	short_date_to_string,
-	string_to_date
+	string_to_date,
+	string_to_short_date
 } from '../ts-server/utils/misc';
 
 describe('Number to string', () => {
@@ -142,6 +143,13 @@ describe('date-to-string conversions', () => {
 		expect(string_to_date('2022-10-01..01:01:01')).toEqual(new Date(2022, 9, 1, 1, 1, 1));
 		expect(string_to_date('2022-10-01..01:01:10')).toEqual(new Date(2022, 9, 1, 1, 1, 10));
 		expect(string_to_date('2022-10-01..10:01:10')).toEqual(new Date(2022, 9, 1, 10, 1, 10));
+
+		expect(string_to_short_date('2022-10-01..11:12:13')).toEqual(new Date(2022, 9, 1));
+		expect(string_to_short_date('2022-10-10..11:12:13')).toEqual(new Date(2022, 9, 10));
+		expect(string_to_short_date('2022-10-01..23:12:13')).toEqual(new Date(2022, 9, 1));
+		expect(string_to_short_date('2022-10-01')).toEqual(new Date(2022, 9, 1));
+		expect(string_to_short_date('2022-10-10')).toEqual(new Date(2022, 9, 10));
+		expect(string_to_short_date('2022-10-01')).toEqual(new Date(2022, 9, 1));
 	});
 
 	test('long date to short date', () => {
