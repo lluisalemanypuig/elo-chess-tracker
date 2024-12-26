@@ -23,7 +23,7 @@ Contact:
 import { EdgeMetadata } from '../../../ts-server/models/graph/edge_metadata';
 import { edge_from_json, Edge } from '../../../ts-server/models/graph/edge';
 
-describe('Edge :: From JSON', () => {
+describe('From JSON', () => {
 	test('string', () => {
 		expect(
 			edge_from_json(

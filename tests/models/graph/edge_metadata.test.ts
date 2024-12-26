@@ -22,7 +22,7 @@ Contact:
 
 import { edge_metadata_from_json, EdgeMetadata } from '../../../ts-server/models/graph/edge_metadata';
 
-describe('EdgeMetadata :: From JSON', () => {
+describe('From JSON', () => {
 	test('string', () => {
 		expect(edge_metadata_from_json('{"num_games_won": 1, "num_games_drawn": 0, "num_games_lost": 300}')).toEqual(
 			new EdgeMetadata(1, 0, 300)
