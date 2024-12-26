@@ -21,7 +21,7 @@ Contact:
 */
 
 import { assert } from 'console';
-import { search_by_key, where_should_be_inserted } from '../utils/searching';
+import { search_by_key, where_should_be_inserted_by_key } from '../utils/searching';
 import { Game, GameResult } from './game';
 
 /**
@@ -51,11 +51,15 @@ export class EdgeMetadata {
 	}
 
 	static from_result(result: GameResult): EdgeMetadata {
-		let data = new EdgeMetadata(0, 0, 0);
-		data.num_games_won += result == 'white_wins' ? 1 : 0;
-		data.num_games_drawn += result == 'draw' ? 1 : 0;
-		data.num_games_lost += result == 'black_wins' ? 1 : 0;
-		return data;
+		return new EdgeMetadata(
+			result == 'white_wins' ? 1 : 0,
+			result == 'draw' ? 1 : 0,
+			result == 'black_wins' ? 1 : 0
+		);
+	}
+
+	static empty(): EdgeMetadata {
+		return new EdgeMetadata(0, 0, 0);
 	}
 }
 
@@ -84,10 +88,10 @@ export function edge_metadata_from_json(json: any): EdgeMetadata {
  */
 export class Edge {
 	/// The id of B (the target of the edge).
-	public neighbor: string = '';
+	public neighbor: string;
 
 	/// The metadata of this edge.
-	public metadata: EdgeMetadata | undefined = new EdgeMetadata(0, 0, 0);
+	public metadata: EdgeMetadata | undefined;
 
 	constructor(neigh: string, data: EdgeMetadata | undefined) {
 		this.neighbor = neigh;
@@ -142,29 +146,39 @@ export class Graph {
 	 * @param neigh The new edge to add.
 	 */
 	add_game(game: Game): void {
-		this.add_edge(game.get_white(), new Edge(game.get_black(), EdgeMetadata.from_result(game.get_result())));
+		this.add_edge(game.get_white(), game.get_black(), game.get_result());
 	}
 
-	add_edge(W: string, edge: Edge): void {
+	add_edge(W: string, B: string, result: GameResult): void {
+		const edge = new Edge(B, EdgeMetadata.from_result(result));
+		this.add_edge_raw(W, edge);
+	}
+
+	add_edge_raw(W: string, edge: Edge): void {
 		let white_idx = this.user_to_index.get(W);
 		if (white_idx == undefined) {
 			white_idx = this.max_user_idx;
 			this.push_user(W);
+			this.adjacency_list.push([]);
 		}
 
-		const [edge_idx, exists]: [number, boolean] = where_should_be_inserted(
-			this.adjacency_list[white_idx],
-			edge,
-			function (a: Edge, b: Edge) {
-				return a.neighbor < b.neighbor;
+		let W_list = this.adjacency_list[white_idx];
+
+		const [edge_idx, exists]: [number, boolean] = where_should_be_inserted_by_key(
+			W_list,
+			edge.neighbor,
+			function (s: string, t: string): number {
+				return s.localeCompare(t);
+			},
+			function (a: Edge) {
+				return a.neighbor;
 			}
 		);
 
 		if (exists) {
-			let current_edge = this.adjacency_list[white_idx][edge_idx];
-			current_edge.merge(edge);
+			W_list[edge_idx].merge(edge);
 		} else {
-			this.adjacency_list[white_idx].splice(edge_idx, 0, edge);
+			W_list.splice(edge_idx, 0, edge);
 		}
 	}
 
@@ -179,13 +193,39 @@ export class Graph {
 			W_list,
 			B,
 			function (a: string, b: string) {
-				return a < b;
+				return a.localeCompare(b);
 			},
 			function (a: Edge) {
 				return a.neighbor;
 			}
 		);
-		return B_idx != -1 ? W_list[B_idx].metadata : undefined;
+		return B_idx == -1 ? undefined : W_list[B_idx].metadata;
+	}
+
+	get_degree(u: string): number {
+		const u_idx = this.user_to_index.get(u);
+		if (u_idx == undefined) {
+			return -1;
+		}
+		return this.adjacency_list[u_idx].length;
+	}
+
+	get_edges(u: string): Edge[] | undefined {
+		const u_idx = this.user_to_index.get(u);
+		if (u_idx == undefined) {
+			return undefined;
+		}
+		return this.adjacency_list[u_idx];
+	}
+
+	get_oponents(u: string): string[] | undefined {
+		const u_idx = this.user_to_index.get(u);
+		if (u_idx == undefined) {
+			return undefined;
+		}
+		return this.adjacency_list[u_idx].map((e: Edge): string => {
+			return e.neighbor;
+		});
 	}
 }
 
@@ -213,7 +253,7 @@ export function graph_from_json(json: any): Graph {
 		const W = index_to_user[i];
 		for (let j = 0; j < adj[i].length; ++j) {
 			const edge = edge_from_json(adj[i][j]);
-			G.add_edge(W, edge);
+			G.add_edge_raw(W, edge);
 		}
 	}
 
