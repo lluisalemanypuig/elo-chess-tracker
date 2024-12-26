@@ -1,6 +1,6 @@
 /*
 Elo rating for a Chess Club
-Copyright (C) 2023  Lluís Alemany Puig
+Copyright (C) 2023 - 2024  Lluís Alemany Puig
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published
@@ -20,15 +20,15 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { game_from_json, game_set_from_json } from "../ts-source/models/game";
-import { server_initialize_from_configuration_file } from "../ts-source/server/initialization";
+import { game_from_json, game_set_from_json } from '../ts-source/models/game';
+import { server_initialize_from_configuration_file } from '../ts-source/server/initialization';
 
-server_initialize_from_configuration_file("webpage/configuration.json");
+server_initialize_from_configuration_file('webpage/configuration.json');
 
 function Test1() {
-	console.log("==========");
-	console.log("  Test 1  ");
-	console.log("==========");
+	console.log('==========');
+	console.log('  Test 1  ');
+	console.log('==========');
 
 	let game = game_from_json(
 		'{\
@@ -56,9 +56,9 @@ function Test1() {
 }
 
 function Test2() {
-	console.log("==========");
-	console.log("  Test 2  ");
-	console.log("==========");
+	console.log('==========');
+	console.log('  Test 2  ');
+	console.log('==========');
 
 	let game = game_set_from_json(
 		'[{\

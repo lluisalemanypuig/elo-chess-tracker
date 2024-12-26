@@ -1,6 +1,6 @@
 /*
 Elo rating for a Chess Club
-Copyright (C) 2023  Lluís Alemany Puig
+Copyright (C) 2023 - 2024  Lluís Alemany Puig
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published
@@ -21,17 +21,23 @@ Contact:
 */
 
 import { server_initialize_from_configuration_file } from '../ts-source/server/initialization';
-import { challenge_accept, challenge_retrieve, challenge_send_new, challenge_set_result, challenge_agree_result } from '../ts-source/server/challenges';
+import {
+	challenge_accept,
+	challenge_retrieve,
+	challenge_send_new,
+	challenge_set_result,
+	challenge_agree_result
+} from '../ts-source/server/challenges';
 import { ServerMemory } from '../ts-source/server/configuration';
 import { Challenge } from '../ts-source/models/challenge';
 
-server_initialize_from_configuration_file("configuration.json");
+server_initialize_from_configuration_file('configuration.json');
 
 let mem = ServerMemory.get_instance();
 
-let id1 = challenge_send_new("magnus.carlsen", "emanuel.lasker");
-let id2 = challenge_send_new("bobby.fischer", "mikhail.botvinnik");
-let id3 = challenge_send_new("vasily.smyslov", "anatoly.karpov");
+let id1 = challenge_send_new('magnus.carlsen', 'emanuel.lasker');
+let id2 = challenge_send_new('bobby.fischer', 'mikhail.botvinnik');
+let id3 = challenge_send_new('vasily.smyslov', 'anatoly.karpov');
 
 for (let i = 0; i < mem.challenges.length; ++i) {
 	console.log(mem.challenges[i]);
@@ -47,35 +53,35 @@ for (let i = 0; i < mem.challenges.length; ++i) {
 
 challenge_set_result(
 	challenge_retrieve(id1) as Challenge,
-	"magnus.carlsen",
-	"2023-01-04..18:00:00",
-	"magnus.carlsen",
-	"emanuel.lasker",
-	"white_wins",
-	"classical_90_30",
-	"Classical"
+	'magnus.carlsen',
+	'2023-01-04..18:00:00',
+	'magnus.carlsen',
+	'emanuel.lasker',
+	'white_wins',
+	'classical_90_30',
+	'Classical'
 );
 
 challenge_set_result(
 	challenge_retrieve(id2) as Challenge,
-	"mikhail.botvinnik",
-	"2023-01-04..18:30:00",
-	"bobby.fischer",
-	"mikhail.botvinnik",
-	"draw",
-	"classical_90_30",
-	"Classical"
+	'mikhail.botvinnik',
+	'2023-01-04..18:30:00',
+	'bobby.fischer',
+	'mikhail.botvinnik',
+	'draw',
+	'classical_90_30',
+	'Classical'
 );
 
 challenge_set_result(
 	challenge_retrieve(id3) as Challenge,
-	"vasily.smyslov",
-	"2023-01-04..19:00:00",
-	"vasily.smyslov",
-	"anatoly.karpov",
-	"black_wins",
-	"classical_90_30",
-	"Classical"
+	'vasily.smyslov',
+	'2023-01-04..19:00:00',
+	'vasily.smyslov',
+	'anatoly.karpov',
+	'black_wins',
+	'classical_90_30',
+	'Classical'
 );
 
 for (let i = 0; i < mem.challenges.length; ++i) {
@@ -85,4 +91,3 @@ for (let i = 0; i < mem.challenges.length; ++i) {
 challenge_agree_result(challenge_retrieve(id1) as Challenge);
 challenge_agree_result(challenge_retrieve(id2) as Challenge);
 challenge_agree_result(challenge_retrieve(id3) as Challenge);
-

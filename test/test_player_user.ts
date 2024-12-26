@@ -1,6 +1,6 @@
 /*
 Elo rating for a Chess Club
-Copyright (C) 2023  Lluís Alemany Puig
+Copyright (C) 2023 - 2024  Lluís Alemany Puig
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published
@@ -27,39 +27,39 @@ import { server_initialize_from_configuration_file } from '../ts-source/server/i
 import { EloRating } from '../ts-source/rating_system/Elo/rating';
 import { TimeControlRating } from '../ts-source/models/time_control_rating';
 
-server_initialize_from_configuration_file("configuration.json");
+server_initialize_from_configuration_file('configuration.json');
 
 function flatten(obj: Object): Object {
-    var result = Object.create(obj);
-    for(var key in result) {
-        result[key] = result[key];
-    }
-    return result;
+	var result = Object.create(obj);
+	for (var key in result) {
+		result[key] = result[key];
+	}
+	return result;
 }
 
 const list_ratings: TimeControlRating[] = [
-	new TimeControlRating("Classical", new EloRating(1500, 0,0,0,0, 40)),
-	new TimeControlRating("Blitz", new EloRating(1500, 0,0,0,0, 40))
+	new TimeControlRating('Classical', new EloRating(1500, 0, 0, 0, 0, 40)),
+	new TimeControlRating('Blitz', new EloRating(1500, 0, 0, 0, 0, 40))
 ];
 
 function Test_Player() {
-	console.log("======================================");
-	console.log("Creating, storing and reading a player");
-	console.log("======================================");
+	console.log('======================================');
+	console.log('Creating, storing and reading a player');
+	console.log('======================================');
 
-	console.log("------------------------------------------");
-	console.log("(1)");
-	let p1: Player = new Player("p1", list_ratings);
+	console.log('------------------------------------------');
+	console.log('(1)');
+	let p1: Player = new Player('p1', list_ratings);
 	console.log(p1);
 
-	console.log("------------------------------------------");
-	console.log("(2)");
-	console.log("Convert a player to JSON string");
+	console.log('------------------------------------------');
+	console.log('(2)');
+	console.log('Convert a player to JSON string');
 	console.log(JSON.stringify(flatten(p1)));
 
-	console.log("------------------------------------------");
-	console.log("(3)");
-	console.log("Parse a player from a JSON string");
+	console.log('------------------------------------------');
+	console.log('(3)');
+	console.log('Parse a player from a JSON string');
 	let json_string: string =
 		'{\
 			"username" : "p1",\
@@ -83,16 +83,16 @@ function Test_Player() {
 			]\
 		}';
 	let json_parse = JSON.parse(json_string);
-	console.log(typeof (json_parse));
+	console.log(typeof json_parse);
 	console.log(json_parse);
 
-	console.log("------------------------------------------");
-	console.log("(4)");
+	console.log('------------------------------------------');
+	console.log('(4)');
 	let px = player_from_json(json_string);
 	console.log(px);
 
-	console.log("------------------------------------------");
-	console.log("(5)");
+	console.log('------------------------------------------');
+	console.log('(5)');
 	let json_string2: string =
 		'[\
 			{\
@@ -143,31 +143,32 @@ function Test_Player() {
 }
 
 function Test_User() {
-	console.log("====================================");
-	console.log("Creating, storing and reading a user");
-	console.log("====================================");
+	console.log('====================================');
+	console.log('Creating, storing and reading a user');
+	console.log('====================================');
 
-	console.log("------------------------------------------");
-	console.log("(1)");
+	console.log('------------------------------------------');
+	console.log('(1)');
 	let p1: User = new User(
-		"p1",
-		"Perico", "de los Palotes",
-		new Password("caca", "iv"),
-		["admin"],
-		["2022-12-31"],
+		'p1',
+		'Perico',
+		'de los Palotes',
+		new Password('caca', 'iv'),
+		['admin'],
+		['2022-12-31'],
 		list_ratings
 	);
 	console.log(p1);
 
-	console.log("------------------------------------------");
-	console.log("(2)");
-	console.log("Convert a user to JSON string");
+	console.log('------------------------------------------');
+	console.log('(2)');
+	console.log('Convert a user to JSON string');
 	let json_str = JSON.stringify(p1);
 	console.log(json_str);
 
-	console.log("------------------------------------------");
-	console.log("(3)");
-	console.log("Parse a user from a JSON string");
+	console.log('------------------------------------------');
+	console.log('(3)');
+	console.log('Parse a user from a JSON string');
 	let json_string: string =
 		'{\
 			"username" : "p1",\
@@ -199,16 +200,16 @@ function Test_User() {
 			"games": []\
 		}';
 	let json_parse = JSON.parse(json_string);
-	console.log(typeof (json_parse));
+	console.log(typeof json_parse);
 	console.log(json_parse);
 
-	console.log("------------------------------------------");
-	console.log("(4)");
+	console.log('------------------------------------------');
+	console.log('(4)');
 	let px = user_from_json(json_string);
 	console.log(px);
 
-	console.log("------------------------------------------");
-	console.log("(5)");
+	console.log('------------------------------------------');
+	console.log('(5)');
 	let json_string2: string =
 		'[\
 			{\

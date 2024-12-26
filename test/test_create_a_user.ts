@@ -1,6 +1,6 @@
 /*
 Elo rating for a Chess Club
-Copyright (C) 2023  Lluís Alemany Puig
+Copyright (C) 2023 - 2024  Lluís Alemany Puig
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published
@@ -20,12 +20,16 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { decrypt_password_for_user, encrypt_password_for_user, is_password_of_user_correct } from "../ts-source/utils/encrypt";
+import {
+	decrypt_password_for_user,
+	encrypt_password_for_user,
+	is_password_of_user_correct
+} from '../ts-source/utils/encrypt';
 
-let username = "";
-let password = "";
+let username = '';
+let password = '';
 
-console.log("-------------------");
+console.log('-------------------');
 console.log(`Username: '${username}'`);
 
 let encrypted = encrypt_password_for_user(username, password);
@@ -38,4 +42,4 @@ console.log(`IV: '${iv}'`);
 let decrypted = decrypt_password_for_user(encrypted_password, password, iv);
 console.log(`Decrypted: '${decrypted}'`);
 
-console.log("Is password correct?", is_password_of_user_correct(encrypted_password, username, password, iv));
+console.log('Is password correct?', is_password_of_user_correct(encrypted_password, username, password, iv));
