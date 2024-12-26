@@ -171,6 +171,10 @@ describe('Interleave strings', () => {
 		expect(interleave_strings('asdf', 'qw')).toBe('aqswdf');
 		expect(interleave_strings('asdf', 'q')).toBe('aqsdf');
 		expect(interleave_strings('asdf', '')).toBe('asdf');
+
+		expect(interleave_strings('admin', '星')).toBe('a星dmin');
+		expect(interleave_strings('admin', '山田')).toBe('a山d田min');
+		expect(interleave_strings('私は一番有名な人です', '山田')).toBe('私山は田一番有名な人です');
 	});
 
 	test('length(A) <= length(B)', () => {
@@ -179,6 +183,10 @@ describe('Interleave strings', () => {
 		expect(interleave_strings('qw', 'asdf')).toBe('qawsdf');
 		expect(interleave_strings('q', 'asdf')).toBe('qasdf');
 		expect(interleave_strings('', 'asdf')).toBe('asdf');
+
+		expect(interleave_strings('星', 'admin')).toBe('星admin');
+		expect(interleave_strings('山田', 'admin')).toBe('山a田dmin');
+		expect(interleave_strings('山田', '私は一番有名な人です')).toBe('山私田は一番有名な人です');
 	});
 });
 
