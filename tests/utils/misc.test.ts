@@ -29,7 +29,7 @@ import {
 	short_date_to_string,
 	string_to_date,
 	string_to_short_date
-} from '../ts-server/utils/misc';
+} from '../../ts-server/utils/misc';
 
 describe('Number to string', () => {
 	test('1 digit', () => {

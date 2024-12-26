@@ -25,7 +25,7 @@ import {
 	encrypt_message,
 	encrypt_password_for_user,
 	is_password_of_user_correct
-} from '../ts-server/utils/encrypt';
+} from '../../ts-server/utils/encrypt';
 
 describe('Encrypt password for users', () => {
 	test('admin - pass', () => {
