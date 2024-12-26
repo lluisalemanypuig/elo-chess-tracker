@@ -20,8 +20,8 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { EdgeMetadata } from '../../ts-server/models/graph/edge_metadata';
-import { Graph } from '../../ts-server/models/graph/graph';
+import { EdgeMetadata } from '../../../ts-server/models/graph/edge_metadata';
+import { Graph } from '../../../ts-server/models/graph/graph';
 
 describe('Simple construction and query', () => {
 	test('', () => {

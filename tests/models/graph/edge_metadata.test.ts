@@ -20,7 +20,7 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { edge_metadata_from_json, EdgeMetadata } from '../../ts-server/models/graph/edge_metadata';
+import { edge_metadata_from_json, EdgeMetadata } from '../../../ts-server/models/graph/edge_metadata';
 
 describe('EdgeMetadata :: From JSON', () => {
 	test('string', () => {
