@@ -39,18 +39,18 @@ function next_power_of_2(n: number): number {
  * @returns A longer string padded with random characters
  */
 export function normalize_string(str: string): string {
-	const allowed_symbols =
-		'a!b$c$d%e&f/g(h)i=j?k$l|m@n#o~p$qr\'s[$]t{u}v/w*x-y+z$A$B"C,D.E;F:G_HIJKLMNOPQRSTUVWXYZ0123456789 ';
+	const allowed_symbols: string =
+		'a!b·c$d%e&f/g(h)i=j?k¿l|m@n#o~p¬qr\'s[¡]t{u}v/w*x-y+zºAªB"C,D.E;F:G_HIJKLMNOPQRSTUVWXYZ0123456789 ';
 
-	const current_length = str.length;
+	let new_password = str.normalize('NFC');
+	const current_length = new_password.length;
 	const next_length = (function () {
-		if (str.length < 4) {
+		if (new_password.length < 4) {
 			return next_power_of_2(next_power_of_2(current_length));
 		}
 		return next_power_of_2(current_length);
 	})();
 
-	let new_password = str.slice();
 	for (let i = current_length; i < next_length; ++i) {
 		const rand_idx = (i - current_length) % allowed_symbols.length;
 		const rand_char = allowed_symbols.charAt(rand_idx);
@@ -90,9 +90,10 @@ export function decrypt_message(encrypted_msg: string, pwd: string): string {
  */
 export function encrypt_password_for_user(username: string, password: string): [string, string] {
 	const normalized_password = normalize_string(password);
-	const key_used_to_encrypt = CryptoJS.enc.Utf8.parse(normalized_password);
+	const key_used_to_encrypt = CryptoJS.SHA256(normalized_password);
 
 	const actual_password_to_be_encrypted = interleave_strings(username, password);
+
 	const iv = CryptoJS.lib.WordArray.random(16);
 
 	const encrypted = CryptoJS.AES.encrypt(actual_password_to_be_encrypted, key_used_to_encrypt, {
@@ -113,7 +114,7 @@ export function encrypt_password_for_user(username: string, password: string): [
  */
 export function decrypt_password_for_user(encrypted_msg: string, password: string, iv: string): string {
 	const normalized_password = normalize_string(password);
-	const key_used_to_decrypt = CryptoJS.enc.Utf8.parse(normalized_password);
+	const key_used_to_decrypt = CryptoJS.SHA256(normalized_password);
 
 	const decrypted = CryptoJS.AES.decrypt(encrypted_msg, key_used_to_decrypt, {
 		iv: CryptoJS.enc.Base64.parse(iv),
@@ -121,13 +122,7 @@ export function decrypt_password_for_user(encrypted_msg: string, password: strin
 		padding: CryptoJS.pad.Pkcs7
 	});
 
-	let result: string;
-	try {
-		result = decrypted.toString(CryptoJS.enc.Utf8);
-	} catch (exception) {
-		result = '';
-	}
-	return result;
+	return decrypted.toString(CryptoJS.enc.Utf8);
 }
 
 /**

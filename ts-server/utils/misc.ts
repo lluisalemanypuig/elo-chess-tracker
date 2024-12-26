@@ -146,15 +146,15 @@ export function interleave_strings(s1: string, s2: string): string {
 	let r: string = '';
 	let i = 0;
 	while (i < s1.length && i < s2.length) {
-		r += s1[i];
-		r += s2[i];
+		r += s1.charAt(i);
+		r += s2.charAt(i);
 		++i;
 	}
 	for (let j = i; j < s1.length; ++j) {
-		r += s1[j];
+		r += s1.charAt(j);
 	}
 	for (let j = i; j < s2.length; ++j) {
-		r += s2[j];
+		r += s2.charAt(j);
 	}
 	return r;
 }
