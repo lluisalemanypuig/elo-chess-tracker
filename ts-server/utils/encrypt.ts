@@ -23,6 +23,43 @@ Contact:
 import CryptoJS from 'crypto-js';
 import { interleave_strings } from './misc';
 
+/// Logarithm of 'x' in base 'base'
+function log_base(x: number, base: number): number {
+	return Math.log(x) / Math.log(base);
+}
+
+/// Next power of 2
+function next_power_of_2(n: number): number {
+	return Math.pow(2, Math.floor(log_base(n, 2)) + 1);
+}
+
+/**
+ * @brief Padds a string (to the right) until its length is a power of 2
+ * @param str A string
+ * @returns A longer string padded with random characters
+ */
+export function normalize_string(str: string): string {
+	const allowed_symbols =
+		'a!b$c$d%e&f/g(h)i=j?k$l|m@n#o~p$qr\'s[$]t{u}v/w*x-y+z$A$B"C,D.E;F:G_HIJKLMNOPQRSTUVWXYZ0123456789 ';
+
+	const current_length = str.length;
+	const next_length = (function () {
+		if (str.length < 4) {
+			return next_power_of_2(next_power_of_2(current_length));
+		}
+		return next_power_of_2(current_length);
+	})();
+
+	let new_password = str.slice();
+	for (let i = current_length; i < next_length; ++i) {
+		const rand_idx = (i - current_length) % allowed_symbols.length;
+		const rand_char = allowed_symbols.charAt(rand_idx);
+		new_password += rand_char;
+	}
+
+	return new_password;
+}
+
 /// Encrypts 'plain_msg' using password 'pwd'
 export function encrypt_message(plain_msg: string, pwd: string): string {
 	return CryptoJS.AES.encrypt(plain_msg, pwd).toString();
@@ -42,73 +79,43 @@ export function decrypt_message(encrypted_msg: string, pwd: string): string {
 	}
 }
 
-/// Logarithm of 'x' in base 'base'
-function log_base(x: number, base: number): number {
-	return Math.log(x) / Math.log(base);
-}
-
-/// Next power of 2
-function next_power_of_2(n: number): number {
-	return Math.pow(2, Math.floor(log_base(n, 2)) + 1);
-}
-
 /**
- * @brief Padds a string (password) until its length is a power of 2
- * @param password A string
- * @returns A longer string padded with random characters
- */
-function normalize_password(password: string): string {
-	const next_length = (function () {
-		if (password.length < 4) {
-			return next_power_of_2(next_power_of_2(password.length));
-		}
-		return next_power_of_2(password.length);
-	})();
-
-	const allowed_symbols =
-		'a!b·c$d%e&f/g(h)i=j?k¿l|m@n#o~p¬qr\'s[¡]t{u}v/w*x-y+zºAªB"C,D.E;F:G_HIJKLMNOPQRSTUVWXYZ0123456789 ';
-	for (let i = password.length; i < next_length; ++i) {
-		const rand_idx = (i - password.length) % allowed_symbols.length;
-		const rand_char = allowed_symbols.charAt(rand_idx);
-		password += rand_char;
-	}
-
-	return password;
-}
-
-/**
- * @brief Encrypts a password for a user
+ * @brief Encrypts the password for a user.
+ *
+ * In order to store the password of a user in the 'database', it is not just the
+ * password alone, but the password provided along with more data (the user name).
  * @param username User name.
- * @param user_password Password in plain text set by the user.
+ * @param password Password in plain text set by the user.
  * @returns A pair of strings: encrypted text, and random initialization vector of AES (length 16 bytes)
  */
-export function encrypt_password_for_user(username: string, user_password: string): [string, string] {
-	const actual_password = interleave_strings(username, user_password);
-	const normalized_user_password = normalize_password(user_password);
+export function encrypt_password_for_user(username: string, password: string): [string, string] {
+	const normalized_password = normalize_string(password);
+	const key_used_to_encrypt = CryptoJS.enc.Utf8.parse(normalized_password);
 
-	const key_to_encrypt = CryptoJS.enc.Utf8.parse(normalized_user_password);
+	const actual_password_to_be_encrypted = interleave_strings(username, password);
 	const iv = CryptoJS.lib.WordArray.random(16);
 
-	const encrypted = CryptoJS.AES.encrypt(actual_password, key_to_encrypt, {
+	const encrypted = CryptoJS.AES.encrypt(actual_password_to_be_encrypted, key_used_to_encrypt, {
 		iv: iv,
 		mode: CryptoJS.mode.CBC,
 		padding: CryptoJS.pad.Pkcs7
 	});
+
 	return [encrypted.toString(), iv.toString(CryptoJS.enc.Base64)];
 }
 
 /**
  * @brief Decrypts @e encrypted_msg using @e password and @e iv.
- * @param encrypted_msg Encrypted message
- * @param password Password of user
- * @param iv Initialization vector of AES
+ * @param encrypted_msg Encrypted message.
+ * @param password Password of user (this may not be the string you think it is!).
+ * @param iv Initialization vector of AES.
  * @returns A string resulting of decrypting @e encrypted_msg.
  */
 export function decrypt_password_for_user(encrypted_msg: string, password: string, iv: string): string {
-	password = normalize_password(password);
-	const key = CryptoJS.enc.Utf8.parse(password);
+	const normalized_password = normalize_string(password);
+	const key_used_to_decrypt = CryptoJS.enc.Utf8.parse(normalized_password);
 
-	const dec = CryptoJS.AES.decrypt(encrypted_msg, key, {
+	const decrypted = CryptoJS.AES.decrypt(encrypted_msg, key_used_to_decrypt, {
 		iv: CryptoJS.enc.Base64.parse(iv),
 		mode: CryptoJS.mode.CBC,
 		padding: CryptoJS.pad.Pkcs7
@@ -116,7 +123,7 @@ export function decrypt_password_for_user(encrypted_msg: string, password: strin
 
 	let result: string;
 	try {
-		result = dec.toString(CryptoJS.enc.Utf8);
+		result = decrypted.toString(CryptoJS.enc.Utf8);
 	} catch (exception) {
 		result = '';
 	}
@@ -140,6 +147,7 @@ export function is_password_of_user_correct(
 	password: string,
 	iv: string
 ): boolean {
-	const decr = decrypt_password_for_user(encrypted_msg, password, iv);
-	return decr == interleave_strings(username, password);
+	const decrypted = decrypt_password_for_user(encrypted_msg, password, iv);
+	const interleave = interleave_strings(username, password);
+	return decrypted == interleave;
 }
