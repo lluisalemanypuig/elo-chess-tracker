@@ -25,41 +25,41 @@ import {
 	encrypt_message,
 	encrypt_password_for_user,
 	is_password_of_user_correct,
-	normalize_password
+	normalize_string
 } from '../../ts-server/utils/encrypt';
 
 describe('Password normalization', () => {
 	test('1', () => {
 		const password = 'q';
-		const normalized = normalize_password(password);
+		const normalized = normalize_string(password);
 		expect(password).toBe('q');
 		expect(normalized).toBe('qa!b');
 	});
 
 	test('2', () => {
 		const password = 'qw';
-		const normalized = normalize_password(password);
+		const normalized = normalize_string(password);
 		expect(password).toBe('qw');
 		expect(normalized).toBe('qwa!b$c$');
 	});
 
 	test('3', () => {
 		const password = 'qwt';
-		const normalized = normalize_password(password);
+		const normalized = normalize_string(password);
 		expect(password).toBe('qwt');
 		expect(normalized).toBe('qwta!b$c');
 	});
 
 	test('4', () => {
 		const password = 'asdf';
-		const normalized = normalize_password(password);
+		const normalized = normalize_string(password);
 		expect(password).toBe('asdf');
 		expect(normalized).toBe('asdfa!b$');
 	});
 
 	test('5', () => {
 		const password = 'AAAAA';
-		const normalized = normalize_password(password);
+		const normalized = normalize_string(password);
 		expect(password).toBe('AAAAA');
 		expect(normalized).toBe('AAAAAa!b');
 	});
