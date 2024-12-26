@@ -2,6 +2,8 @@
 
 A small web page to keep track of Elo ratings of chess players of a club.
 
+_Note_: versions newer than 24.12 are not compatible with older versions.
+
 ## Install
 
 Now follow instructions to explain how to install the webpage.
