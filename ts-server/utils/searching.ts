@@ -137,12 +137,43 @@ export function search_by_key<T, U>(
  * 'search(arr, x, F)' returns false.
  */
 export function where_should_be_inserted<T>(arr: T[], x: T, Comparison: Function = generic_compare): [number, boolean] {
+	return where_should_be_inserted_by_key(arr, x, Comparison, function (t: T): T {
+		return t;
+	});
+}
+
+/**
+ * @brief Returns the index within @e arr where @e x should be inserted in.
+ * @tparam T Type of elements in the array.
+ * @param arr Array.
+ * @param x Element not in @e arr.
+ * @param Comparison Takes two elements of type @e T, F(e1,e2), and returns:
+ * - a value < 0 if "e1 < e2",
+ * - a value = 0 if "e1 == e2",
+ * - a value > 0 if "e1 > e2".
+ * @returns A pair of values [index,true] where 'index' is the position of @e x
+ * within @e arr. A pair of values [index,false] where 'index' is where @e x should
+ * be placed at in @e arr.
+ * @pre Elements in @e arr are sorted by @e F.
+ * @pre Element @e x does not exist in @e arr, that is, function
+ * 'search(arr, x, F)' returns false.
+ */
+export function where_should_be_inserted_by_key<T, U>(
+	arr: T[],
+	x: U,
+	Comparison: Function = generic_compare,
+	M: (input: T) => U
+): [number, boolean] {
+	if (arr.length == 0) {
+		return [1, false];
+	}
+
 	let i: number = 0;
 	let j: number = arr.length - 1;
 	while (i < j) {
 		const m: number = Math.floor((i + j) / 2);
 
-		const comp = Comparison(x, arr[m]);
+		const comp = Comparison(x, M(arr[m]));
 		const is_equal = comp == 0;
 		const is_less_than = comp == -1;
 
@@ -156,7 +187,7 @@ export function where_should_be_inserted<T>(arr: T[], x: T, Comparison: Function
 		}
 	}
 
-	const comp = Comparison(x, arr[i]);
+	const comp = Comparison(x, M(arr[i]));
 	const is_equal = comp == 0;
 	const is_less_than = comp == -1;
 
