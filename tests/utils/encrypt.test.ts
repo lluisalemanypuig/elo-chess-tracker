@@ -40,21 +40,21 @@ describe('Password normalization', () => {
 		const password = 'qw';
 		const normalized = normalize_string(password);
 		expect(password).toBe('qw');
-		expect(normalized).toBe('qwa!b$c$');
+		expect(normalized).toBe('qwa!b·c$');
 	});
 
 	test('3', () => {
 		const password = 'qwt';
 		const normalized = normalize_string(password);
 		expect(password).toBe('qwt');
-		expect(normalized).toBe('qwta!b$c');
+		expect(normalized).toBe('qwta!b·c');
 	});
 
 	test('4', () => {
 		const password = 'asdf';
 		const normalized = normalize_string(password);
 		expect(password).toBe('asdf');
-		expect(normalized).toBe('asdfa!b$');
+		expect(normalized).toBe('asdfa!b·');
 	});
 
 	test('5', () => {
@@ -161,10 +161,38 @@ describe('Encrypt password for users', () => {
 		check_encrypt_user_password('admin', 'Q');
 	});
 
+	test('admin - ·', () => {
+		check_encrypt_user_password('admin', '·');
+	});
+
+	test('admin - a·', () => {
+		check_encrypt_user_password('admin', 'a·');
+	});
+
 	test('Several users', () => {
 		const user_array = ['a', 'asdf', 'qwer', 'admin', 'administrator', 'qwer ppp'];
 		for (const user of user_array) {
 			check_encrypt_user_password(user, 'QQQQQQQ');
 		}
+	});
+
+	test('Use Kanji - 1', () => {
+		check_encrypt_user_password('山田', 'QQQQQQQ');
+	});
+
+	test('Use Kanji - 2', () => {
+		check_encrypt_user_password('admin', '星');
+	});
+
+	test('Use Kanji - 3', () => {
+		check_encrypt_user_password('admin', '山田');
+	});
+
+	test('Use Kanji - 4', () => {
+		check_encrypt_user_password('admin', '私は一番有名な人です');
+	});
+
+	test('Use Kanji - 5', () => {
+		check_encrypt_user_password('admin', '私');
 	});
 });
