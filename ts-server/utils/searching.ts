@@ -50,6 +50,16 @@ export function search_linear_by_key<T>(
 	return -1;
 }
 
+function generic_compare<T>(e1: T, e2: T): number {
+	if (e1 < e2) {
+		return -1;
+	}
+	if (e1 == e2) {
+		return 0;
+	}
+	return 1;
+}
+
 /**
  * @brief Returns whether @e x is in @e arr or not.
  * @tparam T Type of elements in the array.
@@ -62,19 +72,7 @@ export function search_linear_by_key<T>(
  * @returns The index of the element if it is in the array. Returns -1 if it is not.
  * @pre Elements in @e arr are sorted by @e F.
  */
-export function search<T>(
-	arr: T[],
-	x: T,
-	Comparison: Function = (e1: T, e2: T): number => {
-		if (e1 < e2) {
-			return -1;
-		}
-		if (e1 == e2) {
-			return 0;
-		}
-		return 1;
-	}
-): number {
+export function search<T>(arr: T[], x: T, Comparison: Function = generic_compare): number {
 	return search_by_key(arr, x, Comparison, (e1: T) => {
 		return e1;
 	});
@@ -95,15 +93,7 @@ export function search<T>(
 export function search_by_key<T, U>(
 	arr: T[],
 	x: U,
-	Comparison: Function = (e1: U, e2: U): number => {
-		if (e1 < e2) {
-			return -1;
-		}
-		if (e1 == e2) {
-			return 0;
-		}
-		return 1;
-	},
+	Comparison: Function = generic_compare,
 	M: (input: T) => U
 ): number {
 	let i: number = 0;
@@ -146,19 +136,7 @@ export function search_by_key<T, U>(
  * @pre Element @e x does not exist in @e arr, that is, function
  * 'search(arr, x, F)' returns false.
  */
-export function where_should_be_inserted<T>(
-	arr: T[],
-	x: T,
-	Comparison: Function = (e1: T, e2: T): number => {
-		if (e1 < e2) {
-			return -1;
-		}
-		if (e1 == e2) {
-			return 0;
-		}
-		return 1;
-	}
-): [number, boolean] {
+export function where_should_be_inserted<T>(arr: T[], x: T, Comparison: Function = generic_compare): [number, boolean] {
 	let i: number = 0;
 	let j: number = arr.length - 1;
 	while (i < j) {
