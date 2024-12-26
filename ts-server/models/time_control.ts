@@ -49,7 +49,7 @@ export class TimeControl {
  */
 export function time_control_from_json(json: any): TimeControl {
 	if (typeof json === 'string') {
-		let json_parse = JSON.parse(json);
+		const json_parse = JSON.parse(json);
 		return time_control_from_json(json_parse);
 	}
 
@@ -63,7 +63,7 @@ export function time_control_from_json(json: any): TimeControl {
  */
 export function time_control_set_from_json(json: any): TimeControl[] {
 	if (typeof json === 'string') {
-		let json_parse = JSON.parse(json);
+		const json_parse = JSON.parse(json);
 		return time_control_set_from_json(json_parse);
 	}
 
