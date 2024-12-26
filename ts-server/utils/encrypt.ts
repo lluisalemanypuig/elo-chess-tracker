@@ -23,6 +23,11 @@ Contact:
 import CryptoJS from 'crypto-js';
 import { interleave_strings } from './misc';
 
+const allowed_symbols: string =
+	'a!b·c$d%e&f/g(h)i=j?k¿l|m@n#o~p¬qr\'s[¡]t{u}v/w*x-y+zºAªB"C,D.E;F:G_HIJKLMNOPQRSTUVWXYZ0123456789 '.normalize(
+		'NFC'
+	);
+
 /// Logarithm of 'x' in base 'base'
 function log_base(x: number, base: number): number {
 	return Math.log(x) / Math.log(base);
@@ -39,10 +44,8 @@ function next_power_of_2(n: number): number {
  * @returns A longer string padded with random characters
  */
 export function normalize_string(str: string): string {
-	const allowed_symbols: string =
-		'a!b·c$d%e&f/g(h)i=j?k¿l|m@n#o~p¬qr\'s[¡]t{u}v/w*x-y+zºAªB"C,D.E;F:G_HIJKLMNOPQRSTUVWXYZ0123456789 ';
-
 	let new_password = str.normalize('NFC');
+
 	const current_length = new_password.length;
 	const next_length = (function () {
 		if (new_password.length < 4) {
