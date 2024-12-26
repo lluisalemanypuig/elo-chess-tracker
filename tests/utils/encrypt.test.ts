@@ -30,38 +30,30 @@ import {
 
 describe('Password normalization', () => {
 	test('1', () => {
-		const password = 'q';
-		const normalized = normalize_string(password);
-		expect(password).toBe('q');
-		expect(normalized).toBe('qa!b');
+		expect(normalize_string('q')).toBe('qa!b');
+		expect(normalize_string('qw')).toBe('qwa!b·c$');
+		expect(normalize_string('qwt')).toBe('qwta!b·c');
+		expect(normalize_string('asdf')).toBe('asdfa!b·');
+		expect(normalize_string('AAAAA')).toBe('AAAAAa!b');
 	});
 
 	test('2', () => {
-		const password = 'qw';
-		const normalized = normalize_string(password);
-		expect(password).toBe('qw');
-		expect(normalized).toBe('qwa!b·c$');
+		expect(normalize_string('12345678')).toBe('12345678a!b·c$d%');
+		expect(normalize_string('1234567890123456')).toBe('1234567890123456a!b·c$d%e&f/g(h)');
+		expect(normalize_string('1234567890123456789012345678901234567890123456789012345678901234')).toBe(
+			'1234567890123456789012345678901234567890123456789012345678901234a!b·c$d%e&f/g(h)i=j?k¿l|m@n#o~p¬qr\'s[¡]t{u}v/w*x-y+zºAªB"C,D.E;F'
+		);
+		expect(
+			normalize_string(
+				'12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678'
+			)
+		).toBe(
+			'12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678a!b·c$d%e&f/g(h)i=j?k¿l|m@n#o~p¬qr\'s[¡]t{u}v/w*x-y+zºAªB"C,D.E;F:G_HIJKLMNOPQRSTUVWXYZ0123456789 a!b·c$d%e&f/g(h)i=j?k¿l|m@n#o~p'
+		);
 	});
 
 	test('3', () => {
-		const password = 'qwt';
-		const normalized = normalize_string(password);
-		expect(password).toBe('qwt');
-		expect(normalized).toBe('qwta!b·c');
-	});
-
-	test('4', () => {
-		const password = 'asdf';
-		const normalized = normalize_string(password);
-		expect(password).toBe('asdf');
-		expect(normalized).toBe('asdfa!b·');
-	});
-
-	test('5', () => {
-		const password = 'AAAAA';
-		const normalized = normalize_string(password);
-		expect(password).toBe('AAAAA');
-		expect(normalized).toBe('AAAAAa!b');
+		expect(normalize_string('星星星星')).toBe('星星星星a!b·');
 	});
 });
 
