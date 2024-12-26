@@ -27,7 +27,7 @@ import {
 	is_password_of_user_correct
 } from '../../ts-server/utils/encrypt';
 
-function check_encrypt(user: string, pass: string) {
+function check_encrypt_user_password(user: string, pass: string) {
 	const [encrypted, iv] = encrypt_password_for_user(user, pass);
 	expect(is_password_of_user_correct(encrypted, user, pass, iv)).toBe(true);
 }
@@ -44,25 +44,25 @@ function check_decrypt_wrong_password(msg: string, pass1: string, pass2: string)
 
 describe('Encrypt password for users', () => {
 	test('admin - pass', () => {
-		check_encrypt('admin', 'pass');
+		check_encrypt_user_password('admin', 'pass');
 	});
 
 	test('admin - admin', () => {
-		check_encrypt('admin', 'admin');
+		check_encrypt_user_password('admin', 'admin');
 	});
 
 	test('admin - QQQQQQQ', () => {
-		check_encrypt('admin', 'QQQQQQQ');
+		check_encrypt_user_password('admin', 'QQQQQQQ');
 	});
 
 	test('admin - Q', () => {
-		check_encrypt('admin', 'Q');
+		check_encrypt_user_password('admin', 'Q');
 	});
 
 	test('Several users', () => {
 		const user_array = ['a', 'asdf', 'qwer', 'admin', 'administrator', 'qwer ppp'];
 		for (const user of user_array) {
-			check_encrypt(user, 'QQQQQQQ');
+			check_encrypt_user_password(user, 'QQQQQQQ');
 		}
 	});
 });
