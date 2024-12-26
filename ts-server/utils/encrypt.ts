@@ -35,7 +35,11 @@ function decrypt_bytes(encrypted_msg: string, pwd: string): any {
 
 /// Decrypts 'encrypted_msg' using password 'pwd'
 export function decrypt_message(encrypted_msg: string, pwd: string): string {
-	return decrypt_bytes(encrypted_msg, pwd).toString(CryptoJS.enc.Utf8);
+	try {
+		return decrypt_bytes(encrypted_msg, pwd).toString(CryptoJS.enc.Utf8);
+	} catch (error) {
+		return '';
+	}
 }
 
 /// Logarithm of 'x' in base 'base'
