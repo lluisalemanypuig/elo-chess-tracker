@@ -47,7 +47,7 @@ export class TimeControlRating {
  */
 export function time_control_rating_from_json(json: any): TimeControlRating {
 	if (typeof json === 'string') {
-		let json_parse = JSON.parse(json);
+		const json_parse = JSON.parse(json);
 		return time_control_rating_from_json(json_parse);
 	}
 
@@ -62,7 +62,7 @@ export function time_control_rating_from_json(json: any): TimeControlRating {
  */
 export function time_control_rating_set_from_json(json: any): TimeControlRating[] {
 	if (typeof json === 'string') {
-		let json_parse = JSON.parse(json);
+		const json_parse = JSON.parse(json);
 		return time_control_rating_set_from_json(json_parse);
 	}
 

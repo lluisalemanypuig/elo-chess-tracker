@@ -164,7 +164,7 @@ export class Game {
  */
 export function game_from_json(json: any): Game {
 	if (typeof json === 'string') {
-		let json_parse = JSON.parse(json);
+		const json_parse = JSON.parse(json);
 		return game_from_json(json_parse);
 	}
 
@@ -189,7 +189,7 @@ export function game_from_json(json: any): Game {
  */
 export function game_set_from_json(json: any): Game[] {
 	if (typeof json === 'string') {
-		let json_parse = JSON.parse(json);
+		const json_parse = JSON.parse(json);
 		return game_set_from_json(json_parse);
 	}
 

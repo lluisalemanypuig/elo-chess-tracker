@@ -242,7 +242,7 @@ export class Challenge {
  */
 export function challenge_from_json(json: any): Challenge {
 	if (typeof json === 'string') {
-		let json_parse = JSON.parse(json);
+		const json_parse = JSON.parse(json);
 		return challenge_from_json(json_parse);
 	}
 
@@ -277,7 +277,7 @@ export function challenge_from_json(json: any): Challenge {
  */
 export function challenge_set_from_json(json: any): Challenge[] {
 	if (typeof json === 'string') {
-		let json_parse = JSON.parse(json);
+		const json_parse = JSON.parse(json);
 		return challenge_set_from_json(json_parse);
 	}
 

@@ -110,7 +110,7 @@ export class Player {
  */
 export function player_from_json(json: any): Player {
 	if (typeof json === 'string') {
-		let json_parse = JSON.parse(json);
+		const json_parse = JSON.parse(json);
 		return player_from_json(json_parse);
 	}
 
@@ -128,7 +128,7 @@ export function player_from_json(json: any): Player {
  */
 export function player_set_from_json(json: any): Player[] {
 	if (typeof json === 'string') {
-		let json_parse = JSON.parse(json);
+		const json_parse = JSON.parse(json);
 		return player_set_from_json(json_parse);
 	}
 

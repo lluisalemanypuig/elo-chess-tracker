@@ -50,7 +50,7 @@ export class Password {
  */
 export function password_from_json(json: any): Password {
 	if (typeof json === 'string') {
-		let json_parse = JSON.parse(json);
+		const json_parse = JSON.parse(json);
 		return password_from_json(json_parse);
 	}
 	return new Password(json['encrypted'], json['iv']);
@@ -63,7 +63,7 @@ export function password_from_json(json: any): Password {
  */
 export function password_set_from_json(json: any): Password[] {
 	if (typeof json === 'string') {
-		let json_parse = JSON.parse(json);
+		const json_parse = JSON.parse(json);
 		return password_set_from_json(json_parse);
 	}
 

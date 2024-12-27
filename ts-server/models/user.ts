@@ -220,7 +220,7 @@ export class User extends Player {
  */
 export function user_from_json(json: any): User {
 	if (typeof json === 'string') {
-		let json_parse = JSON.parse(json);
+		const json_parse = JSON.parse(json);
 		return user_from_json(json_parse);
 	}
 
@@ -242,7 +242,7 @@ export function user_from_json(json: any): User {
  */
 export function user_set_from_json(json: any): User[] {
 	if (typeof json === 'string') {
-		let json_parse = JSON.parse(json);
+		const json_parse = JSON.parse(json);
 		return user_set_from_json(json_parse);
 	}
 

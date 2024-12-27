@@ -69,7 +69,7 @@ export class EdgeMetadata {
  */
 export function edge_metadata_from_json(json: any): EdgeMetadata {
 	if (typeof json === 'string') {
-		let json_parse = JSON.parse(json);
+		const json_parse = JSON.parse(json);
 		return edge_metadata_from_json(json_parse);
 	}
 

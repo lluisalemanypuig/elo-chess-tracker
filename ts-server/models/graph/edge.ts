@@ -60,7 +60,7 @@ export class Edge {
  */
 export function edge_from_json(json: any): Edge {
 	if (typeof json === 'string') {
-		let json_parse = JSON.parse(json);
+		const json_parse = JSON.parse(json);
 		return edge_from_json(json_parse);
 	}
 

@@ -140,7 +140,7 @@ export class Graph {
  */
 export function graph_from_json(json: any): Graph {
 	if (typeof json === 'string') {
-		let json_parse = JSON.parse(json);
+		const json_parse = JSON.parse(json);
 		return graph_from_json(json_parse);
 	}
 
