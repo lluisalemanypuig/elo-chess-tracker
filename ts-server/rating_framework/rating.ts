@@ -20,6 +20,8 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
+import { assert } from 'console';
+
 /// Generic class for a rating.
 export class Rating {
 	/// Actual rating
@@ -47,6 +49,8 @@ export class Rating {
 		this.won = won;
 		this.drawn = drawn;
 		this.lost = lost;
+
+		assert(this.num_games == this.won + this.drawn + this.lost);
 	}
 
 	clone(): Rating {
