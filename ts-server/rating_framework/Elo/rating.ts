@@ -28,6 +28,8 @@ import { Rating } from '../rating';
 export class EloRating extends Rating {
 	/// Constant
 	public K: number;
+	// Ever surpassed 2400
+	public surpassed_2400: boolean;
 
 	/**
 	 * @brief Constructor
@@ -38,20 +40,29 @@ export class EloRating extends Rating {
 	 * @param lost Number of lost games
 	 * @param K Constant
 	 */
-	constructor(rating: number, num_games: number, won: number, drawn: number, lost: number, K: number) {
+	constructor(
+		rating: number,
+		num_games: number,
+		won: number,
+		drawn: number,
+		lost: number,
+		K: number,
+		surpassed_2400: boolean
+	) {
 		super(rating, num_games, won, drawn, lost);
 
 		this.K = K;
+		this.surpassed_2400 = surpassed_2400;
 	}
 
 	/// Clones the object.
 	override clone(): EloRating {
-		return new EloRating(this.rating, this.num_games, this.won, this.drawn, this.lost, this.K);
+		return new EloRating(this.rating, this.num_games, this.won, this.drawn, this.lost, this.K, this.surpassed_2400);
 	}
 }
 
 export function Elo_rating_new(): EloRating {
-	return new EloRating(1500, 0, 0, 0, 0, 40);
+	return new EloRating(1500, 0, 0, 0, 0, 40, false);
 }
 
 /**
@@ -66,5 +77,13 @@ export function Elo_rating_from_json(json: any): EloRating {
 		return Elo_rating_from_json(json_parse);
 	}
 
-	return new EloRating(json['rating'], json['num_games'], json['won'], json['drawn'], json['lost'], json['K']);
+	return new EloRating(
+		json['rating'],
+		json['num_games'],
+		json['won'],
+		json['drawn'],
+		json['lost'],
+		json['K'],
+		json['surpassed_2400']
+	);
 }
