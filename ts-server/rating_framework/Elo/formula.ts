@@ -57,36 +57,26 @@ REGULATIONS IN THIS WAY
 	* K = 20 as long as a player's rating remains under 2400.
 	* K = 10 once a player's published rating has reached 2400 and remains at
 	that level subsequently, even if the rating drops below 2400.
-	* If the number of games (n) for a player on any list for a rating period
-	multiplied by K (as defined above) exceeds 700, then K shall be the
-	largest whole number such that K x n does not exceed 700.
-
-- this is our interpretation in pseudocode
-
-	K = 40
-	if (resulting number of games >= 30) {
-		K = 20
-	}
-	if ((resulting number of games >= 30) and (resulting rating >= 2400)) {
-		K = 10
-	}
-	if (K*n > 700) {
-		K = 700/n;
-	}
 
 - rating is updated BEFORE changing the value of K
 
 */
 
-function update_constant_K(rating: EloRating): void {
-	if (rating.num_games >= 30) {
-		rating.K = 20;
+function update_constant_K(elo: EloRating): void {
+	// the constant should not be changed and stay at 10.
+	if (elo.surpassed_2400) {
+		return;
 	}
-	if (rating.num_games >= 30 && rating.rating >= 2400) {
-		rating.K = 10;
-	}
-	if (rating.K * rating.num_games > 700) {
-		rating.K = 700 / rating.num_games;
+
+	if (elo.num_games < 30) {
+		elo.K = 40;
+	} else if (elo.num_games >= 30) {
+		if (elo.rating < 2400) {
+			elo.K = 20;
+		} else {
+			elo.K = 10;
+			elo.surpassed_2400 = true;
+		}
 	}
 }
 
