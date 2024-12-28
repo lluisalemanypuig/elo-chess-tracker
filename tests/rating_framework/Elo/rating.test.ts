@@ -25,9 +25,9 @@ import { Elo_rating_from_json, Elo_rating_new, EloRating } from '../../../ts-ser
 describe('JSON conversion', () => {
 	test('from string to rating', () => {
 		const elo = Elo_rating_from_json(
-			'{"rating": 1500.43, "num_games": 100, "won": 50, "drawn": 20, "lost": 30, "K": 40}'
+			'{"rating": 1500.43, "num_games": 100, "won": 50, "drawn": 20, "lost": 30, "K": 40, "surpassed_2400": true}'
 		);
-		expect(elo).toEqual(new EloRating(1500.43, 100, 50, 20, 30, 40));
+		expect(elo).toEqual(new EloRating(1500.43, 100, 50, 20, 30, 40, true));
 	});
 
 	test('from JSON to rating', () => {
@@ -37,9 +37,10 @@ describe('JSON conversion', () => {
 			won: 50,
 			drawn: 20,
 			lost: 30,
-			K: 40
+			K: 40,
+			surpassed_2400: true
 		});
-		expect(elo).toEqual(new EloRating(1500.43, 100, 50, 20, 30, 40));
+		expect(elo).toEqual(new EloRating(1500.43, 100, 50, 20, 30, 40, true));
 	});
 });
 
@@ -52,12 +53,13 @@ describe('Initial rating', () => {
 		expect(elo.drawn).toBe(0);
 		expect(elo.lost).toBe(0);
 		expect(elo.K).toBe(40);
+		expect(elo.surpassed_2400).toBe(false);
 	});
 });
 
 describe('Clone', () => {
 	test('1', () => {
-		const r = new EloRating(1500.0, 100, 50, 30, 20, 40);
+		const r = new EloRating(1500.0, 100, 50, 30, 20, 40, false);
 		const rc = r.clone();
 
 		expect(rc.rating).toBe(r.rating);
@@ -66,5 +68,6 @@ describe('Clone', () => {
 		expect(rc.drawn).toBe(r.drawn);
 		expect(rc.lost).toBe(r.lost);
 		expect(rc.K).toBe(r.K);
+		expect(rc.surpassed_2400).toBe(r.surpassed_2400);
 	});
 });
