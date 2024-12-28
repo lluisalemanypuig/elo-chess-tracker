@@ -62,7 +62,7 @@ export function Elo_rating_new(): EloRating {
  */
 export function Elo_rating_from_json(json: any): EloRating {
 	if (typeof json == 'string') {
-		let json_parse = JSON.parse(json);
+		const json_parse = JSON.parse(json);
 		return Elo_rating_from_json(json_parse);
 	}
 
