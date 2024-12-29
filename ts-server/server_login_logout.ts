@@ -112,12 +112,12 @@ export async function post_user_log_in(req: any, res: any) {
 			make_cookie_string({
 				name: 'session_id',
 				value: token,
-				days: 28
+				days: 2
 			}),
 			make_cookie_string({
 				name: 'user',
 				value: user.get_username(),
-				days: 28
+				days: 2
 			})
 		]
 	});
