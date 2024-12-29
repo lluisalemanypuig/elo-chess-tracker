@@ -187,7 +187,7 @@ function game_next_of_player(username: string, time_control_id: string, when: st
 
 		// try to find the game in the game set
 		for (let i = game_idx; i < game_set.length; ++i) {
-			if (game_set[i].is_user_involved(username) && game_set[i].get_time_control() == time_control_id) {
+			if (game_set[i].is_user_involved(username) && game_set[i].get_time_control_id() == time_control_id) {
 				return game_set[i];
 			}
 		}
@@ -209,7 +209,7 @@ function game_next_of_player(username: string, time_control_id: string, when: st
 		const game_set = read_game_date_record(date_record_file);
 
 		for (let i = 0; i < game_set.length; ++i) {
-			if (game_set[i].is_user_involved(username) && game_set[i].get_time_control() == time_control_id) {
+			if (game_set[i].is_user_involved(username) && game_set[i].get_time_control_id() == time_control_id) {
 				return game_set[i];
 			}
 		}
@@ -238,7 +238,7 @@ function update_game_record(
 	};
 
 	for (let i = start_at; i < game_set.length; ++i) {
-		if (game_set[i].get_time_control() != time_control_id) {
+		if (game_set[i].get_time_control_id() != time_control_id) {
 			continue;
 		}
 

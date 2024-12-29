@@ -145,11 +145,6 @@ export class Game {
 		return this.white == username || this.black == username;
 	}
 
-	/// Is this game of time control 'time_control_id'
-	get_time_control(): string {
-		return this.time_control_id;
-	}
-
 	/// Returns the game's ID
 	get_id(): string {
 		return this.id;
