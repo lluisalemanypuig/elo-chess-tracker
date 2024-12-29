@@ -188,9 +188,9 @@ export function game_set_from_json(json: any): Game[] {
 		return game_set_from_json(json_parse);
 	}
 
-	let player_set: Game[] = [];
-	for (var player in json) {
-		player_set.push(game_from_json(json[player]));
+	let game_set: Game[] = [];
+	for (var game in json) {
+		game_set.push(game_from_json(json[game]));
 	}
-	return player_set;
+	return game_set;
 }
