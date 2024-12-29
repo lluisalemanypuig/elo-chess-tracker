@@ -76,11 +76,12 @@ export function make_cookie_string(values: any): string {
 	return cookie;
 }
 
+/*
 /**
  * @brief Retrieve the value of a cookie
  * @param name Name of the cookie to be retrieved
  * @returns A string object, containing the value of the cookie
- */
+ //
 export function get_cookie(name: string): string {
 	const _name = name + '=';
 	const ca = document.cookie.split(';');
@@ -96,7 +97,6 @@ export function get_cookie(name: string): string {
 	return '';
 }
 
-/*
 export function check_cookie(): void {
 	let user = get_cookie("username");
 	if (user != "") {
