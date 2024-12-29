@@ -40,11 +40,6 @@ export async function logout_link_clicked(_event: any) {
 		value: '',
 		days: 1
 	});
-	document.cookie = make_cookie_string({
-		name: 'type',
-		value: '',
-		days: 1
-	});
 
 	window.location.href = '/';
 }
