@@ -116,3 +116,34 @@ export class RatingSystem {
 		return this.all_unique_time_controls;
 	}
 }
+
+import { player_vs_player as Elo } from '../rating_framework/Elo/formula';
+import { Elo_rating_from_json, Elo_rating_new } from '../rating_framework/Elo/rating';
+
+/**
+ * @brief Initializes the class @ref RatingSystem based on the system in @e name.
+ * @param name Name of the rating system.
+ * @returns True if the name is valid; false if otherwise.
+ */
+export function initialize_rating_formulas(name: string): boolean {
+	let rating_system = RatingSystem.get_instance();
+	if (name == 'Elo') {
+		rating_system.set_rating_formula(Elo);
+		rating_system.set_rating_from_JSON_formula(Elo_rating_from_json);
+		rating_system.set_new_rating(Elo_rating_new);
+		return true;
+	}
+
+	return false;
+}
+
+/**
+ * @brief Initialize the time controls in the @ref RatingSystem.
+ * @param all_time_controls
+ * @pre The RatingSystem must have been initialized via @ref initialize_rating_system.
+ */
+export function initialize_rating_time_controls(all_time_controls: TimeControl[]): void {
+	let rating_system = RatingSystem.get_instance();
+	rating_system.set_time_controls(all_time_controls);
+	rating_system.make_unique_time_controls();
+}

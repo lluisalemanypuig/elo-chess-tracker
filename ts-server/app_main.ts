@@ -32,12 +32,12 @@ const debug = Debug('ELO_TRACKER:app_main');
 import fs from 'fs';
 import { log_now } from './utils/misc';
 
-import { server_initialize_from_parameters } from './server/initialization';
+import { server_init_from_parameters } from './server/initialization';
 import { ServerConfiguration } from './server/environment';
 
 debug(log_now(), 'Initialize server...');
 
-server_initialize_from_parameters(process.argv.slice(2));
+server_init_from_parameters(process.argv.slice(2));
 
 debug(log_now(), 'Import app...');
 

@@ -28,18 +28,16 @@ const debug = Debug('ELO_TRACKER:server_initialization');
 import { log_now } from '../utils/misc';
 import { ServerMemory } from './memory';
 import { ServerConfiguration, ServerEnvironment } from './environment';
-import { RatingSystem } from './rating_system';
+import { initialize_rating_time_controls, RatingSystem } from './rating_system';
 import { user_from_json } from '../models/user';
 import { challenge_from_json } from '../models/challenge';
 import { Game, game_set_from_json } from '../models/game';
 import { ADMIN, MEMBER, STUDENT, TEACHER } from '../models/user_role';
 import { UserRoleToUserAction } from '../models/user_role_action';
 import { TimeControl } from '../models/time_control';
+import { initialize_rating_formulas } from './rating_system';
 
-import { player_vs_player as Elo } from '../rating_framework/Elo/formula';
-import { Elo_rating_from_json, Elo_rating_new } from '../rating_framework/Elo/rating';
-
-function initialize_directories(base_directory: string): void {
+function init_directories(base_directory: string): void {
 	ServerEnvironment.get_instance().set_database_base_directory(path.join(base_directory, '/database'));
 	debug(log_now(), `    Database directory: '${ServerEnvironment.get_instance().get_dir_database()}'`);
 	debug(log_now(), `        Games directory: '${ServerEnvironment.get_instance().get_dir_games()}'`);
@@ -47,7 +45,7 @@ function initialize_directories(base_directory: string): void {
 	debug(log_now(), `        Challenges directory: '${ServerEnvironment.get_instance().get_dir_challenges()}'`);
 }
 
-function initialize_SSL_files(base_directory: string, configuration_data: any): void {
+function init_SSL_files(base_directory: string, configuration_data: any): void {
 	ServerEnvironment.get_instance().set_SSL_info(
 		path.join(base_directory, '/ssl'),
 		configuration_data.ssl_certificate.public_key_file,
@@ -60,13 +58,13 @@ function initialize_SSL_files(base_directory: string, configuration_data: any): 
 	debug(log_now(), `        Passphrase: '${ServerEnvironment.get_instance().get_ssl_passphrase_file()}'`);
 }
 
-function initialize_server_ports(configuration_data: any): void {
+function init_server_ports(configuration_data: any): void {
 	let server_configuration = ServerConfiguration.get_instance();
 	server_configuration.set_port_http(configuration_data.ports.http);
 	server_configuration.set_port_https(configuration_data.ports.https);
 }
 
-function initialize_icon_file_paths(base_directory: string, configuration_data: any): void {
+function init_icon_file_paths(base_directory: string, configuration_data: any): void {
 	ServerEnvironment.get_instance().set_icons_info(
 		path.join(base_directory, '/icons'),
 		'/' + configuration_data.favicon,
@@ -75,14 +73,14 @@ function initialize_icon_file_paths(base_directory: string, configuration_data: 
 	);
 }
 
-function initialize_page_titles(configuration_data: any): void {
+function init_page_titles(configuration_data: any): void {
 	ServerEnvironment.get_instance().set_titles_info(
 		configuration_data.login_page.title,
 		configuration_data.home_page.title
 	);
 }
 
-function initialize_permissions(permission_data: any): void {
+function init_permissions(permission_data: any): void {
 	debug(log_now(), 'Initialize permissions...');
 
 	let actions = UserRoleToUserAction.get_instance();
@@ -105,19 +103,15 @@ function initialize_permissions(permission_data: any): void {
 	}
 }
 
-function initialize_rating_framework(rating_type: string): void {
+function init_rating_framework(rating_type: string): void {
 	debug(log_now(), `    Rating system: '${rating_type}'`);
-	let rating_system = RatingSystem.get_instance();
-	if (rating_type == 'Elo') {
-		rating_system.set_rating_formula(Elo);
-		rating_system.set_rating_from_JSON_formula(Elo_rating_from_json);
-		rating_system.set_new_rating(Elo_rating_new);
-	} else {
+	const res = initialize_rating_formulas(rating_type);
+	if (!res) {
 		debug(log_now(), `Invalid rating system '${rating_type}'`);
 	}
 }
 
-function initialize_time_controls(time_control_array: any): void {
+function init_time_controls(time_control_array: any): void {
 	debug(log_now(), 'Initialize time controls...');
 
 	let all_time_controls: TimeControl[] = [];
@@ -126,18 +120,16 @@ function initialize_time_controls(time_control_array: any): void {
 		all_time_controls.push(new TimeControl(tc.id, tc.name));
 	}
 
-	let rating_system = RatingSystem.get_instance();
-	rating_system.set_time_controls(all_time_controls);
-	rating_system.make_unique_time_controls();
-
 	debug(log_now(), `    Found '${all_time_controls.length}' rating types:`);
 	for (let i = 0; i < all_time_controls.length; ++i) {
 		debug(log_now(), `        * Id '${all_time_controls[i].id}'`);
 		debug(log_now(), `          Name '${all_time_controls[i].name}'`);
 	}
+
+	initialize_rating_time_controls(all_time_controls);
 }
 
-function initialize_sessions(): void {
+function init_sessions(): void {
 	debug(log_now(), 'Initialize sessions...');
 
 	let memory = ServerMemory.get_instance();
@@ -145,7 +137,7 @@ function initialize_sessions(): void {
 	memory.clear_session_ids();
 }
 
-function initialize_users(): void {
+function init_users(): void {
 	debug(log_now(), 'Initialize users...');
 
 	let rating_system = RatingSystem.get_instance();
@@ -176,7 +168,7 @@ function initialize_users(): void {
 	debug(log_now(), `    Found ${memory.num_users()} users.`);
 }
 
-function initialize_challenges(): void {
+function init_challenges(): void {
 	debug(log_now(), 'Initialize challenges...');
 
 	let memory = ServerMemory.get_instance();
@@ -196,7 +188,7 @@ function initialize_challenges(): void {
 	debug(log_now(), `    Found ${memory.num_challenges()} challenges.`);
 }
 
-function initialize_games(): void {
+function init_games(): void {
 	debug(log_now(), 'Initialize games...');
 
 	let mem = ServerMemory.get_instance();
@@ -231,36 +223,36 @@ function initialize_games(): void {
 	debug(log_now(), `    Maximum game id ${max_game_id}.`);
 }
 
-export function server_initialize_from_data(base_directory: string, configuration_data: any): void {
+export function server_init_from_data(base_directory: string, configuration_data: any): void {
 	debug(log_now(), `    Base directory: '${base_directory}'`);
 
-	initialize_directories(base_directory);
-	initialize_SSL_files(base_directory, configuration_data);
-	initialize_server_ports(configuration_data);
-	initialize_icon_file_paths(base_directory, configuration_data);
-	initialize_page_titles(configuration_data);
-	initialize_permissions(configuration_data.permissions);
-	initialize_rating_framework(configuration_data.rating_system);
-	initialize_time_controls(configuration_data.time_controls);
+	init_directories(base_directory);
+	init_SSL_files(base_directory, configuration_data);
+	init_server_ports(configuration_data);
+	init_icon_file_paths(base_directory, configuration_data);
+	init_page_titles(configuration_data);
+	init_permissions(configuration_data.permissions);
+	init_rating_framework(configuration_data.rating_system);
+	init_time_controls(configuration_data.time_controls);
 
-	initialize_sessions();
-	initialize_users();
-	initialize_challenges();
-	initialize_games();
+	init_sessions();
+	init_users();
+	init_challenges();
+	init_games();
 }
 
 /// Initializes the server memory
-export function server_initialize_from_configuration_file(configuration_file: string): void {
+export function server_init_from_configuration_file(configuration_file: string): void {
 	debug(log_now(), `Reading configuration file '${configuration_file}'`);
 
 	const data = fs.readFileSync(configuration_file, 'utf8');
 	const json_data = JSON.parse(data);
 
 	const base_path = configuration_file.substring(0, configuration_file.lastIndexOf('/'));
-	server_initialize_from_data(base_path, json_data);
+	server_init_from_data(base_path, json_data);
 }
 
-export function server_initialize_from_parameters(args: string[]): void {
+export function server_init_from_parameters(args: string[]): void {
 	let configuration_file: string = '';
 	for (let i = 0; i < args.length; ++i) {
 		if (args[i] == 'configuration-file') {
@@ -276,5 +268,5 @@ export function server_initialize_from_parameters(args: string[]): void {
 		return;
 	}
 
-	server_initialize_from_configuration_file(configuration_file);
+	server_init_from_configuration_file(configuration_file);
 }
