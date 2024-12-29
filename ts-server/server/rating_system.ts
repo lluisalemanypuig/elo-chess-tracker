@@ -139,7 +139,7 @@ export function initialize_rating_formulas(name: string): boolean {
 
 /**
  * @brief Initialize the time controls in the @ref RatingSystem.
- * @param all_time_controls
+ * @param all_time_controls The list of time controls for the system.
  * @pre The RatingSystem must have been initialized via @ref initialize_rating_system.
  */
 export function initialize_rating_time_controls(all_time_controls: TimeControl[]): void {
