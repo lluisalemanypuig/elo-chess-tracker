@@ -83,43 +83,13 @@ export class Challenge {
 
 		sent_by: string,
 		sent_to: string,
-		when_challenge_sent: string,
-
-		when_challenge_accepted: string | null = null,
-
-		result_was_set: boolean = false,
-		when_result_set: string | null = null,
-		result_set_by: string | null = null,
-
-		when_result_accepted: string | null = null,
-		result_accepted_by: string | null = null,
-
-		white: string | null = null,
-		black: string | null = null,
-		result: GameResult | null = null,
-		time_control_id: string | null = null,
-		time_control_name: string | null = null
+		when_challenge_sent: string
 	) {
 		this.id = id;
 
 		this.sent_by = sent_by;
 		this.sent_to = sent_to;
 		this.when_challenge_sent = when_challenge_sent;
-
-		this.when_challenge_accepted = when_challenge_accepted;
-
-		this.result_was_set = result_was_set;
-		this.when_result_set = when_result_set;
-		this.result_set_by = result_set_by;
-
-		this.when_result_accepted = when_result_accepted;
-		this.result_accepted_by = result_accepted_by;
-
-		this.white = white;
-		this.black = black;
-		this.result = result;
-		this.time_control_id = time_control_id;
-		this.time_control_name = time_control_name;
 	}
 
 	/// Returns the id of the challenge
@@ -188,11 +158,6 @@ export class Challenge {
 		this.when_challenge_accepted = d;
 	}
 
-	/// Was the result set at some point?
-	was_result_set(): boolean {
-		return this.result_was_set;
-	}
-
 	/// Sets the result
 	set_result(
 		by: string,
@@ -203,6 +168,10 @@ export class Challenge {
 		time_control_id: string,
 		time_control_name: string
 	): void {
+		if (!(by == white || by == black)) {
+			throw new Error(`The setter (${by}) must be either white (${white}) or black (${black}).`);
+		}
+
 		this.result_was_set = true;
 		this.result_set_by = by;
 		this.when_result_set = when;
@@ -215,11 +184,9 @@ export class Challenge {
 
 	/// Unset the previous result
 	unset_result(): void {
+		this.result_was_set = false;
 		this.result_set_by = null;
-
-		// 'when_result_set' should be 'unset' since it marks the first day
-		//this.when_result_set = null;
-
+		this.when_result_set = null;
 		this.white = null;
 		this.black = null;
 		this.result = null;
@@ -227,8 +194,20 @@ export class Challenge {
 		this.time_control_name = null;
 	}
 
+	/// Was the result set at some point?
+	was_result_set(): boolean {
+		return this.result_was_set;
+	}
+
 	/// Accepts the result
 	set_result_accepted(by: string, d: string) {
+		if (!this.was_result_set()) {
+			throw new Error('Result must have been set previously');
+		}
+		if (by == this.result_set_by) {
+			throw new Error('The accepter of the result cannot be the same person who set the result');
+		}
+
 		this.result_accepted_by = by;
 		this.when_result_accepted = d;
 	}
@@ -246,28 +225,19 @@ export function challenge_from_json(json: any): Challenge {
 		return challenge_from_json(json_parse);
 	}
 
-	return new Challenge(
-		json['id'],
-		json['sent_by'],
-		json['sent_to'],
-		json['when_challenge_sent'],
-
-		json['when_challenge_accepted'],
-
-		json['result_was_set'],
-		json['when_result_set'],
+	let c = new Challenge(json['id'], json['sent_by'], json['sent_to'], json['when_challenge_sent']);
+	c.set_challenge_accepted(json['when_challenge_accepted']);
+	c.set_result(
 		json['result_set_by'],
-
-		json['when_result_accepted'],
-		json['result_accepted_by'],
-
+		json['when_result_set'],
 		json['white'],
 		json['black'],
 		json['result'],
-
 		json['time_control_id'],
 		json['time_control_name']
 	);
+	c.set_result_accepted(json['result_accepted_by'], json['when_result_accepted']);
+	return c;
 }
 
 /**
