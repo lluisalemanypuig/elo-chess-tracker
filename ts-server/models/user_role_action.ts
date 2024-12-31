@@ -20,7 +20,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { UserRole } from './user_role';
+import { UserRole, ADMIN, TEACHER, MEMBER, STUDENT } from './user_role';
 import { UserAction } from './user_action';
 
 /// Relate each user role to a readable string
@@ -64,5 +64,37 @@ export class UserRoleToUserAction {
 	/// Return all actions for role 'role'
 	get_actions_role(role: UserRole): UserAction[] {
 		return this.relate[role];
+	}
+}
+
+/**
+ * @brief Initialize the permissions of every type of user.
+ * @param permission_data A JSON object with the following structure:
+{
+admin : [...],
+teacher : [...],
+member : [...],
+student : [...],
+}
+ * where each "[...]" is a vector of UserAction.
+ */
+export function initialize_permissions(permission_data: any): void {
+	let actions = UserRoleToUserAction.get_instance();
+
+	// ADMIN
+	for (let i = 0; i < permission_data.admin.length; ++i) {
+		actions.add_to_role(ADMIN, permission_data.admin[i]);
+	}
+	// TEACHER
+	for (let i = 0; i < permission_data.teacher.length; ++i) {
+		actions.add_to_role(TEACHER, permission_data.teacher[i]);
+	}
+	// MEMBER
+	for (let i = 0; i < permission_data.member.length; ++i) {
+		actions.add_to_role(MEMBER, permission_data.member[i]);
+	}
+	// STUDENT
+	for (let i = 0; i < permission_data.student.length; ++i) {
+		actions.add_to_role(STUDENT, permission_data.student[i]);
 	}
 }

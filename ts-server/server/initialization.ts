@@ -32,8 +32,7 @@ import { initialize_rating_time_controls, RatingSystem } from './rating_system';
 import { user_from_json } from '../models/user';
 import { challenge_from_json } from '../models/challenge';
 import { Game, game_set_from_json } from '../models/game';
-import { ADMIN, MEMBER, STUDENT, TEACHER } from '../models/user_role';
-import { UserRoleToUserAction } from '../models/user_role_action';
+import { initialize_permissions } from '../models/user_role_action';
 import { TimeControl } from '../models/time_control';
 import { initialize_rating_functions } from './rating_system';
 
@@ -83,24 +82,7 @@ function init_page_titles(configuration_data: any): void {
 function init_permissions(permission_data: any): void {
 	debug(log_now(), 'Initialize permissions...');
 
-	let actions = UserRoleToUserAction.get_instance();
-
-	// ADMIN
-	for (let i = 0; i < permission_data.admin.length; ++i) {
-		actions.add_to_role(ADMIN, permission_data.admin[i]);
-	}
-	// TEACHER
-	for (let i = 0; i < permission_data.teacher.length; ++i) {
-		actions.add_to_role(TEACHER, permission_data.teacher[i]);
-	}
-	// MEMBER
-	for (let i = 0; i < permission_data.member.length; ++i) {
-		actions.add_to_role(MEMBER, permission_data.member[i]);
-	}
-	// STUDENT
-	for (let i = 0; i < permission_data.student.length; ++i) {
-		actions.add_to_role(STUDENT, permission_data.student[i]);
-	}
+	initialize_permissions(permission_data);
 }
 
 function init_rating_framework(rating_type: string): void {
