@@ -52,8 +52,7 @@ export class Player {
 
 	/// Returns whether the rating under the given time control id exists
 	has_rating(time_control_id: string): boolean {
-		const index = this.index_time_control_id(time_control_id);
-		return index < this.ratings.length;
+		return this.index_time_control_id(time_control_id) != -1;
 	}
 
 	/**
