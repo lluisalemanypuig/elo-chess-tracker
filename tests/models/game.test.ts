@@ -24,8 +24,8 @@ import { Game, game_from_json } from '../../ts-server/models/game';
 import { EloRating } from '../../ts-server/rating_framework/Elo/rating';
 import { initialize_rating_formulas } from '../../ts-server/server/rating_system';
 
-describe('Setters and Getters', () => {
-	test('Elo (gets)', () => {
+describe('Setters and Getters -- Elo', () => {
+	test('Gets', () => {
 		const rW = new EloRating(1500, 0, 0, 0, 0, 40, false);
 		const rB = new EloRating(1500, 0, 0, 0, 0, 40, false);
 		const g = new Game('1', 'W', rW, 'B', rB, 'white_wins', 'blitz', 'Blitz (5 + 3)', '2024-12-29..11:15:00');
@@ -42,7 +42,7 @@ describe('Setters and Getters', () => {
 		expect(g.is_user_involved('q')).toBe(false);
 	});
 
-	test('Elo (sets)', () => {
+	test('Sets', () => {
 		let rW = new EloRating(1500, 0, 0, 0, 0, 40, false);
 		let rB = new EloRating(1500, 0, 0, 0, 0, 40, false);
 		const g = new Game('1', 'W', rW, 'B', rB, 'white_wins', 'blitz', 'Blitz (5 + 3)', '2024-12-29..11:15:00');
