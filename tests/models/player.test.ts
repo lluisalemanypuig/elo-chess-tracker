@@ -26,14 +26,14 @@ import { initialize_rating_functions } from '../../ts-server/server/rating_syste
 import { EloRating } from '../../ts-server/rating_framework/Elo/rating';
 
 describe('construct', () => {
-	const bullet = new EloRating(1500, 0, 0, 0, 0, 40, false);
+	const bullet = new EloRating(1400, 0, 0, 0, 0, 40, false);
 
 	const blitz = new EloRating(1500, 0, 0, 0, 0, 40, false);
 	const blitz_equal = new EloRating(1500, 0, 0, 0, 0, 40, false);
 	const blitz_higher = new EloRating(1520, 1, 1, 0, 0, 40, false);
 
-	const rapid = new EloRating(1500, 0, 0, 0, 0, 40, false);
-	const classical = new EloRating(1500, 0, 0, 0, 0, 40, false);
+	const rapid = new EloRating(1600, 0, 0, 0, 0, 40, false);
+	const classical = new EloRating(1700, 0, 0, 0, 0, 40, false);
 
 	test('Setters and getters', () => {
 		let p = new Player('user.name', [
@@ -117,16 +117,18 @@ describe('construct', () => {
 describe('From JSON -- Elo', () => {
 	initialize_rating_functions('Elo');
 	const blitz = new EloRating(1500, 0, 0, 0, 0, 40, false);
+	const classical = new EloRating(1700, 0, 0, 0, 0, 40, false);
 
 	test('string', () => {
 		const p = player_from_json(
-			'{ "username": "user.name", "ratings": [ { "time_control": "blitz", "rating": { "rating": 1500, "num_games": 0, "won": 0, "drawn": 0, "lost": 0, "K": 40, "surpassed_2400": false } } ]}'
+			'{ "username": "user.name", "ratings": [ { "time_control": "blitz", "rating": { "rating": 1500, "num_games": 0, "won": 0, "drawn": 0, "lost": 0, "K": 40, "surpassed_2400": false } }, { "time_control": "classical", "rating": { "rating": 1700, "num_games": 0, "won": 0, "drawn": 0, "lost": 0, "K": 40, "surpassed_2400": false } } ]}'
 		);
 
 		expect(p.get_username()).toEqual('user.name');
-		expect(p.get_all_ratings().length).toEqual(1);
+		expect(p.get_all_ratings().length).toEqual(2);
 		expect(p.has_rating('blitz')).toEqual(true);
-		expect(p.get_rating('blitz')).toEqual(blitz);
+		expect(p.has_rating('classical')).toEqual(true);
+		expect(p.get_rating('classical')).toEqual(classical);
 	});
 
 	test('JSON', () => {
@@ -144,14 +146,27 @@ describe('From JSON -- Elo', () => {
 						K: 40,
 						surpassed_2400: false
 					}
+				},
+				{
+					time_control: 'classical',
+					rating: {
+						rating: 1700,
+						num_games: 0,
+						won: 0,
+						drawn: 0,
+						lost: 0,
+						K: 40,
+						surpassed_2400: false
+					}
 				}
 			]
 		});
 
 		expect(p.get_username()).toEqual('user.name');
-		expect(p.get_all_ratings().length).toEqual(1);
+		expect(p.get_all_ratings().length).toEqual(2);
 		expect(p.has_rating('blitz')).toEqual(true);
-		console.log(p.get_all_ratings());
+		expect(p.has_rating('classical')).toEqual(true);
 		expect(p.get_rating('blitz')).toEqual(blitz);
+		expect(p.get_rating('classical')).toEqual(classical);
 	});
 });
