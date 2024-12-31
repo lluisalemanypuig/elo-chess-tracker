@@ -36,13 +36,7 @@ export class UserRoleToUserAction {
 			return UserRoleToUserAction.instance;
 		}
 
-		this.relate = {
-			admin: [],
-			teacher: [],
-			member: [],
-			student: []
-		};
-
+		this.clear();
 		UserRoleToUserAction.instance = this;
 	}
 
@@ -64,6 +58,20 @@ export class UserRoleToUserAction {
 	/// Return all actions for role 'role'
 	get_actions_role(role: UserRole): UserAction[] {
 		return this.relate[role];
+	}
+
+	role_includes_action(role: UserRole, action: UserAction): boolean {
+		return this.relate[role].includes(action);
+	}
+
+	/// Clears the relationships contained in this instance.
+	clear(): void {
+		this.relate = {
+			admin: [],
+			teacher: [],
+			member: [],
+			student: []
+		};
 	}
 }
 
