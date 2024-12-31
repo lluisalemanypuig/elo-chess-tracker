@@ -103,13 +103,13 @@ export function log_now(): string {
 // ------------
 
 /**
- * @brief Deep-copy an array
+ * @brief Deep-copy an array using clone function c
  * @param array Input array
  * @returns A copy of an array and all of its elements.
  */
-export function copyarray<T>(array: T[]): T[] {
+export function copyarray<T>(array: T[], clone: (t: T) => T): T[] {
 	return array.map((k: T) => {
-		return k;
+		return clone(k);
 	});
 }
 

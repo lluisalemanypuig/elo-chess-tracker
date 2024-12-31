@@ -201,14 +201,25 @@ export class User extends Player {
 			this.first_name,
 			this.last_name,
 			this.password.clone(),
-			copyarray(this.roles),
-			copyarray(this.games),
-			copyarray(this.ratings)
+			copyarray(this.roles, (s: UserRole): UserRole => {
+				return s;
+			}),
+			copyarray(this.games, (s: string): string => {
+				return s;
+			}),
+			copyarray(this.ratings, (r: TimeControlRating): TimeControlRating => {
+				return r.clone();
+			})
 		);
 	}
 
 	clone_as_player(): Player {
-		return new Player(this.username, copyarray(this.ratings));
+		return new Player(
+			this.username,
+			copyarray(this.ratings, (tcr: TimeControlRating) => {
+				return tcr.clone();
+			})
+		);
 	}
 }
 

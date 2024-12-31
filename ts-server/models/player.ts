@@ -91,7 +91,12 @@ export class Player {
 
 	/// Creates a copy of this player.
 	clone(): Player {
-		return new Player(this.username, copyarray(this.ratings));
+		return new Player(
+			this.username,
+			copyarray(this.ratings, (tcr: TimeControlRating) => {
+				return tcr.clone();
+			})
+		);
 	}
 
 	index_time_control_id(time_control_id: string): number {
