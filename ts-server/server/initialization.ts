@@ -35,7 +35,7 @@ import { Game, game_set_from_json } from '../models/game';
 import { ADMIN, MEMBER, STUDENT, TEACHER } from '../models/user_role';
 import { UserRoleToUserAction } from '../models/user_role_action';
 import { TimeControl } from '../models/time_control';
-import { initialize_rating_formulas } from './rating_system';
+import { initialize_rating_functions } from './rating_system';
 
 function init_directories(base_directory: string): void {
 	ServerEnvironment.get_instance().set_database_base_directory(path.join(base_directory, '/database'));
@@ -105,7 +105,7 @@ function init_permissions(permission_data: any): void {
 
 function init_rating_framework(rating_type: string): void {
 	debug(log_now(), `    Rating system: '${rating_type}'`);
-	const res = initialize_rating_formulas(rating_type);
+	const res = initialize_rating_functions(rating_type);
 	if (!res) {
 		debug(log_now(), `Invalid rating system '${rating_type}'`);
 	}

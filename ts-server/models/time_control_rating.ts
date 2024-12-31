@@ -51,8 +51,10 @@ export function time_control_rating_from_json(json: any): TimeControlRating {
 		return time_control_rating_from_json(json_parse);
 	}
 
-	const rating_system = RatingSystem.get_instance();
-	return new TimeControlRating(json['time_control'], rating_system.get_rating_from_json(json['rating']));
+	return new TimeControlRating(
+		json['time_control'],
+		RatingSystem.get_instance().get_rating_from_json(json['rating'])
+	);
 }
 
 /**

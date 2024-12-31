@@ -125,7 +125,7 @@ import { Elo_rating_from_json, Elo_rating_new } from '../rating_framework/Elo/ra
  * @param name Name of the rating system.
  * @returns True if the name is valid; false if otherwise.
  */
-export function initialize_rating_formulas(name: string): boolean {
+export function initialize_rating_functions(name: string): boolean {
 	let rating_system = RatingSystem.get_instance();
 	if (name == 'Elo') {
 		rating_system.set_rating_formula(Elo);

@@ -23,7 +23,7 @@ Contact:
 import { Rating } from '../rating_framework/rating';
 import { copyarray } from '../utils/misc';
 import { search_linear_by_key } from '../utils/searching';
-import { TimeControlRating, time_control_rating_from_json } from './time_control_rating';
+import { TimeControlRating, time_control_rating_set_from_json } from './time_control_rating';
 
 /**
  * @brief Simple class to encode a Player
@@ -118,11 +118,7 @@ export function player_from_json(json: any): Player {
 		return player_from_json(json_parse);
 	}
 
-	let all_ratings: TimeControlRating[] = [];
-	for (var r in json.ratings) {
-		all_ratings.push(time_control_rating_from_json(json.ratings[r]));
-	}
-	return new Player(json['username'], all_ratings);
+	return new Player(json['username'], time_control_rating_set_from_json(json['ratings']));
 }
 
 /**
