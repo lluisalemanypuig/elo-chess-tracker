@@ -26,9 +26,9 @@ Contact:
  */
 
 /**
- * @brief Uses randomness to shuffle an array
- * @param array Input array
- * @returns A shuffled array
+ * @brief Uses randomness to shuffle an array.
+ * @param array Input array.
+ * @post The input array is shuffled.
  */
 export function shuffle<T>(array: T[]): void {
 	let cur_idx = array.length;
