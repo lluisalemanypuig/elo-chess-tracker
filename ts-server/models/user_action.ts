@@ -48,6 +48,8 @@ export const EDIT_MEMBER_GAMES = 'edit_member_games';
 /// Can edit student games
 export const EDIT_STUDENT_GAMES = 'edit_student_games';
 
+/// Assign admin to a user
+export const ASSIGN_ROLE_USER = 'assign_role_user';
 /// Assign admin role
 export const ASSIGN_ROLE_ADMIN = 'assign_role_admin';
 /// Assign teacher role
@@ -96,6 +98,7 @@ export const all_actions = [
 	EDIT_MEMBER_GAMES,
 	EDIT_STUDENT_GAMES,
 
+	ASSIGN_ROLE_USER,
 	ASSIGN_ROLE_ADMIN,
 	ASSIGN_ROLE_TEACHER,
 	ASSIGN_ROLE_MEMBER,
