@@ -80,10 +80,6 @@ export class User extends Player {
 		this.games = games;
 	}
 
-	as_player(): Player {
-		return new Player(this.username, this.ratings);
-	}
-
 	/// Set first name of the user
 	set_first_name(f: string): void {
 		this.first_name = f;
@@ -183,8 +179,8 @@ export class User extends Player {
 	}
 
 	/**
-	 * @brief Copy the values of the members of the player
-	 * @param p Player object
+	 * @brief Dump the values the input player @e p into this player.
+	 * @param p Input player.
 	 * @pre Usernames are equal
 	 */
 	copy_player_data(p: Player): void {
