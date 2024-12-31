@@ -63,10 +63,10 @@ describe('Setters and Getters', () => {
 	});
 });
 
-describe('From JSON', () => {
+describe('From JSON -- Elo', () => {
 	initialize_rating_formulas('Elo');
 
-	test('Elo -- string', () => {
+	test('string', () => {
 		const g = game_from_json(
 			'{ "id": "0001", "white": "W", "white_rating": {"rating": 1500.43, "num_games": 100, "won": 50, "drawn": 20, "lost": 30, "K": 40, "surpassed_2400": true}, "black": "B", "black_rating" : {"rating": 1500.43, "num_games": 100, "won": 50, "drawn": 20, "lost": 30, "K": 40, "surpassed_2400": false}, "result": "black_wins", "time_control_id": "blitz", "time_control_name": "Blitz (5 + 3)", "when": "2024-12-29..12:24:00"}'
 		);
@@ -81,7 +81,7 @@ describe('From JSON', () => {
 		expect(g.get_date()).toEqual('2024-12-29..12:24:00');
 	});
 
-	test('Elo -- JSON', () => {
+	test('JSON', () => {
 		const g = game_from_json({
 			id: '0001',
 			white: 'W',
