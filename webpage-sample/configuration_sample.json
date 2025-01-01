@@ -46,7 +46,7 @@
 		"admin": [
 			"create_user",
 			"create_game",
-			"assign_role_admin",	"assign_role_teacher",	"assign_role_member",	"assign_role_student",
+			"assign_role_user",		"assign_role_admin",	"assign_role_teacher",	"assign_role_member",	"assign_role_student",
 
 			"edit_user",			"edit_admin",			"edit_teacher",			"edit_member",			"edit_student",
 			"edit_user_games",		"edit_admin_games",		"edit_teacher_games",	"edit_member_games",	"edit_student_games",
@@ -55,7 +55,7 @@
 		],
 		"teacher": [
 			"create_user",
-			"assign_role_student",
+			"assign_role_user",		"assign_role_student",
 
 			"edit_user",			"edit_student",
 			"edit_user_games",		"edit_student_games",
