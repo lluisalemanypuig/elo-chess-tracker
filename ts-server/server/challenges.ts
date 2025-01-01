@@ -31,15 +31,6 @@ import { ServerEnvironment } from './environment';
 import { Challenge } from '../models/challenge';
 import { GameResult } from '../models/game';
 import { game_new, game_add } from './game_history';
-import { User } from '../models/user';
-import { ADMIN, MEMBER, STUDENT, TEACHER } from '../models/user_role';
-import {
-	CHALLENGE_ADMIN,
-	CHALLENGE_MEMBER,
-	CHALLENGE_STUDENT,
-	CHALLENGE_TEACHER,
-	CHALLENGE_USER
-} from '../models/user_action';
 
 function challenge_get_index(id: string): number {
 	let mem = ServerMemory.get_instance();
@@ -51,30 +42,13 @@ function challenge_get_index(id: string): number {
 	return -1;
 }
 
-/**
- * Challenge sent from 'sender' to 'receiver'
- * @param sender User that sends the challenge.
- * @param receiver User that receives the challenge.
- * @returns Can the sender actually challenge the receiver?
- */
-export function challenge_can_user_send(sender: User, receiver: User): boolean {
-	return (
-		sender.can_do(CHALLENGE_USER) &&
-		((receiver.is(ADMIN) && sender.can_do(CHALLENGE_ADMIN)) ||
-			(receiver.is(MEMBER) && sender.can_do(CHALLENGE_MEMBER)) ||
-			(receiver.is(STUDENT) && sender.can_do(CHALLENGE_STUDENT)) ||
-			(receiver.is(TEACHER) && sender.can_do(CHALLENGE_TEACHER)))
-	);
-}
-
 /// Return challenge with identifier 'id'
 export function challenge_retrieve(id: string): Challenge | null {
-	let mem = ServerMemory.get_instance();
-	let idx = challenge_get_index(id);
+	const idx = challenge_get_index(id);
 	if (idx == -1) {
 		return null;
 	}
-	return mem.get_challenge(idx);
+	return ServerMemory.get_instance().get_challenge(idx);
 }
 
 /**

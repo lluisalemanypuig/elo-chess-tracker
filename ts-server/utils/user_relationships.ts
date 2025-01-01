@@ -22,6 +22,11 @@ Contact:
 
 import { User } from '../models/user';
 import {
+	CHALLENGE_ADMIN,
+	CHALLENGE_MEMBER,
+	CHALLENGE_STUDENT,
+	CHALLENGE_TEACHER,
+	CHALLENGE_USER,
 	EDIT_ADMIN,
 	EDIT_ADMIN_GAMES,
 	EDIT_MEMBER,
@@ -78,5 +83,21 @@ export function can_user_edit_a_game(u: User, white: User, black: User): boolean
 			(u.can_do(EDIT_TEACHER_GAMES) && either_user_is(TEACHER)) ||
 			(u.can_do(EDIT_STUDENT_GAMES) && either_user_is(STUDENT)) ||
 			(u.can_do(EDIT_MEMBER_GAMES) && either_user_is(MEMBER)))
+	);
+}
+
+/**
+ * Challenge sent from 'sender' to 'receiver'
+ * @param sender User that sends the challenge.
+ * @param receiver User that receives the challenge.
+ * @returns Can the sender actually challenge the receiver?
+ */
+export function challenge_can_user_send(sender: User, receiver: User): boolean {
+	return (
+		sender.can_do(CHALLENGE_USER) &&
+		((receiver.is(ADMIN) && sender.can_do(CHALLENGE_ADMIN)) ||
+			(receiver.is(MEMBER) && sender.can_do(CHALLENGE_MEMBER)) ||
+			(receiver.is(STUDENT) && sender.can_do(CHALLENGE_STUDENT)) ||
+			(receiver.is(TEACHER) && sender.can_do(CHALLENGE_TEACHER)))
 	);
 }

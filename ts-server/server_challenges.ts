@@ -34,14 +34,14 @@ import {
 	challenge_send_new,
 	challenge_set_result,
 	challenge_unset_result,
-	challenge_agree_result,
-	challenge_can_user_send
+	challenge_agree_result
 } from './server/challenges';
 import { user_exists, user_retrieve } from './server/users';
 import { Challenge } from './models/challenge';
 import { User } from './models/user';
 import { CHALLENGE_USER } from './models/user_action';
 import { SessionID } from './models/session_id';
+import { challenge_can_user_send } from './utils/user_relationships';
 
 export async function get_challenges_page(req: any, res: any) {
 	debug(log_now(), 'GET challenges_page...');
