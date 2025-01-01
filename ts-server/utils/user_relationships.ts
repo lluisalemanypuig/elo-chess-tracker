@@ -26,10 +26,11 @@ import { ADMIN, MEMBER, STUDENT, TEACHER } from '../models/user_role';
 
 /// Can a user (@e editor) edit another user (@e edited)?
 export function can_user_edit(editor: User, edited: User): boolean {
-	editor.can_do(EDIT_USER) &&
+	return (
+		editor.can_do(EDIT_USER) &&
 		((edited.get_roles().includes(ADMIN) && editor.can_do(EDIT_ADMIN)) ||
 			(edited.get_roles().includes(TEACHER) && editor.can_do(EDIT_TEACHER)) ||
 			(edited.get_roles().includes(MEMBER) && editor.can_do(EDIT_MEMBER)) ||
-			(edited.get_roles().includes(STUDENT) && editor.can_do(EDIT_STUDENT)));
-	return true;
+			(edited.get_roles().includes(STUDENT) && editor.can_do(EDIT_STUDENT)))
+	);
 }
