@@ -221,7 +221,9 @@ The site implements four different roles a user can have. To each role we can as
 Available actions are
 
 -   Creation of users:
+
     -   _create_user_
+
 -   Creation of games
 
     -   _create_game_: can create a game. This adds a game into the system even if the players involved are not aware of this.
@@ -244,6 +246,7 @@ Available actions are
 
 -   Assignment of roles to another user
 
+    -   _assign_role_user_: This first action is necessary for the others to work.
     -   _assign_role_admin_
     -   _assign_role_teacher_
     -   _assign_role_member_
@@ -258,6 +261,7 @@ Available actions are
     -   _see_student_games_
 
 -   Challenge other users to a game
+
     -   _challenge_user_: This first action is necessary for the others to work.
     -   _challenge_admin_
     -   _challenge_member_
