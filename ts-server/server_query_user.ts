@@ -68,7 +68,7 @@ export async function get_query_users_home(req: any, res: any) {
 		return;
 	}
 
-	let user = r[2] as User;
+	const user = r[2] as User;
 
 	let ratings_user: any[] = [];
 	const all_ratings = user.get_all_ratings();

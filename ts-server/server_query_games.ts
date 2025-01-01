@@ -111,16 +111,10 @@ function filter_game_list(filter_game_record: Function, filter_game: Function, u
 			const black = user_retrieve(g.get_black()) as User;
 
 			const white_or_black_is = function (role: UserRole) {
-				if (white.get_roles().includes(role)) {
-					return true;
-				}
-				if (black.get_roles().includes(role)) {
-					return true;
-				}
-				return false;
+				return white.is(role) || black.is(role);
 			};
 
-			let is_editable: boolean = (function () {
+			const is_editable: boolean = (function () {
 				if (user.can_do(EDIT_USER_GAMES)) {
 					if (white_or_black_is(ADMIN)) {
 						return user.can_do(EDIT_ADMIN_GAMES);

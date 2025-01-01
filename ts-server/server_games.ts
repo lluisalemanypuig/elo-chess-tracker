@@ -191,13 +191,7 @@ export async function post_games_edit_result(req: any, res: any) {
 	const black = user_retrieve(game.get_black()) as User;
 
 	const white_or_black_is = function (role: UserRole) {
-		if (white.get_roles().includes(role)) {
-			return true;
-		}
-		if (black.get_roles().includes(role)) {
-			return true;
-		}
-		return false;
+		return white.is(role) || black.is(role);
 	};
 
 	let is_editable: boolean = false;
