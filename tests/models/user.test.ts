@@ -22,7 +22,7 @@ Contact:
 
 import { Password } from '../../ts-server/models/password';
 import { TimeControlRating } from '../../ts-server/models/time_control_rating';
-import { User } from '../../ts-server/models/user';
+import { User, user_from_json } from '../../ts-server/models/user';
 import {
 	ASSIGN_ROLE_ADMIN,
 	ASSIGN_ROLE_MEMBER,
@@ -55,6 +55,7 @@ import {
 import { ADMIN, MEMBER, STUDENT, TEACHER } from '../../ts-server/models/user_role';
 import { initialize_permissions, UserRoleToUserAction } from '../../ts-server/models/user_role_action';
 import { EloRating } from '../../ts-server/rating_framework/Elo/rating';
+import { initialize_rating_functions } from '../../ts-server/server/rating_system';
 
 describe('Elo', () => {
 	//const bullet = new EloRating(1400, 0, 0, 0, 0, 40, false);
@@ -419,5 +420,152 @@ describe('Actions allowed per user (multiple roles)', () => {
 		expect(admin_student.can_do(CHALLENGE_MEMBER)).toBe(false);
 		expect(admin_student.can_do(CHALLENGE_TEACHER)).toBe(false);
 		expect(admin_student.can_do(CHALLENGE_STUDENT)).toBe(true);
+	});
+});
+
+describe('From JSON (Elo)', () => {
+	initialize_rating_functions('Elo');
+
+	test('string (1)', () => {
+		const u = user_from_json(
+			'{ "username": "u", "first_name": "f", "last_name": "l", "password": { "encrypted": "a", "iv": "b" }, "roles": ["admin"], "games": ["2024-12-31", "2025-01-01"], "ratings": [] }'
+		);
+
+		expect(u.get_username()).toEqual('u');
+		expect(u.get_first_name()).toEqual('f');
+		expect(u.get_last_name()).toEqual('l');
+		expect(u.get_password()).toEqual(new Password('a', 'b'));
+		expect(u.get_roles()).toEqual([ADMIN]);
+		expect(u.is(ADMIN)).toEqual(true);
+		expect(u.get_games()).toEqual(['2024-12-31', '2025-01-01']);
+		expect(u.get_all_ratings()).toEqual([]);
+		expect(u.get_all_ratings().length).toBe(0);
+	});
+
+	test('string (2)', () => {
+		const u1 = user_from_json(
+			'{ "username": "u", "first_name": "f", "last_name": "l", "password": { "encrypted": "a", "iv": "b" }, "roles": ["admin", "student"], "games": ["2024-12-31", "2025-01-01"], "ratings": [] }'
+		);
+		expect(u1.get_roles()).toEqual([ADMIN, STUDENT]);
+		expect(u1.get_all_ratings().length).toBe(0);
+
+		const u2 = user_from_json(
+			'{ "username": "u", "first_name": "f", "last_name": "l", "password": { "encrypted": "a", "iv": "b" }, "roles": ["student", "admin"], "games": ["2024-12-31", "2025-01-01"], "ratings": [] }'
+		);
+		expect(u2.get_roles()).toEqual([STUDENT, ADMIN]);
+		expect(u2.get_all_ratings().length).toBe(0);
+	});
+
+	test('string (3)', () => {
+		const u = user_from_json(
+			'{ "username": "u", "first_name": "f", "last_name": "l", "password": { "encrypted": "a", "iv": "b" }, "roles": ["student", "admin"], "games": ["2024-12-31", "2025-01-01"], "ratings": [ { "time_control": "blitz", "rating": { "rating": 1500, "num_games": 0, "won": 0, "drawn": 0, "lost": 0, "K": 40, "surpassed_2400": false } }, { "time_control": "classical", "rating": { "rating": 1700, "num_games": 0, "won": 0, "drawn": 0, "lost": 0, "K": 40, "surpassed_2400": false } } ] }'
+		);
+		expect(u.get_all_ratings().length).toBe(2);
+		expect(u.has_rating('classical')).toBe(true);
+		expect(u.has_rating('blitz')).toBe(true);
+	});
+
+	test('JSON (1)', () => {
+		const u = user_from_json({
+			username: 'u',
+			first_name: 'f',
+			last_name: 'l',
+			password: {
+				encrypted: 'a',
+				iv: 'b'
+			},
+			roles: [ADMIN],
+			games: ['2024-12-31', '2025-01-01'],
+			ratings: []
+		});
+
+		expect(u.get_username()).toEqual('u');
+		expect(u.get_first_name()).toEqual('f');
+		expect(u.get_last_name()).toEqual('l');
+		expect(u.get_password()).toEqual(new Password('a', 'b'));
+		expect(u.get_roles()).toEqual([ADMIN]);
+		expect(u.is(ADMIN)).toEqual(true);
+		expect(u.get_games()).toEqual(['2024-12-31', '2025-01-01']);
+		expect(u.get_all_ratings()).toEqual([]);
+		expect(u.get_all_ratings().length).toBe(0);
+	});
+
+	test('JSON (2)', () => {
+		const u1 = user_from_json({
+			username: 'u',
+			first_name: 'f',
+			last_name: 'l',
+			password: {
+				encrypted: 'a',
+				iv: 'b'
+			},
+			roles: [ADMIN, STUDENT],
+			games: ['2024-12-31', '2025-01-01'],
+			ratings: []
+		});
+		expect(u1.get_roles()).toEqual([ADMIN, STUDENT]);
+		expect(u1.is(ADMIN)).toEqual(true);
+		expect(u1.is(STUDENT)).toEqual(true);
+		expect(u1.get_all_ratings().length).toBe(0);
+
+		const u2 = user_from_json({
+			username: 'u',
+			first_name: 'f',
+			last_name: 'l',
+			password: {
+				encrypted: 'a',
+				iv: 'b'
+			},
+			roles: [STUDENT, ADMIN],
+			games: ['2024-12-31', '2025-01-01'],
+			ratings: []
+		});
+		expect(u2.get_roles()).toEqual([STUDENT, ADMIN]);
+		expect(u2.is(ADMIN)).toEqual(true);
+		expect(u2.is(STUDENT)).toEqual(true);
+		expect(u2.get_all_ratings().length).toBe(0);
+	});
+
+	test('JSON (3)', () => {
+		const u = user_from_json({
+			username: 'u',
+			first_name: 'f',
+			last_name: 'l',
+			password: {
+				encrypted: 'a',
+				iv: 'b'
+			},
+			roles: [ADMIN, STUDENT],
+			games: ['2024-12-31', '2025-01-01'],
+			ratings: [
+				{
+					time_control: 'blitz',
+					rating: {
+						rating: 1500,
+						num_games: 0,
+						won: 0,
+						drawn: 0,
+						lost: 0,
+						K: 40,
+						surpassed_2400: false
+					}
+				},
+				{
+					time_control: 'classical',
+					rating: {
+						rating: 1700,
+						num_games: 0,
+						won: 0,
+						drawn: 0,
+						lost: 0,
+						K: 40,
+						surpassed_2400: false
+					}
+				}
+			]
+		});
+		expect(u.get_all_ratings().length).toBe(2);
+		expect(u.has_rating('classical')).toBe(true);
+		expect(u.has_rating('blitz')).toBe(true);
 	});
 });
