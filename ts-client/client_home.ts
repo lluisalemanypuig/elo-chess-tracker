@@ -21,7 +21,7 @@ Contact:
 */
 
 import { set_footer_version_number } from './client_load_version_number';
-import { ADMIN, user_role_to_string } from '../ts-server/models/user_role';
+import { ADMIN, user_role_to_string, UserRole } from '../ts-server/models/user_role';
 import { CREATE_GAME, CREATE_USER, EDIT_USER, SEE_USER_GAMES } from '../ts-server/models/user_action';
 import { make_cookie_string } from '../ts-server/utils/cookies';
 
@@ -109,12 +109,12 @@ async function fill_own_info() {
 		label_name_and_roles.textContent = data.fullname;
 
 		// roles of user from the cookies
-		let user_roles = data.roles;
+		let user_roles = data.roles as string[];
 		// add roles of user next to the name
 		label_name_and_roles.textContent += ' - ';
-		label_name_and_roles.textContent += user_role_to_string[user_roles[0]];
+		label_name_and_roles.textContent += user_role_to_string[user_roles[0] as UserRole];
 		for (let i = 1; i < user_roles.length; ++i) {
-			label_name_and_roles.textContent += ', ' + user_role_to_string[user_roles[i]];
+			label_name_and_roles.textContent += ', ' + user_role_to_string[user_roles[i] as UserRole];
 		}
 	}
 
