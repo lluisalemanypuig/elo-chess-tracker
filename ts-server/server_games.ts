@@ -39,7 +39,7 @@ import { User } from './models/user';
 import { game_add, game_edit_result, game_find_by_id, game_new, recalculate_Elo_ratings } from './server/game_history';
 import { Game, GameResult } from './models/game';
 import { user_retrieve } from './server/users';
-import { ADMIN, MEMBER, STUDENT, TEACHER } from './models/user_role';
+import { ADMIN, MEMBER, STUDENT, TEACHER, UserRole } from './models/user_role';
 import { SessionID } from './models/session_id';
 
 export async function get_games_own_page(req: any, res: any) {
@@ -190,7 +190,7 @@ export async function post_games_edit_result(req: any, res: any) {
 	const white = user_retrieve(game.get_white()) as User;
 	const black = user_retrieve(game.get_black()) as User;
 
-	const white_or_black_is = function (role: string) {
+	const white_or_black_is = function (role: UserRole) {
 		if (white.get_roles().includes(role)) {
 			return true;
 		}

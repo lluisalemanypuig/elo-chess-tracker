@@ -26,7 +26,12 @@ import { UserAction } from './user_action';
 /// Relate each user role to a readable string
 export class UserRoleToUserAction {
 	/// The data structure that relates user roles to actions
-	private relate: { [key in UserRole]: UserAction[] } = {};
+	private relate: { [key in UserRole]: UserAction[] } = {
+		admin: [],
+		teacher: [],
+		member: [],
+		student: []
+	};
 
 	/// The only instance of this class
 	private static instance: UserRoleToUserAction;
