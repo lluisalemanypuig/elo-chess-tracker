@@ -28,9 +28,9 @@ import { ADMIN, MEMBER, STUDENT, TEACHER } from '../models/user_role';
 export function can_user_edit(editor: User, edited: User): boolean {
 	return (
 		editor.can_do(EDIT_USER) &&
-		((edited.get_roles().includes(ADMIN) && editor.can_do(EDIT_ADMIN)) ||
-			(edited.get_roles().includes(TEACHER) && editor.can_do(EDIT_TEACHER)) ||
-			(edited.get_roles().includes(MEMBER) && editor.can_do(EDIT_MEMBER)) ||
-			(edited.get_roles().includes(STUDENT) && editor.can_do(EDIT_STUDENT)))
+		((edited.is(ADMIN) && editor.can_do(EDIT_ADMIN)) ||
+			(edited.is(TEACHER) && editor.can_do(EDIT_TEACHER)) ||
+			(edited.is(MEMBER) && editor.can_do(EDIT_MEMBER)) ||
+			(edited.is(STUDENT) && editor.can_do(EDIT_STUDENT)))
 	);
 }
