@@ -22,24 +22,37 @@ Contact:
 
 import { Password } from '../../ts-server/models/password';
 import { User } from '../../ts-server/models/user';
-import { EDIT_STUDENT, EDIT_TEACHER, EDIT_USER } from '../../ts-server/models/user_action';
+import {
+	EDIT_STUDENT,
+	EDIT_TEACHER,
+	EDIT_USER,
+	EDIT_USER_GAMES,
+	EDIT_ADMIN_GAMES,
+	EDIT_STUDENT_GAMES,
+	EDIT_TEACHER_GAMES,
+	EDIT_MEMBER_GAMES,
+	SEE_ADMIN_GAMES,
+	SEE_MEMBER_GAMES,
+	SEE_STUDENT_GAMES,
+	SEE_USER_GAMES
+} from '../../ts-server/models/user_action';
 import { ADMIN, MEMBER, STUDENT, TEACHER } from '../../ts-server/models/user_role';
 import { UserRoleToUserAction } from '../../ts-server/models/user_role_action';
 import { initialize_permissions } from '../../ts-server/models/user_role_action';
-import { can_user_edit } from '../../ts-server/utils/user_relationships';
+import { can_user_edit, can_user_edit_a_game, can_user_see_a_game } from '../../ts-server/utils/user_relationships';
 
-const editor_admin = new User('un', 'f', 'l', new Password('a', 'b'), [ADMIN], ['2025-01-01'], []);
-const editor_teacher = new User('un', 'f', 'l', new Password('a', 'b'), [TEACHER], ['2025-01-01'], []);
-const editor_member = new User('un', 'f', 'l', new Password('a', 'b'), [MEMBER], ['2025-01-01'], []);
-const editor_student = new User('un', 'f', 'l', new Password('a', 'b'), [STUDENT], ['2025-01-01'], []);
+describe('Edition', () => {
+	const editor_admin = new User('un', 'f', 'l', new Password('a', 'b'), [ADMIN], ['2025-01-01'], []);
+	const editor_teacher = new User('un', 'f', 'l', new Password('a', 'b'), [TEACHER], ['2025-01-01'], []);
+	const editor_member = new User('un', 'f', 'l', new Password('a', 'b'), [MEMBER], ['2025-01-01'], []);
+	const editor_student = new User('un', 'f', 'l', new Password('a', 'b'), [STUDENT], ['2025-01-01'], []);
 
-const edited_admin = new User('un', 'f', 'l', new Password('a', 'b'), [ADMIN], ['2024-01-01'], []);
-const edited_teacher = new User('un', 'f', 'l', new Password('a', 'b'), [TEACHER], ['2023-01-01'], []);
-const edited_member = new User('un', 'f', 'l', new Password('a', 'b'), [MEMBER], ['2022-01-01'], []);
-const edited_student = new User('un', 'f', 'l', new Password('a', 'b'), [STUDENT], ['2021-01-01'], []);
+	const edited_admin = new User('un', 'f', 'l', new Password('a', 'b'), [ADMIN], ['2024-01-01'], []);
+	const edited_teacher = new User('un', 'f', 'l', new Password('a', 'b'), [TEACHER], ['2023-01-01'], []);
+	const edited_member = new User('un', 'f', 'l', new Password('a', 'b'), [MEMBER], ['2022-01-01'], []);
+	const edited_student = new User('un', 'f', 'l', new Password('a', 'b'), [STUDENT], ['2021-01-01'], []);
 
-describe('Can an ADMIN edit another user?', () => {
-	test('Teacher', () => {
+	test('Admin -> Teacher', () => {
 		let rel = UserRoleToUserAction.get_instance();
 		rel.clear();
 		initialize_permissions({
@@ -55,7 +68,7 @@ describe('Can an ADMIN edit another user?', () => {
 		expect(can_user_edit(editor_admin, edited_student)).toBe(false);
 	});
 
-	test('Teacher + Student', () => {
+	test('Admin -> Teacher + Student', () => {
 		let rel = UserRoleToUserAction.get_instance();
 		rel.clear();
 		initialize_permissions({
@@ -71,7 +84,7 @@ describe('Can an ADMIN edit another user?', () => {
 		expect(can_user_edit(editor_admin, edited_student)).toBe(true);
 	});
 
-	test('Teacher + Student (no EDIT_USER permission)', () => {
+	test('Admin -> Teacher + Student (no EDIT_USER permission)', () => {
 		let rel = UserRoleToUserAction.get_instance();
 		rel.clear();
 		initialize_permissions({
@@ -86,10 +99,8 @@ describe('Can an ADMIN edit another user?', () => {
 		expect(can_user_edit(editor_admin, edited_member)).toBe(false);
 		expect(can_user_edit(editor_admin, edited_student)).toBe(false);
 	});
-});
 
-describe('Can a TEACHER edit another user?', () => {
-	test('Teacher', () => {
+	test('Teacher -> Teacher', () => {
 		let rel = UserRoleToUserAction.get_instance();
 		rel.clear();
 		initialize_permissions({
@@ -105,7 +116,7 @@ describe('Can a TEACHER edit another user?', () => {
 		expect(can_user_edit(editor_teacher, edited_student)).toBe(false);
 	});
 
-	test('Teacher + Student', () => {
+	test('Teacher -> Teacher + Student', () => {
 		let rel = UserRoleToUserAction.get_instance();
 		rel.clear();
 		initialize_permissions({
@@ -121,7 +132,7 @@ describe('Can a TEACHER edit another user?', () => {
 		expect(can_user_edit(editor_teacher, edited_student)).toBe(true);
 	});
 
-	test('Teacher + Student (no EDIT_USER permission)', () => {
+	test('Teacher -> Teacher + Student (no EDIT_USER permission)', () => {
 		let rel = UserRoleToUserAction.get_instance();
 		rel.clear();
 		initialize_permissions({
@@ -136,10 +147,8 @@ describe('Can a TEACHER edit another user?', () => {
 		expect(can_user_edit(editor_teacher, edited_member)).toBe(false);
 		expect(can_user_edit(editor_teacher, edited_student)).toBe(false);
 	});
-});
 
-describe('Can a STUDENT edit another user?', () => {
-	test('Teacher', () => {
+	test('Student -> Teacher', () => {
 		let rel = UserRoleToUserAction.get_instance();
 		rel.clear();
 		initialize_permissions({
@@ -155,7 +164,7 @@ describe('Can a STUDENT edit another user?', () => {
 		expect(can_user_edit(editor_student, edited_student)).toBe(false);
 	});
 
-	test('Teacher + Student', () => {
+	test('Student -> Teacher + Student', () => {
 		let rel = UserRoleToUserAction.get_instance();
 		rel.clear();
 		initialize_permissions({
@@ -171,7 +180,7 @@ describe('Can a STUDENT edit another user?', () => {
 		expect(can_user_edit(editor_student, edited_student)).toBe(true);
 	});
 
-	test('Teacher + Student (no EDIT_USER permission)', () => {
+	test('Student -> Teacher + Student (no EDIT_USER permission)', () => {
 		let rel = UserRoleToUserAction.get_instance();
 		rel.clear();
 		initialize_permissions({
@@ -186,10 +195,8 @@ describe('Can a STUDENT edit another user?', () => {
 		expect(can_user_edit(editor_student, edited_member)).toBe(false);
 		expect(can_user_edit(editor_student, edited_student)).toBe(false);
 	});
-});
 
-describe('Can a MEMBER edit another user?', () => {
-	test('Teacher', () => {
+	test('Member -> Teacher', () => {
 		let rel = UserRoleToUserAction.get_instance();
 		rel.clear();
 		initialize_permissions({
@@ -205,7 +212,7 @@ describe('Can a MEMBER edit another user?', () => {
 		expect(can_user_edit(editor_member, edited_student)).toBe(false);
 	});
 
-	test('Teacher + Student', () => {
+	test('Member -> Teacher + Student', () => {
 		let rel = UserRoleToUserAction.get_instance();
 		rel.clear();
 		initialize_permissions({
@@ -221,7 +228,7 @@ describe('Can a MEMBER edit another user?', () => {
 		expect(can_user_edit(editor_member, edited_student)).toBe(true);
 	});
 
-	test('Teacher + Student (no EDIT_USER permission)', () => {
+	test('Member -> Teacher + Student (no EDIT_USER permission)', () => {
 		let rel = UserRoleToUserAction.get_instance();
 		rel.clear();
 		initialize_permissions({
@@ -235,5 +242,163 @@ describe('Can a MEMBER edit another user?', () => {
 		expect(can_user_edit(editor_member, edited_teacher)).toBe(false);
 		expect(can_user_edit(editor_member, edited_member)).toBe(false);
 		expect(can_user_edit(editor_member, edited_student)).toBe(false);
+	});
+});
+
+describe('Can a user see a game?', () => {
+	const admin = new User('un', 'f', 'l', new Password('a', 'b'), [ADMIN], ['2025-01-01'], []);
+	const teacher = new User('un', 'f', 'l', new Password('a', 'b'), [TEACHER], ['2025-01-01'], []);
+	const member = new User('un', 'f', 'l', new Password('a', 'b'), [MEMBER], ['2025-01-01'], []);
+	const student = new User('un', 'f', 'l', new Password('a', 'b'), [STUDENT], ['2025-01-01'], []);
+
+	test('Admin', () => {
+		let rel = UserRoleToUserAction.get_instance();
+		rel.clear();
+		initialize_permissions({
+			admin: [SEE_USER_GAMES, SEE_ADMIN_GAMES, SEE_MEMBER_GAMES],
+			teacher: [],
+			student: [],
+			member: []
+		});
+
+		expect(can_user_see_a_game(admin, teacher, member)).toBe(true);
+		expect(can_user_see_a_game(admin, teacher, student)).toBe(false);
+		expect(can_user_see_a_game(admin, student, member)).toBe(true);
+		expect(can_user_see_a_game(admin, admin, member)).toBe(true);
+	});
+
+	test('Admin (no SEE_USER_GAMES permission)', () => {
+		let rel = UserRoleToUserAction.get_instance();
+		rel.clear();
+		initialize_permissions({
+			admin: [SEE_ADMIN_GAMES],
+			teacher: [],
+			student: [],
+			member: []
+		});
+
+		expect(can_user_see_a_game(admin, teacher, member)).toBe(false);
+		expect(can_user_see_a_game(admin, teacher, student)).toBe(false);
+		expect(can_user_see_a_game(admin, student, member)).toBe(false);
+		expect(can_user_see_a_game(admin, admin, member)).toBe(false);
+	});
+
+	test('Teacher', () => {
+		let rel = UserRoleToUserAction.get_instance();
+		rel.clear();
+		initialize_permissions({
+			admin: [],
+			teacher: [SEE_USER_GAMES, SEE_ADMIN_GAMES, SEE_STUDENT_GAMES],
+			student: [],
+			member: []
+		});
+
+		expect(can_user_see_a_game(teacher, teacher, member)).toBe(false);
+		expect(can_user_see_a_game(teacher, teacher, student)).toBe(true);
+		expect(can_user_see_a_game(teacher, student, member)).toBe(true);
+		expect(can_user_see_a_game(teacher, admin, member)).toBe(true);
+	});
+
+	test('Teacher (no SEE_USER_GAMES permission)', () => {
+		let rel = UserRoleToUserAction.get_instance();
+		rel.clear();
+		initialize_permissions({
+			admin: [],
+			teacher: [SEE_ADMIN_GAMES, SEE_STUDENT_GAMES],
+			student: [],
+			member: []
+		});
+
+		expect(can_user_see_a_game(teacher, teacher, member)).toBe(false);
+		expect(can_user_see_a_game(teacher, teacher, student)).toBe(false);
+		expect(can_user_see_a_game(teacher, student, member)).toBe(false);
+		expect(can_user_see_a_game(teacher, admin, member)).toBe(false);
+	});
+});
+
+describe('Can a user edit a game?', () => {
+	const admin = new User('un', 'f', 'l', new Password('a', 'b'), [ADMIN], ['2025-01-01'], []);
+	const teacher = new User('un', 'f', 'l', new Password('a', 'b'), [TEACHER], ['2025-01-01'], []);
+	const member = new User('un', 'f', 'l', new Password('a', 'b'), [MEMBER], ['2025-01-01'], []);
+	const student = new User('un', 'f', 'l', new Password('a', 'b'), [STUDENT], ['2025-01-01'], []);
+
+	test('Admin', () => {
+		let rel = UserRoleToUserAction.get_instance();
+		rel.clear();
+		initialize_permissions({
+			admin: [EDIT_USER_GAMES, EDIT_ADMIN_GAMES, EDIT_MEMBER_GAMES],
+			teacher: [],
+			student: [],
+			member: []
+		});
+
+		expect(can_user_edit_a_game(admin, teacher, member)).toBe(true);
+		expect(can_user_edit_a_game(admin, teacher, student)).toBe(false);
+		expect(can_user_edit_a_game(admin, student, member)).toBe(true);
+		expect(can_user_edit_a_game(admin, admin, member)).toBe(true);
+	});
+
+	test('Admin (no SEE_USER_GAMES permission)', () => {
+		let rel = UserRoleToUserAction.get_instance();
+		rel.clear();
+		initialize_permissions({
+			admin: [EDIT_ADMIN_GAMES],
+			teacher: [],
+			student: [],
+			member: []
+		});
+
+		expect(can_user_edit_a_game(admin, teacher, member)).toBe(false);
+		expect(can_user_edit_a_game(admin, teacher, student)).toBe(false);
+		expect(can_user_edit_a_game(admin, student, member)).toBe(false);
+		expect(can_user_edit_a_game(admin, admin, member)).toBe(false);
+	});
+
+	test('Teacher (1)', () => {
+		let rel = UserRoleToUserAction.get_instance();
+		rel.clear();
+		initialize_permissions({
+			admin: [],
+			teacher: [EDIT_USER_GAMES, EDIT_ADMIN_GAMES, EDIT_STUDENT_GAMES],
+			student: [],
+			member: []
+		});
+
+		expect(can_user_edit_a_game(teacher, teacher, member)).toBe(false);
+		expect(can_user_edit_a_game(teacher, teacher, student)).toBe(true);
+		expect(can_user_edit_a_game(teacher, student, member)).toBe(true);
+		expect(can_user_edit_a_game(teacher, admin, member)).toBe(true);
+	});
+
+	test('Teacher (2)', () => {
+		let rel = UserRoleToUserAction.get_instance();
+		rel.clear();
+		initialize_permissions({
+			admin: [],
+			teacher: [EDIT_USER_GAMES, EDIT_ADMIN_GAMES, EDIT_TEACHER_GAMES],
+			student: [],
+			member: []
+		});
+
+		expect(can_user_edit_a_game(teacher, teacher, member)).toBe(true);
+		expect(can_user_edit_a_game(teacher, teacher, student)).toBe(true);
+		expect(can_user_edit_a_game(teacher, student, member)).toBe(false);
+		expect(can_user_edit_a_game(teacher, admin, member)).toBe(true);
+	});
+
+	test('Teacher (no SEE_USER_GAMES permission)', () => {
+		let rel = UserRoleToUserAction.get_instance();
+		rel.clear();
+		initialize_permissions({
+			admin: [],
+			teacher: [EDIT_ADMIN_GAMES, EDIT_STUDENT_GAMES],
+			student: [],
+			member: []
+		});
+
+		expect(can_user_edit_a_game(teacher, teacher, member)).toBe(false);
+		expect(can_user_edit_a_game(teacher, teacher, student)).toBe(false);
+		expect(can_user_edit_a_game(teacher, student, member)).toBe(false);
+		expect(can_user_edit_a_game(teacher, admin, member)).toBe(false);
 	});
 });
