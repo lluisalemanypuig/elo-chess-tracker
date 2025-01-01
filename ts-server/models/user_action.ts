@@ -119,7 +119,7 @@ export const all_actions = [
 	CHALLENGE_STUDENT
 ] as const;
 
-/// All actions as a type
+/// All actions as type
 export type UserAction = (typeof all_actions)[number];
 
 // -----------------------------------------------------------------------------
@@ -133,7 +133,7 @@ export const CHALLENGE_ID = 'challenge';
 /// All action ids that can be performed in this web
 export const all_action_ids = [EDIT_ID, EDIT_GAMES_ID, ASSIGN_ROLE_ID, SEE_ID, CHALLENGE_ID] as const;
 
-/// All action ids as a type
+/// All actions as type
 export type UserActionID = (typeof all_action_ids)[number];
 
 /**
@@ -186,13 +186,13 @@ export function get_role_action_name(id: UserActionID, r: UserRole): UserAction 
 		case SEE_ID:
 			switch (r) {
 				case ADMIN:
-					return ASSIGN_ROLE_ADMIN;
+					return SEE_ADMIN_GAMES;
 				case TEACHER:
-					return ASSIGN_ROLE_TEACHER;
+					return SEE_TEACHER_GAMES;
 				case MEMBER:
-					return ASSIGN_ROLE_MEMBER;
+					return SEE_MEMBER_GAMES;
 				case STUDENT:
-					return ASSIGN_ROLE_STUDENT;
+					return SEE_STUDENT_GAMES;
 			}
 			throw new Error(`Unhandled user role ${r} in ${id}`);
 		case CHALLENGE_ID:
