@@ -33,20 +33,9 @@ import { User } from './models/user';
 import { Game, game_set_from_json } from './models/game';
 import { RatingSystem } from './server/rating_system';
 import { ServerEnvironment } from './server/environment';
-import { ADMIN, MEMBER, STUDENT, TEACHER, UserRole } from './models/user_role';
-import {
-	SEE_USER_GAMES,
-	SEE_ADMIN_GAMES,
-	SEE_MEMBER_GAMES,
-	SEE_STUDENT_GAMES,
-	SEE_TEACHER_GAMES,
-	EDIT_USER_GAMES,
-	EDIT_ADMIN_GAMES,
-	EDIT_MEMBER_GAMES,
-	EDIT_STUDENT_GAMES,
-	EDIT_TEACHER_GAMES
-} from './models/user_action';
+import { SEE_USER_GAMES } from './models/user_action';
 import { SessionID } from './models/session_id';
+import { can_user_edit_a_game, can_user_see_a_game } from './utils/user_relationships';
 
 function increment(g: Game): any {
 	const [white_after, black_after] = RatingSystem.get_instance().apply_rating_formula(g);
@@ -109,28 +98,7 @@ function filter_game_list(filter_game_record: Function, filter_game: Function, u
 
 			const white = user_retrieve(g.get_white()) as User;
 			const black = user_retrieve(g.get_black()) as User;
-
-			const white_or_black_is = function (role: UserRole) {
-				return white.is(role) || black.is(role);
-			};
-
-			const is_editable: boolean = (function () {
-				if (user.can_do(EDIT_USER_GAMES)) {
-					if (white_or_black_is(ADMIN)) {
-						return user.can_do(EDIT_ADMIN_GAMES);
-					}
-					if (white_or_black_is(TEACHER)) {
-						return user.can_do(EDIT_TEACHER_GAMES);
-					}
-					if (white_or_black_is(MEMBER)) {
-						return user.can_do(EDIT_MEMBER_GAMES);
-					}
-					if (white_or_black_is(STUDENT)) {
-						return user.can_do(EDIT_STUDENT_GAMES);
-					}
-				}
-				return false;
-			})();
+			const is_editable: boolean = can_user_edit_a_game(user, white, black);
 
 			data_to_return.push({
 				id: g.get_id(),
@@ -199,30 +167,14 @@ export async function get_query_games_list_all(req: any, res: any) {
 		return;
 	}
 
-	const game_contains = function (g: Game, r: UserRole): boolean {
-		const white = user_retrieve(g.get_white()) as User;
-		const black = user_retrieve(g.get_black()) as User;
-		return white.is(r) || black.is(r);
-	};
-
 	const data_to_return = filter_game_list(
 		(_: string): boolean => {
 			return true;
 		},
 		(g: Game): boolean => {
-			if (user.can_do(SEE_ADMIN_GAMES) && game_contains(g, ADMIN)) {
-				return true;
-			}
-			if (user.can_do(SEE_TEACHER_GAMES) && game_contains(g, TEACHER)) {
-				return true;
-			}
-			if (user.can_do(SEE_STUDENT_GAMES) && game_contains(g, STUDENT)) {
-				return true;
-			}
-			if (user.can_do(SEE_MEMBER_GAMES) && game_contains(g, MEMBER)) {
-				return true;
-			}
-			return false;
+			const white = user_retrieve(g.get_white()) as User;
+			const black = user_retrieve(g.get_black()) as User;
+			return can_user_see_a_game(user, white, black);
 		},
 		user
 	);
