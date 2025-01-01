@@ -29,14 +29,8 @@ import { log_now } from './utils/misc';
 import { is_user_logged_in } from './server/session';
 import { user_add_new, user_exists } from './server/users';
 import { User } from './models/user';
-import { is_role_string_correct, STUDENT, MEMBER, TEACHER, ADMIN } from './models/user_role';
-import {
-	ASSIGN_ROLE_ADMIN,
-	ASSIGN_ROLE_TEACHER,
-	ASSIGN_ROLE_MEMBER,
-	ASSIGN_ROLE_STUDENT,
-	CREATE_USER
-} from './models/user_action';
+import { is_role_string_correct } from './models/user_role';
+import { CREATE_USER, ASSIGN_ROLE_USER, get_role_action_name, ASSIGN_ROLE_ID } from './models/user_action';
 import { encrypt_password_for_user } from './utils/encrypt';
 import { Password } from './models/password';
 import { TimeControlRating } from './models/time_control_rating';
@@ -80,6 +74,14 @@ export async function post_users_create(req: any, res: any) {
 		res.send('403 - Forbidden');
 		return;
 	}
+	if (!registerer.can_do(ASSIGN_ROLE_USER)) {
+		debug(log_now(), `User '${session.username}' cannot assign roles to users.`);
+		res.send({
+			r: '0',
+			reason: `User '${session.username}' cannot assign roles and thus cannot create users.`
+		});
+		return;
+	}
 
 	const new_username = req.body.u;
 	const new_firstname = req.body.fn;
@@ -102,28 +104,23 @@ export async function post_users_create(req: any, res: any) {
 	}
 
 	for (let i = 0; i < new_roles.length; ++i) {
-		if (!is_role_string_correct(new_roles[i])) {
+		const r = new_roles[i];
+		if (!is_role_string_correct(r)) {
 			res.send({
 				r: '0',
-				reason: `Role string '${new_roles[i]}' is not correct.`
+				reason: `Role string '${r}' is not correct.`
 			});
 			return;
 		}
-	}
 
-	const can_create: boolean =
-		registerer.get_roles().includes(ADMIN) &&
-		((new_roles.includes(ADMIN) && registerer.can_do(ASSIGN_ROLE_ADMIN)) ||
-			(new_roles.includes(TEACHER) && registerer.can_do(ASSIGN_ROLE_TEACHER)) ||
-			(new_roles.includes(MEMBER) && registerer.can_do(ASSIGN_ROLE_MEMBER)) ||
-			(new_roles.includes(STUDENT) && registerer.can_do(ASSIGN_ROLE_STUDENT)));
-
-	if (!can_create) {
-		res.send({
-			r: '0',
-			reason: `You do not have enough permissions to create a user with the selected roles.`
-		});
-		return;
+		const action = get_role_action_name(ASSIGN_ROLE_ID, r);
+		if (!registerer.can_do(action)) {
+			res.send({
+				r: '0',
+				reason: `User '${session.username}' cannot do ${action} role.`
+			});
+			return;
+		}
 	}
 
 	// encrypt password
