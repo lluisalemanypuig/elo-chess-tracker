@@ -22,7 +22,7 @@ Contact:
 
 import { Game, game_from_json } from '../../ts-server/models/game';
 import { EloRating } from '../../ts-server/rating_framework/Elo/rating';
-import { initialize_rating_formulas } from '../../ts-server/server/rating_system';
+import { initialize_rating_functions } from '../../ts-server/server/rating_system';
 
 describe('Setters and Getters -- Elo', () => {
 	test('Gets', () => {
@@ -64,7 +64,7 @@ describe('Setters and Getters -- Elo', () => {
 });
 
 describe('From JSON -- Elo', () => {
-	initialize_rating_formulas('Elo');
+	initialize_rating_functions('Elo');
 
 	test('string', () => {
 		const g = game_from_json(
