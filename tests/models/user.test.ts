@@ -155,6 +155,11 @@ describe('Actions allowed per user (single role)', () => {
 
 		const admin = new User('u', 'F', 'L', new Password('a', 'i'), [ADMIN], [], []);
 
+		const actions = admin.get_actions();
+		expect(actions.length).toBe(2);
+		expect(actions.includes(EDIT_USER)).toBe(true);
+		expect(actions.includes(EDIT_TEACHER)).toBe(true);
+
 		expect(admin.can_do(CREATE_USER)).toBe(false);
 		expect(admin.can_do(CREATE_GAME)).toBe(false);
 		expect(admin.can_do(EDIT_USER)).toBe(true);
@@ -194,6 +199,11 @@ describe('Actions allowed per user (single role)', () => {
 		});
 
 		const teacher = new User('u', 'F', 'L', new Password('a', 'i'), [TEACHER], [], []);
+
+		const actions = teacher.get_actions();
+		expect(actions.length).toBe(2);
+		expect(actions.includes(ASSIGN_ROLE_MEMBER)).toBe(true);
+		expect(actions.includes(ASSIGN_ROLE_USER)).toBe(true);
 
 		expect(teacher.can_do(CREATE_USER)).toBe(false);
 		expect(teacher.can_do(CREATE_GAME)).toBe(false);
@@ -235,6 +245,11 @@ describe('Actions allowed per user (single role)', () => {
 
 		const student = new User('u', 'F', 'L', new Password('a', 'i'), [STUDENT], [], []);
 
+		const actions = student.get_actions();
+		expect(actions.length).toBe(2);
+		expect(actions.includes(CREATE_GAME)).toBe(true);
+		expect(actions.includes(CREATE_USER)).toBe(true);
+
 		expect(student.can_do(CREATE_USER)).toBe(true);
 		expect(student.can_do(CREATE_GAME)).toBe(true);
 		expect(student.can_do(EDIT_USER)).toBe(false);
@@ -274,6 +289,12 @@ describe('Actions allowed per user (single role)', () => {
 		});
 
 		const member = new User('u', 'F', 'L', new Password('a', 'i'), [MEMBER], [], []);
+
+		const actions = member.get_actions();
+		expect(actions.length).toBe(3);
+		expect(actions.includes(CHALLENGE_STUDENT)).toBe(true);
+		expect(actions.includes(CHALLENGE_USER)).toBe(true);
+		expect(actions.includes(CHALLENGE_ADMIN)).toBe(true);
 
 		expect(member.can_do(CREATE_USER)).toBe(false);
 		expect(member.can_do(CREATE_GAME)).toBe(false);
@@ -317,6 +338,13 @@ describe('Actions allowed per user (multiple roles)', () => {
 
 		const admin_teacher = new User('u', 'F', 'L', new Password('a', 'i'), [ADMIN, TEACHER], [], []);
 
+		const actions = admin_teacher.get_actions();
+		expect(actions.length).toBe(2);
+		expect(actions.includes(EDIT_USER)).toBe(true);
+		expect(actions.includes(EDIT_TEACHER)).toBe(true);
+		expect(actions.includes(CHALLENGE_USER)).toBe(false);
+		expect(actions.includes(CHALLENGE_STUDENT)).toBe(false);
+
 		expect(admin_teacher.can_do(CREATE_USER)).toBe(false);
 		expect(admin_teacher.can_do(CREATE_GAME)).toBe(false);
 		expect(admin_teacher.can_do(EDIT_USER)).toBe(true);
@@ -356,6 +384,13 @@ describe('Actions allowed per user (multiple roles)', () => {
 		});
 
 		const admin_student = new User('u', 'F', 'L', new Password('a', 'i'), [ADMIN, STUDENT], [], []);
+
+		const actions = admin_student.get_actions();
+		expect(actions.length).toBe(4);
+		expect(actions.includes(EDIT_USER)).toBe(true);
+		expect(actions.includes(EDIT_TEACHER)).toBe(true);
+		expect(actions.includes(CHALLENGE_USER)).toBe(true);
+		expect(actions.includes(CHALLENGE_STUDENT)).toBe(true);
 
 		expect(admin_student.can_do(CREATE_USER)).toBe(false);
 		expect(admin_student.can_do(CREATE_GAME)).toBe(false);
