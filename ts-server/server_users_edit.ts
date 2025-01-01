@@ -29,20 +29,18 @@ import { log_now } from './utils/misc';
 import { is_user_logged_in } from './server/session';
 import { user_retrieve, user_rename_and_reassign_roles } from './server/users';
 import { User } from './models/user';
-import { ADMIN, MEMBER, STUDENT, TEACHER } from './models/user_role';
-import { EDIT_ADMIN, EDIT_MEMBER, EDIT_STUDENT, EDIT_TEACHER, EDIT_USER } from './models/user_action';
+import { EDIT_USER } from './models/user_action';
 
 import { ServerMemory } from './server/memory';
 import { SessionID } from './models/session_id';
+import { can_user_edit } from './utils/user_relationships';
 
 export async function get_users_edit_page(req: any, res: any) {
 	debug(log_now(), 'GET users_edit_page...');
 
-	const mem = ServerMemory.get_instance();
-
 	const session = new SessionID(req.cookies.session_id, req.cookies.user);
 
-	if (!mem.has_session_id(session)) {
+	if (!ServerMemory.get_instance().has_session_id(session)) {
 		debug(log_now(), `    User '${session.username}' is not logged in.`);
 		res.send('403 - Forbidden');
 		return;
@@ -56,7 +54,7 @@ export async function get_users_edit_page(req: any, res: any) {
 	}
 
 	const user = _user as User;
-	if (!user.can_do(EDIT_MEMBER) && !user.can_do(EDIT_STUDENT)) {
+	if (!user.can_do(EDIT_USER)) {
 		debug(log_now(), `    User '${session.username}' does not have sufficient permissions.`);
 		res.send('403 - Forbidden');
 		return;
@@ -89,14 +87,7 @@ export async function post_users_edit(req: any, res: any) {
 
 	debug(log_now(), `User '${editor.get_username()}' is trying to modify user '${edited.get_username()}'`);
 
-	const enough_permissions: boolean =
-		editor.can_do(EDIT_USER) &&
-		((edited.get_roles().includes(ADMIN) && editor.can_do(EDIT_ADMIN)) ||
-			(edited.get_roles().includes(TEACHER) && editor.can_do(EDIT_TEACHER)) ||
-			(edited.get_roles().includes(MEMBER) && editor.can_do(EDIT_MEMBER)) ||
-			(edited.get_roles().includes(STUDENT) && editor.can_do(EDIT_STUDENT)));
-
-	if (!enough_permissions) {
+	if (!can_user_edit(editor, edited)) {
 		res.send({
 			r: '0',
 			reason: 'You do not have enough permissions to edit this user.'
