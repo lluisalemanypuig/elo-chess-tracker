@@ -34,7 +34,7 @@ export const STUDENT = 'student';
  *
  * See below for details on
  */
-export const all_user_roles = [ADMIN, TEACHER, MEMBER, STUDENT];
+export const all_user_roles = [ADMIN, TEACHER, MEMBER, STUDENT] as const;
 
 /// All roles as type
 export type UserRole = (typeof all_user_roles)[number];
@@ -49,5 +49,5 @@ export const user_role_to_string: { [key in UserRole]: string } = {
 
 /// Does the string parameter encode a valid user role?
 export function is_role_string_correct(r: string): boolean {
-	return all_user_roles.includes(r);
+	return all_user_roles.includes(r as UserRole);
 }
