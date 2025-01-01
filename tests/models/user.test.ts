@@ -111,23 +111,6 @@ describe('Elo', () => {
 		expect(u.get_first_name()).toEqual('Perico');
 		expect(u.get_last_name()).toEqual('Palotes');
 		expect(u.get_full_name()).toEqual('Perico Palotes');
-
-		expect(u.get_games()).toEqual(['2024-12-24', '2024-12-25']);
-		u.add_game('2024-12-31');
-		expect(u.get_games()).toEqual(['2024-12-24', '2024-12-25', '2024-12-31']);
-		u.add_game('2024-12-28');
-		expect(u.get_games()).toEqual(['2024-12-24', '2024-12-25', '2024-12-28', '2024-12-31']);
-		u.add_game('2024-12-01');
-		expect(u.get_games()).toEqual(['2024-12-01', '2024-12-24', '2024-12-25', '2024-12-28', '2024-12-31']);
-		u.add_game('2019-12-31');
-		expect(u.get_games()).toEqual([
-			'2019-12-31',
-			'2024-12-01',
-			'2024-12-24',
-			'2024-12-25',
-			'2024-12-28',
-			'2024-12-31'
-		]);
 	});
 
 	test('Adding games', () => {
