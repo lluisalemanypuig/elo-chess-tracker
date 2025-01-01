@@ -20,8 +20,6 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { assert } from 'console';
-
 import { Player } from './player';
 import { Password, password_from_json } from './password';
 import { UserRole } from './user_role';
@@ -183,7 +181,9 @@ export class User extends Player {
 	 * @pre Usernames are equal
 	 */
 	copy_player_data(p: Player): void {
-		assert(this.username == p.get_username());
+		if (this.username != p.get_username()) {
+			throw new Error(`Trying to dump data of user ${p.get_username()} into a different player ${this.username}`);
+		}
 
 		// copy all ratings
 		this.ratings = p.get_all_ratings();
