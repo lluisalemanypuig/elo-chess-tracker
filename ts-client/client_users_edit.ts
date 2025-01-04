@@ -15,6 +15,9 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+Full source code of elo-chess-tracker:
+	https://github.com/lluisalemanypuig/elo-chess-tracker
+
 Contact:
 	Lluís Alemany Puig
 	https://github.com/lluisalemanypuig
