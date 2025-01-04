@@ -117,26 +117,24 @@ function init_time_controls(time_control_array: any): void {
 function init_sessions(): void {
 	debug(log_now(), 'Initialize sessions...');
 
-	let memory = ServerMemory.get_instance();
-	// Session ids. Empty
-	memory.clear_session_ids();
+	ServerMemory.get_instance().clear_session_ids();
 }
 
 function init_users(): void {
 	debug(log_now(), 'Initialize users...');
 
-	let rating_system = RatingSystem.get_instance();
+	const rating_system = RatingSystem.get_instance();
 	let memory = ServerMemory.get_instance();
-	let dir = ServerEnvironment.get_instance().get_dir_users();
+	const dir = ServerEnvironment.get_instance().get_dir_users();
 
 	debug(log_now(), `    Reading directory '${dir}'`);
-	let all_user_files = fs.readdirSync(dir);
+	const all_user_files = fs.readdirSync(dir);
 
 	for (let i = 0; i < all_user_files.length; ++i) {
 		let user_file = path.join(dir, all_user_files[i]);
 
 		debug(log_now(), `        Reading file '${user_file}'`);
-		let user_data = fs.readFileSync(user_file, 'utf8');
+		const user_data = fs.readFileSync(user_file, 'utf8');
 		let user = user_from_json(user_data);
 
 		// make sure that all users have a rating for every time control
@@ -157,13 +155,13 @@ function init_challenges(): void {
 	debug(log_now(), 'Initialize challenges...');
 
 	let memory = ServerMemory.get_instance();
-	let dir = ServerEnvironment.get_instance().get_dir_challenges();
+	const dir = ServerEnvironment.get_instance().get_dir_challenges();
 
 	debug(log_now(), `    Reading directory '${dir}'`);
-	let all_challenges_files = fs.readdirSync(dir);
+	const all_challenges_files = fs.readdirSync(dir);
 
 	for (let i = 0; i < all_challenges_files.length; ++i) {
-		let challenge_file = path.join(dir, all_challenges_files[i]);
+		const challenge_file = path.join(dir, all_challenges_files[i]);
 
 		debug(log_now(), `        Reading file '${challenge_file}'`);
 		let challenge_data = fs.readFileSync(challenge_file, 'utf8');
@@ -182,7 +180,7 @@ function init_games(): void {
 	let max_game_id: number = 0;
 
 	debug(log_now(), `    Reading directory '${dir}'`);
-	let all_date_record_files = fs.readdirSync(dir);
+	const all_date_record_files = fs.readdirSync(dir);
 
 	for (let i = 0; i < all_date_record_files.length; ++i) {
 		const game_record_file = path.join(dir, all_date_record_files[i]);
