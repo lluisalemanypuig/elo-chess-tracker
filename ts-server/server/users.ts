@@ -54,8 +54,8 @@ export function user_retrieve(username: string): User | null {
 }
 
 export function user_overwrite(user: User): void {
-	let user_dir = ServerEnvironment.get_instance().get_dir_users();
-	let user_file = path.join(user_dir, user.get_username());
+	const user_dir = ServerEnvironment.get_instance().get_dir_users();
+	const user_file = path.join(user_dir, user.get_username());
 
 	debug(log_now(), `Overwriting file '${user_file}' of user '${user.get_username()}'`);
 	fs.writeFileSync(user_file, JSON.stringify(user, null, 4));
