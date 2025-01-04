@@ -96,7 +96,7 @@ export class ServerEnvironment {
 	private directory_challenges: string = '';
 
 	get_dir_database(): string {
-		return this.directory_games;
+		return this.directory_database;
 	}
 	get_dir_games(): string {
 		return this.directory_games;
@@ -122,7 +122,7 @@ export class ServerEnvironment {
 	private ssl_passphrase_file: string = '';
 
 	get_dir_ssl(): string {
-		return this.ssl_public_key_file;
+		return this.directory_ssl;
 	}
 	get_ssl_public_key_file(): string {
 		return this.ssl_public_key_file;
