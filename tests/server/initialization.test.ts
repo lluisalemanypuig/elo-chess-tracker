@@ -27,10 +27,10 @@ import { exec } from 'child_process';
 import path from 'path';
 
 import { server_init_from_data } from '../../ts-server/server/initialization';
-
+import { clear_server } from '../../ts-server/server/clear';
 import { RatingSystem } from '../../ts-server/server/rating_system';
 import { ServerConfiguration, ServerEnvironment } from '../../ts-server/server/environment';
-import { ServerChallenges, ServerGames, ServerUsers } from '../../ts-server/server/memory';
+import { ServerChallenges, ServerGames, ServerSessionID, ServerUsers } from '../../ts-server/server/memory';
 
 const webpage_dir = 'tests/webpage';
 const icons_dir = path.join(webpage_dir, 'icons');
@@ -86,34 +86,33 @@ const configuration = {
 	}
 };
 
-let configuration_bullet = configuration;
-configuration_bullet.time_controls.push({
-	id: 'Bullet',
-	name: 'Bullet (2 + 1)'
-});
-
 describe('Configure server', () => {
 	test('Load an empty server', () => {
 		exec('./tests/initialize_empty.sh', (_, __, ___) => {
 			server_init_from_data('tests/webpage', configuration);
+
 			const rating_system = RatingSystem.get_instance();
+			const server_users = ServerUsers.get_instance();
+			const server_challenges = ServerChallenges.get_instance();
+			const server_games = ServerGames.get_instance();
+			const server_configuration = ServerConfiguration.get_instance();
+			const server_session = ServerSessionID.get_instance();
+			const server_environment = ServerEnvironment.get_instance();
+
 			expect(rating_system.get_time_controls().length).toBe(4);
 			expect(rating_system.get_unique_time_controls_ids().length).toBe(3);
 
-			const server_users = ServerUsers.get_instance();
 			expect(server_users.num_users()).toBe(0);
 
-			const server_challenges = ServerChallenges.get_instance();
 			expect(server_challenges.num_challenges()).toBe(0);
 
-			const server_games = ServerGames.get_instance();
 			expect(server_games.get_max_game_id()).toBe(0);
 
-			const server_configuration = ServerConfiguration.get_instance();
 			expect(server_configuration.get_port_http()).toBe('8080');
 			expect(server_configuration.get_port_https()).toBe('8443');
 
-			const server_environment = ServerEnvironment.get_instance();
+			expect(server_session.num_session_ids()).toBe(0);
+
 			expect(server_environment.get_dir_database()).toEqual(db_dir);
 			expect(server_environment.get_dir_games()).toEqual(db_games_dir);
 			expect(server_environment.get_dir_users()).toEqual(db_users_dir);
@@ -132,5 +131,49 @@ describe('Configure server', () => {
 			expect(server_environment.get_title_login_page()).toEqual('Login title');
 			expect(server_environment.get_title_home_page()).toEqual('Home title');
 		});
+	});
+
+	test('Clear the server memory', () => {
+		clear_server();
+
+		const rating_system = RatingSystem.get_instance();
+		const server_users = ServerUsers.get_instance();
+		const server_challenges = ServerChallenges.get_instance();
+		const server_games = ServerGames.get_instance();
+		const server_configuration = ServerConfiguration.get_instance();
+		const server_session = ServerSessionID.get_instance();
+		const server_environment = ServerEnvironment.get_instance();
+
+		expect(rating_system.get_time_controls().length).toBe(0);
+		expect(rating_system.get_unique_time_controls_ids().length).toBe(0);
+
+		expect(server_users.num_users()).toBe(0);
+
+		expect(server_challenges.num_challenges()).toBe(0);
+
+		expect(server_games.get_max_game_id()).toBe(0);
+
+		expect(server_configuration.get_port_http()).toBe('');
+		expect(server_configuration.get_port_https()).toBe('');
+
+		expect(server_session.num_session_ids()).toBe(0);
+
+		expect(server_environment.get_dir_database()).toEqual('');
+		expect(server_environment.get_dir_games()).toEqual('');
+		expect(server_environment.get_dir_users()).toEqual('');
+		expect(server_environment.get_dir_challenges()).toEqual('');
+
+		expect(server_environment.get_dir_ssl()).toEqual('');
+		expect(server_environment.get_ssl_public_key_file()).toEqual('');
+		expect(server_environment.get_ssl_private_key_file()).toEqual('');
+		expect(server_environment.get_ssl_passphrase_file()).toEqual('');
+
+		expect(server_environment.get_dir_icons()).toEqual('');
+		expect(server_environment.get_icon_favicon()).toEqual('');
+		expect(server_environment.get_icon_login_page()).toEqual('');
+		expect(server_environment.get_icon_home_page()).toEqual('');
+
+		expect(server_environment.get_title_login_page()).toEqual('');
+		expect(server_environment.get_title_home_page()).toEqual('');
 	});
 });
