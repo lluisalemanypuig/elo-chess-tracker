@@ -52,6 +52,11 @@ export class ServerUsers {
 	private users: User[] = [];
 	private user_to_index: Map<string, number> = new Map();
 
+	clear(): void {
+		this.users = [];
+		this.user_to_index.clear();
+	}
+
 	add_user(u: User): void {
 		this.users.push(u);
 	}
@@ -92,6 +97,10 @@ export class ServerSessionID {
 
 	/// Session ids of the server.
 	private session_ids: SessionID[] = [];
+
+	clear(): void {
+		this.session_ids = [];
+	}
 
 	add_session_id(id: SessionID): void {
 		this.session_ids.push(id);
@@ -144,6 +153,10 @@ export class ServerChallenges {
 	/// The challenges in the system
 	private challenges: Challenge[] = [];
 
+	clear(): void {
+		this.challenges = [];
+	}
+
 	add_challenge(c: Challenge): void {
 		this.challenges.push(c);
 	}
@@ -181,6 +194,11 @@ export class ServerGames {
 	private max_game_id: number = 0;
 	/// Map from game ID to game record (file)
 	private game_id_to_record_date: Map<string, string> = new Map();
+
+	clear(): void {
+		this.max_game_id = 0;
+		this.game_id_to_record_date.clear();
+	}
 
 	/// Current maximum game ID
 	get_max_game_id(): number {

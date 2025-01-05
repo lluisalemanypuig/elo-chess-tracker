@@ -42,6 +42,16 @@ export class RatingSystem {
 		RatingSystem.instance = this;
 	}
 
+	/**
+	 * @brief Returns the only instance of this class
+	 * @returns The only instance of this class
+	 * @pre Method @ref initialize must have been called before
+	 */
+	static get_instance(): RatingSystem {
+		RatingSystem.instance = RatingSystem.instance || new RatingSystem();
+		return RatingSystem.instance;
+	}
+
 	/// Function to evaluate a game
 	private rating_formula: Function = () => void {};
 	/// Function to create a new rating
@@ -54,14 +64,12 @@ export class RatingSystem {
 	/// All unique rating ids used in the web
 	private all_unique_time_controls: string[] = [];
 
-	/**
-	 * @brief Returns the only instance of this class
-	 * @returns The only instance of this class
-	 * @pre Method @ref initialize must have been called before
-	 */
-	static get_instance(): RatingSystem {
-		RatingSystem.instance = RatingSystem.instance || new RatingSystem();
-		return RatingSystem.instance;
+	clear(): void {
+		this.rating_formula = () => void {};
+		this.new_rating = () => void {};
+		this.rating_from_JSON = () => void {};
+		this.all_time_controls = [];
+		this.all_unique_time_controls = [];
 	}
 
 	set_rating_formula(formula: Function): void {

@@ -29,6 +29,9 @@ import path from 'path';
  * @brief Configuration parameters of the server.
  */
 export class ServerConfiguration {
+	/// The only instance of this class
+	private static instance: ServerConfiguration;
+
 	/**
 	 * @brief Construct the server configuration
 	 */
@@ -40,9 +43,6 @@ export class ServerConfiguration {
 		ServerConfiguration.instance = this;
 	}
 
-	/// The only instance of this class
-	private static instance: ServerConfiguration;
-
 	static get_instance(): ServerConfiguration {
 		ServerConfiguration.instance = ServerConfiguration.instance || new ServerConfiguration();
 		return ServerConfiguration.instance;
@@ -50,6 +50,11 @@ export class ServerConfiguration {
 
 	private port_http: string = '';
 	private port_https: string = '';
+
+	clear(): void {
+		this.port_http = '';
+		this.port_https = '';
+	}
 
 	set_port_http(http: string): void {
 		this.port_http = http;
@@ -70,6 +75,9 @@ export class ServerConfiguration {
  * @brief Directories and other parameters of the server environment
  */
 export class ServerEnvironment {
+	/// The only instance of this class
+	private static instance: ServerEnvironment;
+
 	/**
 	 * @brief Construct the server configuration
 	 */
@@ -81,9 +89,6 @@ export class ServerEnvironment {
 		ServerEnvironment.instance = this;
 	}
 
-	/// The only instance of this class
-	private static instance: ServerEnvironment;
-
 	static get_instance(): ServerEnvironment {
 		ServerEnvironment.instance = ServerEnvironment.instance || new ServerEnvironment();
 		return ServerEnvironment.instance;
@@ -94,6 +99,13 @@ export class ServerEnvironment {
 	private directory_games: string = '';
 	private directory_users: string = '';
 	private directory_challenges: string = '';
+
+	clear_database(): void {
+		this.directory_database = '';
+		this.directory_games = '';
+		this.directory_users = '';
+		this.directory_challenges = '';
+	}
 
 	get_dir_database(): string {
 		return this.directory_database;
@@ -120,6 +132,13 @@ export class ServerEnvironment {
 	private ssl_public_key_file: string = '';
 	private ssl_private_key_file: string = '';
 	private ssl_passphrase_file: string = '';
+
+	clear_ssl(): void {
+		this.directory_ssl = '';
+		this.ssl_public_key_file = '';
+		this.ssl_private_key_file = '';
+		this.ssl_passphrase_file = '';
+	}
 
 	get_dir_ssl(): string {
 		return this.directory_ssl;
@@ -157,6 +176,13 @@ export class ServerEnvironment {
 	private icon_login_page: string = '';
 	private icon_home_page: string = '';
 
+	clear_icons(): void {
+		this.directory_icon = '';
+		this.icon_favicon = '';
+		this.icon_login_page = '';
+		this.icon_home_page = '';
+	}
+
 	get_dir_icons(): string {
 		return this.directory_icon;
 	}
@@ -181,6 +207,11 @@ export class ServerEnvironment {
 	private title_login_page: string = '';
 	private title_home_page: string = '';
 
+	clear_titles(): void {
+		this.title_login_page = '';
+		this.title_home_page = '';
+	}
+
 	get_title_login_page(): string {
 		return this.title_login_page;
 	}
@@ -191,5 +222,14 @@ export class ServerEnvironment {
 	set_titles_info(login_page: string, home_page: string): void {
 		this.title_login_page = login_page;
 		this.title_home_page = home_page;
+	}
+
+	// --------------------
+
+	clear(): void {
+		this.clear_database();
+		this.clear_ssl();
+		this.clear_icons();
+		this.clear_titles();
 	}
 }
