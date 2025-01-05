@@ -173,8 +173,8 @@ const classical = {
 	}
 };
 
-describe('Empty server', () => {
-	test('Create a user in an empty server', async () => {
+describe('Create users', () => {
+	test('In an empty server', async () => {
 		await run_command('./tests/initialize_empty.sh');
 
 		server_init_from_data('tests/webpage/', classical_rapid_blitz);
@@ -200,7 +200,7 @@ describe('Empty server', () => {
 		expect(user_get_all_names_and_usernames()).toEqual([['First Last', 'asdf']]);
 	});
 
-	test('Create a user in a non-empty server with different configuration', async () => {
+	test('In a non-empty server with different configuration', async () => {
 		clear_server();
 		server_init_from_data('tests/webpage/', classical_rapid_blitz_bullet);
 
@@ -227,6 +227,8 @@ describe('Empty server', () => {
 		const u = user_from_json(fs.readFileSync(qwer_user_file, 'utf8'));
 		expect(u.get_all_ratings().length).toBe(4);
 
+		expect(user_retrieve('qwer')).toEqual(new_user);
+
 		const all_users = user_get_all();
 
 		expect(all_users.length).toBe(2);
@@ -245,6 +247,9 @@ describe('Empty server', () => {
 					return pre && cur;
 				}, true)
 		).toEqual(true);
+
+		expect(user_exists('asdf')).toBe(true);
+		expect(user_exists('qwer')).toBe(true);
 	});
 
 	test('Check users with extra ratings', async () => {
@@ -262,5 +267,8 @@ describe('Empty server', () => {
 					return pre && cur;
 				}, true)
 		).toEqual(true);
+
+		expect(user_exists('asdf')).toBe(true);
+		expect(user_exists('qwer')).toBe(true);
 	});
 });
