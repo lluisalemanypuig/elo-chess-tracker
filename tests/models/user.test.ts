@@ -115,6 +115,9 @@ describe('Elo', () => {
 		expect(u.get_first_name()).toEqual('Perico');
 		expect(u.get_last_name()).toEqual('Palotes');
 		expect(u.get_full_name()).toEqual('Perico Palotes');
+
+		u.set_password(new Password('a', 'b'));
+		expect(u.get_password()).toEqual(new Password('a', 'b'));
 	});
 
 	test('Adding games', () => {
