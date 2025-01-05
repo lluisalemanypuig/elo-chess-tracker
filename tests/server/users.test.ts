@@ -35,11 +35,8 @@ import {
 	user_get_all_names_and_usernames,
 	user_retrieve
 } from '../../ts-server/server/users';
-import { User, user_from_json } from '../../ts-server/models/user';
-import { Password } from '../../ts-server/models/password';
+import { user_from_json } from '../../ts-server/models/user';
 import { ADMIN } from '../../ts-server/models/user_role';
-import { encrypt_password_for_user } from '../../ts-server/utils/encrypt';
-import { RatingSystem } from '../../ts-server/server/rating_system';
 
 const webpage_dir = 'tests/webpage';
 const db_dir = path.join(webpage_dir, 'database');
@@ -91,26 +88,64 @@ const configuration = {
 	}
 };
 
+/*
+const configuration_bullet = {
+	ssl_certificate: {
+		public_key_file: 'sadf',
+		private_key_file: 'qwer',
+		passphrase_file: 'kgj68'
+	},
+	ports: {
+		http: '8080',
+		https: '8443'
+	},
+	favicon: 'favicon.png',
+	login_page: {
+		title: 'Login title',
+		icon: 'login.png'
+	},
+	home_page: {
+		title: 'Home title',
+		icon: 'home.png'
+	},
+	rating_system: 'Elo',
+	time_controls: [
+		{
+			id: 'Classical',
+			name: 'Classical (90 + 30)'
+		},
+		{
+			id: 'Rapid',
+			name: 'Rapid (12 + 5)'
+		},
+		{
+			id: 'Rapid',
+			name: 'Rapid (10 + 0)'
+		},
+		{
+			id: 'Blitz',
+			name: 'Blitz (5 + 3)'
+		},
+		{
+			id: 'Bulet',
+			name: 'Bullet (2 + 1)'
+		}
+	],
+	permissions: {
+		admin: ['challenge_user', 'challenge_admin', 'challenge_member', 'challenge_teacher', 'challenge_student'],
+		teacher: ['challenge_user', 'challenge_admin', 'challenge_member', 'challenge_teacher', 'challenge_student'],
+		member: ['challenge_user', 'challenge_admin', 'challenge_member', 'challenge_teacher', 'challenge_student'],
+		student: ['challenge_user', 'challenge_admin', 'challenge_member', 'challenge_teacher', 'challenge_student']
+	}
+};
+*/
+
 describe('Empty server', () => {
 	test('Create a single admin user', () => {
 		exec('./tests/initialize_empty.sh', (_, __, ___) => {
 			server_init_from_data('tests/webpage/', configuration);
 
-			const rating_system = RatingSystem.get_instance();
-
-			const u = (() => {
-				const [pass, iv] = encrypt_password_for_user('user.name', 'password');
-				let user = new User('user.name', 'First', 'Last', new Password(pass, iv), [ADMIN], [], []);
-				const all_time_controls = rating_system.get_time_controls();
-				for (let i = 0; i < all_time_controls.length; ++i) {
-					if (!user.has_rating(all_time_controls[i].id)) {
-						user.add_rating(all_time_controls[i].id, rating_system.get_new_rating());
-					}
-				}
-				return user;
-			})();
-
-			user_add_new(u);
+			const u = user_add_new('user.name', 'First', 'Last', 'password', [ADMIN]);
 
 			const user_file = path.join(db_users_dir, 'user.name');
 			expect(fs.existsSync(user_file)).toBe(true);
