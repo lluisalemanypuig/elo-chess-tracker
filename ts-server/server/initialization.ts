@@ -150,8 +150,9 @@ function init_users(): void {
 			}
 		}
 
-		memory.add_user_index(user, i);
+		memory.add_user(user);
 		if (update_user_file) {
+			debug(log_now(), `Overwriting file '${user_file}' of user '${user.get_username()}'`);
 			fs.writeFileSync(user_file, JSON.stringify(user, null, 4));
 		}
 		debug(log_now(), `    User '${user.get_username()}' is at index '${i}'`);

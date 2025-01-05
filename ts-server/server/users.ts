@@ -33,7 +33,6 @@ import { User } from '../models/user';
 import { ServerUsers } from './memory';
 import { ServerEnvironment } from './environment';
 import { log_now } from '../utils/misc';
-import { assert } from 'console';
 import { UserRole } from '../models/user_role';
 import { Password } from '../models/password';
 import { encrypt_password_for_user } from '../utils/encrypt';
@@ -60,8 +59,6 @@ export function user_retrieve(username: string): User | null {
 export function user_overwrite(user: User): void {
 	const user_dir = ServerEnvironment.get_instance().get_dir_users();
 	const user_file = path.join(user_dir, user.get_username());
-
-	debug(log_now(), `Overwriting file '${user_file}' of user '${user.get_username()}'`);
 	fs.writeFileSync(user_file, JSON.stringify(user, null, 4));
 }
 
@@ -76,7 +73,6 @@ export function user_rename_and_reassign_roles(
 	user.set_first_name(first_name);
 	user.set_last_name(last_name);
 	user.set_roles(roles);
-
 	user_overwrite(user);
 }
 
@@ -105,7 +101,7 @@ export function user_get_all(): User[] {
  * @post Server is updated:
  * - New file for user.
  * - Server is updated to contain the new user.
- * - New user is returned.
+ * @returns The new user created.
  */
 export function user_add_new(
 	username: string,
@@ -135,12 +131,10 @@ export function user_add_new(
 	const user_dir = ServerEnvironment.get_instance().get_dir_users();
 	const user_file = path.join(user_dir, user.get_username());
 
-	debug(log_now(), `Writing file '${user_file}' of new user '${user.get_username()}'`);
 	fs.writeFileSync(user_file, JSON.stringify(user, null, 4));
 
-	debug(log_now(), `Adding user to memory`);
 	let mem = ServerUsers.get_instance();
-	mem.add_user_index(user, mem.num_users() - 1);
+	mem.add_user(user);
 
 	return user;
 }
@@ -178,7 +172,9 @@ export function user_update_from_players_data(players: Player[]): void {
 	}
 
 	// lengths must be equal
-	assert(users_to_update.length == players.length);
+	if (users_to_update.length != players.length) {
+		throw new Error("Lengths of 'users_to_update' and 'players' is not the same.");
+	}
 
 	let mem = ServerUsers.get_instance();
 

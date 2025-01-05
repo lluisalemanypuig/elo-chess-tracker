@@ -58,9 +58,7 @@ export class ServerUsers {
 	}
 
 	add_user(u: User): void {
-		this.users.push(u);
-	}
-	add_user_index(u: User, i: number): void {
+		const i = this.users.length;
 		this.users.push(u);
 		this.user_to_index.set(u.get_username(), i);
 	}
