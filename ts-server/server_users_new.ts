@@ -34,10 +34,6 @@ import { user_add_new, user_exists } from './server/users';
 import { User } from './models/user';
 import { is_role_string_correct } from './models/user_role';
 import { CREATE_USER, ASSIGN_ROLE_USER, get_role_action_name, ASSIGN_ROLE_ID } from './models/user_action';
-import { encrypt_password_for_user } from './utils/encrypt';
-import { Password } from './models/password';
-import { TimeControlRating } from './models/time_control_rating';
-import { RatingSystem } from './server/rating_system';
 import { SessionID } from './models/session_id';
 
 export async function get_users_create_page(req: any, res: any) {
@@ -86,28 +82,28 @@ export async function post_users_create(req: any, res: any) {
 		return;
 	}
 
-	const new_username = req.body.u;
-	const new_firstname = req.body.fn;
-	const new_lastname = req.body.ln;
-	const new_roles = req.body.r;
-	const new_password = req.body.p;
+	const username = req.body.u;
+	const firstname = req.body.fn;
+	const lastname = req.body.ln;
+	const password = req.body.p;
+	const roles = req.body.r;
 
 	debug(log_now(), `User '${req.cookies.user}' is trying to create a new user:`);
-	debug(log_now(), `    Username: '${new_username}'`);
-	debug(log_now(), `    First name: '${new_firstname}'`);
-	debug(log_now(), `    Last name: '${new_lastname}'`);
-	debug(log_now(), `    Roles: '${new_roles}'`);
+	debug(log_now(), `    Username: '${username}'`);
+	debug(log_now(), `    First name: '${firstname}'`);
+	debug(log_now(), `    Last name: '${lastname}'`);
+	debug(log_now(), `    Roles: '${roles}'`);
 
-	if (user_exists(new_username)) {
+	if (user_exists(username)) {
 		res.send({
 			r: '0',
-			reason: `User '${new_username}' already exists`
+			reason: `User '${username}' already exists`
 		});
 		return;
 	}
 
-	for (let i = 0; i < new_roles.length; ++i) {
-		const r = new_roles[i];
+	for (let i = 0; i < roles.length; ++i) {
+		const r = roles[i];
 		if (!is_role_string_correct(r)) {
 			res.send({
 				r: '0',
@@ -126,27 +122,6 @@ export async function post_users_create(req: any, res: any) {
 		}
 	}
 
-	// encrypt password
-	const password = encrypt_password_for_user(new_username, new_password);
-
-	const rating_system = RatingSystem.get_instance();
-	let ratings: TimeControlRating[] = [];
-
-	debug(rating_system.get_unique_time_controls_ids());
-	rating_system.get_unique_time_controls_ids().forEach((id: string) => {
-		ratings.push(new TimeControlRating(id, rating_system.get_new_rating()));
-	});
-
-	let u = new User(
-		new_username,
-		new_firstname,
-		new_lastname,
-		new Password(password[0], password[1]),
-		new_roles,
-		[], // empty set of games
-		ratings
-	);
-
-	user_add_new(u);
+	user_add_new(username, firstname, lastname, password, roles);
 	res.send({ r: '1' });
 }

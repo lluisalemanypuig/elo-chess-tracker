@@ -35,6 +35,10 @@ import { ServerEnvironment } from './environment';
 import { log_now } from '../utils/misc';
 import { assert } from 'console';
 import { UserRole } from '../models/user_role';
+import { Password } from '../models/password';
+import { encrypt_password_for_user } from '../utils/encrypt';
+import { RatingSystem } from './rating_system';
+import { TimeControlRating } from '../models/time_control_rating';
 
 /**
  * @brief Returns a User object from a username.
@@ -93,22 +97,52 @@ export function user_get_all(): User[] {
 
 /**
  * @brief Creates a new user.
- * @param u New user
+ * @param username User name of the new user.
+ * @param firstname First name of the new user.
+ * @param lastname Last name of the new user.
+ * @param pass Plain text password.
+ * @param roles List of roles of the new user.
  * @post Server is updated:
- * - New file for user
- * - ServerMemory contains user (list of users is not sorted)
- * - ServerMemory relates the new user to its position in the list of users
+ * - New file for user.
+ * - Server is updated to contain the new user.
+ * - New user is returned.
  */
-export function user_add_new(u: User): void {
-	let user_dir = ServerEnvironment.get_instance().get_dir_users();
-	let user_file = path.join(user_dir, u.get_username());
+export function user_add_new(
+	username: string,
+	firstname: string,
+	lastname: string,
+	pass: string,
+	roles: UserRole[]
+): User {
+	const rating_system = RatingSystem.get_instance();
+	let ratings: TimeControlRating[] = [];
+	rating_system.get_unique_time_controls_ids().forEach((id: string) => {
+		ratings.push(new TimeControlRating(id, rating_system.get_new_rating()));
+	});
 
-	debug(log_now(), `Writing file '${user_file}' of new user '${u.get_username()}'`);
-	fs.writeFileSync(user_file, JSON.stringify(u, null, 4));
+	const password = encrypt_password_for_user(username, pass);
+
+	const user = new User(
+		username,
+		firstname,
+		lastname,
+		new Password(password[0], password[1]),
+		roles,
+		[], // empty set of games
+		ratings
+	);
+
+	const user_dir = ServerEnvironment.get_instance().get_dir_users();
+	const user_file = path.join(user_dir, user.get_username());
+
+	debug(log_now(), `Writing file '${user_file}' of new user '${user.get_username()}'`);
+	fs.writeFileSync(user_file, JSON.stringify(user, null, 4));
 
 	debug(log_now(), `Adding user to memory`);
 	let mem = ServerUsers.get_instance();
-	mem.add_user_index(u, mem.num_users() - 1);
+	mem.add_user_index(user, mem.num_users() - 1);
+
+	return user;
 }
 
 /// Returns the list of all names and usernames
@@ -129,7 +163,7 @@ export function user_get_all_names_and_usernames(): [string, string][] {
  * @post Users in the server (memory and database) are updated.
  */
 export function user_update_from_players_data(players: Player[]): void {
-	let server_dirs = ServerEnvironment.get_instance();
+	const server_dirs = ServerEnvironment.get_instance();
 
 	let users_to_update: User[] = [];
 
