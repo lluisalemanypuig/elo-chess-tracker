@@ -23,7 +23,6 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { exec } from 'child_process';
 import path from 'path';
 import fs from 'fs';
 
@@ -36,7 +35,9 @@ import {
 	user_retrieve
 } from '../../ts-server/server/users';
 import { user_from_json } from '../../ts-server/models/user';
-import { ADMIN } from '../../ts-server/models/user_role';
+import { ADMIN, TEACHER } from '../../ts-server/models/user_role';
+import { clear_server } from '../../ts-server/server/clear';
+import { run_command } from './exec_utils';
 
 const webpage_dir = 'tests/webpage';
 const db_dir = path.join(webpage_dir, 'database');
@@ -88,7 +89,6 @@ const configuration = {
 	}
 };
 
-/*
 const configuration_bullet = {
 	ssl_certificate: {
 		public_key_file: 'sadf',
@@ -138,31 +138,62 @@ const configuration_bullet = {
 		student: ['challenge_user', 'challenge_admin', 'challenge_member', 'challenge_teacher', 'challenge_student']
 	}
 };
-*/
 
 describe('Empty server', () => {
-	test('Create a single admin user', () => {
-		exec('./tests/initialize_empty.sh', (_, __, ___) => {
-			server_init_from_data('tests/webpage/', configuration);
+	test('Create a user in an empty server', async () => {
+		await run_command('./tests/initialize_empty.sh');
 
-			const u = user_add_new('user.name', 'First', 'Last', 'password', [ADMIN]);
+		server_init_from_data('tests/webpage/', configuration);
 
+		const u = user_add_new('user.name', 'First', 'Last', 'password', [ADMIN]);
+
+		const user_file = path.join(db_users_dir, 'user.name');
+		expect(fs.existsSync(user_file)).toBe(true);
+
+		const u2 = user_from_json(fs.readFileSync(user_file, 'utf8'));
+		expect(u).toEqual(u2);
+
+		expect(user_exists('user.name')).toBe(true);
+
+		const all_users = user_get_all();
+		expect(all_users.length).toBe(1);
+		expect(all_users[0]).toEqual(u);
+		expect(all_users[0]).toEqual(u2);
+		expect(user_retrieve('user.name')).toEqual(u);
+		expect(user_retrieve('user.name')).toEqual(u2);
+
+		expect(user_get_all_names_and_usernames()).toEqual([['First Last', 'user.name']]);
+	});
+
+	test('Create a user in an empty server', async () => {
+		clear_server();
+		server_init_from_data('tests/webpage/', configuration_bullet);
+
+		{
 			const user_file = path.join(db_users_dir, 'user.name');
 			expect(fs.existsSync(user_file)).toBe(true);
 
-			const u2 = user_from_json(fs.readFileSync(user_file, 'utf8'));
-			expect(u).toEqual(u2);
-
-			expect(user_exists('user.name')).toBe(true);
-
 			const all_users = user_get_all();
 			expect(all_users.length).toBe(1);
-			expect(all_users[0]).toEqual(u);
-			expect(all_users[0]).toEqual(u2);
-			expect(user_retrieve('user.name')).toEqual(u);
-			expect(user_retrieve('user.name')).toEqual(u2);
-
+			expect(all_users[0].get_first_name()).toEqual('First');
+			expect(all_users[0].get_last_name()).toEqual('Last');
+			expect(all_users[0].get_roles()).toEqual([ADMIN]);
 			expect(user_get_all_names_and_usernames()).toEqual([['First Last', 'user.name']]);
-		});
+		}
+
+		{
+			const u = user_add_new('user.name2', 'Perico', 'Palotes', 'password', [TEACHER]);
+
+			const user_file = path.join(db_users_dir, 'user.name2');
+			expect(fs.existsSync(user_file)).toBe(true);
+
+			const all_users = user_get_all();
+			expect(all_users.length).toBe(2);
+			expect(all_users[1]).toEqual(u);
+			expect(user_get_all_names_and_usernames()).toEqual([
+				['First Last', 'user.name'],
+				['Perico Palotes', 'user.name2']
+			]);
+		}
 	});
 });
