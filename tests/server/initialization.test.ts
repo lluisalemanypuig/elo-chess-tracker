@@ -23,7 +23,6 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { exec } from 'child_process';
 import path from 'path';
 
 import { server_init_from_data } from '../../ts-server/server/initialization';
