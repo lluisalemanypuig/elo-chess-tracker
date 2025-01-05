@@ -32,12 +32,17 @@ import {
 	user_exists,
 	user_get_all,
 	user_get_all_names_and_usernames,
-	user_retrieve
+	user_rename_and_reassign_roles,
+	user_retrieve,
+	user_update_from_players_data
 } from '../../ts-server/server/users';
 import { User, user_from_json } from '../../ts-server/models/user';
-import { ADMIN, TEACHER } from '../../ts-server/models/user_role';
+import { ADMIN, MEMBER, STUDENT, TEACHER } from '../../ts-server/models/user_role';
 import { clear_server } from '../../ts-server/server/clear';
 import { run_command } from './exec_utils';
+import { Player } from '../../ts-server/models/player';
+import { TimeControlRating } from '../../ts-server/models/time_control_rating';
+import { EloRating } from '../../ts-server/rating_framework/Elo/rating';
 
 const webpage_dir = 'tests/webpage';
 const db_dir = path.join(webpage_dir, 'database');
@@ -176,15 +181,15 @@ const classical = {
 describe('Create users', () => {
 	test('In an empty server', async () => {
 		await run_command('./tests/initialize_empty.sh');
-
+		clear_server();
 		server_init_from_data('tests/webpage/', classical_rapid_blitz);
 
 		const new_user = user_add_new('asdf', 'First', 'Last', 'password', [ADMIN]);
 
 		{
-			const user_file = path.join(db_users_dir, 'asdf');
-			expect(fs.existsSync(user_file)).toBe(true);
-			const u = user_from_json(fs.readFileSync(user_file, 'utf8'));
+			const asdf_user_file = path.join(db_users_dir, 'asdf');
+			expect(fs.existsSync(asdf_user_file)).toBe(true);
+			const u = user_from_json(fs.readFileSync(asdf_user_file, 'utf8'));
 			expect(new_user).toEqual(u);
 			expect(u.get_all_ratings().length).toBe(3);
 		}
@@ -270,5 +275,133 @@ describe('Create users', () => {
 
 		expect(user_exists('asdf')).toBe(true);
 		expect(user_exists('qwer')).toBe(true);
+	});
+});
+
+describe('Modify existing users', () => {
+	test('Newly created user', async () => {
+		await run_command('./tests/initialize_empty.sh');
+
+		clear_server();
+		server_init_from_data('tests/webpage/', classical_rapid_blitz);
+
+		const new_user = user_add_new('asdf', 'First', 'Last', 'password', [ADMIN]);
+
+		const asdf_user_file = path.join(db_users_dir, 'asdf');
+
+		{
+			expect(fs.existsSync(asdf_user_file)).toBe(true);
+			const u = user_from_json(fs.readFileSync(asdf_user_file, 'utf8'));
+			expect(new_user).toEqual(u);
+		}
+
+		const modified_user = user_rename_and_reassign_roles('asdf', 'QQQ', 'WWW', [TEACHER]);
+
+		expect(user_retrieve('asdf')).toEqual(modified_user);
+		expect(user_exists('asdf')).toBe(true);
+		expect(user_get_all_names_and_usernames()).toEqual([['QQQ WWW', 'asdf']]);
+
+		{
+			expect(fs.existsSync(asdf_user_file)).toBe(true);
+			const u = user_from_json(fs.readFileSync(asdf_user_file, 'utf8'));
+			expect(modified_user).toEqual(u);
+			expect(u.get_first_name()).toEqual('QQQ');
+			expect(u.get_last_name()).toEqual('WWW');
+			expect(u.get_roles()).toEqual([TEACHER]);
+		}
+	});
+
+	test('Already existing user', () => {
+		clear_server();
+		server_init_from_data('tests/webpage/', classical_rapid_blitz);
+
+		const modified_user = user_rename_and_reassign_roles('asdf', 'FFF', 'GGG', [ADMIN, MEMBER]);
+
+		const asdf_user_file = path.join(db_users_dir, 'asdf');
+		expect(fs.existsSync(asdf_user_file)).toBe(true);
+		const u = user_from_json(fs.readFileSync(asdf_user_file, 'utf8'));
+		expect(modified_user).toEqual(u);
+		expect(u.get_first_name()).toEqual('FFF');
+		expect(u.get_last_name()).toEqual('GGG');
+		expect(u.get_roles()).toEqual([ADMIN, MEMBER]);
+
+		expect(user_retrieve('asdf')).toEqual(modified_user);
+		expect(user_exists('asdf')).toBe(true);
+		expect(user_get_all_names_and_usernames()).toEqual([['FFF GGG', 'asdf']]);
+	});
+
+	test('Modify users in bulk (', () => {
+		clear_server();
+		server_init_from_data('tests/webpage/', classical_rapid_blitz);
+
+		user_add_new('aa', 'A', 'a', 'pass_a', [ADMIN]);
+		user_add_new('bb', 'B', 'b', 'pass_b', [MEMBER]);
+		user_add_new('cc', 'C', 'c', 'pass_c', [MEMBER]);
+		user_add_new('dd', 'D', 'd', 'pass_d', [STUDENT]);
+		user_add_new('ee', 'E', 'e', 'pass_e', [STUDENT]);
+		user_add_new('ff', 'F', 'f', 'pass_f', [STUDENT]);
+
+		const aa_Classical = new TimeControlRating('Classical', new EloRating(2000, 10, 10, 0, 0, 40, false));
+		const aa_Blitz = new TimeControlRating('Blitz', new EloRating(300, 100, 0, 0, 100, 40, false));
+		const aa_Rapid = new TimeControlRating('Rapid', new EloRating(1000, 100, 0, 50, 50, 40, false));
+		const rating_aa = [aa_Classical, aa_Blitz, aa_Rapid];
+
+		const bb_Classical = new TimeControlRating('Classical', new EloRating(2500, 2000, 1999, 0, 1, 10, true));
+		const bb_Blitz = new TimeControlRating('Blitz', new EloRating(2000, 10, 10, 0, 0, 40, false));
+		const bb_Rapid = new TimeControlRating('Rapid', new EloRating(1000, 100, 0, 0, 100, 40, false));
+		const rating_bb = [bb_Classical, bb_Blitz, bb_Rapid];
+
+		const cc_Classical = new TimeControlRating('Classical', new EloRating(2000, 10, 10, 0, 0, 40, false));
+		const cc_Blitz = new TimeControlRating('Blitz', new EloRating(300, 100, 0, 0, 100, 40, false));
+		const cc_Rapid = new TimeControlRating('Rapid', new EloRating(2000, 10, 10, 0, 0, 40, false));
+		const rating_cc = [cc_Classical, cc_Blitz, cc_Rapid];
+
+		const dd_Classical = new TimeControlRating('Classical', new EloRating(2500, 2000, 1999, 0, 1, 10, true));
+		const dd_Rapid = new TimeControlRating('Rapid', new EloRating(1000, 100, 0, 0, 100, 40, false));
+		const rating_dd = [dd_Classical, dd_Rapid];
+
+		const ee_Blitz = new TimeControlRating('Blitz', new EloRating(300, 100, 0, 0, 100, 40, false));
+		const ee_Rapid = new TimeControlRating('Rapid', new EloRating(2000, 10, 10, 0, 0, 40, false));
+		const rating_ee = [ee_Blitz, ee_Rapid];
+
+		const ff_Classical = new TimeControlRating('Classical', new EloRating(2500, 2000, 1999, 0, 1, 10, true));
+		const ff_Blitz = new TimeControlRating('Blitz', new EloRating(2000, 10, 10, 0, 0, 40, false));
+		const rating_ff = [ff_Classical, ff_Blitz];
+
+		user_update_from_players_data([
+			new Player('aa', rating_aa),
+			new Player('bb', rating_bb),
+			new Player('cc', rating_cc),
+			new Player('dd', rating_dd),
+			new Player('ee', rating_ee),
+			new Player('ff', rating_ff)
+		]);
+
+		const user_aa = user_retrieve('aa') as User;
+		expect(user_aa.get_rating('Blitz')).toEqual(aa_Blitz.rating);
+		expect(user_aa.get_rating('Classical')).toEqual(aa_Classical.rating);
+		expect(user_aa.get_rating('Rapid')).toEqual(aa_Rapid.rating);
+
+		const user_bb = user_retrieve('bb') as User;
+		expect(user_bb.get_rating('Blitz')).toEqual(bb_Blitz.rating);
+		expect(user_bb.get_rating('Classical')).toEqual(bb_Classical.rating);
+		expect(user_bb.get_rating('Rapid')).toEqual(bb_Rapid.rating);
+
+		const user_cc = user_retrieve('cc') as User;
+		expect(user_cc.get_rating('Blitz')).toEqual(cc_Blitz.rating);
+		expect(user_cc.get_rating('Classical')).toEqual(cc_Classical.rating);
+		expect(user_cc.get_rating('Rapid')).toEqual(cc_Rapid.rating);
+
+		const user_dd = user_retrieve('dd') as User;
+		expect(user_dd.get_rating('Classical')).toEqual(dd_Classical.rating);
+		expect(user_dd.get_rating('Rapid')).toEqual(dd_Rapid.rating);
+
+		const user_ee = user_retrieve('ee') as User;
+		expect(user_ee.get_rating('Blitz')).toEqual(ee_Blitz.rating);
+		expect(user_ee.get_rating('Rapid')).toEqual(ee_Rapid.rating);
+
+		const user_ff = user_retrieve('ff') as User;
+		expect(user_ff.get_rating('Blitz')).toEqual(ff_Blitz.rating);
+		expect(user_ff.get_rating('Classical')).toEqual(ff_Classical.rating);
 	});
 });
