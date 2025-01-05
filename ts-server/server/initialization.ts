@@ -131,21 +131,27 @@ function init_users(): void {
 	const all_user_files = fs.readdirSync(dir);
 
 	for (let i = 0; i < all_user_files.length; ++i) {
-		let user_file = path.join(dir, all_user_files[i]);
+		const user_file = path.join(dir, all_user_files[i]);
 
 		debug(log_now(), `        Reading file '${user_file}'`);
 		const user_data = fs.readFileSync(user_file, 'utf8');
 		let user = user_from_json(user_data);
 
+		// maybe the file the user was read from has to be updated
+		let update_user_file: boolean = false;
 		// make sure that all users have a rating for every time control
 		const all_time_controls = rating_system.get_time_controls();
 		for (let i = 0; i < all_time_controls.length; ++i) {
 			if (!user.has_rating(all_time_controls[i].id)) {
 				user.add_rating(all_time_controls[i].id, rating_system.get_new_rating());
+				update_user_file = true;
 			}
 		}
 
 		memory.add_user_index(user, i);
+		if (update_user_file) {
+			fs.writeFileSync(user_file, JSON.stringify(user, null, 4));
+		}
 		debug(log_now(), `    User '${user.get_username()}' is at index '${i}'`);
 	}
 	debug(log_now(), `    Found ${memory.num_users()} users.`);
