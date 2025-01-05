@@ -23,7 +23,6 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-//import { assert } from 'console';
 import { Challenge, challenge_from_json } from '../../ts-server/models/challenge';
 
 describe('Sets and gets', () => {
