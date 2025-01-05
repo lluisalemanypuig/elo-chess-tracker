@@ -23,7 +23,6 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { assert } from 'console';
 import { EdgeMetadata, edge_metadata_from_json } from './edge_metadata';
 
 /**
@@ -48,7 +47,10 @@ export class Edge {
 
 	/// Merge two edges
 	merge(other: Edge): void {
-		assert(this.neighbor == other.neighbor);
+		if (this.neighbor != other.neighbor) {
+			throw new Error('The edge belongs to different people');
+		}
+
 		if (this.metadata != undefined && other.metadata != undefined) {
 			this.metadata.merge(other.metadata);
 		}

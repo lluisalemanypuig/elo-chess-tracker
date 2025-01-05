@@ -23,8 +23,6 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { assert } from 'console';
-
 /// Generic class for a rating.
 export class Rating {
 	/// Actual rating
@@ -53,7 +51,11 @@ export class Rating {
 		this.drawn = drawn;
 		this.lost = lost;
 
-		assert(this.num_games == this.won + this.drawn + this.lost);
+		if (this.num_games != this.won + this.drawn + this.lost) {
+			throw new Error(
+				`Consistency check: total number of games is not equal to the sum of won, drawn and lost. Total ${this.num_games}; Won: ${this.won}; Drawn: ${this.drawn}, Lost: ${this.lost}`
+			);
+		}
 	}
 
 	clone(): Rating {

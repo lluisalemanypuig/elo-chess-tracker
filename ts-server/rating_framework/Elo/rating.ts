@@ -42,6 +42,7 @@ export class EloRating extends Rating {
 	 * @param drawn Number of drawn games
 	 * @param lost Number of lost games
 	 * @param K Constant
+	 * @param surpassed_2400 Has the 2400 threshold rating ever been surpassed?
 	 */
 	constructor(
 		rating: number,

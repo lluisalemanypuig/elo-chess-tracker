@@ -41,7 +41,7 @@ export class Player {
 	/**
 	 * @brief Constructor
 	 * @param username User name of the player.
-	 * @param classical Information about classical games.
+	 * @param ratings All the ratings of this user.
 	 */
 	constructor(username: string, ratings: TimeControlRating[]) {
 		this.username = username;

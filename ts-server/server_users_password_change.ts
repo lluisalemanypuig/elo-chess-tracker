@@ -41,7 +41,7 @@ export async function get_users_password_change_page(req: any, res: any) {
 
 	const session = new SessionID(req.cookies.session_id, req.cookies.user);
 
-	let r = is_user_logged_in(session);
+	const r = is_user_logged_in(session);
 	if (!r[0]) {
 		res.send(r[1]);
 		return;

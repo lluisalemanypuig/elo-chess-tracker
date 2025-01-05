@@ -74,12 +74,12 @@ function filter_game_list(filter_game_record: Function, filter_game: Function, u
 
 		// read the games from the file
 		debug(log_now(), `    Reading game record '${game_record_file}'...`);
-		let data = fs.readFileSync(game_record_file, 'utf8');
+		const data = fs.readFileSync(game_record_file, 'utf8');
 		debug(log_now(), `        Game record '${game_record_file}' read.`);
-		let game_set = game_set_from_json(data);
+		const game_set = game_set_from_json(data);
 
 		for (let j = game_set.length - 1; j >= 0; --j) {
-			let g = game_set[j];
+			const g = game_set[j];
 
 			if (!filter_game(g)) {
 				continue;

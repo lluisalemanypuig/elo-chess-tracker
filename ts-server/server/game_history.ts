@@ -340,9 +340,7 @@ function game_insert_in_history(game: Game, date_record_str: string): void {
 	if (all_date_record_strs.length == 0) {
 		debug(log_now(), 'There are no game records.');
 		debug(log_now(), `Simply write into file '${date_record_file}'`);
-		fs.writeFileSync(date_record_file, JSON.stringify([game], null, 4), {
-			flag: 'w'
-		});
+		fs.writeFileSync(date_record_file, JSON.stringify([game], null, 4));
 
 		// update the players in the server memory
 		user_update_from_players_data(updated_players);
@@ -365,9 +363,7 @@ function game_insert_in_history(game: Game, date_record_str: string): void {
 		debug(log_now(), `Writing game into game record file '${date_record_file}'...`);
 
 		// The file does not exist. Create the file and dump the game into it.
-		fs.writeFileSync(date_record_file, JSON.stringify([game], null, 4), {
-			flag: 'w'
-		});
+		fs.writeFileSync(date_record_file, JSON.stringify([game], null, 4));
 	}
 
 	// The record file did not exist => no games on that day
@@ -409,9 +405,7 @@ function game_insert_in_history(game: Game, date_record_str: string): void {
 		update_game_record(game_set, game_idx + 1, game.get_time_control_id(), updated_players, player_to_index);
 
 		debug(log_now(), `    Writing game record '${date_record_file}'...`);
-		fs.writeFileSync(date_record_file, JSON.stringify(game_set, null, 4), {
-			flag: 'w'
-		});
+		fs.writeFileSync(date_record_file, JSON.stringify(game_set, null, 4));
 		debug(log_now(), `        Game record '${date_record_file}' written.`);
 
 		// if the record already exists then 'record_index_in_list' points
@@ -440,9 +434,7 @@ function game_insert_in_history(game: Game, date_record_str: string): void {
 
 		// update the record file
 		debug(log_now(), `    Writing game record '${date_record_file}'...`);
-		fs.writeFileSync(date_record_file, JSON.stringify(game_set, null, 4), {
-			flag: 'w'
-		});
+		fs.writeFileSync(date_record_file, JSON.stringify(game_set, null, 4));
 		debug(log_now(), `        Game record '${date_record_file}' written.`);
 	}
 
@@ -552,9 +544,7 @@ export function game_edit_result(game_id: string, new_result: GameResult): void 
 	// update record of the current game
 	update_game_record(game_set, idx_in_game_set + 1, game.get_time_control_id(), updated_players, player_to_index);
 	debug(log_now(), `    Writing game record '${date_record_filename}'...`);
-	fs.writeFileSync(date_record_filename, JSON.stringify(game_set, null, 4), {
-		flag: 'w'
-	});
+	fs.writeFileSync(date_record_filename, JSON.stringify(game_set, null, 4));
 	debug(log_now(), `        Game record '${date_record_filename}' written.`);
 
 	debug(log_now(), 'Update the rest of the records...');
@@ -577,7 +567,7 @@ export function game_edit_result(game_id: string, new_result: GameResult): void 
 
 		// update the record file
 		debug(log_now(), `    Writing game record '${date_record_filename}'...`);
-		fs.writeFileSync(date_record_filename, JSON.stringify(game_set, null, 4), { flag: 'w' });
+		fs.writeFileSync(date_record_filename, JSON.stringify(game_set, null, 4));
 		debug(log_now(), `        Game record '${date_record_filename}' written.`);
 	}
 
@@ -636,7 +626,7 @@ export function recalculate_Elo_ratings() {
 
 		// update the record file
 		debug(log_now(), `    Writing game record '${date_record_filename}'...`);
-		fs.writeFileSync(date_record_filename, JSON.stringify(game_set, null, 4), { flag: 'w' });
+		fs.writeFileSync(date_record_filename, JSON.stringify(game_set, null, 4));
 		debug(log_now(), `        Game record '${date_record_filename}' written.`);
 	}
 

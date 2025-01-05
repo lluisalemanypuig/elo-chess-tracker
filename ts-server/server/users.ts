@@ -56,6 +56,7 @@ export function user_retrieve(username: string): User | null {
 	return null;
 }
 
+/// Dump the data in user @e u into its corresponding file.
 export function user_overwrite(user: User): void {
 	const user_dir = ServerEnvironment.get_instance().get_dir_users();
 	const user_file = path.join(user_dir, user.get_username());
@@ -68,12 +69,13 @@ export function user_rename_and_reassign_roles(
 	first_name: string,
 	last_name: string,
 	roles: UserRole[]
-): void {
+): User {
 	let user = user_retrieve(username) as User;
 	user.set_first_name(first_name);
 	user.set_last_name(last_name);
 	user.set_roles(roles);
 	user_overwrite(user);
+	return user;
 }
 
 /// Does a user exist?
@@ -153,7 +155,7 @@ export function user_get_all_names_and_usernames(): [string, string][] {
 
 /**
  * @brief Updates all user information using data from "players"
- * @param players Set of players to be updated
+ * @param players Set of players to be updated.
  * @post Users in the server (memory and database) are updated.
  */
 export function user_update_from_players_data(players: Player[]): void {
@@ -166,7 +168,9 @@ export function user_update_from_players_data(players: Player[]): void {
 		let u = user_retrieve(players[i].get_username()) as User;
 
 		const all_ratings_u = players[i].get_all_ratings();
-		u.set_rating(all_ratings_u[0].time_control, all_ratings_u[0].rating);
+		for (let j = 0; j < all_ratings_u.length; ++j) {
+			u.set_rating(all_ratings_u[j].time_control, all_ratings_u[j].rating);
+		}
 
 		users_to_update.push(u);
 	}
@@ -185,9 +189,7 @@ export function user_update_from_players_data(players: Player[]): void {
 
 		// update player file
 		debug(log_now(), `    User file '${user_filename}'...`);
-		fs.writeFileSync(user_filename, JSON.stringify(u, null, 4), {
-			flag: 'w'
-		});
+		fs.writeFileSync(user_filename, JSON.stringify(u, null, 4));
 		debug(log_now(), `        User file '${user_filename}' written.`);
 
 		debug(log_now(), '    Server memory...');

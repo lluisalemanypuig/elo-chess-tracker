@@ -182,7 +182,7 @@ export function challenge_agree_result(c: Challenge): void {
 		fs.unlinkSync(challenge_file);
 	}
 
-	let g = game_new(
+	const g = game_new(
 		c.get_white() as string,
 		c.get_black() as string,
 		c.get_result() as GameResult,
