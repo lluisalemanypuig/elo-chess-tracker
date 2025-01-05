@@ -30,7 +30,7 @@ import { server_init_from_data } from '../../ts-server/server/initialization';
 
 import { RatingSystem } from '../../ts-server/server/rating_system';
 import { ServerConfiguration, ServerEnvironment } from '../../ts-server/server/environment';
-import { ServerMemory } from '../../ts-server/server/memory';
+import { ServerChallenges, ServerGames, ServerUsers } from '../../ts-server/server/memory';
 
 const webpage_dir = 'tests/webpage';
 const icons_dir = path.join(webpage_dir, 'icons');
@@ -86,6 +86,12 @@ const configuration = {
 	}
 };
 
+let configuration_bullet = configuration;
+configuration_bullet.time_controls.push({
+	id: 'Bullet',
+	name: 'Bullet (2 + 1)'
+});
+
 describe('Configure server', () => {
 	test('Load an empty server', () => {
 		exec('./tests/initialize_empty.sh', (_, __, ___) => {
@@ -94,10 +100,14 @@ describe('Configure server', () => {
 			expect(rating_system.get_time_controls().length).toBe(4);
 			expect(rating_system.get_unique_time_controls_ids().length).toBe(3);
 
-			const server_memory = ServerMemory.get_instance();
-			expect(server_memory.num_users()).toBe(0);
-			expect(server_memory.num_challenges()).toBe(0);
-			expect(server_memory.get_max_game_id()).toBe(0);
+			const server_users = ServerUsers.get_instance();
+			expect(server_users.num_users()).toBe(0);
+
+			const server_challenges = ServerChallenges.get_instance();
+			expect(server_challenges.num_challenges()).toBe(0);
+
+			const server_games = ServerGames.get_instance();
+			expect(server_games.get_max_game_id()).toBe(0);
 
 			const server_configuration = ServerConfiguration.get_instance();
 			expect(server_configuration.get_port_http()).toBe('8080');
