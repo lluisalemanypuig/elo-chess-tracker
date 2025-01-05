@@ -40,30 +40,32 @@ import { TimeControl } from '../models/time_control';
 import { initialize_rating_functions } from './rating_system';
 
 function init_directories(base_directory: string): void {
-	ServerEnvironment.get_instance().set_database_base_directory(path.join(base_directory, '/database'));
-	debug(log_now(), `    Database directory: '${ServerEnvironment.get_instance().get_dir_database()}'`);
-	debug(log_now(), `        Games directory: '${ServerEnvironment.get_instance().get_dir_games()}'`);
-	debug(log_now(), `        Users directory: '${ServerEnvironment.get_instance().get_dir_users()}'`);
-	debug(log_now(), `        Challenges directory: '${ServerEnvironment.get_instance().get_dir_challenges()}'`);
+	let server_env = ServerEnvironment.get_instance();
+	server_env.set_database_base_directory(path.join(base_directory, '/database'));
+	debug(log_now(), `    Database directory: '${server_env.get_dir_database()}'`);
+	debug(log_now(), `        Games directory: '${server_env.get_dir_games()}'`);
+	debug(log_now(), `        Users directory: '${server_env.get_dir_users()}'`);
+	debug(log_now(), `        Challenges directory: '${server_env.get_dir_challenges()}'`);
 }
 
 function init_SSL_files(base_directory: string, configuration_data: any): void {
-	ServerEnvironment.get_instance().set_SSL_info(
+	let env = ServerEnvironment.get_instance();
+	env.set_SSL_info(
 		path.join(base_directory, '/ssl'),
 		configuration_data.ssl_certificate.public_key_file,
 		configuration_data.ssl_certificate.private_key_file,
 		configuration_data.ssl_certificate.passphrase_file
 	);
-	debug(log_now(), `    SSL base directory: '${ServerEnvironment.get_instance().get_dir_ssl()}'`);
-	debug(log_now(), `        Public key file: '${ServerEnvironment.get_instance().get_ssl_public_key_file()}'`);
-	debug(log_now(), `        Private key file: '${ServerEnvironment.get_instance().get_ssl_private_key_file()}'`);
-	debug(log_now(), `        Passphrase: '${ServerEnvironment.get_instance().get_ssl_passphrase_file()}'`);
+	debug(log_now(), `    SSL base directory: '${env.get_dir_ssl()}'`);
+	debug(log_now(), `        Public key file: '${env.get_ssl_public_key_file()}'`);
+	debug(log_now(), `        Private key file: '${env.get_ssl_private_key_file()}'`);
+	debug(log_now(), `        Passphrase: '${env.get_ssl_passphrase_file()}'`);
 }
 
 function init_server_ports(configuration_data: any): void {
-	let server_configuration = ServerConfiguration.get_instance();
-	server_configuration.set_port_http(configuration_data.ports.http);
-	server_configuration.set_port_https(configuration_data.ports.https);
+	let server_conf = ServerConfiguration.get_instance();
+	server_conf.set_port_http(configuration_data.ports.http);
+	server_conf.set_port_https(configuration_data.ports.https);
 }
 
 function init_icon_file_paths(base_directory: string, configuration_data: any): void {
@@ -124,14 +126,14 @@ function init_users(): void {
 	debug(log_now(), 'Initialize users...');
 
 	const rating_system = RatingSystem.get_instance();
+	const users_dir = ServerEnvironment.get_instance().get_dir_users();
 	let memory = ServerUsers.get_instance();
-	const dir = ServerEnvironment.get_instance().get_dir_users();
 
-	debug(log_now(), `    Reading directory '${dir}'`);
-	const all_user_files = fs.readdirSync(dir);
+	debug(log_now(), `    Reading directory '${users_dir}'`);
+	const all_user_files = fs.readdirSync(users_dir);
 
 	for (let i = 0; i < all_user_files.length; ++i) {
-		const user_file = path.join(dir, all_user_files[i]);
+		const user_file = path.join(users_dir, all_user_files[i]);
 
 		debug(log_now(), `        Reading file '${user_file}'`);
 		const user_data = fs.readFileSync(user_file, 'utf8');
@@ -160,18 +162,17 @@ function init_users(): void {
 function init_challenges(): void {
 	debug(log_now(), 'Initialize challenges...');
 
+	const challenges_dir = ServerEnvironment.get_instance().get_dir_challenges();
 	let challenges = ServerChallenges.get_instance();
-	const dir = ServerEnvironment.get_instance().get_dir_challenges();
 
-	debug(log_now(), `    Reading directory '${dir}'`);
-	const all_challenges_files = fs.readdirSync(dir);
+	debug(log_now(), `    Reading directory '${challenges_dir}'`);
+	const all_challenges_files = fs.readdirSync(challenges_dir);
 
 	for (let i = 0; i < all_challenges_files.length; ++i) {
-		const challenge_file = path.join(dir, all_challenges_files[i]);
+		const challenge_file = path.join(challenges_dir, all_challenges_files[i]);
 
 		debug(log_now(), `        Reading file '${challenge_file}'`);
-		let challenge_data = fs.readFileSync(challenge_file, 'utf8');
-
+		const challenge_data = fs.readFileSync(challenge_file, 'utf8');
 		challenges.add_challenge(challenge_from_json(challenge_data));
 	}
 	debug(log_now(), `    Found ${challenges.num_challenges()} challenges.`);
@@ -180,16 +181,16 @@ function init_challenges(): void {
 function init_games(): void {
 	debug(log_now(), 'Initialize games...');
 
+	const games_dir = ServerEnvironment.get_instance().get_dir_games();
 	let games = ServerGames.get_instance();
-	const dir = ServerEnvironment.get_instance().get_dir_games();
 	let num_games: number = 0;
 	let max_game_id: number = 0;
 
-	debug(log_now(), `    Reading directory '${dir}'`);
-	const all_date_record_files = fs.readdirSync(dir);
+	debug(log_now(), `    Reading directory '${games_dir}'`);
+	const all_date_record_files = fs.readdirSync(games_dir);
 
 	for (let i = 0; i < all_date_record_files.length; ++i) {
-		const game_record_file = path.join(dir, all_date_record_files[i]);
+		const game_record_file = path.join(games_dir, all_date_record_files[i]);
 
 		debug(log_now(), `        Reading file '${game_record_file}'`);
 		const game_record_data = fs.readFileSync(game_record_file, 'utf8');
