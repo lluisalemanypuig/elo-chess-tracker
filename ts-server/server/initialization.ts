@@ -29,7 +29,7 @@ import Debug from 'debug';
 const debug = Debug('ELO_TRACKER:server_initialization');
 
 import { log_now } from '../utils/misc';
-import { ServerMemory } from './memory';
+import { ServerChallenges, ServerGames, ServerUsers, ServerSessionID } from './memory';
 import { ServerConfiguration, ServerEnvironment } from './environment';
 import { initialize_rating_time_controls, RatingSystem } from './rating_system';
 import { user_from_json } from '../models/user';
@@ -117,14 +117,14 @@ function init_time_controls(time_control_array: any): void {
 function init_sessions(): void {
 	debug(log_now(), 'Initialize sessions...');
 
-	ServerMemory.get_instance().clear_session_ids();
+	ServerSessionID.get_instance().clear_session_ids();
 }
 
 function init_users(): void {
 	debug(log_now(), 'Initialize users...');
 
 	const rating_system = RatingSystem.get_instance();
-	let memory = ServerMemory.get_instance();
+	let memory = ServerUsers.get_instance();
 	const dir = ServerEnvironment.get_instance().get_dir_users();
 
 	debug(log_now(), `    Reading directory '${dir}'`);
@@ -154,7 +154,7 @@ function init_users(): void {
 function init_challenges(): void {
 	debug(log_now(), 'Initialize challenges...');
 
-	let memory = ServerMemory.get_instance();
+	let challenges = ServerChallenges.get_instance();
 	const dir = ServerEnvironment.get_instance().get_dir_challenges();
 
 	debug(log_now(), `    Reading directory '${dir}'`);
@@ -166,15 +166,15 @@ function init_challenges(): void {
 		debug(log_now(), `        Reading file '${challenge_file}'`);
 		let challenge_data = fs.readFileSync(challenge_file, 'utf8');
 
-		memory.add_challenge(challenge_from_json(challenge_data));
+		challenges.add_challenge(challenge_from_json(challenge_data));
 	}
-	debug(log_now(), `    Found ${memory.num_challenges()} challenges.`);
+	debug(log_now(), `    Found ${challenges.num_challenges()} challenges.`);
 }
 
 function init_games(): void {
 	debug(log_now(), 'Initialize games...');
 
-	let mem = ServerMemory.get_instance();
+	let games = ServerGames.get_instance();
 	const dir = ServerEnvironment.get_instance().get_dir_games();
 	let num_games: number = 0;
 	let max_game_id: number = 0;
@@ -194,13 +194,13 @@ function init_games(): void {
 			const game_id = parseInt(g.get_id(), 10);
 			max_game_id = max_game_id < game_id ? game_id : max_game_id;
 
-			mem.set_game_id_record_date(g.get_id(), all_date_record_files[i]);
+			games.set_game_id_record_date(g.get_id(), all_date_record_files[i]);
 		}
 
 		num_games += game_set.length;
 	}
 
-	mem.set_max_game_id(max_game_id);
+	games.set_max_game_id(max_game_id);
 
 	debug(log_now(), `    Found ${num_games} games.`);
 	debug(log_now(), `    Maximum game id ${max_game_id}.`);

@@ -34,7 +34,7 @@ import { user_retrieve, user_rename_and_reassign_roles } from './server/users';
 import { User } from './models/user';
 import { EDIT_USER } from './models/user_action';
 
-import { ServerMemory } from './server/memory';
+import { ServerSessionID } from './server/memory';
 import { SessionID } from './models/session_id';
 import { can_user_edit } from './utils/user_relationships';
 
@@ -43,7 +43,7 @@ export async function get_users_edit_page(req: any, res: any) {
 
 	const session = new SessionID(req.cookies.session_id, req.cookies.user);
 
-	if (!ServerMemory.get_instance().has_session_id(session)) {
+	if (!ServerSessionID.get_instance().has_session_id(session)) {
 		debug(log_now(), `    User '${session.username}' is not logged in.`);
 		res.send('403 - Forbidden');
 		return;

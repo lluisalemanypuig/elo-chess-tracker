@@ -30,7 +30,7 @@ import { log_now } from './utils/misc';
 import { user_get_all_names_and_usernames, user_retrieve } from './server/users';
 import { is_user_logged_in } from './server/session';
 import { User } from './models/user';
-import { ServerMemory } from './server/memory';
+import { ServerUsers } from './server/memory';
 import { TimeControlRating } from './models/time_control_rating';
 import { SessionID } from './models/session_id';
 
@@ -141,7 +141,7 @@ export async function post_query_users_ranking(req: any, res: any) {
 	let users: any[] = [];
 
 	{
-		let mem = ServerMemory.get_instance();
+		let mem = ServerUsers.get_instance();
 		for (let i = 0; i < mem.num_users(); ++i) {
 			const user = mem.get_user(i);
 			users.push({

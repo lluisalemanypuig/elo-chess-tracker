@@ -34,7 +34,7 @@ import { Game, GameResult, game_set_from_json } from '../models/game';
 import { User } from '../models/user';
 import { log_now, long_date_to_short_date, number_to_string } from '../utils/misc';
 import { search, where_should_be_inserted, search_linear_by_key } from '../utils/searching';
-import { ServerMemory } from './memory';
+import { ServerGames, ServerUsers } from './memory';
 import { RatingSystem } from './rating_system';
 import { ServerEnvironment } from './environment';
 import { user_retrieve, user_update_from_players_data } from './users';
@@ -77,7 +77,7 @@ export function game_new(
 	when: string
 ): Game {
 	// retrieve next id and increment maximum id
-	const id_number = ServerMemory.get_instance().new_max_game_id();
+	const id_number = ServerGames.get_instance().new_max_game_id();
 	const id_str = number_to_string(id_number);
 	debug(log_now(), `ID for new game: ${id_str}`);
 
@@ -463,11 +463,11 @@ export function game_add(g: Game): void {
 	debug(log_now(), `Inserting the game into the history...`);
 	game_insert_in_history(g, when);
 	debug(log_now(), `Updating the hash table (game id -> game record)`);
-	ServerMemory.get_instance().set_game_id_record_date(g.get_id(), when);
+	ServerGames.get_instance().set_game_id_record_date(g.get_id(), when);
 }
 
 export function game_find_by_id(game_id: string): [string[], string, Game[], number, number] | null {
-	const __date_record_str = ServerMemory.get_instance().get_game_id_record_date(game_id);
+	const __date_record_str = ServerGames.get_instance().get_game_id_record_date(game_id);
 	// game_id does not exist
 	if (__date_record_str == null) {
 		return null;
@@ -592,7 +592,7 @@ export function recalculate_Elo_ratings() {
 	let updated_players: Player[] = [];
 	let player_to_index: Map<string, number> = new Map();
 	{
-		let mem = ServerMemory.get_instance();
+		let mem = ServerUsers.get_instance();
 		for (let i = 0; i < mem.num_users(); ++i) {
 			const username = mem.get_user(i).get_username();
 

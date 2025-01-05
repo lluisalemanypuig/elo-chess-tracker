@@ -33,7 +33,7 @@ import { User } from './models/user';
 import { make_cookie_string } from './utils/cookies';
 import { shuffle } from './utils/shuffle_random';
 import { session_id_delete } from './server/session';
-import { ServerMemory } from './server/memory';
+import { ServerSessionID } from './server/memory';
 import { SessionID } from './models/session_id';
 
 const character_samples =
@@ -103,7 +103,7 @@ export async function post_user_log_in(req: any, res: any) {
 	const session = new SessionID(token, user.get_username());
 
 	// store session id
-	let mem = ServerMemory.get_instance();
+	let mem = ServerSessionID.get_instance();
 	if (!mem.has_session_id(session)) {
 		mem.add_session_id(session);
 	}
@@ -143,7 +143,7 @@ export async function post_user_log_out(req: any, res: any) {
 
 	// in order to log out a user, the must have been logged in with the given
 	// session id token
-	const mem = ServerMemory.get_instance();
+	const mem = ServerSessionID.get_instance();
 	if (!mem.has_session_id(session)) {
 		debug(log_now(), `    User '${session.username}' was never logged in with this session id.`);
 		res.status(200).send('error');

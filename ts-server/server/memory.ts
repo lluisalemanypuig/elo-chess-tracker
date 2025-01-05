@@ -32,20 +32,20 @@ import { SessionID } from '../models/session_id';
  *
  * Stores things like users session ids.
  */
-export class ServerMemory {
+export class ServerUsers {
 	/// The only instance of this class
-	private static instance: ServerMemory;
+	private static instance: ServerUsers;
 
 	constructor() {
-		if (ServerMemory.instance) {
-			return ServerMemory.instance;
+		if (ServerUsers.instance) {
+			return ServerUsers.instance;
 		}
-		ServerMemory.instance = this;
+		ServerUsers.instance = this;
 	}
 
-	static get_instance(): ServerMemory {
-		ServerMemory.instance = ServerMemory.instance || new ServerMemory();
-		return ServerMemory.instance;
+	static get_instance(): ServerUsers {
+		ServerUsers.instance = ServerUsers.instance || new ServerUsers();
+		return ServerUsers.instance;
 	}
 
 	/// Set of users
@@ -71,6 +71,23 @@ export class ServerMemory {
 	}
 	num_users(): number {
 		return this.users.length;
+	}
+}
+
+export class ServerSessionID {
+	/// The only instance of this class
+	private static instance: ServerSessionID;
+
+	constructor() {
+		if (ServerSessionID.instance) {
+			return ServerSessionID.instance;
+		}
+		ServerSessionID.instance = this;
+	}
+
+	static get_instance(): ServerSessionID {
+		ServerSessionID.instance = ServerSessionID.instance || new ServerSessionID();
+		return ServerSessionID.instance;
 	}
 
 	/// Session ids of the server.
@@ -106,6 +123,23 @@ export class ServerMemory {
 			}
 		}
 	}
+}
+
+export class ServerChallenges {
+	/// The only instance of this class
+	private static instance: ServerChallenges;
+
+	constructor() {
+		if (ServerChallenges.instance) {
+			return ServerChallenges.instance;
+		}
+		ServerChallenges.instance = this;
+	}
+
+	static get_instance(): ServerChallenges {
+		ServerChallenges.instance = ServerChallenges.instance || new ServerChallenges();
+		return ServerChallenges.instance;
+	}
 
 	/// The challenges in the system
 	private challenges: Challenge[] = [];
@@ -124,6 +158,23 @@ export class ServerMemory {
 	}
 	last_challenge(): Challenge {
 		return this.challenges[this.challenges.length - 1];
+	}
+}
+
+export class ServerGames {
+	/// The only instance of this class
+	private static instance: ServerGames;
+
+	constructor() {
+		if (ServerGames.instance) {
+			return ServerGames.instance;
+		}
+		ServerGames.instance = this;
+	}
+
+	static get_instance(): ServerGames {
+		ServerGames.instance = ServerGames.instance || new ServerGames();
+		return ServerGames.instance;
 	}
 
 	/// Number of games in the system

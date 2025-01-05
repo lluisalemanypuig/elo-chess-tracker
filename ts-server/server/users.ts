@@ -30,7 +30,7 @@ const debug = Debug('ELO_TRACKER:server_users');
 
 import { Player } from '../models/player';
 import { User } from '../models/user';
-import { ServerMemory } from './memory';
+import { ServerUsers } from './memory';
 import { ServerEnvironment } from './environment';
 import { log_now } from '../utils/misc';
 import { assert } from 'console';
@@ -43,7 +43,7 @@ import { UserRole } from '../models/user_role';
  * @returns Null or a User if the user exists.
  */
 export function user_retrieve(username: string): User | null {
-	let mem = ServerMemory.get_instance();
+	let mem = ServerUsers.get_instance();
 	for (let i = 0; i < mem.num_users(); ++i) {
 		const user: User = mem.get_user(i);
 		if (user.get_username() == username) {
@@ -84,7 +84,7 @@ export function user_exists(username: string): boolean {
 /// Returns a copy of all users
 export function user_get_all(): User[] {
 	let all_users: User[] = [];
-	let mem = ServerMemory.get_instance();
+	let mem = ServerUsers.get_instance();
 	for (let i = 0; i < mem.num_users(); ++i) {
 		all_users.push(mem.get_user(i).clone());
 	}
@@ -107,7 +107,7 @@ export function user_add_new(u: User): void {
 	fs.writeFileSync(user_file, JSON.stringify(u, null, 4));
 
 	debug(log_now(), `Adding user to memory`);
-	let mem = ServerMemory.get_instance();
+	let mem = ServerUsers.get_instance();
 	mem.add_user_index(u, mem.num_users() - 1);
 }
 
@@ -115,7 +115,7 @@ export function user_add_new(u: User): void {
 export function user_get_all_names_and_usernames(): [string, string][] {
 	let res: [string, string][] = [];
 
-	let mem = ServerMemory.get_instance();
+	let mem = ServerUsers.get_instance();
 	for (let i = 0; i < mem.num_users(); ++i) {
 		const user = mem.get_user(i);
 		res.push([user.get_full_name(), user.get_username()]);
@@ -146,7 +146,7 @@ export function user_update_from_players_data(players: Player[]): void {
 	// lengths must be equal
 	assert(users_to_update.length == players.length);
 
-	let mem = ServerMemory.get_instance();
+	let mem = ServerUsers.get_instance();
 
 	debug(log_now(), 'Updating users...');
 	for (let i = 0; i < users_to_update.length; ++i) {

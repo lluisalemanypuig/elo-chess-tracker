@@ -29,14 +29,14 @@ import Debug from 'debug';
 const debug = Debug('ELO_TRACKER:server_challenges');
 
 import { log_now, number_to_string } from '../utils/misc';
-import { ServerMemory } from './memory';
+import { ServerChallenges } from './memory';
 import { ServerEnvironment } from './environment';
 import { Challenge } from '../models/challenge';
 import { GameResult } from '../models/game';
 import { game_new, game_add } from './game_history';
 
 function challenge_get_index(id: string): number {
-	let mem = ServerMemory.get_instance();
+	let mem = ServerChallenges.get_instance();
 	for (let i = mem.num_challenges() - 1; i >= 0; --i) {
 		if (mem.get_challenge(i).id == id) {
 			return i;
@@ -51,7 +51,7 @@ export function challenge_retrieve(id: string): Challenge | null {
 	if (idx == -1) {
 		return null;
 	}
-	return ServerMemory.get_instance().get_challenge(idx);
+	return ServerChallenges.get_instance().get_challenge(idx);
 }
 
 /**
@@ -65,7 +65,7 @@ export function challenge_set_retrieve(
 	}
 ): Challenge[] {
 	let res: Challenge[] = [];
-	let mem = ServerMemory.get_instance();
+	let mem = ServerChallenges.get_instance();
 	for (let i = 0; i < mem.num_challenges(); ++i) {
 		let c = mem.get_challenge(i);
 		if (by(c)) {
@@ -84,7 +84,7 @@ export function challenge_set_retrieve(
 export function challenge_send_new(sender: string, receiver: string): string {
 	debug(log_now(), 'Adding a new challenge...');
 
-	let mem = ServerMemory.get_instance();
+	let mem = ServerChallenges.get_instance();
 	let new_id: string = '';
 	if (mem.num_challenges() == 0) {
 		new_id = number_to_string(1);
@@ -132,7 +132,7 @@ export function challenge_decline(c: Challenge): void {
 	debug(log_now(), `Declining challenge '${c.id}'`);
 
 	let idx = challenge_get_index(c.id);
-	ServerMemory.get_instance().remove_challenge(idx);
+	ServerChallenges.get_instance().remove_challenge(idx);
 
 	let challenge_dir = ServerEnvironment.get_instance().get_dir_challenges();
 	let challenge_file = path.join(challenge_dir, c.id);
@@ -197,7 +197,7 @@ export function challenge_agree_result(c: Challenge): void {
 	{
 		debug(log_now(), `    Deleting the challenge from the memory...`);
 		const index = challenge_get_index(c.id);
-		ServerMemory.get_instance().remove_challenge(index);
+		ServerChallenges.get_instance().remove_challenge(index);
 	}
 }
 
