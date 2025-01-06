@@ -1,3 +1,6 @@
+-   A user currently has a single list of game records. Every user should have a list
+    of game records for every different time control id.
+
 -   Create a directed graph-like structure to store game relationships between users.
     There is a graph for every TimeControl (unique by id -- one for "blitz", one for
     "classical", ...).
