@@ -31,7 +31,6 @@ import path from 'path';
 import { log_now } from './utils/misc';
 import { is_user_logged_in } from './server/session';
 import {
-	challenge_retrieve,
 	challenge_accept,
 	challenge_decline,
 	challenge_send_new,
@@ -45,6 +44,7 @@ import { User } from './models/user';
 import { CHALLENGE_USER } from './models/user_action';
 import { SessionID } from './models/session_id';
 import { challenge_can_user_send } from './utils/user_relationships';
+import { ServerChallenges } from './server/memory';
 
 export async function get_challenges_page(req: any, res: any) {
 	debug(log_now(), 'GET challenges_page...');
@@ -141,7 +141,7 @@ export async function post_challenge_accept(req: any, res: any) {
 
 	debug(log_now(), `User '${session.username}' wants to accept challenge '${challenge_id}'`);
 
-	const _c = challenge_retrieve(challenge_id);
+	const _c = ServerChallenges.get_instance().get_challenge_id(challenge_id);
 	if (_c == null) {
 		res.send({
 			r: '0',
@@ -180,7 +180,7 @@ export async function post_challenge_decline(req: any, res: any) {
 
 	debug(log_now(), `User '${session.username}' wants to decline challenge '${challenge_id}'`);
 
-	const _c = challenge_retrieve(challenge_id);
+	const _c = ServerChallenges.get_instance().get_challenge_id(challenge_id);
 	if (_c == null) {
 		res.send({
 			r: '0',
@@ -264,7 +264,7 @@ export async function post_challenge_set_result(req: any, res: any) {
 		return;
 	}
 
-	let _c = challenge_retrieve(challenge_id);
+	let _c = ServerChallenges.get_instance().get_challenge_id(challenge_id);
 	if (_c == null) {
 		res.send({
 			r: '0',
@@ -308,31 +308,7 @@ export async function post_challenge_set_result(req: any, res: any) {
 		return;
 	}
 
-	if (c.was_result_set()) {
-		// result was set for the first time before
-		challenge_set_result(
-			c,
-			setter_user,
-			c.get_when_result_set() as string,
-			white_username,
-			black_username,
-			result,
-			time_control_id,
-			time_control_name
-		);
-	} else {
-		// result is about to be set for the first time
-		challenge_set_result(
-			c,
-			setter_user,
-			log_now(),
-			white_username,
-			black_username,
-			result,
-			time_control_id,
-			time_control_name
-		);
-	}
+	challenge_set_result(c, setter_user, white_username, black_username, result, time_control_id, time_control_name);
 
 	res.send({ r: '1' });
 }
@@ -349,7 +325,7 @@ export async function post_challenge_agree_result(req: any, res: any) {
 	}
 
 	const challenge_id = req.body.challenge_id;
-	let _c = challenge_retrieve(challenge_id);
+	let _c = ServerChallenges.get_instance().get_challenge_id(challenge_id);
 	if (_c == null) {
 		res.send({
 			r: '0',
@@ -374,7 +350,7 @@ export async function post_challenge_disagree_result(req: any, res: any) {
 	}
 
 	const challenge_id = req.body.challenge_id;
-	let _c = challenge_retrieve(challenge_id);
+	let _c = ServerChallenges.get_instance().get_challenge_id(challenge_id);
 	if (_c == null) {
 		res.send({
 			r: '0',
