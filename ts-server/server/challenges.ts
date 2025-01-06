@@ -35,7 +35,7 @@ import { Challenge } from '../models/challenge';
 import { GameResult } from '../models/game';
 import { game_new, game_add } from './game_history';
 
-function challenge_get_index(id: string): number {
+export function challenge_get_index(id: string): number {
 	const mem = ServerChallenges.get_instance();
 	for (let i = mem.num_challenges() - 1; i >= 0; --i) {
 		if (mem.get_challenge(i).get_id() == id) {
@@ -48,10 +48,7 @@ function challenge_get_index(id: string): number {
 /// Return challenge with identifier 'id'
 export function challenge_retrieve(id: string): Challenge | null {
 	const idx = challenge_get_index(id);
-	if (idx == -1) {
-		return null;
-	}
-	return ServerChallenges.get_instance().get_challenge(idx);
+	return idx != -1 ? ServerChallenges.get_instance().get_challenge(idx) : null;
 }
 
 /**
@@ -67,7 +64,7 @@ export function challenge_set_retrieve(
 	let res: Challenge[] = [];
 	const mem = ServerChallenges.get_instance();
 	for (let i = 0; i < mem.num_challenges(); ++i) {
-		let c = mem.get_challenge(i);
+		const c = mem.get_challenge(i);
 		if (by(c)) {
 			res.push(c);
 		}
@@ -85,12 +82,7 @@ export function challenge_send_new(sender: string, receiver: string): string {
 	debug(log_now(), 'Adding a new challenge...');
 
 	let mem = ServerChallenges.get_instance();
-	const new_id: string = ((): string => {
-		if (mem.num_challenges() == 0) {
-			return number_to_string(1);
-		}
-		return number_to_string(mem.new_challenge_id());
-	})();
+	const new_id: string = number_to_string(mem.new_challenge_id());
 
 	const c = new Challenge(new_id, sender, receiver, log_now());
 

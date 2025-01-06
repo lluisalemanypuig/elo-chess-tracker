@@ -171,7 +171,7 @@ export class ServerChallenges {
 		return this.challenges[this.challenges.length - 1];
 	}
 	new_challenge_id(): number {
-		return parseInt(this.last_challenge().get_id(), 10) + 1;
+		return this.num_challenges() == 0 ? 1 : parseInt(this.last_challenge().get_id(), 10) + 1;
 	}
 }
 

@@ -154,7 +154,10 @@ export class Challenge {
 		this.when_challenge_accepted = d;
 	}
 
-	/// Sets the result
+	/**
+	 * @brief Sets the result of the challenge
+	 * @pre 'by' is not null
+	 */
 	set_result(
 		by: string,
 		when: string,
@@ -200,7 +203,7 @@ export class Challenge {
 		if (!this.was_result_set()) {
 			throw new Error('Result must have been set previously');
 		}
-		if (by == this.result_set_by) {
+		if (by != null && by == this.result_set_by) {
 			throw new Error('The accepter of the result cannot be the same person who set the result');
 		}
 
@@ -222,17 +225,36 @@ export function challenge_from_json(json: any): Challenge {
 	}
 
 	let c = new Challenge(json['id'], json['sent_by'], json['sent_to'], json['when_challenge_sent']);
-	c.set_challenge_accepted(json['when_challenge_accepted']);
-	c.set_result(
-		json['result_set_by'],
-		json['when_result_set'],
-		json['white'],
-		json['black'],
-		json['result'],
-		json['time_control_id'],
-		json['time_control_name']
-	);
-	c.set_result_accepted(json['result_accepted_by'], json['when_result_accepted']);
+
+	const when_challenge_accepted = json['when_challenge_accepted'];
+	if (when_challenge_accepted != null) {
+		c.set_challenge_accepted(when_challenge_accepted);
+	}
+
+	const result_set_by = json['result_set_by'];
+	const when_result_set = json['when_result_set'];
+	const white = json['white'];
+	const black = json['black'];
+	const result = json['result'];
+	const time_control_id = json['time_control_id'];
+	const time_control_name = json['time_control_name'];
+	if (
+		result_set_by != null &&
+		when_result_set != null &&
+		white != null &&
+		black != null &&
+		result != null &&
+		time_control_id != null &&
+		time_control_name != null
+	) {
+		c.set_result(result_set_by, when_result_set, white, black, result, time_control_id, time_control_name);
+	}
+
+	const result_accepted_by = json['result_accepted_by'];
+	const when_result_accepted = json['when_result_accepted'];
+	if (result_accepted_by != null && when_result_accepted != null) {
+		c.set_result_accepted(result_accepted_by, when_result_accepted);
+	}
 	return c;
 }
 
