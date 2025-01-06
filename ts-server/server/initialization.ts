@@ -165,6 +165,7 @@ function init_challenges(): void {
 
 	const challenges_dir = ServerEnvironment.get_instance().get_dir_challenges();
 	let challenges = ServerChallenges.get_instance();
+	let max_challenge_id: string = '0';
 
 	debug(log_now(), `    Reading directory '${challenges_dir}'`);
 	const all_challenges_files = fs.readdirSync(challenges_dir);
@@ -174,9 +175,17 @@ function init_challenges(): void {
 
 		debug(log_now(), `        Reading file '${challenge_file}'`);
 		const challenge_data = fs.readFileSync(challenge_file, 'utf8');
-		challenges.add_challenge(challenge_from_json(challenge_data));
+		const c = challenge_from_json(challenge_data);
+		challenges.add_challenge(c);
+
+		const challenge_id = c.get_id();
+		max_challenge_id = max_challenge_id < challenge_id ? challenge_id : max_challenge_id;
 	}
+
+	challenges.set_max_challenge_id(parseInt(max_challenge_id));
+
 	debug(log_now(), `    Found ${challenges.num_challenges()} challenges.`);
+	debug(log_now(), `    Maximum challenge id ${max_challenge_id}.`);
 }
 
 function init_games(): void {
@@ -185,7 +194,7 @@ function init_games(): void {
 	const games_dir = ServerEnvironment.get_instance().get_dir_games();
 	let games = ServerGames.get_instance();
 	let num_games: number = 0;
-	let max_game_id: number = 0;
+	let max_game_id: string = '0';
 
 	debug(log_now(), `    Reading directory '${games_dir}'`);
 	const all_date_record_files = fs.readdirSync(games_dir);
@@ -199,7 +208,7 @@ function init_games(): void {
 
 		for (let j = 0; j < game_set.length; ++j) {
 			const g = game_set[j] as Game;
-			const game_id = parseInt(g.get_id(), 10);
+			const game_id = g.get_id();
 			max_game_id = max_game_id < game_id ? game_id : max_game_id;
 
 			games.set_game_id_record_date(g.get_id(), all_date_record_files[i]);
@@ -208,7 +217,7 @@ function init_games(): void {
 		num_games += game_set.length;
 	}
 
-	games.set_max_game_id(max_game_id);
+	games.set_max_game_id(parseInt(max_game_id));
 
 	debug(log_now(), `    Found ${num_games} games.`);
 	debug(log_now(), `    Maximum game id ${max_game_id}.`);
