@@ -148,10 +148,13 @@ export class ServerChallenges {
 		return ServerChallenges.instance;
 	}
 
+	/// Number of games in the system
+	private max_challenge_id: number = 0;
 	/// The challenges in the system
 	private challenges: Challenge[] = [];
 
 	clear(): void {
+		this.max_challenge_id = 0;
 		this.challenges = [];
 	}
 
@@ -165,6 +168,9 @@ export class ServerChallenges {
 	}
 	remove_challenge_index(i: number): void {
 		this.challenges.splice(i, 1);
+		if (this.challenges.length == 0) {
+			this.max_challenge_id = 0;
+		}
 	}
 
 	num_challenges(): number {
@@ -190,11 +196,18 @@ export class ServerChallenges {
 		return -1;
 	}
 
-	last_challenge(): Challenge {
-		return this.challenges[this.challenges.length - 1];
+	/// Current maximum challenge ID
+	get_max_challenge_id(): number {
+		return this.max_challenge_id;
 	}
-	new_challenge_id(): number {
-		return this.num_challenges() == 0 ? 1 : parseInt(this.last_challenge().get_id(), 10) + 1;
+	/// Sets the maximum challenge ID
+	set_max_challenge_id(id: number): void {
+		this.max_challenge_id = id;
+	}
+	/// Increase current maximum challenge ID
+	increase_max_challenge_id(): number {
+		this.max_challenge_id += 1;
+		return this.max_challenge_id;
 	}
 }
 
@@ -232,8 +245,8 @@ export class ServerGames {
 	set_max_game_id(id: number): void {
 		this.max_game_id = id;
 	}
-	/// Current maximum game ID
-	new_max_game_id(): number {
+	/// Increase current maximum game ID
+	increase_max_game_id(): number {
 		this.max_game_id += 1;
 		return this.max_game_id;
 	}
