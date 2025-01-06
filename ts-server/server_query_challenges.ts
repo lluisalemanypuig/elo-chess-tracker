@@ -27,10 +27,10 @@ import Debug from 'debug';
 const debug = Debug('ELO_TRACKER:server_query_challenges');
 
 import { log_now } from './utils/misc';
-import { is_user_logged_in } from './server/session';
-import { user_retrieve } from './server/users';
+import { is_user_logged_in } from './managers/session';
+import { user_retrieve } from './managers/users';
 import { User } from './models/user';
-import { challenge_set_retrieve } from './server/challenges';
+import { challenge_set_retrieve } from './managers/challenges';
 import { Challenge } from './models/challenge';
 import { SessionID } from './models/session_id';
 

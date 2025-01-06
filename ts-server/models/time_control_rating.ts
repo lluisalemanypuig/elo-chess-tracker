@@ -23,7 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { RatingSystem } from '../server/rating_system';
+import { RatingSystemManager } from '../managers/rating_system_manager';
 import { Rating } from '../rating_framework/rating';
 
 /**
@@ -56,7 +56,7 @@ export function time_control_rating_from_json(json: any): TimeControlRating {
 
 	return new TimeControlRating(
 		json['time_control'],
-		RatingSystem.get_instance().get_rating_from_json(json['rating'])
+		RatingSystemManager.get_instance().get_rating_from_json(json['rating'])
 	);
 }
 

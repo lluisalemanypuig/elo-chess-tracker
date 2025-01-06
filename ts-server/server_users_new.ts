@@ -29,8 +29,8 @@ const debug = Debug('ELO_TRACKER:server_user_new');
 import path from 'path';
 
 import { log_now } from './utils/misc';
-import { is_user_logged_in } from './server/session';
-import { user_add_new, user_exists } from './server/users';
+import { is_user_logged_in } from './managers/session';
+import { user_add_new, user_exists } from './managers/users';
 import { User } from './models/user';
 import { is_role_string_correct } from './models/user_role';
 import { CREATE_USER, ASSIGN_ROLE_USER, get_role_action_name, ASSIGN_ROLE_ID } from './models/user_action';

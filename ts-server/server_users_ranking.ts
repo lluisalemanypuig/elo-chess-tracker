@@ -29,7 +29,7 @@ const debug = Debug('ELO_TRACKER:server_ranking');
 import path from 'path';
 
 import { log_now } from './utils/misc';
-import { is_user_logged_in } from './server/session';
+import { is_user_logged_in } from './managers/session';
 import { SessionID } from './models/session_id';
 
 export async function get_ranking_users_page(req: any, res: any) {

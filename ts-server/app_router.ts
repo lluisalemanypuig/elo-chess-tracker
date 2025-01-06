@@ -30,15 +30,15 @@ import Debug from 'debug';
 const debug = Debug('ELO_TRACKER:app_router');
 import { log_now } from './utils/misc';
 
-import { ServerSessionID } from './server/memory';
-import { ServerEnvironment } from './server/environment';
+import { SessionIDManager } from './managers/session_id_manager';
+import { EnvironmentManager } from './managers/environment_manager';
 
 let router = express.Router();
 router.get('/', (req: any, res: any) => {
 	debug(log_now(), `Username received in cookie: '${req.cookies.user}'`);
 
 	const session = new SessionID(req.cookies.session_id, req.cookies.user);
-	const mem = ServerSessionID.get_instance();
+	const mem = SessionIDManager.get_instance();
 	if (mem.has_session_id(session)) {
 		debug(log_now(), `    Session id exists. Please, come in.`);
 		// User has a cookie proving that they logged into the web in the past
@@ -74,7 +74,7 @@ router.get('/version_number', (req: any, res: any) => {
 router.get('/favicon.ico', (req: any, res: any) => {
 	debug(log_now(), 'GET favicon.ico...');
 	debug(log_now(), `    request: ${req.url}`);
-	const filepath = ServerEnvironment.get_instance().get_icon_favicon();
+	const filepath = EnvironmentManager.get_instance().get_icon_favicon();
 	debug(log_now(), `    file to send: ${filepath}`);
 	res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
 	res.sendFile(filepath);
@@ -82,7 +82,7 @@ router.get('/favicon.ico', (req: any, res: any) => {
 router.get('/icon_login_page', (req: any, res: any) => {
 	debug(log_now(), 'GET icon_login_page...');
 	debug(log_now(), `    request: ${req.url}`);
-	const filepath = ServerEnvironment.get_instance().get_icon_login_page();
+	const filepath = EnvironmentManager.get_instance().get_icon_login_page();
 	debug(log_now(), `    file to send: ${filepath}`);
 	res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
 	res.sendFile(filepath);
@@ -90,7 +90,7 @@ router.get('/icon_login_page', (req: any, res: any) => {
 router.get('/icon_home_page', (req: any, res: any) => {
 	debug(log_now(), 'GET icon_home_page...');
 	debug(log_now(), `    request: ${req.url}`);
-	const filepath = ServerEnvironment.get_instance().get_icon_home_page();
+	const filepath = EnvironmentManager.get_instance().get_icon_home_page();
 	debug(log_now(), `    file to send: ${filepath}`);
 	res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
 	res.sendFile(filepath);
@@ -101,13 +101,13 @@ router.get('/title_login_page', (req: any, res: any) => {
 	debug(log_now(), 'GET title_login_page...');
 	debug(log_now(), `    request: ${req.url}`);
 	res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
-	res.send(ServerEnvironment.get_instance().get_title_login_page());
+	res.send(EnvironmentManager.get_instance().get_title_login_page());
 });
 router.get('/title_home_page', (req: any, res: any) => {
 	debug(log_now(), 'GET title_home_page...');
 	debug(log_now(), `    request: ${req.url}`);
 	res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
-	res.send(ServerEnvironment.get_instance().get_title_home_page());
+	res.send(EnvironmentManager.get_instance().get_title_home_page());
 });
 
 /* ************************************************************************** */
@@ -218,7 +218,7 @@ router.get('/home', (req: any, res: any) => {
 	debug(log_now(), 'GET home');
 
 	const session = new SessionID(req.cookies.session_id, req.cookies.user);
-	let mem = ServerSessionID.get_instance();
+	let mem = SessionIDManager.get_instance();
 	if (!mem.has_session_id(session)) {
 		debug(log_now(), '    Session id does not exist.');
 		res.send('Computer says no');

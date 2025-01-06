@@ -29,7 +29,7 @@ const debug = Debug('ELO_TRACKER:server_games');
 import path from 'path';
 
 import { log_now } from './utils/misc';
-import { is_user_logged_in } from './server/session';
+import { is_user_logged_in } from './managers/session';
 import {
 	CREATE_GAME,
 	EDIT_ADMIN_GAMES,
@@ -39,9 +39,9 @@ import {
 	EDIT_USER_GAMES
 } from './models/user_action';
 import { User } from './models/user';
-import { game_add, game_edit_result, game_find_by_id, game_new, recalculate_Elo_ratings } from './server/game_history';
+import { game_add, game_edit_result, game_find_by_id, game_new, recalculate_Elo_ratings } from './managers/games';
 import { Game, GameResult } from './models/game';
-import { user_retrieve } from './server/users';
+import { user_retrieve } from './managers/users';
 import { ADMIN, MEMBER, STUDENT, TEACHER, UserRole } from './models/user_role';
 import { SessionID } from './models/session_id';
 

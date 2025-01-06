@@ -28,13 +28,13 @@ import { User } from '../models/user';
 import { log_now } from '../utils/misc';
 const debug = Debug('ELO_TRACKER:server_session');
 
-import { ServerSessionID } from './memory';
+import { SessionIDManager } from './session_id_manager';
 import { user_retrieve } from './users';
 import { SessionID } from '../models/session_id';
 
 /// Deletes a session id.
 export function session_id_delete(session: SessionID): void {
-	let mem = ServerSessionID.get_instance();
+	let mem = SessionIDManager.get_instance();
 
 	debug(log_now(), `Before deleting, '${mem.num_session_ids()}' sessions`);
 	const idx = mem.index_session_id(session);
@@ -50,7 +50,7 @@ export function session_id_delete(session: SessionID): void {
 
 /// Deletes a session id.
 export function session_user_delete_all(session: SessionID): void {
-	let mem = ServerSessionID.get_instance();
+	let mem = SessionIDManager.get_instance();
 
 	debug(log_now(), `Before deleting, '${mem.num_session_ids()}' sessions`);
 
@@ -65,7 +65,7 @@ export function session_user_delete_all(session: SessionID): void {
  * Checks that a user logged in or not using the cookies.
  */
 export function is_user_logged_in(session: SessionID): [boolean, string, User | null] {
-	if (!ServerSessionID.get_instance().has_session_id(session)) {
+	if (!SessionIDManager.get_instance().has_session_id(session)) {
 		debug(log_now(), `Session does not exist for user '${session.username}'.`);
 		return [false, '403 - Forbidden', null];
 	}

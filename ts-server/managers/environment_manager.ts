@@ -26,72 +26,26 @@ Contact:
 import path from 'path';
 
 /**
- * @brief Configuration parameters of the server.
- */
-export class ServerConfiguration {
-	/// The only instance of this class
-	private static instance: ServerConfiguration;
-
-	/**
-	 * @brief Construct the server configuration
-	 */
-	constructor() {
-		if (ServerConfiguration.instance) {
-			return ServerConfiguration.instance;
-		}
-
-		ServerConfiguration.instance = this;
-	}
-
-	static get_instance(): ServerConfiguration {
-		ServerConfiguration.instance = ServerConfiguration.instance || new ServerConfiguration();
-		return ServerConfiguration.instance;
-	}
-
-	private port_http: string = '';
-	private port_https: string = '';
-
-	clear(): void {
-		this.port_http = '';
-		this.port_https = '';
-	}
-
-	set_port_http(http: string): void {
-		this.port_http = http;
-	}
-	set_port_https(https: string): void {
-		this.port_https = https;
-	}
-
-	get_port_http(): string {
-		return this.port_http;
-	}
-	get_port_https(): string {
-		return this.port_https;
-	}
-}
-
-/**
  * @brief Directories and other parameters of the server environment
  */
-export class ServerEnvironment {
+export class EnvironmentManager {
 	/// The only instance of this class
-	private static instance: ServerEnvironment;
+	private static instance: EnvironmentManager;
 
 	/**
 	 * @brief Construct the server configuration
 	 */
 	constructor() {
-		if (ServerEnvironment.instance) {
-			return ServerEnvironment.instance;
+		if (EnvironmentManager.instance) {
+			return EnvironmentManager.instance;
 		}
 
-		ServerEnvironment.instance = this;
+		EnvironmentManager.instance = this;
 	}
 
-	static get_instance(): ServerEnvironment {
-		ServerEnvironment.instance = ServerEnvironment.instance || new ServerEnvironment();
-		return ServerEnvironment.instance;
+	static get_instance(): EnvironmentManager {
+		EnvironmentManager.instance = EnvironmentManager.instance || new EnvironmentManager();
+		return EnvironmentManager.instance;
 	}
 
 	// database directory

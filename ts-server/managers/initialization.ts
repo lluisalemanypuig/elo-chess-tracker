@@ -29,18 +29,22 @@ import Debug from 'debug';
 const debug = Debug('ELO_TRACKER:server_initialization');
 
 import { log_now } from '../utils/misc';
-import { ServerChallenges, ServerGames, ServerUsers, ServerSessionID } from './memory';
-import { ServerConfiguration, ServerEnvironment } from './environment';
-import { initialize_rating_time_controls, RatingSystem } from './rating_system';
+import { EnvironmentManager } from './environment_manager';
+import { ConfigurationManager } from './configuration_manager';
+import { ChallengesManager } from './challenges_manager';
+import { GamesManager } from './games_manager';
+import { UsersManager } from './users_manager';
+import { SessionIDManager } from './session_id_manager';
+import { initialize_rating_time_controls, initialize_rating_functions } from './rating_system';
+import { RatingSystemManager } from './rating_system_manager';
 import { user_from_json } from '../models/user';
 import { challenge_from_json } from '../models/challenge';
 import { Game, game_set_from_json } from '../models/game';
 import { initialize_permissions } from '../models/user_role_action';
 import { TimeControl } from '../models/time_control';
-import { initialize_rating_functions } from './rating_system';
 
 function init_directories(base_directory: string): void {
-	let server_env = ServerEnvironment.get_instance();
+	let server_env = EnvironmentManager.get_instance();
 	server_env.set_database_base_directory(path.join(base_directory, '/database'));
 	debug(log_now(), `    Database directory: '${server_env.get_dir_database()}'`);
 	debug(log_now(), `        Games directory: '${server_env.get_dir_games()}'`);
@@ -49,7 +53,7 @@ function init_directories(base_directory: string): void {
 }
 
 function init_SSL_files(base_directory: string, configuration_data: any): void {
-	let env = ServerEnvironment.get_instance();
+	let env = EnvironmentManager.get_instance();
 	env.set_SSL_info(
 		path.join(base_directory, '/ssl'),
 		configuration_data.ssl_certificate.public_key_file,
@@ -63,13 +67,13 @@ function init_SSL_files(base_directory: string, configuration_data: any): void {
 }
 
 function init_server_ports(configuration_data: any): void {
-	let server_conf = ServerConfiguration.get_instance();
+	let server_conf = ConfigurationManager.get_instance();
 	server_conf.set_port_http(configuration_data.ports.http);
 	server_conf.set_port_https(configuration_data.ports.https);
 }
 
 function init_icon_file_paths(base_directory: string, configuration_data: any): void {
-	ServerEnvironment.get_instance().set_icons_info(
+	EnvironmentManager.get_instance().set_icons_info(
 		path.join(base_directory, '/icons'),
 		'/' + configuration_data.favicon,
 		'/' + configuration_data.login_page.icon,
@@ -78,7 +82,7 @@ function init_icon_file_paths(base_directory: string, configuration_data: any): 
 }
 
 function init_page_titles(configuration_data: any): void {
-	ServerEnvironment.get_instance().set_titles_info(
+	EnvironmentManager.get_instance().set_titles_info(
 		configuration_data.login_page.title,
 		configuration_data.home_page.title
 	);
@@ -119,15 +123,15 @@ function init_time_controls(time_control_array: any): void {
 function init_sessions(): void {
 	debug(log_now(), 'Initialize sessions...');
 
-	ServerSessionID.get_instance().clear_session_ids();
+	SessionIDManager.get_instance().clear_session_ids();
 }
 
 function init_users(): void {
 	debug(log_now(), 'Initialize users...');
 
-	const rating_system = RatingSystem.get_instance();
-	const users_dir = ServerEnvironment.get_instance().get_dir_users();
-	let memory = ServerUsers.get_instance();
+	const rating_system = RatingSystemManager.get_instance();
+	const users_dir = EnvironmentManager.get_instance().get_dir_users();
+	let memory = UsersManager.get_instance();
 
 	debug(log_now(), `    Reading directory '${users_dir}'`);
 	const all_user_files = fs.readdirSync(users_dir);
@@ -163,8 +167,8 @@ function init_users(): void {
 function init_challenges(): void {
 	debug(log_now(), 'Initialize challenges...');
 
-	const challenges_dir = ServerEnvironment.get_instance().get_dir_challenges();
-	let challenges = ServerChallenges.get_instance();
+	const challenges_dir = EnvironmentManager.get_instance().get_dir_challenges();
+	let challenges = ChallengesManager.get_instance();
 	let max_challenge_id: string = '0';
 
 	debug(log_now(), `    Reading directory '${challenges_dir}'`);
@@ -191,8 +195,8 @@ function init_challenges(): void {
 function init_games(): void {
 	debug(log_now(), 'Initialize games...');
 
-	const games_dir = ServerEnvironment.get_instance().get_dir_games();
-	let games = ServerGames.get_instance();
+	const games_dir = EnvironmentManager.get_instance().get_dir_games();
+	let games = GamesManager.get_instance();
 	let num_games: number = 0;
 	let max_game_id: string = '0';
 

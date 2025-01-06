@@ -23,9 +23,13 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { ServerConfiguration, ServerEnvironment } from './environment';
-import { ServerChallenges, ServerGames, ServerSessionID, ServerUsers } from './memory';
-import { RatingSystem } from './rating_system';
+import { EnvironmentManager } from './environment_manager';
+import { ConfigurationManager } from './configuration_manager';
+import { ChallengesManager } from './challenges_manager';
+import { GamesManager } from './games_manager';
+import { UsersManager } from './users_manager';
+import { SessionIDManager } from './session_id_manager';
+import { RatingSystemManager } from './rating_system_manager';
 
 /**
  * @brief Clear the memory of the server
@@ -33,11 +37,11 @@ import { RatingSystem } from './rating_system';
  * That is, the RAM memory, not the disk memory.
  */
 export function clear_server(): void {
-	RatingSystem.get_instance().clear();
-	ServerUsers.get_instance().clear();
-	ServerChallenges.get_instance().clear();
-	ServerGames.get_instance().clear();
-	ServerConfiguration.get_instance().clear();
-	ServerEnvironment.get_instance().clear();
-	ServerSessionID.get_instance().clear();
+	RatingSystemManager.get_instance().clear();
+	UsersManager.get_instance().clear();
+	ChallengesManager.get_instance().clear();
+	GamesManager.get_instance().clear();
+	ConfigurationManager.get_instance().clear();
+	EnvironmentManager.get_instance().clear();
+	SessionIDManager.get_instance().clear();
 }

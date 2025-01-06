@@ -28,12 +28,12 @@ const debug = Debug('ELO_TRACKER:server_login');
 
 import { interleave_strings, log_now } from './utils/misc';
 import { is_password_of_user_correct } from './utils/encrypt';
-import { user_retrieve } from './server/users';
+import { user_retrieve } from './managers/users';
 import { User } from './models/user';
 import { make_cookie_string } from './utils/cookies';
 import { shuffle } from './utils/shuffle_random';
-import { session_id_delete } from './server/session';
-import { ServerSessionID } from './server/memory';
+import { session_id_delete } from './managers/session';
+import { SessionIDManager } from './managers/session_id_manager';
 import { SessionID } from './models/session_id';
 
 const character_samples =
@@ -103,7 +103,7 @@ export async function post_user_log_in(req: any, res: any) {
 	const session = new SessionID(token, user.get_username());
 
 	// store session id
-	let mem = ServerSessionID.get_instance();
+	let mem = SessionIDManager.get_instance();
 	if (!mem.has_session_id(session)) {
 		mem.add_session_id(session);
 	}
@@ -143,7 +143,7 @@ export async function post_user_log_out(req: any, res: any) {
 
 	// in order to log out a user, the must have been logged in with the given
 	// session id token
-	const mem = ServerSessionID.get_instance();
+	const mem = SessionIDManager.get_instance();
 	if (!mem.has_session_id(session)) {
 		debug(log_now(), `    User '${session.username}' was never logged in with this session id.`);
 		res.status(200).send('error');

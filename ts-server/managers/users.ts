@@ -30,13 +30,13 @@ const debug = Debug('ELO_TRACKER:server_users');
 
 import { Player } from '../models/player';
 import { User } from '../models/user';
-import { ServerUsers } from './memory';
-import { ServerEnvironment } from './environment';
+import { EnvironmentManager } from './environment_manager';
+import { UsersManager } from './users_manager';
 import { log_now } from '../utils/misc';
 import { UserRole } from '../models/user_role';
 import { Password } from '../models/password';
 import { encrypt_password_for_user } from '../utils/encrypt';
-import { RatingSystem } from './rating_system';
+import { RatingSystemManager } from './rating_system_manager';
 import { TimeControlRating } from '../models/time_control_rating';
 
 /**
@@ -46,7 +46,7 @@ import { TimeControlRating } from '../models/time_control_rating';
  * @returns Null or a User if the user exists.
  */
 export function user_retrieve(username: string): User | null {
-	let mem = ServerUsers.get_instance();
+	let mem = UsersManager.get_instance();
 	for (let i = 0; i < mem.num_users(); ++i) {
 		const user: User = mem.get_user(i);
 		if (user.get_username() == username) {
@@ -58,7 +58,7 @@ export function user_retrieve(username: string): User | null {
 
 /// Dump the data in user @e u into its corresponding file.
 export function user_overwrite(user: User): void {
-	const user_dir = ServerEnvironment.get_instance().get_dir_users();
+	const user_dir = EnvironmentManager.get_instance().get_dir_users();
 	const user_file = path.join(user_dir, user.get_username());
 	fs.writeFileSync(user_file, JSON.stringify(user, null, 4));
 }
@@ -86,7 +86,7 @@ export function user_exists(username: string): boolean {
 /// Returns a copy of all users
 export function user_get_all(): User[] {
 	let all_users: User[] = [];
-	let mem = ServerUsers.get_instance();
+	let mem = UsersManager.get_instance();
 	for (let i = 0; i < mem.num_users(); ++i) {
 		all_users.push(mem.get_user(i).clone());
 	}
@@ -112,7 +112,7 @@ export function user_add_new(
 	pass: string,
 	roles: UserRole[]
 ): User {
-	const rating_system = RatingSystem.get_instance();
+	const rating_system = RatingSystemManager.get_instance();
 	let ratings: TimeControlRating[] = [];
 	rating_system.get_unique_time_controls_ids().forEach((id: string) => {
 		ratings.push(new TimeControlRating(id, rating_system.get_new_rating()));
@@ -130,12 +130,12 @@ export function user_add_new(
 		ratings
 	);
 
-	const user_dir = ServerEnvironment.get_instance().get_dir_users();
+	const user_dir = EnvironmentManager.get_instance().get_dir_users();
 	const user_file = path.join(user_dir, user.get_username());
 
 	fs.writeFileSync(user_file, JSON.stringify(user, null, 4));
 
-	let mem = ServerUsers.get_instance();
+	let mem = UsersManager.get_instance();
 	mem.add_user(user);
 
 	return user;
@@ -145,7 +145,7 @@ export function user_add_new(
 export function user_get_all_names_and_usernames(): [string, string][] {
 	let res: [string, string][] = [];
 
-	let mem = ServerUsers.get_instance();
+	let mem = UsersManager.get_instance();
 	for (let i = 0; i < mem.num_users(); ++i) {
 		const user = mem.get_user(i);
 		res.push([user.get_full_name(), user.get_username()]);
@@ -159,7 +159,7 @@ export function user_get_all_names_and_usernames(): [string, string][] {
  * @post Users in the server (memory and database) are updated.
  */
 export function user_update_from_players_data(players: Player[]): void {
-	const server_dirs = ServerEnvironment.get_instance();
+	const server_dirs = EnvironmentManager.get_instance();
 
 	let users_to_update: User[] = [];
 
@@ -180,7 +180,7 @@ export function user_update_from_players_data(players: Player[]): void {
 		throw new Error("Lengths of 'users_to_update' and 'players' is not the same.");
 	}
 
-	let mem = ServerUsers.get_instance();
+	let mem = UsersManager.get_instance();
 
 	debug(log_now(), 'Updating users...');
 	for (let i = 0; i < users_to_update.length; ++i) {

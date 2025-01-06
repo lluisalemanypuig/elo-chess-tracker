@@ -30,18 +30,18 @@ import path from 'path';
 import fs from 'fs';
 
 import { log_now } from './utils/misc';
-import { is_user_logged_in } from './server/session';
-import { user_retrieve } from './server/users';
+import { is_user_logged_in } from './managers/session';
+import { user_retrieve } from './managers/users';
 import { User } from './models/user';
 import { Game, game_set_from_json } from './models/game';
-import { RatingSystem } from './server/rating_system';
-import { ServerEnvironment } from './server/environment';
+import { RatingSystemManager } from './managers/rating_system_manager';
+import { EnvironmentManager } from './managers/environment_manager';
 import { SEE_USER_GAMES } from './models/user_action';
 import { SessionID } from './models/session_id';
 import { can_user_edit_a_game, can_user_see_a_game } from './utils/user_relationships';
 
 function increment(g: Game): any {
-	const [white_after, black_after] = RatingSystem.get_instance().apply_rating_formula(g);
+	const [white_after, black_after] = RatingSystemManager.get_instance().apply_rating_formula(g);
 	return {
 		white_increment: Math.round(white_after.rating - g.get_white_rating().rating),
 		black_increment: Math.round(black_after.rating - g.get_black_rating().rating)
@@ -56,7 +56,7 @@ function increment(g: Game): any {
  * @param filter_game Filters games
  */
 function filter_game_list(filter_game_record: Function, filter_game: Function, user: User): any[] {
-	const games_dir = ServerEnvironment.get_instance().get_dir_games();
+	const games_dir = EnvironmentManager.get_instance().get_dir_games();
 
 	let data_to_return: any[] = [];
 
@@ -86,7 +86,7 @@ function filter_game_list(filter_game_record: Function, filter_game: Function, u
 			}
 
 			const inc = increment(g);
-			const time_control_name: string = RatingSystem.get_instance().get_name_time_control(
+			const time_control_name: string = RatingSystemManager.get_instance().get_name_time_control(
 				g.get_time_control_id()
 			);
 

@@ -35,10 +35,10 @@ const debug = Debug('ELO_TRACKER:app_main');
 import fs from 'fs';
 import { log_now } from './utils/misc';
 
-import { server_init_from_parameters } from './server/initialization';
-import { ServerConfiguration } from './server/environment';
+import { server_init_from_parameters } from './managers/initialization';
+import { ConfigurationManager } from './managers/configuration_manager';
 
-debug(log_now(), 'Initialize server...');
+debug(log_now(), 'Initialize server memory...');
 
 server_init_from_parameters(process.argv.slice(2));
 
@@ -51,7 +51,7 @@ debug(log_now(), '    Imported!');
 import http from 'http';
 import https from 'https';
 import { AddressInfo } from 'net';
-import { ServerEnvironment } from './server/environment';
+import { EnvironmentManager } from './managers/environment_manager';
 
 // Normalize a port into a number, string, or false.
 function normalizePort(val: any): any {
@@ -70,8 +70,8 @@ function normalizePort(val: any): any {
 	return false;
 }
 
-let server_environment = ServerEnvironment.get_instance();
-let server_configuration = ServerConfiguration.get_instance();
+let server_environment = EnvironmentManager.get_instance();
+let server_configuration = ConfigurationManager.get_instance();
 
 // create https server when possible
 if (server_environment.is_SSL_info_valid()) {

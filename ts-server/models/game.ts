@@ -24,7 +24,7 @@ Contact:
 */
 
 import { Rating } from '../rating_framework/rating';
-import { RatingSystem } from '../server/rating_system';
+import { RatingSystemManager } from '../managers/rating_system_manager';
 
 /// Result of a game
 export type GameResult = 'white_wins' | 'black_wins' | 'draw';
@@ -166,7 +166,7 @@ export function game_from_json(json: any): Game {
 		return game_from_json(json_parse);
 	}
 
-	const rating_system = RatingSystem.get_instance();
+	const rating_system = RatingSystemManager.get_instance();
 	return new Game(
 		json['id'],
 		json['white'],

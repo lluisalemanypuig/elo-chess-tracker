@@ -29,12 +29,12 @@ const debug = Debug('ELO_TRACKER:server_user_edit');
 import path from 'path';
 
 import { log_now } from './utils/misc';
-import { is_user_logged_in } from './server/session';
-import { user_retrieve, user_rename_and_reassign_roles } from './server/users';
+import { is_user_logged_in } from './managers/session';
+import { user_retrieve, user_rename_and_reassign_roles } from './managers/users';
 import { User } from './models/user';
 import { EDIT_USER } from './models/user_action';
 
-import { ServerSessionID } from './server/memory';
+import { SessionIDManager } from './managers/session_id_manager';
 import { SessionID } from './models/session_id';
 import { can_user_edit } from './utils/user_relationships';
 
@@ -43,7 +43,7 @@ export async function get_users_edit_page(req: any, res: any) {
 
 	const session = new SessionID(req.cookies.session_id, req.cookies.user);
 
-	if (!ServerSessionID.get_instance().has_session_id(session)) {
+	if (!SessionIDManager.get_instance().has_session_id(session)) {
 		debug(log_now(), `    User '${session.username}' is not logged in.`);
 		res.send('403 - Forbidden');
 		return;

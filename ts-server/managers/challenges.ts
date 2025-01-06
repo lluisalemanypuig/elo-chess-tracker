@@ -29,11 +29,11 @@ import Debug from 'debug';
 const debug = Debug('ELO_TRACKER:server_challenges');
 
 import { log_now, log_now_millis, number_to_string } from '../utils/misc';
-import { ServerChallenges } from './memory';
-import { ServerEnvironment } from './environment';
+import { ChallengesManager } from './challenges_manager';
+import { EnvironmentManager } from './environment_manager';
 import { Challenge } from '../models/challenge';
 import { GameResult } from '../models/game';
-import { game_new, game_add } from './game_history';
+import { game_new, game_add } from './games';
 
 /**
  * @brief Filters the set of challenges that are accepted by the filter function @e by.
@@ -46,7 +46,7 @@ export function challenge_set_retrieve(
 	}
 ): Challenge[] {
 	let res: Challenge[] = [];
-	const mem = ServerChallenges.get_instance();
+	const mem = ChallengesManager.get_instance();
 	for (let i = 0; i < mem.num_challenges(); ++i) {
 		const c = mem.get_challenge(i) as Challenge;
 		if (by(c)) {
@@ -65,7 +65,7 @@ export function challenge_set_retrieve(
 export function challenge_send_new(sender: string, receiver: string): Challenge {
 	debug(log_now(), 'Adding a new challenge...');
 
-	let mem = ServerChallenges.get_instance();
+	let mem = ChallengesManager.get_instance();
 	mem.increase_max_challenge_id();
 	const new_id: string = number_to_string(mem.get_max_challenge_id());
 
@@ -73,7 +73,7 @@ export function challenge_send_new(sender: string, receiver: string): Challenge 
 
 	mem.add_challenge(c);
 
-	const challenge_dir = ServerEnvironment.get_instance().get_dir_challenges();
+	const challenge_dir = EnvironmentManager.get_instance().get_dir_challenges();
 	const challenge_file = path.join(challenge_dir, new_id);
 	debug(log_now(), `    writing challenge into file '${challenge_file}'`);
 	fs.writeFileSync(challenge_file, JSON.stringify(c, null, 4));
@@ -92,7 +92,7 @@ export function challenge_accept(c: Challenge): void {
 
 	c.set_challenge_accepted(log_now());
 
-	const challenge_dir = ServerEnvironment.get_instance().get_dir_challenges();
+	const challenge_dir = EnvironmentManager.get_instance().get_dir_challenges();
 	const challenge_file = path.join(challenge_dir, c.get_id());
 	debug(log_now(), `    Writing challenge into file '${challenge_file}'`);
 	fs.writeFileSync(challenge_file, JSON.stringify(c, null, 4));
@@ -107,9 +107,9 @@ export function challenge_accept(c: Challenge): void {
 export function challenge_decline(c: Challenge): void {
 	debug(log_now(), `Declining challenge '${c.get_id()}'`);
 
-	ServerChallenges.get_instance().remove_challenge(c);
+	ChallengesManager.get_instance().remove_challenge(c);
 
-	const challenge_dir = ServerEnvironment.get_instance().get_dir_challenges();
+	const challenge_dir = EnvironmentManager.get_instance().get_dir_challenges();
 	const challenge_file = path.join(challenge_dir, c.get_id());
 	debug(log_now(), `    Deleting file '${challenge_file}'`);
 	fs.unlinkSync(challenge_file);
@@ -135,7 +135,7 @@ export function challenge_set_result(
 	const when = log_now_millis();
 	c.set_result(by, when, white, black, result, time_control_id, time_control_name);
 
-	const challenge_dir = ServerEnvironment.get_instance().get_dir_challenges();
+	const challenge_dir = EnvironmentManager.get_instance().get_dir_challenges();
 	const challenge_file = path.join(challenge_dir, c.get_id());
 	debug(log_now(), `    Writing challenge into file '${challenge_file}'`);
 	fs.writeFileSync(challenge_file, JSON.stringify(c, null, 4));
@@ -150,7 +150,7 @@ export function challenge_agree_result(c: Challenge): void {
 	debug(log_now(), `Agree to result of challenge '${c.get_id()}'...`);
 
 	{
-		const challenge_dir = ServerEnvironment.get_instance().get_dir_challenges();
+		const challenge_dir = EnvironmentManager.get_instance().get_dir_challenges();
 		const challenge_file = path.join(challenge_dir, c.get_id());
 		debug(log_now(), `    Removing challenge file '${challenge_file}'`);
 		fs.unlinkSync(challenge_file);
@@ -170,7 +170,7 @@ export function challenge_agree_result(c: Challenge): void {
 
 	{
 		debug(log_now(), `    Deleting the challenge from the memory...`);
-		ServerChallenges.get_instance().remove_challenge(c);
+		ChallengesManager.get_instance().remove_challenge(c);
 	}
 }
 
@@ -185,7 +185,7 @@ export function challenge_unset_result(c: Challenge): void {
 
 	c.unset_result();
 
-	const challenge_dir = ServerEnvironment.get_instance().get_dir_challenges();
+	const challenge_dir = EnvironmentManager.get_instance().get_dir_challenges();
 	const challenge_file = path.join(challenge_dir, c.get_id());
 	debug(log_now(), `    Writing challenge into file '${challenge_file}'`);
 	fs.writeFileSync(challenge_file, JSON.stringify(c, null, 4));

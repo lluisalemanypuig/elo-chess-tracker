@@ -38,9 +38,10 @@ import {
 	search_linear_by_key,
 	where_should_be_inserted_by_key
 } from '../utils/searching';
-import { ServerGames, ServerUsers } from './memory';
-import { RatingSystem } from './rating_system';
-import { ServerEnvironment } from './environment';
+import { GamesManager } from './games_manager';
+import { UsersManager } from './users_manager';
+import { RatingSystemManager } from './rating_system_manager';
+import { EnvironmentManager } from './environment_manager';
 import { user_retrieve, user_update_from_players_data } from './users';
 import { Rating } from '../rating_framework/rating';
 import { TimeControlRating } from '../models/time_control_rating';
@@ -81,7 +82,7 @@ export function game_new(
 	when: string
 ): Game {
 	// retrieve next id and increment maximum id
-	const id_number = ServerGames.get_instance().increase_max_game_id();
+	const id_number = GamesManager.get_instance().increase_max_game_id();
 	const id_str = number_to_string(id_number);
 	debug(log_now(), `ID for new game: ${id_str}`);
 
@@ -147,7 +148,7 @@ export function game_new(
 function game_next_of_player(username: string, time_control_id: string, when: string): Game | null {
 	debug(log_now(), `Find the game of user '${username}' right after date '${when}'`);
 
-	const games_dir = ServerEnvironment.get_instance().get_dir_games();
+	const games_dir = EnvironmentManager.get_instance().get_dir_games();
 
 	// The file into which we have to add the new game.
 	const date_record_str = make_game_date_record_name_str(when);
@@ -299,7 +300,7 @@ function update_game_record(
 
 		if (white_was_updated || black_was_updated) {
 			// calculate result of game
-			const [white_after, black_after] = RatingSystem.get_instance().apply_rating_formula(game_set[i]);
+			const [white_after, black_after] = RatingSystemManager.get_instance().apply_rating_formula(game_set[i]);
 
 			if (!white_was_updated) {
 				debug(log_now(), `    White has been updated for the first time: ${JSON.stringify(white_after)}`);
@@ -340,12 +341,12 @@ function game_insert_in_history(game: Game, date_record_str: string): void {
 
 	// apply rating formula
 	{
-		let [white_after, black_after] = RatingSystem.get_instance().apply_rating_formula(game);
+		let [white_after, black_after] = RatingSystemManager.get_instance().apply_rating_formula(game);
 		updated_players.push(updated_player(game.get_time_control_id(), game.get_white(), white_after));
 		updated_players.push(updated_player(game.get_time_control_id(), game.get_black(), black_after));
 	}
 
-	const games_dir = ServerEnvironment.get_instance().get_dir_games();
+	const games_dir = EnvironmentManager.get_instance().get_dir_games();
 
 	debug(log_now(), 'Adding game into the history...');
 	debug(log_now(), `    Game '${JSON.stringify(game)}'`);
@@ -479,18 +480,18 @@ export function game_add(g: Game): void {
 	debug(log_now(), `Inserting the game into the history...`);
 	game_insert_in_history(g, when);
 	debug(log_now(), `Updating the hash table (game id -> game record)`);
-	ServerGames.get_instance().set_game_id_record_date(g.get_id(), when);
+	GamesManager.get_instance().set_game_id_record_date(g.get_id(), when);
 }
 
 export function game_find_by_id(game_id: string): [string[], string, Game[], number, number] | null {
-	const __date_record_str = ServerGames.get_instance().get_game_id_record_date(game_id);
+	const __date_record_str = GamesManager.get_instance().get_game_id_record_date(game_id);
 	// game_id does not exist
 	if (__date_record_str == null) {
 		return null;
 	}
 	const date_record_str = __date_record_str as string;
 
-	const games_dir = ServerEnvironment.get_instance().get_dir_games();
+	const games_dir = EnvironmentManager.get_instance().get_dir_games();
 	const date_record_filename: string = path.join(games_dir, date_record_str);
 	debug(log_now(), `    File: '${date_record_filename}'`);
 
@@ -538,7 +539,7 @@ export function game_find_by_id(game_id: string): [string[], string, Game[], num
  * @param new_result The (new) result of the game
  */
 export function game_edit_result(game_id: string, new_result: GameResult): void {
-	const games_dir = ServerEnvironment.get_instance().get_dir_games();
+	const games_dir = EnvironmentManager.get_instance().get_dir_games();
 
 	debug(log_now(), `Editing game '${game_id}'`);
 
@@ -566,7 +567,7 @@ export function game_edit_result(game_id: string, new_result: GameResult): void 
 
 	// apply rating formula
 	{
-		let [white_after, black_after] = RatingSystem.get_instance().apply_rating_formula(game);
+		let [white_after, black_after] = RatingSystemManager.get_instance().apply_rating_formula(game);
 		updated_players.push(updated_player(game.get_time_control_id(), game.get_white(), white_after));
 		updated_players.push(updated_player(game.get_time_control_id(), game.get_black(), black_after));
 	}
@@ -609,21 +610,24 @@ export function game_edit_result(game_id: string, new_result: GameResult): void 
 }
 
 export function recalculate_Elo_ratings() {
-	const games_dir = ServerEnvironment.get_instance().get_dir_games();
-	const all_time_controls = RatingSystem.get_instance().get_time_controls();
+	const games_dir = EnvironmentManager.get_instance().get_dir_games();
+	const all_time_controls = RatingSystemManager.get_instance().get_time_controls();
 
 	// initialize all players to a freshly created player
 	let updated_players: Player[] = [];
 	let player_to_index: Map<string, number> = new Map();
 	{
-		let mem = ServerUsers.get_instance();
+		let mem = UsersManager.get_instance();
 		for (let i = 0; i < mem.num_users(); ++i) {
 			const username = mem.get_user(i).get_username();
 
 			let ratings: TimeControlRating[] = [];
 			// update the current record for all time controls
 			for (let k = 0; k < all_time_controls.length; ++k) {
-				let tcr = new TimeControlRating(all_time_controls[k].id, RatingSystem.get_instance().get_new_rating());
+				let tcr = new TimeControlRating(
+					all_time_controls[k].id,
+					RatingSystemManager.get_instance().get_new_rating()
+				);
 				ratings.push(tcr);
 			}
 
