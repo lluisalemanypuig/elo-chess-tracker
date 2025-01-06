@@ -41,6 +41,17 @@ export function date_to_string(date: Date): string {
 }
 
 /**
+ * @brief Formats a date into a string YYYY-MM-DD..HH:mm:ss:SSS
+ *
+ * 'SSS' are milliseconds
+ * @param date A Date object.
+ * @returns A string.
+ */
+export function date_to_string_millis(date: Date): string {
+	return moment.utc(date).local().format('YYYY-MM-DD..HH:mm:ss:SSS');
+}
+
+/**
  * @brief Formats a date into a string YYYY-MM-DD
  * @param date A Date object.
  * @returns A string.
@@ -101,6 +112,11 @@ export function long_date_to_short_date(date: string): string {
 /// Returns the current date in string format "YYYY-MM-DD..HH:mm:ss"
 export function log_now(): string {
 	return date_to_string(new Date());
+}
+
+/// Returns the current date in string format "YYYY-MM-DD..HH:mm:ss:SSS"
+export function log_now_millis(): string {
+	return date_to_string_millis(new Date());
 }
 
 // ------------
