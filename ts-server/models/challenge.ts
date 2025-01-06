@@ -32,14 +32,14 @@ import { GameResult } from './game';
  */
 export class Challenge {
 	/// Identifier of this challenge
-	public id: string;
+	private readonly id: string;
 
 	/// The Challenge sending the challenge
 	private readonly sent_by: string;
 	/// The Challenge receiving the challenge
 	private readonly sent_to: string;
 	/// Date when the challenge was sent
-	private when_challenge_sent: string;
+	private readonly when_challenge_sent: string;
 
 	/// Date when the challenge was accepted
 	private when_challenge_accepted: string | null = null;
@@ -81,15 +81,8 @@ export class Challenge {
 	 * @param time_control_id Time control id of the game
 	 * @param time_control_name Time control name of the game
 	 */
-	constructor(
-		id: string,
-
-		sent_by: string,
-		sent_to: string,
-		when_challenge_sent: string
-	) {
+	constructor(id: string, sent_by: string, sent_to: string, when_challenge_sent: string) {
 		this.id = id;
-
 		this.sent_by = sent_by;
 		this.sent_to = sent_to;
 		this.when_challenge_sent = when_challenge_sent;

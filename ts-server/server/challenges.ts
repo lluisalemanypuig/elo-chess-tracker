@@ -36,9 +36,9 @@ import { GameResult } from '../models/game';
 import { game_new, game_add } from './game_history';
 
 function challenge_get_index(id: string): number {
-	let mem = ServerChallenges.get_instance();
+	const mem = ServerChallenges.get_instance();
 	for (let i = mem.num_challenges() - 1; i >= 0; --i) {
-		if (mem.get_challenge(i).id == id) {
+		if (mem.get_challenge(i).get_id() == id) {
 			return i;
 		}
 	}
@@ -65,7 +65,7 @@ export function challenge_set_retrieve(
 	}
 ): Challenge[] {
 	let res: Challenge[] = [];
-	let mem = ServerChallenges.get_instance();
+	const mem = ServerChallenges.get_instance();
 	for (let i = 0; i < mem.num_challenges(); ++i) {
 		let c = mem.get_challenge(i);
 		if (by(c)) {
@@ -89,8 +89,7 @@ export function challenge_send_new(sender: string, receiver: string): string {
 		if (mem.num_challenges() == 0) {
 			return number_to_string(1);
 		}
-		const last_id = mem.last_challenge().id;
-		return number_to_string(parseInt(last_id, 10) + 1);
+		return number_to_string(mem.new_challenge_id());
 	})();
 
 	const c = new Challenge(new_id, sender, receiver, log_now());
@@ -112,12 +111,12 @@ export function challenge_send_new(sender: string, receiver: string): string {
  * of the challenge.
  */
 export function challenge_accept(c: Challenge): void {
-	debug(log_now(), `Accepting challenge '${c.id}'`);
+	debug(log_now(), `Accepting challenge '${c.get_id()}'`);
 
 	c.set_challenge_accepted(log_now());
 
 	const challenge_dir = ServerEnvironment.get_instance().get_dir_challenges();
-	const challenge_file = path.join(challenge_dir, c.id);
+	const challenge_file = path.join(challenge_dir, c.get_id());
 	debug(log_now(), `    Writing challenge into file '${challenge_file}'`);
 	fs.writeFileSync(challenge_file, JSON.stringify(c, null, 4));
 }
@@ -129,13 +128,13 @@ export function challenge_accept(c: Challenge): void {
  * of the challenge.
  */
 export function challenge_decline(c: Challenge): void {
-	debug(log_now(), `Declining challenge '${c.id}'`);
+	debug(log_now(), `Declining challenge '${c.get_id()}'`);
 
-	const idx = challenge_get_index(c.id);
+	const idx = challenge_get_index(c.get_id());
 	ServerChallenges.get_instance().remove_challenge(idx);
 
 	const challenge_dir = ServerEnvironment.get_instance().get_dir_challenges();
-	const challenge_file = path.join(challenge_dir, c.id);
+	const challenge_file = path.join(challenge_dir, c.get_id());
 	debug(log_now(), `    Deleting file '${challenge_file}'`);
 	fs.unlinkSync(challenge_file);
 }
@@ -156,12 +155,12 @@ export function challenge_set_result(
 	time_control_id: string,
 	time_control_name: string
 ): void {
-	debug(log_now(), `Set the result of the challenge '${c.id}'`);
+	debug(log_now(), `Set the result of the challenge '${c.get_id()}'`);
 
 	c.set_result(by, when, white, black, result, time_control_id, time_control_name);
 
 	const challenge_dir = ServerEnvironment.get_instance().get_dir_challenges();
-	const challenge_file = path.join(challenge_dir, c.id);
+	const challenge_file = path.join(challenge_dir, c.get_id());
 	debug(log_now(), `    Writing challenge into file '${challenge_file}'`);
 	fs.writeFileSync(challenge_file, JSON.stringify(c, null, 4));
 }
@@ -173,11 +172,11 @@ export function challenge_set_result(
  * of the challenge.
  */
 export function challenge_agree_result(c: Challenge): void {
-	debug(log_now(), `Agree to result of challenge '${c.id}'...`);
+	debug(log_now(), `Agree to result of challenge '${c.get_id()}'...`);
 
 	{
 		const challenge_dir = ServerEnvironment.get_instance().get_dir_challenges();
-		const challenge_file = path.join(challenge_dir, c.id);
+		const challenge_file = path.join(challenge_dir, c.get_id());
 		debug(log_now(), `    Removing challenge file '${challenge_file}'`);
 		fs.unlinkSync(challenge_file);
 	}
@@ -196,7 +195,7 @@ export function challenge_agree_result(c: Challenge): void {
 
 	{
 		debug(log_now(), `    Deleting the challenge from the memory...`);
-		const index = challenge_get_index(c.id);
+		const index = challenge_get_index(c.get_id());
 		ServerChallenges.get_instance().remove_challenge(index);
 	}
 }
@@ -208,12 +207,12 @@ export function challenge_agree_result(c: Challenge): void {
  * their rating as specified in the system at the conclusion of the game.
  */
 export function challenge_unset_result(c: Challenge): void {
-	debug(log_now(), `Disagree to the result of the challenge '${c.id}'`);
+	debug(log_now(), `Disagree to the result of the challenge '${c.get_id()}'`);
 
 	c.unset_result();
 
 	const challenge_dir = ServerEnvironment.get_instance().get_dir_challenges();
-	const challenge_file = path.join(challenge_dir, c.id);
+	const challenge_file = path.join(challenge_dir, c.get_id());
 	debug(log_now(), `    Writing challenge into file '${challenge_file}'`);
 	fs.writeFileSync(challenge_file, JSON.stringify(c, null, 4));
 }

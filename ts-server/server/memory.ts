@@ -170,6 +170,9 @@ export class ServerChallenges {
 	last_challenge(): Challenge {
 		return this.challenges[this.challenges.length - 1];
 	}
+	new_challenge_id(): number {
+		return parseInt(this.last_challenge().get_id(), 10) + 1;
+	}
 }
 
 export class ServerGames {
