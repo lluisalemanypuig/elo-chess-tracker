@@ -35,22 +35,6 @@ import { Challenge } from '../models/challenge';
 import { GameResult } from '../models/game';
 import { game_new, game_add } from './game_history';
 
-export function challenge_get_index(id: string): number {
-	const mem = ServerChallenges.get_instance();
-	for (let i = mem.num_challenges() - 1; i >= 0; --i) {
-		if (mem.get_challenge(i).get_id() == id) {
-			return i;
-		}
-	}
-	return -1;
-}
-
-/// Return challenge with identifier 'id'
-export function challenge_retrieve(id: string): Challenge | null {
-	const idx = challenge_get_index(id);
-	return idx != -1 ? ServerChallenges.get_instance().get_challenge(idx) : null;
-}
-
 /**
  * @brief Filters the set of challenges that are accepted by the filter function @e by.
  * @param by Function to filter. Returns true if a challenge is to be returned.
@@ -64,7 +48,7 @@ export function challenge_set_retrieve(
 	let res: Challenge[] = [];
 	const mem = ServerChallenges.get_instance();
 	for (let i = 0; i < mem.num_challenges(); ++i) {
-		const c = mem.get_challenge(i);
+		const c = mem.get_challenge(i) as Challenge;
 		if (by(c)) {
 			res.push(c);
 		}
@@ -122,8 +106,7 @@ export function challenge_accept(c: Challenge): void {
 export function challenge_decline(c: Challenge): void {
 	debug(log_now(), `Declining challenge '${c.get_id()}'`);
 
-	const idx = challenge_get_index(c.get_id());
-	ServerChallenges.get_instance().remove_challenge(idx);
+	ServerChallenges.get_instance().remove_challenge(c);
 
 	const challenge_dir = ServerEnvironment.get_instance().get_dir_challenges();
 	const challenge_file = path.join(challenge_dir, c.get_id());
@@ -140,7 +123,6 @@ export function challenge_decline(c: Challenge): void {
 export function challenge_set_result(
 	c: Challenge,
 	by: string,
-	when: string,
 	white: string,
 	black: string,
 	result: GameResult,
@@ -149,6 +131,7 @@ export function challenge_set_result(
 ): void {
 	debug(log_now(), `Set the result of the challenge '${c.get_id()}'`);
 
+	const when = log_now();
 	c.set_result(by, when, white, black, result, time_control_id, time_control_name);
 
 	const challenge_dir = ServerEnvironment.get_instance().get_dir_challenges();
@@ -187,8 +170,7 @@ export function challenge_agree_result(c: Challenge): void {
 
 	{
 		debug(log_now(), `    Deleting the challenge from the memory...`);
-		const index = challenge_get_index(c.get_id());
-		ServerChallenges.get_instance().remove_challenge(index);
+		ServerChallenges.get_instance().remove_challenge(c);
 	}
 }
 

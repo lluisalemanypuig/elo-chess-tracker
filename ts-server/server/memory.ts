@@ -158,15 +158,38 @@ export class ServerChallenges {
 	add_challenge(c: Challenge): void {
 		this.challenges.push(c);
 	}
-	remove_challenge(i: number): void {
+
+	remove_challenge(c: Challenge): void {
+		const idx = this.get_challenge_index(c);
+		this.remove_challenge_index(idx);
+	}
+	remove_challenge_index(i: number): void {
 		this.challenges.splice(i, 1);
 	}
+
 	num_challenges(): number {
 		return this.challenges.length;
 	}
-	get_challenge(i: number): Challenge {
-		return this.challenges[i];
+
+	get_challenge(idx: number): Challenge | null {
+		return idx != -1 ? this.challenges[idx] : null;
 	}
+	get_challenge_id(id: string): Challenge | null {
+		return this.get_challenge(this.get_challenge_index_id(id));
+	}
+
+	get_challenge_index(c: Challenge): number {
+		return this.get_challenge_index_id(c.get_id());
+	}
+	get_challenge_index_id(id: string): number {
+		for (let i = 0; i < this.challenges.length; ++i) {
+			if (this.challenges[i].get_id() == id) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
 	last_challenge(): Challenge {
 		return this.challenges[this.challenges.length - 1];
 	}
