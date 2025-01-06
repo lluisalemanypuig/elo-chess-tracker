@@ -85,15 +85,15 @@ export function challenge_send_new(sender: string, receiver: string): string {
 	debug(log_now(), 'Adding a new challenge...');
 
 	let mem = ServerChallenges.get_instance();
-	let new_id: string = '';
-	if (mem.num_challenges() == 0) {
-		new_id = number_to_string(1);
-	} else {
-		let last_id = mem.last_challenge().id;
-		new_id = number_to_string(parseInt(last_id, 10) + 1);
-	}
+	const new_id: string = ((): string => {
+		if (mem.num_challenges() == 0) {
+			return number_to_string(1);
+		}
+		const last_id = mem.last_challenge().id;
+		return number_to_string(parseInt(last_id, 10) + 1);
+	})();
 
-	let c = new Challenge(new_id, sender, receiver, log_now());
+	const c = new Challenge(new_id, sender, receiver, log_now());
 
 	mem.add_challenge(c);
 
@@ -116,8 +116,8 @@ export function challenge_accept(c: Challenge): void {
 
 	c.set_challenge_accepted(log_now());
 
-	let challenge_dir = ServerEnvironment.get_instance().get_dir_challenges();
-	let challenge_file = path.join(challenge_dir, c.id);
+	const challenge_dir = ServerEnvironment.get_instance().get_dir_challenges();
+	const challenge_file = path.join(challenge_dir, c.id);
 	debug(log_now(), `    Writing challenge into file '${challenge_file}'`);
 	fs.writeFileSync(challenge_file, JSON.stringify(c, null, 4));
 }
@@ -131,11 +131,11 @@ export function challenge_accept(c: Challenge): void {
 export function challenge_decline(c: Challenge): void {
 	debug(log_now(), `Declining challenge '${c.id}'`);
 
-	let idx = challenge_get_index(c.id);
+	const idx = challenge_get_index(c.id);
 	ServerChallenges.get_instance().remove_challenge(idx);
 
-	let challenge_dir = ServerEnvironment.get_instance().get_dir_challenges();
-	let challenge_file = path.join(challenge_dir, c.id);
+	const challenge_dir = ServerEnvironment.get_instance().get_dir_challenges();
+	const challenge_file = path.join(challenge_dir, c.id);
 	debug(log_now(), `    Deleting file '${challenge_file}'`);
 	fs.unlinkSync(challenge_file);
 }
@@ -160,8 +160,8 @@ export function challenge_set_result(
 
 	c.set_result(by, when, white, black, result, time_control_id, time_control_name);
 
-	let challenge_dir = ServerEnvironment.get_instance().get_dir_challenges();
-	let challenge_file = path.join(challenge_dir, c.id);
+	const challenge_dir = ServerEnvironment.get_instance().get_dir_challenges();
+	const challenge_file = path.join(challenge_dir, c.id);
 	debug(log_now(), `    Writing challenge into file '${challenge_file}'`);
 	fs.writeFileSync(challenge_file, JSON.stringify(c, null, 4));
 }
