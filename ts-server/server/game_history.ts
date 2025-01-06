@@ -97,7 +97,11 @@ export function game_new(
 			}
 		} else {
 			// there is no next game for white
-			white_to_assign = (user_retrieve(white) as User).get_rating(time_control_id).clone();
+			const white_user = user_retrieve(white);
+			if (white_user == null) {
+				throw new Error(`White user '${white}' is not in the users database`);
+			}
+			white_to_assign = (white_user as User).get_rating(time_control_id).clone();
 		}
 	}
 
@@ -113,7 +117,11 @@ export function game_new(
 				black_to_assign = next.get_black_rating().clone();
 			}
 		} else {
-			black_to_assign = (user_retrieve(black) as User).get_rating(time_control_id).clone();
+			const black_user = user_retrieve(black);
+			if (black_user == null) {
+				throw new Error(`Black user '${black}' is not in the users database`);
+			}
+			black_to_assign = (black_user as User).get_rating(time_control_id).clone();
 		}
 	}
 
