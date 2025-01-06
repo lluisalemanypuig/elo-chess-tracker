@@ -87,10 +87,10 @@ const classical_rapid_blitz = {
 		}
 	],
 	permissions: {
-		admin: ['challenge_user', 'challenge_admin', 'challenge_member', 'challenge_teacher', 'challenge_student'],
-		teacher: ['challenge_user', 'challenge_admin', 'challenge_member', 'challenge_teacher', 'challenge_student'],
-		member: ['challenge_user', 'challenge_admin', 'challenge_member', 'challenge_teacher', 'challenge_student'],
-		student: ['challenge_user', 'challenge_admin', 'challenge_member', 'challenge_teacher', 'challenge_student']
+		admin: [],
+		teacher: [],
+		member: [],
+		student: []
 	}
 };
 
@@ -137,10 +137,10 @@ const classical_rapid_blitz_bullet = {
 		}
 	],
 	permissions: {
-		admin: ['challenge_user', 'challenge_admin', 'challenge_member', 'challenge_teacher', 'challenge_student'],
-		teacher: ['challenge_user', 'challenge_admin', 'challenge_member', 'challenge_teacher', 'challenge_student'],
-		member: ['challenge_user', 'challenge_admin', 'challenge_member', 'challenge_teacher', 'challenge_student'],
-		student: ['challenge_user', 'challenge_admin', 'challenge_member', 'challenge_teacher', 'challenge_student']
+		admin: [],
+		teacher: [],
+		member: [],
+		student: []
 	}
 };
 
@@ -171,10 +171,10 @@ const classical = {
 		}
 	],
 	permissions: {
-		admin: ['challenge_user', 'challenge_admin', 'challenge_member', 'challenge_teacher', 'challenge_student'],
-		teacher: ['challenge_user', 'challenge_admin', 'challenge_member', 'challenge_teacher', 'challenge_student'],
-		member: ['challenge_user', 'challenge_admin', 'challenge_member', 'challenge_teacher', 'challenge_student'],
-		student: ['challenge_user', 'challenge_admin', 'challenge_member', 'challenge_teacher', 'challenge_student']
+		admin: [],
+		teacher: [],
+		member: [],
+		student: []
 	}
 };
 
