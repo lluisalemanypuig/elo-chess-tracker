@@ -27,11 +27,12 @@ import path from 'path';
 import fs from 'fs';
 
 import { run_command } from './exec_utils';
-import { clear_server } from '../../ts-server/server/clear';
-import { server_init_from_data } from '../../ts-server/server/initialization';
+import { clear_server } from '../../ts-server/managers/clear';
+import { server_init_from_data } from '../../ts-server/managers/initialization';
 import { ADMIN, MEMBER, STUDENT } from '../../ts-server/models/user_role';
-import { user_add_new, user_retrieve } from '../../ts-server/server/users';
-import { ServerChallenges, ServerGames } from '../../ts-server/server/memory';
+import { user_add_new, user_retrieve } from '../../ts-server/managers/users';
+import { ChallengesManager } from '../../ts-server/managers/challenges_manager';
+import { GamesManager } from '../../ts-server/managers/games_manager';
 import {
 	challenge_accept,
 	challenge_agree_result,
@@ -40,7 +41,7 @@ import {
 	challenge_set_result,
 	challenge_set_retrieve,
 	challenge_unset_result
-} from '../../ts-server/server/challenges';
+} from '../../ts-server/managers/challenges';
 import { number_to_string } from '../../ts-server/utils/misc';
 import { Challenge, challenge_from_json } from '../../ts-server/models/challenge';
 import { User } from '../../ts-server/models/user';
@@ -103,7 +104,7 @@ describe('Check initialization', () => {
 		clear_server();
 		server_init_from_data('tests/webpage/', classical_rapid_blitz);
 
-		const challenges = ServerChallenges.get_instance();
+		const challenges = ChallengesManager.get_instance();
 		expect(challenges.num_challenges()).toBe(0);
 		expect(challenges.get_max_challenge_id()).toBe(0);
 		expect(challenge_set_retrieve()).toEqual([]);
@@ -125,7 +126,7 @@ describe('Check challenge communication', () => {
 	});
 
 	test('Sending', () => {
-		const challenges = ServerChallenges.get_instance();
+		const challenges = ChallengesManager.get_instance();
 		expect(challenges.get_max_challenge_id()).toBe(0);
 
 		const c_aa_bb = challenge_send_new('aa', 'bb');
@@ -192,7 +193,7 @@ describe('Check challenge communication', () => {
 	});
 
 	test('Accept some challenges', () => {
-		const challenges = ServerChallenges.get_instance();
+		const challenges = ChallengesManager.get_instance();
 
 		for (let i of [3, 4]) {
 			const id = number_to_string(i);
@@ -209,7 +210,7 @@ describe('Check challenge communication', () => {
 	});
 
 	test('Decline some challenges', () => {
-		const challenges = ServerChallenges.get_instance();
+		const challenges = ChallengesManager.get_instance();
 
 		for (let i of [1, 2]) {
 			const id = number_to_string(i);
@@ -228,7 +229,7 @@ describe('Check challenge communication', () => {
 	});
 
 	test('Set result (3)', () => {
-		const challenges = ServerChallenges.get_instance();
+		const challenges = ChallengesManager.get_instance();
 
 		const id = number_to_string(3);
 
@@ -251,7 +252,7 @@ describe('Check challenge communication', () => {
 	});
 
 	test('Set result (4)', () => {
-		const challenges = ServerChallenges.get_instance();
+		const challenges = ChallengesManager.get_instance();
 
 		const id = number_to_string(4);
 
@@ -274,7 +275,7 @@ describe('Check challenge communication', () => {
 	});
 
 	test('Accept result (4)', () => {
-		const challenges = ServerChallenges.get_instance();
+		const challenges = ChallengesManager.get_instance();
 
 		const id = number_to_string(4);
 		let c = challenges.get_challenge_id(id) as Challenge;
@@ -303,14 +304,14 @@ describe('Check challenge communication', () => {
 		expect(challenges.get_max_challenge_id()).toBe(4);
 		expect(challenges.num_challenges()).toBe(1);
 
-		const games = ServerGames.get_instance();
+		const games = GamesManager.get_instance();
 		expect(games.get_max_game_id()).toEqual(1);
 		const game_file = path.join(db_games_dir, number_to_string(1));
 		expect(fs.existsSync(game_file)).toBe(false);
 	});
 
 	test('Unset result (3)', () => {
-		const challenges = ServerChallenges.get_instance();
+		const challenges = ChallengesManager.get_instance();
 
 		const id = number_to_string(3);
 
@@ -333,7 +334,7 @@ describe('Check challenge communication', () => {
 	});
 
 	test('Set result (3)', () => {
-		const challenges = ServerChallenges.get_instance();
+		const challenges = ChallengesManager.get_instance();
 
 		const id = number_to_string(3);
 
@@ -361,12 +362,12 @@ describe('Check initialization and communication', () => {
 		clear_server();
 		server_init_from_data('tests/webpage/', classical_rapid_blitz);
 
-		expect(ServerChallenges.get_instance().get_max_challenge_id()).toEqual(3);
-		expect(ServerGames.get_instance().get_max_game_id()).toEqual(1);
+		expect(ChallengesManager.get_instance().get_max_challenge_id()).toEqual(3);
+		expect(GamesManager.get_instance().get_max_game_id()).toEqual(1);
 	});
 
 	test('Accept result (3)', () => {
-		const challenges = ServerChallenges.get_instance();
+		const challenges = ChallengesManager.get_instance();
 
 		const id = number_to_string(3);
 		let c = challenges.get_challenge_id(id) as Challenge;
@@ -395,7 +396,7 @@ describe('Check initialization and communication', () => {
 		expect(challenges.get_max_challenge_id()).toBe(0);
 		expect(challenges.num_challenges()).toBe(0);
 
-		const games = ServerGames.get_instance();
+		const games = GamesManager.get_instance();
 		expect(games.get_max_game_id()).toEqual(2);
 		const game_file = path.join(db_games_dir, number_to_string(1));
 		expect(fs.existsSync(game_file)).toBe(false);

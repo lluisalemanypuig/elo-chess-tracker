@@ -58,7 +58,7 @@ import {
 import { ADMIN, MEMBER, STUDENT, TEACHER } from '../../ts-server/models/user_role';
 import { initialize_permissions, UserRoleToUserAction } from '../../ts-server/models/user_role_action';
 import { EloRating } from '../../ts-server/rating_framework/Elo/rating';
-import { initialize_rating_functions } from '../../ts-server/server/rating_system';
+import { initialize_rating_functions } from '../../ts-server/managers/rating_system';
 
 describe('Elo', () => {
 	//const bullet = new EloRating(1400, 0, 0, 0, 0, 40, false);

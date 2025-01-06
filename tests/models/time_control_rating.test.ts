@@ -29,7 +29,7 @@ import {
 	TimeControlRating
 } from '../../ts-server/models/time_control_rating';
 import { EloRating } from '../../ts-server/rating_framework/Elo/rating';
-import { initialize_rating_functions } from '../../ts-server/server/rating_system';
+import { initialize_rating_functions } from '../../ts-server/managers/rating_system';
 
 describe('clone', () => {
 	test('', () => {

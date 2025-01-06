@@ -26,7 +26,7 @@ Contact:
 import path from 'path';
 import fs from 'fs';
 
-import { server_init_from_data } from '../../ts-server/server/initialization';
+import { server_init_from_data } from '../../ts-server/managers/initialization';
 import {
 	user_add_new,
 	user_exists,
@@ -35,10 +35,10 @@ import {
 	user_rename_and_reassign_roles,
 	user_retrieve,
 	user_update_from_players_data
-} from '../../ts-server/server/users';
+} from '../../ts-server/managers/users';
 import { User, user_from_json } from '../../ts-server/models/user';
 import { ADMIN, MEMBER, STUDENT, TEACHER } from '../../ts-server/models/user_role';
-import { clear_server } from '../../ts-server/server/clear';
+import { clear_server } from '../../ts-server/managers/clear';
 import { run_command } from './exec_utils';
 import { Player } from '../../ts-server/models/player';
 import { TimeControlRating } from '../../ts-server/models/time_control_rating';

@@ -25,11 +25,15 @@ Contact:
 
 import path from 'path';
 
-import { server_init_from_data } from '../../ts-server/server/initialization';
-import { clear_server } from '../../ts-server/server/clear';
-import { RatingSystem } from '../../ts-server/server/rating_system';
-import { ServerConfiguration, ServerEnvironment } from '../../ts-server/server/environment';
-import { ServerChallenges, ServerGames, ServerSessionID, ServerUsers } from '../../ts-server/server/memory';
+import { server_init_from_data } from '../../ts-server/managers/initialization';
+import { clear_server } from '../../ts-server/managers/clear';
+import { RatingSystemManager } from '../../ts-server/managers/rating_system_manager';
+import { EnvironmentManager } from '../../ts-server/managers/environment_manager';
+import { ConfigurationManager } from '../../ts-server/managers/configuration_manager';
+import { ChallengesManager } from '../../ts-server/managers/challenges_manager';
+import { GamesManager } from '../../ts-server/managers/games_manager';
+import { SessionIDManager } from '../../ts-server/managers/session_id_manager';
+import { UsersManager } from '../../ts-server/managers/users_manager';
 import { run_command } from './exec_utils';
 
 const webpage_dir = 'tests/webpage';
@@ -91,13 +95,13 @@ describe('Configure server', () => {
 		await run_command('./tests/initialize_empty.sh');
 		server_init_from_data('tests/webpage', configuration);
 
-		const rating_system = RatingSystem.get_instance();
-		const server_users = ServerUsers.get_instance();
-		const server_challenges = ServerChallenges.get_instance();
-		const server_games = ServerGames.get_instance();
-		const server_configuration = ServerConfiguration.get_instance();
-		const server_session = ServerSessionID.get_instance();
-		const server_environment = ServerEnvironment.get_instance();
+		const rating_system = RatingSystemManager.get_instance();
+		const server_users = UsersManager.get_instance();
+		const server_challenges = ChallengesManager.get_instance();
+		const server_games = GamesManager.get_instance();
+		const server_configuration = ConfigurationManager.get_instance();
+		const server_session = SessionIDManager.get_instance();
+		const server_environment = EnvironmentManager.get_instance();
 
 		expect(rating_system.get_time_controls().length).toBe(4);
 		expect(rating_system.get_unique_time_controls_ids().length).toBe(3);
@@ -135,13 +139,13 @@ describe('Configure server', () => {
 	test('Clear the server memory', () => {
 		clear_server();
 
-		const rating_system = RatingSystem.get_instance();
-		const server_users = ServerUsers.get_instance();
-		const server_challenges = ServerChallenges.get_instance();
-		const server_games = ServerGames.get_instance();
-		const server_configuration = ServerConfiguration.get_instance();
-		const server_session = ServerSessionID.get_instance();
-		const server_environment = ServerEnvironment.get_instance();
+		const rating_system = RatingSystemManager.get_instance();
+		const server_users = UsersManager.get_instance();
+		const server_challenges = ChallengesManager.get_instance();
+		const server_games = GamesManager.get_instance();
+		const server_configuration = ConfigurationManager.get_instance();
+		const server_session = SessionIDManager.get_instance();
+		const server_environment = EnvironmentManager.get_instance();
 
 		expect(rating_system.get_time_controls().length).toBe(0);
 		expect(rating_system.get_unique_time_controls_ids().length).toBe(0);
