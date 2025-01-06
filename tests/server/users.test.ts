@@ -381,27 +381,72 @@ describe('Modify existing users', () => {
 		expect(user_aa.get_rating('Blitz')).toEqual(aa_Blitz.rating);
 		expect(user_aa.get_rating('Classical')).toEqual(aa_Classical.rating);
 		expect(user_aa.get_rating('Rapid')).toEqual(aa_Rapid.rating);
+		{
+			const user_file = path.join(db_users_dir, 'aa');
+			expect(fs.existsSync(user_file)).toBe(true);
+			const u = user_from_json(fs.readFileSync(user_file, 'utf8'));
+			expect(u.get_rating('Blitz')).toEqual(aa_Blitz.rating);
+			expect(u.get_rating('Classical')).toEqual(aa_Classical.rating);
+			expect(u.get_rating('Rapid')).toEqual(aa_Rapid.rating);
+		}
 
 		const user_bb = user_retrieve('bb') as User;
 		expect(user_bb.get_rating('Blitz')).toEqual(bb_Blitz.rating);
 		expect(user_bb.get_rating('Classical')).toEqual(bb_Classical.rating);
 		expect(user_bb.get_rating('Rapid')).toEqual(bb_Rapid.rating);
+		{
+			const user_file = path.join(db_users_dir, 'bb');
+			expect(fs.existsSync(user_file)).toBe(true);
+			const u = user_from_json(fs.readFileSync(user_file, 'utf8'));
+			expect(u.get_rating('Blitz')).toEqual(bb_Blitz.rating);
+			expect(u.get_rating('Classical')).toEqual(bb_Classical.rating);
+			expect(u.get_rating('Rapid')).toEqual(bb_Rapid.rating);
+		}
 
 		const user_cc = user_retrieve('cc') as User;
 		expect(user_cc.get_rating('Blitz')).toEqual(cc_Blitz.rating);
 		expect(user_cc.get_rating('Classical')).toEqual(cc_Classical.rating);
 		expect(user_cc.get_rating('Rapid')).toEqual(cc_Rapid.rating);
+		{
+			const user_file = path.join(db_users_dir, 'cc');
+			expect(fs.existsSync(user_file)).toBe(true);
+			const u = user_from_json(fs.readFileSync(user_file, 'utf8'));
+			expect(u.get_rating('Blitz')).toEqual(cc_Blitz.rating);
+			expect(u.get_rating('Classical')).toEqual(cc_Classical.rating);
+			expect(u.get_rating('Rapid')).toEqual(cc_Rapid.rating);
+		}
 
 		const user_dd = user_retrieve('dd') as User;
 		expect(user_dd.get_rating('Classical')).toEqual(dd_Classical.rating);
 		expect(user_dd.get_rating('Rapid')).toEqual(dd_Rapid.rating);
+		{
+			const user_file = path.join(db_users_dir, 'dd');
+			expect(fs.existsSync(user_file)).toBe(true);
+			const u = user_from_json(fs.readFileSync(user_file, 'utf8'));
+			expect(u.get_rating('Classical')).toEqual(dd_Classical.rating);
+			expect(u.get_rating('Rapid')).toEqual(dd_Rapid.rating);
+		}
 
 		const user_ee = user_retrieve('ee') as User;
 		expect(user_ee.get_rating('Blitz')).toEqual(ee_Blitz.rating);
 		expect(user_ee.get_rating('Rapid')).toEqual(ee_Rapid.rating);
+		{
+			const user_file = path.join(db_users_dir, 'ee');
+			expect(fs.existsSync(user_file)).toBe(true);
+			const u = user_from_json(fs.readFileSync(user_file, 'utf8'));
+			expect(u.get_rating('Blitz')).toEqual(ee_Blitz.rating);
+			expect(u.get_rating('Rapid')).toEqual(ee_Rapid.rating);
+		}
 
 		const user_ff = user_retrieve('ff') as User;
 		expect(user_ff.get_rating('Blitz')).toEqual(ff_Blitz.rating);
 		expect(user_ff.get_rating('Classical')).toEqual(ff_Classical.rating);
+		{
+			const user_file = path.join(db_users_dir, 'ff');
+			expect(fs.existsSync(user_file)).toBe(true);
+			const u = user_from_json(fs.readFileSync(user_file, 'utf8'));
+			expect(u.get_rating('Blitz')).toEqual(ff_Blitz.rating);
+			expect(u.get_rating('Classical')).toEqual(ff_Classical.rating);
+		}
 	});
 });
