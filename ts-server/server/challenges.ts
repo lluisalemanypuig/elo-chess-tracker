@@ -78,7 +78,7 @@ export function challenge_set_retrieve(
  * @param receiver Username of receiver
  * @returns The id of the challenge
  */
-export function challenge_send_new(sender: string, receiver: string): string {
+export function challenge_send_new(sender: string, receiver: string): Challenge {
 	debug(log_now(), 'Adding a new challenge...');
 
 	let mem = ServerChallenges.get_instance();
@@ -93,7 +93,7 @@ export function challenge_send_new(sender: string, receiver: string): string {
 	debug(log_now(), `    writing challenge into file '${challenge_file}'`);
 	fs.writeFileSync(challenge_file, JSON.stringify(c, null, 4));
 
-	return new_id;
+	return c;
 }
 
 /**
