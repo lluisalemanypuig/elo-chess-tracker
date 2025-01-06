@@ -23,7 +23,6 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { assert } from 'console';
 import path from 'path';
 import fs from 'fs';
 import Debug from 'debug';
@@ -33,7 +32,12 @@ import { Player } from '../models/player';
 import { Game, GameResult, game_set_from_json } from '../models/game';
 import { User } from '../models/user';
 import { log_now, long_date_to_short_date, number_to_string } from '../utils/misc';
-import { search, where_should_be_inserted, search_linear_by_key } from '../utils/searching';
+import {
+	search,
+	where_should_be_inserted,
+	search_linear_by_key,
+	where_should_be_inserted_by_key
+} from '../utils/searching';
 import { ServerGames, ServerUsers } from './memory';
 import { RatingSystem } from './rating_system';
 import { ServerEnvironment } from './environment';
@@ -77,7 +81,7 @@ export function game_new(
 	when: string
 ): Game {
 	// retrieve next id and increment maximum id
-	const id_number = ServerGames.get_instance().new_max_game_id();
+	const id_number = ServerGames.get_instance().increase_max_game_id();
 	const id_str = number_to_string(id_number);
 	debug(log_now(), `ID for new game: ${id_str}`);
 
@@ -184,17 +188,28 @@ function game_next_of_player(username: string, time_control_id: string, when: st
 		debug(log_now(), `    Look for a game with date '${when}'`);
 
 		// where should the current game be inserted
-		let [game_idx, game_exists] = where_should_be_inserted(
+		let [game_idx, game_exists] = where_should_be_inserted_by_key(
 			// convert each game into a string
-			game_set.map(function (elem): string {
-				return elem.get_date();
-			}),
-			when
+			game_set,
+			when,
+			(when1: string, when2: string): number => {
+				if (when1 < when2) {
+					return -1;
+				}
+				if (when1 > when2) {
+					return 1;
+				}
+				return 0;
+			},
+			(g: Game): string => {
+				return g.get_date();
+			}
 		);
 
 		debug(log_now(), `    Game exists? '${game_exists}'. At '${game_idx}'`);
-
-		assert(!game_exists);
+		if (game_exists) {
+			throw new Error(`Game already exists with date '${when}' at index ${game_idx}`);
+		}
 
 		// try to find the game in the game set
 		for (let i = game_idx; i < game_set.length; ++i) {
@@ -400,9 +415,10 @@ function game_insert_in_history(game: Game, date_record_str: string): void {
 		const [game_idx, game_exists] = where_should_be_inserted(game_set, game, game_compare_dates);
 
 		// The game should not exist in its record.
-		// This assumes that different games will never
-		// have the exact same 'when'.
-		assert(!game_exists);
+		// This assumes that different games will never have the exact same 'when'.
+		if (game_exists) {
+			throw new Error(`Game of the exact same when field '${game.get_date()}' already exists`);
+		}
 
 		// insert game into array
 		game_set.splice(game_idx, 0, game);
@@ -484,12 +500,16 @@ export function game_find_by_id(game_id: string): [string[], string, Game[], num
 	debug(log_now(), `    Directory contents: '${all_date_records}'`);
 
 	// Ensure there are game records
-	assert(all_date_records.length != 0);
+	if (all_date_records.length == 0) {
+		throw new Error(`There are no game records in database`);
+	}
 
 	// check that the file actually exists
 	debug(log_now(), `Searching '${date_record_str}' in '${all_date_records}'.`);
 	const idx_in_record_list = search(all_date_records, date_record_str);
-	assert(idx_in_record_list != -1);
+	if (idx_in_record_list == -1) {
+		throw new Error(`There is no game record '${date_record_str}' in the database.`);
+	}
 
 	// read games in record
 	const game_set = read_game_date_record(date_record_filename);
@@ -498,10 +518,16 @@ export function game_find_by_id(game_id: string): [string[], string, Game[], num
 	const game_idx_in_game_set = search_linear_by_key(game_set, (g: Game): boolean => {
 		return g.get_id() == game_id;
 	});
-	assert(game_idx_in_game_set < game_set.length);
+	if (game_idx_in_game_set == -1) {
+		throw new Error(`There is no game with id '${game_id}' in game record '${date_record_str}'`);
+	}
 
 	const game = game_set[game_idx_in_game_set];
-	assert(game.get_id() == game_id);
+	if (game.get_id() != game_id) {
+		throw new Error(
+			`The game returned has a different id. Searching for '${game_id}'. Returned '${game.get_id()}'`
+		);
+	}
 
 	return [all_date_records, date_record_filename, game_set, idx_in_record_list, game_idx_in_game_set];
 }
