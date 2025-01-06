@@ -64,7 +64,7 @@ export async function get_query_challenges_received(req: any, res: any) {
 
 		// return only basic information
 		all_challenges_received.push({
-			id: c.id,
+			id: c.get_id(),
 			sent_by: sent_by,
 			sent_when: c.get_when_challenge_sent()
 		});
@@ -105,7 +105,7 @@ export async function get_query_challenges_sent(req: any, res: any) {
 
 		// return only basic information
 		all_challenges.push({
-			id: c.id,
+			id: c.get_id(),
 			sent_to: sent_to,
 			sent_when: c.get_when_challenge_sent()
 		});
@@ -160,7 +160,7 @@ export async function get_query_challenges_pending_result(req: any, res: any) {
 
 		// return only basic information
 		all_challenges.push({
-			id: c.id,
+			id: c.get_id(),
 			sent_by_name: user_sent_by.get_full_name(),
 			sent_by_username: user_sent_by.get_username(),
 			sent_to_name: user_sent_to.get_full_name(),
@@ -232,7 +232,7 @@ export async function get_query_challenges_confirm_result_other(req: any, res: a
 
 		// return only basic information
 		all_challenges.push({
-			id: c.id,
+			id: c.get_id(),
 			opponent: opponent,
 			sent_when: c.get_when_challenge_sent(),
 			white: (user_retrieve(c.get_white() as string) as User).get_full_name(),
@@ -304,7 +304,7 @@ export async function get_query_challenges_confirm_result_self(req: any, res: an
 
 		// return only basic information
 		all_challenges.push({
-			id: c.id,
+			id: c.get_id(),
 			opponent: opponent,
 			sent_when: c.get_when_challenge_sent(),
 			white: (user_retrieve(c.get_white() as string) as User).get_full_name(),
