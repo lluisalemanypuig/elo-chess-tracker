@@ -27,6 +27,11 @@ import { ServerConfiguration, ServerEnvironment } from './environment';
 import { ServerChallenges, ServerGames, ServerSessionID, ServerUsers } from './memory';
 import { RatingSystem } from './rating_system';
 
+/**
+ * @brief Clear the memory of the server
+ *
+ * That is, the RAM memory, not the disk memory.
+ */
 export function clear_server(): void {
 	RatingSystem.get_instance().clear();
 	ServerUsers.get_instance().clear();
