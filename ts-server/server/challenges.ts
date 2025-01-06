@@ -28,7 +28,7 @@ import path from 'path';
 import Debug from 'debug';
 const debug = Debug('ELO_TRACKER:server_challenges');
 
-import { log_now, number_to_string } from '../utils/misc';
+import { log_now, log_now_millis, number_to_string } from '../utils/misc';
 import { ServerChallenges } from './memory';
 import { ServerEnvironment } from './environment';
 import { Challenge } from '../models/challenge';
@@ -66,7 +66,8 @@ export function challenge_send_new(sender: string, receiver: string): Challenge 
 	debug(log_now(), 'Adding a new challenge...');
 
 	let mem = ServerChallenges.get_instance();
-	const new_id: string = number_to_string(mem.new_challenge_id());
+	mem.increase_max_challenge_id();
+	const new_id: string = number_to_string(mem.get_max_challenge_id());
 
 	const c = new Challenge(new_id, sender, receiver, log_now());
 
@@ -131,7 +132,7 @@ export function challenge_set_result(
 ): void {
 	debug(log_now(), `Set the result of the challenge '${c.get_id()}'`);
 
-	const when = log_now();
+	const when = log_now_millis();
 	c.set_result(by, when, white, black, result, time_control_id, time_control_name);
 
 	const challenge_dir = ServerEnvironment.get_instance().get_dir_challenges();
@@ -143,8 +144,7 @@ export function challenge_set_result(
 /**
  * @brief Somebody accepts the result of the game
  * @param id Identifier string
- * @pre The accepter must be either a priviledged user or the receiver
- * of the challenge.
+ * @pre The accepter must be the receiver of the challenge.
  */
 export function challenge_agree_result(c: Challenge): void {
 	debug(log_now(), `Agree to result of challenge '${c.get_id()}'...`);
