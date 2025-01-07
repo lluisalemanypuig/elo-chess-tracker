@@ -41,8 +41,8 @@ describe('Challenges Manager', () => {
 		expect(challenges.get_challenge_index_id('00002')).toBe(-1);
 		expect(challenges.get_challenge_id('00001')).toBe(null);
 		expect(challenges.get_challenge_id('00002')).toBe(null);
-		expect(challenges.get_challenge(0)).toBe(null);
-		expect(challenges.get_challenge(1)).toBe(null);
+		expect(challenges.get_challenge_at(0)).toBe(null);
+		expect(challenges.get_challenge_at(1)).toBe(null);
 	});
 
 	test('Set maximum challenge id', () => {
@@ -82,17 +82,17 @@ describe('Challenges Manager', () => {
 		expect(challenges.get_challenge_index(yesterday)).toBe(0);
 		expect(challenges.get_challenge_index_id(yesterday.get_id())).toBe(0);
 		expect(challenges.get_challenge_id(yesterday.get_id())).toEqual(yesterday);
-		expect(challenges.get_challenge(0)).toEqual(yesterday);
+		expect(challenges.get_challenge_at(0)).toEqual(yesterday);
 
 		expect(challenges.get_challenge_index(today)).toBe(1);
 		expect(challenges.get_challenge_index_id(today.get_id())).toBe(1);
 		expect(challenges.get_challenge_id(today.get_id())).toEqual(today);
-		expect(challenges.get_challenge(1)).toEqual(today);
+		expect(challenges.get_challenge_at(1)).toEqual(today);
 
 		expect(challenges.get_challenge_index(tomorrow)).toBe(2);
 		expect(challenges.get_challenge_index_id(tomorrow.get_id())).toBe(2);
 		expect(challenges.get_challenge_id(tomorrow.get_id())).toEqual(tomorrow);
-		expect(challenges.get_challenge(2)).toEqual(tomorrow);
+		expect(challenges.get_challenge_at(2)).toEqual(tomorrow);
 	});
 
 	test('Remove some challenges', () => {
@@ -141,10 +141,10 @@ describe('Challenges Manager', () => {
 		expect(challenges.get_challenge_index_id(tomorrow.get_id())).toBe(1);
 		expect(challenges.get_challenge_id(tomorrow.get_id())).toEqual(tomorrow);
 
-		expect(challenges.get_challenge(0)).toEqual(today);
-		expect(challenges.get_challenge(1)).toEqual(tomorrow);
-		expect(challenges.get_challenge(2)).toEqual(null);
-		expect(challenges.get_challenge(3)).toEqual(null);
+		expect(challenges.get_challenge_at(0)).toEqual(today);
+		expect(challenges.get_challenge_at(1)).toEqual(tomorrow);
+		expect(challenges.get_challenge_at(2)).toEqual(null);
+		expect(challenges.get_challenge_at(3)).toEqual(null);
 
 		// ------------------------------------------------------------------------
 		challenges.add_challenge(day_after_tomorrow);
@@ -167,10 +167,10 @@ describe('Challenges Manager', () => {
 		expect(challenges.get_challenge_index_id(day_after_tomorrow.get_id())).toBe(2);
 		expect(challenges.get_challenge_id(day_after_tomorrow.get_id())).toEqual(day_after_tomorrow);
 
-		expect(challenges.get_challenge(0)).toEqual(today);
-		expect(challenges.get_challenge(1)).toEqual(tomorrow);
-		expect(challenges.get_challenge(2)).toEqual(day_after_tomorrow);
-		expect(challenges.get_challenge(3)).toEqual(null);
+		expect(challenges.get_challenge_at(0)).toEqual(today);
+		expect(challenges.get_challenge_at(1)).toEqual(tomorrow);
+		expect(challenges.get_challenge_at(2)).toEqual(day_after_tomorrow);
+		expect(challenges.get_challenge_at(3)).toEqual(null);
 
 		// ------------------------------------------------------------------------
 		challenges.remove_challenge(tomorrow);
@@ -193,10 +193,10 @@ describe('Challenges Manager', () => {
 		expect(challenges.get_challenge_index_id(day_after_tomorrow.get_id())).toBe(1);
 		expect(challenges.get_challenge_id(day_after_tomorrow.get_id())).toEqual(day_after_tomorrow);
 
-		expect(challenges.get_challenge(0)).toEqual(today);
-		expect(challenges.get_challenge(1)).toEqual(day_after_tomorrow);
-		expect(challenges.get_challenge(2)).toEqual(null);
-		expect(challenges.get_challenge(3)).toEqual(null);
+		expect(challenges.get_challenge_at(0)).toEqual(today);
+		expect(challenges.get_challenge_at(1)).toEqual(day_after_tomorrow);
+		expect(challenges.get_challenge_at(2)).toEqual(null);
+		expect(challenges.get_challenge_at(3)).toEqual(null);
 
 		// ------------------------------------------------------------------------
 		challenges.remove_challenge(today);
@@ -219,10 +219,10 @@ describe('Challenges Manager', () => {
 		expect(challenges.get_challenge_index_id(day_after_tomorrow.get_id())).toBe(0);
 		expect(challenges.get_challenge_id(day_after_tomorrow.get_id())).toEqual(day_after_tomorrow);
 
-		expect(challenges.get_challenge(0)).toEqual(day_after_tomorrow);
-		expect(challenges.get_challenge(1)).toEqual(null);
-		expect(challenges.get_challenge(2)).toEqual(null);
-		expect(challenges.get_challenge(3)).toEqual(null);
+		expect(challenges.get_challenge_at(0)).toEqual(day_after_tomorrow);
+		expect(challenges.get_challenge_at(1)).toEqual(null);
+		expect(challenges.get_challenge_at(2)).toEqual(null);
+		expect(challenges.get_challenge_at(3)).toEqual(null);
 
 		// ------------------------------------------------------------------------
 		challenges.remove_challenge(day_after_tomorrow);
@@ -245,9 +245,9 @@ describe('Challenges Manager', () => {
 		expect(challenges.get_challenge_index_id(day_after_tomorrow.get_id())).toBe(-1);
 		expect(challenges.get_challenge_id(day_after_tomorrow.get_id())).toEqual(null);
 
-		expect(challenges.get_challenge(0)).toEqual(null);
-		expect(challenges.get_challenge(1)).toEqual(null);
-		expect(challenges.get_challenge(2)).toEqual(null);
-		expect(challenges.get_challenge(3)).toEqual(null);
+		expect(challenges.get_challenge_at(0)).toEqual(null);
+		expect(challenges.get_challenge_at(1)).toEqual(null);
+		expect(challenges.get_challenge_at(2)).toEqual(null);
+		expect(challenges.get_challenge_at(3)).toEqual(null);
 	});
 });
