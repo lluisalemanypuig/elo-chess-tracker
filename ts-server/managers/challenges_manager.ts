@@ -71,7 +71,7 @@ export class ChallengesManager {
 	}
 
 	get_challenge(idx: number): Challenge | null {
-		return idx != -1 ? this.challenges[idx] : null;
+		return 0 <= idx && idx < this.challenges.length ? this.challenges[idx] : null;
 	}
 	get_challenge_id(id: string): Challenge | null {
 		return this.get_challenge(this.get_challenge_index_id(id));
