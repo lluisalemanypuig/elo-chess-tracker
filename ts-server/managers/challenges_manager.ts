@@ -70,17 +70,17 @@ export class ChallengesManager {
 		return this.challenges.length;
 	}
 
-	get_challenge(idx: number): Challenge | null {
+	get_challenge_at(idx: number): Challenge | null {
 		return 0 <= idx && idx < this.challenges.length ? this.challenges[idx] : null;
 	}
-	get_challenge_id(id: string): Challenge | null {
-		return this.get_challenge(this.get_challenge_index_id(id));
+	get_challenge_by_id(id: string): Challenge | null {
+		return this.get_challenge_at(this.get_challenge_index_by_id(id));
 	}
 
 	get_challenge_index(c: Challenge): number {
-		return this.get_challenge_index_id(c.get_id());
+		return this.get_challenge_index_by_id(c.get_id());
 	}
-	get_challenge_index_id(id: string): number {
+	get_challenge_index_by_id(id: string): number {
 		for (let i = 0; i < this.challenges.length; ++i) {
 			if (this.challenges[i].get_id() == id) {
 				return i;

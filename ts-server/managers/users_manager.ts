@@ -60,16 +60,27 @@ export class UsersManager {
 		this.users.push(u);
 		this.user_to_index.set(u.get_username(), i);
 	}
-	replace_user(u: User, i: number): void {
-		delete this.users[i];
-		this.users[i] = u;
+	replace_user(u: User, idx: number): void {
+		if (!(0 <= idx && idx < this.users.length)) {
+			throw new Error('Index out of bounds');
+		}
+		this.user_to_index.delete(this.users[idx].get_username());
+		delete this.users[idx];
+
+		this.user_to_index.set(u.get_username(), idx);
+		this.users[idx] = u;
 	}
-	get_user(i: number): User {
-		return this.users[i];
+	get_user_at(idx: number): User | null {
+		return 0 <= idx && idx < this.users.length ? this.users[idx] : null;
 	}
-	get_user_index(username: string): number | undefined {
-		return this.user_to_index.get(username);
+	get_user_index(u: User): number {
+		return this.get_user_index_by_username(u.get_username());
 	}
+	get_user_index_by_username(username: string): number {
+		const idx = this.user_to_index.get(username);
+		return idx != undefined ? idx : -1;
+	}
+
 	num_users(): number {
 		return this.users.length;
 	}

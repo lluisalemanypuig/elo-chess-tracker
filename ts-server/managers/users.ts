@@ -48,7 +48,7 @@ import { TimeControlRating } from '../models/time_control_rating';
 export function user_retrieve(username: string): User | null {
 	let mem = UsersManager.get_instance();
 	for (let i = 0; i < mem.num_users(); ++i) {
-		const user: User = mem.get_user(i);
+		const user = mem.get_user_at(i) as User;
 		if (user.get_username() == username) {
 			return user;
 		}
@@ -88,7 +88,7 @@ export function user_get_all(): User[] {
 	let all_users: User[] = [];
 	let mem = UsersManager.get_instance();
 	for (let i = 0; i < mem.num_users(); ++i) {
-		all_users.push(mem.get_user(i).clone());
+		all_users.push((mem.get_user_at(i) as User).clone());
 	}
 	return all_users;
 }
@@ -147,7 +147,7 @@ export function user_get_all_names_and_usernames(): [string, string][] {
 
 	let mem = UsersManager.get_instance();
 	for (let i = 0; i < mem.num_users(); ++i) {
-		const user = mem.get_user(i);
+		const user = mem.get_user_at(i) as User;
 		res.push([user.get_full_name(), user.get_username()]);
 	}
 	return res;
@@ -193,7 +193,7 @@ export function user_update_from_players_data(players: Player[]): void {
 		debug(log_now(), `        User file '${user_filename}' written.`);
 
 		debug(log_now(), '    Server memory...');
-		const u_idx = mem.get_user_index(u.get_username()) as number;
+		const u_idx = mem.get_user_index(u) as number;
 		debug(log_now(), `        User '${u.get_username()}' is at index '${u_idx}'`);
 		mem.replace_user(u, u_idx);
 	}

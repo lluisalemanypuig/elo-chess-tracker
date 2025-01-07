@@ -141,7 +141,7 @@ export async function post_challenge_accept(req: any, res: any) {
 
 	debug(log_now(), `User '${session.username}' wants to accept challenge '${challenge_id}'`);
 
-	const _c = ChallengesManager.get_instance().get_challenge_id(challenge_id);
+	const _c = ChallengesManager.get_instance().get_challenge_by_id(challenge_id);
 	if (_c == null) {
 		res.send({
 			r: '0',
@@ -180,7 +180,7 @@ export async function post_challenge_decline(req: any, res: any) {
 
 	debug(log_now(), `User '${session.username}' wants to decline challenge '${challenge_id}'`);
 
-	const _c = ChallengesManager.get_instance().get_challenge_id(challenge_id);
+	const _c = ChallengesManager.get_instance().get_challenge_by_id(challenge_id);
 	if (_c == null) {
 		res.send({
 			r: '0',
@@ -264,7 +264,7 @@ export async function post_challenge_set_result(req: any, res: any) {
 		return;
 	}
 
-	let _c = ChallengesManager.get_instance().get_challenge_id(challenge_id);
+	let _c = ChallengesManager.get_instance().get_challenge_by_id(challenge_id);
 	if (_c == null) {
 		res.send({
 			r: '0',
@@ -325,7 +325,7 @@ export async function post_challenge_agree_result(req: any, res: any) {
 	}
 
 	const challenge_id = req.body.challenge_id;
-	let _c = ChallengesManager.get_instance().get_challenge_id(challenge_id);
+	let _c = ChallengesManager.get_instance().get_challenge_by_id(challenge_id);
 	if (_c == null) {
 		res.send({
 			r: '0',
@@ -350,7 +350,7 @@ export async function post_challenge_disagree_result(req: any, res: any) {
 	}
 
 	const challenge_id = req.body.challenge_id;
-	let _c = ChallengesManager.get_instance().get_challenge_id(challenge_id);
+	let _c = ChallengesManager.get_instance().get_challenge_by_id(challenge_id);
 	if (_c == null) {
 		res.send({
 			r: '0',

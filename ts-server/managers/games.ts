@@ -619,7 +619,7 @@ export function recalculate_Elo_ratings() {
 	{
 		let mem = UsersManager.get_instance();
 		for (let i = 0; i < mem.num_users(); ++i) {
-			const username = mem.get_user(i).get_username();
+			const username = (mem.get_user_at(i) as User).get_username();
 
 			let ratings: TimeControlRating[] = [];
 			// update the current record for all time controls

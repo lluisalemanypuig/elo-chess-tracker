@@ -48,7 +48,7 @@ export function challenge_set_retrieve(
 	let res: Challenge[] = [];
 	const mem = ChallengesManager.get_instance();
 	for (let i = 0; i < mem.num_challenges(); ++i) {
-		const c = mem.get_challenge(i) as Challenge;
+		const c = mem.get_challenge_at(i) as Challenge;
 		if (by(c)) {
 			res.push(c);
 		}
