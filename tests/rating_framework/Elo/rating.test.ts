@@ -23,7 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { Elo_rating_from_json, Elo_rating_new, EloRating } from '../../../ts-server/rating_framework/Elo/rating';
+import { Elo_rating_from_json, Elo_new_rating, EloRating } from '../../../ts-server/rating_framework/Elo/rating';
 
 describe('JSON conversion', () => {
 	test('from string to rating', () => {
@@ -49,7 +49,7 @@ describe('JSON conversion', () => {
 
 describe('Initial rating', () => {
 	test('1', () => {
-		const elo = Elo_rating_new();
+		const elo = Elo_new_rating();
 		expect(elo.rating).toBe(1500);
 		expect(elo.num_games).toBe(0);
 		expect(elo.won).toBe(0);
