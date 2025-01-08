@@ -93,90 +93,160 @@ const configuration = {
 describe('Configure server', () => {
 	test('Load an empty server', async () => {
 		await run_command('./tests/initialize_empty.sh');
-		server_init_from_data('tests/webpage', configuration);
+		expect(() => server_init_from_data('tests/webpage', configuration)).not.toThrow();
+	});
 
-		const rating_system = RatingSystemManager.get_instance();
-		const server_users = UsersManager.get_instance();
-		const server_challenges = ChallengesManager.get_instance();
-		const server_games = GamesManager.get_instance();
-		const server_configuration = ConfigurationManager.get_instance();
-		const server_session = SessionIDManager.get_instance();
-		const server_environment = EnvironmentManager.get_instance();
+	test('Check RatingSystemManager', () => {
+		const rating_system_manager = RatingSystemManager.get_instance();
 
-		expect(rating_system.get_time_controls().length).toBe(4);
-		expect(rating_system.get_unique_time_controls_ids().length).toBe(3);
+		expect(rating_system_manager.is_time_control_id_valid('Classical')).toBe(true);
+		expect(rating_system_manager.is_time_control_id_valid('classical')).toBe(false);
+		expect(rating_system_manager.is_time_control_id_valid('Rapid')).toBe(true);
+		expect(rating_system_manager.is_time_control_id_valid('rapid')).toBe(false);
+		expect(rating_system_manager.is_time_control_id_valid('Blitz')).toBe(true);
+		expect(rating_system_manager.is_time_control_id_valid('blitz')).toBe(false);
 
-		expect(server_users.num_users()).toBe(0);
+		const unique_ids = rating_system_manager.get_unique_time_controls_ids();
+		expect(
+			unique_ids.find((val: string): boolean => {
+				return val == 'Rapid';
+			})
+		).toEqual('Rapid');
 
-		expect(server_challenges.num_challenges()).toBe(0);
+		expect(
+			unique_ids.find((val: string): boolean => {
+				return val == 'Blitz';
+			})
+		).toEqual('Blitz');
 
-		expect(server_games.get_max_game_id()).toBe(0);
+		expect(rating_system_manager.get_time_controls().length).toBe(4);
+		expect(rating_system_manager.get_unique_time_controls_ids().length).toBe(3);
+	});
 
-		expect(server_configuration.get_port_http()).toBe('8080');
-		expect(server_configuration.get_port_https()).toBe('8443');
+	test('Check UsersManager', () => {
+		const users_manager = UsersManager.get_instance();
+		expect(users_manager.num_users()).toBe(0);
+	});
 
-		expect(server_session.num_session_ids()).toBe(0);
+	test('Check ChallengesManager', () => {
+		const challenges_manager = ChallengesManager.get_instance();
+		expect(challenges_manager.num_challenges()).toBe(0);
+	});
 
-		expect(server_environment.get_dir_database()).toEqual(db_dir);
-		expect(server_environment.get_dir_games()).toEqual(db_games_dir);
-		expect(server_environment.get_dir_users()).toEqual(db_users_dir);
-		expect(server_environment.get_dir_challenges()).toEqual(db_challenges_dir);
+	test('Check GamesManager', () => {
+		const games_manager = GamesManager.get_instance();
+		expect(games_manager.get_max_game_id()).toBe(0);
+	});
 
-		expect(server_environment.get_dir_ssl()).toEqual(ssl_dir);
-		expect(server_environment.get_ssl_public_key_file()).toEqual(path.join(ssl_dir, 'sadf'));
-		expect(server_environment.get_ssl_private_key_file()).toEqual(path.join(ssl_dir, 'qwer'));
-		expect(server_environment.get_ssl_passphrase_file()).toEqual(path.join(ssl_dir, 'kgj68'));
+	test('Check ConfigurationManager', () => {
+		const configuration_manager = ConfigurationManager.get_instance();
+		expect(configuration_manager.get_port_http()).toBe('8080');
+		expect(configuration_manager.get_port_https()).toBe('8443');
+	});
 
-		expect(server_environment.get_dir_icons()).toEqual(icons_dir);
-		expect(server_environment.get_icon_favicon()).toEqual(path.join(icons_dir, 'favicon.png'));
-		expect(server_environment.get_icon_login_page()).toEqual(path.join(icons_dir, 'login.png'));
-		expect(server_environment.get_icon_home_page()).toEqual(path.join(icons_dir, 'home.png'));
+	test('Check SessionIDManager', () => {
+		const session_manager = SessionIDManager.get_instance();
+		expect(session_manager.num_session_ids()).toBe(0);
+	});
 
-		expect(server_environment.get_title_login_page()).toEqual('Login title');
-		expect(server_environment.get_title_home_page()).toEqual('Home title');
+	test('Check Environmentmanager', () => {
+		const environment_manager = EnvironmentManager.get_instance();
+
+		expect(environment_manager.get_dir_database()).toEqual(db_dir);
+		expect(environment_manager.get_dir_games()).toEqual(db_games_dir);
+		expect(environment_manager.get_dir_users()).toEqual(db_users_dir);
+		expect(environment_manager.get_dir_challenges()).toEqual(db_challenges_dir);
+
+		expect(environment_manager.get_dir_ssl()).toEqual(ssl_dir);
+		expect(environment_manager.get_ssl_public_key_file()).toEqual(path.join(ssl_dir, 'sadf'));
+		expect(environment_manager.get_ssl_private_key_file()).toEqual(path.join(ssl_dir, 'qwer'));
+		expect(environment_manager.get_ssl_passphrase_file()).toEqual(path.join(ssl_dir, 'kgj68'));
+
+		expect(environment_manager.get_dir_icons()).toEqual(icons_dir);
+		expect(environment_manager.get_icon_favicon()).toEqual(path.join(icons_dir, 'favicon.png'));
+		expect(environment_manager.get_icon_login_page()).toEqual(path.join(icons_dir, 'login.png'));
+		expect(environment_manager.get_icon_home_page()).toEqual(path.join(icons_dir, 'home.png'));
+
+		expect(environment_manager.get_title_login_page()).toEqual('Login title');
+		expect(environment_manager.get_title_home_page()).toEqual('Home title');
 	});
 
 	test('Clear the server memory', () => {
-		clear_server();
+		expect(() => clear_server()).not.toThrow();
+	});
 
-		const rating_system = RatingSystemManager.get_instance();
-		const server_users = UsersManager.get_instance();
-		const server_challenges = ChallengesManager.get_instance();
-		const server_games = GamesManager.get_instance();
-		const server_configuration = ConfigurationManager.get_instance();
-		const server_session = SessionIDManager.get_instance();
-		const server_environment = EnvironmentManager.get_instance();
+	test('Check RatingSystemManager', () => {
+		const rating_system_manager = RatingSystemManager.get_instance();
 
-		expect(rating_system.get_time_controls().length).toBe(0);
-		expect(rating_system.get_unique_time_controls_ids().length).toBe(0);
+		expect(rating_system_manager.is_time_control_id_valid('Classical')).toBe(false);
+		expect(rating_system_manager.is_time_control_id_valid('classical')).toBe(false);
+		expect(rating_system_manager.is_time_control_id_valid('Rapid')).toBe(false);
+		expect(rating_system_manager.is_time_control_id_valid('rapid')).toBe(false);
+		expect(rating_system_manager.is_time_control_id_valid('Blitz')).toBe(false);
+		expect(rating_system_manager.is_time_control_id_valid('blitz')).toBe(false);
 
-		expect(server_users.num_users()).toBe(0);
+		const unique_ids = rating_system_manager.get_unique_time_controls_ids();
+		expect(
+			unique_ids.find((val: string): boolean => {
+				return val == 'Rapid';
+			})
+		).toEqual(undefined);
 
-		expect(server_challenges.num_challenges()).toBe(0);
+		expect(
+			unique_ids.find((val: string): boolean => {
+				return val == 'Blitz';
+			})
+		).toEqual(undefined);
 
-		expect(server_games.get_max_game_id()).toBe(0);
+		expect(rating_system_manager.get_time_controls().length).toBe(0);
+		expect(rating_system_manager.get_unique_time_controls_ids().length).toBe(0);
+	});
 
-		expect(server_configuration.get_port_http()).toBe('');
-		expect(server_configuration.get_port_https()).toBe('');
+	test('Check UsersManager', () => {
+		const users_manager = UsersManager.get_instance();
+		expect(users_manager.num_users()).toBe(0);
+	});
 
-		expect(server_session.num_session_ids()).toBe(0);
+	test('Check ChallengesManager', () => {
+		const challenges_manager = ChallengesManager.get_instance();
+		expect(challenges_manager.num_challenges()).toBe(0);
+	});
 
-		expect(server_environment.get_dir_database()).toEqual('');
-		expect(server_environment.get_dir_games()).toEqual('');
-		expect(server_environment.get_dir_users()).toEqual('');
-		expect(server_environment.get_dir_challenges()).toEqual('');
+	test('Check GamesManager', () => {
+		const games_manager = GamesManager.get_instance();
+		expect(games_manager.get_max_game_id()).toBe(0);
+	});
 
-		expect(server_environment.get_dir_ssl()).toEqual('');
-		expect(server_environment.get_ssl_public_key_file()).toEqual('');
-		expect(server_environment.get_ssl_private_key_file()).toEqual('');
-		expect(server_environment.get_ssl_passphrase_file()).toEqual('');
+	test('Check ConfigurationManager', () => {
+		const configuration_manager = ConfigurationManager.get_instance();
+		expect(configuration_manager.get_port_http()).toBe('');
+		expect(configuration_manager.get_port_https()).toBe('');
+	});
 
-		expect(server_environment.get_dir_icons()).toEqual('');
-		expect(server_environment.get_icon_favicon()).toEqual('');
-		expect(server_environment.get_icon_login_page()).toEqual('');
-		expect(server_environment.get_icon_home_page()).toEqual('');
+	test('Check SessionIDManager', () => {
+		const session_manager = SessionIDManager.get_instance();
+		expect(session_manager.num_session_ids()).toBe(0);
+	});
 
-		expect(server_environment.get_title_login_page()).toEqual('');
-		expect(server_environment.get_title_home_page()).toEqual('');
+	test('Check Environmentmanager', () => {
+		const environment_manager = EnvironmentManager.get_instance();
+
+		expect(environment_manager.get_dir_database()).toEqual('');
+		expect(environment_manager.get_dir_games()).toEqual('');
+		expect(environment_manager.get_dir_users()).toEqual('');
+		expect(environment_manager.get_dir_challenges()).toEqual('');
+
+		expect(environment_manager.get_dir_ssl()).toEqual('');
+		expect(environment_manager.get_ssl_public_key_file()).toEqual('');
+		expect(environment_manager.get_ssl_private_key_file()).toEqual('');
+		expect(environment_manager.get_ssl_passphrase_file()).toEqual('');
+
+		expect(environment_manager.get_dir_icons()).toEqual('');
+		expect(environment_manager.get_icon_favicon()).toEqual('');
+		expect(environment_manager.get_icon_login_page()).toEqual('');
+		expect(environment_manager.get_icon_home_page()).toEqual('');
+
+		expect(environment_manager.get_title_login_page()).toEqual('');
+		expect(environment_manager.get_title_home_page()).toEqual('');
 	});
 });
