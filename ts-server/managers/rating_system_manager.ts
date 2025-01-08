@@ -26,7 +26,6 @@ Contact:
 import { Game } from '../models/game';
 import { Rating } from '../rating_framework/rating';
 import { TimeControl } from '../models/time_control';
-import { search_linear_by_key } from '../utils/searching';
 
 /**
  * @brief Rating system in the web
@@ -53,61 +52,60 @@ export class RatingSystemManager {
 	}
 
 	/// Function to evaluate a game
-	private rating_formula: Function = () => void {};
+	private rating_func: Function = () => void {};
 	/// Function to create a new rating
-	private new_rating: Function = () => void {};
-
+	private new_rating_func: Function = () => void {};
 	/// Function to read a single rating JSON object
-	private rating_from_JSON: Function = () => void {};
+	private rating_from_JSON_func: Function = () => void {};
+
 	/// All ratings used in the web
 	private all_time_controls: TimeControl[] = [];
 	/// All unique rating ids used in the web
 	private all_unique_time_controls: string[] = [];
 
 	clear(): void {
-		this.rating_formula = () => void {};
-		this.new_rating = () => void {};
-		this.rating_from_JSON = () => void {};
+		this.rating_func = () => void {};
+		this.new_rating_func = () => void {};
+		this.rating_from_JSON_func = () => void {};
 		this.all_time_controls = [];
 		this.all_unique_time_controls = [];
 	}
 
-	set_rating_formula(formula: Function): void {
-		this.rating_formula = formula;
+	set_rating_function(func: Function): void {
+		this.rating_func = func;
 	}
-	apply_rating_formula(game: Game): [Rating, Rating] {
-		return this.rating_formula(game);
+	get_rating_function(): Function {
+		return this.rating_func;
+	}
+	set_rating_from_JSON_function(func: Function): void {
+		this.rating_from_JSON_func = func;
+	}
+	get_rating_from_JSON_function(): Function {
+		return this.rating_from_JSON_func;
+	}
+	set_new_rating_function(func: Function): void {
+		this.new_rating_func = func;
+	}
+	get_new_rating_function(): Function {
+		return this.new_rating_func;
+	}
+
+	apply_rating_function(game: Game): [Rating, Rating] {
+		return this.rating_func(game);
 	}
 	get_new_rating(): Rating {
-		return this.new_rating();
-	}
-
-	set_rating_from_JSON_formula(read_rating: Function): void {
-		this.rating_from_JSON = read_rating;
+		return this.new_rating_func();
 	}
 	get_rating_from_json(json: any): Rating {
-		return this.rating_from_JSON(json);
+		return this.rating_from_JSON_func(json);
 	}
 
-	set_new_rating(new_rating: Function): void {
-		this.new_rating = new_rating;
-	}
 	set_time_controls(all_ratings: TimeControl[]): void {
 		this.all_time_controls = all_ratings;
-	}
-	make_unique_time_controls(): void {
+
 		this.all_unique_time_controls = [
 			...new Set(this.all_time_controls.map<string>((value: TimeControl): string => value.id))
 		];
-	}
-	get_name_time_control(time_control_id: string): string {
-		const index = search_linear_by_key(this.all_time_controls, (t: TimeControl): boolean => {
-			return t.id == time_control_id;
-		});
-		if (index >= this.all_time_controls.length) {
-			return '?';
-		}
-		return this.all_time_controls[index].name;
 	}
 
 	is_time_control_id_valid(id: string): boolean {

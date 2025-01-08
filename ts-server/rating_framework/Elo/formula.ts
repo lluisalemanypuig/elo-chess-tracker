@@ -83,7 +83,7 @@ function update_constant_K(elo: EloRating): void {
 	}
 }
 
-export function player_vs_player(game: Game): [EloRating, EloRating] {
+export function Elo_player_vs_player(game: Game): [EloRating, EloRating] {
 	let white_rating = game.get_white_rating().clone() as EloRating;
 	let black_rating = game.get_black_rating().clone() as EloRating;
 	const result = game.get_result();

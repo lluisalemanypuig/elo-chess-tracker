@@ -300,7 +300,7 @@ function update_game_record(
 
 		if (white_was_updated || black_was_updated) {
 			// calculate result of game
-			const [white_after, black_after] = RatingSystemManager.get_instance().apply_rating_formula(game_set[i]);
+			const [white_after, black_after] = RatingSystemManager.get_instance().apply_rating_function(game_set[i]);
 
 			if (!white_was_updated) {
 				debug(log_now(), `    White has been updated for the first time: ${JSON.stringify(white_after)}`);
@@ -341,7 +341,7 @@ function game_insert_in_history(game: Game, date_record_str: string): void {
 
 	// apply rating formula
 	{
-		let [white_after, black_after] = RatingSystemManager.get_instance().apply_rating_formula(game);
+		let [white_after, black_after] = RatingSystemManager.get_instance().apply_rating_function(game);
 		updated_players.push(updated_player(game.get_time_control_id(), game.get_white(), white_after));
 		updated_players.push(updated_player(game.get_time_control_id(), game.get_black(), black_after));
 	}
@@ -567,7 +567,7 @@ export function game_edit_result(game_id: string, new_result: GameResult): void 
 
 	// apply rating formula
 	{
-		let [white_after, black_after] = RatingSystemManager.get_instance().apply_rating_formula(game);
+		let [white_after, black_after] = RatingSystemManager.get_instance().apply_rating_function(game);
 		updated_players.push(updated_player(game.get_time_control_id(), game.get_white(), white_after));
 		updated_players.push(updated_player(game.get_time_control_id(), game.get_black(), black_after));
 	}

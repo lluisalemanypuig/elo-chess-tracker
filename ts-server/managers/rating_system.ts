@@ -25,8 +25,8 @@ Contact:
 
 import { TimeControl } from '../models/time_control';
 
-import { player_vs_player as Elo } from '../rating_framework/Elo/formula';
-import { Elo_rating_from_json, Elo_rating_new } from '../rating_framework/Elo/rating';
+import { Elo_player_vs_player } from '../rating_framework/Elo/formula';
+import { Elo_rating_from_json, Elo_new_rating } from '../rating_framework/Elo/rating';
 import { RatingSystemManager } from './rating_system_manager';
 
 /**
@@ -37,9 +37,9 @@ import { RatingSystemManager } from './rating_system_manager';
 export function initialize_rating_functions(name: string): boolean {
 	let rating_system = RatingSystemManager.get_instance();
 	if (name == 'Elo') {
-		rating_system.set_rating_formula(Elo);
-		rating_system.set_rating_from_JSON_formula(Elo_rating_from_json);
-		rating_system.set_new_rating(Elo_rating_new);
+		rating_system.set_rating_function(Elo_player_vs_player);
+		rating_system.set_rating_from_JSON_function(Elo_rating_from_json);
+		rating_system.set_new_rating_function(Elo_new_rating);
 		return true;
 	}
 
@@ -54,5 +54,4 @@ export function initialize_rating_functions(name: string): boolean {
 export function initialize_rating_time_controls(all_time_controls: TimeControl[]): void {
 	let rating_system = RatingSystemManager.get_instance();
 	rating_system.set_time_controls(all_time_controls);
-	rating_system.make_unique_time_controls();
 }

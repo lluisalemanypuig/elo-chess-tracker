@@ -65,7 +65,7 @@ export class EloRating extends Rating {
 	}
 }
 
-export function Elo_rating_new(): EloRating {
+export function Elo_new_rating(): EloRating {
 	return new EloRating(1500, 0, 0, 0, 0, 40, false);
 }
 

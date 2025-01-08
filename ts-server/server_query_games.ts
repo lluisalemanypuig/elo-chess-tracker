@@ -41,7 +41,7 @@ import { SessionID } from './models/session_id';
 import { can_user_edit_a_game, can_user_see_a_game } from './utils/user_relationships';
 
 function increment(g: Game): any {
-	const [white_after, black_after] = RatingSystemManager.get_instance().apply_rating_formula(g);
+	const [white_after, black_after] = RatingSystemManager.get_instance().apply_rating_function(g);
 	return {
 		white_increment: Math.round(white_after.rating - g.get_white_rating().rating),
 		black_increment: Math.round(black_after.rating - g.get_black_rating().rating)
@@ -86,18 +86,16 @@ function filter_game_list(filter_game_record: Function, filter_game: Function, u
 			}
 
 			const inc = increment(g);
-			const time_control_name: string = RatingSystemManager.get_instance().get_name_time_control(
-				g.get_time_control_id()
-			);
 
-			let result: string;
-			if (g.get_result() == 'white_wins') {
-				result = '1 - 0';
-			} else if (g.get_result() == 'black_wins') {
-				result = '0 - 1';
-			} else {
-				result = '1/2 - 1/2';
-			}
+			const result = ((): string => {
+				if (g.get_result() == 'white_wins') {
+					return '1 - 0';
+				}
+				if (g.get_result() == 'black_wins') {
+					return '0 - 1';
+				}
+				return '1/2 - 1/2';
+			})();
 
 			const white = user_retrieve(g.get_white()) as User;
 			const black = user_retrieve(g.get_black()) as User;
@@ -108,7 +106,7 @@ function filter_game_list(filter_game_record: Function, filter_game: Function, u
 				white: white.get_full_name(),
 				black: black.get_full_name(),
 				result: result,
-				time_control: time_control_name,
+				time_control: g.get_time_control_name(),
 				date: g.get_date().replace('..', ' '),
 				white_rating: Math.round(g.get_white_rating().rating),
 				black_rating: Math.round(g.get_black_rating().rating),
