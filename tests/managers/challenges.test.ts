@@ -27,12 +27,12 @@ import path from 'path';
 import fs from 'fs';
 
 import { run_command } from './exec_utils';
-import { clear_server } from '../../ts-server/managers/clear';
-import { server_init_from_data } from '../../ts-server/managers/initialization';
-import { ADMIN, MEMBER, STUDENT } from '../../ts-server/models/user_role';
-import { user_add_new, user_retrieve } from '../../ts-server/managers/users';
-import { ChallengesManager } from '../../ts-server/managers/challenges_manager';
-import { GamesManager } from '../../ts-server/managers/games_manager';
+import { clear_server } from '../../src-server/managers/clear';
+import { server_init_from_data } from '../../src-server/managers/initialization';
+import { ADMIN, MEMBER, STUDENT } from '../../src-server/models/user_role';
+import { user_add_new, user_retrieve } from '../../src-server/managers/users';
+import { ChallengesManager } from '../../src-server/managers/challenges_manager';
+import { GamesManager } from '../../src-server/managers/games_manager';
 import {
 	challenge_accept,
 	challenge_agree_result,
@@ -41,10 +41,10 @@ import {
 	challenge_set_result,
 	challenge_set_retrieve,
 	challenge_unset_result
-} from '../../ts-server/managers/challenges';
-import { number_to_string } from '../../ts-server/utils/misc';
-import { Challenge, challenge_from_json } from '../../ts-server/models/challenge';
-import { User } from '../../ts-server/models/user';
+} from '../../src-server/managers/challenges';
+import { number_to_string } from '../../src-server/utils/misc';
+import { Challenge, challenge_from_json } from '../../src-server/models/challenge';
+import { User } from '../../src-server/models/user';
 
 const webpage_dir = 'tests/webpage';
 const db_dir = path.join(webpage_dir, 'database');

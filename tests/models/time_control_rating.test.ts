@@ -27,9 +27,9 @@ import {
 	time_control_rating_from_json,
 	time_control_rating_set_from_json,
 	TimeControlRating
-} from '../../ts-server/models/time_control_rating';
-import { EloRating } from '../../ts-server/rating_framework/Elo/rating';
-import { initialize_rating_functions } from '../../ts-server/managers/rating_system';
+} from '../../src-server/models/time_control_rating';
+import { EloRating } from '../../src-server/rating_framework/Elo/rating';
+import { initialize_rating_functions } from '../../src-server/managers/rating_system';
 
 describe('clone', () => {
 	test('', () => {

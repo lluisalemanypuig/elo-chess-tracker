@@ -24,7 +24,7 @@ Contact:
 */
 
 import { set_footer_version_number } from './client_load_version_number';
-import { UserRole, all_user_roles, user_role_to_string } from '../ts-server/models/user_role';
+import { UserRole, all_user_roles, user_role_to_string } from '../src-server/models/user_role';
 
 async function fill_username_datalist() {
 	let username_datalist = document.getElementById('username_datalist') as HTMLDataListElement;

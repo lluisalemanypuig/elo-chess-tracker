@@ -51,9 +51,9 @@ import {
 	SEE_STUDENT_GAMES,
 	SEE_TEACHER_GAMES,
 	SEE_USER_GAMES
-} from '../../ts-server/models/user_action';
-import { ADMIN, MEMBER, STUDENT, TEACHER } from '../../ts-server/models/user_role';
-import { initialize_permissions, UserRoleToUserAction } from '../../ts-server/models/user_role_action';
+} from '../../src-server/models/user_action';
+import { ADMIN, MEMBER, STUDENT, TEACHER } from '../../src-server/models/user_role';
+import { initialize_permissions, UserRoleToUserAction } from '../../src-server/models/user_role_action';
 
 describe('Actions allowed per user (single role)', () => {
 	test('Admin', () => {

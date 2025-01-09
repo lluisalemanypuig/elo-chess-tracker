@@ -23,7 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { SessionID } from '../../ts-server/models/session_id';
+import { SessionID } from '../../src-server/models/session_id';
 
 test('Fields contents are correct', () => {
 	const sid = new SessionID('asdf', 'qwer');

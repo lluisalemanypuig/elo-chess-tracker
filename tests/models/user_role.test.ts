@@ -31,7 +31,7 @@ import {
 	STUDENT,
 	TEACHER,
 	user_role_to_string
-} from '../../ts-server/models/user_role';
+} from '../../src-server/models/user_role';
 
 test('Array of all roles', () => {
 	expect(all_user_roles.length).toBe(4);

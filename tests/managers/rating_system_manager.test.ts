@@ -23,8 +23,8 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { RatingSystemManager } from '../../ts-server/managers/rating_system_manager';
-import { TimeControl } from '../../ts-server/models/time_control';
+import { RatingSystemManager } from '../../src-server/managers/rating_system_manager';
+import { TimeControl } from '../../src-server/models/time_control';
 
 describe('Rating System Manager', () => {
 	test('Basic tests', () => {

@@ -23,9 +23,9 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { Password } from '../../ts-server/models/password';
-import { TimeControlRating } from '../../ts-server/models/time_control_rating';
-import { User, user_from_json } from '../../ts-server/models/user';
+import { Password } from '../../src-server/models/password';
+import { TimeControlRating } from '../../src-server/models/time_control_rating';
+import { User, user_from_json } from '../../src-server/models/user';
 import {
 	ASSIGN_ROLE_ADMIN,
 	ASSIGN_ROLE_MEMBER,
@@ -54,11 +54,11 @@ import {
 	SEE_STUDENT_GAMES,
 	SEE_TEACHER_GAMES,
 	SEE_USER_GAMES
-} from '../../ts-server/models/user_action';
-import { ADMIN, MEMBER, STUDENT, TEACHER } from '../../ts-server/models/user_role';
-import { initialize_permissions, UserRoleToUserAction } from '../../ts-server/models/user_role_action';
-import { EloRating } from '../../ts-server/rating_framework/Elo/rating';
-import { initialize_rating_functions } from '../../ts-server/managers/rating_system';
+} from '../../src-server/models/user_action';
+import { ADMIN, MEMBER, STUDENT, TEACHER } from '../../src-server/models/user_role';
+import { initialize_permissions, UserRoleToUserAction } from '../../src-server/models/user_role_action';
+import { EloRating } from '../../src-server/rating_framework/Elo/rating';
+import { initialize_rating_functions } from '../../src-server/managers/rating_system';
 
 describe('Elo', () => {
 	//const bullet = new EloRating(1400, 0, 0, 0, 0, 40, false);

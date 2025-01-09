@@ -23,7 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { Elo_rating_from_json, Elo_new_rating, EloRating } from '../../../ts-server/rating_framework/Elo/rating';
+import { Elo_rating_from_json, Elo_new_rating, EloRating } from '../../../src-server/rating_framework/Elo/rating';
 
 describe('JSON conversion', () => {
 	test('from string to rating', () => {

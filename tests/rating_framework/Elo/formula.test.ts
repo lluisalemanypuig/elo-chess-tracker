@@ -23,9 +23,9 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { Game } from '../../../ts-server/models/game';
-import { EloRating } from '../../../ts-server/rating_framework/Elo/rating';
-import { Elo_player_vs_player } from '../../../ts-server/rating_framework/Elo/formula';
+import { Game } from '../../../src-server/models/game';
+import { EloRating } from '../../../src-server/rating_framework/Elo/rating';
+import { Elo_player_vs_player } from '../../../src-server/rating_framework/Elo/formula';
 
 describe('Simple games', () => {
 	test('white_wins', () => {

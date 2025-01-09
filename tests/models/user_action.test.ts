@@ -48,8 +48,8 @@ import {
 	SEE_TEACHER_GAMES,
 	UserAction,
 	UserActionID
-} from '../../ts-server/models/user_action';
-import { all_user_roles, UserRole } from '../../ts-server/models/user_role';
+} from '../../src-server/models/user_action';
+import { all_user_roles, UserRole } from '../../src-server/models/user_role';
 
 describe('Role concatenation', () => {
 	test('Check non-throwing functions', () => {

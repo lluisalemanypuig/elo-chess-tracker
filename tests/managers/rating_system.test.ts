@@ -23,12 +23,12 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { RatingSystemManager } from '../../ts-server/managers/rating_system_manager';
-import { initialize_rating_functions, initialize_rating_time_controls } from '../../ts-server/managers/rating_system';
-import { TimeControl } from '../../ts-server/models/time_control';
+import { RatingSystemManager } from '../../src-server/managers/rating_system_manager';
+import { initialize_rating_functions, initialize_rating_time_controls } from '../../src-server/managers/rating_system';
+import { TimeControl } from '../../src-server/models/time_control';
 
-import { Elo_player_vs_player } from '../../ts-server/rating_framework/Elo/formula';
-import { Elo_rating_from_json, Elo_new_rating } from '../../ts-server/rating_framework/Elo/rating';
+import { Elo_player_vs_player } from '../../src-server/rating_framework/Elo/formula';
+import { Elo_rating_from_json, Elo_new_rating } from '../../src-server/rating_framework/Elo/rating';
 
 describe('Rating System Manager', () => {
 	test('Initialization of functions (Elo)', () => {

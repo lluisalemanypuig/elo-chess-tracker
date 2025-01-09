@@ -2,8 +2,8 @@
 
 cd js-source
 
-mv ts-client/* .
-mv ts-server/* .
-rmdir ts-server ts-client
+mv src-client/* .
+mv src-server/* .
+rmdir src-server src-client
 
 cd ..

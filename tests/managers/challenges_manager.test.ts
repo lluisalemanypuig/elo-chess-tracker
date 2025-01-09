@@ -23,9 +23,9 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { ChallengesManager } from '../../ts-server/managers/challenges_manager';
-import { Challenge } from '../../ts-server/models/challenge';
-import { number_to_string } from '../../ts-server/utils/misc';
+import { ChallengesManager } from '../../src-server/managers/challenges_manager';
+import { Challenge } from '../../src-server/models/challenge';
+import { number_to_string } from '../../src-server/utils/misc';
 
 describe('Challenges Manager', () => {
 	test('Empty manager', () => {

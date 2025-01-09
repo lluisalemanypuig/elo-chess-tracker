@@ -23,8 +23,8 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { Password } from '../../ts-server/models/password';
-import { User } from '../../ts-server/models/user';
+import { Password } from '../../src-server/models/password';
+import { User } from '../../src-server/models/user';
 import {
 	EDIT_STUDENT,
 	EDIT_TEACHER,
@@ -38,11 +38,11 @@ import {
 	SEE_MEMBER_GAMES,
 	SEE_STUDENT_GAMES,
 	SEE_USER_GAMES
-} from '../../ts-server/models/user_action';
-import { ADMIN, MEMBER, STUDENT, TEACHER } from '../../ts-server/models/user_role';
-import { UserRoleToUserAction } from '../../ts-server/models/user_role_action';
-import { initialize_permissions } from '../../ts-server/models/user_role_action';
-import { can_user_edit, can_user_edit_a_game, can_user_see_a_game } from '../../ts-server/utils/user_relationships';
+} from '../../src-server/models/user_action';
+import { ADMIN, MEMBER, STUDENT, TEACHER } from '../../src-server/models/user_role';
+import { UserRoleToUserAction } from '../../src-server/models/user_role_action';
+import { initialize_permissions } from '../../src-server/models/user_role_action';
+import { can_user_edit, can_user_edit_a_game, can_user_see_a_game } from '../../src-server/utils/user_relationships';
 
 describe('Edition', () => {
 	const editor_admin = new User('un', 'f', 'l', new Password('a', 'b'), [ADMIN], ['2025-01-01'], []);

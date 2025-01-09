@@ -25,15 +25,15 @@ Contact:
 
 import path from 'path';
 
-import { server_init_from_data } from '../../ts-server/managers/initialization';
-import { clear_server } from '../../ts-server/managers/clear';
-import { RatingSystemManager } from '../../ts-server/managers/rating_system_manager';
-import { EnvironmentManager } from '../../ts-server/managers/environment_manager';
-import { ConfigurationManager } from '../../ts-server/managers/configuration_manager';
-import { ChallengesManager } from '../../ts-server/managers/challenges_manager';
-import { GamesManager } from '../../ts-server/managers/games_manager';
-import { SessionIDManager } from '../../ts-server/managers/session_id_manager';
-import { UsersManager } from '../../ts-server/managers/users_manager';
+import { server_init_from_data } from '../../src-server/managers/initialization';
+import { clear_server } from '../../src-server/managers/clear';
+import { RatingSystemManager } from '../../src-server/managers/rating_system_manager';
+import { EnvironmentManager } from '../../src-server/managers/environment_manager';
+import { ConfigurationManager } from '../../src-server/managers/configuration_manager';
+import { ChallengesManager } from '../../src-server/managers/challenges_manager';
+import { GamesManager } from '../../src-server/managers/games_manager';
+import { SessionIDManager } from '../../src-server/managers/session_id_manager';
+import { UsersManager } from '../../src-server/managers/users_manager';
 import { run_command } from './exec_utils';
 
 const webpage_dir = 'tests/webpage';

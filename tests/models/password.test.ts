@@ -23,7 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { Password, password_from_json } from '../../ts-server/models/password';
+import { Password, password_from_json } from '../../src-server/models/password';
 
 describe('From JSON', () => {
 	test('string', () => {

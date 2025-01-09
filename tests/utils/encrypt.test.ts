@@ -29,7 +29,7 @@ import {
 	encrypt_password_for_user,
 	is_password_of_user_correct,
 	normalize_string
-} from '../../ts-server/utils/encrypt';
+} from '../../src-server/utils/encrypt';
 
 describe('Password normalization', () => {
 	test('1', () => {

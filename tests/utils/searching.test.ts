@@ -29,7 +29,7 @@ import {
 	search_linear,
 	search_linear_by_key,
 	where_should_be_inserted
-} from '../../ts-server/utils/searching';
+} from '../../src-server/utils/searching';
 
 describe('Searching in an array of numbers -- locate a number', () => {
 	test('Empty', () => {

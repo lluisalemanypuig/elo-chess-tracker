@@ -23,9 +23,9 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { Game, game_from_json } from '../../ts-server/models/game';
-import { EloRating } from '../../ts-server/rating_framework/Elo/rating';
-import { initialize_rating_functions } from '../../ts-server/managers/rating_system';
+import { Game, game_from_json } from '../../src-server/models/game';
+import { EloRating } from '../../src-server/rating_framework/Elo/rating';
+import { initialize_rating_functions } from '../../src-server/managers/rating_system';
 
 describe('Setters and Getters -- Elo', () => {
 	test('Gets', () => {
