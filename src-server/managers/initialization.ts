@@ -118,6 +118,15 @@ function init_time_controls(time_control_array: any): void {
 	}
 
 	initialize_rating_time_controls(all_time_controls);
+
+	// create directories for the time controls in the 'games' directory
+	const games_dir = EnvironmentManager.get_instance().get_dir_games();
+	for (let i = 0; i < all_time_controls.length; ++i) {
+		const id_dir = path.join(games_dir, all_time_controls[i].id);
+		if (!fs.existsSync(id_dir)) {
+			fs.mkdirSync(id_dir);
+		}
+	}
 }
 
 function init_sessions(): void {
@@ -195,30 +204,34 @@ function init_challenges(): void {
 function init_games(): void {
 	debug(log_now(), 'Initialize games...');
 
-	const games_dir = EnvironmentManager.get_instance().get_dir_games();
+	const ratings = RatingSystemManager.get_instance();
 	let games = GamesManager.get_instance();
 	let num_games: number = 0;
 	let max_game_id: string = '0';
 
-	debug(log_now(), `    Reading directory '${games_dir}'`);
-	const all_date_record_files = fs.readdirSync(games_dir);
+	for (const id of ratings.get_unique_time_controls_ids()) {
+		const games_dir = EnvironmentManager.get_instance().get_dir_games_time_control(id);
 
-	for (let i = 0; i < all_date_record_files.length; ++i) {
-		const game_record_file = path.join(games_dir, all_date_record_files[i]);
+		debug(log_now(), `    Reading directory '${games_dir}'`);
+		const all_date_record_files = fs.readdirSync(games_dir);
 
-		debug(log_now(), `        Reading file '${game_record_file}'`);
-		const game_record_data = fs.readFileSync(game_record_file, 'utf8');
-		const game_set = game_set_from_json(game_record_data);
+		for (let i = 0; i < all_date_record_files.length; ++i) {
+			const game_record_file = path.join(games_dir, all_date_record_files[i]);
 
-		for (let j = 0; j < game_set.length; ++j) {
-			const g = game_set[j] as Game;
-			const game_id = g.get_id();
-			max_game_id = max_game_id < game_id ? game_id : max_game_id;
+			debug(log_now(), `        Reading file '${game_record_file}'`);
+			const game_record_data = fs.readFileSync(game_record_file, 'utf8');
+			const game_set = game_set_from_json(game_record_data);
 
-			games.set_game_id_record_date(g.get_id(), all_date_record_files[i]);
+			for (let j = 0; j < game_set.length; ++j) {
+				const g = game_set[j] as Game;
+				const game_id = g.get_id();
+				max_game_id = max_game_id < game_id ? game_id : max_game_id;
+
+				games.set_game_id_record_date(g.get_id(), all_date_record_files[i]);
+			}
+
+			num_games += game_set.length;
 		}
-
-		num_games += game_set.length;
 	}
 
 	games.set_max_game_id(parseInt(max_game_id));
