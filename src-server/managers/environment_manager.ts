@@ -67,6 +67,9 @@ export class EnvironmentManager {
 	get_dir_games(): string {
 		return this.directory_database_games;
 	}
+	get_dir_games_time_control(id: string): string {
+		return path.join(this.directory_database_games, id);
+	}
 	get_dir_users(): string {
 		return this.directory_database_users;
 	}
