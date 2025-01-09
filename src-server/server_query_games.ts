@@ -56,64 +56,68 @@ function increment(g: Game): any {
  * @param filter_game Filters games
  */
 function filter_game_list(filter_game_record: Function, filter_game: Function, user: User): any[] {
-	const games_dir = EnvironmentManager.get_instance().get_dir_games();
-
 	let data_to_return: any[] = [];
 
-	// The files currently existing in the 'games_directory'
-	debug(log_now(), `Reading directory '${games_dir}'...`);
-	let game_record_file_list = fs.readdirSync(games_dir);
-	debug(log_now(), `    Directory contents: '${game_record_file_list}'`);
+	const rating_system_manager = RatingSystemManager.get_instance();
 
-	for (let i = game_record_file_list.length - 1; i >= 0; --i) {
-		let game_record_file = path.join(games_dir, game_record_file_list[i]);
+	for (const id of rating_system_manager.get_unique_time_controls_ids()) {
+		const games_id_dir = EnvironmentManager.get_instance().get_dir_games_time_control(id);
 
-		if (!filter_game_record(game_record_file_list[i])) {
-			continue;
-		}
+		// The files currently existing in the 'games_directory'
+		debug(log_now(), `Reading directory '${games_id_dir}'...`);
+		const game_record_file_list = fs.readdirSync(games_id_dir);
+		debug(log_now(), `    Directory contents: '${game_record_file_list}'`);
 
-		// read the games from the file
-		debug(log_now(), `    Reading game record '${game_record_file}'...`);
-		const data = fs.readFileSync(game_record_file, 'utf8');
-		debug(log_now(), `        Game record '${game_record_file}' read.`);
-		const game_set = game_set_from_json(data);
+		for (let i = game_record_file_list.length - 1; i >= 0; --i) {
+			const game_record_file = path.join(games_id_dir, game_record_file_list[i]);
 
-		for (let j = game_set.length - 1; j >= 0; --j) {
-			const g = game_set[j];
-
-			if (!filter_game(g)) {
+			if (!filter_game_record(game_record_file_list[i])) {
 				continue;
 			}
 
-			const inc = increment(g);
+			// read the games from the file
+			debug(log_now(), `    Reading game record '${game_record_file}'...`);
+			const data = fs.readFileSync(game_record_file, 'utf8');
+			debug(log_now(), `        Game record '${game_record_file}' read.`);
+			const game_set = game_set_from_json(data);
 
-			const result = ((): string => {
-				if (g.get_result() == 'white_wins') {
-					return '1 - 0';
+			for (let j = game_set.length - 1; j >= 0; --j) {
+				const g = game_set[j];
+
+				if (!filter_game(g)) {
+					continue;
 				}
-				if (g.get_result() == 'black_wins') {
-					return '0 - 1';
-				}
-				return '1/2 - 1/2';
-			})();
 
-			const white = user_retrieve(g.get_white()) as User;
-			const black = user_retrieve(g.get_black()) as User;
-			const is_editable: boolean = can_user_edit_a_game(user, white, black);
+				const inc = increment(g);
 
-			data_to_return.push({
-				id: g.get_id(),
-				white: white.get_full_name(),
-				black: black.get_full_name(),
-				result: result,
-				time_control: g.get_time_control_name(),
-				date: g.get_date().replace('..', ' '),
-				white_rating: Math.round(g.get_white_rating().rating),
-				black_rating: Math.round(g.get_black_rating().rating),
-				white_increment: inc.white_increment < 0 ? inc.white_increment : '+' + inc.white_increment,
-				black_increment: inc.black_increment < 0 ? inc.black_increment : '+' + inc.black_increment,
-				editable: is_editable ? 'yes' : 'no'
-			});
+				const result = ((): string => {
+					if (g.get_result() == 'white_wins') {
+						return '1 - 0';
+					}
+					if (g.get_result() == 'black_wins') {
+						return '0 - 1';
+					}
+					return '1/2 - 1/2';
+				})();
+
+				const white = user_retrieve(g.get_white()) as User;
+				const black = user_retrieve(g.get_black()) as User;
+				const is_editable: boolean = can_user_edit_a_game(user, white, black);
+
+				data_to_return.push({
+					id: g.get_id(),
+					white: white.get_full_name(),
+					black: black.get_full_name(),
+					result: result,
+					time_control: g.get_time_control_name(),
+					date: g.get_date().replace('..', ' '),
+					white_rating: Math.round(g.get_white_rating().rating),
+					black_rating: Math.round(g.get_black_rating().rating),
+					white_increment: inc.white_increment < 0 ? inc.white_increment : '+' + inc.white_increment,
+					black_increment: inc.black_increment < 0 ? inc.black_increment : '+' + inc.black_increment,
+					editable: is_editable ? 'yes' : 'no'
+				});
+			}
 		}
 	}
 
@@ -132,10 +136,16 @@ export async function get_query_games_list_own(req: any, res: any) {
 	}
 
 	const user = user_retrieve(session.username) as User;
+	const rating_system_manager = RatingSystemManager.get_instance();
 
 	const data_to_return = filter_game_list(
 		(game_record_file: string): boolean => {
-			return user.get_games().includes(game_record_file);
+			for (const id of rating_system_manager.get_unique_time_controls_ids()) {
+				if (user.get_games(id)?.includes(game_record_file)) {
+					return true;
+				}
+			}
+			return false;
 		},
 		(g: Game): boolean => {
 			return g.is_user_involved(session.username);
