@@ -113,9 +113,12 @@ export function user_add_new(
 	roles: UserRole[]
 ): User {
 	const rating_system = RatingSystemManager.get_instance();
+
+	let game_map: Map<string, string[]> = new Map();
 	let ratings: TimeControlRating[] = [];
 	rating_system.get_unique_time_controls_ids().forEach((id: string) => {
 		ratings.push(new TimeControlRating(id, rating_system.get_new_rating()));
+		game_map.set(id, []);
 	});
 
 	const password = encrypt_password_for_user(username, pass);
@@ -126,7 +129,7 @@ export function user_add_new(
 		lastname,
 		new Password(password[0], password[1]),
 		roles,
-		[], // empty set of games
+		game_map,
 		ratings
 	);
 
