@@ -148,7 +148,7 @@ export function game_new(
 function game_next_of_player(username: string, time_control_id: string, when: string): Game | null {
 	debug(log_now(), `Find the game of user '${username}' right after date '${when}'`);
 
-	const games_dir = EnvironmentManager.get_instance().get_dir_games();
+	const games_dir = EnvironmentManager.get_instance().get_dir_games_time_control(time_control_id);
 
 	// The file into which we have to add the new game.
 	const date_record_str = make_game_date_record_name_str(when);
@@ -346,7 +346,7 @@ function game_insert_in_history(game: Game, date_record_str: string): void {
 		updated_players.push(updated_player(game.get_time_control_id(), game.get_black(), black_after));
 	}
 
-	const games_dir = EnvironmentManager.get_instance().get_dir_games();
+	const games_dir = EnvironmentManager.get_instance().get_dir_games_time_control(game.get_time_control_id());
 
 	debug(log_now(), 'Adding game into the history...');
 	debug(log_now(), `    Game '${JSON.stringify(game)}'`);
@@ -473,25 +473,33 @@ function game_insert_in_history(game: Game, date_record_str: string): void {
 export function game_add(g: Game): void {
 	debug(log_now(), `Add game into the list of games played by both users...`);
 
+	const time_control_id = g.get_time_control_id();
 	const when = make_game_date_record_name(g);
-	(user_retrieve(g.get_white()) as User).add_game(when);
-	(user_retrieve(g.get_black()) as User).add_game(when);
+	(user_retrieve(g.get_white()) as User).add_game(time_control_id, when);
+	(user_retrieve(g.get_black()) as User).add_game(time_control_id, when);
 
 	debug(log_now(), `Inserting the game into the history...`);
 	game_insert_in_history(g, when);
 	debug(log_now(), `Updating the hash table (game id -> game record)`);
-	GamesManager.get_instance().set_game_id_record_date(g.get_id(), when);
+
+	const game_id = g.get_id();
+	let games = GamesManager.get_instance();
+	games.set_game_id_record_date(game_id, when);
+	games.set_game_id_time_control(game_id, time_control_id);
 }
 
 export function game_find_by_id(game_id: string): [string[], string, Game[], number, number] | null {
 	const __date_record_str = GamesManager.get_instance().get_game_id_record_date(game_id);
+	const __time_control_id = GamesManager.get_instance().get_game_id_time_control(game_id);
+
 	// game_id does not exist
-	if (__date_record_str == null) {
+	if (__date_record_str == null || __time_control_id == null) {
 		return null;
 	}
 	const date_record_str = __date_record_str as string;
+	const time_control_id = __time_control_id as string;
 
-	const games_dir = EnvironmentManager.get_instance().get_dir_games();
+	const games_dir = EnvironmentManager.get_instance().get_dir_games_time_control(time_control_id);
 	const date_record_filename: string = path.join(games_dir, date_record_str);
 	debug(log_now(), `    File: '${date_record_filename}'`);
 
