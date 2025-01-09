@@ -24,6 +24,15 @@ Contact:
 */
 
 /**
+ * @brief A time control ID.
+ *
+ * A time control ID is a unique name that can represent multiple time controls.
+ * For example, a time control ID can be 'blitz' and can represent the time usual
+ * controls 5+3, 5+0, 3+2.
+ */
+export type TimeControlID = string;
+
+/**
  * @brief Time control as a tuple.
  *
  * Examples:
@@ -35,10 +44,10 @@ Contact:
  * - id: "blitz", name: "Blitz (5 + 0)"
  */
 export class TimeControl {
-	public id: string;
+	public id: TimeControlID;
 	public name: string;
 
-	constructor(id: string, name: string) {
+	constructor(id: TimeControlID, name: string) {
 		this.id = id;
 		this.name = name;
 	}

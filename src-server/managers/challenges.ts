@@ -34,6 +34,7 @@ import { EnvironmentManager } from './environment_manager';
 import { Challenge } from '../models/challenge';
 import { GameResult } from '../models/game';
 import { game_new, game_add } from './games';
+import { TimeControlID } from '../models/time_control';
 
 /**
  * @brief Filters the set of challenges that are accepted by the filter function @e by.
@@ -127,7 +128,7 @@ export function challenge_set_result(
 	white: string,
 	black: string,
 	result: GameResult,
-	time_control_id: string,
+	time_control_id: TimeControlID,
 	time_control_name: string
 ): void {
 	debug(log_now(), `Set the result of the challenge '${c.get_id()}'`);

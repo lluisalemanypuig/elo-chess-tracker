@@ -23,7 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { Challenge } from '../models/challenge';
+import { Challenge, ChallengeID } from '../models/challenge';
 
 export class ChallengesManager {
 	/// The only instance of this class
@@ -59,8 +59,8 @@ export class ChallengesManager {
 		const idx = this.get_challenge_index(c);
 		this.remove_challenge_index(idx);
 	}
-	remove_challenge_index(i: number): void {
-		this.challenges.splice(i, 1);
+	remove_challenge_index(idx: number): void {
+		this.challenges.splice(idx, 1);
 		if (this.challenges.length == 0) {
 			this.max_challenge_id = 0;
 		}
@@ -73,14 +73,14 @@ export class ChallengesManager {
 	get_challenge_at(idx: number): Challenge | null {
 		return 0 <= idx && idx < this.challenges.length ? this.challenges[idx] : null;
 	}
-	get_challenge_by_id(id: string): Challenge | null {
+	get_challenge_by_id(id: ChallengeID): Challenge | null {
 		return this.get_challenge_at(this.get_challenge_index_by_id(id));
 	}
 
 	get_challenge_index(c: Challenge): number {
 		return this.get_challenge_index_by_id(c.get_id());
 	}
-	get_challenge_index_by_id(id: string): number {
+	get_challenge_index_by_id(id: ChallengeID): number {
 		for (let i = 0; i < this.challenges.length; ++i) {
 			if (this.challenges[i].get_id() == id) {
 				return i;

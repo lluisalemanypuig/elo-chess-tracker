@@ -25,9 +25,21 @@ Contact:
 
 import { Rating } from '../rating_framework/rating';
 import { RatingSystemManager } from '../managers/rating_system_manager';
+import { TimeControlID } from './time_control';
 
 /// Result of a game
 export type GameResult = 'white_wins' | 'black_wins' | 'draw';
+
+/// A type for game IDs.
+export type GameID = string;
+
+/**
+ * @brief A type to encode a game record.
+ *
+ * A game record is simply the name of a file that can contain multiple games.
+ * The format of this name is always a date in the format YYYY-MM-DD (year-month-day).
+ */
+export type GameRecordID = string;
 
 /**
  * @brief Class to encode a chess game.
@@ -43,7 +55,7 @@ export type GameResult = 'white_wins' | 'black_wins' | 'draw';
  */
 export class Game {
 	/// Identifier of the game
-	private readonly id: string;
+	private readonly id: GameID;
 	/// White player username
 	private white: string;
 	/// White in the state before the game
@@ -54,8 +66,8 @@ export class Game {
 	private black_rating: Rating;
 	/// Result of the game
 	private result: GameResult;
-	/// Time control id (Classical, Blitz, ...)
-	private time_control_id: string;
+	/// Time control id
+	private time_control_id: TimeControlID;
 	/// Time control name (Classical (90 + 30), Blitz (5 + 3), ...)
 	private time_control_name: string;
 	/// Date when the game took place
@@ -73,13 +85,13 @@ export class Game {
 	 * @param when Date
 	 */
 	constructor(
-		id: string,
+		id: GameID,
 		white: string,
 		white_rating: Rating,
 		black: string,
 		black_rating: Rating,
 		result: GameResult,
-		time_control_id: string,
+		time_control_id: TimeControlID,
 		time_control_name: string,
 		when: string
 	) {
@@ -121,7 +133,7 @@ export class Game {
 	}
 
 	/// Return this game's time control id.
-	get_time_control_id(): string {
+	get_time_control_id(): TimeControlID {
 		return this.time_control_id;
 	}
 	/// Return this game's time control name.
@@ -149,7 +161,7 @@ export class Game {
 	}
 
 	/// Returns the game's ID
-	get_id(): string {
+	get_id(): GameID {
 		return this.id;
 	}
 }

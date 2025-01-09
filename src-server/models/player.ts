@@ -26,6 +26,7 @@ Contact:
 import { Rating } from '../rating_framework/rating';
 import { copyarray } from '../utils/misc';
 import { search_linear_by_key } from '../utils/searching';
+import { TimeControlID } from './time_control';
 import { TimeControlRating, time_control_rating_set_from_json } from './time_control_rating';
 
 /**
@@ -54,34 +55,34 @@ export class Player {
 	}
 
 	/// Returns whether the rating under the given time control id exists
-	has_rating(time_control_id: string): boolean {
-		return this.index_time_control_id(time_control_id) != -1;
+	has_rating(id: TimeControlID): boolean {
+		return this.index_time_control_id(id) != -1;
 	}
 
 	/**
 	 * @brief Adds a rating assuming it does not exist
-	 * @param time_control_id String
+	 * @param id String
 	 * @param rating Rating object
 	 * @pre Rating does not exist
 	 */
-	add_rating(time_control_id: string, rating: Rating): void {
-		this.ratings.push(new TimeControlRating(time_control_id, rating));
+	add_rating(id: TimeControlID, rating: Rating): void {
+		this.ratings.push(new TimeControlRating(id, rating));
 	}
 
 	/// Returns the rating of the player under the given time control id
-	get_rating(time_control_id: string): Rating {
-		const index = this.index_time_control_id(time_control_id);
+	get_rating(id: TimeControlID): Rating {
+		const index = this.index_time_control_id(id);
 		if (index >= this.ratings.length) {
-			console.log(`Rating with id '${time_control_id}' does not exist!`);
+			console.log(`Rating with id '${id}' does not exist!`);
 		}
 		return this.ratings[index].rating;
 	}
 
 	/// Sets the classical rating of the player
-	set_rating(time_control_id: string, rating: Rating): void {
-		const index = this.index_time_control_id(time_control_id);
+	set_rating(id: TimeControlID, rating: Rating): void {
+		const index = this.index_time_control_id(id);
 		if (index >= this.ratings.length) {
-			console.log(`Rating with id '${time_control_id}' does not exist!`);
+			console.log(`Rating with id '${id}' does not exist!`);
 			return;
 		}
 		this.ratings[index].rating = rating;
@@ -102,9 +103,9 @@ export class Player {
 		);
 	}
 
-	index_time_control_id(time_control_id: string): number {
+	index_time_control_id(id: TimeControlID): number {
 		return search_linear_by_key(this.ratings, (v: TimeControlRating): boolean => {
-			return v.time_control == time_control_id;
+			return v.time_control == id;
 		});
 	}
 }

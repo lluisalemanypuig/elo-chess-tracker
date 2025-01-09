@@ -40,10 +40,11 @@ import {
 } from './models/user_action';
 import { User } from './models/user';
 import { game_add, game_edit_result, game_find_by_id, game_new, recalculate_Elo_ratings } from './managers/games';
-import { Game, GameResult } from './models/game';
+import { Game, GameID, GameResult } from './models/game';
 import { user_retrieve } from './managers/users';
 import { ADMIN, MEMBER, STUDENT, TEACHER, UserRole } from './models/user_role';
 import { SessionID } from './models/session_id';
+import { TimeControlID } from './models/time_control';
 
 export async function get_games_own_page(req: any, res: any) {
 	debug(log_now(), 'GET games_own_page...');
@@ -112,8 +113,8 @@ export async function post_games_create(req: any, res: any) {
 
 	const white = req.body.w;
 	const black = req.body.b;
-	const result = req.body.r;
-	const time_control_id = req.body.tc_i;
+	const result: GameResult = req.body.r;
+	const time_control_id: TimeControlID = req.body.tc_i;
 	const time_control_name = req.body.tc_n;
 	const game_date = req.body.d;
 	const game_time = req.body.t;
@@ -142,14 +143,7 @@ export async function post_games_create(req: any, res: any) {
 
 	debug(log_now(), `Adding the new game`);
 
-	let g = game_new(
-		white,
-		black,
-		result as GameResult,
-		time_control_id,
-		time_control_name,
-		game_date + '..' + game_time
-	);
+	let g = game_new(white, black, result, time_control_id, time_control_name, game_date + '..' + game_time);
 
 	debug(log_now(), `    Adding game...`);
 
@@ -177,7 +171,7 @@ export async function post_games_edit_result(req: any, res: any) {
 		return;
 	}
 
-	const game_id = req.body.game_id;
+	const game_id: GameID = req.body.game_id;
 	const new_result = req.body.new_result;
 
 	debug(log_now(), `    Game ID: '${game_id}'`);

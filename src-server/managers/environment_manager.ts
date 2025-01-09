@@ -24,6 +24,7 @@ Contact:
 */
 
 import path from 'path';
+import { TimeControlID } from '../models/time_control';
 
 /**
  * @brief Directories and other parameters of the server environment
@@ -67,7 +68,7 @@ export class EnvironmentManager {
 	get_dir_games(): string {
 		return this.directory_database_games;
 	}
-	get_dir_games_time_control(id: string): string {
+	get_dir_games_time_control(id: TimeControlID): string {
 		return path.join(this.directory_database_games, id);
 	}
 	get_dir_users(): string {

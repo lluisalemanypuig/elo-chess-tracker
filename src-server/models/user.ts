@@ -31,6 +31,8 @@ import { UserRoleToUserAction } from './user_role_action';
 import { copyarray } from '../utils/misc';
 import { where_should_be_inserted } from '../utils/searching';
 import { TimeControlRating, time_control_rating_set_from_json } from './time_control_rating';
+import { GameRecordID } from './game';
+import { TimeControlID } from './time_control';
 
 /**
  * @brief Simple class to encode a User
@@ -53,7 +55,7 @@ export class User extends Player {
 	 * For each time rating id, there is an array of strings that simply point
 	 * to the game records.
 	 */
-	private games: Map<string, string[]>;
+	private games: Map<TimeControlID, GameRecordID[]>;
 
 	toJSON(): object {
 		return {
@@ -83,7 +85,7 @@ export class User extends Player {
 		last_name: string,
 		password: Password,
 		roles: UserRole[],
-		games: Map<string, string[]>,
+		games: Map<TimeControlID, GameRecordID[]>,
 		ratings: TimeControlRating[]
 	) {
 		super(username, ratings);
@@ -138,7 +140,7 @@ export class User extends Player {
 	 * @param id The time control id.
 	 * @returns A list of strings pointing to game records.
 	 */
-	get_games(id: string): string[] | undefined {
+	get_games(id: TimeControlID): GameRecordID[] | undefined {
 		return this.games.get(id);
 	}
 
@@ -146,10 +148,10 @@ export class User extends Player {
 	 * @brief Inserts a new game record string into @ref games.
 	 *
 	 * If the record string already exists, does nothing.
-	 * @param g New game record string.
 	 * @param id Time control id of the game.
+	 * @param g New game record string.
 	 */
-	add_game(id: string, g: string): void {
+	add_game(id: TimeControlID, g: GameRecordID): void {
 		let games_id = this.games.get(id);
 		if (games_id == undefined) {
 			throw new Error(`User does not have time control id '${id}'`);
@@ -214,12 +216,14 @@ export class User extends Player {
 
 	/// Creates a copy of this user
 	override clone(): User {
-		const new_games = new Map<string, string[]>();
-
-		this.games.forEach((value, key) => {
-			// Deep copy the array to avoid reference sharing
-			const copiedArray = [...value];
-			new_games.set(key, copiedArray);
+		let new_games: Map<TimeControlID, GameRecordID[]> = new Map();
+		this.games.forEach((value: GameRecordID[], key: TimeControlID) => {
+			new_games.set(
+				key,
+				copyarray(value, (id: GameRecordID): GameRecordID => {
+					return id;
+				})
+			);
 		});
 
 		return new User(
@@ -240,7 +244,7 @@ export class User extends Player {
 	clone_as_player(): Player {
 		return new Player(
 			this.username,
-			copyarray(this.ratings, (tcr: TimeControlRating) => {
+			copyarray(this.ratings, (tcr: TimeControlRating): TimeControlRating => {
 				return tcr.clone();
 			})
 		);

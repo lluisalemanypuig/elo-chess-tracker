@@ -25,7 +25,7 @@ Contact:
 
 import { Game } from '../models/game';
 import { Rating } from '../rating_framework/rating';
-import { TimeControl } from '../models/time_control';
+import { TimeControl, TimeControlID } from '../models/time_control';
 
 /**
  * @brief Rating system in the web
@@ -61,7 +61,7 @@ export class RatingSystemManager {
 	/// All ratings used in the web
 	private all_time_controls: TimeControl[] = [];
 	/// All unique rating ids used in the web
-	private all_unique_time_controls: string[] = [];
+	private all_unique_time_controls: TimeControlID[] = [];
 
 	clear(): void {
 		this.rating_func = () => void {};
@@ -108,7 +108,7 @@ export class RatingSystemManager {
 		];
 	}
 
-	is_time_control_id_valid(id: string): boolean {
+	is_time_control_id_valid(id: TimeControlID): boolean {
 		for (let i = 0; i < this.all_time_controls.length; ++i) {
 			if (this.all_time_controls[i].id == id) {
 				return true;
@@ -121,7 +121,7 @@ export class RatingSystemManager {
 		return this.all_time_controls;
 	}
 
-	get_unique_time_controls_ids(): string[] {
+	get_unique_time_controls_ids(): TimeControlID[] {
 		return this.all_unique_time_controls;
 	}
 }

@@ -100,8 +100,8 @@ export async function get_query_challenges_sent(req: any, res: any) {
 
 	let all_challenges: any[] = [];
 	for (let i = 0; i < to_return.length; ++i) {
-		let c = to_return[i];
-		let sent_to = (user_retrieve(c.get_sent_to() as string) as User).get_full_name();
+		const c = to_return[i];
+		const sent_to = (user_retrieve(c.get_sent_to() as string) as User).get_full_name();
 
 		// return only basic information
 		all_challenges.push({
@@ -147,16 +147,16 @@ export async function get_query_challenges_pending_result(req: any, res: any) {
 
 	let all_challenges: any[] = [];
 	for (let i = 0; i < to_return.length; ++i) {
-		let c = to_return[i];
-		let user_sent_to = user_retrieve(c.get_sent_to()) as User;
-		let user_sent_by = user_retrieve(c.get_sent_by()) as User;
+		const c = to_return[i];
+		const user_sent_to = user_retrieve(c.get_sent_to()) as User;
+		const user_sent_by = user_retrieve(c.get_sent_by()) as User;
 
-		let opponent: string;
-		if (user_sent_by.get_username() == session.username) {
-			opponent = user_sent_to.get_full_name();
-		} else {
-			opponent = user_sent_by.get_full_name();
-		}
+		const opponent: string = ((): string => {
+			if (user_sent_by.get_username() == session.username) {
+				return user_sent_to.get_full_name();
+			}
+			return user_sent_by.get_full_name();
+		})();
 
 		// return only basic information
 		all_challenges.push({
@@ -210,25 +210,26 @@ export async function get_query_challenges_confirm_result_other(req: any, res: a
 
 	let all_challenges: any[] = [];
 	for (let i = 0; i < to_return.length; ++i) {
-		let c = to_return[i];
-		let user_sent_to = user_retrieve(c.get_sent_to()) as User;
-		let user_sent_by = user_retrieve(c.get_sent_by()) as User;
+		const c = to_return[i];
+		const user_sent_to = user_retrieve(c.get_sent_to()) as User;
+		const user_sent_by = user_retrieve(c.get_sent_by()) as User;
 
-		let opponent: string;
-		if (user_sent_by.get_username() == session.username) {
-			opponent = user_sent_to.get_full_name();
-		} else {
-			opponent = user_sent_by.get_full_name();
-		}
+		const opponent: string = ((): string => {
+			if (user_sent_by.get_username() == session.username) {
+				return user_sent_to.get_full_name();
+			}
+			return user_sent_by.get_full_name();
+		})();
 
-		let nice_result: string;
-		if (c.get_result() == 'white_wins') {
-			nice_result = 'White wins';
-		} else if (c.get_result() == 'black_wins') {
-			nice_result = 'Black wins';
-		} else {
-			nice_result = 'Draw';
-		}
+		const nice_result: string = ((): string => {
+			if (c.get_result() == 'white_wins') {
+				return 'White wins';
+			}
+			if (c.get_result() == 'black_wins') {
+				return 'Black wins';
+			}
+			return 'Draw';
+		})();
 
 		// return only basic information
 		all_challenges.push({
@@ -282,25 +283,26 @@ export async function get_query_challenges_confirm_result_self(req: any, res: an
 
 	let all_challenges: any[] = [];
 	for (let i = 0; i < to_return.length; ++i) {
-		let c = to_return[i];
-		let user_sent_to = user_retrieve(c.get_sent_to()) as User;
-		let user_sent_by = user_retrieve(c.get_sent_by()) as User;
+		const c = to_return[i];
+		const user_sent_to = user_retrieve(c.get_sent_to()) as User;
+		const user_sent_by = user_retrieve(c.get_sent_by()) as User;
 
-		let opponent: string;
-		if (user_sent_by.get_username() == session.username) {
-			opponent = user_sent_to.get_full_name();
-		} else {
-			opponent = user_sent_by.get_full_name();
-		}
+		const opponent: string = ((): string => {
+			if (user_sent_by.get_username() == session.username) {
+				return user_sent_to.get_full_name();
+			}
+			return user_sent_by.get_full_name();
+		})();
 
-		let nice_result: string;
-		if (c.get_result() == 'white_wins') {
-			nice_result = 'White wins';
-		} else if (c.get_result() == 'black_wins') {
-			nice_result = 'Black wins';
-		} else {
-			nice_result = 'Draw';
-		}
+		const nice_result: string = ((): string => {
+			if (c.get_result() == 'white_wins') {
+				return 'White wins';
+			}
+			if (c.get_result() == 'black_wins') {
+				return 'Black wins';
+			}
+			return 'Draw';
+		})();
 
 		// return only basic information
 		all_challenges.push({

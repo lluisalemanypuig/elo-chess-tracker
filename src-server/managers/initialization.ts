@@ -39,7 +39,7 @@ import { initialize_rating_time_controls, initialize_rating_functions } from './
 import { RatingSystemManager } from './rating_system_manager';
 import { user_from_json } from '../models/user';
 import { challenge_from_json } from '../models/challenge';
-import { Game, game_set_from_json } from '../models/game';
+import { Game, game_set_from_json, GameID } from '../models/game';
 import { initialize_permissions } from '../models/user_role_action';
 import { TimeControl } from '../models/time_control';
 
@@ -207,7 +207,7 @@ function init_games(): void {
 	const ratings = RatingSystemManager.get_instance();
 	let games = GamesManager.get_instance();
 	let num_games: number = 0;
-	let max_game_id: string = '0';
+	let max_game_id: GameID = '0';
 
 	for (const id of ratings.get_unique_time_controls_ids()) {
 		const games_dir = EnvironmentManager.get_instance().get_dir_games_time_control(id);

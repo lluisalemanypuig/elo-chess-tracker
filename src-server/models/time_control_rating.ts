@@ -25,16 +25,17 @@ Contact:
 
 import { RatingSystemManager } from '../managers/rating_system_manager';
 import { Rating } from '../rating_framework/rating';
+import { TimeControlID } from './time_control';
 
 /**
  * @brief A pair of time control id and rating
  */
 export class TimeControlRating {
-	public time_control: string;
+	public time_control: TimeControlID;
 	public rating: Rating;
 
-	constructor(time_control: string, data: Rating) {
-		this.time_control = time_control;
+	constructor(id: TimeControlID, data: Rating) {
+		this.time_control = id;
 		this.rating = data;
 	}
 

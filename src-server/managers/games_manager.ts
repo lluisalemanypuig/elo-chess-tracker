@@ -23,6 +23,9 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
+import { GameID } from '../models/game';
+import { TimeControlID } from '../models/time_control';
+
 export class GamesManager {
 	/// The only instance of this class
 	private static instance: GamesManager;
@@ -42,14 +45,14 @@ export class GamesManager {
 	/// Number of games in the system
 	private max_game_id: number = 0;
 	/// Map from game ID to game record (file)
-	private game_id_to_record_date: Map<string, string> = new Map();
+	private record_dates: Map<GameID, string> = new Map();
 	/// Map from game ID to time control id.
-	private game_id_to_time_control: Map<string, string> = new Map();
+	private time_controls: Map<GameID, TimeControlID> = new Map();
 
 	clear(): void {
 		this.max_game_id = 0;
-		this.game_id_to_record_date.clear();
-		this.game_id_to_time_control.clear();
+		this.record_dates.clear();
+		this.time_controls.clear();
 	}
 
 	/// Current maximum game ID
@@ -68,19 +71,19 @@ export class GamesManager {
 
 	/// Returns the date record file in which we find the game ID passed as parameter.
 	get_game_id_record_date(game_id: string): string | undefined {
-		return this.game_id_to_record_date.get(game_id);
+		return this.record_dates.get(game_id);
 	}
 	// Sets the date record file 'when' in which we find the game ID passed as parameter.
 	set_game_id_record_date(game_id: string, when: string): void {
-		this.game_id_to_record_date.set(game_id, when);
+		this.record_dates.set(game_id, when);
 	}
 
 	/// Returns the time control id of the game
-	get_game_id_time_control(game_id: string): string | undefined {
-		return this.game_id_to_time_control.get(game_id);
+	get_game_id_time_control(game_id: GameID): string | undefined {
+		return this.time_controls.get(game_id);
 	}
 	// Sets the time control id of the game
-	set_game_id_time_control(game_id: string, time_control_id: string): void {
-		this.game_id_to_time_control.set(game_id, time_control_id);
+	set_game_id_time_control(game_id: GameID, time_id: TimeControlID): void {
+		this.time_controls.set(game_id, time_id);
 	}
 }

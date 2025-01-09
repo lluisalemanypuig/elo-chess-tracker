@@ -29,7 +29,7 @@ import Debug from 'debug';
 const debug = Debug('ELO_TRACKER:server_game_history');
 
 import { Player } from '../models/player';
-import { Game, GameResult, game_set_from_json } from '../models/game';
+import { Game, GameID, GameResult, game_set_from_json } from '../models/game';
 import { User } from '../models/user';
 import { log_now, long_date_to_short_date, number_to_string } from '../utils/misc';
 import {
@@ -83,7 +83,7 @@ export function game_new(
 ): Game {
 	// retrieve next id and increment maximum id
 	const id_number = GamesManager.get_instance().increase_max_game_id();
-	const id_str = number_to_string(id_number);
+	const id_str: GameID = number_to_string(id_number);
 	debug(log_now(), `ID for new game: ${id_str}`);
 
 	let white_to_assign: Rating;
@@ -482,7 +482,7 @@ export function game_add(g: Game): void {
 	game_insert_in_history(g, when);
 	debug(log_now(), `Updating the hash table (game id -> game record)`);
 
-	const game_id = g.get_id();
+	const game_id: GameID = g.get_id();
 	let games = GamesManager.get_instance();
 	games.set_game_id_record_date(game_id, when);
 	games.set_game_id_time_control(game_id, time_control_id);
@@ -546,7 +546,7 @@ export function game_find_by_id(game_id: string): [string[], string, Game[], num
  * @param game_id The ID of the game to edit
  * @param new_result The (new) result of the game
  */
-export function game_edit_result(game_id: string, new_result: GameResult): void {
+export function game_edit_result(game_id: GameID, new_result: GameResult): void {
 	const games_dir = EnvironmentManager.get_instance().get_dir_games();
 
 	debug(log_now(), `Editing game '${game_id}'`);

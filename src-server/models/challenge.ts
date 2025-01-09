@@ -24,6 +24,9 @@ Contact:
 */
 
 import { GameResult } from './game';
+import { TimeControlID } from './time_control';
+
+export type ChallengeID = string;
 
 /**
  * @brief Class enconding a challenge
@@ -32,7 +35,7 @@ import { GameResult } from './game';
  */
 export class Challenge {
 	/// Identifier of this challenge
-	private readonly id: string;
+	private readonly id: ChallengeID;
 
 	/// The Challenge sending the challenge
 	private readonly sent_by: string;
@@ -60,7 +63,7 @@ export class Challenge {
 	private white: string | null = null;
 	private black: string | null = null;
 	private result: GameResult | null = null;
-	private time_control_id: string | null = null;
+	private time_control_id: TimeControlID | null = null;
 	private time_control_name: string | null = null;
 
 	/**
@@ -81,7 +84,7 @@ export class Challenge {
 	 * @param time_control_id Time control id of the game
 	 * @param time_control_name Time control name of the game
 	 */
-	constructor(id: string, sent_by: string, sent_to: string, when_challenge_sent: string) {
+	constructor(id: ChallengeID, sent_by: string, sent_to: string, when_challenge_sent: string) {
 		this.id = id;
 		this.sent_by = sent_by;
 		this.sent_to = sent_to;
@@ -89,7 +92,7 @@ export class Challenge {
 	}
 
 	/// Returns the id of the challenge
-	get_id(): string {
+	get_id(): ChallengeID {
 		return this.id;
 	}
 
@@ -142,7 +145,7 @@ export class Challenge {
 		return this.result;
 	}
 	/// Time control id of the game
-	get_time_control_id(): string | null {
+	get_time_control_id(): TimeControlID | null {
 		return this.time_control_id;
 	}
 	/// Time control name of the game
@@ -164,7 +167,7 @@ export class Challenge {
 		white: string,
 		black: string,
 		result: GameResult,
-		time_control_id: string,
+		time_control_id: TimeControlID,
 		time_control_name: string
 	): void {
 		if (!(by == white || by == black)) {

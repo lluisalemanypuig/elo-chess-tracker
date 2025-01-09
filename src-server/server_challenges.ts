@@ -39,12 +39,14 @@ import {
 	challenge_agree_result
 } from './managers/challenges';
 import { user_exists, user_retrieve } from './managers/users';
-import { Challenge } from './models/challenge';
+import { Challenge, ChallengeID } from './models/challenge';
 import { User } from './models/user';
 import { CHALLENGE_USER } from './models/user_action';
 import { SessionID } from './models/session_id';
 import { challenge_can_user_send } from './utils/user_relationships';
 import { ChallengesManager } from './managers/challenges_manager';
+import { TimeControlID } from './models/time_control';
+import { GameResult } from './models/game';
 
 export async function get_challenges_page(req: any, res: any) {
 	debug(log_now(), 'GET challenges_page...');
@@ -108,7 +110,7 @@ export async function post_challenge_send(req: any, res: any) {
 		return;
 	}
 
-	let receiver = _receiver as User;
+	const receiver = _receiver as User;
 
 	if (!challenge_can_user_send(sender, receiver)) {
 		debug(log_now(), `Sender '${sender.get_username()}' cannot challenge user '${receiver.get_username()}'.`);
@@ -137,7 +139,7 @@ export async function post_challenge_accept(req: any, res: any) {
 		return;
 	}
 
-	const challenge_id = req.body.challenge_id;
+	const challenge_id: ChallengeID = req.body.challenge_id;
 
 	debug(log_now(), `User '${session.username}' wants to accept challenge '${challenge_id}'`);
 
@@ -176,7 +178,7 @@ export async function post_challenge_decline(req: any, res: any) {
 		return;
 	}
 
-	const challenge_id = req.body.challenge_id;
+	const challenge_id: ChallengeID = req.body.challenge_id;
 
 	debug(log_now(), `User '${session.username}' wants to decline challenge '${challenge_id}'`);
 
@@ -215,12 +217,12 @@ export async function post_challenge_set_result(req: any, res: any) {
 	}
 
 	const setter_user = session.username;
-	const challenge_id = req.body.challenge_id;
+	const challenge_id: ChallengeID = req.body.challenge_id;
 	const white_username = req.body.white;
 	const black_username = req.body.black;
-	const time_control_id = req.body.time_control_id;
+	const time_control_id: TimeControlID = req.body.time_control_id;
 	const time_control_name = req.body.time_control_name;
-	const result = req.body.result;
+	const result: GameResult = req.body.result;
 
 	debug(log_now(), `User '${setter_user}' is trying to set the result of a challenge`);
 	debug(log_now(), `    Challenge id: '${challenge_id}'`);
@@ -324,7 +326,7 @@ export async function post_challenge_agree_result(req: any, res: any) {
 		return;
 	}
 
-	const challenge_id = req.body.challenge_id;
+	const challenge_id: ChallengeID = req.body.challenge_id;
 	let _c = ChallengesManager.get_instance().get_challenge_by_id(challenge_id);
 	if (_c == null) {
 		res.send({
@@ -349,7 +351,7 @@ export async function post_challenge_disagree_result(req: any, res: any) {
 		return;
 	}
 
-	const challenge_id = req.body.challenge_id;
+	const challenge_id: ChallengeID = req.body.challenge_id;
 	let _c = ChallengesManager.get_instance().get_challenge_by_id(challenge_id);
 	if (_c == null) {
 		res.send({
