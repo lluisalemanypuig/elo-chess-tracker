@@ -619,6 +619,20 @@ describe('To JSON', () => {
 		const u = user_from_json(JSON);
 
 		expect(u.toJSON()).toEqual(JSON);
+		expect(u).toEqual(
+			new User(
+				'u',
+				'f',
+				'l',
+				new Password('a', 'b'),
+				[ADMIN],
+				new Map([
+					['blitz', ['2024-12-31', '2025-01-09']],
+					['rapid', ['2025-01-01']]
+				]),
+				[]
+			)
+		);
 	});
 
 	test('Elo', () => {
@@ -665,5 +679,22 @@ describe('To JSON', () => {
 		const u = user_from_json(JSON);
 
 		expect(u.toJSON()).toEqual(JSON);
+		expect(u).toEqual(
+			new User(
+				'u',
+				'f',
+				'l',
+				new Password('a', 'b'),
+				[ADMIN],
+				new Map([
+					['blitz', ['2024-12-31', '2025-01-09']],
+					['rapid', ['2025-01-01']]
+				]),
+				[
+					new TimeControlRating('blitz', new EloRating(1500, 0, 0, 0, 0, 40, false)),
+					new TimeControlRating('classical', new EloRating(1700, 0, 0, 0, 0, 40, false))
+				]
+			)
+		);
 	});
 });
