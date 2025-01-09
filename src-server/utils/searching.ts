@@ -41,8 +41,8 @@ export function search_linear<T>(arr: T[], x: T): number {
  */
 export function search_linear_by_key<T>(
 	arr: T[],
-	F: Function = (e1: T, e2: T) => {
-		return e1 == e2;
+	F: Function = (_e: T): boolean => {
+		return true;
 	}
 ): number {
 	for (let i = 0; i < arr.length; ++i) {
