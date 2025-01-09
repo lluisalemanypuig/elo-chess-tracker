@@ -39,9 +39,9 @@ describe('Users Manager', () => {
 		let users = UsersManager.get_instance();
 		users.clear();
 
-		const a = new User('a', 'AA', 'aa', new Password('p', 'w'), [], [], []);
-		const b = new User('b', 'BB', 'bb', new Password('p', 'w'), [], [], []);
-		const c = new User('c', 'CC', 'cc', new Password('p', 'w'), [], [], []);
+		const a = new User('a', 'AA', 'aa', new Password('p', 'w'), [], new Map([]), []);
+		const b = new User('b', 'BB', 'bb', new Password('p', 'w'), [], new Map([]), []);
+		const c = new User('c', 'CC', 'cc', new Password('p', 'w'), [], new Map([]), []);
 
 		users.add_user(a);
 		expect(users.num_users()).toBe(1);
@@ -70,15 +70,15 @@ describe('Users Manager', () => {
 		let users = UsersManager.get_instance();
 		users.clear();
 
-		const a = new User('a', 'AA', 'aa', new Password('p', 'w'), [], [], []);
-		const b = new User('b', 'BB', 'bb', new Password('p', 'w'), [], [], []);
-		const c = new User('c', 'CC', 'cc', new Password('p', 'w'), [], [], []);
+		const a = new User('a', 'AA', 'aa', new Password('p', 'w'), [], new Map([]), []);
+		const b = new User('b', 'BB', 'bb', new Password('p', 'w'), [], new Map([]), []);
+		const c = new User('c', 'CC', 'cc', new Password('p', 'w'), [], new Map([]), []);
 
 		users.add_user(a);
 		users.add_user(b);
 		users.add_user(c);
 
-		const d = new User('d', 'DD', 'dd', new Password('p', 'w'), [], [], []);
+		const d = new User('d', 'DD', 'dd', new Password('p', 'w'), [], new Map([]), []);
 
 		users.replace_user(d, users.get_user_index(b));
 

@@ -45,15 +45,15 @@ import { initialize_permissions } from '../../src-server/models/user_role_action
 import { can_user_edit, can_user_edit_a_game, can_user_see_a_game } from '../../src-server/utils/user_relationships';
 
 describe('Edition', () => {
-	const editor_admin = new User('un', 'f', 'l', new Password('a', 'b'), [ADMIN], ['2025-01-01'], []);
-	const editor_teacher = new User('un', 'f', 'l', new Password('a', 'b'), [TEACHER], ['2025-01-01'], []);
-	const editor_member = new User('un', 'f', 'l', new Password('a', 'b'), [MEMBER], ['2025-01-01'], []);
-	const editor_student = new User('un', 'f', 'l', new Password('a', 'b'), [STUDENT], ['2025-01-01'], []);
+	const editor_admin = new User('un', 'f', 'l', new Password('a', 'b'), [ADMIN], new Map([]), []);
+	const editor_teacher = new User('un', 'f', 'l', new Password('a', 'b'), [TEACHER], new Map([]), []);
+	const editor_member = new User('un', 'f', 'l', new Password('a', 'b'), [MEMBER], new Map([]), []);
+	const editor_student = new User('un', 'f', 'l', new Password('a', 'b'), [STUDENT], new Map([]), []);
 
-	const edited_admin = new User('un', 'f', 'l', new Password('a', 'b'), [ADMIN], ['2024-01-01'], []);
-	const edited_teacher = new User('un', 'f', 'l', new Password('a', 'b'), [TEACHER], ['2023-01-01'], []);
-	const edited_member = new User('un', 'f', 'l', new Password('a', 'b'), [MEMBER], ['2022-01-01'], []);
-	const edited_student = new User('un', 'f', 'l', new Password('a', 'b'), [STUDENT], ['2021-01-01'], []);
+	const edited_admin = new User('un', 'f', 'l', new Password('a', 'b'), [ADMIN], new Map([]), []);
+	const edited_teacher = new User('un', 'f', 'l', new Password('a', 'b'), [TEACHER], new Map([]), []);
+	const edited_member = new User('un', 'f', 'l', new Password('a', 'b'), [MEMBER], new Map([]), []);
+	const edited_student = new User('un', 'f', 'l', new Password('a', 'b'), [STUDENT], new Map([]), []);
 
 	test('Admin -> Teacher', () => {
 		let rel = UserRoleToUserAction.get_instance();
@@ -249,10 +249,10 @@ describe('Edition', () => {
 });
 
 describe('Can a user see a game?', () => {
-	const admin = new User('un', 'f', 'l', new Password('a', 'b'), [ADMIN], ['2025-01-01'], []);
-	const teacher = new User('un', 'f', 'l', new Password('a', 'b'), [TEACHER], ['2025-01-01'], []);
-	const member = new User('un', 'f', 'l', new Password('a', 'b'), [MEMBER], ['2025-01-01'], []);
-	const student = new User('un', 'f', 'l', new Password('a', 'b'), [STUDENT], ['2025-01-01'], []);
+	const admin = new User('un', 'f', 'l', new Password('a', 'b'), [ADMIN], new Map([]), []);
+	const teacher = new User('un', 'f', 'l', new Password('a', 'b'), [TEACHER], new Map([]), []);
+	const member = new User('un', 'f', 'l', new Password('a', 'b'), [MEMBER], new Map([]), []);
+	const student = new User('un', 'f', 'l', new Password('a', 'b'), [STUDENT], new Map([]), []);
 
 	test('Admin', () => {
 		let rel = UserRoleToUserAction.get_instance();
@@ -320,10 +320,10 @@ describe('Can a user see a game?', () => {
 });
 
 describe('Can a user edit a game?', () => {
-	const admin = new User('un', 'f', 'l', new Password('a', 'b'), [ADMIN], ['2025-01-01'], []);
-	const teacher = new User('un', 'f', 'l', new Password('a', 'b'), [TEACHER], ['2025-01-01'], []);
-	const member = new User('un', 'f', 'l', new Password('a', 'b'), [MEMBER], ['2025-01-01'], []);
-	const student = new User('un', 'f', 'l', new Password('a', 'b'), [STUDENT], ['2025-01-01'], []);
+	const admin = new User('un', 'f', 'l', new Password('a', 'b'), [ADMIN], new Map([]), []);
+	const teacher = new User('un', 'f', 'l', new Password('a', 'b'), [TEACHER], new Map([]), []);
+	const member = new User('un', 'f', 'l', new Password('a', 'b'), [MEMBER], new Map([]), []);
+	const student = new User('un', 'f', 'l', new Password('a', 'b'), [STUDENT], new Map([]), []);
 
 	test('Admin', () => {
 		let rel = UserRoleToUserAction.get_instance();

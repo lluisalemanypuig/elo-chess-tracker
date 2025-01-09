@@ -23,6 +23,7 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
+import fs from 'fs';
 import path from 'path';
 
 import { server_init_from_data } from '../../src-server/managers/initialization';
@@ -43,6 +44,9 @@ const db_dir = path.join(webpage_dir, 'database');
 const db_users_dir = path.join(db_dir, 'users');
 const db_challenges_dir = path.join(db_dir, 'challenges');
 const db_games_dir = path.join(db_dir, 'games');
+const db_games_Classical_dir = path.join(db_games_dir, 'Classical');
+const db_games_Rapid_dir = path.join(db_games_dir, 'Rapid');
+const db_games_Blitz_dir = path.join(db_games_dir, 'Blitz');
 
 const configuration = {
 	ssl_certificate: {
@@ -154,8 +158,15 @@ describe('Configure server', () => {
 
 		expect(environment_manager.get_dir_database()).toEqual(db_dir);
 		expect(environment_manager.get_dir_games()).toEqual(db_games_dir);
+		expect(environment_manager.get_dir_games_time_control('Classical')).toEqual(db_games_Classical_dir);
+		expect(environment_manager.get_dir_games_time_control('Rapid')).toEqual(db_games_Rapid_dir);
+		expect(environment_manager.get_dir_games_time_control('Blitz')).toEqual(db_games_Blitz_dir);
 		expect(environment_manager.get_dir_users()).toEqual(db_users_dir);
 		expect(environment_manager.get_dir_challenges()).toEqual(db_challenges_dir);
+
+		expect(fs.existsSync(db_games_Classical_dir)).toBe(true);
+		expect(fs.existsSync(db_games_Rapid_dir)).toBe(true);
+		expect(fs.existsSync(db_games_Blitz_dir)).toBe(true);
 
 		expect(environment_manager.get_dir_ssl()).toEqual(ssl_dir);
 		expect(environment_manager.get_ssl_public_key_file()).toEqual(path.join(ssl_dir, 'sadf'));
