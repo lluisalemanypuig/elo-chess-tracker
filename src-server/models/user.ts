@@ -50,7 +50,8 @@ export class User extends Player {
 	/**
 	 * @brief The set of games this user has played
 	 *
-	 * The data points to the game records.
+	 * For each time rating id, there is an array of strings that simply point
+	 * to the game records.
 	 */
 	private games: Map<string, string[]>;
 
@@ -62,7 +63,7 @@ export class User extends Player {
 			password: this.password,
 			roles: this.roles,
 			ratings: this.ratings,
-			games: Object.fromEntries(this.games) // Converts Map to a plain object
+			games: Object.fromEntries(this.games)
 		};
 	}
 
