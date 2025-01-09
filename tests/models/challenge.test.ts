@@ -168,6 +168,12 @@ describe('Sets and gets', () => {
 		expect(() =>
 			c.set_result('a', '2024-12-29..14:00:02', 'A', 'B', 'black_wins', 'blitz', 'Blitz (5 + 3)')
 		).toThrow();
+		expect(() =>
+			c.set_result('A', '2024-12-29..14:00:02', 'a', 'B', 'black_wins', 'blitz', 'Blitz (5 + 3)')
+		).toThrow();
+		expect(() =>
+			c.set_result('A', '2024-12-29..14:00:02', 'A', 'b', 'black_wins', 'blitz', 'Blitz (5 + 3)')
+		).toThrow();
 
 		expect(c.was_result_set()).toBe(false);
 		expect(c.get_result_set_by()).toBe(null);
