@@ -170,6 +170,20 @@ export class Challenge {
 		time_control_id: TimeControlID,
 		time_control_name: string
 	): void {
+		if (!(by == white || by == black)) {
+			throw new Error(`The setter (${by}) must be either white (${white}) or black (${black}).`);
+		}
+		if (!(white == this.sent_by || white == this.sent_to)) {
+			throw new Error(
+				`White (${white}) must be either the sender (${this.sent_by}) or the receiver (${this.sent_to}).`
+			);
+		}
+		if (!(black == this.sent_by || black == this.sent_to)) {
+			throw new Error(
+				`Black (${black}) must be either the sender (${this.sent_by}) or the receiver (${this.sent_to}).`
+			);
+		}
+
 		this.result_was_set = true;
 		this.result_set_by = by;
 		this.when_result_set = when;

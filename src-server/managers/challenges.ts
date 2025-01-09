@@ -133,20 +133,6 @@ export function challenge_set_result(
 ): void {
 	debug(log_now(), `Set the result of the challenge '${c.get_id()}'`);
 
-	if (!(by == white || by == black)) {
-		throw new Error(`The setter (${by}) must be either white (${white}) or black (${black}).`);
-	}
-	if (!(white == c.get_sent_by() || white == c.get_sent_to())) {
-		throw new Error(
-			`White (${white}) must be either the sender (${c.get_sent_by()}) or the receiver (${c.get_sent_to()}).`
-		);
-	}
-	if (!(black == c.get_sent_by() || black == c.get_sent_to())) {
-		throw new Error(
-			`Black (${black}) must be either the sender (${c.get_sent_by()}) or the receiver (${c.get_sent_to()}).`
-		);
-	}
-
 	const when = log_now_millis();
 	c.set_result(by, when, white, black, result, time_control_id, time_control_name);
 
