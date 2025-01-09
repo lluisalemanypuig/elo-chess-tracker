@@ -52,7 +52,19 @@ export class User extends Player {
 	 *
 	 * The data points to the game records.
 	 */
-	private games: string[];
+	private games: Map<string, string[]>;
+
+	toJSON(): object {
+		return {
+			username: this.username,
+			first_name: this.first_name,
+			last_name: this.last_name,
+			password: this.password,
+			roles: this.roles,
+			ratings: this.ratings,
+			games: Object.fromEntries(this.games) // Converts Map to a plain object
+		};
+	}
 
 	/**
 	 * @brief Constructor
@@ -70,7 +82,7 @@ export class User extends Player {
 		last_name: string,
 		password: Password,
 		roles: UserRole[],
-		games: string[],
+		games: Map<string, string[]>,
 		ratings: TimeControlRating[]
 	) {
 		super(username, ratings);
@@ -122,10 +134,11 @@ export class User extends Player {
 
 	/**
 	 * @brief Returns the set of games played by this user.
+	 * @param id The time control id.
 	 * @returns A list of strings pointing to game records.
 	 */
-	get_games(): string[] {
-		return this.games;
+	get_games(id: string): string[] | undefined {
+		return this.games.get(id);
 	}
 
 	/**
@@ -133,11 +146,17 @@ export class User extends Player {
 	 *
 	 * If the record string already exists, does nothing.
 	 * @param g New game record string.
+	 * @param id Time control id of the game.
 	 */
-	add_game(g: string): void {
-		let [index, exists] = where_should_be_inserted(this.games, g);
+	add_game(id: string, g: string): void {
+		let games_id = this.games.get(id);
+		if (games_id == undefined) {
+			throw new Error(`User does not have time control id '${id}'`);
+		}
+
+		let [index, exists] = where_should_be_inserted(games_id, g);
 		if (!exists) {
-			this.games.splice(index, 0, g);
+			games_id.splice(index, 0, g);
 		}
 	}
 
@@ -194,6 +213,14 @@ export class User extends Player {
 
 	/// Creates a copy of this user
 	override clone(): User {
+		const new_games = new Map<string, string[]>();
+
+		this.games.forEach((value, key) => {
+			// Deep copy the array to avoid reference sharing
+			const copiedArray = [...value];
+			new_games.set(key, copiedArray);
+		});
+
 		return new User(
 			this.username,
 			this.first_name,
@@ -202,9 +229,7 @@ export class User extends Player {
 			copyarray(this.roles, (s: UserRole): UserRole => {
 				return s;
 			}),
-			copyarray(this.games, (s: string): string => {
-				return s;
-			}),
+			new_games,
 			copyarray(this.ratings, (r: TimeControlRating): TimeControlRating => {
 				return r.clone();
 			})
@@ -239,7 +264,7 @@ export function user_from_json(json: any): User {
 		json['last_name'],
 		password_from_json(json['password']),
 		json['roles'],
-		json['games'],
+		new Map(Object.entries(json['games'])),
 		time_control_rating_set_from_json(json['ratings'])
 	);
 }
