@@ -50,35 +50,35 @@ export class EnvironmentManager {
 
 	// database directory
 	private directory_database: string = '';
-	private directory_games: string = '';
-	private directory_users: string = '';
-	private directory_challenges: string = '';
+	private directory_database_games: string = '';
+	private directory_database_users: string = '';
+	private directory_database_challenges: string = '';
 
 	clear_database(): void {
 		this.directory_database = '';
-		this.directory_games = '';
-		this.directory_users = '';
-		this.directory_challenges = '';
+		this.directory_database_games = '';
+		this.directory_database_users = '';
+		this.directory_database_challenges = '';
 	}
 
 	get_dir_database(): string {
 		return this.directory_database;
 	}
 	get_dir_games(): string {
-		return this.directory_games;
+		return this.directory_database_games;
 	}
 	get_dir_users(): string {
-		return this.directory_users;
+		return this.directory_database_users;
 	}
 	get_dir_challenges(): string {
-		return this.directory_challenges;
+		return this.directory_database_challenges;
 	}
 
 	set_database_base_directory(base_dir: string): void {
 		this.directory_database = base_dir;
-		this.directory_games = path.join(this.directory_database, 'games');
-		this.directory_users = path.join(this.directory_database, 'users');
-		this.directory_challenges = path.join(this.directory_database, 'challenges');
+		this.directory_database_games = path.join(this.directory_database, 'games');
+		this.directory_database_users = path.join(this.directory_database, 'users');
+		this.directory_database_challenges = path.join(this.directory_database, 'challenges');
 	}
 
 	// SSL certificate info
