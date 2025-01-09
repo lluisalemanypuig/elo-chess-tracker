@@ -43,10 +43,13 @@ export class GamesManager {
 	private max_game_id: number = 0;
 	/// Map from game ID to game record (file)
 	private game_id_to_record_date: Map<string, string> = new Map();
+	/// Map from game ID to time control id.
+	private game_id_to_time_control: Map<string, string> = new Map();
 
 	clear(): void {
 		this.max_game_id = 0;
 		this.game_id_to_record_date.clear();
+		this.game_id_to_time_control.clear();
 	}
 
 	/// Current maximum game ID
@@ -70,5 +73,14 @@ export class GamesManager {
 	// Sets the date record file 'when' in which we find the game ID passed as parameter.
 	set_game_id_record_date(game_id: string, when: string): void {
 		this.game_id_to_record_date.set(game_id, when);
+	}
+
+	/// Returns the time control id of the game
+	get_game_id_time_control(game_id: string): string | undefined {
+		return this.game_id_to_time_control.get(game_id);
+	}
+	// Sets the time control id of the game
+	set_game_id_time_control(game_id: string, time_control_id: string): void {
+		this.game_id_to_time_control.set(game_id, time_control_id);
 	}
 }
