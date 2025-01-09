@@ -170,10 +170,6 @@ export class Challenge {
 		time_control_id: TimeControlID,
 		time_control_name: string
 	): void {
-		if (!(by == white || by == black)) {
-			throw new Error(`The setter (${by}) must be either white (${white}) or black (${black}).`);
-		}
-
 		this.result_was_set = true;
 		this.result_set_by = by;
 		this.when_result_set = when;
