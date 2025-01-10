@@ -129,10 +129,10 @@ describe('Check challenge communication', () => {
 		const challenges = ChallengesManager.get_instance();
 		expect(challenges.get_max_challenge_id()).toBe(0);
 
-		const c_aa_bb = challenge_send_new('aa', 'bb');
-		const c_aa_cc = challenge_send_new('aa', 'cc');
-		const c_aa_dd = challenge_send_new('aa', 'dd');
-		const c_ee_ff = challenge_send_new('ee', 'ff');
+		const c_aa_bb = challenge_send_new('aa', 'bb', '2025-01-10..20:38:12:000');
+		const c_aa_cc = challenge_send_new('aa', 'cc', '2025-01-10..20:38:13:000');
+		const c_aa_dd = challenge_send_new('aa', 'dd', '2025-01-10..20:38:14:000');
+		const c_ee_ff = challenge_send_new('ee', 'ff', '2025-01-10..20:38:15:000');
 
 		const c_aa_bb_id = number_to_string(1);
 		const c_aa_cc_id = number_to_string(2);
@@ -234,7 +234,7 @@ describe('Check challenge communication', () => {
 		const id = number_to_string(3);
 
 		let c = challenges.get_challenge_by_id(id) as Challenge;
-		challenge_set_result(c, 'aa', 'aa', 'dd', 'white_wins', 'Blitz', 'Blitz (5 + 3)');
+		challenge_set_result(c, 'aa', '2025-01-10..20:32:11:000', 'aa', 'dd', 'white_wins', 'Blitz', 'Blitz (5 + 3)');
 
 		expect(c.get_result_set_by()).toEqual('aa');
 		expect(c.get_white()).toEqual('aa');
@@ -257,7 +257,16 @@ describe('Check challenge communication', () => {
 		const id = number_to_string(4);
 
 		let c = challenges.get_challenge_by_id(id) as Challenge;
-		challenge_set_result(c, 'ff', 'ee', 'ff', 'black_wins', 'Classical', 'Classical (90 + 30)');
+		challenge_set_result(
+			c,
+			'ff',
+			'2025-01-10..20:37:35:000',
+			'ee',
+			'ff',
+			'black_wins',
+			'Classical',
+			'Classical (90 + 30)'
+		);
 
 		expect(c.get_result_set_by()).toEqual('ff');
 		expect(c.get_white()).toEqual('ee');
@@ -351,7 +360,7 @@ describe('Check challenge communication', () => {
 		const id = number_to_string(3);
 
 		let c = challenges.get_challenge_by_id(id) as Challenge;
-		challenge_set_result(c, 'aa', 'dd', 'aa', 'black_wins', 'Blitz', 'Blitz (5 + 3)');
+		challenge_set_result(c, 'aa', '2025-01-10..20:38:45:000', 'dd', 'aa', 'black_wins', 'Blitz', 'Blitz (5 + 3)');
 
 		expect(c.get_result_set_by()).toEqual('aa');
 		expect(c.get_white()).toEqual('dd');
@@ -429,14 +438,56 @@ describe('Check initialization and communication', () => {
 
 describe('Fast challenge communication', () => {
 	test('New challenge (Blitz) aa -- bb', () => {
-		const c_aa_bb = challenge_send_new('aa', 'bb');
+		const c_aa_bb = challenge_send_new('aa', 'bb', '2025-01-10..20:38:45:000');
 		challenge_accept(c_aa_bb);
 
-		expect(() => challenge_set_result(c_aa_bb, 'ee', 'aa', 'bb', 'black_wins', 'Blitz', 'Blitz (5 + 3)')).toThrow();
-		expect(() => challenge_set_result(c_aa_bb, 'aa', 'dd', 'aa', 'black_wins', 'Blitz', 'Blitz (5 + 3)')).toThrow();
-		expect(() => challenge_set_result(c_aa_bb, 'aa', 'aa', 'ee', 'black_wins', 'Blitz', 'Blitz (5 + 3)')).toThrow();
+		expect(() =>
+			challenge_set_result(
+				c_aa_bb,
+				'ee',
+				'2025-01-10..20:39:15:000',
+				'aa',
+				'bb',
+				'black_wins',
+				'Blitz',
+				'Blitz (5 + 3)'
+			)
+		).toThrow();
+		expect(() =>
+			challenge_set_result(
+				c_aa_bb,
+				'aa',
+				'2025-01-10..20:39:16:000',
+				'dd',
+				'aa',
+				'black_wins',
+				'Blitz',
+				'Blitz (5 + 3)'
+			)
+		).toThrow();
+		expect(() =>
+			challenge_set_result(
+				c_aa_bb,
+				'aa',
+				'2025-01-10..20:39:17:000',
+				'aa',
+				'ee',
+				'black_wins',
+				'Blitz',
+				'Blitz (5 + 3)'
+			)
+		).toThrow();
 
-		challenge_set_result(c_aa_bb, 'aa', 'bb', 'aa', 'black_wins', 'Blitz', 'Blitz (5 + 3)');
+		challenge_set_result(
+			c_aa_bb,
+			'aa',
+			'2025-01-10..20:39:20:000',
+			'bb',
+			'aa',
+			'black_wins',
+			'Blitz',
+			'Blitz (5 + 3)'
+		);
 		challenge_agree_result(c_aa_bb);
 
 		const aa = user_retrieve('aa') as User;
@@ -466,20 +517,56 @@ describe('Fast challenge communication', () => {
 	});
 
 	test('New challenge (Classical) cc -- bb', () => {
-		const c_bb_cc = challenge_send_new('cc', 'bb');
+		const c_bb_cc = challenge_send_new('cc', 'bb', '2025-01-10..20:40:00:000');
 		challenge_accept(c_bb_cc);
 
 		expect(() =>
-			challenge_set_result(c_bb_cc, 'aa', 'bb', 'cc', 'black_wins', 'Classical', 'Classical (90 + 30)')
+			challenge_set_result(
+				c_bb_cc,
+				'aa',
+				'2025-01-10..20:39:30:000',
+				'bb',
+				'cc',
+				'black_wins',
+				'Classical',
+				'Classical (90 + 30)'
+			)
 		).toThrow();
 		expect(() =>
-			challenge_set_result(c_bb_cc, 'bb', 'aa', 'cc', 'black_wins', 'Classical', 'Classical (90 + 30)')
+			challenge_set_result(
+				c_bb_cc,
+				'bb',
+				'2025-01-10..20:39:31:000',
+				'aa',
+				'cc',
+				'black_wins',
+				'Classical',
+				'Classical (90 + 30)'
+			)
 		).toThrow();
 		expect(() =>
-			challenge_set_result(c_bb_cc, 'bb', 'bb', 'aa', 'black_wins', 'Classical', 'Classical (90 + 30)')
+			challenge_set_result(
+				c_bb_cc,
+				'bb',
+				'2025-01-10..20:39:32:000',
+				'bb',
+				'aa',
+				'black_wins',
+				'Classical',
+				'Classical (90 + 30)'
+			)
 		).toThrow();
 
-		challenge_set_result(c_bb_cc, 'bb', 'bb', 'cc', 'black_wins', 'Classical', 'Classical (90 + 30)');
+		challenge_set_result(
+			c_bb_cc,
+			'bb',
+			'2025-01-10..20:39:33:000',
+			'bb',
+			'cc',
+			'black_wins',
+			'Classical',
+			'Classical (90 + 30)'
+		);
 		challenge_agree_result(c_bb_cc);
 
 		const aa = user_retrieve('aa') as User;
