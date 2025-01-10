@@ -28,7 +28,7 @@ import path from 'path';
 
 import Debug from 'debug';
 const debug = Debug('ELO_TRACKER:app_router');
-import { log_now } from './utils/misc';
+import { log_now } from './utils/time';
 
 import { SessionIDManager } from './managers/session_id_manager';
 import { EnvironmentManager } from './managers/environment_manager';

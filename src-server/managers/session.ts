@@ -24,8 +24,9 @@ Contact:
 */
 
 import Debug from 'debug';
+
+import { log_now } from '../utils/time';
 import { User } from '../models/user';
-import { log_now } from '../utils/misc';
 const debug = Debug('ELO_TRACKER:server_session');
 
 import { SessionIDManager } from './session_id_manager';

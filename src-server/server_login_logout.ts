@@ -26,7 +26,8 @@ Contact:
 import Debug from 'debug';
 const debug = Debug('ELO_TRACKER:server_login');
 
-import { interleave_strings, log_now } from './utils/misc';
+import { log_now } from './utils/time';
+import { interleave_strings } from './utils/misc';
 import { is_password_of_user_correct } from './utils/encrypt';
 import { user_retrieve } from './managers/users';
 import { User } from './models/user';

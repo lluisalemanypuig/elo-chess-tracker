@@ -28,11 +28,11 @@ import path from 'path';
 import Debug from 'debug';
 const debug = Debug('ELO_TRACKER:server_users');
 
+import { log_now } from '../utils/time';
 import { Player } from '../models/player';
 import { User } from '../models/user';
 import { EnvironmentManager } from './environment_manager';
 import { UsersManager } from './users_manager';
-import { log_now } from '../utils/misc';
 import { UserRole } from '../models/user_role';
 import { Password } from '../models/password';
 import { encrypt_password_for_user } from '../utils/encrypt';

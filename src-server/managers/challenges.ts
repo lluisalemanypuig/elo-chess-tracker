@@ -28,7 +28,8 @@ import path from 'path';
 import Debug from 'debug';
 const debug = Debug('ELO_TRACKER:server_challenges');
 
-import { log_now, log_now_millis, number_to_string } from '../utils/misc';
+import { number_to_string } from '../utils/misc';
+import { log_now, log_now_millis } from '../utils/time';
 import { ChallengesManager } from './challenges_manager';
 import { EnvironmentManager } from './environment_manager';
 import { Challenge } from '../models/challenge';
@@ -61,6 +62,7 @@ export function challenge_set_retrieve(
  * @brief Send a challenge from a user to another
  * @param sender Username of sender
  * @param receiver Username of receiver
+ * @param when Timestamp
  * @returns The id of the challenge
  */
 export function challenge_send_new(sender: string, receiver: string): Challenge {
@@ -70,7 +72,7 @@ export function challenge_send_new(sender: string, receiver: string): Challenge 
 	mem.increase_max_challenge_id();
 	const new_id: string = number_to_string(mem.get_max_challenge_id());
 
-	const c = new Challenge(new_id, sender, receiver, log_now());
+	const c = new Challenge(new_id, sender, receiver, log_now_millis());
 
 	mem.add_challenge(c);
 

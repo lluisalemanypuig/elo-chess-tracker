@@ -24,7 +24,6 @@ Contact:
 */
 
 import { TimeControl } from '../models/time_control';
-
 import { Elo_player_vs_player } from '../rating_framework/Elo/formula';
 import { Elo_rating_from_json, Elo_new_rating } from '../rating_framework/Elo/rating';
 import { RatingSystemManager } from './rating_system_manager';

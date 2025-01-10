@@ -28,7 +28,7 @@ const debug = Debug('ELO_TRACKER:server_ranking');
 
 import path from 'path';
 
-import { log_now } from './utils/misc';
+import { log_now } from './utils/time';
 import { is_user_logged_in } from './managers/session';
 import { SessionID } from './models/session_id';
 

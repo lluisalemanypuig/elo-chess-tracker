@@ -28,10 +28,10 @@ import fs from 'fs';
 import Debug from 'debug';
 const debug = Debug('ELO_TRACKER:server_game_history');
 
+import { log_now, long_date_to_short_date, number_to_string } from '../utils/time';
 import { Player } from '../models/player';
 import { Game, GameID, GameResult, game_set_from_json } from '../models/game';
 import { User } from '../models/user';
-import { log_now, long_date_to_short_date, number_to_string } from '../utils/misc';
 import {
 	search,
 	where_should_be_inserted,

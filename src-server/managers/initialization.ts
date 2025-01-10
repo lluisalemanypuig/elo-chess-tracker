@@ -28,7 +28,7 @@ import path from 'path';
 import Debug from 'debug';
 const debug = Debug('ELO_TRACKER:server_initialization');
 
-import { log_now } from '../utils/misc';
+import { log_now } from '../utils/time';
 import { EnvironmentManager } from './environment_manager';
 import { ConfigurationManager } from './configuration_manager';
 import { ChallengesManager } from './challenges_manager';

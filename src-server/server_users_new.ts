@@ -28,7 +28,7 @@ const debug = Debug('ELO_TRACKER:server_user_new');
 
 import path from 'path';
 
-import { log_now } from './utils/misc';
+import { log_now } from './utils/time';
 import { is_user_logged_in } from './managers/session';
 import { user_add_new, user_exists } from './managers/users';
 import { User } from './models/user';

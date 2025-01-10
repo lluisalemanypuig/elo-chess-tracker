@@ -26,7 +26,7 @@ Contact:
 import Debug from 'debug';
 const debug = Debug('ELO_TRACKER:server_query_challenges');
 
-import { log_now } from './utils/misc';
+import { log_now } from './utils/time';
 import { is_user_logged_in } from './managers/session';
 import { user_retrieve } from './managers/users';
 import { User } from './models/user';

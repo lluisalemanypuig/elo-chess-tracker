@@ -26,7 +26,7 @@ Contact:
 import Debug from 'debug';
 const debug = Debug('ELO_TRACKER:server_time_control');
 
-import { log_now } from './utils/misc';
+import { log_now } from './utils/time';
 import { is_user_logged_in } from './managers/session';
 import { RatingSystemManager } from './managers/rating_system_manager';
 import { SessionID } from './models/session_id';

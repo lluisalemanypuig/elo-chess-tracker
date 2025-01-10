@@ -33,7 +33,7 @@ import Debug from 'debug';
 const debug = Debug('ELO_TRACKER:app_main');
 
 import fs from 'fs';
-import { log_now } from './utils/misc';
+import { log_now } from './utils/time';
 
 import { server_init_from_parameters } from './managers/initialization';
 import { ConfigurationManager } from './managers/configuration_manager';

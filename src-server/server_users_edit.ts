@@ -28,7 +28,7 @@ const debug = Debug('ELO_TRACKER:server_user_edit');
 
 import path from 'path';
 
-import { log_now } from './utils/misc';
+import { log_now } from './utils/time';
 import { is_user_logged_in } from './managers/session';
 import { user_retrieve, user_rename_and_reassign_roles } from './managers/users';
 import { User } from './models/user';
