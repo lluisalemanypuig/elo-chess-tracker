@@ -122,7 +122,7 @@ export async function post_challenge_send(req: any, res: any) {
 	}
 
 	debug(log_now(), `Send challenge from '${sender.get_username()}' to '${to_user}'`);
-	challenge_send_new(sender.get_username(), receiver.get_username());
+	challenge_send_new(sender.get_username(), receiver.get_username(), log_now_millis());
 
 	res.send({ r: '1' });
 	return;
