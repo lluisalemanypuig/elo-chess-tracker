@@ -26,20 +26,13 @@ Contact:
 import { Rating } from '../rating_framework/rating';
 import { RatingSystemManager } from '../managers/rating_system_manager';
 import { TimeControlID } from './time_control';
+import { DateStringLongMillis } from '../utils/time';
 
 /// Result of a game
 export type GameResult = 'white_wins' | 'black_wins' | 'draw';
 
 /// A type for game IDs.
 export type GameID = string;
-
-/**
- * @brief A type to encode a game record.
- *
- * A game record is simply the name of a file that can contain multiple games.
- * The format of this name is always a date in the format YYYY-MM-DD (year-month-day).
- */
-export type GameRecordID = string;
 
 /**
  * @brief Class to encode a chess game.
@@ -71,7 +64,7 @@ export class Game {
 	/// Time control name (Classical (90 + 30), Blitz (5 + 3), ...)
 	private time_control_name: string;
 	/// Date when the game took place
-	private when: string;
+	private when: DateStringLongMillis;
 
 	/**
 	 * @brief Constructor
@@ -93,7 +86,7 @@ export class Game {
 		result: GameResult,
 		time_control_id: TimeControlID,
 		time_control_name: string,
-		when: string
+		when: DateStringLongMillis
 	) {
 		this.id = id;
 		this.white = white;
@@ -151,7 +144,7 @@ export class Game {
 	}
 
 	/// Return game's date
-	get_date(): string {
+	get_date(): DateStringLongMillis {
 		return this.when;
 	}
 

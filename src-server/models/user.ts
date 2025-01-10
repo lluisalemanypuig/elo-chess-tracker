@@ -31,8 +31,8 @@ import { UserRoleToUserAction } from './user_role_action';
 import { copyarray } from '../utils/misc';
 import { where_should_be_inserted } from '../utils/searching';
 import { TimeControlRating, time_control_rating_set_from_json } from './time_control_rating';
-import { GameRecordID } from './game';
 import { TimeControlID } from './time_control';
+import { DateStringShort } from '../utils/time';
 
 /**
  * @brief Simple class to encode a User
@@ -55,7 +55,7 @@ export class User extends Player {
 	 * For each time rating id, there is an array of strings that simply point
 	 * to the game records.
 	 */
-	private games: Map<TimeControlID, GameRecordID[]>;
+	private games: Map<TimeControlID, DateStringShort[]>;
 
 	toJSON(): object {
 		return {
@@ -85,7 +85,7 @@ export class User extends Player {
 		last_name: string,
 		password: Password,
 		roles: UserRole[],
-		games: Map<TimeControlID, GameRecordID[]>,
+		games: Map<TimeControlID, DateStringShort[]>,
 		ratings: TimeControlRating[]
 	) {
 		super(username, ratings);
@@ -140,7 +140,7 @@ export class User extends Player {
 	 * @param id The time control id.
 	 * @returns A list of strings pointing to game records.
 	 */
-	get_games(id: TimeControlID): GameRecordID[] | undefined {
+	get_games(id: TimeControlID): DateStringShort[] | undefined {
 		return this.games.get(id);
 	}
 
@@ -151,7 +151,7 @@ export class User extends Player {
 	 * @param id Time control id of the game.
 	 * @param g New game record string.
 	 */
-	add_game(id: TimeControlID, g: GameRecordID): void {
+	add_game(id: TimeControlID, g: DateStringShort): void {
 		let games_id = this.games.get(id);
 		if (games_id == undefined) {
 			throw new Error(`User does not have time control id '${id}'`);
@@ -216,11 +216,11 @@ export class User extends Player {
 
 	/// Creates a copy of this user
 	override clone(): User {
-		let new_games: Map<TimeControlID, GameRecordID[]> = new Map();
-		this.games.forEach((value: GameRecordID[], key: TimeControlID) => {
+		let new_games: Map<TimeControlID, DateStringShort[]> = new Map();
+		this.games.forEach((value: DateStringShort[], key: TimeControlID) => {
 			new_games.set(
 				key,
-				copyarray(value, (id: GameRecordID): GameRecordID => {
+				copyarray(value, (id: DateStringShort): DateStringShort => {
 					return id;
 				})
 			);

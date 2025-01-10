@@ -25,6 +25,7 @@ Contact:
 
 import { GameID } from '../models/game';
 import { TimeControlID } from '../models/time_control';
+import { DateStringShort } from '../utils/time';
 
 export class GamesManager {
 	/// The only instance of this class
@@ -70,11 +71,11 @@ export class GamesManager {
 	}
 
 	/// Returns the date record file in which we find the game ID passed as parameter.
-	get_game_id_record_date(game_id: string): string | undefined {
+	get_game_id_record_date(game_id: GameID): DateStringShort | undefined {
 		return this.record_dates.get(game_id);
 	}
 	// Sets the date record file 'when' in which we find the game ID passed as parameter.
-	set_game_id_record_date(game_id: string, when: string): void {
+	set_game_id_record_date(game_id: GameID, when: DateStringShort): void {
 		this.record_dates.set(game_id, when);
 	}
 

@@ -29,7 +29,7 @@ import Debug from 'debug';
 const debug = Debug('ELO_TRACKER:server_game_history');
 
 import { number_to_string } from '../utils/misc';
-import { log_now, long_date_to_short_date } from '../utils/time';
+import { DateStringLongMillis, DateStringShort, log_now, long_date_to_short_date } from '../utils/time';
 import { Player } from '../models/player';
 import { Game, GameID, GameResult, game_set_from_json } from '../models/game';
 import { User } from '../models/user';
@@ -46,6 +46,7 @@ import { EnvironmentManager } from './environment_manager';
 import { user_retrieve, user_update_from_players_data } from './users';
 import { Rating } from '../rating_framework/rating';
 import { TimeControlRating } from '../models/time_control_rating';
+import { TimeControlID } from '../models/time_control';
 
 /// Returns g1 < g2 using dates
 function game_compare_dates(g1: Game, g2: Game): number {
@@ -58,18 +59,18 @@ function game_compare_dates(g1: Game, g2: Game): number {
 	return 1;
 }
 
-function make_game_date_record_name_str(when: string): string {
+function make_game_date_record_name_str(when: DateStringLongMillis): DateStringShort {
 	return long_date_to_short_date(when);
 }
 
-function make_game_date_record_name(g: Game): string {
+function make_game_date_record_name(g: Game): DateStringShort {
 	return make_game_date_record_name_str(g.get_date());
 }
 
-function read_game_date_record(game_record_name: string): Game[] {
-	debug(log_now(), `Read game record file '${game_record_name}'...`);
-	const data = fs.readFileSync(game_record_name, 'utf8');
-	debug(log_now(), `    Game record '${game_record_name}' read.`);
+function read_game_date_record(game_record_id: DateStringShort): Game[] {
+	debug(log_now(), `Read game record file '${game_record_id}'...`);
+	const data = fs.readFileSync(game_record_id, 'utf8');
+	debug(log_now(), `    Game record '${game_record_id}' read.`);
 	return game_set_from_json(data);
 }
 
@@ -80,7 +81,7 @@ export function game_new(
 	result: GameResult,
 	time_control_id: string,
 	time_control_name: string,
-	when: string
+	when: DateStringLongMillis
 ): Game {
 	// retrieve next id and increment maximum id
 	const id_number = GamesManager.get_instance().increase_max_game_id();
@@ -146,7 +147,11 @@ export function game_new(
 
 /// Return the game where player 'username' is involved with
 /// date after later than date 'when'.
-function game_next_of_player(username: string, time_control_id: string, when: string): Game | null {
+function game_next_of_player(
+	username: string,
+	time_control_id: TimeControlID,
+	when: DateStringLongMillis
+): Game | null {
 	debug(log_now(), `Find the game of user '${username}' right after date '${when}'`);
 
 	const games_dir = EnvironmentManager.get_instance().get_dir_games_time_control(time_control_id);
@@ -247,7 +252,7 @@ function game_next_of_player(username: string, time_control_id: string, when: st
 	return null;
 }
 
-function updated_player(time_control_id: string, player: string, rating: Rating): Player {
+function updated_player(time_control_id: TimeControlID, player: string, rating: Rating): Player {
 	let p = (user_retrieve(player) as User).clone();
 	p.set_rating(time_control_id, rating);
 	return p;
@@ -257,7 +262,7 @@ function updated_player(time_control_id: string, player: string, rating: Rating)
 function update_game_record(
 	game_set: Game[],
 	start_at: number,
-	time_control_id: string,
+	time_control_id: TimeControlID,
 	updated_players: Player[],
 	player_to_index: Map<string, number>
 ): void {
@@ -333,10 +338,10 @@ function update_game_record(
 /**
  * @brief Inserts a game into the entire history
  * @param game Game to be inserted
- * @param date_record_str The file into which we have to add the new game
+ * @param game_record_id The file into which we have to add the new game
  * @post Users in the server are update (both memory and user files)
  */
-function game_insert_in_history(game: Game, date_record_str: string): void {
+function game_insert_in_history(game: Game, game_record_id: DateStringShort): void {
 	// some player's rating will change and will have to be updated
 	let updated_players: Player[] = [];
 
@@ -352,8 +357,8 @@ function game_insert_in_history(game: Game, date_record_str: string): void {
 	debug(log_now(), 'Adding game into the history...');
 	debug(log_now(), `    Game '${JSON.stringify(game)}'`);
 
-	debug(log_now(), `    Game record string: '${date_record_str}'`);
-	const date_record_file: string = path.join(games_dir, date_record_str);
+	debug(log_now(), `    Game record string: '${game_record_id}'`);
+	const date_record_file: string = path.join(games_dir, game_record_id);
 	debug(log_now(), `    File: '${date_record_file}'`);
 
 	// The files currently existing in the 'games_directory'
@@ -372,15 +377,15 @@ function game_insert_in_history(game: Game, date_record_str: string): void {
 		return;
 	}
 
-	debug(log_now(), `Find '${date_record_str}' in '${all_date_record_strs}'`);
+	debug(log_now(), `Find '${game_record_id}' in '${all_date_record_strs}'`);
 	// Does the record corresponding to the game exist?
-	let [idx_in_record_list, record_exists] = where_should_be_inserted(all_date_record_strs, date_record_str);
+	let [idx_in_record_list, record_exists] = where_should_be_inserted(all_date_record_strs, game_record_id);
 
 	if (!record_exists) {
-		debug(log_now(), `    There is no record with date '${date_record_str}'`);
+		debug(log_now(), `    There is no record with date '${game_record_id}'`);
 		debug(log_now(), `    The new record should be placed at '${idx_in_record_list}'`);
 	} else {
-		debug(log_now(), `    There is a record with date '${date_record_str}'`);
+		debug(log_now(), `    There is a record with date '${game_record_id}'`);
 		debug(log_now(), `    The new record is at '${idx_in_record_list}'`);
 	}
 
@@ -425,7 +430,7 @@ function game_insert_in_history(game: Game, date_record_str: string): void {
 		// insert game into array
 		game_set.splice(game_idx, 0, game);
 
-		debug(log_now(), `    Update game record '${date_record_str}'`);
+		debug(log_now(), `    Update game record '${game_record_id}'`);
 
 		// update record of the current game
 		update_game_record(game_set, game_idx + 1, game.get_time_control_id(), updated_players, player_to_index);
@@ -474,8 +479,8 @@ function game_insert_in_history(game: Game, date_record_str: string): void {
 export function game_add(g: Game): void {
 	debug(log_now(), `Add game into the list of games played by both users...`);
 
-	const time_control_id = g.get_time_control_id();
-	const when = make_game_date_record_name(g);
+	const time_control_id: TimeControlID = g.get_time_control_id();
+	const when: DateStringShort = make_game_date_record_name(g);
 	(user_retrieve(g.get_white()) as User).add_game(time_control_id, when);
 	(user_retrieve(g.get_black()) as User).add_game(time_control_id, when);
 
@@ -489,7 +494,7 @@ export function game_add(g: Game): void {
 	games.set_game_id_time_control(game_id, time_control_id);
 }
 
-export function game_find_by_id(game_id: string): [string[], string, Game[], number, number] | null {
+export function game_find_by_id(game_id: GameID): [string[], string, Game[], number, number] | null {
 	const __date_record_str = GamesManager.get_instance().get_game_id_record_date(game_id);
 	const __time_control_id = GamesManager.get_instance().get_game_id_time_control(game_id);
 

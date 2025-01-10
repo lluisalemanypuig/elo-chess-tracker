@@ -23,6 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
+import { DateStringLongMillis } from '../utils/time';
 import { GameResult } from './game';
 import { TimeControlID } from './time_control';
 
@@ -42,20 +43,20 @@ export class Challenge {
 	/// The Challenge receiving the challenge
 	private readonly sent_to: string;
 	/// Date when the challenge was sent
-	private readonly when_challenge_sent: string;
+	private readonly when_challenge_sent: DateStringLongMillis;
 
 	/// Date when the challenge was accepted
-	private when_challenge_accepted: string | null = null;
+	private when_challenge_accepted: DateStringLongMillis | null = null;
 
 	/// Has the result been set at some point?
 	private result_was_set: boolean = false;
 	/// Date when the result of the game was last modified
-	private when_result_set: string | null = null;
+	private when_result_set: DateStringLongMillis | null = null;
 	/// Player who set the result
 	private result_set_by: string | null = null;
 
 	/// Date when the result of the game was accepted.
-	private when_result_accepted: string | null = null;
+	private when_result_accepted: DateStringLongMillis | null = null;
 	/// User that accepted the result
 	private result_accepted_by: string | null = null;
 
@@ -84,7 +85,7 @@ export class Challenge {
 	 * @param time_control_id Time control id of the game
 	 * @param time_control_name Time control name of the game
 	 */
-	constructor(id: ChallengeID, sent_by: string, sent_to: string, when_challenge_sent: string) {
+	constructor(id: ChallengeID, sent_by: string, sent_to: string, when_challenge_sent: DateStringLongMillis) {
 		this.id = id;
 		this.sent_by = sent_by;
 		this.sent_to = sent_to;
@@ -115,7 +116,7 @@ export class Challenge {
 	}
 
 	/// Return the time when the challenge was sent
-	get_when_result_set(): string | null {
+	get_when_result_set(): DateStringLongMillis | null {
 		return this.when_result_set;
 	}
 	/// Returns the username of the player who set the result
@@ -124,7 +125,7 @@ export class Challenge {
 	}
 
 	/// Return the time when the challenge was accepted
-	get_when_result_accepted(): string | null {
+	get_when_result_accepted(): DateStringLongMillis | null {
 		return this.when_result_accepted;
 	}
 	/// Returns the username of the player who set the result
@@ -163,7 +164,7 @@ export class Challenge {
 	 */
 	set_result(
 		by: string,
-		when: string,
+		when: DateStringLongMillis,
 		white: string,
 		black: string,
 		result: GameResult,

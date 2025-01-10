@@ -23,7 +23,14 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-export type DateString = string;
+/// YYYY-MM-DD..HH:mm:ss:SSS
+export type DateStringLongMillis = string;
+
+/// YYYY-MM-DD..HH:mm:ss
+export type DateStringLong = string;
+
+/// YYYY-MM-DD
+export type DateStringShort = string;
 
 import moment from 'moment';
 
@@ -34,7 +41,7 @@ import moment from 'moment';
  * @param date A Date object.
  * @returns A string.
  */
-export function date_to_string_long_millis(date: Date): DateString {
+export function date_to_string_long_millis(date: Date): DateStringLongMillis {
 	return moment.utc(date).local().format('YYYY-MM-DD..HH:mm:ss:SSS');
 }
 
@@ -43,25 +50,26 @@ export function date_to_string_long_millis(date: Date): DateString {
  * @param date A Date object.
  * @returns A string.
  */
-export function date_to_string_long(date: Date): DateString {
+export function date_to_string_long(date: Date): DateStringLong {
 	return moment.utc(date).local().format('YYYY-MM-DD..HH:mm:ss');
 }
 
 /**
- * @brief Converts a YYYY-MM-DD..HH:mm:ss string into a YYYY-MM-DD string.
- * @param date A string object containing a date formatted with YYYY-MM-DD..HH:mm:ss.
+ * @brief Converts a YYYY-MM-DD..* string into a YYYY-MM-DD string.
+ * @param date A string object containing a date formatted with YYYY-MM-DD..*.
+ * The part * can be anything.
  * @returns A string object containing a date formatted with YYYY-MM-DD.
  */
-export function long_date_to_short_date(date: DateString): string {
+export function long_date_to_short_date(date: DateStringLong | DateStringLongMillis): DateStringShort {
 	return date.split('..')[0];
 }
 
 /// Returns the current date in string format "YYYY-MM-DD..HH:mm:ss"
-export function log_now(): DateString {
+export function log_now(): DateStringLong {
 	return date_to_string_long(new Date());
 }
 
 /// Returns the current date in string format "YYYY-MM-DD..HH:mm:ss:SSS"
-export function log_now_millis(): DateString {
+export function log_now_millis(): DateStringLongMillis {
 	return date_to_string_long_millis(new Date());
 }

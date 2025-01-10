@@ -28,7 +28,7 @@ const debug = Debug('ELO_TRACKER:server_challenges');
 
 import path from 'path';
 
-import { log_now } from './utils/time';
+import { log_now, log_now_millis } from './utils/time';
 import { is_user_logged_in } from './managers/session';
 import {
 	challenge_accept,
@@ -310,7 +310,16 @@ export async function post_challenge_set_result(req: any, res: any) {
 		return;
 	}
 
-	challenge_set_result(c, setter_user, white_username, black_username, result, time_control_id, time_control_name);
+	challenge_set_result(
+		c,
+		setter_user,
+		log_now_millis(),
+		white_username,
+		black_username,
+		result,
+		time_control_id,
+		time_control_name
+	);
 
 	res.send({ r: '1' });
 }

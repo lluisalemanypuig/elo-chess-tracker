@@ -29,11 +29,11 @@ const debug = Debug('ELO_TRACKER:server_query_games');
 import path from 'path';
 import fs from 'fs';
 
-import { log_now } from './utils/time';
+import { DateStringShort, log_now } from './utils/time';
 import { is_user_logged_in } from './managers/session';
 import { user_retrieve } from './managers/users';
 import { User } from './models/user';
-import { Game, game_set_from_json, GameRecordID } from './models/game';
+import { Game, game_set_from_json } from './models/game';
 import { RatingSystemManager } from './managers/rating_system_manager';
 import { EnvironmentManager } from './managers/environment_manager';
 import { SEE_USER_GAMES } from './models/user_action';
@@ -139,7 +139,7 @@ export async function get_query_games_list_own(req: any, res: any) {
 	const rating_system_manager = RatingSystemManager.get_instance();
 
 	const data_to_return = filter_game_list(
-		(record_id: GameRecordID): boolean => {
+		(record_id: DateStringShort): boolean => {
 			for (const id of rating_system_manager.get_unique_time_controls_ids()) {
 				if (user.get_games(id)?.includes(record_id)) {
 					return true;
@@ -179,7 +179,7 @@ export async function get_query_games_list_all(req: any, res: any) {
 	}
 
 	const data_to_return = filter_game_list(
-		(_: GameRecordID): boolean => {
+		(_: DateStringShort): boolean => {
 			return true;
 		},
 		(g: Game): boolean => {

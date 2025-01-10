@@ -28,7 +28,7 @@ import path from 'path';
 import Debug from 'debug';
 const debug = Debug('ELO_TRACKER:server_users');
 
-import { log_now } from '../utils/time';
+import { DateStringShort, log_now } from '../utils/time';
 import { Player } from '../models/player';
 import { User } from '../models/user';
 import { EnvironmentManager } from './environment_manager';
@@ -38,6 +38,7 @@ import { Password } from '../models/password';
 import { encrypt_password_for_user } from '../utils/encrypt';
 import { RatingSystemManager } from './rating_system_manager';
 import { TimeControlRating } from '../models/time_control_rating';
+import { TimeControlID } from '../models/time_control';
 
 /**
  * @brief Returns a User object from a username.
@@ -114,7 +115,7 @@ export function user_add_new(
 ): User {
 	const rating_system = RatingSystemManager.get_instance();
 
-	let game_map: Map<string, string[]> = new Map();
+	let game_map: Map<TimeControlID, DateStringShort[]> = new Map();
 	let ratings: TimeControlRating[] = [];
 	rating_system.get_unique_time_controls_ids().forEach((id: string) => {
 		ratings.push(new TimeControlRating(id, rating_system.get_new_rating()));
@@ -144,7 +145,7 @@ export function user_add_new(
 	return user;
 }
 
-/// Returns the list of all names and usernames
+/// Returns the list of all (full) names and usernames
 export function user_get_all_names_and_usernames(): [string, string][] {
 	let res: [string, string][] = [];
 

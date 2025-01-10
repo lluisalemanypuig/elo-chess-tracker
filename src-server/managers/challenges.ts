@@ -29,7 +29,7 @@ import Debug from 'debug';
 const debug = Debug('ELO_TRACKER:server_challenges');
 
 import { number_to_string } from '../utils/misc';
-import { log_now, log_now_millis } from '../utils/time';
+import { DateStringLongMillis, log_now, log_now_millis } from '../utils/time';
 import { ChallengesManager } from './challenges_manager';
 import { EnvironmentManager } from './environment_manager';
 import { Challenge } from '../models/challenge';
@@ -127,6 +127,7 @@ export function challenge_decline(c: Challenge): void {
 export function challenge_set_result(
 	c: Challenge,
 	by: string,
+	when: DateStringLongMillis,
 	white: string,
 	black: string,
 	result: GameResult,
@@ -135,7 +136,6 @@ export function challenge_set_result(
 ): void {
 	debug(log_now(), `Set the result of the challenge '${c.get_id()}'`);
 
-	const when = log_now_millis();
 	c.set_result(by, when, white, black, result, time_control_id, time_control_name);
 
 	const challenge_dir = EnvironmentManager.get_instance().get_dir_challenges();
