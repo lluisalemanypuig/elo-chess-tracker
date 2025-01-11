@@ -139,6 +139,23 @@ export const all_action_ids = [EDIT_ID, EDIT_GAMES_ID, ASSIGN_ROLE_ID, SEE_ID, C
 /// All actions as type
 export type UserActionID = (typeof all_action_ids)[number];
 
+export function get_generic_role_action_name(id: UserActionID): UserAction {
+	switch (id) {
+		case EDIT_ID:
+			return EDIT_USER;
+		case EDIT_GAMES_ID:
+			return EDIT_USER_GAMES;
+		case ASSIGN_ROLE_ID:
+			return ASSIGN_ROLE_USER;
+		case SEE_ID:
+			return SEE_USER_GAMES;
+		case CHALLENGE_ID:
+			return CHALLENGE_USER;
+	}
+
+	throw new Error(`Wrong action identifier ${id}`);
+}
+
 /**
  * @brief Returns the 'concatenation' of role and action:
  *

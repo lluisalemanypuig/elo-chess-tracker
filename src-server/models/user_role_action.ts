@@ -23,8 +23,14 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { UserRole, ADMIN, TEACHER, MEMBER, STUDENT } from './user_role';
-import { UserAction } from './user_action';
+import { UserRole, ADMIN, TEACHER, MEMBER, STUDENT, all_user_roles } from './user_role';
+import {
+	all_action_ids,
+	get_generic_role_action_name,
+	get_role_action_name,
+	UserAction,
+	UserActionID
+} from './user_action';
 
 /// Relate each user role to a readable string
 export class UserRoleToUserAction {
@@ -72,6 +78,25 @@ export class UserRoleToUserAction {
 		return this.relate[role].includes(action);
 	}
 
+	role_can_do(role: UserRole, action: UserActionID): boolean {
+		for (const other_roles of all_user_roles) {
+			const user_action = get_role_action_name(action, other_roles);
+			if (this.role_includes_action(role, user_action)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	add_missing_generic_actions(role: UserRole): void {
+		for (const action_id of all_action_ids) {
+			if (this.role_can_do(role, action_id)) {
+				const generic_action_name = get_generic_role_action_name(action_id);
+				this.add_to_role(role, generic_action_name);
+			}
+		}
+	}
+
 	/// Clears the relationships contained in this instance.
 	clear(): void {
 		this.relate = {
@@ -86,12 +111,12 @@ export class UserRoleToUserAction {
 /**
  * @brief Initialize the permissions of every type of user.
  * @param permission_data A JSON object with the following structure:
-{
-admin : [...],
-teacher : [...],
-member : [...],
-student : [...],
-}
+	{
+		admin : [...],
+		teacher : [...],
+		member : [...],
+		student : [...],
+	}
  * where each "[...]" is a vector of UserAction.
  */
 export function initialize_permissions(permission_data: any): void {
@@ -101,16 +126,23 @@ export function initialize_permissions(permission_data: any): void {
 	for (let i = 0; i < permission_data.admin.length; ++i) {
 		actions.add_to_role(ADMIN, permission_data.admin[i]);
 	}
+	actions.add_missing_generic_actions(ADMIN);
+
 	// TEACHER
 	for (let i = 0; i < permission_data.teacher.length; ++i) {
 		actions.add_to_role(TEACHER, permission_data.teacher[i]);
 	}
+	actions.add_missing_generic_actions(TEACHER);
+
 	// MEMBER
 	for (let i = 0; i < permission_data.member.length; ++i) {
 		actions.add_to_role(MEMBER, permission_data.member[i]);
 	}
+	actions.add_missing_generic_actions(MEMBER);
+
 	// STUDENT
 	for (let i = 0; i < permission_data.student.length; ++i) {
 		actions.add_to_role(STUDENT, permission_data.student[i]);
 	}
+	actions.add_missing_generic_actions(STUDENT);
 }
