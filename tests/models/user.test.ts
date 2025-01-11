@@ -162,7 +162,7 @@ describe('Actions allowed per user (single role)', () => {
 	test('Admin', () => {
 		UserRoleToUserAction.get_instance().clear();
 		initialize_permissions({
-			admin: [EDIT_USER, EDIT_TEACHER],
+			admin: [EDIT_TEACHER],
 			teacher: [],
 			student: [],
 			member: []
@@ -208,7 +208,7 @@ describe('Actions allowed per user (single role)', () => {
 		UserRoleToUserAction.get_instance().clear();
 		initialize_permissions({
 			admin: [],
-			teacher: [ASSIGN_ROLE_USER, ASSIGN_ROLE_MEMBER],
+			teacher: [ASSIGN_ROLE_MEMBER],
 			student: [],
 			member: []
 		});
@@ -300,7 +300,7 @@ describe('Actions allowed per user (single role)', () => {
 			admin: [],
 			teacher: [],
 			student: [],
-			member: [CHALLENGE_USER, CHALLENGE_ADMIN, CHALLENGE_STUDENT]
+			member: [CHALLENGE_ADMIN, CHALLENGE_STUDENT]
 		});
 
 		const member = new User('u', 'F', 'L', new Password('a', 'i'), [MEMBER], new Map([]), []);
@@ -345,9 +345,9 @@ describe('Actions allowed per user (multiple roles)', () => {
 	test('Admin + Teacher', () => {
 		UserRoleToUserAction.get_instance().clear();
 		initialize_permissions({
-			admin: [EDIT_USER, EDIT_TEACHER],
+			admin: [EDIT_TEACHER],
 			teacher: [],
-			student: [CHALLENGE_USER, CHALLENGE_STUDENT],
+			student: [CHALLENGE_STUDENT],
 			member: []
 		});
 
@@ -392,9 +392,9 @@ describe('Actions allowed per user (multiple roles)', () => {
 	test('Admin + Student', () => {
 		UserRoleToUserAction.get_instance().clear();
 		initialize_permissions({
-			admin: [EDIT_USER, EDIT_TEACHER],
+			admin: [EDIT_TEACHER],
 			teacher: [],
-			student: [CHALLENGE_USER, CHALLENGE_STUDENT],
+			student: [CHALLENGE_STUDENT],
 			member: []
 		});
 

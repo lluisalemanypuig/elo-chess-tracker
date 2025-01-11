@@ -60,7 +60,7 @@ describe('Actions allowed per user (single role)', () => {
 		let rel = UserRoleToUserAction.get_instance();
 		rel.clear();
 		initialize_permissions({
-			admin: [EDIT_USER, EDIT_TEACHER],
+			admin: [EDIT_TEACHER],
 			teacher: [],
 			student: [],
 			member: []
@@ -100,7 +100,7 @@ describe('Actions allowed per user (single role)', () => {
 		rel.clear();
 		initialize_permissions({
 			admin: [],
-			teacher: [ASSIGN_ROLE_USER, ASSIGN_ROLE_MEMBER],
+			teacher: [ASSIGN_ROLE_MEMBER],
 			student: [],
 			member: []
 		});
@@ -180,7 +180,7 @@ describe('Actions allowed per user (single role)', () => {
 			admin: [],
 			teacher: [],
 			student: [],
-			member: [CHALLENGE_USER, CHALLENGE_ADMIN, CHALLENGE_STUDENT]
+			member: [CHALLENGE_ADMIN, CHALLENGE_STUDENT]
 		});
 
 		expect(rel.role_includes_action(MEMBER, CREATE_USER)).toBe(false);
@@ -218,9 +218,9 @@ describe('Actions allowed per user (multiple roles)', () => {
 		let rel = UserRoleToUserAction.get_instance();
 		rel.clear();
 		initialize_permissions({
-			admin: [EDIT_USER, EDIT_TEACHER],
+			admin: [EDIT_TEACHER],
 			teacher: [],
-			student: [CHALLENGE_USER, CHALLENGE_STUDENT],
+			student: [CHALLENGE_STUDENT],
 			member: []
 		});
 
@@ -286,9 +286,9 @@ describe('Actions allowed per user (multiple roles)', () => {
 		rel.clear();
 		initialize_permissions({
 			admin: [],
-			teacher: [ASSIGN_ROLE_USER, ASSIGN_ROLE_STUDENT, SEE_USER_GAMES, SEE_MEMBER_GAMES],
+			teacher: [ASSIGN_ROLE_STUDENT, SEE_MEMBER_GAMES],
 			student: [],
-			member: [CHALLENGE_USER, CHALLENGE_STUDENT, CHALLENGE_TEACHER]
+			member: [CHALLENGE_STUDENT, CHALLENGE_TEACHER]
 		});
 
 		expect(rel.role_includes_action(TEACHER, CREATE_USER)).toBe(false);
