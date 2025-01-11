@@ -26,6 +26,7 @@ Contact:
 import { GameID } from '../models/game';
 import { TimeControlID } from '../models/time_control';
 import { DateStringShort } from '../utils/time';
+import { number_to_string } from '../utils/misc';
 
 export class GamesManager {
 	/// The only instance of this class
@@ -69,9 +70,9 @@ export class GamesManager {
 		this.max_game_id = id;
 	}
 	/// Increase current maximum game ID
-	new_max_game_id(): number {
+	new_game_id(): GameID {
 		this.max_game_id += 1;
-		return this.max_game_id;
+		return number_to_string(this.max_game_id);
 	}
 
 	/// Returns the date record file in which we find the game ID passed as parameter.

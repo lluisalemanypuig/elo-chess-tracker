@@ -24,6 +24,7 @@ Contact:
 */
 
 import { Challenge, ChallengeID } from '../models/challenge';
+import { number_to_string } from '../utils/misc';
 
 export class ChallengesManager {
 	/// The only instance of this class
@@ -98,8 +99,8 @@ export class ChallengesManager {
 		this.max_challenge_id = id;
 	}
 	/// Increase current maximum challenge ID
-	new_max_challenge_id(): number {
+	new_challenge_id(): ChallengeID {
 		this.max_challenge_id += 1;
-		return this.max_challenge_id;
+		return number_to_string(this.max_challenge_id);
 	}
 }

@@ -28,7 +28,6 @@ import fs from 'fs';
 import Debug from 'debug';
 const debug = Debug('ELO_TRACKER:server_game_history');
 
-import { number_to_string } from '../utils/misc';
 import { DateStringLongMillis, DateStringShort, log_now, long_date_to_short_date } from '../utils/time';
 import { Player } from '../models/player';
 import { Game, GameID, GameResult, game_set_from_json } from '../models/game';
@@ -84,7 +83,7 @@ export function game_new(
 	when: DateStringLongMillis
 ): Game {
 	// retrieve next id and increment maximum id
-	const id_str: GameID = number_to_string(GamesManager.get_instance().new_max_game_id());
+	const id_str: GameID = GamesManager.get_instance().new_game_id();
 	debug(log_now(), `ID for new game: ${id_str}`);
 
 	let white_to_assign: Rating;
