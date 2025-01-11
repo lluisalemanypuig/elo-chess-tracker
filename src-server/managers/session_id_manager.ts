@@ -24,6 +24,7 @@ Contact:
 */
 
 import { SessionID } from '../models/session_id';
+import { search_linear_by_key } from '../utils/searching';
 
 export class SessionIDManager {
 	/// The only instance of this class
@@ -55,18 +56,15 @@ export class SessionIDManager {
 		return this.session_ids.length;
 	}
 	index_session_id(session: SessionID): number {
-		for (let i = 0; i < this.session_ids.length; ++i) {
-			if (this.session_ids[i].id == session.id && this.session_ids[i].username == session.username) {
-				return i;
-			}
-		}
-		return -1;
+		return search_linear_by_key(this.session_ids, (s: SessionID): boolean => {
+			return s.id == session.id && s.username == session.username;
+		});
 	}
 	has_session_id(session: SessionID): boolean {
 		return this.index_session_id(session) != -1;
 	}
-	remove_session_id(i: number): void {
-		this.session_ids.splice(i, 1);
+	remove_session_id(idx: number): void {
+		this.session_ids.splice(idx, 1);
 	}
 	clear_session_ids(): void {
 		this.session_ids = [];
