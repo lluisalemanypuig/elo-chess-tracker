@@ -84,8 +84,7 @@ export function game_new(
 	when: DateStringLongMillis
 ): Game {
 	// retrieve next id and increment maximum id
-	const id_number = GamesManager.get_instance().increase_max_game_id();
-	const id_str: GameID = number_to_string(id_number);
+	const id_str: GameID = number_to_string(GamesManager.get_instance().new_max_game_id());
 	debug(log_now(), `ID for new game: ${id_str}`);
 
 	let white_to_assign: Rating;

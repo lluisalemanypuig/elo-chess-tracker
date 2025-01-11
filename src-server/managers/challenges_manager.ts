@@ -98,7 +98,7 @@ export class ChallengesManager {
 		this.max_challenge_id = id;
 	}
 	/// Increase current maximum challenge ID
-	increase_max_challenge_id(): number {
+	new_max_challenge_id(): number {
 		this.max_challenge_id += 1;
 		return this.max_challenge_id;
 	}

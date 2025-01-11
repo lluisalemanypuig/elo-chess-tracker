@@ -69,7 +69,7 @@ export class GamesManager {
 		this.max_game_id = id;
 	}
 	/// Increase current maximum game ID
-	increase_max_game_id(): number {
+	new_max_game_id(): number {
 		this.max_game_id += 1;
 		return this.max_game_id;
 	}

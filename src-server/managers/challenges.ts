@@ -69,8 +69,7 @@ export function challenge_send_new(sender: string, receiver: string, when: DateS
 	debug(log_now(), 'Adding a new challenge...');
 
 	let mem = ChallengesManager.get_instance();
-	mem.increase_max_challenge_id();
-	const new_id: string = number_to_string(mem.get_max_challenge_id());
+	const new_id: string = number_to_string(mem.new_max_challenge_id());
 
 	const c = new Challenge(new_id, sender, receiver, when);
 
