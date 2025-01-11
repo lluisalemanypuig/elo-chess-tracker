@@ -230,7 +230,6 @@ Available actions are
 
 -   Edition of users: to be able to edit user's information, except for passwords and ratings.
 
-    -   _edit_user_: This first action is necessary for the others to work.
     -   _edit_admin_
     -   _edit_teacher_
     -   _edit_member_
@@ -238,7 +237,6 @@ Available actions are
 
 -   Edition of a user's game: to change the result of a game.
 
-    -   _edit_user_games_: This first action is necessary for the others to work.
     -   _edit_admin_games_
     -   _edit_teacher_games_
     -   _edit_member_games_
@@ -246,7 +244,6 @@ Available actions are
 
 -   Assignment of roles to another user
 
-    -   _assign_role_user_: This first action is necessary for the others to work.
     -   _assign_role_admin_
     -   _assign_role_teacher_
     -   _assign_role_member_
@@ -254,7 +251,6 @@ Available actions are
 
 -   See another user's games
 
-    -   _see_user_games_: This first action is necessary for the others to work.
     -   _see_admin_games_
     -   _see_teacher_games_
     -   _see_member_games_
@@ -262,7 +258,6 @@ Available actions are
 
 -   Challenge other users to a game
 
-    -   _challenge_user_: This first action is necessary for the others to work.
     -   _challenge_admin_
     -   _challenge_member_
     -   _challenge_teacher_
