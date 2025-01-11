@@ -56,6 +56,10 @@ export class GamesManager {
 		this.time_controls.clear();
 	}
 
+	game_exists(game_id: GameID): boolean {
+		return this.record_dates.has(game_id) && this.time_controls.has(game_id);
+	}
+
 	/// Current maximum game ID
 	get_max_game_id(): number {
 		return this.max_game_id;

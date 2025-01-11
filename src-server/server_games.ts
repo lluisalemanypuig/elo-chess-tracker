@@ -28,7 +28,7 @@ const debug = Debug('ELO_TRACKER:server_games');
 
 import path from 'path';
 
-import { log_now } from './utils/time';
+import { DateStringShort, log_now } from './utils/time';
 import { is_user_logged_in } from './managers/session';
 import {
 	CREATE_GAME,
@@ -45,6 +45,7 @@ import { user_retrieve } from './managers/users';
 import { ADMIN, MEMBER, STUDENT, TEACHER, UserRole } from './models/user_role';
 import { SessionID } from './models/session_id';
 import { TimeControlID } from './models/time_control';
+import { GamesManager } from './managers/games_manager';
 
 export async function get_games_own_page(req: any, res: any) {
 	debug(log_now(), 'GET games_own_page...');
@@ -116,8 +117,8 @@ export async function post_games_create(req: any, res: any) {
 	const result: GameResult = req.body.r;
 	const time_control_id: TimeControlID = req.body.tc_i;
 	const time_control_name = req.body.tc_n;
-	const game_date = req.body.d;
-	const game_time = req.body.t;
+	const game_date: DateStringShort = req.body.d;
+	const game_time: string = req.body.t; // HH:mm:ss:SSS
 
 	debug(log_now(), `    White: '${white}'`);
 	debug(log_now(), `    Black: '${black}'`);
@@ -177,12 +178,19 @@ export async function post_games_edit_result(req: any, res: any) {
 	debug(log_now(), `    Game ID: '${game_id}'`);
 	debug(log_now(), `    New result: '${new_result}'`);
 
-	const search_result = game_find_by_id(game_id);
-	if (search_result == null) {
+	if (!GamesManager.get_instance().game_exists(game_id)) {
 		res.send({ r: '0', reason: `Game with ID ${game_id} not found.` });
 		return;
 	}
-	const [_, __, game_set, ___, game_idx] = search_result as [string[], string, Game[], number, number];
+
+	const search_result = game_find_by_id(game_id);
+	const [_, __, game_set, ___, game_idx] = search_result as [
+		DateStringShort[],
+		DateStringShort,
+		Game[],
+		number,
+		number
+	];
 	const game = game_set[game_idx];
 	const white = user_retrieve(game.get_white()) as User;
 	const black = user_retrieve(game.get_black()) as User;
