@@ -52,7 +52,7 @@ describe('Challenges Manager', () => {
 		challenges.set_max_challenge_id(3);
 		expect(challenges.get_max_challenge_id()).toBe(3);
 
-		challenges.new_max_challenge_id();
+		challenges.new_challenge_id();
 		expect(challenges.get_max_challenge_id()).toBe(4);
 	});
 
@@ -60,17 +60,17 @@ describe('Challenges Manager', () => {
 		let challenges = ChallengesManager.get_instance();
 		challenges.clear();
 
-		challenges.new_max_challenge_id();
-		expect(challenges.get_max_challenge_id()).toBe(1);
-		const yesterday = new Challenge(number_to_string(challenges.get_max_challenge_id()), 'a', 'b', 'yesterday');
+		const yesterday_id = challenges.new_challenge_id();
+		expect(yesterday_id).toBe(number_to_string(1));
+		const yesterday = new Challenge(yesterday_id, 'a', 'b', 'yesterday');
 
-		challenges.new_max_challenge_id();
-		expect(challenges.get_max_challenge_id()).toBe(2);
-		const today = new Challenge(number_to_string(challenges.get_max_challenge_id()), 'a', 'b', 'today__');
+		const today_id = challenges.new_challenge_id();
+		expect(today_id).toBe(number_to_string(2));
+		const today = new Challenge(today_id, 'a', 'b', 'today__');
 
-		challenges.new_max_challenge_id();
-		expect(challenges.get_max_challenge_id()).toBe(3);
-		const tomorrow = new Challenge(number_to_string(challenges.get_max_challenge_id()), 'a', 'b', 'tomorrow');
+		const tomorrow_id = challenges.new_challenge_id();
+		expect(tomorrow_id).toBe(number_to_string(3));
+		const tomorrow = new Challenge(tomorrow_id, 'a', 'b', 'tomorrow');
 
 		challenges.add_challenge(yesterday);
 		expect(challenges.num_challenges()).toBe(1);
@@ -99,26 +99,21 @@ describe('Challenges Manager', () => {
 		let challenges = ChallengesManager.get_instance();
 		challenges.clear();
 
-		challenges.new_max_challenge_id();
-		expect(challenges.get_max_challenge_id()).toBe(1);
-		const yesterday = new Challenge(number_to_string(challenges.get_max_challenge_id()), 'a', 'b', 'yesterday');
+		const yesterday_id = challenges.new_challenge_id();
+		expect(yesterday_id).toBe(number_to_string(1));
+		const yesterday = new Challenge(yesterday_id, 'a', 'b', 'yesterday');
 
-		challenges.new_max_challenge_id();
-		expect(challenges.get_max_challenge_id()).toBe(2);
-		const today = new Challenge(number_to_string(challenges.get_max_challenge_id()), 'a', 'b', 'today__');
+		const today_id = challenges.new_challenge_id();
+		expect(today_id).toBe(number_to_string(2));
+		const today = new Challenge(today_id, 'a', 'b', 'today__');
 
-		challenges.new_max_challenge_id();
-		expect(challenges.get_max_challenge_id()).toBe(3);
-		const tomorrow = new Challenge(number_to_string(challenges.get_max_challenge_id()), 'a', 'b', 'tomorrow');
+		const tomorrow_id = challenges.new_challenge_id();
+		expect(tomorrow_id).toBe(number_to_string(3));
+		const tomorrow = new Challenge(tomorrow_id, 'a', 'b', 'tomorrow');
 
-		challenges.new_max_challenge_id();
-		expect(challenges.get_max_challenge_id()).toBe(4);
-		const day_after_tomorrow = new Challenge(
-			number_to_string(challenges.get_max_challenge_id()),
-			'a',
-			'b',
-			'day_after_tomorrow'
-		);
+		const day_after_tomorrow_id = challenges.new_challenge_id();
+		expect(day_after_tomorrow_id).toBe(number_to_string(4));
+		const day_after_tomorrow = new Challenge(day_after_tomorrow_id, 'a', 'b', 'day_after_tomorrow');
 
 		challenges.add_challenge(yesterday);
 		challenges.add_challenge(today);
