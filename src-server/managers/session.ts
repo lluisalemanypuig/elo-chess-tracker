@@ -44,12 +44,12 @@ function random_session_id(str: string): string {
 	// convert string to an array
 	let string_array: string[] = [];
 	for (let i = 0; i < str.length; ++i) {
-		string_array.push(str[i]);
+		string_array.push(str.charAt(i));
 	}
 	// put more characters until the array is at least 128 characters
 	while (string_array.length < 128) {
 		const rand_idx = Math.floor(Math.random() * character_samples.length);
-		string_array.push(character_samples[rand_idx]);
+		string_array.push(character_samples.charAt(rand_idx));
 	}
 
 	shuffle(string_array);
