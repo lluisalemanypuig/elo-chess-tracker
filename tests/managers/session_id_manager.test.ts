@@ -346,7 +346,6 @@ describe('Session ID Manager', () => {
 		sessions.add_session_id(s42);
 		sessions.add_session_id(s21);
 		sessions.add_session_id(s22);
-
 		sessions.add_session_id(s44);
 		expect(sessions.num_session_ids()).toBe(16);
 
