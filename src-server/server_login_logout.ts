@@ -65,7 +65,7 @@ function random_session_id(str: string): string {
  * @post Creates a new session id for the user.
  */
 export async function post_user_log_in(req: any, res: any) {
-	debug(log_now(), `POST /log_in`);
+	debug(log_now(), `POST user_log_in`);
 
 	const username = req.body.u;
 	const password = req.body.p;
@@ -134,7 +134,7 @@ export async function post_user_log_in(req: any, res: any) {
  * @post Deletes the user's session id.
  */
 export async function post_user_log_out(req: any, res: any) {
-	debug(log_now(), `POST /logout`);
+	debug(log_now(), `POST user_log_out`);
 
 	const session = new SessionID(req.cookies.session_id, req.cookies.user);
 

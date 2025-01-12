@@ -158,8 +158,8 @@ router.get('/query_time_controls', get_query_time_control);
 
 // user login and logout
 import { post_user_log_in, post_user_log_out } from './server_login_logout';
-router.post('/login', post_user_log_in);
-router.post('/logout', post_user_log_out);
+router.post('/user_log_in', post_user_log_in);
+router.post('/user_log_out', post_user_log_out);
 
 // creation of a new user
 import { post_users_create, get_users_create_page } from './server_users_new';
