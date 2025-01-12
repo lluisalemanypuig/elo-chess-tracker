@@ -48,7 +48,7 @@ async function login_button_clicked(_event: any) {
 	}
 
 	// "query" the server
-	const response = await fetch('/login', {
+	const response = await fetch('/user_log_in', {
 		method: 'POST',
 		body: JSON.stringify({ u: username, p: password }),
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }

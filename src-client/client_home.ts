@@ -30,7 +30,7 @@ import { make_cookie_string } from '../src-server/utils/cookies';
 
 export async function logout_link_clicked(_event: any) {
 	// "query" the server
-	await fetch('/logout', { method: 'POST' });
+	await fetch('/user_log_out', { method: 'POST' });
 
 	// whether logout was successful or not, empty the cookies
 	document.cookie = make_cookie_string({
