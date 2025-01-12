@@ -32,6 +32,43 @@ const debug = Debug('ELO_TRACKER:server_session');
 import { SessionIDManager } from './session_id_manager';
 import { user_retrieve } from './users';
 import { SessionID } from '../models/session_id';
+import { Password } from '../models/password';
+import { shuffle } from '../utils/shuffle_random';
+import { interleave_strings } from '../utils/misc';
+
+const character_samples =
+	"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+-*/ª!·$%&/()=?¿¡'º|@#~€¬^{},;.:_";
+
+/// Makes a random session id from a starting string.
+function random_session_id(str: string): string {
+	// convert string to an array
+	let string_array: string[] = [];
+	for (let i = 0; i < str.length; ++i) {
+		string_array.push(str[i]);
+	}
+	// put more characters until the array is at least 128 characters
+	while (string_array.length < 128) {
+		const rand_idx = Math.floor(Math.random() * character_samples.length);
+		string_array.push(character_samples[rand_idx]);
+	}
+
+	shuffle(string_array);
+	return string_array.join('');
+}
+
+/// Adds a new user session
+export function session_id_add(user: User, pwd: Password): void {
+	// generate "random" "session id"
+	const token = random_session_id(interleave_strings(pwd.encrypted, pwd.iv));
+
+	const session = new SessionID(token, user.get_username());
+
+	// store session id
+	let mem = SessionIDManager.get_instance();
+	if (!mem.has_session_id(session)) {
+		mem.add_session_id(session);
+	}
+}
 
 /// Deletes a session id.
 export function session_id_delete(session: SessionID): void {

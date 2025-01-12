@@ -27,35 +27,13 @@ import Debug from 'debug';
 const debug = Debug('ELO_TRACKER:server_login');
 
 import { log_now } from './utils/time';
-import { interleave_strings } from './utils/misc';
 import { is_password_of_user_correct } from './utils/encrypt';
 import { user_retrieve } from './managers/users';
 import { User } from './models/user';
 import { make_cookie_string } from './utils/cookies';
-import { shuffle } from './utils/shuffle_random';
-import { session_id_delete } from './managers/session';
+import { session_id_add, session_id_delete } from './managers/session';
 import { SessionIDManager } from './managers/session_id_manager';
 import { SessionID } from './models/session_id';
-
-const character_samples =
-	"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+-*/ª!·$%&/()=?¿¡'º|@#~€¬^{},;.:_";
-
-/// Makes a random session id from a starting string.
-function random_session_id(str: string): string {
-	// convert string to an array
-	let string_array: string[] = [];
-	for (let i = 0; i < str.length; ++i) {
-		string_array.push(str[i]);
-	}
-	// put more characters until the array is at least 128 characters
-	while (string_array.length < 128) {
-		const rand_idx = Math.floor(Math.random() * character_samples.length);
-		string_array.push(character_samples[rand_idx]);
-	}
-
-	shuffle(string_array);
-	return string_array.join('');
-}
 
 /**
  * @brief Can a user log into the webpage? Are the username and password input correct?
@@ -98,16 +76,7 @@ export async function post_user_log_in(req: any, res: any) {
 
 	debug(log_now(), `    Password for '${username}' is correct`);
 
-	// generate "random" "session id"
-	const token = random_session_id(interleave_strings(pwd.encrypted, pwd.iv));
-
-	const session = new SessionID(token, user.get_username());
-
-	// store session id
-	let mem = SessionIDManager.get_instance();
-	if (!mem.has_session_id(session)) {
-		mem.add_session_id(session);
-	}
+	const token = session_id_add(user, pwd);
 
 	// send response
 	res.status(200).send({
