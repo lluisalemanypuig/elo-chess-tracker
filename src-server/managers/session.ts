@@ -55,9 +55,8 @@ function random_session_id(str: string): string {
 }
 
 /// Adds a new user session
-export function session_id_add(user: User): void {
+export function session_id_add(username: string): void {
 	// generate "random" session id
-	const username = user.get_username();
 	const token_str = random_session_id(username);
 
 	const session = new SessionID(token_str, username);

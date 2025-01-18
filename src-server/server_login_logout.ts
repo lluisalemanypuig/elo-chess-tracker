@@ -61,8 +61,7 @@ export async function post_user_log_in(req: any, res: any) {
 	}
 
 	// user exists
-	const user = _user_data as User;
-	const pwd = user.get_password();
+	const pwd = (_user_data as User).get_password();
 
 	// check if password is correct
 	const is_password_correct = is_password_of_user_correct(pwd.encrypted, username, password_plain_text, pwd.iv);
@@ -76,7 +75,7 @@ export async function post_user_log_in(req: any, res: any) {
 
 	debug(log_now(), `    Password for '${username}' is correct`);
 
-	const token = session_id_add(user);
+	const token = session_id_add(username);
 
 	// send response
 	res.status(200).send({
@@ -89,7 +88,7 @@ export async function post_user_log_in(req: any, res: any) {
 			}),
 			make_cookie_string({
 				name: 'user',
-				value: user.get_username(),
+				value: username,
 				days: 2
 			})
 		]
