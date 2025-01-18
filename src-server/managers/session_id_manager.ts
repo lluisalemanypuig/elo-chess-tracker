@@ -57,7 +57,7 @@ export class SessionIDManager {
 	}
 	index_session_id(session: SessionID): number {
 		return search_linear_by_key(this.session_ids, (s: SessionID): boolean => {
-			return s.id == session.id && s.username == session.username;
+			return s.token == session.token && s.username == session.username;
 		});
 	}
 	has_session_id(session: SessionID): boolean {

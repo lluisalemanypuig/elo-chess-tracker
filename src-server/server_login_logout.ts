@@ -82,14 +82,14 @@ export async function post_user_log_in(req: any, res: any) {
 		r: '1', // result of trying to log in
 		cookies: [
 			make_cookie_string({
-				name: 'session_id',
+				name: 'token',
 				value: token,
-				days: 2
+				days: 1
 			}),
 			make_cookie_string({
 				name: 'user',
 				value: username,
-				days: 2
+				days: 1
 			})
 		]
 	});
@@ -104,11 +104,11 @@ export async function post_user_log_in(req: any, res: any) {
 export async function post_user_log_out(req: any, res: any) {
 	debug(log_now(), `POST user_log_out`);
 
-	const session = new SessionID(req.cookies.session_id, req.cookies.user);
+	const session = new SessionID(req.cookies.token, req.cookies.user);
 
 	debug(log_now(), `    Cookie:`);
 	debug(log_now(), `        Username:   '${session.username}'`);
-	debug(log_now(), `        Session ID: '${session.id}'`);
+	debug(log_now(), `        Session ID: '${session.token}'`);
 
 	// in order to log out a user, the must have been logged in with the given
 	// session id token
