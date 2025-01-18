@@ -59,10 +59,11 @@ function random_session_id(str: string): string {
  * @param username Username.
  * @returns The authentication token.
  */
-export function session_id_add(username: string): void {
+export function session_id_add(username: string): string {
 	const token = random_session_id(username);
 	const session_id = new SessionID(token, username);
 	SessionIDManager.get_instance().add_session_id(session_id);
+	return token;
 }
 
 /// Deletes a session id.
