@@ -84,7 +84,7 @@ export async function post_users_password_change(req: any, res: any) {
 	}
 
 	// delete all session ids of this user
-	session_user_delete_all(session);
+	session_user_delete_all(session.username);
 
 	// make new password
 	const _pass = encrypt_password_for_user(session.username, new_password);

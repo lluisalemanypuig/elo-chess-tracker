@@ -83,12 +83,12 @@ export function session_id_delete(session: SessionID): void {
 }
 
 /// Deletes a session id.
-export function session_user_delete_all(session: SessionID): void {
+export function session_user_delete_all(username: string): void {
 	let mem = SessionIDManager.get_instance();
 
 	debug(log_now(), `Before deleting, '${mem.num_session_ids()}' sessions`);
 
-	mem.remove_user_sessions(session.username);
+	mem.remove_user_sessions(username);
 
 	debug(log_now(), `Currently, '${mem.num_session_ids()}' sessions`);
 }
