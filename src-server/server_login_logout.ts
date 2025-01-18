@@ -46,7 +46,7 @@ export async function post_user_log_in(req: any, res: any) {
 	debug(log_now(), `POST user_log_in`);
 
 	const username = req.body.u;
-	const password = req.body.p;
+	const password_plain_text = req.body.p;
 
 	debug(log_now(), `    Username '${username}'`);
 
@@ -65,7 +65,7 @@ export async function post_user_log_in(req: any, res: any) {
 	const pwd = user.get_password();
 
 	// check if password is correct
-	const is_password_correct = is_password_of_user_correct(pwd.encrypted, username, password, pwd.iv);
+	const is_password_correct = is_password_of_user_correct(pwd.encrypted, username, password_plain_text, pwd.iv);
 
 	// correct password
 	if (!is_password_correct) {
@@ -76,7 +76,7 @@ export async function post_user_log_in(req: any, res: any) {
 
 	debug(log_now(), `    Password for '${username}' is correct`);
 
-	const token = session_id_add(user, pwd);
+	const token = session_id_add(user);
 
 	// send response
 	res.status(200).send({

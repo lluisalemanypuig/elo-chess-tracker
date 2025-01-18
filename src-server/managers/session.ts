@@ -32,9 +32,7 @@ const debug = Debug('ELO_TRACKER:server_session');
 import { SessionIDManager } from './session_id_manager';
 import { user_retrieve } from './users';
 import { SessionID } from '../models/session_id';
-import { Password } from '../models/password';
 import { shuffle } from '../utils/shuffle_random';
-import { interleave_strings } from '../utils/misc';
 
 const character_samples =
 	"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+-*/ª!·$%&/()=?¿¡'º|@#~€¬^{},;.:_";
@@ -57,11 +55,12 @@ function random_session_id(str: string): string {
 }
 
 /// Adds a new user session
-export function session_id_add(user: User, pwd: Password): void {
-	// generate "random" "session id"
-	const token = random_session_id(interleave_strings(pwd.encrypted, pwd.iv));
+export function session_id_add(user: User): void {
+	// generate "random" session id
+	const username = user.get_username();
+	const token_str = random_session_id(username);
 
-	const session = new SessionID(token, user.get_username());
+	const session = new SessionID(token_str, username);
 
 	// store session id
 	let mem = SessionIDManager.get_instance();
