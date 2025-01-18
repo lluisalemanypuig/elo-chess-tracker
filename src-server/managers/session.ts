@@ -54,18 +54,15 @@ function random_session_id(str: string): string {
 	return string_array.join('');
 }
 
-/// Adds a new user session
+/**
+ * Adds a new user session.
+ * @param username Username.
+ * @returns The authentication token.
+ */
 export function session_id_add(username: string): void {
-	// generate "random" session id
-	const token_str = random_session_id(username);
-
-	const session = new SessionID(token_str, username);
-
-	// store session id
-	let mem = SessionIDManager.get_instance();
-	if (!mem.has_session_id(session)) {
-		mem.add_session_id(session);
-	}
+	const token = random_session_id(username);
+	const session_id = new SessionID(token, username);
+	SessionIDManager.get_instance().add_session_id(session_id);
 }
 
 /// Deletes a session id.
