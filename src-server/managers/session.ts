@@ -99,13 +99,13 @@ export function session_user_delete_all(session: SessionID): void {
  * Checks that a user logged in or not using the cookies.
  */
 export function is_user_logged_in(session: SessionID): [boolean, string, User | null] {
-	if (!SessionIDManager.get_instance().has_session_id(session)) {
-		debug(log_now(), `Session does not exist for user '${session.username}'.`);
-		return [false, '403 - Forbidden', null];
-	}
 	const user = user_retrieve(session.username);
 	if (user == null) {
 		debug(log_now(), `User '${session.username}' does not exist.`);
+		return [false, '403 - Forbidden', null];
+	}
+	if (!SessionIDManager.get_instance().has_session_id(session)) {
+		debug(log_now(), `Session does not exist for user '${session.username}'.`);
 		return [false, '403 - Forbidden', null];
 	}
 	return [true, '', user as User];
