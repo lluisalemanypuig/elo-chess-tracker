@@ -83,7 +83,7 @@ const configuration = {
 	}
 };
 
-describe('', () => {
+describe('Session management via functions', () => {
 	test('Load an empty server', async () => {
 		await run_command('./tests/initialize_empty.sh');
 		clear_server();
