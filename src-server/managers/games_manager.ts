@@ -28,6 +28,16 @@ import { TimeControlID } from '../models/time_control';
 import { DateStringShort } from '../utils/time';
 import { number_to_string } from '../utils/misc';
 
+class GameInfo {
+	when: DateStringShort;
+	time_id: TimeControlID;
+
+	constructor(_when: DateStringShort, _time_id: TimeControlID) {
+		this.when = _when;
+		this.time_id = _time_id;
+	}
+}
+
 export class GamesManager {
 	/// The only instance of this class
 	private static instance: GamesManager;
@@ -46,19 +56,17 @@ export class GamesManager {
 
 	/// Number of games in the system
 	private max_game_id: number = 0;
-	/// Map from game ID to game record (file)
-	private record_dates: Map<GameID, string> = new Map();
-	/// Map from game ID to time control id.
-	private time_controls: Map<GameID, TimeControlID> = new Map();
+	/// Map from game ID to game information
+	private game_info: Map<GameID, GameInfo> = new Map();
 
 	clear(): void {
 		this.max_game_id = 0;
-		this.record_dates.clear();
-		this.time_controls.clear();
+		this.game_info.clear();
 	}
 
+	/// Does a game exist?
 	game_exists(game_id: GameID): boolean {
-		return this.record_dates.has(game_id) && this.time_controls.has(game_id);
+		return this.game_info.has(game_id);
 	}
 
 	/// Current maximum game ID
@@ -75,21 +83,23 @@ export class GamesManager {
 		return number_to_string(this.max_game_id);
 	}
 
-	/// Returns the date record file in which we find the game ID passed as parameter.
-	get_game_id_record_date(game_id: GameID): DateStringShort | undefined {
-		return this.record_dates.get(game_id);
-	}
-	// Sets the date record file 'when' in which we find the game ID passed as parameter.
-	set_game_id_record_date(game_id: GameID, when: DateStringShort): void {
-		this.record_dates.set(game_id, when);
+	/**
+	 * @brief Adds a game to the manager.
+	 * @param game_id ID of the game to be added.
+	 * @param when The timestamp of the when the game occurred.
+	 * @param time_id The time control id of the game (recall, could be 'blitz',
+	 * 'classical', ...)
+	 */
+	add_game(game_id: GameID, when: DateStringShort, time_id: TimeControlID): void {
+		this.game_info.set(game_id, new GameInfo(when, time_id));
 	}
 
+	/// Returns the date record file in which we find the game ID passed as parameter.
+	get_game_id_record_date(game_id: GameID): DateStringShort | undefined {
+		return this.game_info.get(game_id)?.when;
+	}
 	/// Returns the time control id of the game
 	get_game_id_time_control(game_id: GameID): string | undefined {
-		return this.time_controls.get(game_id);
-	}
-	// Sets the time control id of the game
-	set_game_id_time_control(game_id: GameID, time_id: TimeControlID): void {
-		this.time_controls.set(game_id, time_id);
+		return this.game_info.get(game_id)?.time_id;
 	}
 }

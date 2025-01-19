@@ -227,7 +227,7 @@ function init_games(): void {
 				const game_id = g.get_id();
 				max_game_id = max_game_id < game_id ? game_id : max_game_id;
 
-				games.set_game_id_record_date(g.get_id(), all_date_record_files[i]);
+				games.add_game(g.get_id(), all_date_record_files[i], g.get_time_control_id());
 			}
 
 			num_games += game_set.length;

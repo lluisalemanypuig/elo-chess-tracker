@@ -488,8 +488,7 @@ export function game_add(g: Game): void {
 
 	const game_id: GameID = g.get_id();
 	let games = GamesManager.get_instance();
-	games.set_game_id_record_date(game_id, when);
-	games.set_game_id_time_control(game_id, time_control_id);
+	games.add_game(game_id, when, time_control_id);
 }
 
 /**
