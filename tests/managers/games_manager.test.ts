@@ -100,6 +100,7 @@ describe('Games Manager', () => {
 		expect(games.get_game_id_time_control('0000000003')).toBe('rapid');
 		expect(games.get_game_id_time_control('0000000004')).toBe('bullet');
 
+		expect(games.game_exists('0000000000')).toBe(false);
 		expect(games.game_exists('0000000001')).toBe(true);
 		expect(games.game_exists('0000000002')).toBe(true);
 		expect(games.game_exists('0000000003')).toBe(true);
