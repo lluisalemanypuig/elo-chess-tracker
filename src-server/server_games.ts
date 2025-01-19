@@ -39,7 +39,7 @@ import {
 	EDIT_USER_GAMES
 } from './models/user_action';
 import { User } from './models/user';
-import { game_add, game_edit_result, game_find_by_id, game_new, recalculate_Elo_ratings } from './managers/games';
+import { game_add_new, game_edit_result, game_find_by_id, recalculate_Elo_ratings } from './managers/games';
 import { Game, GameID, GameResult } from './models/game';
 import { user_retrieve } from './managers/users';
 import { ADMIN, MEMBER, STUDENT, TEACHER, UserRole } from './models/user_role';
@@ -112,23 +112,23 @@ export async function post_games_create(req: any, res: any) {
 		return;
 	}
 
-	const white = req.body.w;
-	const black = req.body.b;
+	const white_username = req.body.w;
+	const black_username = req.body.b;
 	const result: GameResult = req.body.r;
 	const time_control_id: TimeControlID = req.body.tc_i;
 	const time_control_name = req.body.tc_n;
 	const game_date: DateStringShort = req.body.d;
 	const game_time: string = req.body.t; // HH:mm:ss:SSS
 
-	debug(log_now(), `    White: '${white}'`);
-	debug(log_now(), `    Black: '${black}'`);
+	debug(log_now(), `    White: '${white_username}'`);
+	debug(log_now(), `    Black: '${black_username}'`);
 	debug(log_now(), `    Result: '${result}'`);
 	debug(log_now(), `    Time control id: '${time_control_id}'`);
 	debug(log_now(), `    Time control name: '${time_control_name}'`);
 	debug(log_now(), `    Date of game: '${game_date}'`);
 	debug(log_now(), `    Time of game: '${game_time}'`);
 
-	if (white == black) {
+	if (white_username == black_username) {
 		res.send({ r: '0', reason: 'The players cannot be the same' });
 		return;
 	}
@@ -144,11 +144,7 @@ export async function post_games_create(req: any, res: any) {
 
 	debug(log_now(), `Adding the new game`);
 
-	let g = game_new(white, black, result, time_control_id, time_control_name, game_date + '..' + game_time);
-
-	debug(log_now(), `    Adding game...`);
-
-	game_add(g);
+	game_add_new(white_username, black_username, result, time_control_id, time_control_name, game_date, game_time);
 
 	res.send({ r: '1' });
 	return;

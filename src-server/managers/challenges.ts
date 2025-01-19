@@ -28,12 +28,12 @@ import path from 'path';
 import Debug from 'debug';
 const debug = Debug('ELO_TRACKER:server_challenges');
 
-import { DateStringLongMillis, log_now } from '../utils/time';
+import { DateStringLongMillis, log_now, long_date_to_short_and_tiny_date } from '../utils/time';
 import { ChallengesManager } from './challenges_manager';
 import { EnvironmentManager } from './environment_manager';
 import { Challenge } from '../models/challenge';
 import { GameResult } from '../models/game';
-import { game_new, game_add } from './games';
+import { game_add_new } from './games';
 import { TimeControlID } from '../models/time_control';
 
 /**
@@ -157,17 +157,17 @@ export function challenge_agree_result(c: Challenge): void {
 		fs.unlinkSync(challenge_file);
 	}
 
-	const g = game_new(
+	debug(log_now(), `Adding game...`);
+	const split = long_date_to_short_and_tiny_date(c.get_when_result_set() as string);
+	game_add_new(
 		c.get_white() as string,
 		c.get_black() as string,
 		c.get_result() as GameResult,
-		c.get_time_control_id() as string,
+		c.get_time_control_id() as TimeControlID,
 		c.get_time_control_name() as string,
-		c.get_when_result_set() as string
+		split[0],
+		split[1]
 	);
-
-	debug(log_now(), `    Adding game...`);
-	game_add(g);
 
 	{
 		debug(log_now(), `    Deleting the challenge from the memory...`);
@@ -178,8 +178,8 @@ export function challenge_agree_result(c: Challenge): void {
 /**
  * @brief Unsets the result of the challenge
  * @param c Challenge object
- * @param g The game encoding the result of the game. The players in the game contain
- * their rating as specified in the system at the conclusion of the game.
+ * @param g The game encoding the result of the game. The players in the game
+ * contain their rating as specified in the system at the conclusion of the game.
  */
 export function challenge_unset_result(c: Challenge): void {
 	debug(log_now(), `Disagree to the result of the challenge '${c.get_id()}'`);

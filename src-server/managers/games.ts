@@ -66,7 +66,7 @@ function read_game_date_record(game_record_id: DateStringShort): Game[] {
 }
 
 /// Creates a new game with no players using the parameters given
-export function game_new(
+function game_new(
 	white: string,
 	black: string,
 	result: GameResult,
@@ -466,21 +466,28 @@ function game_insert_in_history(g: Game, record_id: DateStringShort): void {
  * @brief Add a game to the server
  * @param g Game
  */
-export function game_add(g: Game): void {
+export function game_add_new(
+	white_username: string,
+	black_username: string,
+	result: GameResult,
+	time_control_id: TimeControlID,
+	time_control_name: string,
+	game_record: DateStringShort,
+	hhmmss: string
+): void {
+	const when = game_record + '..' + hhmmss;
+	const g = game_new(white_username, black_username, result, time_control_id, time_control_name, when);
+
 	debug(log_now(), `Add game into the list of games played by both users...`);
 
-	const time_control_id: TimeControlID = g.get_time_control_id();
-	const when: DateStringShort = long_date_to_short_date(g.get_date());
-	(user_retrieve(g.get_white()) as User).add_game(time_control_id, when);
-	(user_retrieve(g.get_black()) as User).add_game(time_control_id, when);
+	(user_retrieve(g.get_white()) as User).add_game(time_control_id, game_record);
+	(user_retrieve(g.get_black()) as User).add_game(time_control_id, game_record);
 
 	debug(log_now(), `Inserting the game into the history...`);
-	game_insert_in_history(g, when);
+	game_insert_in_history(g, game_record);
 	debug(log_now(), `Updating the hash table (game id -> game record)`);
 
-	const game_id: GameID = g.get_id();
-	let games = GamesManager.get_instance();
-	games.add_game(game_id, when, time_control_id);
+	GamesManager.get_instance().add_game(g.get_id(), game_record, time_control_id);
 }
 
 /**

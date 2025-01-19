@@ -32,6 +32,9 @@ export type DateStringLong = string;
 /// YYYY-MM-DD
 export type DateStringShort = string;
 
+/// HH:mm:ss:SSS
+export type DateStringTiny = string;
+
 import moment from 'moment';
 
 /**
@@ -62,6 +65,27 @@ export function date_to_string_long(date: Date): DateStringLong {
  */
 export function long_date_to_short_date(date: DateStringLong | DateStringLongMillis): DateStringShort {
 	return date.split('..')[0];
+}
+
+/**
+ * @brief Converts a YYYY-MM-DD..HH:mm:ss* string into a HH:mm:ss* string.
+ * @param date A string object containing a date formatted with YYYY-MM-DD..HH:mm:ss*.
+ * The part * can be anything.
+ * @returns A string object containing a date formatted with HH:mm:ss*.
+ */
+export function long_date_to_tiny_date(date: DateStringLongMillis): DateStringTiny {
+	return date.split('..')[1];
+}
+
+/**
+ * @brief Converts a YYYY-MM-DD..HH:mm:ss* string into a HH:mm:ss* string.
+ * @param date A string object containing a date formatted with YYYY-MM-DD..HH:mm:ss*.
+ * The part * can be anything.
+ * @returns A string object containing a date formatted with HH:mm:ss*.
+ */
+export function long_date_to_short_and_tiny_date(date: DateStringLongMillis): [DateStringShort, DateStringTiny] {
+	const s = date.split('..');
+	return [s[0], s[1]];
 }
 
 /// Returns the current date in string format "YYYY-MM-DD..HH:mm:ss"
