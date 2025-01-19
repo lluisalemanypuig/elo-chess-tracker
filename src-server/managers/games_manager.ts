@@ -68,10 +68,17 @@ export class GamesManager {
 	game_exists(game_id: GameID): boolean {
 		return this.game_info.has(game_id);
 	}
+	num_games(): number {
+		return this.game_info.size;
+	}
 
-	/// Current maximum game ID
-	get_max_game_id(): number {
-		return this.max_game_id;
+	/**
+	 * @brief Current maximum game ID, over all existing games.
+	 * @returns The largest existing ID. When there are no games, returns the
+	 * all-zero ID.
+	 */
+	get_max_game_id(): string {
+		return number_to_string(this.max_game_id);
 	}
 	/// Sets the maximum game ID
 	set_max_game_id(id: number): void {
