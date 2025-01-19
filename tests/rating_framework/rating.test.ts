@@ -35,5 +35,7 @@ describe('clone', () => {
 		expect(rc.won).toBe(r.won);
 		expect(rc.drawn).toBe(r.drawn);
 		expect(rc.lost).toBe(r.lost);
+
+		expect(rc.num_won_drawn_lost()).toEqual([rc.num_games, rc.won, rc.drawn, rc.lost]);
 	});
 });
