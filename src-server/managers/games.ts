@@ -494,19 +494,15 @@ export function game_add(g: Game): void {
  * 5. The index of G within (3).
  */
 export function game_find_by_id(game_id: GameID): [DateStringShort[], DateStringShort, Game[], number, number] {
-	const __date_record_str = GamesManager.get_instance().get_game_id_record_date(game_id);
-	const __time_control_id = GamesManager.get_instance().get_game_id_time_control(game_id);
+	const __info = GamesManager.get_instance().get_game_info(game_id);
 
 	// game_id does not exist
-	if (__date_record_str == null) {
+	if (__info == null) {
 		throw new Error(`Game id '${game_id}' does not exist in the Games Manager`);
 	}
-	if (__time_control_id == null) {
-		throw new Error(`Time control id for game '${game_id}' does not exist in the Games Manager`);
-	}
 
-	const game_record_id = __date_record_str as DateStringShort;
-	const time_control_id = __time_control_id as TimeControlID;
+	const game_record_id = __info.game_record;
+	const time_control_id = __info.time_control_id;
 
 	const games_dir = EnvironmentManager.get_instance().get_dir_games_time_control(time_control_id);
 	const game_record_file: string = path.join(games_dir, game_record_id);

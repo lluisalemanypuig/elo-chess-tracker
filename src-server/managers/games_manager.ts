@@ -28,13 +28,13 @@ import { TimeControlID } from '../models/time_control';
 import { DateStringShort } from '../utils/time';
 import { number_to_string } from '../utils/misc';
 
-class GameInfo {
-	when: DateStringShort;
-	time_id: TimeControlID;
+export class GameInfo {
+	game_record: DateStringShort;
+	time_control_id: TimeControlID;
 
 	constructor(_when: DateStringShort, _time_id: TimeControlID) {
-		this.when = _when;
-		this.time_id = _time_id;
+		this.game_record = _when;
+		this.time_control_id = _time_id;
 	}
 }
 
@@ -101,12 +101,8 @@ export class GamesManager {
 		this.game_info.set(game_id, new GameInfo(when, time_id));
 	}
 
-	/// Returns the date record file in which we find the game ID passed as parameter.
-	get_game_id_record_date(game_id: GameID): DateStringShort | undefined {
-		return this.game_info.get(game_id)?.when;
-	}
-	/// Returns the time control id of the game
-	get_game_id_time_control(game_id: GameID): string | undefined {
-		return this.game_info.get(game_id)?.time_id;
+	/// Returns the information associated to game @e game_id.
+	get_game_info(game_id: GameID): GameInfo | undefined {
+		return this.game_info.get(game_id);
 	}
 }
