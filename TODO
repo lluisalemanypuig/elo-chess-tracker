@@ -1,3 +1,12 @@
+-   When an object does not exist and nothing can be returned, instead of throwing
+    simply return undefined, and use the '?.' operator to let javascript runtime
+    decide the fate of the program.
+
+    Example: User class -> get_rating()
+
+        This function either returns a Rating object or throws. Should return
+            Rating | undefined
+
 -   Create a directed graph-like structure to store game relationships between users.
     There is a graph for every TimeControl (unique by id -- one for "blitz", one for
     "classical", ...).
