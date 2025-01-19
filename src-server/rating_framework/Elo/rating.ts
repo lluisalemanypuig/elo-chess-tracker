@@ -76,7 +76,7 @@ export function Elo_new_rating(): EloRating {
  * @pre If @e json is a string then it cannot start with '['.
  */
 export function Elo_rating_from_json(json: any): EloRating {
-	if (typeof json == 'string') {
+	if (typeof json === 'string') {
 		const json_parse = JSON.parse(json);
 		return Elo_rating_from_json(json_parse);
 	}
