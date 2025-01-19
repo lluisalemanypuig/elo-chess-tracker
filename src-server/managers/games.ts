@@ -58,14 +58,6 @@ function game_compare_dates(g1: Game, g2: Game): number {
 	return 1;
 }
 
-function make_game_date_record_name_str(when: DateStringLongMillis): DateStringShort {
-	return long_date_to_short_date(when);
-}
-
-function make_game_date_record_name(g: Game): DateStringShort {
-	return make_game_date_record_name_str(g.get_date());
-}
-
 function read_game_date_record(game_record_id: DateStringShort): Game[] {
 	debug(log_now(), `Read game record file '${game_record_id}'...`);
 	const data = fs.readFileSync(game_record_id, 'utf8');
@@ -155,7 +147,7 @@ function game_next_of_player(
 	const games_dir = EnvironmentManager.get_instance().get_dir_games_time_control(time_control_id);
 
 	// The file into which we have to add the new game.
-	const date_record_str = make_game_date_record_name_str(when);
+	const date_record_str = long_date_to_short_date(when);
 	debug(log_now(), `    Date: '${date_record_str}'`);
 
 	// The files currently existing in the 'games_directory'
@@ -478,7 +470,7 @@ export function game_add(g: Game): void {
 	debug(log_now(), `Add game into the list of games played by both users...`);
 
 	const time_control_id: TimeControlID = g.get_time_control_id();
-	const when: DateStringShort = make_game_date_record_name(g);
+	const when: DateStringShort = long_date_to_short_date(g.get_date());
 	(user_retrieve(g.get_white()) as User).add_game(time_control_id, when);
 	(user_retrieve(g.get_black()) as User).add_game(time_control_id, when);
 
