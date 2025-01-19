@@ -61,4 +61,8 @@ export class Rating {
 	clone(): Rating {
 		return new Rating(this.rating, this.num_games, this.won, this.drawn, this.lost);
 	}
+
+	num_won_drawn_lost(): [number, number, number, number] {
+		return [this.num_games, this.won, this.drawn, this.lost];
+	}
 }
