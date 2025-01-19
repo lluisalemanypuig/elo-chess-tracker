@@ -326,7 +326,7 @@ describe('Check challenge communication', () => {
 		expect(challenges.num_challenges()).toBe(1);
 
 		const games = GamesManager.get_instance();
-		expect(games.get_max_game_id()).toEqual(1);
+		expect(games.get_max_game_id()).toEqual('0000000001');
 		const game_file = path.join(db_games_dir, number_to_string(1));
 		expect(fs.existsSync(game_file)).toBe(false);
 	});
@@ -384,7 +384,7 @@ describe('Check initialization and communication', () => {
 		server_init_from_data('tests/webpage/', classical_rapid_blitz);
 
 		expect(ChallengesManager.get_instance().get_max_challenge_id()).toEqual(3);
-		expect(GamesManager.get_instance().get_max_game_id()).toEqual(1);
+		expect(GamesManager.get_instance().get_max_game_id()).toEqual('0000000001');
 	});
 
 	test('Accept result (3)', () => {
@@ -430,7 +430,7 @@ describe('Check initialization and communication', () => {
 		expect(challenges.num_challenges()).toBe(0);
 
 		const games = GamesManager.get_instance();
-		expect(games.get_max_game_id()).toEqual(2);
+		expect(games.get_max_game_id()).toEqual('0000000002');
 		const game_file = path.join(db_games_dir, number_to_string(1));
 		expect(fs.existsSync(game_file)).toBe(false);
 	});
