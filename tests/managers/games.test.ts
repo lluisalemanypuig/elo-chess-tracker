@@ -26,14 +26,15 @@ Contact:
 import fs from 'fs';
 import path from 'path';
 
-import { game_add_new, game_edit_result } from '../../src-server/managers/games';
+import { game_add_new, game_edit_result, game_find_by_id } from '../../src-server/managers/games';
 import { server_init_from_data } from '../../src-server/managers/initialization';
 import { user_add_new } from '../../src-server/managers/users';
 import { ADMIN } from '../../src-server/models/user_role';
 import { run_command } from './exec_utils';
 import { EnvironmentManager } from '../../src-server/managers/environment_manager';
-import { game_set_from_json } from '../../src-server/models/game';
+import { Game, game_set_from_json } from '../../src-server/models/game';
 import { User } from '../../src-server/models/user';
+import { DateStringShort } from '../../src-server/utils/time';
 
 const configuration = {
 	ssl_certificate: {
@@ -1757,5 +1758,129 @@ describe('Edition of game results', () => {
 		expect(d.get_rating('Classical').num_won_drawn_lost()).toEqual([3, 2, 0, 1]);
 		expect(e.get_rating('Classical').num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
 		expect(f.get_rating('Classical').num_won_drawn_lost()).toEqual([6, 2, 3, 1]);
+	});
+});
+
+describe('Look for a game', () => {
+	test('"Blitz" games', () => {
+		const game_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Blitz');
+
+		{
+			const [game_record_set, game_file_path, game_set, game_record_set_idx, game_set_idx] = game_find_by_id(
+				'0000000001'
+			) as [DateStringShort[], string, Game[], number, number];
+
+			expect(game_record_set).toEqual(fs.readdirSync(game_dir));
+			expect(game_record_set[game_record_set_idx]).toEqual('2025-01-19');
+
+			expect(game_file_path).toEqual(path.join(game_dir, '2025-01-19'));
+
+			const game = game_set[game_set_idx];
+			expect(game.get_id()).toEqual('0000000001');
+			expect(game.get_white()).toEqual('a');
+			expect(game.get_black()).toEqual('b');
+			expect(game.get_result()).toEqual('draw');
+			expect(game.get_time_control_id()).toEqual('Blitz');
+			expect(game.get_time_control_name()).toEqual('Blitz (5 + 3)');
+		}
+
+		{
+			const [game_record_set, game_file_path, game_set, game_record_set_idx, game_set_idx] = game_find_by_id(
+				'0000000002'
+			) as [DateStringShort[], string, Game[], number, number];
+
+			expect(game_record_set).toEqual(fs.readdirSync(game_dir));
+			expect(game_record_set[game_record_set_idx]).toEqual('2025-01-19');
+
+			expect(game_file_path).toEqual(path.join(game_dir, '2025-01-19'));
+
+			const game = game_set[game_set_idx];
+			expect(game.get_id()).toEqual('0000000002');
+			expect(game.get_white()).toEqual('c');
+			expect(game.get_black()).toEqual('d');
+			expect(game.get_result()).toEqual('draw');
+			expect(game.get_time_control_id()).toEqual('Blitz');
+			expect(game.get_time_control_name()).toEqual('Blitz (5 + 3)');
+		}
+
+		{
+			const [game_record_set, game_file_path, game_set, game_record_set_idx, game_set_idx] = game_find_by_id(
+				'0000000020'
+			) as [DateStringShort[], string, Game[], number, number];
+
+			expect(game_record_set).toEqual(fs.readdirSync(game_dir));
+			expect(game_record_set[game_record_set_idx]).toEqual('2025-01-20');
+
+			expect(game_file_path).toEqual(path.join(game_dir, '2025-01-20'));
+
+			const game = game_set[game_set_idx];
+			expect(game.get_id()).toEqual('0000000020');
+			expect(game.get_white()).toEqual('a');
+			expect(game.get_black()).toEqual('b');
+			expect(game.get_result()).toEqual('black_wins');
+			expect(game.get_time_control_id()).toEqual('Blitz');
+			expect(game.get_time_control_name()).toEqual('Blitz (5 + 3)');
+		}
+	});
+
+	test('"Classical" games', () => {
+		const game_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Classical');
+
+		{
+			const [game_record_set, game_file_path, game_set, game_record_set_idx, game_set_idx] = game_find_by_id(
+				'0000000015'
+			) as [DateStringShort[], string, Game[], number, number];
+
+			expect(game_record_set).toEqual(fs.readdirSync(game_dir));
+			expect(game_record_set[game_record_set_idx]).toEqual('2025-01-20');
+
+			expect(game_file_path).toEqual(path.join(game_dir, '2025-01-20'));
+
+			const game = game_set[game_set_idx];
+			expect(game.get_id()).toEqual('0000000015');
+			expect(game.get_white()).toEqual('c');
+			expect(game.get_black()).toEqual('d');
+			expect(game.get_result()).toEqual('black_wins');
+			expect(game.get_time_control_id()).toEqual('Classical');
+			expect(game.get_time_control_name()).toEqual('Classical (90 + 30)');
+		}
+
+		{
+			const [game_record_set, game_file_path, game_set, game_record_set_idx, game_set_idx] = game_find_by_id(
+				'0000000021'
+			) as [DateStringShort[], string, Game[], number, number];
+
+			expect(game_record_set).toEqual(fs.readdirSync(game_dir));
+			expect(game_record_set[game_record_set_idx]).toEqual('2025-01-20');
+
+			expect(game_file_path).toEqual(path.join(game_dir, '2025-01-20'));
+
+			const game = game_set[game_set_idx];
+			expect(game.get_id()).toEqual('0000000021');
+			expect(game.get_white()).toEqual('a');
+			expect(game.get_black()).toEqual('f');
+			expect(game.get_result()).toEqual('black_wins');
+			expect(game.get_time_control_id()).toEqual('Classical');
+			expect(game.get_time_control_name()).toEqual('Classical (90 + 30)');
+		}
+
+		{
+			const [game_record_set, game_file_path, game_set, game_record_set_idx, game_set_idx] = game_find_by_id(
+				'0000000008'
+			) as [DateStringShort[], string, Game[], number, number];
+
+			expect(game_record_set).toEqual(fs.readdirSync(game_dir));
+			expect(game_record_set[game_record_set_idx]).toEqual('2025-01-19');
+
+			expect(game_file_path).toEqual(path.join(game_dir, '2025-01-19'));
+
+			const game = game_set[game_set_idx];
+			expect(game.get_id()).toEqual('0000000008');
+			expect(game.get_white()).toEqual('a');
+			expect(game.get_black()).toEqual('f');
+			expect(game.get_result()).toEqual('black_wins');
+			expect(game.get_time_control_id()).toEqual('Classical');
+			expect(game.get_time_control_name()).toEqual('Classical (90 + 30)');
+		}
 	});
 });
