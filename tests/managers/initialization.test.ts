@@ -139,7 +139,7 @@ describe('Configure server', () => {
 
 	test('Check GamesManager', () => {
 		const games_manager = GamesManager.get_instance();
-		expect(games_manager.get_max_game_id()).toBe(0);
+		expect(games_manager.get_max_game_id()).toBe('0000000000');
 	});
 
 	test('Check ConfigurationManager', () => {
@@ -225,7 +225,7 @@ describe('Configure server', () => {
 
 	test('Check GamesManager', () => {
 		const games_manager = GamesManager.get_instance();
-		expect(games_manager.get_max_game_id()).toBe(0);
+		expect(games_manager.get_max_game_id()).toBe('0000000000');
 	});
 
 	test('Check ConfigurationManager', () => {
