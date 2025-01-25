@@ -30,22 +30,16 @@ import path from 'path';
 
 import { DateStringShort, log_now } from './utils/time';
 import { is_user_logged_in } from './managers/session';
-import {
-	CREATE_GAME,
-	EDIT_ADMIN_GAMES,
-	EDIT_MEMBER_GAMES,
-	EDIT_STUDENT_GAMES,
-	EDIT_TEACHER_GAMES,
-	EDIT_USER_GAMES
-} from './models/user_action';
+import { CREATE_GAME, EDIT_USER_GAMES } from './models/user_action';
 import { User } from './models/user';
 import { game_add_new, game_edit_result, game_find_by_id, recalculate_Elo_ratings } from './managers/games';
 import { Game, GameID, GameResult } from './models/game';
 import { user_retrieve } from './managers/users';
-import { ADMIN, MEMBER, STUDENT, TEACHER, UserRole } from './models/user_role';
+import { ADMIN } from './models/user_role';
 import { SessionID } from './models/session_id';
 import { TimeControlID } from './models/time_control';
 import { GamesManager } from './managers/games_manager';
+import { can_user_edit_a_game } from './utils/user_relationships';
 
 export async function get_games_own_page(req: any, res: any) {
 	debug(log_now(), 'GET games_own_page...');
@@ -191,25 +185,7 @@ export async function post_games_edit_result(req: any, res: any) {
 	const white = user_retrieve(game.get_white()) as User;
 	const black = user_retrieve(game.get_black()) as User;
 
-	const white_or_black_is = function (role: UserRole) {
-		return white.is(role) || black.is(role);
-	};
-
-	let is_editable: boolean = false;
-	if (user.can_do(EDIT_USER_GAMES)) {
-		if (user.can_do(EDIT_ADMIN_GAMES) && white_or_black_is(ADMIN)) {
-			is_editable = true;
-		}
-		if (user.can_do(EDIT_MEMBER_GAMES) && white_or_black_is(MEMBER)) {
-			is_editable = true;
-		}
-		if (user.can_do(EDIT_TEACHER_GAMES) && white_or_black_is(TEACHER)) {
-			is_editable = true;
-		}
-		if (user.can_do(EDIT_STUDENT_GAMES) && white_or_black_is(STUDENT)) {
-			is_editable = true;
-		}
-	}
+	const is_editable = can_user_edit_a_game(user, white, black);
 	if (!is_editable) {
 		res.send({
 			r: '0',
