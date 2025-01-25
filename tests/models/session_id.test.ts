@@ -27,6 +27,6 @@ import { SessionID } from '../../src-server/models/session_id';
 
 test('Fields contents are correct', () => {
 	const sid = new SessionID('asdf', 'qwer');
-	expect(sid.id).toEqual('asdf');
+	expect(sid.token).toEqual('asdf');
 	expect(sid.username).toEqual('qwer');
 });
