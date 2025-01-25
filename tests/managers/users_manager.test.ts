@@ -80,7 +80,7 @@ describe('Users Manager', () => {
 
 		const d = new User('d', 'DD', 'dd', new Password('p', 'w'), [], new Map([]), []);
 
-		users.replace_user(d, users.get_user_index(b));
+		users.replace_user(d, users.get_user_index(b) as number);
 
 		expect(() => users.replace_user(b, 500)).toThrow();
 
@@ -93,8 +93,8 @@ describe('Users Manager', () => {
 		expect(users.get_user_index_by_username('a')).toBe(0);
 		expect(users.get_user_index(a)).toBe(0);
 
-		expect(users.get_user_index_by_username('b')).toBe(-1);
-		expect(users.get_user_index(b)).toBe(-1);
+		expect(users.get_user_index_by_username('b')).toBe(undefined);
+		expect(users.get_user_index(b)).toBe(undefined);
 
 		expect(users.get_user_index_by_username('d')).toBe(1);
 		expect(users.get_user_index(d)).toBe(1);

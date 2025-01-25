@@ -108,8 +108,8 @@ describe('Check initialization', () => {
 		expect(challenges.num_challenges()).toBe(0);
 		expect(challenges.get_max_challenge_id()).toBe(0);
 		expect(challenge_set_retrieve()).toEqual([]);
-		expect(challenges.get_challenge_by_id(number_to_string(1))).toEqual(null);
-		expect(challenges.get_challenge_by_id(number_to_string(2))).toEqual(null);
+		expect(challenges.get_challenge_by_id(number_to_string(1))).toEqual(undefined);
+		expect(challenges.get_challenge_by_id(number_to_string(2))).toEqual(undefined);
 		expect(challenges.get_challenge_index_by_id(number_to_string(1))).toEqual(-1);
 		expect(challenges.get_challenge_index_by_id(number_to_string(2))).toEqual(-1);
 	});
@@ -200,7 +200,7 @@ describe('Check challenge communication', () => {
 
 			let c = challenges.get_challenge_by_id(id) as Challenge;
 			challenge_accept(c);
-			expect(c.get_when_challenge_accepted()).not.toBe(null);
+			expect(c.get_when_challenge_accepted()).not.toBe(undefined);
 
 			const challenge_file = path.join(db_challenges_dir, id);
 			expect(fs.existsSync(challenge_file)).toBe(true);
@@ -217,11 +217,11 @@ describe('Check challenge communication', () => {
 
 			let c = challenges.get_challenge_by_id(id) as Challenge;
 			challenge_decline(c);
-			expect(c.get_when_challenge_accepted()).toBe(null);
+			expect(c.get_when_challenge_accepted()).toBe(undefined);
 
 			const challenge_file = path.join(db_challenges_dir, id);
 			expect(fs.existsSync(challenge_file)).toBe(false);
-			expect(challenges.get_challenge_by_id(id)).toEqual(null);
+			expect(challenges.get_challenge_by_id(id)).toEqual(undefined);
 		}
 
 		expect(challenges.get_max_challenge_id()).toBe(4);
@@ -318,7 +318,7 @@ describe('Check challenge communication', () => {
 		expect(ff.get_games('Rapid')?.length).toBe(0);
 		expect(ff.get_games('Blitz')?.length).toBe(0);
 
-		expect(challenges.get_challenge_by_id(number_to_string(4))).toBe(null);
+		expect(challenges.get_challenge_by_id(number_to_string(4))).toBe(undefined);
 
 		const challenge_file = path.join(db_challenges_dir, id);
 		expect(fs.existsSync(challenge_file)).toBe(false);
@@ -339,12 +339,12 @@ describe('Check challenge communication', () => {
 		let c = challenges.get_challenge_by_id(id) as Challenge;
 		challenge_unset_result(c);
 
-		expect(c.get_result_set_by()).toEqual(null);
-		expect(c.get_white()).toEqual(null);
-		expect(c.get_black()).toEqual(null);
-		expect(c.get_result()).toEqual(null);
-		expect(c.get_time_control_id()).toEqual(null);
-		expect(c.get_time_control_name()).toEqual(null);
+		expect(c.get_result_set_by()).toEqual(undefined);
+		expect(c.get_white()).toEqual(undefined);
+		expect(c.get_black()).toEqual(undefined);
+		expect(c.get_result()).toEqual(undefined);
+		expect(c.get_time_control_id()).toEqual(undefined);
+		expect(c.get_time_control_name()).toEqual(undefined);
 
 		const challenge_file = path.join(db_challenges_dir, id);
 		expect(fs.existsSync(challenge_file)).toBe(true);
@@ -422,7 +422,7 @@ describe('Check initialization and communication', () => {
 		expect(ff.get_games('Rapid')?.length).toBe(0);
 		expect(ff.get_games('Blitz')?.length).toBe(0);
 
-		expect(challenges.get_challenge_by_id(number_to_string(4))).toBe(null);
+		expect(challenges.get_challenge_by_id(number_to_string(4))).toBe(undefined);
 
 		const challenge_file = path.join(db_challenges_dir, id);
 		expect(fs.existsSync(challenge_file)).toBe(false);

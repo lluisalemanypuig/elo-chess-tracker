@@ -129,8 +129,8 @@ describe('Sets and gets', () => {
 
 		expect(() => c.set_result_accepted('A', '2024-12-29..14:00:03')).toThrow();
 
-		expect(c.get_when_result_accepted()).toBe(null);
-		expect(c.get_result_accepted_by()).toBe(null);
+		expect(c.get_when_result_accepted()).toBe(undefined);
+		expect(c.get_result_accepted_by()).toBe(undefined);
 	});
 
 	test('Set fields - 4', () => {
@@ -148,8 +148,8 @@ describe('Sets and gets', () => {
 
 		expect(() => c.set_result_accepted('A', '2024-12-29..14:00:03')).toThrow();
 
-		expect(c.get_when_result_accepted()).toBe(null);
-		expect(c.get_result_accepted_by()).toBe(null);
+		expect(c.get_when_result_accepted()).toBe(undefined);
+		expect(c.get_result_accepted_by()).toBe(undefined);
 	});
 
 	test('Set fields - 5', () => {
@@ -176,13 +176,13 @@ describe('Sets and gets', () => {
 		).toThrow();
 
 		expect(c.was_result_set()).toBe(false);
-		expect(c.get_result_set_by()).toBe(null);
-		expect(c.get_when_result_set()).toBe(null);
-		expect(c.get_white()).toBe(null);
-		expect(c.get_black()).toBe(null);
-		expect(c.get_result()).toBe(null);
-		expect(c.get_time_control_id()).toBe(null);
-		expect(c.get_time_control_name()).toBe(null);
+		expect(c.get_result_set_by()).toBe(undefined);
+		expect(c.get_when_result_set()).toBe(undefined);
+		expect(c.get_white()).toBe(undefined);
+		expect(c.get_black()).toBe(undefined);
+		expect(c.get_result()).toBe(undefined);
+		expect(c.get_time_control_id()).toBe(undefined);
+		expect(c.get_time_control_name()).toBe(undefined);
 	});
 
 	test('Set fields - 6', () => {
@@ -214,13 +214,13 @@ describe('Sets and gets', () => {
 		c.unset_result();
 
 		expect(c.was_result_set()).toBe(false);
-		expect(c.get_result_set_by()).toBe(null);
-		expect(c.get_when_result_set()).toBe(null);
-		expect(c.get_white()).toBe(null);
-		expect(c.get_black()).toBe(null);
-		expect(c.get_result()).toBe(null);
-		expect(c.get_time_control_id()).toBe(null);
-		expect(c.get_time_control_name()).toBe(null);
+		expect(c.get_result_set_by()).toBe(undefined);
+		expect(c.get_when_result_set()).toBe(undefined);
+		expect(c.get_white()).toBe(undefined);
+		expect(c.get_black()).toBe(undefined);
+		expect(c.get_result()).toBe(undefined);
+		expect(c.get_time_control_id()).toBe(undefined);
+		expect(c.get_time_control_name()).toBe(undefined);
 	});
 });
 
