@@ -108,8 +108,8 @@ export async function post_query_users_edit(req: any, res: any) {
 		return;
 	}
 
-	let modified = user_retrieve(req.body.u);
-	if (modified == null) {
+	const modified = user_retrieve(req.body.u);
+	if (modified == undefined) {
 		res.send({
 			r: '0',
 			reason: `User '${req.body.u}' to be modified does not exist.`
@@ -117,11 +117,12 @@ export async function post_query_users_edit(req: any, res: any) {
 		return;
 	}
 
+	const umodified = modified as User;
 	res.send({
 		r: '1',
-		first_name: modified.get_first_name(),
-		last_name: modified.get_last_name(),
-		roles: modified.get_roles()
+		first_name: umodified.get_first_name(),
+		last_name: umodified.get_last_name(),
+		roles: umodified.get_roles()
 	});
 }
 

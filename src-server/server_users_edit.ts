@@ -50,7 +50,7 @@ export async function get_users_edit_page(req: any, res: any) {
 	}
 
 	const _user = user_retrieve(session.username);
-	if (_user == null) {
+	if (_user == undefined) {
 		debug(log_now(), `    User '${session.username}' does not exist.`);
 		res.send('403 - Forbidden');
 		return;
@@ -79,7 +79,7 @@ export async function post_users_edit(req: any, res: any) {
 	const editor = r[2] as User;
 
 	const _edited = user_retrieve(req.body.u);
-	if (_edited == null) {
+	if (_edited == undefined) {
 		res.send({
 			r: '0',
 			reason: `User '${req.body.u}' to be modified does not exist.`

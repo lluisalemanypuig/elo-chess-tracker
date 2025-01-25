@@ -141,7 +141,8 @@ export async function get_query_games_list_own(req: any, res: any) {
 	const data_to_return = filter_game_list(
 		(record_id: DateStringShort): boolean => {
 			for (const id of rating_system_manager.get_unique_time_controls_ids()) {
-				if (user.get_games(id)?.includes(record_id)) {
+				const array = user.get_games(id) as DateStringShort[];
+				if (array.includes(record_id)) {
 					return true;
 				}
 			}
@@ -183,9 +184,11 @@ export async function get_query_games_list_all(req: any, res: any) {
 			return true;
 		},
 		(g: Game): boolean => {
-			const white = user_retrieve(g.get_white()) as User;
-			const black = user_retrieve(g.get_black()) as User;
-			return can_user_see_a_game(user, white, black);
+			return can_user_see_a_game(
+				user,
+				user_retrieve(g.get_white()) as User,
+				user_retrieve(g.get_black()) as User
+			);
 		},
 		user
 	);

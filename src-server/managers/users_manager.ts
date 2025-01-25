@@ -70,15 +70,14 @@ export class UsersManager {
 		this.user_to_index.set(u.get_username(), idx);
 		this.users[idx] = u;
 	}
-	get_user_at(idx: number): User | null {
-		return 0 <= idx && idx < this.users.length ? this.users[idx] : null;
+	get_user_at(idx: number): User | undefined {
+		return 0 <= idx && idx < this.users.length ? this.users[idx] : undefined;
 	}
-	get_user_index(u: User): number {
+	get_user_index(u: User): number | undefined {
 		return this.get_user_index_by_username(u.get_username());
 	}
-	get_user_index_by_username(username: string): number {
-		const idx = this.user_to_index.get(username);
-		return idx != undefined ? idx : -1;
+	get_user_index_by_username(username: string): number | undefined {
+		return this.user_to_index.get(username);
 	}
 
 	num_users(): number {

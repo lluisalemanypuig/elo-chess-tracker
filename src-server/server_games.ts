@@ -181,11 +181,13 @@ export async function post_games_edit_result(req: any, res: any) {
 		number,
 		number
 	];
-	const game = game_set[game_idx];
-	const white = user_retrieve(game.get_white()) as User;
-	const black = user_retrieve(game.get_black()) as User;
 
-	const is_editable = can_user_edit_a_game(user, white, black);
+	const game = game_set[game_idx];
+	const is_editable = can_user_edit_a_game(
+		user,
+		user_retrieve(game.get_white()) as User,
+		user_retrieve(game.get_black()) as User
+	);
 	if (!is_editable) {
 		res.send({
 			r: '0',
@@ -214,8 +216,7 @@ export async function post_recalculate_Elo_ratings(req: any, res: any) {
 		return;
 	}
 
-	const user = r[2] as User;
-	if (!user.is(ADMIN)) {
+	if (!(r[2] as User).is(ADMIN)) {
 		debug(log_now(), `User '${session.username}' cannot recalculate Elo ratings.`);
 		res.send('403 - Forbidden');
 		return;

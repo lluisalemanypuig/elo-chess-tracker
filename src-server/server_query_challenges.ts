@@ -51,7 +51,7 @@ export async function get_query_challenges_received(req: any, res: any) {
 		if (c.get_sent_to() != session.username) {
 			return false;
 		}
-		if (c.get_when_challenge_accepted() != null) {
+		if (c.get_when_challenge_accepted() != undefined) {
 			return false;
 		}
 		return true;
@@ -59,8 +59,8 @@ export async function get_query_challenges_received(req: any, res: any) {
 
 	let all_challenges_received: any[] = [];
 	for (let i = 0; i < to_return.length; ++i) {
-		let c = to_return[i];
-		let sent_by = (user_retrieve(c.get_sent_by() as string) as User).get_full_name();
+		const c = to_return[i];
+		const sent_by = (user_retrieve(c.get_sent_by() as string) as User).get_full_name();
 
 		// return only basic information
 		all_challenges_received.push({
@@ -92,7 +92,7 @@ export async function get_query_challenges_sent(req: any, res: any) {
 		if (c.get_sent_by() != session.username) {
 			return false;
 		}
-		if (c.get_when_challenge_accepted() != null) {
+		if (c.get_when_challenge_accepted() != undefined) {
 			return false;
 		}
 		return true;
@@ -101,12 +101,11 @@ export async function get_query_challenges_sent(req: any, res: any) {
 	let all_challenges: any[] = [];
 	for (let i = 0; i < to_return.length; ++i) {
 		const c = to_return[i];
-		const sent_to = (user_retrieve(c.get_sent_to() as string) as User).get_full_name();
 
 		// return only basic information
 		all_challenges.push({
 			id: c.get_id(),
-			sent_to: sent_to,
+			sent_to: (user_retrieve(c.get_sent_to() as string) as User).get_full_name(),
 			sent_when: c.get_when_challenge_sent()
 		});
 	}
@@ -135,11 +134,11 @@ export async function get_query_challenges_pending_result(req: any, res: any) {
 			return false;
 		}
 		// must have been accepted
-		if (c.get_when_challenge_accepted() == null) {
+		if (c.get_when_challenge_accepted() == undefined) {
 			return false;
 		}
 		// result can't have been set
-		if (c.get_result_set_by() != null) {
+		if (c.get_result_set_by() != undefined) {
 			return false;
 		}
 		return true;
@@ -194,11 +193,11 @@ export async function get_query_challenges_confirm_result_other(req: any, res: a
 			return false;
 		}
 		// must have been accepted
-		if (c.get_when_challenge_accepted() == null) {
+		if (c.get_when_challenge_accepted() == undefined) {
 			return false;
 		}
 		// result already set
-		if (c.get_result_set_by() == null) {
+		if (c.get_result_set_by() == undefined) {
 			return false;
 		}
 		// result should have been set by this user
@@ -267,11 +266,11 @@ export async function get_query_challenges_confirm_result_self(req: any, res: an
 			return false;
 		}
 		// must have been accepted
-		if (c.get_when_challenge_accepted() == null) {
+		if (c.get_when_challenge_accepted() == undefined) {
 			return false;
 		}
 		// result already set by somebody
-		if (c.get_result_set_by() == null) {
+		if (c.get_result_set_by() == undefined) {
 			return false;
 		}
 		// result should NOT have been set by this user

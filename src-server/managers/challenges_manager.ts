@@ -71,10 +71,10 @@ export class ChallengesManager {
 		return this.challenges.length;
 	}
 
-	get_challenge_at(idx: number): Challenge | null {
-		return 0 <= idx && idx < this.challenges.length ? this.challenges[idx] : null;
+	get_challenge_at(idx: number): Challenge | undefined {
+		return 0 <= idx && idx < this.challenges.length ? this.challenges[idx] : undefined;
 	}
-	get_challenge_by_id(id: ChallengeID): Challenge | null {
+	get_challenge_by_id(id: ChallengeID): Challenge | undefined {
 		return this.get_challenge_at(this.get_challenge_index_by_id(id));
 	}
 

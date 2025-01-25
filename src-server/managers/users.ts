@@ -44,9 +44,9 @@ import { TimeControlID } from '../models/time_control';
  * @brief Returns a User object from a username.
  * @param username Username of the player.
  * @param server_conf Directories of the database.
- * @returns Null or a User if the user exists.
+ * @returns Undefined or a User if the user exists.
  */
-export function user_retrieve(username: string): User | null {
+export function user_retrieve(username: string): User | undefined {
 	let mem = UsersManager.get_instance();
 	for (let i = 0; i < mem.num_users(); ++i) {
 		const user = mem.get_user_at(i) as User;
@@ -54,7 +54,7 @@ export function user_retrieve(username: string): User | null {
 			return user;
 		}
 	}
-	return null;
+	return undefined;
 }
 
 /// Dump the data in user @e u into its corresponding file.
@@ -81,7 +81,7 @@ export function user_rename_and_reassign_roles(
 
 /// Does a user exist?
 export function user_exists(username: string): boolean {
-	return user_retrieve(username) != null;
+	return user_retrieve(username) != undefined;
 }
 
 /// Returns a copy of all users

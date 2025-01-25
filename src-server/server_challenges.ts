@@ -70,7 +70,7 @@ export async function post_challenge_send(req: any, res: any) {
 
 	debug(log_now(), `Trying to send challenge from '${session.username}' to '${to_user}'.`);
 
-	let r = is_user_logged_in(session);
+	const r = is_user_logged_in(session);
 	if (!r[0]) {
 		debug(log_now(), `User '${session.username}' is not logged in or does not exist.`);
 		res.send({
@@ -80,7 +80,7 @@ export async function post_challenge_send(req: any, res: any) {
 		return;
 	}
 
-	let sender = r[2] as User;
+	const sender = r[2] as User;
 	if (!sender.can_do(CHALLENGE_USER)) {
 		debug(log_now(), `User '${session.username}' cannot challenge other users.`);
 		res.send({
@@ -90,9 +90,8 @@ export async function post_challenge_send(req: any, res: any) {
 		return;
 	}
 
-	let _receiver = user_retrieve(to_user);
-
-	if (_receiver == null) {
+	const _receiver = user_retrieve(to_user);
+	if (_receiver == undefined) {
 		debug(log_now(), `User receiver of the challenge '${to_user}' does not exist.`);
 		res.send({
 			r: '0',
@@ -111,7 +110,6 @@ export async function post_challenge_send(req: any, res: any) {
 	}
 
 	const receiver = _receiver as User;
-
 	if (!challenge_can_user_send(sender, receiver)) {
 		debug(log_now(), `Sender '${sender.get_username()}' cannot challenge user '${receiver.get_username()}'.`);
 		res.send({
@@ -144,7 +142,7 @@ export async function post_challenge_accept(req: any, res: any) {
 	debug(log_now(), `User '${session.username}' wants to accept challenge '${challenge_id}'`);
 
 	const _c = ChallengesManager.get_instance().get_challenge_by_id(challenge_id);
-	if (_c == null) {
+	if (_c == undefined) {
 		res.send({
 			r: '0',
 			reason: 'Challenge does not exist'
@@ -183,7 +181,7 @@ export async function post_challenge_decline(req: any, res: any) {
 	debug(log_now(), `User '${session.username}' wants to decline challenge '${challenge_id}'`);
 
 	const _c = ChallengesManager.get_instance().get_challenge_by_id(challenge_id);
-	if (_c == null) {
+	if (_c == undefined) {
 		res.send({
 			r: '0',
 			reason: 'Challenge does not exist'
@@ -267,7 +265,7 @@ export async function post_challenge_set_result(req: any, res: any) {
 	}
 
 	let _c = ChallengesManager.get_instance().get_challenge_by_id(challenge_id);
-	if (_c == null) {
+	if (_c == undefined) {
 		res.send({
 			r: '0',
 			reason: `Challenge '${challenge_id}' does not exist.`
@@ -278,7 +276,7 @@ export async function post_challenge_set_result(req: any, res: any) {
 
 	{
 		const original_setter = c.get_result_set_by();
-		if (c.get_result_set_by() != null) {
+		if (c.get_result_set_by() != undefined) {
 			debug(
 				log_now(),
 				`User '${setter_user}' is trying to override the result of
@@ -337,7 +335,7 @@ export async function post_challenge_agree_result(req: any, res: any) {
 
 	const challenge_id: ChallengeID = req.body.challenge_id;
 	let _c = ChallengesManager.get_instance().get_challenge_by_id(challenge_id);
-	if (_c == null) {
+	if (_c == undefined) {
 		res.send({
 			r: '0',
 			reason: 'Challenge does not exist'
@@ -362,7 +360,7 @@ export async function post_challenge_disagree_result(req: any, res: any) {
 
 	const challenge_id: ChallengeID = req.body.challenge_id;
 	let _c = ChallengesManager.get_instance().get_challenge_by_id(challenge_id);
-	if (_c == null) {
+	if (_c == undefined) {
 		res.send({
 			r: '0',
 			reason: 'Challenge does not exist'

@@ -29,11 +29,11 @@ const debug = Debug('ELO_TRACKER:server_login');
 import { log_now } from './utils/time';
 import { is_password_of_user_correct } from './utils/encrypt';
 import { user_retrieve } from './managers/users';
-import { User } from './models/user';
 import { make_cookie_string } from './utils/cookies';
 import { session_id_add, session_id_delete } from './managers/session';
 import { SessionIDManager } from './managers/session_id_manager';
 import { SessionID } from './models/session_id';
+import { User } from './models/user';
 
 /**
  * @brief Can a user log into the webpage? Are the username and password input correct?
@@ -50,11 +50,10 @@ export async function post_user_log_in(req: any, res: any) {
 
 	debug(log_now(), `    Username '${username}'`);
 
-	// user data, which might be null
 	const _user_data = user_retrieve(username);
 
 	// nonexistent user
-	if (_user_data == null) {
+	if (_user_data == undefined) {
 		debug(log_now(), `    User ${username} does not exist`);
 		res.status(404).send({ r: '0' });
 		return;

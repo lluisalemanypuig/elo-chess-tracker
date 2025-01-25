@@ -46,26 +46,26 @@ export class Challenge {
 	private readonly when_challenge_sent: DateStringLongMillis;
 
 	/// Date when the challenge was accepted
-	private when_challenge_accepted: DateStringLongMillis | null = null;
+	private when_challenge_accepted: DateStringLongMillis | undefined = undefined;
 
 	/// Has the result been set at some point?
 	private result_was_set: boolean = false;
 	/// Date when the result of the game was last modified
-	private when_result_set: DateStringLongMillis | null = null;
+	private when_result_set: DateStringLongMillis | undefined = undefined;
 	/// Player who set the result
-	private result_set_by: string | null = null;
+	private result_set_by: string | undefined = undefined;
 
 	/// Date when the result of the game was accepted.
-	private when_result_accepted: DateStringLongMillis | null = null;
+	private when_result_accepted: DateStringLongMillis | undefined = undefined;
 	/// User that accepted the result
-	private result_accepted_by: string | null = null;
+	private result_accepted_by: string | undefined = undefined;
 
 	/// The resulting game of the challenge
-	private white: string | null = null;
-	private black: string | null = null;
-	private result: GameResult | null = null;
-	private time_control_id: TimeControlID | null = null;
-	private time_control_name: string | null = null;
+	private white: string | undefined = undefined;
+	private black: string | undefined = undefined;
+	private result: GameResult | undefined = undefined;
+	private time_control_id: TimeControlID | undefined = undefined;
+	private time_control_name: string | undefined = undefined;
 
 	/**
 	 * @brief Constructor
@@ -111,46 +111,46 @@ export class Challenge {
 		return this.when_challenge_sent;
 	}
 	/// Return the time when the challenge was accepted
-	get_when_challenge_accepted(): string | null {
+	get_when_challenge_accepted(): string | undefined {
 		return this.when_challenge_accepted;
 	}
 
 	/// Return the time when the challenge was sent
-	get_when_result_set(): DateStringLongMillis | null {
+	get_when_result_set(): DateStringLongMillis | undefined {
 		return this.when_result_set;
 	}
 	/// Returns the username of the player who set the result
-	get_result_set_by(): string | null {
+	get_result_set_by(): string | undefined {
 		return this.result_set_by;
 	}
 
 	/// Return the time when the challenge was accepted
-	get_when_result_accepted(): DateStringLongMillis | null {
+	get_when_result_accepted(): DateStringLongMillis | undefined {
 		return this.when_result_accepted;
 	}
 	/// Returns the username of the player who set the result
-	get_result_accepted_by(): string | null {
+	get_result_accepted_by(): string | undefined {
 		return this.result_accepted_by;
 	}
 
 	/// White player
-	get_white(): string | null {
+	get_white(): string | undefined {
 		return this.white;
 	}
 	/// Black player
-	get_black(): string | null {
+	get_black(): string | undefined {
 		return this.black;
 	}
 	/// Result of the game
-	get_result(): GameResult | null {
+	get_result(): GameResult | undefined {
 		return this.result;
 	}
 	/// Time control id of the game
-	get_time_control_id(): TimeControlID | null {
+	get_time_control_id(): TimeControlID | undefined {
 		return this.time_control_id;
 	}
 	/// Time control name of the game
-	get_time_control_name(): string | null {
+	get_time_control_name(): string | undefined {
 		return this.time_control_name;
 	}
 	/// Sets the date when the challenge was accepted
@@ -160,7 +160,7 @@ export class Challenge {
 
 	/**
 	 * @brief Sets the result of the challenge
-	 * @pre 'by' is not null
+	 * @pre 'by' is not undefined
 	 */
 	set_result(
 		by: string,
@@ -198,13 +198,13 @@ export class Challenge {
 	/// Unset the previous result
 	unset_result(): void {
 		this.result_was_set = false;
-		this.result_set_by = null;
-		this.when_result_set = null;
-		this.white = null;
-		this.black = null;
-		this.result = null;
-		this.time_control_id = null;
-		this.time_control_name = null;
+		this.result_set_by = undefined;
+		this.when_result_set = undefined;
+		this.white = undefined;
+		this.black = undefined;
+		this.result = undefined;
+		this.time_control_id = undefined;
+		this.time_control_name = undefined;
 	}
 
 	/// Was the result set at some point?
@@ -217,7 +217,7 @@ export class Challenge {
 		if (!this.was_result_set()) {
 			throw new Error('Result must have been set previously');
 		}
-		if (by != null && by == this.result_set_by) {
+		if (by != undefined && by == this.result_set_by) {
 			throw new Error('The accepter of the result cannot be the same person who set the result');
 		}
 
@@ -241,7 +241,7 @@ export function challenge_from_json(json: any): Challenge {
 	let c = new Challenge(json['id'], json['sent_by'], json['sent_to'], json['when_challenge_sent']);
 
 	const when_challenge_accepted = json['when_challenge_accepted'];
-	if (when_challenge_accepted != null) {
+	if (when_challenge_accepted != undefined) {
 		c.set_challenge_accepted(when_challenge_accepted);
 	}
 
@@ -253,20 +253,20 @@ export function challenge_from_json(json: any): Challenge {
 	const time_control_id = json['time_control_id'];
 	const time_control_name = json['time_control_name'];
 	if (
-		result_set_by != null &&
-		when_result_set != null &&
-		white != null &&
-		black != null &&
-		result != null &&
-		time_control_id != null &&
-		time_control_name != null
+		result_set_by != undefined &&
+		when_result_set != undefined &&
+		white != undefined &&
+		black != undefined &&
+		result != undefined &&
+		time_control_id != undefined &&
+		time_control_name != undefined
 	) {
 		c.set_result(result_set_by, when_result_set, white, black, result, time_control_id, time_control_name);
 	}
 
 	const result_accepted_by = json['result_accepted_by'];
 	const when_result_accepted = json['when_result_accepted'];
-	if (result_accepted_by != null && when_result_accepted != null) {
+	if (result_accepted_by != undefined && when_result_accepted != undefined) {
 		c.set_result_accepted(result_accepted_by, when_result_accepted);
 	}
 	return c;
