@@ -567,6 +567,11 @@ export function game_edit_result(game_id: GameID, new_result: GameResult): void 
 
 	let game = game_set[idx_in_game_set];
 
+	// avoid unnecessary work
+	if (game.get_result() == new_result) {
+		return;
+	}
+
 	const games_dir = EnvironmentManager.get_instance().get_dir_games_time_control(game.get_time_control_id());
 
 	// ---------------------------------------------------------
