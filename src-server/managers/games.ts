@@ -494,13 +494,14 @@ export function game_add_new(
  * @brief Looks for the game of identifier @e game_id.
  * @param game_id The game G to be returned.
  * @returns A tuple with the following values:
- * 1. All the game record ids in the games directory that corresponds to the time control of G.
- * 2. The path to the file that contains G.
- * 3. All the games within (2), including G.
- * 4. The index within (1) of the file that contains G.
- * 5. The index of G within (3).
+ * 1. game_record_set: All the game record ids in the games directory that
+ *    corresponds to the time control of G.
+ * 2. game_file_path: The path to the file that contains G.
+ * 3. game_set: All the games within (2), including G.
+ * 4. game_record_set_idx: The index within (1) of the file that contains G.
+ * 5. game_set_idx: The index of G within (3).
  */
-export function game_find_by_id(game_id: GameID): [DateStringShort[], DateStringShort, Game[], number, number] {
+export function game_find_by_id(game_id: GameID): [DateStringShort[], string, Game[], number, number] {
 	const __info = GamesManager.get_instance().get_game_info(game_id);
 
 	// game_id does not exist
@@ -512,45 +513,45 @@ export function game_find_by_id(game_id: GameID): [DateStringShort[], DateString
 	const time_control_id = __info.time_control_id;
 
 	const games_dir = EnvironmentManager.get_instance().get_dir_games_time_control(time_control_id);
-	const game_record_file: string = path.join(games_dir, game_record_id);
-	debug(log_now(), `    File: '${game_record_file}'`);
+	const game_file_path: string = path.join(games_dir, game_record_id);
+	debug(log_now(), `    File: '${game_file_path}'`);
 
 	// The files currently existing in the 'games_directory'
 	debug(log_now(), `Reading directory '${games_dir}'...`);
-	const all_game_records = fs.readdirSync(games_dir);
-	debug(log_now(), `    Directory contents: '${all_game_records}'`);
+	const game_record_set = fs.readdirSync(games_dir);
+	debug(log_now(), `    Directory contents: '${game_record_set}'`);
 
 	// Ensure there are game records
-	if (all_game_records.length == 0) {
+	if (game_record_set.length == 0) {
 		throw new Error(`There are no game records in database for time control ${time_control_id}.`);
 	}
 
 	// check that the file actually exists
-	debug(log_now(), `Searching for '${game_record_id}' in '${all_game_records}'.`);
-	const idx_in_record_list = search(all_game_records, game_record_id);
-	if (idx_in_record_list == -1) {
+	debug(log_now(), `Searching for '${game_record_id}' in '${game_record_set}'.`);
+	const game_record_set_idx = search(game_record_set, game_record_id);
+	if (game_record_set_idx == -1) {
 		throw new Error(
 			`There is no game record '${game_record_id}' in the database for time control ${time_control_id}.`
 		);
 	}
 
 	// read games in record
-	const game_set = read_game_date_record(game_record_file);
+	const game_set = read_game_date_record(game_file_path);
 
 	// find the game 'game_id' in the array 'game_set' and check that it exists
-	const game_idx_in_game_set = search_linear_by_key(game_set, (g: Game): boolean => {
+	const game_set_idx = search_linear_by_key(game_set, (g: Game): boolean => {
 		return g.get_id() == game_id;
 	});
-	if (game_idx_in_game_set == -1) {
+	if (game_set_idx == -1) {
 		throw new Error(`There is no game with id '${game_id}' in game record '${game_record_id}'`);
 	}
 
-	const game = game_set[game_idx_in_game_set];
+	const game = game_set[game_set_idx];
 	if (game.get_id() != game_id) {
 		throw new Error(`The game found has a different id. Searching for '${game_id}'. Found '${game.get_id()}'`);
 	}
 
-	return [all_game_records, game_record_file, game_set, idx_in_record_list, game_idx_in_game_set];
+	return [game_record_set, game_file_path, game_set, game_record_set_idx, game_set_idx];
 }
 
 /**
