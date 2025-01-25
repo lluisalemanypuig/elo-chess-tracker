@@ -1,7 +1,3 @@
--   Add tests for 'src-server/managers/games'. Tests that:
-
-    -   find a game by id
-
 -   Create a directed graph-like structure to store game relationships between users.
     There is a graph for every TimeControl (unique by id -- one for "blitz", one for
     "classical", ...).
