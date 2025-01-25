@@ -504,7 +504,7 @@ export function game_find_by_id(game_id: GameID): [DateStringShort[], DateString
 	const __info = GamesManager.get_instance().get_game_info(game_id);
 
 	// game_id does not exist
-	if (__info == null) {
+	if (__info == undefined) {
 		throw new Error(`Game id '${game_id}' does not exist in the Games Manager`);
 	}
 
@@ -559,8 +559,6 @@ export function game_find_by_id(game_id: GameID): [DateStringShort[], DateString
  * @param new_result The (new) result of the game
  */
 export function game_edit_result(game_id: GameID, new_result: GameResult): void {
-	const games_dir = EnvironmentManager.get_instance().get_dir_games();
-
 	debug(log_now(), `Editing game '${game_id}'`);
 
 	let [all_game_records, game_record_file, game_set, idx_in_record_list, idx_in_game_set] = game_find_by_id(
@@ -568,6 +566,8 @@ export function game_edit_result(game_id: GameID, new_result: GameResult): void 
 	) as [DateStringShort[], DateStringShort, Game[], number, number];
 
 	let game = game_set[idx_in_game_set];
+
+	const games_dir = EnvironmentManager.get_instance().get_dir_games_time_control(game.get_time_control_id());
 
 	// ---------------------------------------------------------
 	// actually apply changes
