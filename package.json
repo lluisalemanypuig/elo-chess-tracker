@@ -5,7 +5,7 @@
     "start": "node ./js-source/app_main.js",
     "devstart": "DEBUG=ELO_TRACKER:* nodemon ./js-source/app_main.js",
     "serverstart": "DEBUG=ELO_TRACKER:* npm run devstart",
-    "test": "jest"
+    "test": "jest --runInBand"
   },
   "devDependencies": {
     "@types/compression": "^1.7.2",
