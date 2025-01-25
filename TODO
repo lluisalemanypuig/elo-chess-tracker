@@ -1,6 +1,5 @@
 -   Add tests for 'src-server/managers/games'. Tests that:
 
-    -   edit a game
     -   find a game by id
 
 -   When an object does not exist and nothing can be returned, instead of throwing
