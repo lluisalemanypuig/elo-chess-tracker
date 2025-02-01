@@ -35,6 +35,8 @@ import { Challenge } from '../models/challenge';
 import { GameResult } from '../models/game';
 import { game_add_new } from './games';
 import { TimeControlID } from '../models/time_control';
+import { UsersManager } from './users_manager';
+import { User } from '../models/user';
 
 /**
  * @brief Filters the set of challenges that are accepted by the filter function @e by.
@@ -159,9 +161,14 @@ export function challenge_agree_result(c: Challenge): void {
 
 	debug(log_now(), `Adding game...`);
 	const split = long_date_to_short_and_tiny_date(c.get_when_result_set() as string);
+
+	const mem = UsersManager.get_instance();
+	const white = mem.get_user_by_username(c.get_white() as string) as User;
+	const black = mem.get_user_by_username(c.get_black() as string) as User;
+
 	game_add_new(
-		c.get_white() as string,
-		c.get_black() as string,
+		white,
+		black,
 		c.get_result() as GameResult,
 		c.get_time_control_id() as TimeControlID,
 		c.get_time_control_name() as string,

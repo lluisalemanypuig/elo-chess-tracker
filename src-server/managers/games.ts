@@ -467,8 +467,8 @@ function game_insert_in_history(g: Game, record_id: DateStringShort): void {
  * @param g Game
  */
 export function game_add_new(
-	white_username: string,
-	black_username: string,
+	white: User,
+	black: User,
 	result: GameResult,
 	time_control_id: TimeControlID,
 	time_control_name: string,
@@ -476,12 +476,12 @@ export function game_add_new(
 	hhmmss: string
 ): void {
 	const when = game_record + '..' + hhmmss;
-	const g = game_new(white_username, black_username, result, time_control_id, time_control_name, when);
+	const g = game_new(white.get_username(), black.get_username(), result, time_control_id, time_control_name, when);
 
 	debug(log_now(), `Add game into the list of games played by both users...`);
 
-	(user_retrieve(g.get_white()) as User).add_game(time_control_id, game_record);
-	(user_retrieve(g.get_black()) as User).add_game(time_control_id, game_record);
+	white.add_game(time_control_id, game_record);
+	black.add_game(time_control_id, game_record);
 
 	debug(log_now(), `Inserting the game into the history...`);
 	game_insert_in_history(g, game_record);
