@@ -16,5 +16,6 @@ browserify client_users_password_change.js > bdl__client_users_password_change.j
 browserify client_challenges.js > bdl__client_challenges.js
 
 browserify client_games_list.js > bdl__client_games_list.js
+browserify client_games_create.js > bdl__client_games_create.js
 
 cd ..
