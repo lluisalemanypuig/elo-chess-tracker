@@ -628,62 +628,65 @@ export function game_edit_result(game_id: GameID, new_result: GameResult): void 
 }
 
 export function recalculate_Elo_ratings() {
-	const games_dir = EnvironmentManager.get_instance().get_dir_games();
 	const all_time_controls = RatingSystemManager.get_instance().get_time_controls();
+
+	let mem = UsersManager.get_instance();
 
 	// initialize all players to a freshly created player
 	let updated_players: Player[] = [];
 	let player_to_index: Map<string, number> = new Map();
-	{
-		let mem = UsersManager.get_instance();
-		for (let i = 0; i < mem.num_users(); ++i) {
-			const username = (mem.get_user_at(i) as User).get_username();
 
-			let ratings: TimeControlRating[] = [];
-			// update the current record for all time controls
-			for (let k = 0; k < all_time_controls.length; ++k) {
-				let tcr = new TimeControlRating(
-					all_time_controls[k].id,
-					RatingSystemManager.get_instance().get_new_rating()
-				);
-				ratings.push(tcr);
-			}
+	for (let i = 0; i < mem.num_users(); ++i) {
+		const username = (mem.get_user_at(i) as User).get_username();
 
-			updated_players.push(new Player(username, ratings));
-			player_to_index.set(username, i);
-		}
-	}
-
-	// The files currently existing in the 'games_directory'
-	debug(log_now(), `Reading directory '${games_dir}'...`);
-	const all_date_records = fs.readdirSync(games_dir);
-	debug(log_now(), `    Directory contents: '${all_date_records}'`);
-
-	for (let i = 0; i < all_date_records.length; ++i) {
-		const date_record_str = all_date_records[i];
-
-		// files already contain the '.json' extension
-		const date_record_filename = path.join(games_dir, date_record_str);
-
-		// read and parse the next file
-		const game_set = read_game_date_record(date_record_filename);
-
+		let ratings: TimeControlRating[] = [];
 		// update the current record for all time controls
 		for (let k = 0; k < all_time_controls.length; ++k) {
-			const time_control = all_time_controls[k];
-
-			debug(log_now(), `    Updating game record '${date_record_filename}'...`);
-			update_game_record(game_set, 0, time_control.id, updated_players, player_to_index);
-			debug(log_now(), `        Number of updated players: '${updated_players.length}'...`);
-			for (let j = 0; j < updated_players.length; ++j) {
-				debug(log_now(), `        Player: '${JSON.stringify(updated_players[j])}'...`);
-			}
+			let tcr = new TimeControlRating(
+				all_time_controls[k].id,
+				RatingSystemManager.get_instance().get_new_rating()
+			);
+			ratings.push(tcr);
 		}
 
-		// update the record file
-		debug(log_now(), `    Writing game record '${date_record_filename}'...`);
-		fs.writeFileSync(date_record_filename, JSON.stringify(game_set, null, 4));
-		debug(log_now(), `        Game record '${date_record_filename}' written.`);
+		updated_players.push(new Player(username, ratings));
+		player_to_index.set(username, i);
+	}
+
+	for (let k = 0; k < all_time_controls.length; ++k) {
+		const games_dir = EnvironmentManager.get_instance().get_dir_games_time_control(all_time_controls[k].id);
+
+		// The files currently existing in the 'games_directory'
+		debug(log_now(), `Reading directory '${games_dir}'...`);
+		const all_date_records = fs.readdirSync(games_dir);
+		debug(log_now(), `    Directory contents: '${all_date_records}'`);
+
+		for (let i = 0; i < all_date_records.length; ++i) {
+			const date_record_str = all_date_records[i];
+
+			// files already contain the '.json' extension
+			const date_record_filename = path.join(games_dir, date_record_str);
+
+			// read and parse the next file
+			const game_set = read_game_date_record(date_record_filename);
+
+			// update the current record for all time controls
+			for (let k = 0; k < all_time_controls.length; ++k) {
+				const time_control = all_time_controls[k];
+
+				debug(log_now(), `    Updating game record '${date_record_filename}'...`);
+				update_game_record(game_set, 0, time_control.id, updated_players, player_to_index);
+				debug(log_now(), `        Number of updated players: '${updated_players.length}'...`);
+				for (let j = 0; j < updated_players.length; ++j) {
+					debug(log_now(), `        Player: '${JSON.stringify(updated_players[j])}'...`);
+				}
+			}
+
+			// update the record file
+			debug(log_now(), `    Writing game record '${date_record_filename}'...`);
+			fs.writeFileSync(date_record_filename, JSON.stringify(game_set, null, 4));
+			debug(log_now(), `        Game record '${date_record_filename}' written.`);
+		}
 	}
 
 	user_update_from_players_data(updated_players);
