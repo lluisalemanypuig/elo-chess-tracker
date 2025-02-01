@@ -34,13 +34,6 @@ function create_label_text(text: string): HTMLLabelElement {
 async function fill_username_datalist() {
 	let username_datalist = document.getElementById('username_datalist') as HTMLDataListElement;
 
-	{
-		let opt = document.createElement('option');
-		opt.text = '';
-		opt.value = '';
-		username_datalist.appendChild(opt);
-	}
-
 	// "query" the server
 	const response = await fetch('/query_users_list', {
 		method: 'GET',
