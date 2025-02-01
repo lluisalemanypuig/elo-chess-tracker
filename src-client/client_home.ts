@@ -27,6 +27,7 @@ import { set_footer_version_number } from './client_load_version_number';
 import { ADMIN, user_role_to_string, UserRole } from '../src-server/models/user_role';
 import { CREATE_GAME, CREATE_USER, EDIT_USER, SEE_USER_GAMES } from '../src-server/models/user_action';
 import { make_cookie_string } from '../src-server/utils/cookies';
+import { SessionID } from '../src-server/models/session_id';
 
 export async function logout_link_clicked(_event: any) {
 	// "query" the server
@@ -34,12 +35,12 @@ export async function logout_link_clicked(_event: any) {
 
 	// whether logout was successful or not, empty the cookies
 	document.cookie = make_cookie_string({
-		name: 'session_id',
+		name: SessionID.get_field_name_0(),
 		value: '',
 		days: 1
 	});
 	document.cookie = make_cookie_string({
-		name: 'user',
+		name: SessionID.get_field_name_1(),
 		value: '',
 		days: 1
 	});
