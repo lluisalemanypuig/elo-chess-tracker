@@ -56,7 +56,7 @@ async function initialize_window_client_games_create() {
 	{
 		const user_list = data_user_list.data as [string, number][];
 		user_list.forEach(function (elem: [string, number]) {
-			options += '<option id="' + elem[1] + '" value="' + elem[0] + '">';
+			options += `<option value="${elem[0]}" id="${elem[1]}">`;
 		});
 	}
 	white_datalist.innerHTML = options;

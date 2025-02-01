@@ -46,7 +46,7 @@ async function fill_username_datalist() {
 
 	let options = '';
 	list.forEach(function (elem: [string, number]) {
-		options += '<option id="' + elem[1] + '" value="' + elem[0] + '">';
+		options += `<option value="${elem[0]}" id="${elem[1]}">`;
 	});
 	username_datalist.innerHTML = options;
 }
