@@ -27,7 +27,7 @@ import Debug from 'debug';
 const debug = Debug('ELO_TRACKER:server_query_users');
 
 import { log_now } from './utils/time';
-import { user_get_all_names_and_usernames, user_retrieve } from './managers/users';
+import { user_get_all__name_randid, user_retrieve } from './managers/users';
 import { is_user_logged_in } from './managers/session';
 import { User } from './models/user';
 import { UsersManager } from './managers/users_manager';
@@ -46,8 +46,8 @@ export async function get_query_users_list(req: any, res: any) {
 		return;
 	}
 
-	let list = user_get_all_names_and_usernames();
-	list.sort(function (a: [string, string], b: [string, string]): number {
+	let list = user_get_all__name_randid();
+	list.sort(function (a: [string, number], b: [string, number]): number {
 		if (a[0] < b[0]) {
 			return -1;
 		}

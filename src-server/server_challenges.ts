@@ -38,7 +38,7 @@ import {
 	challenge_unset_result,
 	challenge_agree_result
 } from './managers/challenges';
-import { user_exists, user_retrieve } from './managers/users';
+import { user_exists } from './managers/users';
 import { Challenge, ChallengeID } from './models/challenge';
 import { User } from './models/user';
 import { CHALLENGE_USER } from './models/user_action';
@@ -47,6 +47,7 @@ import { challenge_can_user_send } from './utils/user_relationships';
 import { ChallengesManager } from './managers/challenges_manager';
 import { TimeControlID } from './models/time_control';
 import { GameResult } from './models/game';
+import { UsersManager } from './managers/users_manager';
 
 export async function get_challenges_page(req: any, res: any) {
 	debug(log_now(), 'GET challenges_page...');
@@ -66,9 +67,7 @@ export async function post_challenge_send(req: any, res: any) {
 	debug(log_now(), 'POST challenge_send...');
 
 	const session = SessionID.from_cookie(req.cookies);
-	const to_user = req.body.to;
-
-	debug(log_now(), `Trying to send challenge from '${session.username}' to '${to_user}'.`);
+	const to_random_id = req.body.to;
 
 	const r = is_user_logged_in(session);
 	if (!r[0]) {
@@ -90,9 +89,12 @@ export async function post_challenge_send(req: any, res: any) {
 		return;
 	}
 
-	const _receiver = user_retrieve(to_user);
+	debug(log_now(), `Trying to send challenge from '${session.username}' to '${to_random_id}'.`);
+
+	const _receiver = UsersManager.get_instance().get_user_by_random_id(to_random_id);
+
 	if (_receiver == undefined) {
-		debug(log_now(), `User receiver of the challenge '${to_user}' does not exist.`);
+		debug(log_now(), `User receiver of the challenge '${to_random_id}' does not exist.`);
 		res.send({
 			r: '0',
 			reason: 'User does not exist'
@@ -100,7 +102,8 @@ export async function post_challenge_send(req: any, res: any) {
 		return;
 	}
 
-	if (to_user == sender.get_username()) {
+	const receiver = _receiver as User;
+	if (receiver.get_username() == sender.get_username()) {
 		debug(log_now(), `A challenge cannot be sent to oneself.`);
 		res.send({
 			r: '0',
@@ -109,7 +112,6 @@ export async function post_challenge_send(req: any, res: any) {
 		return;
 	}
 
-	const receiver = _receiver as User;
 	if (!challenge_can_user_send(sender, receiver)) {
 		debug(log_now(), `Sender '${sender.get_username()}' cannot challenge user '${receiver.get_username()}'.`);
 		res.send({
@@ -119,7 +121,7 @@ export async function post_challenge_send(req: any, res: any) {
 		return;
 	}
 
-	debug(log_now(), `Send challenge from '${sender.get_username()}' to '${to_user}'`);
+	debug(log_now(), `Send challenge from '${sender.get_username()}' to '${receiver.get_username()}'`);
 	challenge_send_new(sender.get_username(), receiver.get_username(), log_now_millis());
 
 	res.send({ r: '1' });

@@ -40,6 +40,7 @@ import { SessionID } from './models/session_id';
 import { TimeControlID } from './models/time_control';
 import { GamesManager } from './managers/games_manager';
 import { can_user_edit_a_game } from './utils/user_relationships';
+import { UsersManager } from './managers/users_manager';
 
 export async function get_games_own_page(req: any, res: any) {
 	debug(log_now(), 'GET games_own_page...');
@@ -106,23 +107,41 @@ export async function post_games_create(req: any, res: any) {
 		return;
 	}
 
-	const white_username = req.body.w;
-	const black_username = req.body.b;
+	const mem = UsersManager.get_instance();
+
+	const white_rid = req.body.w;
+	const _white = mem.get_user_by_random_id(white_rid);
+	if (_white == undefined) {
+		debug(log_now(), `Random id '${white_rid}' for White is not valid.`);
+		res.send('Invalid values');
+		return;
+	}
+
+	const black_rid = req.body.b;
+	const _black = mem.get_user_by_random_id(black_rid);
+	if (_black == undefined) {
+		debug(log_now(), `Random id '${black_rid}' for Black is not valid.`);
+		res.send('Invalid values');
+		return;
+	}
+
+	const white = _white as User;
+	const black = _black as User;
 	const result: GameResult = req.body.r;
 	const time_control_id: TimeControlID = req.body.tc_i;
 	const time_control_name = req.body.tc_n;
 	const game_date: DateStringShort = req.body.d;
 	const game_time: string = req.body.t; // HH:mm:ss:SSS
 
-	debug(log_now(), `    White: '${white_username}'`);
-	debug(log_now(), `    Black: '${black_username}'`);
+	debug(log_now(), `    White: '${white.get_username()}'`);
+	debug(log_now(), `    Black: '${black.get_username()}'`);
 	debug(log_now(), `    Result: '${result}'`);
 	debug(log_now(), `    Time control id: '${time_control_id}'`);
 	debug(log_now(), `    Time control name: '${time_control_name}'`);
 	debug(log_now(), `    Date of game: '${game_date}'`);
 	debug(log_now(), `    Time of game: '${game_time}'`);
 
-	if (white_username == black_username) {
+	if (white.get_username() == black.get_username()) {
 		res.send({ r: '0', reason: 'The players cannot be the same' });
 		return;
 	}
@@ -138,7 +157,7 @@ export async function post_games_create(req: any, res: any) {
 
 	debug(log_now(), `Adding the new game`);
 
-	game_add_new(white_username, black_username, result, time_control_id, time_control_name, game_date, game_time);
+	game_add_new(white, black, result, time_control_id, time_control_name, game_date, game_time);
 
 	res.send({ r: '1' });
 	return;
