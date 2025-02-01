@@ -31,7 +31,7 @@ import {
 	user_add_new,
 	user_exists,
 	user_get_all,
-	user_get_all_names_and_usernames,
+	user_get_all__name_randid,
 	user_rename_and_reassign_roles,
 	user_retrieve,
 	user_update_from_players_data
@@ -202,7 +202,11 @@ describe('Create users', () => {
 		expect(all_users[0].get_all_ratings().length).toEqual(3);
 		expect(user_retrieve('asdf')).toEqual(new_user);
 
-		expect(user_get_all_names_and_usernames()).toEqual([['First Last', 'asdf']]);
+		expect(
+			user_get_all__name_randid().map((d: [string, number]): string => {
+				return d[0];
+			})
+		).toEqual(['First Last']);
 	});
 
 	test('In a non-empty server with different configuration', async () => {
@@ -216,7 +220,11 @@ describe('Create users', () => {
 			expect(all_users[0].get_last_name()).toEqual('Last');
 			expect(all_users[0].get_roles()).toEqual([ADMIN]);
 			expect(all_users[0].get_all_ratings().length).toBe(4);
-			expect(user_get_all_names_and_usernames()).toEqual([['First Last', 'asdf']]);
+			expect(
+				user_get_all__name_randid().map((d: [string, number]): string => {
+					return d[0];
+				})
+			).toEqual(['First Last']);
 
 			// check that the user file was updated with the new rating
 			const asdf_user_file = path.join(db_users_dir, 'asdf');
@@ -238,10 +246,11 @@ describe('Create users', () => {
 
 		expect(all_users.length).toBe(2);
 		expect(all_users[1]).toEqual(new_user);
-		expect(user_get_all_names_and_usernames()).toEqual([
-			['First Last', 'asdf'],
-			['Perico Palotes', 'qwer']
-		]);
+		expect(
+			user_get_all__name_randid().map((d: [string, number]): string => {
+				return d[0];
+			})
+		).toEqual(['First Last', 'Perico Palotes']);
 
 		expect(
 			all_users
@@ -299,7 +308,11 @@ describe('Modify existing users', () => {
 
 		expect(user_retrieve('asdf')).toEqual(modified_user);
 		expect(user_exists('asdf')).toBe(true);
-		expect(user_get_all_names_and_usernames()).toEqual([['QQQ WWW', 'asdf']]);
+		expect(
+			user_get_all__name_randid().map((d: [string, number]): string => {
+				return d[0];
+			})
+		).toEqual(['QQQ WWW']);
 
 		{
 			expect(fs.existsSync(asdf_user_file)).toBe(true);
@@ -327,7 +340,11 @@ describe('Modify existing users', () => {
 
 		expect(user_retrieve('asdf')).toEqual(modified_user);
 		expect(user_exists('asdf')).toBe(true);
-		expect(user_get_all_names_and_usernames()).toEqual([['FFF GGG', 'asdf']]);
+		expect(
+			user_get_all__name_randid().map((d: [string, number]): string => {
+				return d[0];
+			})
+		).toEqual(['FFF GGG']);
 	});
 
 	test('Modify users in bulk (', () => {
