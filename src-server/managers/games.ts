@@ -627,7 +627,7 @@ export function game_edit_result(game_id: GameID, new_result: GameResult): void 
 	user_update_from_players_data(updated_players);
 }
 
-export function recalculate_Elo_ratings() {
+export function recalculate_all_ratings() {
 	const all_time_controls = RatingSystemManager.get_instance().get_time_controls();
 
 	let mem = UsersManager.get_instance();

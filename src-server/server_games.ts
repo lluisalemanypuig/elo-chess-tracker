@@ -32,7 +32,7 @@ import { DateStringShort, log_now } from './utils/time';
 import { is_user_logged_in } from './managers/session';
 import { CREATE_GAME, EDIT_USER_GAMES } from './models/user_action';
 import { User } from './models/user';
-import { game_add_new, game_edit_result, game_find_by_id, recalculate_Elo_ratings } from './managers/games';
+import { game_add_new, game_edit_result, game_find_by_id, recalculate_all_ratings } from './managers/games';
 import { Game, GameID, GameResult } from './models/game';
 import { user_retrieve } from './managers/users';
 import { ADMIN } from './models/user_role';
@@ -225,7 +225,7 @@ export async function post_recalculate_Elo_ratings(req: any, res: any) {
 	debug(log_now(), `Recalculating Elo ratings...`);
 
 	// actually recalculating Elo ratings
-	recalculate_Elo_ratings();
+	recalculate_all_ratings();
 
 	res.send({ r: '1' });
 	return;
