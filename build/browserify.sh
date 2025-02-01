@@ -2,6 +2,8 @@
 
 cd js-source
 
+browserify client_load_version_number.js > bdl__client_load_version_number.js
+
 browserify client_login.js > bdl__client_login.js
 
 browserify client_home.js > bdl__client_home.js
