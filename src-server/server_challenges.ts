@@ -51,7 +51,7 @@ import { GameResult } from './models/game';
 export async function get_challenges_page(req: any, res: any) {
 	debug(log_now(), 'GET challenges_page...');
 
-	const session = new SessionID(req.cookies.session_id, req.cookies.user);
+	const session = SessionID.from_cookie(req.cookies);
 
 	const r = is_user_logged_in(session);
 	if (!r[0]) {
@@ -65,7 +65,7 @@ export async function get_challenges_page(req: any, res: any) {
 export async function post_challenge_send(req: any, res: any) {
 	debug(log_now(), 'POST challenge_send...');
 
-	const session = new SessionID(req.cookies.session_id, req.cookies.user);
+	const session = SessionID.from_cookie(req.cookies);
 	const to_user = req.body.to;
 
 	debug(log_now(), `Trying to send challenge from '${session.username}' to '${to_user}'.`);
@@ -129,7 +129,7 @@ export async function post_challenge_send(req: any, res: any) {
 export async function post_challenge_accept(req: any, res: any) {
 	debug(log_now(), 'POST challenge_accept...');
 
-	const session = new SessionID(req.cookies.session_id, req.cookies.user);
+	const session = SessionID.from_cookie(req.cookies);
 
 	const r = is_user_logged_in(session);
 	if (!r[0]) {
@@ -168,7 +168,7 @@ export async function post_challenge_accept(req: any, res: any) {
 export async function post_challenge_decline(req: any, res: any) {
 	debug(log_now(), 'POST challenge_decline...');
 
-	const session = new SessionID(req.cookies.session_id, req.cookies.user);
+	const session = SessionID.from_cookie(req.cookies);
 
 	const r = is_user_logged_in(session);
 	if (!r[0]) {
@@ -207,7 +207,7 @@ export async function post_challenge_decline(req: any, res: any) {
 export async function post_challenge_set_result(req: any, res: any) {
 	debug(log_now(), 'POST challenge_set_result...');
 
-	const session = new SessionID(req.cookies.session_id, req.cookies.user);
+	const session = SessionID.from_cookie(req.cookies);
 	const r = is_user_logged_in(session);
 	if (!r[0]) {
 		res.send(r[1]);
@@ -325,7 +325,7 @@ export async function post_challenge_set_result(req: any, res: any) {
 export async function post_challenge_agree_result(req: any, res: any) {
 	debug(log_now(), 'POST challenge_agree_result...');
 
-	const session = new SessionID(req.cookies.session_id, req.cookies.user);
+	const session = SessionID.from_cookie(req.cookies);
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -350,7 +350,7 @@ export async function post_challenge_agree_result(req: any, res: any) {
 export async function post_challenge_disagree_result(req: any, res: any) {
 	debug(log_now(), 'POST challenge_disagree_result...');
 
-	const session = new SessionID(req.cookies.session_id, req.cookies.user);
+	const session = SessionID.from_cookie(req.cookies);
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {

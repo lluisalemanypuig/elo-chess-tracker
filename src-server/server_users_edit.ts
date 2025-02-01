@@ -41,7 +41,7 @@ import { can_user_edit } from './utils/user_relationships';
 export async function get_users_edit_page(req: any, res: any) {
 	debug(log_now(), 'GET users_edit_page...');
 
-	const session = new SessionID(req.cookies.session_id, req.cookies.user);
+	const session = SessionID.from_cookie(req.cookies);
 
 	if (!SessionIDManager.get_instance().has_session_id(session)) {
 		debug(log_now(), `    User '${session.username}' is not logged in.`);
@@ -69,7 +69,7 @@ export async function get_users_edit_page(req: any, res: any) {
 export async function post_users_edit(req: any, res: any) {
 	debug(log_now(), 'POST users_edit...');
 
-	const session = new SessionID(req.cookies.session_id, req.cookies.user);
+	const session = SessionID.from_cookie(req.cookies);
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {

@@ -38,7 +38,7 @@ import { SessionID } from './models/session_id';
 export async function get_query_challenges_received(req: any, res: any) {
 	debug(log_now(), 'GET query_challenges_received...');
 
-	const session = new SessionID(req.cookies.session_id, req.cookies.user);
+	const session = SessionID.from_cookie(req.cookies);
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -79,7 +79,7 @@ export async function get_query_challenges_received(req: any, res: any) {
 export async function get_query_challenges_sent(req: any, res: any) {
 	debug(log_now(), 'GET query_challenges_sent...');
 
-	const session = new SessionID(req.cookies.session_id, req.cookies.user);
+	const session = SessionID.from_cookie(req.cookies);
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -119,7 +119,7 @@ export async function get_query_challenges_sent(req: any, res: any) {
 export async function get_query_challenges_pending_result(req: any, res: any) {
 	debug(log_now(), 'GET query_challenges_pending_result...');
 
-	const session = new SessionID(req.cookies.session_id, req.cookies.user);
+	const session = SessionID.from_cookie(req.cookies);
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -178,7 +178,7 @@ export async function get_query_challenges_pending_result(req: any, res: any) {
 export async function get_query_challenges_confirm_result_other(req: any, res: any) {
 	debug(log_now(), 'GET query_challenges_confirm_result_other...');
 
-	const session = new SessionID(req.cookies.session_id, req.cookies.user);
+	const session = SessionID.from_cookie(req.cookies);
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -251,7 +251,7 @@ export async function get_query_challenges_confirm_result_other(req: any, res: a
 export async function get_query_challenges_confirm_result_self(req: any, res: any) {
 	debug(log_now(), 'GET query_challenges_confirm_result_self...');
 
-	const session = new SessionID(req.cookies.session_id, req.cookies.user);
+	const session = SessionID.from_cookie(req.cookies);
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {

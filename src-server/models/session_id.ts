@@ -35,4 +35,15 @@ export class SessionID {
 		this.token = token;
 		this.username = username;
 	}
+
+	static get_field_name_0(): string {
+		return 'token';
+	}
+	static get_field_name_1(): string {
+		return 'username';
+	}
+
+	static from_cookie(cookie: any): SessionID {
+		return new SessionID(cookie.token, cookie.username);
+	}
 }

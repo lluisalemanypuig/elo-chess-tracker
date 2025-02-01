@@ -38,7 +38,7 @@ import { SessionID } from './models/session_id';
 export async function get_query_users_list(req: any, res: any) {
 	debug(log_now(), 'GET query_users_list...');
 
-	const session = new SessionID(req.cookies.session_id, req.cookies.user);
+	const session = SessionID.from_cookie(req.cookies);
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -63,7 +63,7 @@ export async function get_query_users_list(req: any, res: any) {
 export async function get_query_users_home(req: any, res: any) {
 	debug(log_now(), 'GET query_users_home...');
 
-	const session = new SessionID(req.cookies.session_id, req.cookies.user);
+	const session = SessionID.from_cookie(req.cookies);
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -100,7 +100,7 @@ export async function get_query_users_home(req: any, res: any) {
 export async function post_query_users_edit(req: any, res: any) {
 	debug(log_now(), 'POST query_users_edit...');
 
-	const session = new SessionID(req.cookies.session_id, req.cookies.user);
+	const session = SessionID.from_cookie(req.cookies);
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -129,7 +129,7 @@ export async function post_query_users_edit(req: any, res: any) {
 export async function post_query_users_ranking(req: any, res: any) {
 	debug(log_now(), 'POST query_users_ranking...');
 
-	const session = new SessionID(req.cookies.session_id, req.cookies.user);
+	const session = SessionID.from_cookie(req.cookies);
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {

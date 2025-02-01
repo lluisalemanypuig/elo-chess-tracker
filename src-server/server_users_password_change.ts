@@ -39,7 +39,7 @@ import { SessionID } from './models/session_id';
 export async function get_users_password_change_page(req: any, res: any) {
 	debug(log_now(), 'GET users_password_change_page...');
 
-	const session = new SessionID(req.cookies.session_id, req.cookies.user);
+	const session = SessionID.from_cookie(req.cookies);
 
 	const r = is_user_logged_in(session);
 	if (!r[0]) {
@@ -53,7 +53,7 @@ export async function get_users_password_change_page(req: any, res: any) {
 export async function post_users_password_change(req: any, res: any) {
 	debug(log_now(), 'POST users_password_change...');
 
-	const session = new SessionID(req.cookies.session_id, req.cookies.user);
+	const session = SessionID.from_cookie(req.cookies);
 	const old_password = req.body.old;
 	const new_password = req.body.new;
 

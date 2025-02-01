@@ -127,7 +127,7 @@ function filter_game_list(filter_game_record: Function, filter_game: Function, u
 export async function get_query_games_list_own(req: any, res: any) {
 	debug(log_now(), 'GET query_games_list_own...');
 
-	const session = new SessionID(req.cookies.session_id, req.cookies.user);
+	const session = SessionID.from_cookie(req.cookies);
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -165,7 +165,7 @@ export async function get_query_games_list_own(req: any, res: any) {
 export async function get_query_games_list_all(req: any, res: any) {
 	debug(log_now(), 'GET query_games_list_all...');
 
-	const session = new SessionID(req.cookies.session_id, req.cookies.user);
+	const session = SessionID.from_cookie(req.cookies);
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {

@@ -44,7 +44,7 @@ import { can_user_edit_a_game } from './utils/user_relationships';
 export async function get_games_own_page(req: any, res: any) {
 	debug(log_now(), 'GET games_own_page...');
 
-	const session = new SessionID(req.cookies.session_id, req.cookies.user);
+	const session = SessionID.from_cookie(req.cookies);
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -58,7 +58,7 @@ export async function get_games_own_page(req: any, res: any) {
 export async function get_games_all_page(req: any, res: any) {
 	debug(log_now(), 'GET games_all_page...');
 
-	const session = new SessionID(req.cookies.session_id, req.cookies.user);
+	const session = SessionID.from_cookie(req.cookies);
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -72,7 +72,7 @@ export async function get_games_all_page(req: any, res: any) {
 export async function get_games_create_page(req: any, res: any) {
 	debug(log_now(), 'GET games_create_page...');
 
-	const session = new SessionID(req.cookies.session_id, req.cookies.user);
+	const session = SessionID.from_cookie(req.cookies);
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -92,7 +92,7 @@ export async function get_games_create_page(req: any, res: any) {
 export async function post_games_create(req: any, res: any) {
 	debug(log_now(), 'POST games_create...');
 
-	const session = new SessionID(req.cookies.session_id, req.cookies.user);
+	const session = SessionID.from_cookie(req.cookies);
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -147,7 +147,7 @@ export async function post_games_create(req: any, res: any) {
 export async function post_games_edit_result(req: any, res: any) {
 	debug(log_now(), 'POST games_edit_result...');
 
-	const session = new SessionID(req.cookies.session_id, req.cookies.user);
+	const session = SessionID.from_cookie(req.cookies);
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -208,7 +208,7 @@ export async function post_games_edit_result(req: any, res: any) {
 export async function post_recalculate_Elo_ratings(req: any, res: any) {
 	debug(log_now(), 'POST recalculate_Elo_ratings...');
 
-	const session = new SessionID(req.cookies.session_id, req.cookies.user);
+	const session = SessionID.from_cookie(req.cookies);
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {

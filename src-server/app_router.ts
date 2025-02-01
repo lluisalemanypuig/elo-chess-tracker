@@ -37,18 +37,30 @@ let router = express.Router();
 router.get('/', (req: any, res: any) => {
 	debug(log_now(), `Username received in cookie: '${req.cookies.user}'`);
 
-	const session = new SessionID(req.cookies.session_id, req.cookies.user);
+	const session = SessionID.from_cookie(req.cookies);
 	const mem = SessionIDManager.get_instance();
 	if (mem.has_session_id(session)) {
-		debug(log_now(), `    Session id exists. Please, come in.`);
-		// User has a cookie proving that they logged into the web in the past
+		debug(log_now(), `    Session id for user '${session.username}' exists. Please, come in.`);
 		res.sendFile(path.join(__dirname, '../html/home.html'));
 	} else {
-		debug(log_now(), `    Session id does not exist. Login!`);
-		// User does not have an appropriate cookie. They must provide
-		// identity credentials to log in.
+		debug(log_now(), `    Session id does not exist. Login using your credentials`);
 		res.sendFile(path.join(__dirname, '../html/login_screen.html'));
 	}
+});
+
+// retrieve home page
+router.get('/home', (req: any, res: any) => {
+	debug(log_now(), 'GET home');
+
+	const session = SessionID.from_cookie(req.cookies);
+	if (!SessionIDManager.get_instance().has_session_id(session)) {
+		debug(log_now(), '    Session id does not exist.');
+		res.send('Computer says no');
+		return;
+	}
+
+	debug(log_now(), '    Access granted');
+	res.sendFile(path.join(__dirname, '../html/home.html'));
 });
 
 // serve all *.css files
@@ -212,21 +224,5 @@ router.post('/challenges_disagree_result', post_challenge_disagree_result);
 import { post_recalculate_Elo_ratings } from './server_games';
 import { SessionID } from './models/session_id';
 router.post('/recalculate_Elo_ratings', post_recalculate_Elo_ratings);
-
-// retrieve home page
-router.get('/home', (req: any, res: any) => {
-	debug(log_now(), 'GET home');
-
-	const session = new SessionID(req.cookies.session_id, req.cookies.user);
-	let mem = SessionIDManager.get_instance();
-	if (!mem.has_session_id(session)) {
-		debug(log_now(), '    Session id does not exist.');
-		res.send('Computer says no');
-		return;
-	}
-
-	debug(log_now(), '    Access granted');
-	res.sendFile(path.join(__dirname, '../html/home.html'));
-});
 
 export { router };

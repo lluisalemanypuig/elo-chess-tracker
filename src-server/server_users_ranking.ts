@@ -35,7 +35,7 @@ import { SessionID } from './models/session_id';
 export async function get_ranking_users_page(req: any, res: any) {
 	debug(log_now(), 'GET users_ranking_page...');
 
-	const session = new SessionID(req.cookies.session_id, req.cookies.user);
+	const session = SessionID.from_cookie(req.cookies);
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {

@@ -81,12 +81,12 @@ export async function post_user_log_in(req: any, res: any) {
 		r: '1', // result of trying to log in
 		cookies: [
 			make_cookie_string({
-				name: 'token',
+				name: SessionID.get_field_name_0(),
 				value: token,
 				days: 1
 			}),
 			make_cookie_string({
-				name: 'user',
+				name: SessionID.get_field_name_1(),
 				value: username,
 				days: 1
 			})
@@ -103,7 +103,7 @@ export async function post_user_log_in(req: any, res: any) {
 export async function post_user_log_out(req: any, res: any) {
 	debug(log_now(), `POST user_log_out`);
 
-	const session = new SessionID(req.cookies.token, req.cookies.user);
+	const session = SessionID.from_cookie(req.cookies);
 
 	debug(log_now(), `    Cookie:`);
 	debug(log_now(), `        Username:   '${session.username}'`);
@@ -111,8 +111,7 @@ export async function post_user_log_out(req: any, res: any) {
 
 	// in order to log out a user, the must have been logged in with the given
 	// session id token
-	const mem = SessionIDManager.get_instance();
-	if (!mem.has_session_id(session)) {
+	if (!SessionIDManager.get_instance().has_session_id(session)) {
 		debug(log_now(), `    User '${session.username}' was never logged in with this session id.`);
 		res.status(200).send('error');
 	} else {
