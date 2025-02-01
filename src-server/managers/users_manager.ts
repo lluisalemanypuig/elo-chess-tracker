@@ -24,6 +24,9 @@ Contact:
 */
 
 import { User } from '../models/user';
+import { search_linear_by_key } from '../utils/searching';
+
+export type UserRandomID = number;
 
 /**
  * @brief A singleton class to store data at runtime
@@ -48,36 +51,55 @@ export class UsersManager {
 
 	/// Set of users
 	private users: User[] = [];
-	private user_to_index: Map<string, number> = new Map();
+	private random_ids: UserRandomID[] = [];
 
 	clear(): void {
 		this.users = [];
-		this.user_to_index.clear();
+		this.random_ids = [];
 	}
 
 	add_user(u: User): void {
-		const i = this.users.length;
 		this.users.push(u);
-		this.user_to_index.set(u.get_username(), i);
+
+		const new_randid = Math.floor(Math.random() * 1000000);
+		this.random_ids.push(new_randid);
 	}
 	replace_user(u: User, idx: number): void {
 		if (!(0 <= idx && idx < this.users.length)) {
 			throw new Error('Index out of bounds');
 		}
-		this.user_to_index.delete(this.users[idx].get_username());
 		delete this.users[idx];
-
-		this.user_to_index.set(u.get_username(), idx);
 		this.users[idx] = u;
 	}
+
+	get_user_by_username(username: string): User | undefined {
+		const idx = search_linear_by_key(this.users, (u: User): boolean => {
+			return u.get_username() == username;
+		});
+		return this.get_user_at(idx);
+	}
+	get_user_by_random_id(rid: UserRandomID): User | undefined {
+		const idx = search_linear_by_key(this.random_ids, (id: UserRandomID): boolean => {
+			return id == rid;
+		});
+		return this.get_user_at(idx);
+	}
+
 	get_user_at(idx: number): User | undefined {
 		return 0 <= idx && idx < this.users.length ? this.users[idx] : undefined;
 	}
+	get_user_random_ID_at(idx: number): UserRandomID | undefined {
+		return 0 <= idx && idx < this.random_ids.length ? this.random_ids[idx] : undefined;
+	}
+
 	get_user_index(u: User): number | undefined {
 		return this.get_user_index_by_username(u.get_username());
 	}
 	get_user_index_by_username(username: string): number | undefined {
-		return this.user_to_index.get(username);
+		const idx = search_linear_by_key(this.users, (u: User): boolean => {
+			return u.get_username() == username;
+		});
+		return idx != -1 ? idx : undefined;
 	}
 
 	num_users(): number {

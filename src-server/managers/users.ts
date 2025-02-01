@@ -32,7 +32,7 @@ import { DateStringShort, log_now } from '../utils/time';
 import { Player } from '../models/player';
 import { User } from '../models/user';
 import { EnvironmentManager } from './environment_manager';
-import { UsersManager } from './users_manager';
+import { UserRandomID, UsersManager } from './users_manager';
 import { UserRole } from '../models/user_role';
 import { Password } from '../models/password';
 import { encrypt_password_for_user } from '../utils/encrypt';
@@ -146,13 +146,14 @@ export function user_add_new(
 }
 
 /// Returns the list of all (full) names and usernames
-export function user_get_all_names_and_usernames(): [string, string][] {
-	let res: [string, string][] = [];
+export function user_get_all__name_randid(): [string, number][] {
+	let res: [string, number][] = [];
 
 	let mem = UsersManager.get_instance();
 	for (let i = 0; i < mem.num_users(); ++i) {
 		const user = mem.get_user_at(i) as User;
-		res.push([user.get_full_name(), user.get_username()]);
+		const random_id = mem.get_user_random_ID_at(i) as UserRandomID;
+		res.push([user.get_full_name(), random_id]);
 	}
 	return res;
 }
