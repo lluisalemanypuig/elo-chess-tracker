@@ -293,4 +293,4 @@ This address is the same for _all_ other machines. Remember to use the right htt
 
 ## Adding new users
 
-To log into the site for the first time, use a default admin user, such as `mikhail.botvinnik`. Then, create a new admin user. Log out of the website, stop the server process, and then remove the files of the default users. This will leave the site with a single user, the one you have just created.
+To log into the site for the first time, use the default admin user `admin`. Its password is `admin`. Then, create a new "Admin" user with a different username and password. Give that user a proper first and last names. Then, log out of the website, stop the server process, and then remove the `admin` file from the database. This will leave the site with a single user, the one you have just created.
