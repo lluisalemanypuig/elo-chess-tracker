@@ -29,17 +29,18 @@ async function initialize_window_client_games_create() {
 	let white_datalist = document.getElementById('white_datalist') as HTMLDataListElement;
 	let black_datalist = document.getElementById('black_datalist') as HTMLDataListElement;
 
-	// "query" the server
+	// query the server for the list of users
 	const response = await fetch('/query_users_list', {
 		method: 'GET',
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
-	const user_lst = await response.json();
-	if (user_lst.r == '0') {
-		alert(user_lst.reason);
+	const data = await response.json();
+	if (data.r == '0') {
+		alert(data.reason);
 		return;
 	}
 
+	// query the server for the list of time controls
 	const response_time_control = await fetch('/query_time_controls', {
 		method: 'GET',
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
@@ -50,13 +51,14 @@ async function initialize_window_client_games_create() {
 		return;
 	}
 
-	const list = user_lst.data as [string, string][];
-
 	// fill username lists
 	let options = '';
-	list.forEach(function (elem: [string, string]) {
-		options += '<option id="' + elem[1] + '" value="' + elem[0] + '">';
-	});
+	{
+		const user_list = data.data as [string, string][];
+		user_list.forEach(function (elem: [string, string]) {
+			options += '<option id="' + elem[1] + '" value="' + elem[0] + '">';
+		});
+	}
 	white_datalist.innerHTML = options;
 	black_datalist.innerHTML = options;
 
@@ -94,16 +96,8 @@ async function submit_new_game(_event: any) {
 		return;
 	}
 
-	let white = '';
-	if (white_option != null) {
-		white = white_option.id;
-	}
-
-	let black = '';
-	if (black_option != null) {
-		black = black_option.id;
-	}
-
+	const white = white_option != null ? white_option.id : '';
+	const black = black_option != null ? black_option.id : '';
 	const response = await fetch('/games_create', {
 		method: 'POST',
 		body: JSON.stringify({
