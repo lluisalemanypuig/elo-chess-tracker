@@ -120,7 +120,7 @@ async function submit_new_game(_event: any) {
 			tc_i: time_control_id,
 			tc_n: time_control_name,
 			d: game_date_input.value,
-			t: game_time_input.value
+			t: game_time_input.value + ':' + `${Math.floor(Math.random() * 999)}`
 		}),
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
