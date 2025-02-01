@@ -102,31 +102,24 @@ The database generated will have the following directory structure:
     ├── database
     │   ├── challenges
     │   ├── games
+    │   │   ├── Blitz
+    │   │   ├── Classical
+    │   │   └── Rapid
     │   └── users
-    │       ├── anatoly.karpov
-    │       ├── bobby.fischer
-    │       ├── emanuel.lasker
-    │       ├── magnus.carlsen
-    │       ├── mikhail.botvinnik
-    │       └── vasily.smyslov
+    │       └── admin
     ├── icons
     │   ├── favicon.png
     │   ├── home.png
     │   └── login.png
     └── ssl
-    	├── server.cert
-    	└── server.key
+        ├── server.cert
+        └── server.key
 
 The directory `webpage` can be renamed with any name. The default users in the database are the following:
 
-    Username           | Password                          | Role
-    ---------------------------------------------------------------------------------
-    anatoly.karpov     | "always play king b1"             | Member
-    bobby.fischer      | "I hate chess"                    | Member, Student
-    emanuel.lasker     | "oh no, my queen"                 | Member, Teacher
-    magnus.carlsen     | "it's not playable... for black"  | Member
-    mikhail.botvinnik  | "the science of logic"            | Member, Admin
-    vasily.smyslov     | "never play f6"                   | Member, Admin, Teacher
+    Username | Password | Role
+    -----------------------------
+    admin    | "admin"  | Admin
 
 The actual passwords do not include the quote characters `"`; they are only used here as delimiters. Yes, passwords include spaces. Usernames correspond to famous chess players. Some of the passwords are quotes attributed to their corresponding chess player, other passwords are quotes attributed to different famous chess players.
 
