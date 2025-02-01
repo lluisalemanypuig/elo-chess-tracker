@@ -29,13 +29,6 @@ async function initialize_window_client_games_create() {
 	let white_datalist = document.getElementById('white_datalist') as HTMLDataListElement;
 	let black_datalist = document.getElementById('black_datalist') as HTMLDataListElement;
 
-	{
-		let opt = document.createElement('option');
-		opt.text = '';
-		opt.value = '';
-		white_datalist.appendChild(opt);
-	}
-
 	// "query" the server
 	const response = await fetch('/query_users_list', {
 		method: 'GET',
