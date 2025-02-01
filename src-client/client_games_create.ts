@@ -30,13 +30,13 @@ async function initialize_window_client_games_create() {
 	let black_datalist = document.getElementById('black_datalist') as HTMLDataListElement;
 
 	// query the server for the list of users
-	const response = await fetch('/query_users_list', {
+	const response_user_list = await fetch('/query_users_list', {
 		method: 'GET',
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
-	const data = await response.json();
-	if (data.r == '0') {
-		alert(data.reason);
+	const data_user_list = await response_user_list.json();
+	if (data_user_list.r == '0') {
+		alert(data_user_list.reason);
 		return;
 	}
 
@@ -45,17 +45,17 @@ async function initialize_window_client_games_create() {
 		method: 'GET',
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
-	const time_control = await response_time_control.json();
-	if (time_control.r == '0') {
-		alert(time_control.reason);
+	const data_time_control = await response_time_control.json();
+	if (data_time_control.r == '0') {
+		alert(data_time_control.reason);
 		return;
 	}
 
 	// fill username lists
 	let options = '';
 	{
-		const user_list = data.data as [string, string][];
-		user_list.forEach(function (elem: [string, string]) {
+		const user_list = data_user_list.data as [string, number][];
+		user_list.forEach(function (elem: [string, number]) {
 			options += '<option id="' + elem[1] + '" value="' + elem[0] + '">';
 		});
 	}
@@ -64,11 +64,11 @@ async function initialize_window_client_games_create() {
 
 	// fill time control lists
 	let time_control_select = document.getElementById('time_control_select') as HTMLSelectElement;
-	const time_control_data = time_control.data;
-	for (let i = 0; i < time_control_data.length; ++i) {
+	const time_controls = data_time_control.data;
+	for (let i = 0; i < time_controls.length; ++i) {
 		let option_i = document.createElement('option');
-		option_i.text = time_control_data[i].name;
-		option_i.value = time_control_data[i].id;
+		option_i.text = time_controls[i].name;
+		option_i.value = time_controls[i].id;
 		time_control_select.appendChild(option_i);
 	}
 }

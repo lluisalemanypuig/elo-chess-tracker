@@ -42,10 +42,10 @@ async function fill_username_datalist() {
 	});
 
 	const data = await response.json();
-	const list = data.data as [string, string][];
+	const list = data.data as [string, number][];
 
 	let options = '';
-	list.forEach(function (elem: [string, string]) {
+	list.forEach(function (elem: [string, number]) {
 		options += '<option id="' + elem[1] + '" value="' + elem[0] + '">';
 	});
 	username_datalist.innerHTML = options;

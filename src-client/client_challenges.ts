@@ -46,10 +46,10 @@ async function fill_username_datalist() {
 		return;
 	}
 
-	const list = data.data as [string, string][];
+	const list = data.data as [string, number][];
 
 	let options = '';
-	list.forEach(function (elem: [string, string]) {
+	list.forEach(function (elem: [string, number]) {
 		options += '<option id="' + elem[1] + '" value="' + elem[0] + '">';
 	});
 	username_datalist.innerHTML = options;
@@ -60,12 +60,12 @@ async function send_challenge_button_clicked(_event: any) {
 	const username_option = document.querySelector('option[value="' + username_list_input.value + '"]');
 
 	if (username_option != null) {
-		const username = username_option.id;
+		const random_user_id = username_option.id;
 
 		// "query" the server
 		const response = await fetch('/challenges_send', {
 			method: 'POST',
-			body: JSON.stringify({ to: username }),
+			body: JSON.stringify({ to: random_user_id }),
 			headers: { 'Content-type': 'application/json; charset=UTF-8' }
 		});
 
