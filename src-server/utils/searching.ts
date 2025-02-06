@@ -140,9 +140,14 @@ export function search_by_key<T, U>(
  * 'search(arr, x, F)' returns false.
  */
 export function where_should_be_inserted<T>(arr: T[], x: T, Comparison: Function = generic_compare): [number, boolean] {
-	return where_should_be_inserted_by_key(arr, x, Comparison, function (t: T): T {
-		return t;
-	});
+	return where_should_be_inserted_by_key(
+		arr,
+		x,
+		function (t: T): T {
+			return t;
+		},
+		Comparison
+	);
 }
 
 /**
@@ -164,8 +169,8 @@ export function where_should_be_inserted<T>(arr: T[], x: T, Comparison: Function
 export function where_should_be_inserted_by_key<T, U>(
 	arr: T[],
 	x: U,
-	Comparison: Function = generic_compare,
-	M: (input: T) => U
+	M: (input: T) => U,
+	Comparison: Function = generic_compare
 ): [number, boolean] {
 	if (arr.length == 0) {
 		return [1, false];

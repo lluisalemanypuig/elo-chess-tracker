@@ -185,21 +185,15 @@ function game_next_of_player(
 		debug(log_now(), `    Look for a game with date '${when}'`);
 
 		// where should the current game be inserted
-		let [game_idx, game_exists] = where_should_be_inserted_by_key(
+		const [game_idx, game_exists] = where_should_be_inserted_by_key(
 			// convert each game into a string
 			game_set,
 			when,
-			(when1: string, when2: string): number => {
-				if (when1 < when2) {
-					return -1;
-				}
-				if (when1 > when2) {
-					return 1;
-				}
-				return 0;
-			},
 			(g: Game): string => {
 				return g.get_date();
+			},
+			(when1: string, when2: string): number => {
+				return when1.localeCompare(when2);
 			}
 		);
 
