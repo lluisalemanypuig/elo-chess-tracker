@@ -48,7 +48,9 @@ export class Edge {
 	/// Merge two edges
 	merge(other: Edge): void {
 		if (this.neighbor != other.neighbor) {
-			throw new Error('The edge belongs to different people');
+			throw new Error(
+				`The current edge points to '${this.neighbor}' but the new edge points to '${other.neighbor}'.`
+			);
 		}
 
 		if (this.metadata != undefined && other.metadata != undefined) {
@@ -70,4 +72,23 @@ export function edge_from_json(json: any): Edge {
 	}
 
 	return new Edge(json['neighbor'], edge_metadata_from_json(json['metadata']));
+}
+
+/**
+ * @brief Parses a JSON string or object and returns an Edge.
+ * @param json A string with data of an Edge.
+ * @returns A new Edge object.
+ * @pre If @e json is a string, then it cannot start with '['.
+ */
+export function edge_set_from_json(json: any): Edge[] {
+	if (typeof json === 'string') {
+		const json_parse = JSON.parse(json);
+		return edge_set_from_json(json_parse);
+	}
+
+	let edge_set: Edge[] = [];
+	for (var edge in json) {
+		edge_set.push(edge_from_json(json[edge]));
+	}
+	return edge_set;
 }
