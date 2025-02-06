@@ -76,9 +76,14 @@ function generic_compare<T>(e1: T, e2: T): number {
  * @pre Elements in @e arr are sorted by @e F.
  */
 export function search<T>(arr: T[], x: T, Comparison: Function = generic_compare): number {
-	return search_by_key(arr, x, Comparison, (e1: T) => {
-		return e1;
-	});
+	return search_by_key(
+		arr,
+		x,
+		(e1: T) => {
+			return e1;
+		},
+		Comparison
+	);
 }
 
 /**
@@ -96,8 +101,8 @@ export function search<T>(arr: T[], x: T, Comparison: Function = generic_compare
 export function search_by_key<T, U>(
 	arr: T[],
 	x: U,
-	Comparison: Function = generic_compare,
-	M: (input: T) => U
+	M: (input: T) => U,
+	Comparison: Function = generic_compare
 ): number {
 	let i: number = 0;
 	let j: number = arr.length - 1;
