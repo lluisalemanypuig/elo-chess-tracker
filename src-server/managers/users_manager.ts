@@ -23,10 +23,8 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { User } from '../models/user';
+import { User, UserRandomID } from '../models/user';
 import { search_linear_by_key } from '../utils/searching';
-
-export type UserRandomID = number;
 
 /**
  * @brief A singleton class to store data at runtime

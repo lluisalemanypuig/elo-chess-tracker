@@ -34,6 +34,8 @@ import { TimeControlRating, time_control_rating_set_from_json } from './time_con
 import { TimeControlID } from './time_control';
 import { DateStringShort } from '../utils/time';
 
+export type UserRandomID = number;
+
 /**
  * @brief Simple class to encode a User
  *
