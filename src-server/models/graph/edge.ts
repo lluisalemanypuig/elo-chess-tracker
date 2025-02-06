@@ -71,7 +71,7 @@ export function edge_from_json(json: any): Edge {
 		return edge_from_json(json_parse);
 	}
 
-	return new Edge(json['neighbor'], edge_metadata_from_json(json['metadata']));
+	return new Edge(json.neighbor, edge_metadata_from_json(json.metadata));
 }
 
 /**
@@ -85,7 +85,6 @@ export function edge_set_from_json(json: any): Edge[] {
 		const json_parse = JSON.parse(json);
 		return edge_set_from_json(json_parse);
 	}
-
 	let edge_set: Edge[] = [];
 	for (var edge in json) {
 		edge_set.push(edge_from_json(json[edge]));

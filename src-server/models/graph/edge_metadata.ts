@@ -76,5 +76,5 @@ export function edge_metadata_from_json(json: any): EdgeMetadata {
 		return edge_metadata_from_json(json_parse);
 	}
 
-	return new EdgeMetadata(json['num_games_won'], json['num_games_drawn'], json['num_games_lost']);
+	return new EdgeMetadata(json.num_games_won, json.num_games_drawn, json.num_games_lost);
 }

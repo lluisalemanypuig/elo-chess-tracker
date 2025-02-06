@@ -166,7 +166,7 @@ export function graph_from_json(dir: string): Graph {
 		const username = files[i] as string;
 
 		const filename = path.join(dir, username);
-		const edge_set = edge_set_from_json(filename);
+		const edge_set = edge_set_from_json(fs.readFileSync(filename, 'utf8'));
 
 		for (let i = 0; i < edge_set.length; ++i) {
 			g.add_edge_raw(username, edge_set[i]);
