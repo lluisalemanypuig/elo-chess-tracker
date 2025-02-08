@@ -148,7 +148,7 @@ window.onload = async function () {
 		row.appendChild(new_text_cell(games[i].white));
 		row.appendChild(new_text_cell(games[i].black));
 
-		if (games[i].editable == 'yes') {
+		if (games[i].editable == 'y') {
 			row.appendChild(new_select_cell_result(games[i].result, games[i].id));
 		} else {
 			row.appendChild(new_text_cell(games[i].result));
@@ -162,7 +162,7 @@ window.onload = async function () {
 		row.appendChild(new_text_cell(games[i].black_rating));
 		row.appendChild(new_text_cell(games[i].black_increment));
 
-		if (games[i].editable == 'yes') {
+		if (games[i].editable == 'y') {
 			row.appendChild(new_button_cell('Edit', games[i].id));
 		}
 
