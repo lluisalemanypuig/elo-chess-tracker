@@ -20,3 +20,5 @@
         CREATE_GAME_TEACHER
         CREATE_GAME_ADMIN
         CREATE_GAME_MEMBER
+
+-   Add a function in the client to rebuild all the graphs in the server.
