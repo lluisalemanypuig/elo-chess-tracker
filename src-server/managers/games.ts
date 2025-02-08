@@ -46,6 +46,7 @@ import { user_retrieve, user_update_from_players_data } from './users';
 import { Rating } from '../rating_framework/rating';
 import { TimeControlRating } from '../models/time_control_rating';
 import { TimeControlID } from '../models/time_control';
+import { graph_update } from './graphs';
 
 /// Returns g1 < g2 using dates
 function game_compare_dates(g1: Game, g2: Game): number {
@@ -470,7 +471,9 @@ export function game_add_new(
 	hhmmss: string
 ): void {
 	const when = game_record + '..' + hhmmss;
-	const g = game_new(white.get_username(), black.get_username(), result, time_control_id, time_control_name, when);
+	const white_username = white.get_username();
+	const black_username = black.get_username();
+	const g = game_new(white_username, black_username, result, time_control_id, time_control_name, when);
 
 	debug(log_now(), `Add game into the list of games played by both users...`);
 
@@ -482,6 +485,7 @@ export function game_add_new(
 	debug(log_now(), `Updating the hash table (game id -> game record)`);
 
 	GamesManager.get_instance().add_game(g.get_id(), game_record, time_control_id);
+	graph_update(white_username, black_username, result, time_control_id);
 }
 
 /**
@@ -562,12 +566,17 @@ export function game_edit_result(game_id: GameID, new_result: GameResult): void 
 
 	let game = game_set[idx_in_game_set];
 
+	const old_result = game.get_result();
+
 	// avoid unnecessary work
-	if (game.get_result() == new_result) {
+	if (old_result == new_result) {
 		return;
 	}
 
-	const games_dir = EnvironmentManager.get_instance().get_dir_games_time_control(game.get_time_control_id());
+	const white = game.get_white();
+	const black = game.get_black();
+	const time_control_id = game.get_time_control_id();
+	const games_dir = EnvironmentManager.get_instance().get_dir_games_time_control(time_control_id);
 
 	// ---------------------------------------------------------
 	// actually apply changes
@@ -580,13 +589,13 @@ export function game_edit_result(game_id: GameID, new_result: GameResult): void 
 	// apply rating formula
 	{
 		let [white_after, black_after] = RatingSystemManager.get_instance().apply_rating_function(game);
-		updated_players.push(updated_player(game.get_time_control_id(), game.get_white(), white_after));
-		updated_players.push(updated_player(game.get_time_control_id(), game.get_black(), black_after));
+		updated_players.push(updated_player(time_control_id, white, white_after));
+		updated_players.push(updated_player(time_control_id, black, black_after));
 	}
 
 	let player_to_index: Map<string, number> = new Map();
-	player_to_index.set(game.get_white(), 0);
-	player_to_index.set(game.get_black(), 1);
+	player_to_index.set(white, 0);
+	player_to_index.set(black, 1);
 
 	// update record of the current game
 	update_game_record(game_set, idx_in_game_set + 1, game.get_time_control_id(), updated_players, player_to_index);

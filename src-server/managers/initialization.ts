@@ -42,17 +42,20 @@ import { challenge_from_json } from '../models/challenge';
 import { Game, game_set_from_json, GameID } from '../models/game';
 import { initialize_permissions } from '../models/user_role_action';
 import { TimeControl } from '../models/time_control';
+import { Graph, graph_from_json } from '../models/graph/graph';
+import { GraphsManager } from './graphs_manager';
 
-function init_directories(base_directory: string): void {
+function init_environment_directories(base_directory: string): void {
 	let server_env = EnvironmentManager.get_instance();
 	server_env.set_database_base_directory(path.join(base_directory, '/database'));
 	debug(log_now(), `    Database directory: '${server_env.get_dir_database()}'`);
 	debug(log_now(), `        Games directory: '${server_env.get_dir_games()}'`);
 	debug(log_now(), `        Users directory: '${server_env.get_dir_users()}'`);
 	debug(log_now(), `        Challenges directory: '${server_env.get_dir_challenges()}'`);
+	debug(log_now(), `        Graphs directory: '${server_env.get_dir_graphs()}'`);
 }
 
-function init_SSL_files(base_directory: string, configuration_data: any): void {
+function init_environment_SSL(base_directory: string, configuration_data: any): void {
 	let env = EnvironmentManager.get_instance();
 	env.set_SSL_info(
 		path.join(base_directory, '/ssl'),
@@ -66,13 +69,7 @@ function init_SSL_files(base_directory: string, configuration_data: any): void {
 	debug(log_now(), `        Passphrase: '${env.get_ssl_passphrase_file()}'`);
 }
 
-function init_server_ports(configuration_data: any): void {
-	let server_conf = ConfigurationManager.get_instance();
-	server_conf.set_port_http(configuration_data.ports.http);
-	server_conf.set_port_https(configuration_data.ports.https);
-}
-
-function init_icon_file_paths(base_directory: string, configuration_data: any): void {
+function init_environment_icon_file_paths(base_directory: string, configuration_data: any): void {
 	EnvironmentManager.get_instance().set_icons_info(
 		path.join(base_directory, '/icons'),
 		'/' + configuration_data.favicon,
@@ -81,14 +78,20 @@ function init_icon_file_paths(base_directory: string, configuration_data: any): 
 	);
 }
 
-function init_page_titles(configuration_data: any): void {
+function init_configuration_server_ports(configuration_data: any): void {
+	let server_conf = ConfigurationManager.get_instance();
+	server_conf.set_port_http(configuration_data.ports.http);
+	server_conf.set_port_https(configuration_data.ports.https);
+}
+
+function init_environment_page_titles(configuration_data: any): void {
 	EnvironmentManager.get_instance().set_titles_info(
 		configuration_data.login_page.title,
 		configuration_data.home_page.title
 	);
 }
 
-function init_permissions(permission_data: any): void {
+function init_user_permissions(permission_data: any): void {
 	debug(log_now(), 'Initialize permissions...');
 
 	initialize_permissions(permission_data);
@@ -129,7 +132,7 @@ function init_time_controls(time_control_array: any): void {
 	}
 }
 
-function init_sessions(): void {
+function init_user_session_ids(): void {
 	debug(log_now(), 'Initialize sessions...');
 
 	SessionIDManager.get_instance().clear_session_ids();
@@ -240,22 +243,42 @@ function init_games(): void {
 	debug(log_now(), `    Maximum game id ${max_game_id}.`);
 }
 
+function init_graphs(): void {
+	debug(log_now(), 'Initialize games...');
+
+	const ratings = RatingSystemManager.get_instance();
+	let graph_manager = GraphsManager.get_instance();
+
+	for (const id of ratings.get_unique_time_controls_ids()) {
+		const graphs_dir = EnvironmentManager.get_instance().get_dir_graphs_time_control(id);
+
+		if (!fs.existsSync(graphs_dir)) {
+			fs.mkdirSync(graphs_dir);
+			graph_manager.add_graph(id, new Graph());
+		} else {
+			const g_id = graph_from_json(graphs_dir);
+			graph_manager.add_graph(id, g_id);
+		}
+	}
+}
+
 export function server_init_from_data(base_directory: string, configuration_data: any): void {
 	debug(log_now(), `    Base directory: '${base_directory}'`);
 
-	init_directories(base_directory);
-	init_SSL_files(base_directory, configuration_data);
-	init_server_ports(configuration_data);
-	init_icon_file_paths(base_directory, configuration_data);
-	init_page_titles(configuration_data);
-	init_permissions(configuration_data.permissions);
+	init_environment_directories(base_directory);
+	init_environment_SSL(base_directory, configuration_data);
+	init_environment_icon_file_paths(base_directory, configuration_data);
+	init_environment_page_titles(configuration_data);
+	init_configuration_server_ports(configuration_data);
+	init_user_permissions(configuration_data.permissions);
 	init_rating_framework(configuration_data.rating_system);
 	init_time_controls(configuration_data.time_controls);
 
-	init_sessions();
+	init_user_session_ids();
 	init_users();
 	init_challenges();
 	init_games();
+	init_graphs();
 }
 
 /// Initializes the server memory

@@ -54,12 +54,14 @@ export class EnvironmentManager {
 	private directory_database_games: string = '';
 	private directory_database_users: string = '';
 	private directory_database_challenges: string = '';
+	private directory_database_graphs: string = '';
 
 	clear_database(): void {
 		this.directory_database = '';
 		this.directory_database_games = '';
 		this.directory_database_users = '';
 		this.directory_database_challenges = '';
+		this.directory_database_graphs = '';
 	}
 
 	get_dir_database(): string {
@@ -77,12 +79,19 @@ export class EnvironmentManager {
 	get_dir_challenges(): string {
 		return this.directory_database_challenges;
 	}
+	get_dir_graphs(): string {
+		return this.directory_database_graphs;
+	}
+	get_dir_graphs_time_control(id: TimeControlID): string {
+		return path.join(this.directory_database_graphs, id);
+	}
 
 	set_database_base_directory(base_dir: string): void {
 		this.directory_database = base_dir;
 		this.directory_database_games = path.join(this.directory_database, 'games');
 		this.directory_database_users = path.join(this.directory_database, 'users');
 		this.directory_database_challenges = path.join(this.directory_database, 'challenges');
+		this.directory_database_graphs = path.join(this.directory_database, 'graphs');
 	}
 
 	// SSL certificate info
