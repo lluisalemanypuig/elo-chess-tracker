@@ -98,6 +98,9 @@ async function submit_new_game(_event: any) {
 
 	const white = white_option != null ? white_option.id : '';
 	const black = black_option != null ? black_option.id : '';
+
+	const rand_sec = `${Math.floor(Math.random() * 59)}`;
+	const rand_milli = `${Math.floor(Math.random() * 999)}`;
 	const response = await fetch('/games_create', {
 		method: 'POST',
 		body: JSON.stringify({
@@ -107,7 +110,14 @@ async function submit_new_game(_event: any) {
 			tc_i: time_control_id,
 			tc_n: time_control_name,
 			d: game_date_input.value,
-			t: game_time_input.value + ':' + `${Math.floor(Math.random() * 999)}`
+			t:
+				game_time_input.value +
+				':' +
+				(rand_sec.length == 1 ? '0' : '') +
+				rand_sec +
+				':' +
+				(rand_milli.length == 1 ? '00' : rand_milli.length == 2 ? '0' : '') +
+				rand_milli
 		}),
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
