@@ -70,13 +70,7 @@ export class Graph {
 				return a.neighbor;
 			},
 			function (s: string, t: string): number {
-				if (s < t) {
-					return -1;
-				}
-				if (s > t) {
-					return 1;
-				}
-				return 0;
+				return s.localeCompare(t);
 			}
 		);
 
@@ -100,17 +94,49 @@ export class Graph {
 			function (a: Edge) {
 				return a.neighbor;
 			},
-			function (s: string, t: string) {
-				if (s < t) {
-					return -1;
-				}
-				if (s > t) {
-					return 1;
-				}
-				return 0;
+			function (s: string, t: string): number {
+				return s.localeCompare(t);
 			}
 		);
 		return B_idx == -1 ? undefined : W_list[B_idx].metadata;
+	}
+
+	change_game_result(W: string, B: string, old_res: GameResult, new_res: GameResult): void {
+		const _W_list = this.adjacency_list.get(W);
+		if (_W_list == undefined) {
+			return undefined;
+		}
+
+		let W_list = _W_list as Neighborhood;
+		const B_idx = search_by_key(
+			W_list,
+			B,
+			function (a: Edge) {
+				return a.neighbor;
+			},
+			function (s: string, t: string): number {
+				return s.localeCompare(t);
+			}
+		);
+		if (B_idx == -1) {
+			throw new Error(`The edge from '${W}' to '${B}' does not exist.`);
+		}
+
+		if (old_res == 'white_wins') {
+			--W_list[B_idx].metadata.num_games_won;
+		} else if (old_res == 'draw') {
+			--W_list[B_idx].metadata.num_games_drawn;
+		} else {
+			--W_list[B_idx].metadata.num_games_lost;
+		}
+
+		if (new_res == 'white_wins') {
+			++W_list[B_idx].metadata.num_games_won;
+		} else if (new_res == 'draw') {
+			++W_list[B_idx].metadata.num_games_drawn;
+		} else {
+			++W_list[B_idx].metadata.num_games_lost;
+		}
 	}
 
 	get_degree(u: string): number {
