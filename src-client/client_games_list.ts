@@ -154,8 +154,9 @@ window.onload = async function () {
 			row.appendChild(new_text_cell(games[i].result));
 		}
 
+		const when = games[i].date.substring(0, games[i].date.length - (3 + 1 + 2 + 1));
 		row.appendChild(new_text_cell(games[i].time_control));
-		row.appendChild(new_text_cell(games[i].date));
+		row.appendChild(new_text_cell(when));
 		row.appendChild(new_text_cell(games[i].white_rating));
 		row.appendChild(new_text_cell(games[i].white_increment));
 		row.appendChild(new_text_cell(games[i].black_rating));
