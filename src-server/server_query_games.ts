@@ -115,7 +115,7 @@ function filter_game_list(filter_game_record: Function, filter_game: Function, u
 					black_rating: Math.round(g.get_black_rating().rating),
 					white_increment: inc.white_increment < 0 ? inc.white_increment : '+' + inc.white_increment,
 					black_increment: inc.black_increment < 0 ? inc.black_increment : '+' + inc.black_increment,
-					editable: is_editable ? 'yes' : 'no'
+					editable: is_editable ? 'y' : 'n'
 				});
 			}
 		}
