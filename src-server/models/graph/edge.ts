@@ -38,9 +38,9 @@ export class Edge {
 	public neighbor: string;
 
 	/// The metadata of this edge.
-	public metadata: EdgeMetadata | undefined;
+	public metadata: EdgeMetadata;
 
-	constructor(neigh: string, data: EdgeMetadata | undefined) {
+	constructor(neigh: string, data: EdgeMetadata) {
 		this.neighbor = neigh;
 		this.metadata = data;
 	}
@@ -56,6 +56,12 @@ export class Edge {
 		if (this.metadata != undefined && other.metadata != undefined) {
 			this.metadata.merge(other.metadata);
 		}
+	}
+
+	is_empty_edge(): boolean {
+		return (
+			this.metadata.num_games_drawn == 0 && this.metadata.num_games_lost == 0 && this.metadata.num_games_won == 0
+		);
 	}
 }
 
