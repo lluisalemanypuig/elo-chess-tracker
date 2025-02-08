@@ -1,16 +1,3 @@
--   Create a directed graph-like structure to store game relationships between users.
-    There is a graph for every TimeControl (unique by id -- one for "blitz", one for
-    "classical", ...).
-
-    Such a graph stores weighted directed edges (A, B) where A and B are user names.
-    Each edge is weighted with three integral weights; each weight encodes
-    a number of games of A against B in which A plays as white (and B as black).
-    There are three such weights: the number of games won by A, the number of draws,
-    and the number of games won by B.
-
-    The graph is updated after every game and is always loaded in memory. Due to
-    safety concerns, the graph should always be stored in disk after every update.
-
 -   Add a UserAction that allows a user to create games only for certain types of
     users.
     CREATE_GAME // this already exists
