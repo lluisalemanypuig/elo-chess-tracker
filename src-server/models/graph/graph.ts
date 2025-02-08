@@ -49,22 +49,22 @@ export class Graph {
 		return this.adjacency_list.keys();
 	}
 
-	add_edge(W: string, B: string, result: GameResult): void {
-		const edge = new Edge(B, EdgeMetadata.from_result(result));
-		this.add_edge_raw(W, edge);
+	add_edge(w: string, b: string, result: GameResult): void {
+		const edge = new Edge(b, EdgeMetadata.from_result(result));
+		this.add_edge_raw(w, edge);
 	}
 
-	add_edge_raw(W: string, edge: Edge): void {
-		let _W_list = this.adjacency_list.get(W);
-		if (_W_list == undefined) {
-			this.push_user(W);
-			_W_list = this.adjacency_list.get(W);
+	add_edge_raw(w: string, edge: Edge): void {
+		let _w_list = this.adjacency_list.get(w);
+		if (_w_list == undefined) {
+			this.push_user(w);
+			_w_list = this.adjacency_list.get(w);
 		}
 
-		let W_list = _W_list as Neighborhood;
+		let w_list = _w_list as Neighborhood;
 
 		const [edge_idx, exists]: [number, boolean] = where_should_be_inserted_by_key(
-			W_list,
+			w_list,
 			edge.neighbor,
 			function (a: Edge) {
 				return a.neighbor;
@@ -75,22 +75,22 @@ export class Graph {
 		);
 
 		if (exists) {
-			W_list[edge_idx].merge(edge);
+			w_list[edge_idx].merge(edge);
 		} else {
-			W_list.splice(edge_idx, 0, edge);
+			w_list.splice(edge_idx, 0, edge);
 		}
 	}
 
-	get_data(W: string, B: string): EdgeMetadata | undefined {
-		const _W_list = this.adjacency_list.get(W);
-		if (_W_list == undefined) {
+	get_data(w: string, b: string): EdgeMetadata | undefined {
+		const _w_list = this.adjacency_list.get(w);
+		if (_w_list == undefined) {
 			return undefined;
 		}
 
-		const W_list = _W_list as Neighborhood;
-		const B_idx = search_by_key(
-			W_list,
-			B,
+		const w_list = _w_list as Neighborhood;
+		const b_idx = search_by_key(
+			w_list,
+			b,
 			function (a: Edge) {
 				return a.neighbor;
 			},
@@ -98,19 +98,19 @@ export class Graph {
 				return s.localeCompare(t);
 			}
 		);
-		return B_idx == -1 ? undefined : W_list[B_idx].metadata;
+		return b_idx == -1 ? undefined : w_list[b_idx].metadata;
 	}
 
-	change_game_result(W: string, B: string, old_res: GameResult, new_res: GameResult): void {
-		const _W_list = this.adjacency_list.get(W);
-		if (_W_list == undefined) {
+	change_game_result(w: string, b: string, old_res: GameResult, new_res: GameResult): void {
+		const _w_list = this.adjacency_list.get(w);
+		if (_w_list == undefined) {
 			return undefined;
 		}
 
-		let W_list = _W_list as Neighborhood;
-		const B_idx = search_by_key(
-			W_list,
-			B,
+		let w_list = _w_list as Neighborhood;
+		const b_idx = search_by_key(
+			w_list,
+			b,
 			function (a: Edge) {
 				return a.neighbor;
 			},
@@ -118,24 +118,24 @@ export class Graph {
 				return s.localeCompare(t);
 			}
 		);
-		if (B_idx == -1) {
-			throw new Error(`The edge from '${W}' to '${B}' does not exist.`);
+		if (b_idx == -1) {
+			throw new Error(`The edge from '${w}' to '${b}' does not exist.`);
 		}
 
 		if (old_res == 'white_wins') {
-			--W_list[B_idx].metadata.num_games_won;
+			--w_list[b_idx].metadata.num_games_won;
 		} else if (old_res == 'draw') {
-			--W_list[B_idx].metadata.num_games_drawn;
+			--w_list[b_idx].metadata.num_games_drawn;
 		} else {
-			--W_list[B_idx].metadata.num_games_lost;
+			--w_list[b_idx].metadata.num_games_lost;
 		}
 
 		if (new_res == 'white_wins') {
-			++W_list[B_idx].metadata.num_games_won;
+			++w_list[b_idx].metadata.num_games_won;
 		} else if (new_res == 'draw') {
-			++W_list[B_idx].metadata.num_games_drawn;
+			++w_list[b_idx].metadata.num_games_drawn;
 		} else {
-			++W_list[B_idx].metadata.num_games_lost;
+			++w_list[b_idx].metadata.num_games_lost;
 		}
 	}
 
