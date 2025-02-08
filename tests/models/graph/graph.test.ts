@@ -97,6 +97,46 @@ describe('Simple construction and query', () => {
 	});
 });
 
+describe('Edge update', () => {
+	test('1', () => {
+		let g = new Graph();
+
+		g.add_edge('A', 'B', 'white_wins');
+		expect(g.get_data('A', 'B')).toEqual(new EdgeMetadata(1, 0, 0));
+		expect(g.get_degree('A')).toBe(1);
+		expect(g.get_oponents('A')).toEqual(['B']);
+
+		g.change_game_result('A', 'B', 'white_wins', 'draw');
+		expect(g.get_data('A', 'B')).toEqual(new EdgeMetadata(0, 1, 0));
+		expect(g.get_degree('A')).toBe(1);
+		expect(g.get_oponents('A')).toEqual(['B']);
+
+		g.change_game_result('A', 'B', 'draw', 'black_wins');
+		expect(g.get_data('A', 'B')).toEqual(new EdgeMetadata(0, 0, 1));
+		expect(g.get_degree('A')).toBe(1);
+		expect(g.get_oponents('A')).toEqual(['B']);
+
+		g.change_game_result('A', 'B', 'black_wins', 'draw');
+		expect(g.get_data('A', 'B')).toEqual(new EdgeMetadata(0, 1, 0));
+		expect(g.get_degree('A')).toBe(1);
+		expect(g.get_oponents('A')).toEqual(['B']);
+
+		g.add_edge('C', 'A', 'white_wins');
+		g.add_edge('C', 'B', 'black_wins');
+		expect(g.get_data('C', 'A')).toEqual(new EdgeMetadata(1, 0, 0));
+		expect(g.get_data('C', 'B')).toEqual(new EdgeMetadata(0, 0, 1));
+		expect(g.get_degree('C')).toBe(2);
+		expect(g.get_oponents('C')).toEqual(['A', 'B']);
+
+		g.change_game_result('C', 'A', 'white_wins', 'draw');
+		expect(g.get_data('C', 'A')).toEqual(new EdgeMetadata(0, 1, 0));
+		expect(g.get_data('C', 'B')).toEqual(new EdgeMetadata(0, 0, 1));
+		g.change_game_result('C', 'B', 'black_wins', 'draw');
+		expect(g.get_data('C', 'A')).toEqual(new EdgeMetadata(0, 1, 0));
+		expect(g.get_data('C', 'B')).toEqual(new EdgeMetadata(0, 1, 0));
+	});
+});
+
 describe('Write to and read from disk', () => {
 	test('2 users -- write', () => {
 		let g = new Graph();
