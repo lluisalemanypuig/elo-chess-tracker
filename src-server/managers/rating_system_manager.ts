@@ -28,7 +28,10 @@ import { Rating } from '../rating_framework/rating';
 import { TimeControl, TimeControlID } from '../models/time_control';
 
 /**
- * @brief Rating system in the web
+ * @brief Rating System Manager singleton class
+ *
+ * This class manages the functions used to calculate ratings according to the
+ * configuration of the server.
  */
 export class RatingSystemManager {
 	/// The only instance of this class
@@ -58,9 +61,9 @@ export class RatingSystemManager {
 	/// Function to read a single rating JSON object
 	private rating_from_JSON_func: Function = () => void {};
 
-	/// All ratings used in the web
+	/// All ratings used in the server
 	private all_time_controls: TimeControl[] = [];
-	/// All unique rating ids used in the web
+	/// All unique rating ids used in the server
 	private all_unique_time_controls: TimeControlID[] = [];
 
 	clear(): void {

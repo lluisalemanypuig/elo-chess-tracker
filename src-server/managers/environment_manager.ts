@@ -27,7 +27,7 @@ import path from 'path';
 import { TimeControlID } from '../models/time_control';
 
 /**
- * @brief Directories and other parameters of the server environment
+ * @brief Directories and other parameters of the server's environment
  */
 export class EnvironmentManager {
 	/// The only instance of this class

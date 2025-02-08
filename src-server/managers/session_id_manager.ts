@@ -26,6 +26,12 @@ Contact:
 import { SessionID } from '../models/session_id';
 import { search_linear_by_key } from '../utils/searching';
 
+/**
+ * @brief Session ID Manager singleton class
+ *
+ * This class stores in memory the session IDs of all the users who logged into
+ * the webpage.
+ */
 export class SessionIDManager {
 	/// The only instance of this class
 	private static instance: SessionIDManager;

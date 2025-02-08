@@ -28,6 +28,9 @@ import { TimeControlID } from '../models/time_control';
 import { DateStringShort } from '../utils/time';
 import { number_to_string } from '../utils/misc';
 
+/**
+ * @brief The minimal summary of a game.
+ */
 export class GameInfo {
 	game_record: DateStringShort;
 	time_control_id: TimeControlID;
@@ -38,6 +41,13 @@ export class GameInfo {
 	}
 }
 
+/**
+ * @brief Games Manager singleton class.
+ *
+ * This class does not store the whole set of games in memory since the number of
+ * games is expected to be large. Instead, it only stores partial information about
+ * the games (@ref game_info).
+ */
 export class GamesManager {
 	/// The only instance of this class
 	private static instance: GamesManager;

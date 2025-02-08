@@ -27,6 +27,12 @@ import { Graph } from '../models/graph/graph';
 import { TimeControlID } from '../models/time_control';
 import { search_linear_by_key } from '../utils/searching';
 
+/**
+ * @brief Graphs Manager singleton class
+ *
+ * This class stores in memory a graph for every time control id in the server
+ * (@ref graph_list).
+ */
 export class GraphsManager {
 	private static instance: GraphsManager;
 

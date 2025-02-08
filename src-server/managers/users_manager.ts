@@ -27,7 +27,7 @@ import { User, UserRandomID } from '../models/user';
 import { search_linear_by_key } from '../utils/searching';
 
 /**
- * @brief A singleton class to store data at runtime
+ * @brief Users Manager singleton class
  *
  * Stores things like users session ids.
  */
@@ -47,8 +47,9 @@ export class UsersManager {
 		return UsersManager.instance;
 	}
 
-	/// Set of users
+	/// The list of users in the database
 	private users: User[] = [];
+	/// The list of random user IDS for every user.
 	private random_ids: UserRandomID[] = [];
 
 	clear(): void {

@@ -58,6 +58,7 @@ export class Edge {
 		}
 	}
 
+	/// Is the metadata of this edge all zeroes?
 	is_empty_edge(): boolean {
 		return (
 			this.metadata.num_games_drawn == 0 && this.metadata.num_games_lost == 0 && this.metadata.num_games_won == 0

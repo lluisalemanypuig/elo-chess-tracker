@@ -26,6 +26,12 @@ Contact:
 import { Challenge, ChallengeID } from '../models/challenge';
 import { number_to_string } from '../utils/misc';
 
+/**
+ * @brief Challenges Manager singleton class.
+ *
+ * This class stores all challenges in memory for fast retrieval. A large number
+ * of challenges is never expected.
+ */
 export class ChallengesManager {
 	/// The only instance of this class
 	private static instance: ChallengesManager;

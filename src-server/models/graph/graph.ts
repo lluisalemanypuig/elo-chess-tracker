@@ -34,7 +34,7 @@ import { GameResult } from '../game';
 export type Neighborhood = Edge[];
 
 /**
- * @brief Graph abstraction for games between pairs of users.
+ * @brief Graph abstraction for games between users.
  */
 export class Graph {
 	/// This is used to locate the games for any user A
@@ -45,15 +45,27 @@ export class Graph {
 		this.adjacency_list.set(user, []);
 	}
 
+	/// An iterator to the list of users who played as White.
 	get_entries(): MapIterator<string> {
 		return this.adjacency_list.keys();
 	}
 
+	/**
+	 * @brief Add an edge between White @e w and Black @e b, with result.
+	 * @param w White player
+	 * @param b Black player
+	 * @param result Result of the player
+	 */
 	add_edge(w: string, b: string, result: GameResult): void {
 		const edge = new Edge(b, EdgeMetadata.from_result(result));
 		this.add_edge_raw(w, edge);
 	}
 
+	/**
+	 * @brief Add an edge @ref edge outgoing from White @e w.
+	 * @param w White player.
+	 * @param edge The edge outgoing from @e w towards another player.
+	 */
 	add_edge_raw(w: string, edge: Edge): void {
 		let _w_list = this.adjacency_list.get(w);
 		if (_w_list == undefined) {
@@ -81,6 +93,12 @@ export class Graph {
 		}
 	}
 
+	/**
+	 * @brief The weight of edge (w,b).
+	 * @param w White player.
+	 * @param b Black player.
+	 * @returns The summary of all games between @e w and @e b.
+	 */
 	get_data(w: string, b: string): EdgeMetadata | undefined {
 		const _w_list = this.adjacency_list.get(w);
 		if (_w_list == undefined) {
@@ -101,6 +119,17 @@ export class Graph {
 		return b_idx == -1 ? undefined : w_list[b_idx].metadata;
 	}
 
+	/**
+	 * @brief Change the result of a game between @e w and @e b.
+	 *
+	 * There is no need to specify the game since the results are all aggregated,
+	 * and the change only affects the aggregated data.
+	 * @param w White player.
+	 * @param b Black player.
+	 * @param old_res Original result of the game.
+	 * @param new_res New result of the game.
+	 * @pre @e old_res != @e new_result.
+	 */
 	change_game_result(w: string, b: string, old_res: GameResult, new_res: GameResult): void {
 		const _w_list = this.adjacency_list.get(w);
 		if (_w_list == undefined) {
@@ -139,6 +168,12 @@ export class Graph {
 		}
 	}
 
+	/**
+	 * @brief Number of opponents of @e u as white.
+	 * @param u Player as white.
+	 * @returns The number of opponents of @e u over games where @e u plays as
+	 * White.
+	 */
 	get_degree(u: string): number {
 		const _u_list = this.adjacency_list.get(u);
 		if (_u_list == undefined) {
@@ -147,10 +182,12 @@ export class Graph {
 		return (_u_list as Neighborhood).length;
 	}
 
+	/// Returns the list of opponents and the metadata of @e u.
 	get_outgoing_edges(u: string): Neighborhood | undefined {
 		return this.adjacency_list.get(u);
 	}
 
+	/// Returns the list of opponents of @e u.
 	get_oponents(u: string): string[] | undefined {
 		const _u_list = this.adjacency_list.get(u);
 		if (_u_list == undefined) {
@@ -163,19 +200,48 @@ export class Graph {
 	}
 }
 
+/**
+ * @brief Save a portion of the graph from a file.
+ *
+ * The file represents the opponents of a specific user @e username when said
+ * user plays as White.
+ * @param dir Directory.
+ * @param username The actual filename.
+ * @param edges The information to save.
+ */
 export function neighborhood_to_file(dir: string, username: string, edges: Neighborhood): void {
 	const filename = path.join(dir, username);
 	fs.writeFileSync(filename, JSON.stringify(edges, null, 4));
 }
 
+/**
+ * @brief Save portions of a graph into distinct files.
+ *
+ * This function only saves a portion of the graph, that is, the portions
+ * corresponding to those users for which there has been a change. Each file
+ * created or updated corresponds to a specific user of the server.
+ * @param dir The directory where to save the graph.
+ * @param changes The users for which their portion graph is to be saved.
+ * @param g The graph to be saved.
+ */
 export function graph_to_file(dir: string, changes: string[], g: Graph): void {
 	for (const username of changes) {
 		neighborhood_to_file(dir, username, g.get_outgoing_edges(username) as Neighborhood);
 	}
 }
 
+/**
+ * @brief Save a whole graph into distinct files.
+ *
+ * This saves the whole graph into several files. Each file corresponds to a
+ * specific user of the server.
+ * @param dir The directory where to save the graph.
+ * @param g The graph to be saved.
+ */
 export function graph_full_to_file(dir: string, g: Graph): void {
-	graph_to_file(dir, Array.from(g.get_entries()), g);
+	for (const username of g.get_entries()) {
+		neighborhood_to_file(dir, username, g.get_outgoing_edges(username) as Neighborhood);
+	}
 }
 
 /**
