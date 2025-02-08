@@ -105,6 +105,10 @@ The database generated will have the following directory structure:
     │   │   ├── Blitz
     │   │   ├── Classical
     │   │   └── Rapid
+    │   ├── graphs
+    │   │   ├── Blitz
+    │   │   ├── Classical
+    │   │   └── Rapid
     │   └── users
     │       └── admin
     ├── icons
