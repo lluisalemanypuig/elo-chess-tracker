@@ -102,13 +102,7 @@ The database generated will have the following directory structure:
     ├── database
     │   ├── challenges
     │   ├── games
-    │   │   ├── Blitz
-    │   │   ├── Classical
-    │   │   └── Rapid
     │   ├── graphs
-    │   │   ├── Blitz
-    │   │   ├── Classical
-    │   │   └── Rapid
     │   └── users
     │       └── admin
     ├── icons
