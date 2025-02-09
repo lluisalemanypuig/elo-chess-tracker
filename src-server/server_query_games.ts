@@ -73,7 +73,8 @@ function filter_game_list(filter_game_record: Function, filter_game: Function, u
 	 * 	...
 	 * 	Blitz -- Oldest
 	 *
-	 * The order of the time control ids is unspecified
+	 * The order of the time control ids is unspecified. A linear time algorithm
+	 * is possible!
 	 */
 
 	for (const id of rating_system_manager.get_unique_time_controls_ids()) {
