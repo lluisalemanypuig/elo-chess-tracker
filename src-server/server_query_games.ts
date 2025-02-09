@@ -39,6 +39,7 @@ import { EnvironmentManager } from './managers/environment_manager';
 import { SEE_USER_GAMES } from './models/user_action';
 import { SessionID } from './models/session_id';
 import { can_user_edit_a_game, can_user_see_a_game } from './utils/user_relationships';
+import { TimeControlID } from './models/time_control';
 
 function increment(g: Game): any {
 	const [white_after, black_after] = RatingSystemManager.get_instance().apply_rating_function(g);
@@ -71,7 +72,7 @@ function filter_game_list(filter_game_record: Function, filter_game: Function, u
 		for (let i = game_record_file_list.length - 1; i >= 0; --i) {
 			const game_record_file = path.join(games_id_dir, game_record_file_list[i]);
 
-			if (!filter_game_record(game_record_file_list[i])) {
+			if (!filter_game_record(id, game_record_file_list[i])) {
 				continue;
 			}
 
@@ -136,17 +137,11 @@ export async function get_query_games_list_own(req: any, res: any) {
 	}
 
 	const user = user_retrieve(session.username) as User;
-	const rating_system_manager = RatingSystemManager.get_instance();
 
 	const data_to_return = filter_game_list(
-		(record_id: DateStringShort): boolean => {
-			for (const id of rating_system_manager.get_unique_time_controls_ids()) {
-				const array = user.get_games(id) as DateStringShort[];
-				if (array.includes(record_id)) {
-					return true;
-				}
-			}
-			return false;
+		(time_id: TimeControlID, record_id: DateStringShort): boolean => {
+			const array = user.get_games(time_id) as DateStringShort[];
+			return array.includes(record_id);
 		},
 		(g: Game): boolean => {
 			return g.is_user_involved(session.username);
