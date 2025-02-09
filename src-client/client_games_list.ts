@@ -118,12 +118,15 @@ function new_select_cell_result(original_result: string, game_id: string) {
 window.onload = async function () {
 	const val = document.getElementById('type_of_list')?.getAttribute('value');
 
-	let query_to_server: string = '';
-	if (val == 'all') {
-		query_to_server = '/query_games_all';
-	} else if (val == 'own') {
-		query_to_server = '/query_games_own';
-	}
+	const query_to_server: string = (() => {
+		if (val == 'all') {
+			return '/query_games_all';
+		}
+		if (val == 'own') {
+			return '/query_games_own';
+		}
+		return '?';
+	})();
 
 	// "query" the server
 	const response = await fetch(query_to_server, {
