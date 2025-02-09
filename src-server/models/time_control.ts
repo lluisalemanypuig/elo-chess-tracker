@@ -52,36 +52,3 @@ export class TimeControl {
 		this.name = name;
 	}
 }
-
-/**
- * @brief Parses a JSON string or object and returns a TimeControl.
- * @param json A string with data of a TimeControl.
- * @returns A new TimeControl object.
- * @pre If @e json is a string, then it cannot start with '['.
- */
-export function time_control_from_json(json: any): TimeControl {
-	if (typeof json === 'string') {
-		const json_parse = JSON.parse(json);
-		return time_control_from_json(json_parse);
-	}
-
-	return new TimeControl(json['id'], json['name']);
-}
-
-/**
- * @brief Parses a JSON string and returns a set of TimeControl.
- * @param json A string with data of several TimeControl.
- * @returns An array of TimeControl objects.
- */
-export function time_control_set_from_json(json: any): TimeControl[] {
-	if (typeof json === 'string') {
-		const json_parse = JSON.parse(json);
-		return time_control_set_from_json(json_parse);
-	}
-
-	let time_control_set: TimeControl[] = [];
-	for (var game_type in json) {
-		time_control_set.push(time_control_from_json(json[game_type]));
-	}
-	return time_control_set;
-}

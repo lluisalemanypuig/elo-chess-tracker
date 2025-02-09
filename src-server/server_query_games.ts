@@ -33,13 +33,14 @@ import { DateStringShort, log_now } from './utils/time';
 import { is_user_logged_in } from './managers/session';
 import { user_retrieve } from './managers/users';
 import { User } from './models/user';
-import { Game, game_set_from_json } from './models/game';
+import { Game } from './models/game';
 import { RatingSystemManager } from './managers/rating_system_manager';
 import { EnvironmentManager } from './managers/environment_manager';
 import { SEE_USER_GAMES } from './models/user_action';
 import { SessionID } from './models/session_id';
 import { can_user_edit_a_game, can_user_see_a_game } from './utils/user_relationships';
 import { TimeControlID } from './models/time_control';
+import { game_set_from_json } from './io/game';
 
 function increment(g: Game): any {
 	const [white_after, black_after] = RatingSystemManager.get_instance().apply_rating_function(g);

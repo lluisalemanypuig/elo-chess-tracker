@@ -44,35 +44,3 @@ export class Password {
 		return new Password(this.encrypted, this.iv);
 	}
 }
-
-/**
- * @brief Parses a JSON string or object and returns a Password.
- * @param json A JSON string or object with data of a Password.
- * @returns A new Password object.
- * @pre If @e json is a string then it cannot start with '['.
- */
-export function password_from_json(json: any): Password {
-	if (typeof json === 'string') {
-		const json_parse = JSON.parse(json);
-		return password_from_json(json_parse);
-	}
-	return new Password(json['encrypted'], json['iv']);
-}
-
-/**
- * @brief Parses a JSON string or object and returns a set of Password.
- * @param json A JSON string or object with data of several Password.
- * @returns An array of Password objects.
- */
-export function password_set_from_json(json: any): Password[] {
-	if (typeof json === 'string') {
-		const json_parse = JSON.parse(json);
-		return password_set_from_json(json_parse);
-	}
-
-	let player_set: Password[] = [];
-	for (var player in json) {
-		player_set.push(password_from_json(json[player]));
-	}
-	return player_set;
-}

@@ -23,8 +23,9 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
+import { graph_to_file } from '../io/graph/graph';
 import { GameResult } from '../models/game';
-import { Graph, graph_to_file } from '../models/graph/graph';
+import { Graph } from '../models/graph/graph';
 import { TimeControlID } from '../models/time_control';
 import { EnvironmentManager } from './environment_manager';
 import { GraphsManager } from './graphs_manager';

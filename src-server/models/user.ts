@@ -24,14 +24,14 @@ Contact:
 */
 
 import { Player } from './player';
-import { Password, password_from_json } from './password';
+import { Password } from './password';
 import { UserRole } from './user_role';
 import { UserAction } from './user_action';
 import { UserRoleToUserAction } from './user_role_action';
+import { TimeControlRating } from './time_control_rating';
+import { TimeControlID } from './time_control';
 import { copyarray } from '../utils/misc';
 import { search_linear_by_key, where_should_be_inserted } from '../utils/searching';
-import { TimeControlRating, time_control_rating_set_from_json } from './time_control_rating';
-import { TimeControlID } from './time_control';
 import { DateStringShort } from '../utils/time';
 
 export type UserRandomID = number;
@@ -250,77 +250,4 @@ export class User extends Player {
 			})
 		);
 	}
-}
-
-/**
- * @brief Parses a JSON string or object and returns a TimeControlGames.
- * @param json A JSON string or object with data of a TimeControlGames.
- * @returns A new TimeControlGames object.
- * @pre If @e json is a string then it cannot start with '['.
- */
-export function time_control_games_from_json(json: any): TimeControlGames {
-	if (typeof json === 'string') {
-		const json_parse = JSON.parse(json);
-		return time_control_games_from_json(json_parse);
-	}
-	return new TimeControlGames(json['time_control'], json['records']);
-}
-
-/**
- * @brief Parses a JSON string or object and returns a set of TimeControlGames.
- * @param json A JSON string or object with data of several TimeControlGames.
- * @returns An array of TimeControlGames objects.
- */
-export function time_control_games_set_from_json(json: any): TimeControlGames[] {
-	if (typeof json === 'string') {
-		const json_parse = JSON.parse(json);
-		return time_control_games_set_from_json(json_parse);
-	}
-
-	let data_set: TimeControlGames[] = [];
-	for (var data in json) {
-		data_set.push(time_control_games_from_json(json[data]));
-	}
-	return data_set;
-}
-
-/**
- * @brief Parses a JSON string or object and returns a User.
- * @param json A JSON string or object with data of a User.
- * @returns A new User object.
- * @pre If @e json is a string then it cannot start with '['.
- */
-export function user_from_json(json: any): User {
-	if (typeof json === 'string') {
-		const json_parse = JSON.parse(json);
-		return user_from_json(json_parse);
-	}
-
-	return new User(
-		json['username'],
-		json['first_name'],
-		json['last_name'],
-		password_from_json(json['password']),
-		json['roles'],
-		time_control_games_set_from_json(json['games']),
-		time_control_rating_set_from_json(json['ratings'])
-	);
-}
-
-/**
- * @brief Parses a JSON string or object and returns a set of User.
- * @param json A JSON string or object with data of several User.
- * @returns An array of User objects.
- */
-export function user_set_from_json(json: any): User[] {
-	if (typeof json === 'string') {
-		const json_parse = JSON.parse(json);
-		return user_set_from_json(json_parse);
-	}
-
-	let player_set: User[] = [];
-	for (var player in json) {
-		player_set.push(user_from_json(json[player]));
-	}
-	return player_set;
 }

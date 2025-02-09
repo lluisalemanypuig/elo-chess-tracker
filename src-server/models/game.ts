@@ -24,7 +24,6 @@ Contact:
 */
 
 import { Rating } from '../rating_framework/rating';
-import { RatingSystemManager } from '../managers/rating_system_manager';
 import { TimeControlID } from './time_control';
 import { DateStringLongMillis } from '../utils/time';
 
@@ -157,48 +156,4 @@ export class Game {
 	get_id(): GameID {
 		return this.id;
 	}
-}
-
-/**
- * @brief Parses a JSON string or object and returns a Game.
- * @param json A string with data of a Game.
- * @returns A new Game object.
- * @pre If @e json is a string, then it cannot start with '['.
- */
-export function game_from_json(json: any): Game {
-	if (typeof json === 'string') {
-		const json_parse = JSON.parse(json);
-		return game_from_json(json_parse);
-	}
-
-	const rating_system = RatingSystemManager.get_instance();
-	return new Game(
-		json['id'],
-		json['white'],
-		rating_system.get_rating_from_json(json['white_rating']),
-		json['black'],
-		rating_system.get_rating_from_json(json['black_rating']),
-		json['result'],
-		json['time_control_id'],
-		json['time_control_name'],
-		json['when']
-	);
-}
-
-/**
- * @brief Parses a JSON string and returns a set of Game.
- * @param json A string with data of several Game.
- * @returns An array of Game objects.
- */
-export function game_set_from_json(json: any): Game[] {
-	if (typeof json === 'string') {
-		const json_parse = JSON.parse(json);
-		return game_set_from_json(json_parse);
-	}
-
-	let game_set: Game[] = [];
-	for (var game in json) {
-		game_set.push(game_from_json(json[game]));
-	}
-	return game_set;
 }

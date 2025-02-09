@@ -37,13 +37,15 @@ import { UsersManager } from './users_manager';
 import { SessionIDManager } from './session_id_manager';
 import { initialize_rating_time_controls, initialize_rating_functions } from './rating_system';
 import { RatingSystemManager } from './rating_system_manager';
-import { user_from_json } from '../models/user';
-import { challenge_from_json } from '../models/challenge';
-import { Game, game_set_from_json, GameID } from '../models/game';
+import { Game, GameID } from '../models/game';
 import { initialize_permissions } from '../models/user_role_action';
 import { TimeControl } from '../models/time_control';
-import { Graph, graph_from_json } from '../models/graph/graph';
+import { Graph } from '../models/graph/graph';
 import { GraphsManager } from './graphs_manager';
+import { game_set_from_json } from '../io/game';
+import { challenge_from_json } from '../io/challenge';
+import { user_from_json } from '../io/user';
+import { graph_from_json } from '../io/graph/graph';
 
 function init_environment_directories(base_directory: string): void {
 	let server_env = EnvironmentManager.get_instance();

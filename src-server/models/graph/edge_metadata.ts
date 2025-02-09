@@ -63,18 +63,3 @@ export class EdgeMetadata {
 		return new EdgeMetadata(0, 0, 0);
 	}
 }
-
-/**
- * @brief Parses a JSON string or object and returns an Edge.
- * @param json A string with data of an Edge.
- * @returns A new Edge object.
- * @pre If @e json is a string, then it cannot start with '['.
- */
-export function edge_metadata_from_json(json: any): EdgeMetadata {
-	if (typeof json === 'string') {
-		const json_parse = JSON.parse(json);
-		return edge_metadata_from_json(json_parse);
-	}
-
-	return new EdgeMetadata(json.num_games_won, json.num_games_drawn, json.num_games_lost);
-}

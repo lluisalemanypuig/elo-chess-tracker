@@ -23,22 +23,19 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { Rating } from '../rating_framework/rating';
-import { TimeControlID } from './time_control';
+import { EdgeMetadata } from '../../models/graph/edge_metadata';
 
 /**
- * @brief A pair of time control id and rating
+ * @brief Parses a JSON string or object and returns an Edge.
+ * @param json A string with data of an Edge.
+ * @returns A new Edge object.
+ * @pre If @e json is a string, then it cannot start with '['.
  */
-export class TimeControlRating {
-	public time_control: TimeControlID;
-	public rating: Rating;
-
-	constructor(id: TimeControlID, data: Rating) {
-		this.time_control = id;
-		this.rating = data;
+export function edge_metadata_from_json(json: any): EdgeMetadata {
+	if (typeof json === 'string') {
+		const json_parse = JSON.parse(json);
+		return edge_metadata_from_json(json_parse);
 	}
 
-	clone(): TimeControlRating {
-		return new TimeControlRating(this.time_control, this.rating.clone());
-	}
+	return new EdgeMetadata(json.num_games_won, json.num_games_drawn, json.num_games_lost);
 }

@@ -30,7 +30,7 @@ const debug = Debug('ELO_TRACKER:server_game_history');
 
 import { DateStringLongMillis, DateStringShort, log_now, long_date_to_short_date } from '../utils/time';
 import { Player } from '../models/player';
-import { Game, GameID, GameResult, game_set_from_json } from '../models/game';
+import { Game, GameID, GameResult } from '../models/game';
 import { User } from '../models/user';
 import {
 	search,
@@ -47,6 +47,7 @@ import { Rating } from '../rating_framework/rating';
 import { TimeControlRating } from '../models/time_control_rating';
 import { TimeControlID } from '../models/time_control';
 import { graph_update } from './graphs';
+import { game_set_from_json } from '../io/game';
 
 /// Returns g1 < g2 using dates
 function game_compare_dates(g1: Game, g2: Game): number {

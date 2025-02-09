@@ -23,7 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { EdgeMetadata, edge_metadata_from_json } from './edge_metadata';
+import { EdgeMetadata } from './edge_metadata';
 
 /**
  * @brief A (directed) edge from user A to user B.
@@ -64,37 +64,4 @@ export class Edge {
 			this.metadata.num_games_drawn == 0 && this.metadata.num_games_lost == 0 && this.metadata.num_games_won == 0
 		);
 	}
-}
-
-/**
- * @brief Parses a JSON string or object and returns an Edge.
- * @param json A string with data of an Edge.
- * @returns A new Edge object.
- * @pre If @e json is a string, then it cannot start with '['.
- */
-export function edge_from_json(json: any): Edge {
-	if (typeof json === 'string') {
-		const json_parse = JSON.parse(json);
-		return edge_from_json(json_parse);
-	}
-
-	return new Edge(json.neighbor, edge_metadata_from_json(json.metadata));
-}
-
-/**
- * @brief Parses a JSON string or object and returns an Edge.
- * @param json A string with data of an Edge.
- * @returns A new Edge object.
- * @pre If @e json is a string, then it cannot start with '['.
- */
-export function edge_set_from_json(json: any): Edge[] {
-	if (typeof json === 'string') {
-		const json_parse = JSON.parse(json);
-		return edge_set_from_json(json_parse);
-	}
-	let edge_set: Edge[] = [];
-	for (var edge in json) {
-		edge_set.push(edge_from_json(json[edge]));
-	}
-	return edge_set;
 }
