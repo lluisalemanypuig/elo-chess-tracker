@@ -29,12 +29,25 @@ import { UserRole } from './user_role';
 import { UserAction } from './user_action';
 import { UserRoleToUserAction } from './user_role_action';
 import { copyarray } from '../utils/misc';
-import { where_should_be_inserted } from '../utils/searching';
+import { search_linear_by_key, where_should_be_inserted } from '../utils/searching';
 import { TimeControlRating, time_control_rating_set_from_json } from './time_control_rating';
 import { TimeControlID } from './time_control';
 import { DateStringShort } from '../utils/time';
 
 export type UserRandomID = number;
+
+export class TimeControlGames {
+	public time_control: TimeControlID = '';
+	public records: DateStringShort[] = [];
+
+	constructor(id: TimeControlID, list: DateStringShort[]) {
+		this.time_control = id;
+		this.records = list;
+	}
+	clone(): TimeControlGames {
+		return new TimeControlGames(this.time_control, this.records);
+	}
+}
 
 /**
  * @brief Simple class to encode a User
@@ -57,19 +70,7 @@ export class User extends Player {
 	 * For each time rating id, there is an array of strings that simply point
 	 * to the game records.
 	 */
-	private games: Map<TimeControlID, DateStringShort[]>;
-
-	toJSON(): object {
-		return {
-			username: this.username,
-			first_name: this.first_name,
-			last_name: this.last_name,
-			password: this.password,
-			roles: this.roles,
-			ratings: this.ratings,
-			games: Object.fromEntries(this.games)
-		};
-	}
+	private games: TimeControlGames[];
 
 	/**
 	 * @brief Constructor
@@ -87,15 +88,15 @@ export class User extends Player {
 		last_name: string,
 		password: Password,
 		roles: UserRole[],
-		games: Map<TimeControlID, DateStringShort[]>,
+		games: TimeControlGames[],
 		ratings: TimeControlRating[]
 	) {
 		super(username, ratings);
 		this.first_name = first_name;
 		this.last_name = last_name;
 		this.password = password;
-		this.roles = roles;
 		this.games = games;
+		this.roles = roles;
 	}
 
 	/// Set first name of the user
@@ -143,7 +144,10 @@ export class User extends Player {
 	 * @returns A list of strings pointing to game records.
 	 */
 	get_games(id: TimeControlID): DateStringShort[] | undefined {
-		return this.games.get(id);
+		const idx = search_linear_by_key(this.games, (v: TimeControlGames): boolean => {
+			return v.time_control == id;
+		});
+		return idx != -1 ? this.games[idx].records : undefined;
 	}
 
 	/**
@@ -154,14 +158,17 @@ export class User extends Player {
 	 * @param g New game record string.
 	 */
 	add_game(id: TimeControlID, g: DateStringShort): void {
-		let games_id = this.games.get(id);
-		if (games_id == undefined) {
+		const idx = search_linear_by_key(this.games, (p: TimeControlGames): boolean => {
+			return p.time_control == id;
+		});
+		if (idx == -1) {
 			throw new Error(`User does not have time control id '${id}'`);
 		}
 
-		let [index, exists] = where_should_be_inserted(games_id, g);
+		let games_list = this.games[idx].records;
+		let [index, exists] = where_should_be_inserted(games_list, g);
 		if (!exists) {
-			games_id.splice(index, 0, g);
+			games_list.splice(index, 0, g);
 		}
 	}
 
@@ -218,16 +225,6 @@ export class User extends Player {
 
 	/// Creates a copy of this user
 	override clone(): User {
-		let new_games: Map<TimeControlID, DateStringShort[]> = new Map();
-		this.games.forEach((value: DateStringShort[], key: TimeControlID) => {
-			new_games.set(
-				key,
-				copyarray(value, (id: DateStringShort): DateStringShort => {
-					return id;
-				})
-			);
-		});
-
 		return new User(
 			this.username,
 			this.first_name,
@@ -236,7 +233,9 @@ export class User extends Player {
 			copyarray(this.roles, (s: UserRole): UserRole => {
 				return s;
 			}),
-			new_games,
+			copyarray(this.games, (value: TimeControlGames): TimeControlGames => {
+				return value.clone();
+			}),
 			copyarray(this.ratings, (r: TimeControlRating): TimeControlRating => {
 				return r.clone();
 			})
@@ -251,6 +250,38 @@ export class User extends Player {
 			})
 		);
 	}
+}
+
+/**
+ * @brief Parses a JSON string or object and returns a TimeControlGames.
+ * @param json A JSON string or object with data of a TimeControlGames.
+ * @returns A new TimeControlGames object.
+ * @pre If @e json is a string then it cannot start with '['.
+ */
+export function time_control_games_from_json(json: any): TimeControlGames {
+	if (typeof json === 'string') {
+		const json_parse = JSON.parse(json);
+		return time_control_games_from_json(json_parse);
+	}
+	return new TimeControlGames(json['time_control'], json['records']);
+}
+
+/**
+ * @brief Parses a JSON string or object and returns a set of TimeControlGames.
+ * @param json A JSON string or object with data of several TimeControlGames.
+ * @returns An array of TimeControlGames objects.
+ */
+export function time_control_games_set_from_json(json: any): TimeControlGames[] {
+	if (typeof json === 'string') {
+		const json_parse = JSON.parse(json);
+		return time_control_games_set_from_json(json_parse);
+	}
+
+	let data_set: TimeControlGames[] = [];
+	for (var data in json) {
+		data_set.push(time_control_games_from_json(json[data]));
+	}
+	return data_set;
 }
 
 /**
@@ -271,7 +302,7 @@ export function user_from_json(json: any): User {
 		json['last_name'],
 		password_from_json(json['password']),
 		json['roles'],
-		new Map(Object.entries(json['games'])),
+		time_control_games_set_from_json(json['games']),
 		time_control_rating_set_from_json(json['ratings'])
 	);
 }

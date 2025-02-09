@@ -28,9 +28,8 @@ import path from 'path';
 import Debug from 'debug';
 const debug = Debug('ELO_TRACKER:server_users');
 
-import { DateStringShort, log_now } from '../utils/time';
 import { Player } from '../models/player';
-import { User, UserRandomID } from '../models/user';
+import { TimeControlGames, User, UserRandomID } from '../models/user';
 import { EnvironmentManager } from './environment_manager';
 import { UsersManager } from './users_manager';
 import { UserRole } from '../models/user_role';
@@ -38,7 +37,7 @@ import { Password } from '../models/password';
 import { encrypt_password_for_user } from '../utils/encrypt';
 import { RatingSystemManager } from './rating_system_manager';
 import { TimeControlRating } from '../models/time_control_rating';
-import { TimeControlID } from '../models/time_control';
+import { log_now } from '../utils/time';
 
 /**
  * @brief Returns a User object from a username.
@@ -115,11 +114,11 @@ export function user_add_new(
 ): User {
 	const rating_system = RatingSystemManager.get_instance();
 
-	let game_map: Map<TimeControlID, DateStringShort[]> = new Map();
+	let game_list: TimeControlGames[] = [];
 	let ratings: TimeControlRating[] = [];
 	rating_system.get_unique_time_controls_ids().forEach((id: string) => {
 		ratings.push(new TimeControlRating(id, rating_system.get_new_rating()));
-		game_map.set(id, []);
+		game_list.push(new TimeControlGames(id, []));
 	});
 
 	const password = encrypt_password_for_user(username, pass);
@@ -130,7 +129,7 @@ export function user_add_new(
 		lastname,
 		new Password(password[0], password[1]),
 		roles,
-		game_map,
+		game_list,
 		ratings
 	);
 
@@ -139,8 +138,7 @@ export function user_add_new(
 
 	fs.writeFileSync(user_file, JSON.stringify(user, null, 4));
 
-	let mem = UsersManager.get_instance();
-	mem.add_user(user);
+	UsersManager.get_instance().add_user(user);
 
 	return user;
 }
