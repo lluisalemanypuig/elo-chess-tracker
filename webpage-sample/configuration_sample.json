@@ -45,29 +45,30 @@
 	"permissions": {
 		"admin": [
 			"create_user",
-			"assign_role_admin",	"assign_role_teacher",	"assign_role_member",	"assign_role_student",
 
-			"create_game",
+			"assign_role_admin",  "assign_role_teacher",  "assign_role_member",  "assign_role_student",
 
-			"edit_admin",			"edit_teacher",			"edit_member",			"edit_student",
-			"edit_admin_games",		"edit_teacher_games",	"edit_member_games",	"edit_student_games",
-			"see_admin_games",		"see_teacher_games",	"see_member_games",		"see_student_games",
-			"challenge_admin",		"challenge_member",		"challenge_teacher",	"challenge_student"
+			"create_games_admin", "create_games_teacher", "create_games_member", "create_games_student",
+
+			"edit_admin",         "edit_teacher",         "edit_member",         "edit_student",
+			"edit_games_admin",   "edit_games_teacher",   "edit_games_member",   "edit_games_student",
+			"see_games_admin",    "see_games_teacher",    "see_games_member",    "see_games_student",
+			"challenge_admin",    "challenge_member",     "challenge_teacher",   "challenge_student"
 		],
 		"teacher": [
 			"create_user",
 			"assign_role_student",
 
 			"edit_student",
-			"edit_student_games",
-			"see_student_games",
-			"challenge_admin",		"challenge_member",		"challenge_teacher",	"challenge_student"
+			"edit_games_student",
+			"see_games_student",
+			"challenge_admin",    "challenge_member",     "challenge_teacher",   "challenge_student"
 		],
 		"member": [
-			"challenge_admin",		"challenge_member",		"challenge_teacher"
+			"challenge_admin",    "challenge_member",     "challenge_teacher"
 		],
 		"student": [
-			"challenge_admin",		"challenge_member",		"challenge_teacher",	"challenge_student"
+			"challenge_admin",    "challenge_member",     "challenge_teacher",   "challenge_student"
 		]
 	}
 }
