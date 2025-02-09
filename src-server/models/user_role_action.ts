@@ -34,14 +34,6 @@ import {
 
 /// Relate each user role to a readable string
 export class UserRoleToUserAction {
-	/// The data structure that relates user roles to actions
-	private relate: { [key in UserRole]: UserAction[] } = {
-		admin: [],
-		teacher: [],
-		member: [],
-		student: []
-	};
-
 	/// The only instance of this class
 	private static instance: UserRoleToUserAction;
 
@@ -63,6 +55,14 @@ export class UserRoleToUserAction {
 		UserRoleToUserAction.instance = UserRoleToUserAction.instance || new UserRoleToUserAction();
 		return UserRoleToUserAction.instance;
 	}
+
+	/// The data structure that relates user roles to actions
+	private relate: { [key in UserRole]: UserAction[] } = {
+		admin: [],
+		teacher: [],
+		member: [],
+		student: []
+	};
 
 	/// Add action 'action' to role 'role'
 	add_to_role(role: UserRole, action: UserAction): void {
