@@ -90,12 +90,12 @@ export function can_user_edit_a_game(u: User, white: User, black: User): boolean
 }
 
 /**
- * Challenge sent from 'sender' to 'receiver'
+ * @brief Challenge sent from 'sender' to 'receiver'
  * @param sender User that sends the challenge.
  * @param receiver User that receives the challenge.
  * @returns Can the sender actually challenge the receiver?
  */
-export function challenge_can_user_send(sender: User, receiver: User): boolean {
+export function can_user_send_challenge(sender: User, receiver: User): boolean {
 	return (
 		sender.can_do(CHALLENGE_USER) &&
 		((receiver.is(ADMIN) && sender.can_do(CHALLENGE_ADMIN)) ||

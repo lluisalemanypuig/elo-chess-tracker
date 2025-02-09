@@ -43,7 +43,7 @@ import { Challenge, ChallengeID } from './models/challenge';
 import { User } from './models/user';
 import { CHALLENGE_USER } from './models/user_action';
 import { SessionID } from './models/session_id';
-import { challenge_can_user_send } from './utils/user_relationships';
+import { can_user_send_challenge } from './utils/user_relationships';
 import { ChallengesManager } from './managers/challenges_manager';
 import { TimeControlID } from './models/time_control';
 import { GameResult } from './models/game';
@@ -112,7 +112,7 @@ export async function post_challenge_send(req: any, res: any) {
 		return;
 	}
 
-	if (!challenge_can_user_send(sender, receiver)) {
+	if (!can_user_send_challenge(sender, receiver)) {
 		debug(log_now(), `Sender '${sender.get_username()}' cannot challenge user '${receiver.get_username()}'.`);
 		res.send({
 			r: '0',
