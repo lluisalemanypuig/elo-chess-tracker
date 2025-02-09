@@ -29,7 +29,7 @@ Contact:
  * @param F Boolean function
  */
 export function search_linear<T>(arr: T[], x: T): number {
-	return search_linear_by_key(arr, (y: T) => {
+	return search_linear_by_key(arr, (y: T): boolean => {
 		return x == y;
 	});
 }
@@ -39,12 +39,7 @@ export function search_linear<T>(arr: T[], x: T): number {
  * @param arr Input array
  * @param F Boolean function
  */
-export function search_linear_by_key<T>(
-	arr: T[],
-	F: Function = (_e: T): boolean => {
-		return true;
-	}
-): number {
+export function search_linear_by_key<T>(arr: T[], F: Function): number {
 	for (let i = 0; i < arr.length; ++i) {
 		if (F(arr[i])) {
 			return i;
