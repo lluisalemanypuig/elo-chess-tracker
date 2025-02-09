@@ -16,23 +16,30 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 Full source code of elo-chess-tracker:
-	https://github.com/lluisalemanypuig/elo-chess-tracker
+    https://github.com/lluisalemanypuig/elo-chess-tracker
 
 Contact:
-	Lluís Alemany Puig
-	https://github.com/lluisalemanypuig
+    Lluís Alemany Puig
+    https://github.com/lluisalemanypuig
 */
 
 import { EdgeMetadata } from '../../../src-server/models/graph/edge_metadata';
+import { Edge } from '../../../src-server/models/graph/edge';
 
-describe('Static initialization', () => {
-	test('Empty', () => {
-		expect(EdgeMetadata.empty()).toEqual(new EdgeMetadata(0, 0, 0));
+import { edge_from_json } from '../../../src-server/io/graph/edge';
+
+describe('From JSON', () => {
+	test('string', () => {
+		expect(
+			edge_from_json(
+				'{"neighbor": "A", "metadata": {"num_games_won": 1, "num_games_drawn": 0, "num_games_lost": 300}}'
+			)
+		).toEqual(new Edge('A', new EdgeMetadata(1, 0, 300)));
 	});
 
-	test('From result', () => {
-		expect(EdgeMetadata.from_result('white_wins')).toEqual(new EdgeMetadata(1, 0, 0));
-		expect(EdgeMetadata.from_result('draw')).toEqual(new EdgeMetadata(0, 1, 0));
-		expect(EdgeMetadata.from_result('black_wins')).toEqual(new EdgeMetadata(0, 0, 1));
+	test('JSON', () => {
+		expect(
+			edge_from_json({ neighbor: 'A', metadata: { num_games_won: 1, num_games_drawn: 0, num_games_lost: 300 } })
+		).toEqual(new Edge('A', new EdgeMetadata(1, 0, 300)));
 	});
 });

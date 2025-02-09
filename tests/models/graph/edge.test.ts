@@ -26,24 +26,6 @@ Contact:
 import { EdgeMetadata } from '../../../src-server/models/graph/edge_metadata';
 import { Edge } from '../../../src-server/models/graph/edge';
 
-import { edge_from_json } from '../../../src-server/io/graph/edge';
-
-describe('From JSON', () => {
-	test('string', () => {
-		expect(
-			edge_from_json(
-				'{"neighbor": "A", "metadata": {"num_games_won": 1, "num_games_drawn": 0, "num_games_lost": 300}}'
-			)
-		).toEqual(new Edge('A', new EdgeMetadata(1, 0, 300)));
-	});
-
-	test('JSON', () => {
-		expect(
-			edge_from_json({ neighbor: 'A', metadata: { num_games_won: 1, num_games_drawn: 0, num_games_lost: 300 } })
-		).toEqual(new Edge('A', new EdgeMetadata(1, 0, 300)));
-	});
-});
-
 describe('Merge edges', () => {
 	test('1', () => {
 		let e1 = new Edge('a', new EdgeMetadata(1, 0, 10));

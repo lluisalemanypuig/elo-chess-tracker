@@ -23,7 +23,6 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { challenge_from_json } from '../../src-server/io/challenge';
 import { Challenge } from '../../src-server/models/challenge';
 
 describe('Sets and gets', () => {
@@ -222,58 +221,5 @@ describe('Sets and gets', () => {
 		expect(c.get_result()).toBe(undefined);
 		expect(c.get_time_control_id()).toBe(undefined);
 		expect(c.get_time_control_name()).toBe(undefined);
-	});
-});
-
-describe('From JSON', () => {
-	test('string', () => {
-		const c = challenge_from_json(
-			'{ "id": "000x1", "sent_by": "A", "sent_to": "B", "when_challenge_sent": "2024-12-29..17:10:00", "when_challenge_accepted": "2024-12-29..17:10:01", "result_set_by": "A", "when_result_set": "2024-12-29..17:10:02", "white": "A", "black": "B", "result": "draw", "time_control_id": "blitz", "time_control_name": "Blitz (5 + 3)" }'
-		);
-
-		expect(c.get_id()).toBe('000x1');
-		expect(c.get_sent_by()).toBe('A');
-		expect(c.get_sent_to()).toBe('B');
-		expect(c.get_when_challenge_sent()).toBe('2024-12-29..17:10:00');
-		expect(c.get_when_challenge_accepted()).toBe('2024-12-29..17:10:01');
-		expect(c.was_result_set()).toBe(true);
-		expect(c.get_result_set_by()).toBe('A');
-		expect(c.get_when_result_set()).toBe('2024-12-29..17:10:02');
-		expect(c.get_white()).toBe('A');
-		expect(c.get_black()).toBe('B');
-		expect(c.get_result()).toBe('draw');
-		expect(c.get_time_control_id()).toBe('blitz');
-		expect(c.get_time_control_name()).toBe('Blitz (5 + 3)');
-	});
-
-	test('JSON', () => {
-		const c = challenge_from_json({
-			id: '000x1',
-			sent_by: 'A',
-			sent_to: 'B',
-			when_challenge_sent: '2024-12-29..17:10:00',
-			when_challenge_accepted: '2024-12-29..17:10:01',
-			result_set_by: 'A',
-			when_result_set: '2024-12-29..17:10:02',
-			white: 'A',
-			black: 'B',
-			result: 'draw',
-			time_control_id: 'blitz',
-			time_control_name: 'Blitz (5 + 3)'
-		});
-
-		expect(c.get_id()).toBe('000x1');
-		expect(c.get_sent_by()).toBe('A');
-		expect(c.get_sent_to()).toBe('B');
-		expect(c.get_when_challenge_sent()).toBe('2024-12-29..17:10:00');
-		expect(c.get_when_challenge_accepted()).toBe('2024-12-29..17:10:01');
-		expect(c.was_result_set()).toBe(true);
-		expect(c.get_result_set_by()).toBe('A');
-		expect(c.get_when_result_set()).toBe('2024-12-29..17:10:02');
-		expect(c.get_white()).toBe('A');
-		expect(c.get_black()).toBe('B');
-		expect(c.get_result()).toBe('draw');
-		expect(c.get_time_control_id()).toBe('blitz');
-		expect(c.get_time_control_name()).toBe('Blitz (5 + 3)');
 	});
 });

@@ -16,24 +16,22 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 Full source code of elo-chess-tracker:
-	https://github.com/lluisalemanypuig/elo-chess-tracker
+    https://github.com/lluisalemanypuig/elo-chess-tracker
 
 Contact:
-	Lluís Alemany Puig
-	https://github.com/lluisalemanypuig
+    Lluís Alemany Puig
+    https://github.com/lluisalemanypuig
 */
 
-import { TimeControlRating } from '../../src-server/models/time_control_rating';
-import { EloRating } from '../../src-server/rating_framework/Elo/rating';
+import { Password } from '../../src-server/models/password';
+import { password_from_json } from '../../src-server/io/password';
 
-describe('clone', () => {
-	test('', () => {
-		const tcr = new TimeControlRating('blitz', new EloRating(1500.43, 100, 50, 20, 30, 40, true));
-		const tcrc = tcr.clone();
+describe('From JSON', () => {
+	test('string', () => {
+		expect(password_from_json('{"encrypted": "1234", "iv": "asdf"}')).toEqual(new Password('1234', 'asdf'));
+	});
 
-		expect(tcr).not.toBe(tcrc);
-		expect(tcr.time_control).toEqual(tcrc.time_control);
-		expect(tcr.rating).not.toBe(tcrc.rating);
-		expect(tcr.rating).toEqual(tcrc.rating);
+	test('JSON', () => {
+		expect(password_from_json({ encrypted: '1234', iv: 'asdf' })).toEqual(new Password('1234', 'asdf'));
 	});
 });

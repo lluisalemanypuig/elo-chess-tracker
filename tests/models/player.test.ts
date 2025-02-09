@@ -25,9 +25,7 @@ Contact:
 
 import { Player } from '../../src-server/models/player';
 import { TimeControlRating } from '../../src-server/models/time_control_rating';
-import { initialize_rating_functions } from '../../src-server/managers/rating_system';
 import { EloRating } from '../../src-server/rating_framework/Elo/rating';
-import { player_from_json } from '../../src-server/io/player';
 
 describe('construct', () => {
 	const bullet = new EloRating(1400, 0, 0, 0, 0, 40, false);
@@ -115,62 +113,5 @@ describe('construct', () => {
 		p.set_rating('blitz', blitz_equal);
 		expect(pc.get_rating('blitz')).not.toBe(blitz);
 		expect(pc.get_rating('blitz')).toEqual(blitz);
-	});
-});
-
-describe('From JSON -- Elo', () => {
-	initialize_rating_functions('Elo');
-	const blitz = new EloRating(1500, 0, 0, 0, 0, 40, false);
-	const classical = new EloRating(1700, 0, 0, 0, 0, 40, false);
-
-	test('string', () => {
-		const p = player_from_json(
-			'{ "username": "user.name", "ratings": [ { "time_control": "blitz", "rating": { "rating": 1500, "num_games": 0, "won": 0, "drawn": 0, "lost": 0, "K": 40, "surpassed_2400": false } }, { "time_control": "classical", "rating": { "rating": 1700, "num_games": 0, "won": 0, "drawn": 0, "lost": 0, "K": 40, "surpassed_2400": false } } ]}'
-		);
-
-		expect(p.get_username()).toEqual('user.name');
-		expect(p.get_all_ratings().length).toEqual(2);
-		expect(p.has_rating('blitz')).toEqual(true);
-		expect(p.has_rating('classical')).toEqual(true);
-		expect(p.get_rating('classical')).toEqual(classical);
-	});
-
-	test('JSON', () => {
-		const p = player_from_json({
-			username: 'user.name',
-			ratings: [
-				{
-					time_control: 'blitz',
-					rating: {
-						rating: 1500,
-						num_games: 0,
-						won: 0,
-						drawn: 0,
-						lost: 0,
-						K: 40,
-						surpassed_2400: false
-					}
-				},
-				{
-					time_control: 'classical',
-					rating: {
-						rating: 1700,
-						num_games: 0,
-						won: 0,
-						drawn: 0,
-						lost: 0,
-						K: 40,
-						surpassed_2400: false
-					}
-				}
-			]
-		});
-
-		expect(p.get_username()).toEqual('user.name');
-		expect(p.get_all_ratings().length).toEqual(2);
-		expect(p.has_rating('blitz')).toEqual(true);
-		expect(p.has_rating('classical')).toEqual(true);
-		expect(p.get_rating('blitz')).toEqual(blitz);
-		expect(p.get_rating('classical')).toEqual(classical);
 	});
 });
