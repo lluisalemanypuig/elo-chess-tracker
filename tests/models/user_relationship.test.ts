@@ -42,15 +42,15 @@ import { initialize_permissions } from '../../src-server/models/user_role_action
 import { can_user_edit, can_user_edit_a_game, can_user_see_a_game } from '../../src-server/utils/user_relationships';
 
 describe('Edition', () => {
-	const editor_admin = new User('un', 'f', 'l', new Password('a', 'b'), [ADMIN], new Map([]), []);
-	const editor_teacher = new User('un', 'f', 'l', new Password('a', 'b'), [TEACHER], new Map([]), []);
-	const editor_member = new User('un', 'f', 'l', new Password('a', 'b'), [MEMBER], new Map([]), []);
-	const editor_student = new User('un', 'f', 'l', new Password('a', 'b'), [STUDENT], new Map([]), []);
+	const editor_admin = new User('un', 'f', 'l', new Password('a', 'b'), [ADMIN], [], []);
+	const editor_teacher = new User('un', 'f', 'l', new Password('a', 'b'), [TEACHER], [], []);
+	const editor_member = new User('un', 'f', 'l', new Password('a', 'b'), [MEMBER], [], []);
+	const editor_student = new User('un', 'f', 'l', new Password('a', 'b'), [STUDENT], [], []);
 
-	const edited_admin = new User('un', 'f', 'l', new Password('a', 'b'), [ADMIN], new Map([]), []);
-	const edited_teacher = new User('un', 'f', 'l', new Password('a', 'b'), [TEACHER], new Map([]), []);
-	const edited_member = new User('un', 'f', 'l', new Password('a', 'b'), [MEMBER], new Map([]), []);
-	const edited_student = new User('un', 'f', 'l', new Password('a', 'b'), [STUDENT], new Map([]), []);
+	const edited_admin = new User('un', 'f', 'l', new Password('a', 'b'), [ADMIN], [], []);
+	const edited_teacher = new User('un', 'f', 'l', new Password('a', 'b'), [TEACHER], [], []);
+	const edited_member = new User('un', 'f', 'l', new Password('a', 'b'), [MEMBER], [], []);
+	const edited_student = new User('un', 'f', 'l', new Password('a', 'b'), [STUDENT], [], []);
 
 	test('Admin -> Teacher', () => {
 		let rel = UserRoleToUserAction.get_instance();
@@ -182,10 +182,10 @@ describe('Edition', () => {
 });
 
 describe('Can a user see a game?', () => {
-	const admin = new User('un', 'f', 'l', new Password('a', 'b'), [ADMIN], new Map([]), []);
-	const teacher = new User('un', 'f', 'l', new Password('a', 'b'), [TEACHER], new Map([]), []);
-	const member = new User('un', 'f', 'l', new Password('a', 'b'), [MEMBER], new Map([]), []);
-	const student = new User('un', 'f', 'l', new Password('a', 'b'), [STUDENT], new Map([]), []);
+	const admin = new User('un', 'f', 'l', new Password('a', 'b'), [ADMIN], [], []);
+	const teacher = new User('un', 'f', 'l', new Password('a', 'b'), [TEACHER], [], []);
+	const member = new User('un', 'f', 'l', new Password('a', 'b'), [MEMBER], [], []);
+	const student = new User('un', 'f', 'l', new Password('a', 'b'), [STUDENT], [], []);
 
 	test('Admin', () => {
 		let rel = UserRoleToUserAction.get_instance();
@@ -221,10 +221,10 @@ describe('Can a user see a game?', () => {
 });
 
 describe('Can a user edit a game?', () => {
-	const admin = new User('un', 'f', 'l', new Password('a', 'b'), [ADMIN], new Map([]), []);
-	const teacher = new User('un', 'f', 'l', new Password('a', 'b'), [TEACHER], new Map([]), []);
-	const member = new User('un', 'f', 'l', new Password('a', 'b'), [MEMBER], new Map([]), []);
-	const student = new User('un', 'f', 'l', new Password('a', 'b'), [STUDENT], new Map([]), []);
+	const admin = new User('un', 'f', 'l', new Password('a', 'b'), [ADMIN], [], []);
+	const teacher = new User('un', 'f', 'l', new Password('a', 'b'), [TEACHER], [], []);
+	const member = new User('un', 'f', 'l', new Password('a', 'b'), [MEMBER], [], []);
+	const student = new User('un', 'f', 'l', new Password('a', 'b'), [STUDENT], [], []);
 
 	test('Admin', () => {
 		let rel = UserRoleToUserAction.get_instance();

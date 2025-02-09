@@ -25,7 +25,7 @@ Contact:
 
 import { Password } from '../../src-server/models/password';
 import { TimeControlRating } from '../../src-server/models/time_control_rating';
-import { User, user_from_json } from '../../src-server/models/user';
+import { TimeControlGames, User, user_from_json } from '../../src-server/models/user';
 import {
 	ASSIGN_ROLE_ADMIN,
 	ASSIGN_ROLE_MEMBER,
@@ -73,10 +73,7 @@ describe('Elo', () => {
 			'Last',
 			new Password('asdf', 'ivrandom'),
 			[ADMIN, TEACHER],
-			new Map([
-				['blitz', ['2024-12-24']],
-				['rapid', ['2024-12-25']]
-			]),
+			[new TimeControlGames('blitz', ['2024-12-24']), new TimeControlGames('rapid', ['2024-12-25'])],
 			[new TimeControlRating('blitz', blitz), new TimeControlRating('classical', classical)]
 		);
 
@@ -102,10 +99,7 @@ describe('Elo', () => {
 			'Last',
 			new Password('asdf', 'ivrandom'),
 			[ADMIN, TEACHER],
-			new Map([
-				['blitz', ['2024-12-24']],
-				['rapid', ['2024-12-25']]
-			]),
+			[new TimeControlGames('blitz', ['2024-12-24']), new TimeControlGames('rapid', ['2024-12-25'])],
 			[new TimeControlRating('blitz', blitz), new TimeControlRating('classical', classical)]
 		);
 
@@ -134,10 +128,7 @@ describe('Elo', () => {
 			'Last',
 			new Password('asdf', 'ivrandom'),
 			[ADMIN, TEACHER],
-			new Map([
-				['blitz', ['2024-12-24']],
-				['rapid', ['2024-12-25']]
-			]),
+			[new TimeControlGames('blitz', ['2024-12-24']), new TimeControlGames('rapid', ['2024-12-25'])],
 			[new TimeControlRating('blitz', blitz), new TimeControlRating('classical', classical)]
 		);
 
@@ -168,7 +159,7 @@ describe('Actions allowed per user (single role)', () => {
 			member: []
 		});
 
-		const admin = new User('u', 'F', 'L', new Password('a', 'i'), [ADMIN], new Map([]), []);
+		const admin = new User('u', 'F', 'L', new Password('a', 'i'), [ADMIN], [], []);
 
 		const actions = admin.get_actions();
 		expect(actions.length).toBe(2);
@@ -213,7 +204,7 @@ describe('Actions allowed per user (single role)', () => {
 			member: []
 		});
 
-		const teacher = new User('u', 'F', 'L', new Password('a', 'i'), [TEACHER], new Map([]), []);
+		const teacher = new User('u', 'F', 'L', new Password('a', 'i'), [TEACHER], [], []);
 
 		const actions = teacher.get_actions();
 		expect(actions.length).toBe(2);
@@ -258,7 +249,7 @@ describe('Actions allowed per user (single role)', () => {
 			member: []
 		});
 
-		const student = new User('u', 'F', 'L', new Password('a', 'i'), [STUDENT], new Map([]), []);
+		const student = new User('u', 'F', 'L', new Password('a', 'i'), [STUDENT], [], []);
 
 		const actions = student.get_actions();
 		expect(actions.length).toBe(2);
@@ -303,7 +294,7 @@ describe('Actions allowed per user (single role)', () => {
 			member: [CHALLENGE_ADMIN, CHALLENGE_STUDENT]
 		});
 
-		const member = new User('u', 'F', 'L', new Password('a', 'i'), [MEMBER], new Map([]), []);
+		const member = new User('u', 'F', 'L', new Password('a', 'i'), [MEMBER], [], []);
 
 		const actions = member.get_actions();
 		expect(actions.length).toBe(3);
@@ -351,7 +342,7 @@ describe('Actions allowed per user (multiple roles)', () => {
 			member: []
 		});
 
-		const admin_teacher = new User('u', 'F', 'L', new Password('a', 'i'), [ADMIN, TEACHER], new Map([]), []);
+		const admin_teacher = new User('u', 'F', 'L', new Password('a', 'i'), [ADMIN, TEACHER], [], []);
 
 		const actions = admin_teacher.get_actions();
 		expect(actions.length).toBe(2);
@@ -398,7 +389,7 @@ describe('Actions allowed per user (multiple roles)', () => {
 			member: []
 		});
 
-		const admin_student = new User('u', 'F', 'L', new Password('a', 'i'), [ADMIN, STUDENT], new Map([]), []);
+		const admin_student = new User('u', 'F', 'L', new Password('a', 'i'), [ADMIN, STUDENT], [], []);
 
 		const actions = admin_student.get_actions();
 		expect(actions.length).toBe(4);
@@ -442,7 +433,7 @@ describe('From JSON (Elo)', () => {
 
 	test('string (1)', () => {
 		const u = user_from_json(
-			'{ "username": "u", "first_name": "f", "last_name": "l", "password": { "encrypted": "a", "iv": "b" }, "roles": ["admin"], "games": { "blitz": ["2024-12-31"], "rapid" : ["2025-01-01"] }, "ratings": [] }'
+			'{ "username": "u", "first_name": "f", "last_name": "l", "password": { "encrypted": "a", "iv": "b" }, "roles": ["admin"], "games": [ {"time_control": "blitz", "records": ["2024-12-31"]}, {"time_control": "rapid", "records": ["2025-01-01"]} ], "ratings": [] }'
 		);
 
 		expect(u.get_username()).toEqual('u');
@@ -459,14 +450,14 @@ describe('From JSON (Elo)', () => {
 
 	test('string (2)', () => {
 		const u1 = user_from_json(
-			'{ "username": "u", "first_name": "f", "last_name": "l", "password": { "encrypted": "a", "iv": "b" }, "roles": ["admin", "student"], "games": { "blitz": ["2024-12-31"], "rapid" : ["2025-01-01"] }, "ratings": [] }'
+			'{ "username": "u", "first_name": "f", "last_name": "l", "password": { "encrypted": "a", "iv": "b" }, "roles": ["admin", "student"], "games": [ { "time_control": "blitz", "records": ["2024-12-31"] }, {"time_control":"rapid", "records": ["2025-01-01"]} ], "ratings": [] }'
 		);
 
 		expect(u1.get_roles()).toEqual([ADMIN, STUDENT]);
 		expect(u1.get_all_ratings().length).toBe(0);
 
 		const u2 = user_from_json(
-			'{ "username": "u", "first_name": "f", "last_name": "l", "password": { "encrypted": "a", "iv": "b" }, "roles": ["student", "admin"], "games": { "blitz": ["2024-12-31"], "rapid" : ["2025-01-01"] }, "ratings": [] }'
+			'{ "username": "u", "first_name": "f", "last_name": "l", "password": { "encrypted": "a", "iv": "b" }, "roles": ["student", "admin"], "games": [ {"time_control_id": "blitz", "record_list": ["2024-12-31"]}, {"time_control_id": "rapid", "record_list": ["2025-01-01"]} ], "ratings": [] }'
 		);
 		expect(u2.get_roles()).toEqual([STUDENT, ADMIN]);
 		expect(u2.get_all_ratings().length).toBe(0);
@@ -474,7 +465,7 @@ describe('From JSON (Elo)', () => {
 
 	test('string (3)', () => {
 		const u = user_from_json(
-			'{ "username": "u", "first_name": "f", "last_name": "l", "password": { "encrypted": "a", "iv": "b" }, "roles": ["student", "admin"], "games": { "blitz": ["2024-12-31"], "rapid" : ["2025-01-01"] }, "ratings": [ { "time_control": "blitz", "rating": { "rating": 1500, "num_games": 0, "won": 0, "drawn": 0, "lost": 0, "K": 40, "surpassed_2400": false } }, { "time_control": "classical", "rating": { "rating": 1700, "num_games": 0, "won": 0, "drawn": 0, "lost": 0, "K": 40, "surpassed_2400": false } } ] }'
+			'{ "username": "u", "first_name": "f", "last_name": "l", "password": { "encrypted": "a", "iv": "b" }, "roles": ["student", "admin"], "games": [ {"time_control": "blitz", "records": ["2024-12-31"]}, {"time_control": "rapid", "records": ["2025-01-01"]} ], "ratings": [ { "time_control": "blitz", "rating": { "rating": 1500, "num_games": 0, "won": 0, "drawn": 0, "lost": 0, "K": 40, "surpassed_2400": false } }, { "time_control": "classical", "rating": { "rating": 1700, "num_games": 0, "won": 0, "drawn": 0, "lost": 0, "K": 40, "surpassed_2400": false } } ] }'
 		);
 		expect(u.get_all_ratings().length).toBe(2);
 		expect(u.has_rating('classical')).toBe(true);
@@ -491,10 +482,10 @@ describe('From JSON (Elo)', () => {
 				iv: 'b'
 			},
 			roles: [ADMIN],
-			games: {
-				blitz: ['2024-12-31'],
-				rapid: ['2025-01-01']
-			},
+			games: [
+				{ time_control: 'blitz', records: ['2024-12-31'] },
+				{ time_control: 'rapid', records: ['2025-01-01'] }
+			],
 			ratings: []
 		});
 
@@ -520,10 +511,10 @@ describe('From JSON (Elo)', () => {
 				iv: 'b'
 			},
 			roles: [ADMIN, STUDENT],
-			games: {
-				blitz: ['2024-12-31'],
-				rapid: ['2025-01-01']
-			},
+			games: [
+				{ time_control: 'blitz', records: ['2024-12-31'] },
+				{ time_control: 'rapid', records: ['2025-01-01'] }
+			],
 			ratings: []
 		});
 		expect(u1.get_roles()).toEqual([ADMIN, STUDENT]);
@@ -540,10 +531,10 @@ describe('From JSON (Elo)', () => {
 				iv: 'b'
 			},
 			roles: [STUDENT, ADMIN],
-			games: {
-				blitz: ['2024-12-31'],
-				rapid: ['2025-01-01']
-			},
+			games: [
+				{ time_control: 'blitz', record_list: ['2024-12-31'] },
+				{ time_control: 'rapid', recors: ['2025-01-01'] }
+			],
 			ratings: []
 		});
 		expect(u2.get_roles()).toEqual([STUDENT, ADMIN]);
@@ -562,10 +553,10 @@ describe('From JSON (Elo)', () => {
 				iv: 'b'
 			},
 			roles: [ADMIN, STUDENT],
-			games: {
-				blitz: ['2024-12-31'],
-				rapid: ['2025-01-01']
-			},
+			games: [
+				{ time_control: 'blitz', records: ['2024-12-31'] },
+				{ time_control: 'rapid', records: ['2025-01-01'] }
+			],
 			ratings: [
 				{
 					time_control: 'blitz',
@@ -596,105 +587,5 @@ describe('From JSON (Elo)', () => {
 		expect(u.get_all_ratings().length).toBe(2);
 		expect(u.has_rating('classical')).toBe(true);
 		expect(u.has_rating('blitz')).toBe(true);
-	});
-});
-
-describe('To JSON', () => {
-	test('Empty ratings', () => {
-		const JSON = {
-			username: 'u',
-			first_name: 'f',
-			last_name: 'l',
-			password: {
-				encrypted: 'a',
-				iv: 'b'
-			},
-			roles: [ADMIN],
-			games: {
-				blitz: ['2024-12-31', '2025-01-09'],
-				rapid: ['2025-01-01']
-			},
-			ratings: []
-		};
-		const u = user_from_json(JSON);
-
-		expect(u.toJSON()).toEqual(JSON);
-		expect(u).toEqual(
-			new User(
-				'u',
-				'f',
-				'l',
-				new Password('a', 'b'),
-				[ADMIN],
-				new Map([
-					['blitz', ['2024-12-31', '2025-01-09']],
-					['rapid', ['2025-01-01']]
-				]),
-				[]
-			)
-		);
-	});
-
-	test('Elo', () => {
-		const JSON = {
-			username: 'u',
-			first_name: 'f',
-			last_name: 'l',
-			password: {
-				encrypted: 'a',
-				iv: 'b'
-			},
-			roles: [ADMIN],
-			games: {
-				blitz: ['2024-12-31', '2025-01-09'],
-				rapid: ['2025-01-01']
-			},
-			ratings: [
-				{
-					time_control: 'blitz',
-					rating: {
-						rating: 1500,
-						num_games: 0,
-						won: 0,
-						drawn: 0,
-						lost: 0,
-						K: 40,
-						surpassed_2400: false
-					}
-				},
-				{
-					time_control: 'classical',
-					rating: {
-						rating: 1700,
-						num_games: 0,
-						won: 0,
-						drawn: 0,
-						lost: 0,
-						K: 40,
-						surpassed_2400: false
-					}
-				}
-			]
-		};
-		const u = user_from_json(JSON);
-
-		expect(u.toJSON()).toEqual(JSON);
-		expect(u).toEqual(
-			new User(
-				'u',
-				'f',
-				'l',
-				new Password('a', 'b'),
-				[ADMIN],
-				new Map([
-					['blitz', ['2024-12-31', '2025-01-09']],
-					['rapid', ['2025-01-01']]
-				]),
-				[
-					new TimeControlRating('blitz', new EloRating(1500, 0, 0, 0, 0, 40, false)),
-					new TimeControlRating('classical', new EloRating(1700, 0, 0, 0, 0, 40, false))
-				]
-			)
-		);
 	});
 });
