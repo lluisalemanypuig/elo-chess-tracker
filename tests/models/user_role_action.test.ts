@@ -34,23 +34,23 @@ import {
 	CHALLENGE_STUDENT,
 	CHALLENGE_TEACHER,
 	CHALLENGE_USER,
-	CREATE_GAME,
+	CREATE_GAMES,
 	CREATE_USER,
 	EDIT_ADMIN,
-	EDIT_ADMIN_GAMES,
 	EDIT_MEMBER,
-	EDIT_MEMBER_GAMES,
 	EDIT_STUDENT,
-	EDIT_STUDENT_GAMES,
 	EDIT_TEACHER,
-	EDIT_TEACHER_GAMES,
 	EDIT_USER,
-	EDIT_USER_GAMES,
-	SEE_ADMIN_GAMES,
-	SEE_MEMBER_GAMES,
-	SEE_STUDENT_GAMES,
-	SEE_TEACHER_GAMES,
-	SEE_USER_GAMES
+	EDIT_GAMES_ADMIN,
+	EDIT_GAMES_MEMBER,
+	EDIT_GAMES_STUDENT,
+	EDIT_GAMES_TEACHER,
+	EDIT_GAMES_USER,
+	SEE_GAMES_ADMIN,
+	SEE_GAMES_MEMBER,
+	SEE_GAMES_STUDENT,
+	SEE_GAMES_TEACHER,
+	SEE_GAMES_USER
 } from '../../src-server/models/user_action';
 import { ADMIN, MEMBER, STUDENT, TEACHER } from '../../src-server/models/user_role';
 import { initialize_permissions, UserRoleToUserAction } from '../../src-server/models/user_role_action';
@@ -67,27 +67,27 @@ describe('Actions allowed per user (single role)', () => {
 		});
 
 		expect(rel.role_includes_action(ADMIN, CREATE_USER)).toBe(false);
-		expect(rel.role_includes_action(ADMIN, CREATE_GAME)).toBe(false);
+		expect(rel.role_includes_action(ADMIN, CREATE_GAMES)).toBe(false);
 		expect(rel.role_includes_action(ADMIN, EDIT_USER)).toBe(true);
 		expect(rel.role_includes_action(ADMIN, EDIT_ADMIN)).toBe(false);
 		expect(rel.role_includes_action(ADMIN, EDIT_TEACHER)).toBe(true);
 		expect(rel.role_includes_action(ADMIN, EDIT_MEMBER)).toBe(false);
 		expect(rel.role_includes_action(ADMIN, EDIT_STUDENT)).toBe(false);
-		expect(rel.role_includes_action(ADMIN, EDIT_USER_GAMES)).toBe(false);
-		expect(rel.role_includes_action(ADMIN, EDIT_ADMIN_GAMES)).toBe(false);
-		expect(rel.role_includes_action(ADMIN, EDIT_TEACHER_GAMES)).toBe(false);
-		expect(rel.role_includes_action(ADMIN, EDIT_MEMBER_GAMES)).toBe(false);
-		expect(rel.role_includes_action(ADMIN, EDIT_STUDENT_GAMES)).toBe(false);
+		expect(rel.role_includes_action(ADMIN, EDIT_GAMES_USER)).toBe(false);
+		expect(rel.role_includes_action(ADMIN, EDIT_GAMES_ADMIN)).toBe(false);
+		expect(rel.role_includes_action(ADMIN, EDIT_GAMES_TEACHER)).toBe(false);
+		expect(rel.role_includes_action(ADMIN, EDIT_GAMES_MEMBER)).toBe(false);
+		expect(rel.role_includes_action(ADMIN, EDIT_GAMES_STUDENT)).toBe(false);
 		expect(rel.role_includes_action(ADMIN, ASSIGN_ROLE_USER)).toBe(false);
 		expect(rel.role_includes_action(ADMIN, ASSIGN_ROLE_ADMIN)).toBe(false);
 		expect(rel.role_includes_action(ADMIN, ASSIGN_ROLE_TEACHER)).toBe(false);
 		expect(rel.role_includes_action(ADMIN, ASSIGN_ROLE_MEMBER)).toBe(false);
 		expect(rel.role_includes_action(ADMIN, ASSIGN_ROLE_STUDENT)).toBe(false);
-		expect(rel.role_includes_action(ADMIN, SEE_USER_GAMES)).toBe(false);
-		expect(rel.role_includes_action(ADMIN, SEE_ADMIN_GAMES)).toBe(false);
-		expect(rel.role_includes_action(ADMIN, SEE_TEACHER_GAMES)).toBe(false);
-		expect(rel.role_includes_action(ADMIN, SEE_MEMBER_GAMES)).toBe(false);
-		expect(rel.role_includes_action(ADMIN, SEE_STUDENT_GAMES)).toBe(false);
+		expect(rel.role_includes_action(ADMIN, SEE_GAMES_USER)).toBe(false);
+		expect(rel.role_includes_action(ADMIN, SEE_GAMES_ADMIN)).toBe(false);
+		expect(rel.role_includes_action(ADMIN, SEE_GAMES_TEACHER)).toBe(false);
+		expect(rel.role_includes_action(ADMIN, SEE_GAMES_MEMBER)).toBe(false);
+		expect(rel.role_includes_action(ADMIN, SEE_GAMES_STUDENT)).toBe(false);
 		expect(rel.role_includes_action(ADMIN, CHALLENGE_USER)).toBe(false);
 		expect(rel.role_includes_action(ADMIN, CHALLENGE_ADMIN)).toBe(false);
 		expect(rel.role_includes_action(ADMIN, CHALLENGE_MEMBER)).toBe(false);
@@ -106,27 +106,27 @@ describe('Actions allowed per user (single role)', () => {
 		});
 
 		expect(rel.role_includes_action(TEACHER, CREATE_USER)).toBe(false);
-		expect(rel.role_includes_action(TEACHER, CREATE_GAME)).toBe(false);
+		expect(rel.role_includes_action(TEACHER, CREATE_GAMES)).toBe(false);
 		expect(rel.role_includes_action(TEACHER, EDIT_USER)).toBe(false);
 		expect(rel.role_includes_action(TEACHER, EDIT_ADMIN)).toBe(false);
 		expect(rel.role_includes_action(TEACHER, EDIT_TEACHER)).toBe(false);
 		expect(rel.role_includes_action(TEACHER, EDIT_MEMBER)).toBe(false);
 		expect(rel.role_includes_action(TEACHER, EDIT_STUDENT)).toBe(false);
-		expect(rel.role_includes_action(TEACHER, EDIT_USER_GAMES)).toBe(false);
-		expect(rel.role_includes_action(TEACHER, EDIT_ADMIN_GAMES)).toBe(false);
-		expect(rel.role_includes_action(TEACHER, EDIT_TEACHER_GAMES)).toBe(false);
-		expect(rel.role_includes_action(TEACHER, EDIT_MEMBER_GAMES)).toBe(false);
-		expect(rel.role_includes_action(TEACHER, EDIT_STUDENT_GAMES)).toBe(false);
+		expect(rel.role_includes_action(TEACHER, EDIT_GAMES_USER)).toBe(false);
+		expect(rel.role_includes_action(TEACHER, EDIT_GAMES_ADMIN)).toBe(false);
+		expect(rel.role_includes_action(TEACHER, EDIT_GAMES_TEACHER)).toBe(false);
+		expect(rel.role_includes_action(TEACHER, EDIT_GAMES_MEMBER)).toBe(false);
+		expect(rel.role_includes_action(TEACHER, EDIT_GAMES_STUDENT)).toBe(false);
 		expect(rel.role_includes_action(TEACHER, ASSIGN_ROLE_USER)).toBe(true);
 		expect(rel.role_includes_action(TEACHER, ASSIGN_ROLE_ADMIN)).toBe(false);
 		expect(rel.role_includes_action(TEACHER, ASSIGN_ROLE_TEACHER)).toBe(false);
 		expect(rel.role_includes_action(TEACHER, ASSIGN_ROLE_MEMBER)).toBe(true);
 		expect(rel.role_includes_action(TEACHER, ASSIGN_ROLE_STUDENT)).toBe(false);
-		expect(rel.role_includes_action(TEACHER, SEE_USER_GAMES)).toBe(false);
-		expect(rel.role_includes_action(TEACHER, SEE_ADMIN_GAMES)).toBe(false);
-		expect(rel.role_includes_action(TEACHER, SEE_TEACHER_GAMES)).toBe(false);
-		expect(rel.role_includes_action(TEACHER, SEE_MEMBER_GAMES)).toBe(false);
-		expect(rel.role_includes_action(TEACHER, SEE_STUDENT_GAMES)).toBe(false);
+		expect(rel.role_includes_action(TEACHER, SEE_GAMES_USER)).toBe(false);
+		expect(rel.role_includes_action(TEACHER, SEE_GAMES_ADMIN)).toBe(false);
+		expect(rel.role_includes_action(TEACHER, SEE_GAMES_TEACHER)).toBe(false);
+		expect(rel.role_includes_action(TEACHER, SEE_GAMES_MEMBER)).toBe(false);
+		expect(rel.role_includes_action(TEACHER, SEE_GAMES_STUDENT)).toBe(false);
 		expect(rel.role_includes_action(TEACHER, CHALLENGE_USER)).toBe(false);
 		expect(rel.role_includes_action(TEACHER, CHALLENGE_ADMIN)).toBe(false);
 		expect(rel.role_includes_action(TEACHER, CHALLENGE_MEMBER)).toBe(false);
@@ -140,32 +140,32 @@ describe('Actions allowed per user (single role)', () => {
 		initialize_permissions({
 			admin: [],
 			teacher: [],
-			student: [CREATE_USER, CREATE_GAME],
+			student: [CREATE_USER, CREATE_GAMES],
 			member: []
 		});
 
 		expect(rel.role_includes_action(STUDENT, CREATE_USER)).toBe(true);
-		expect(rel.role_includes_action(STUDENT, CREATE_GAME)).toBe(true);
+		expect(rel.role_includes_action(STUDENT, CREATE_GAMES)).toBe(true);
 		expect(rel.role_includes_action(STUDENT, EDIT_USER)).toBe(false);
 		expect(rel.role_includes_action(STUDENT, EDIT_ADMIN)).toBe(false);
 		expect(rel.role_includes_action(STUDENT, EDIT_TEACHER)).toBe(false);
 		expect(rel.role_includes_action(STUDENT, EDIT_MEMBER)).toBe(false);
 		expect(rel.role_includes_action(STUDENT, EDIT_STUDENT)).toBe(false);
-		expect(rel.role_includes_action(STUDENT, EDIT_USER_GAMES)).toBe(false);
-		expect(rel.role_includes_action(STUDENT, EDIT_ADMIN_GAMES)).toBe(false);
-		expect(rel.role_includes_action(STUDENT, EDIT_TEACHER_GAMES)).toBe(false);
-		expect(rel.role_includes_action(STUDENT, EDIT_MEMBER_GAMES)).toBe(false);
-		expect(rel.role_includes_action(STUDENT, EDIT_STUDENT_GAMES)).toBe(false);
+		expect(rel.role_includes_action(STUDENT, EDIT_GAMES_USER)).toBe(false);
+		expect(rel.role_includes_action(STUDENT, EDIT_GAMES_ADMIN)).toBe(false);
+		expect(rel.role_includes_action(STUDENT, EDIT_GAMES_TEACHER)).toBe(false);
+		expect(rel.role_includes_action(STUDENT, EDIT_GAMES_MEMBER)).toBe(false);
+		expect(rel.role_includes_action(STUDENT, EDIT_GAMES_STUDENT)).toBe(false);
 		expect(rel.role_includes_action(STUDENT, ASSIGN_ROLE_USER)).toBe(false);
 		expect(rel.role_includes_action(STUDENT, ASSIGN_ROLE_ADMIN)).toBe(false);
 		expect(rel.role_includes_action(STUDENT, ASSIGN_ROLE_TEACHER)).toBe(false);
 		expect(rel.role_includes_action(STUDENT, ASSIGN_ROLE_MEMBER)).toBe(false);
 		expect(rel.role_includes_action(STUDENT, ASSIGN_ROLE_STUDENT)).toBe(false);
-		expect(rel.role_includes_action(STUDENT, SEE_USER_GAMES)).toBe(false);
-		expect(rel.role_includes_action(STUDENT, SEE_ADMIN_GAMES)).toBe(false);
-		expect(rel.role_includes_action(STUDENT, SEE_TEACHER_GAMES)).toBe(false);
-		expect(rel.role_includes_action(STUDENT, SEE_MEMBER_GAMES)).toBe(false);
-		expect(rel.role_includes_action(STUDENT, SEE_STUDENT_GAMES)).toBe(false);
+		expect(rel.role_includes_action(STUDENT, SEE_GAMES_USER)).toBe(false);
+		expect(rel.role_includes_action(STUDENT, SEE_GAMES_ADMIN)).toBe(false);
+		expect(rel.role_includes_action(STUDENT, SEE_GAMES_TEACHER)).toBe(false);
+		expect(rel.role_includes_action(STUDENT, SEE_GAMES_MEMBER)).toBe(false);
+		expect(rel.role_includes_action(STUDENT, SEE_GAMES_STUDENT)).toBe(false);
 		expect(rel.role_includes_action(STUDENT, CHALLENGE_USER)).toBe(false);
 		expect(rel.role_includes_action(STUDENT, CHALLENGE_ADMIN)).toBe(false);
 		expect(rel.role_includes_action(STUDENT, CHALLENGE_MEMBER)).toBe(false);
@@ -184,27 +184,27 @@ describe('Actions allowed per user (single role)', () => {
 		});
 
 		expect(rel.role_includes_action(MEMBER, CREATE_USER)).toBe(false);
-		expect(rel.role_includes_action(MEMBER, CREATE_GAME)).toBe(false);
+		expect(rel.role_includes_action(MEMBER, CREATE_GAMES)).toBe(false);
 		expect(rel.role_includes_action(MEMBER, EDIT_USER)).toBe(false);
 		expect(rel.role_includes_action(MEMBER, EDIT_ADMIN)).toBe(false);
 		expect(rel.role_includes_action(MEMBER, EDIT_TEACHER)).toBe(false);
 		expect(rel.role_includes_action(MEMBER, EDIT_MEMBER)).toBe(false);
 		expect(rel.role_includes_action(MEMBER, EDIT_STUDENT)).toBe(false);
-		expect(rel.role_includes_action(MEMBER, EDIT_USER_GAMES)).toBe(false);
-		expect(rel.role_includes_action(MEMBER, EDIT_ADMIN_GAMES)).toBe(false);
-		expect(rel.role_includes_action(MEMBER, EDIT_TEACHER_GAMES)).toBe(false);
-		expect(rel.role_includes_action(MEMBER, EDIT_MEMBER_GAMES)).toBe(false);
-		expect(rel.role_includes_action(MEMBER, EDIT_STUDENT_GAMES)).toBe(false);
+		expect(rel.role_includes_action(MEMBER, EDIT_GAMES_USER)).toBe(false);
+		expect(rel.role_includes_action(MEMBER, EDIT_GAMES_ADMIN)).toBe(false);
+		expect(rel.role_includes_action(MEMBER, EDIT_GAMES_TEACHER)).toBe(false);
+		expect(rel.role_includes_action(MEMBER, EDIT_GAMES_MEMBER)).toBe(false);
+		expect(rel.role_includes_action(MEMBER, EDIT_GAMES_STUDENT)).toBe(false);
 		expect(rel.role_includes_action(MEMBER, ASSIGN_ROLE_USER)).toBe(false);
 		expect(rel.role_includes_action(MEMBER, ASSIGN_ROLE_ADMIN)).toBe(false);
 		expect(rel.role_includes_action(MEMBER, ASSIGN_ROLE_TEACHER)).toBe(false);
 		expect(rel.role_includes_action(MEMBER, ASSIGN_ROLE_MEMBER)).toBe(false);
 		expect(rel.role_includes_action(MEMBER, ASSIGN_ROLE_STUDENT)).toBe(false);
-		expect(rel.role_includes_action(MEMBER, SEE_USER_GAMES)).toBe(false);
-		expect(rel.role_includes_action(MEMBER, SEE_ADMIN_GAMES)).toBe(false);
-		expect(rel.role_includes_action(MEMBER, SEE_TEACHER_GAMES)).toBe(false);
-		expect(rel.role_includes_action(MEMBER, SEE_MEMBER_GAMES)).toBe(false);
-		expect(rel.role_includes_action(MEMBER, SEE_STUDENT_GAMES)).toBe(false);
+		expect(rel.role_includes_action(MEMBER, SEE_GAMES_USER)).toBe(false);
+		expect(rel.role_includes_action(MEMBER, SEE_GAMES_ADMIN)).toBe(false);
+		expect(rel.role_includes_action(MEMBER, SEE_GAMES_TEACHER)).toBe(false);
+		expect(rel.role_includes_action(MEMBER, SEE_GAMES_MEMBER)).toBe(false);
+		expect(rel.role_includes_action(MEMBER, SEE_GAMES_STUDENT)).toBe(false);
 		expect(rel.role_includes_action(MEMBER, CHALLENGE_USER)).toBe(true);
 		expect(rel.role_includes_action(MEMBER, CHALLENGE_ADMIN)).toBe(true);
 		expect(rel.role_includes_action(MEMBER, CHALLENGE_MEMBER)).toBe(false);
@@ -225,27 +225,27 @@ describe('Actions allowed per user (multiple roles)', () => {
 		});
 
 		expect(rel.role_includes_action(ADMIN, CREATE_USER)).toBe(false);
-		expect(rel.role_includes_action(ADMIN, CREATE_GAME)).toBe(false);
+		expect(rel.role_includes_action(ADMIN, CREATE_GAMES)).toBe(false);
 		expect(rel.role_includes_action(ADMIN, EDIT_USER)).toBe(true);
 		expect(rel.role_includes_action(ADMIN, EDIT_ADMIN)).toBe(false);
 		expect(rel.role_includes_action(ADMIN, EDIT_TEACHER)).toBe(true);
 		expect(rel.role_includes_action(ADMIN, EDIT_MEMBER)).toBe(false);
 		expect(rel.role_includes_action(ADMIN, EDIT_STUDENT)).toBe(false);
-		expect(rel.role_includes_action(ADMIN, EDIT_USER_GAMES)).toBe(false);
-		expect(rel.role_includes_action(ADMIN, EDIT_ADMIN_GAMES)).toBe(false);
-		expect(rel.role_includes_action(ADMIN, EDIT_TEACHER_GAMES)).toBe(false);
-		expect(rel.role_includes_action(ADMIN, EDIT_MEMBER_GAMES)).toBe(false);
-		expect(rel.role_includes_action(ADMIN, EDIT_STUDENT_GAMES)).toBe(false);
+		expect(rel.role_includes_action(ADMIN, EDIT_GAMES_USER)).toBe(false);
+		expect(rel.role_includes_action(ADMIN, EDIT_GAMES_ADMIN)).toBe(false);
+		expect(rel.role_includes_action(ADMIN, EDIT_GAMES_TEACHER)).toBe(false);
+		expect(rel.role_includes_action(ADMIN, EDIT_GAMES_MEMBER)).toBe(false);
+		expect(rel.role_includes_action(ADMIN, EDIT_GAMES_STUDENT)).toBe(false);
 		expect(rel.role_includes_action(ADMIN, ASSIGN_ROLE_USER)).toBe(false);
 		expect(rel.role_includes_action(ADMIN, ASSIGN_ROLE_ADMIN)).toBe(false);
 		expect(rel.role_includes_action(ADMIN, ASSIGN_ROLE_TEACHER)).toBe(false);
 		expect(rel.role_includes_action(ADMIN, ASSIGN_ROLE_MEMBER)).toBe(false);
 		expect(rel.role_includes_action(ADMIN, ASSIGN_ROLE_STUDENT)).toBe(false);
-		expect(rel.role_includes_action(ADMIN, SEE_USER_GAMES)).toBe(false);
-		expect(rel.role_includes_action(ADMIN, SEE_ADMIN_GAMES)).toBe(false);
-		expect(rel.role_includes_action(ADMIN, SEE_TEACHER_GAMES)).toBe(false);
-		expect(rel.role_includes_action(ADMIN, SEE_MEMBER_GAMES)).toBe(false);
-		expect(rel.role_includes_action(ADMIN, SEE_STUDENT_GAMES)).toBe(false);
+		expect(rel.role_includes_action(ADMIN, SEE_GAMES_USER)).toBe(false);
+		expect(rel.role_includes_action(ADMIN, SEE_GAMES_ADMIN)).toBe(false);
+		expect(rel.role_includes_action(ADMIN, SEE_GAMES_TEACHER)).toBe(false);
+		expect(rel.role_includes_action(ADMIN, SEE_GAMES_MEMBER)).toBe(false);
+		expect(rel.role_includes_action(ADMIN, SEE_GAMES_STUDENT)).toBe(false);
 		expect(rel.role_includes_action(ADMIN, CHALLENGE_USER)).toBe(false);
 		expect(rel.role_includes_action(ADMIN, CHALLENGE_ADMIN)).toBe(false);
 		expect(rel.role_includes_action(ADMIN, CHALLENGE_MEMBER)).toBe(false);
@@ -253,27 +253,27 @@ describe('Actions allowed per user (multiple roles)', () => {
 		expect(rel.role_includes_action(ADMIN, CHALLENGE_STUDENT)).toBe(false);
 
 		expect(rel.role_includes_action(STUDENT, CREATE_USER)).toBe(false);
-		expect(rel.role_includes_action(STUDENT, CREATE_GAME)).toBe(false);
+		expect(rel.role_includes_action(STUDENT, CREATE_GAMES)).toBe(false);
 		expect(rel.role_includes_action(STUDENT, EDIT_USER)).toBe(false);
 		expect(rel.role_includes_action(STUDENT, EDIT_ADMIN)).toBe(false);
 		expect(rel.role_includes_action(STUDENT, EDIT_TEACHER)).toBe(false);
 		expect(rel.role_includes_action(STUDENT, EDIT_MEMBER)).toBe(false);
 		expect(rel.role_includes_action(STUDENT, EDIT_STUDENT)).toBe(false);
-		expect(rel.role_includes_action(STUDENT, EDIT_USER_GAMES)).toBe(false);
-		expect(rel.role_includes_action(STUDENT, EDIT_ADMIN_GAMES)).toBe(false);
-		expect(rel.role_includes_action(STUDENT, EDIT_TEACHER_GAMES)).toBe(false);
-		expect(rel.role_includes_action(STUDENT, EDIT_MEMBER_GAMES)).toBe(false);
-		expect(rel.role_includes_action(STUDENT, EDIT_STUDENT_GAMES)).toBe(false);
+		expect(rel.role_includes_action(STUDENT, EDIT_GAMES_USER)).toBe(false);
+		expect(rel.role_includes_action(STUDENT, EDIT_GAMES_ADMIN)).toBe(false);
+		expect(rel.role_includes_action(STUDENT, EDIT_GAMES_TEACHER)).toBe(false);
+		expect(rel.role_includes_action(STUDENT, EDIT_GAMES_MEMBER)).toBe(false);
+		expect(rel.role_includes_action(STUDENT, EDIT_GAMES_STUDENT)).toBe(false);
 		expect(rel.role_includes_action(STUDENT, ASSIGN_ROLE_USER)).toBe(false);
 		expect(rel.role_includes_action(STUDENT, ASSIGN_ROLE_ADMIN)).toBe(false);
 		expect(rel.role_includes_action(STUDENT, ASSIGN_ROLE_TEACHER)).toBe(false);
 		expect(rel.role_includes_action(STUDENT, ASSIGN_ROLE_MEMBER)).toBe(false);
 		expect(rel.role_includes_action(STUDENT, ASSIGN_ROLE_STUDENT)).toBe(false);
-		expect(rel.role_includes_action(STUDENT, SEE_USER_GAMES)).toBe(false);
-		expect(rel.role_includes_action(STUDENT, SEE_ADMIN_GAMES)).toBe(false);
-		expect(rel.role_includes_action(STUDENT, SEE_TEACHER_GAMES)).toBe(false);
-		expect(rel.role_includes_action(STUDENT, SEE_MEMBER_GAMES)).toBe(false);
-		expect(rel.role_includes_action(STUDENT, SEE_STUDENT_GAMES)).toBe(false);
+		expect(rel.role_includes_action(STUDENT, SEE_GAMES_USER)).toBe(false);
+		expect(rel.role_includes_action(STUDENT, SEE_GAMES_ADMIN)).toBe(false);
+		expect(rel.role_includes_action(STUDENT, SEE_GAMES_TEACHER)).toBe(false);
+		expect(rel.role_includes_action(STUDENT, SEE_GAMES_MEMBER)).toBe(false);
+		expect(rel.role_includes_action(STUDENT, SEE_GAMES_STUDENT)).toBe(false);
 		expect(rel.role_includes_action(STUDENT, CHALLENGE_USER)).toBe(true);
 		expect(rel.role_includes_action(STUDENT, CHALLENGE_ADMIN)).toBe(false);
 		expect(rel.role_includes_action(STUDENT, CHALLENGE_MEMBER)).toBe(false);
@@ -286,33 +286,33 @@ describe('Actions allowed per user (multiple roles)', () => {
 		rel.clear();
 		initialize_permissions({
 			admin: [],
-			teacher: [ASSIGN_ROLE_STUDENT, SEE_MEMBER_GAMES],
+			teacher: [ASSIGN_ROLE_STUDENT, SEE_GAMES_MEMBER],
 			student: [],
 			member: [CHALLENGE_STUDENT, CHALLENGE_TEACHER]
 		});
 
 		expect(rel.role_includes_action(TEACHER, CREATE_USER)).toBe(false);
-		expect(rel.role_includes_action(TEACHER, CREATE_GAME)).toBe(false);
+		expect(rel.role_includes_action(TEACHER, CREATE_GAMES)).toBe(false);
 		expect(rel.role_includes_action(TEACHER, EDIT_USER)).toBe(false);
 		expect(rel.role_includes_action(TEACHER, EDIT_ADMIN)).toBe(false);
 		expect(rel.role_includes_action(TEACHER, EDIT_TEACHER)).toBe(false);
 		expect(rel.role_includes_action(TEACHER, EDIT_MEMBER)).toBe(false);
 		expect(rel.role_includes_action(TEACHER, EDIT_STUDENT)).toBe(false);
-		expect(rel.role_includes_action(TEACHER, EDIT_USER_GAMES)).toBe(false);
-		expect(rel.role_includes_action(TEACHER, EDIT_ADMIN_GAMES)).toBe(false);
-		expect(rel.role_includes_action(TEACHER, EDIT_TEACHER_GAMES)).toBe(false);
-		expect(rel.role_includes_action(TEACHER, EDIT_MEMBER_GAMES)).toBe(false);
-		expect(rel.role_includes_action(TEACHER, EDIT_STUDENT_GAMES)).toBe(false);
+		expect(rel.role_includes_action(TEACHER, EDIT_GAMES_USER)).toBe(false);
+		expect(rel.role_includes_action(TEACHER, EDIT_GAMES_ADMIN)).toBe(false);
+		expect(rel.role_includes_action(TEACHER, EDIT_GAMES_TEACHER)).toBe(false);
+		expect(rel.role_includes_action(TEACHER, EDIT_GAMES_MEMBER)).toBe(false);
+		expect(rel.role_includes_action(TEACHER, EDIT_GAMES_STUDENT)).toBe(false);
 		expect(rel.role_includes_action(TEACHER, ASSIGN_ROLE_USER)).toBe(true);
 		expect(rel.role_includes_action(TEACHER, ASSIGN_ROLE_ADMIN)).toBe(false);
 		expect(rel.role_includes_action(TEACHER, ASSIGN_ROLE_TEACHER)).toBe(false);
 		expect(rel.role_includes_action(TEACHER, ASSIGN_ROLE_MEMBER)).toBe(false);
 		expect(rel.role_includes_action(TEACHER, ASSIGN_ROLE_STUDENT)).toBe(true);
-		expect(rel.role_includes_action(TEACHER, SEE_USER_GAMES)).toBe(true);
-		expect(rel.role_includes_action(TEACHER, SEE_ADMIN_GAMES)).toBe(false);
-		expect(rel.role_includes_action(TEACHER, SEE_TEACHER_GAMES)).toBe(false);
-		expect(rel.role_includes_action(TEACHER, SEE_MEMBER_GAMES)).toBe(true);
-		expect(rel.role_includes_action(TEACHER, SEE_STUDENT_GAMES)).toBe(false);
+		expect(rel.role_includes_action(TEACHER, SEE_GAMES_USER)).toBe(true);
+		expect(rel.role_includes_action(TEACHER, SEE_GAMES_ADMIN)).toBe(false);
+		expect(rel.role_includes_action(TEACHER, SEE_GAMES_TEACHER)).toBe(false);
+		expect(rel.role_includes_action(TEACHER, SEE_GAMES_MEMBER)).toBe(true);
+		expect(rel.role_includes_action(TEACHER, SEE_GAMES_STUDENT)).toBe(false);
 		expect(rel.role_includes_action(TEACHER, CHALLENGE_USER)).toBe(false);
 		expect(rel.role_includes_action(TEACHER, CHALLENGE_ADMIN)).toBe(false);
 		expect(rel.role_includes_action(TEACHER, CHALLENGE_MEMBER)).toBe(false);
@@ -320,27 +320,27 @@ describe('Actions allowed per user (multiple roles)', () => {
 		expect(rel.role_includes_action(TEACHER, CHALLENGE_STUDENT)).toBe(false);
 
 		expect(rel.role_includes_action(MEMBER, CREATE_USER)).toBe(false);
-		expect(rel.role_includes_action(MEMBER, CREATE_GAME)).toBe(false);
+		expect(rel.role_includes_action(MEMBER, CREATE_GAMES)).toBe(false);
 		expect(rel.role_includes_action(MEMBER, EDIT_USER)).toBe(false);
 		expect(rel.role_includes_action(MEMBER, EDIT_ADMIN)).toBe(false);
 		expect(rel.role_includes_action(MEMBER, EDIT_TEACHER)).toBe(false);
 		expect(rel.role_includes_action(MEMBER, EDIT_MEMBER)).toBe(false);
 		expect(rel.role_includes_action(MEMBER, EDIT_STUDENT)).toBe(false);
-		expect(rel.role_includes_action(MEMBER, EDIT_USER_GAMES)).toBe(false);
-		expect(rel.role_includes_action(MEMBER, EDIT_ADMIN_GAMES)).toBe(false);
-		expect(rel.role_includes_action(MEMBER, EDIT_TEACHER_GAMES)).toBe(false);
-		expect(rel.role_includes_action(MEMBER, EDIT_MEMBER_GAMES)).toBe(false);
-		expect(rel.role_includes_action(MEMBER, EDIT_STUDENT_GAMES)).toBe(false);
+		expect(rel.role_includes_action(MEMBER, EDIT_GAMES_USER)).toBe(false);
+		expect(rel.role_includes_action(MEMBER, EDIT_GAMES_ADMIN)).toBe(false);
+		expect(rel.role_includes_action(MEMBER, EDIT_GAMES_TEACHER)).toBe(false);
+		expect(rel.role_includes_action(MEMBER, EDIT_GAMES_MEMBER)).toBe(false);
+		expect(rel.role_includes_action(MEMBER, EDIT_GAMES_STUDENT)).toBe(false);
 		expect(rel.role_includes_action(MEMBER, ASSIGN_ROLE_USER)).toBe(false);
 		expect(rel.role_includes_action(MEMBER, ASSIGN_ROLE_ADMIN)).toBe(false);
 		expect(rel.role_includes_action(MEMBER, ASSIGN_ROLE_TEACHER)).toBe(false);
 		expect(rel.role_includes_action(MEMBER, ASSIGN_ROLE_MEMBER)).toBe(false);
 		expect(rel.role_includes_action(MEMBER, ASSIGN_ROLE_STUDENT)).toBe(false);
-		expect(rel.role_includes_action(MEMBER, SEE_USER_GAMES)).toBe(false);
-		expect(rel.role_includes_action(MEMBER, SEE_ADMIN_GAMES)).toBe(false);
-		expect(rel.role_includes_action(MEMBER, SEE_TEACHER_GAMES)).toBe(false);
-		expect(rel.role_includes_action(MEMBER, SEE_MEMBER_GAMES)).toBe(false);
-		expect(rel.role_includes_action(MEMBER, SEE_STUDENT_GAMES)).toBe(false);
+		expect(rel.role_includes_action(MEMBER, SEE_GAMES_USER)).toBe(false);
+		expect(rel.role_includes_action(MEMBER, SEE_GAMES_ADMIN)).toBe(false);
+		expect(rel.role_includes_action(MEMBER, SEE_GAMES_TEACHER)).toBe(false);
+		expect(rel.role_includes_action(MEMBER, SEE_GAMES_MEMBER)).toBe(false);
+		expect(rel.role_includes_action(MEMBER, SEE_GAMES_STUDENT)).toBe(false);
 		expect(rel.role_includes_action(MEMBER, CHALLENGE_USER)).toBe(true);
 		expect(rel.role_includes_action(MEMBER, CHALLENGE_ADMIN)).toBe(false);
 		expect(rel.role_includes_action(MEMBER, CHALLENGE_MEMBER)).toBe(false);
