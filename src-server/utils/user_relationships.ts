@@ -31,20 +31,20 @@ import {
 	CHALLENGE_TEACHER,
 	CHALLENGE_USER,
 	EDIT_ADMIN,
-	EDIT_ADMIN_GAMES,
+	EDIT_GAMES_ADMIN,
 	EDIT_MEMBER,
-	EDIT_MEMBER_GAMES,
+	EDIT_GAMES_MEMBER,
 	EDIT_STUDENT,
-	EDIT_STUDENT_GAMES,
+	EDIT_GAMES_STUDENT,
 	EDIT_TEACHER,
-	EDIT_TEACHER_GAMES,
+	EDIT_GAMES_TEACHER,
 	EDIT_USER,
-	EDIT_USER_GAMES,
-	SEE_ADMIN_GAMES,
-	SEE_MEMBER_GAMES,
-	SEE_STUDENT_GAMES,
-	SEE_TEACHER_GAMES,
-	SEE_USER_GAMES
+	EDIT_GAMES_USER,
+	SEE_GAMES_ADMIN,
+	SEE_GAMES_MEMBER,
+	SEE_GAMES_STUDENT,
+	SEE_GAMES_TEACHER,
+	SEE_GAMES_USER
 } from '../models/user_action';
 import { ADMIN, MEMBER, STUDENT, TEACHER, UserRole } from '../models/user_role';
 
@@ -66,11 +66,11 @@ export function can_user_see_a_game(u: User, white: User, black: User): boolean 
 	};
 
 	return (
-		u.can_do(SEE_USER_GAMES) &&
-		((u.can_do(SEE_ADMIN_GAMES) && either_user_is(ADMIN)) ||
-			(u.can_do(SEE_TEACHER_GAMES) && either_user_is(TEACHER)) ||
-			(u.can_do(SEE_STUDENT_GAMES) && either_user_is(STUDENT)) ||
-			(u.can_do(SEE_MEMBER_GAMES) && either_user_is(MEMBER)))
+		u.can_do(SEE_GAMES_USER) &&
+		((u.can_do(SEE_GAMES_ADMIN) && either_user_is(ADMIN)) ||
+			(u.can_do(SEE_GAMES_TEACHER) && either_user_is(TEACHER)) ||
+			(u.can_do(SEE_GAMES_STUDENT) && either_user_is(STUDENT)) ||
+			(u.can_do(SEE_GAMES_MEMBER) && either_user_is(MEMBER)))
 	);
 }
 
@@ -81,11 +81,11 @@ export function can_user_edit_a_game(u: User, white: User, black: User): boolean
 	};
 
 	return (
-		u.can_do(EDIT_USER_GAMES) &&
-		((u.can_do(EDIT_ADMIN_GAMES) && either_user_is(ADMIN)) ||
-			(u.can_do(EDIT_TEACHER_GAMES) && either_user_is(TEACHER)) ||
-			(u.can_do(EDIT_STUDENT_GAMES) && either_user_is(STUDENT)) ||
-			(u.can_do(EDIT_MEMBER_GAMES) && either_user_is(MEMBER)))
+		u.can_do(EDIT_GAMES_USER) &&
+		((u.can_do(EDIT_GAMES_ADMIN) && either_user_is(ADMIN)) ||
+			(u.can_do(EDIT_GAMES_TEACHER) && either_user_is(TEACHER)) ||
+			(u.can_do(EDIT_GAMES_STUDENT) && either_user_is(STUDENT)) ||
+			(u.can_do(EDIT_GAMES_MEMBER) && either_user_is(MEMBER)))
 	);
 }
 

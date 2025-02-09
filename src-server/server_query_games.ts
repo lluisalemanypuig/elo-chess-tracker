@@ -36,7 +36,7 @@ import { User } from './models/user';
 import { Game } from './models/game';
 import { RatingSystemManager } from './managers/rating_system_manager';
 import { EnvironmentManager } from './managers/environment_manager';
-import { SEE_USER_GAMES } from './models/user_action';
+import { SEE_GAMES_USER } from './models/user_action';
 import { SessionID } from './models/session_id';
 import { can_user_edit_a_game, can_user_see_a_game } from './utils/user_relationships';
 import { TimeControlID } from './models/time_control';
@@ -185,7 +185,7 @@ export async function get_query_games_list_all(req: any, res: any) {
 	}
 	const user = user_retrieve(session.username) as User;
 
-	if (!user.can_do(SEE_USER_GAMES)) {
+	if (!user.can_do(SEE_GAMES_USER)) {
 		res.send('403 - Forbidden');
 		return;
 	}

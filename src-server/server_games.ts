@@ -30,7 +30,7 @@ import path from 'path';
 
 import { DateStringShort, log_now } from './utils/time';
 import { is_user_logged_in } from './managers/session';
-import { CREATE_GAME, EDIT_USER_GAMES } from './models/user_action';
+import { CREATE_GAMES, EDIT_GAMES_USER } from './models/user_action';
 import { User } from './models/user';
 import { game_add_new, game_edit_result, game_find_by_id, recalculate_all_ratings } from './managers/games';
 import { Game, GameID, GameResult } from './models/game';
@@ -81,7 +81,7 @@ export async function get_games_create_page(req: any, res: any) {
 		return;
 	}
 
-	if (!(r[2] as User).can_do(CREATE_GAME)) {
+	if (!(r[2] as User).can_do(CREATE_GAMES)) {
 		debug(log_now(), `User '${session.username}' cannot create users.`);
 		res.send('403 - Forbidden');
 		return;
@@ -101,7 +101,7 @@ export async function post_games_create(req: any, res: any) {
 		return;
 	}
 
-	if (!(r[2] as User).can_do(CREATE_GAME)) {
+	if (!(r[2] as User).can_do(CREATE_GAMES)) {
 		debug(log_now(), `User '${session.username}' cannot create users.`);
 		res.send('403 - Forbidden');
 		return;
@@ -175,7 +175,7 @@ export async function post_games_edit_result(req: any, res: any) {
 	}
 
 	const user = r[2] as User;
-	if (!user.can_do(EDIT_USER_GAMES)) {
+	if (!user.can_do(EDIT_GAMES_USER)) {
 		debug(log_now(), `User '${session.username}' cannot create users.`);
 		res.send('403 - Forbidden');
 		return;
