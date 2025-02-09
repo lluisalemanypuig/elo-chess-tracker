@@ -39,7 +39,7 @@ import { ADMIN } from './models/user_role';
 import { SessionID } from './models/session_id';
 import { TimeControlID } from './models/time_control';
 import { GamesManager } from './managers/games_manager';
-import { can_user_edit_a_game } from './utils/user_relationships';
+import { can_user_create_a_game, can_user_edit_a_game } from './utils/user_relationships';
 import { UsersManager } from './managers/users_manager';
 
 export async function get_games_own_page(req: any, res: any) {
@@ -101,7 +101,8 @@ export async function post_games_create(req: any, res: any) {
 		return;
 	}
 
-	if (!(r[2] as User).can_do(CREATE_GAMES)) {
+	const creator = r[2] as User;
+	if (!creator.can_do(CREATE_GAMES)) {
 		debug(log_now(), `User '${session.username}' cannot create users.`);
 		res.send('403 - Forbidden');
 		return;
@@ -132,6 +133,12 @@ export async function post_games_create(req: any, res: any) {
 	const time_control_name = req.body.tc_n;
 	const game_date: DateStringShort = req.body.d;
 	const game_time: string = req.body.t; // HH:mm:ss:SSS
+
+	if (!can_user_create_a_game(creator, white, black)) {
+		debug(log_now(), `User cannot create this game.`);
+		res.send({ r: '0', reason: 'You do not have enough permissions to create this game' });
+		return;
+	}
 
 	debug(log_now(), `    White: '${white.get_username()}'`);
 	debug(log_now(), `    Black: '${black.get_username()}'`);

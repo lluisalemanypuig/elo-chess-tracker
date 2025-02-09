@@ -31,20 +31,25 @@ import {
 	CHALLENGE_TEACHER,
 	CHALLENGE_USER,
 	EDIT_ADMIN,
-	EDIT_GAMES_ADMIN,
 	EDIT_MEMBER,
-	EDIT_GAMES_MEMBER,
 	EDIT_STUDENT,
-	EDIT_GAMES_STUDENT,
 	EDIT_TEACHER,
-	EDIT_GAMES_TEACHER,
 	EDIT_USER,
+	EDIT_GAMES_ADMIN,
+	EDIT_GAMES_MEMBER,
+	EDIT_GAMES_STUDENT,
+	EDIT_GAMES_TEACHER,
 	EDIT_GAMES_USER,
 	SEE_GAMES_ADMIN,
 	SEE_GAMES_MEMBER,
 	SEE_GAMES_STUDENT,
 	SEE_GAMES_TEACHER,
-	SEE_GAMES_USER
+	SEE_GAMES_USER,
+	CREATE_GAMES,
+	CREATE_GAMES_ADMIN,
+	CREATE_GAMES_TEACHER,
+	CREATE_GAMES_STUDENT,
+	CREATE_GAMES_MEMBER
 } from '../models/user_action';
 import { ADMIN, MEMBER, STUDENT, TEACHER, UserRole } from '../models/user_role';
 
@@ -71,6 +76,21 @@ export function can_user_see_a_game(u: User, white: User, black: User): boolean 
 			(u.can_do(SEE_GAMES_TEACHER) && either_user_is(TEACHER)) ||
 			(u.can_do(SEE_GAMES_STUDENT) && either_user_is(STUDENT)) ||
 			(u.can_do(SEE_GAMES_MEMBER) && either_user_is(MEMBER)))
+	);
+}
+
+/// Can a user (@e u) create a game between two players (@e white and @e black)?
+export function can_user_create_a_game(u: User, white: User, black: User): boolean {
+	const either_user_is = function (r: UserRole): boolean {
+		return white.is(r) || black.is(r);
+	};
+
+	return (
+		u.can_do(CREATE_GAMES) &&
+		((u.can_do(CREATE_GAMES_ADMIN) && either_user_is(ADMIN)) ||
+			(u.can_do(CREATE_GAMES_TEACHER) && either_user_is(TEACHER)) ||
+			(u.can_do(CREATE_GAMES_STUDENT) && either_user_is(STUDENT)) ||
+			(u.can_do(CREATE_GAMES_MEMBER) && either_user_is(MEMBER)))
 	);
 }
 
