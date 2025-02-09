@@ -1,11 +1,23 @@
--   Add a UserAction that allows a user to create games only for certain types of
-    users.
-    CREATE_GAME // this already exists
+- Solve all TODO notes in the code
 
-        // new UserAction
-        CREATE_GAME_STUDENT
-        CREATE_GAME_TEACHER
-        CREATE_GAME_ADMIN
-        CREATE_GAME_MEMBER
+- Add a UserAction that allows a user to create games only for certain types of
+  users.
+  CREATE_GAME // this already exists
 
--   Add a function in the client to rebuild all the graphs in the server.
+  -   CREATE_GAME_STUDENT
+  -   CREATE_GAME_TEACHER
+  -   CREATE_GAME_ADMIN
+  -   CREATE_GAME_MEMBER
+
+- Add a function in the client to
+  -   Build all the graphs (one for each time control) in the server.
+  -   View one's own graph.
+  -   View the entire server graph -- with permission only.
+  -   View the graph of a specific user -- with permission only (see below)
+
+- Add new UserActions to allow a user to see the graph of other players
+  -   SEE_GRAPH
+  -   SEE_GRAPH_STUDENT
+  -   SEE_GRAPH_TEACHER
+  -   SEE_GRAPH_ADMIN
+  -   SEE_GRAPH_MEMBER
