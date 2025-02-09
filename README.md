@@ -215,9 +215,12 @@ Available actions are
 
     -   _create_user_
 
--   Creation of games
+-   Assignment of roles to another user
 
-    -   _create_game_: can create a game. This adds a game into the system even if the players involved are not aware of this.
+    -   _assign_role_admin_
+    -   _assign_role_teacher_
+    -   _assign_role_member_
+    -   _assign_role_student_
 
 -   Edition of users: to be able to edit user's information, except for passwords and ratings.
 
@@ -226,28 +229,28 @@ Available actions are
     -   _edit_member_
     -   _edit_student_
 
+-   Creation of games: to be able to create games between pairs of players. This is restricted to players of specific roles.
+
+    -   _create_games_admin_
+    -   _create_games_teacher_
+    -   _create_games_member_
+    -   _create_games_student_
+
 -   Edition of a user's game: to change the result of a game.
 
-    -   _edit_admin_games_
-    -   _edit_teacher_games_
-    -   _edit_member_games_
-    -   _edit_student_games_
+    -   _edit_games_admin_
+    -   _edit_games_teacher_
+    -   _edit_games_member_
+    -   _edit_games_student_
 
--   Assignment of roles to another user
+-   See another user's games.
 
-    -   _assign_role_admin_
-    -   _assign_role_teacher_
-    -   _assign_role_member_
-    -   _assign_role_student_
+    -   _see_games_admin_
+    -   _see_games_teacher_
+    -   _see_games_member_
+    -   _see_games_student_
 
--   See another user's games
-
-    -   _see_admin_games_
-    -   _see_teacher_games_
-    -   _see_member_games_
-    -   _see_student_games_
-
--   Challenge other users to a game
+-   Challenge other users to a game.
 
     -   _challenge_admin_
     -   _challenge_member_
