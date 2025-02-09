@@ -32,10 +32,11 @@ import { user_add_new } from '../../src-server/managers/users';
 import { ADMIN } from '../../src-server/models/user_role';
 import { run_command } from './exec_utils';
 import { EnvironmentManager } from '../../src-server/managers/environment_manager';
-import { Game, game_set_from_json } from '../../src-server/models/game';
+import { Game } from '../../src-server/models/game';
 import { User } from '../../src-server/models/user';
 import { DateStringShort } from '../../src-server/utils/time';
 import { UsersManager } from '../../src-server/managers/users_manager';
+import { game_set_from_json } from '../../src-server/io/game';
 
 const configuration = {
 	ssl_certificate: {

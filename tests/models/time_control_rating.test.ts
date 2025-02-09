@@ -23,11 +23,11 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
+import { TimeControlRating } from '../../src-server/models/time_control_rating';
 import {
 	time_control_rating_from_json,
-	time_control_rating_set_from_json,
-	TimeControlRating
-} from '../../src-server/models/time_control_rating';
+	time_control_rating_set_from_json
+} from '../../src-server/io/time_control_rating';
 import { EloRating } from '../../src-server/rating_framework/Elo/rating';
 import { initialize_rating_functions } from '../../src-server/managers/rating_system';
 

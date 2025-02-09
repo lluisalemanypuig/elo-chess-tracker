@@ -36,13 +36,14 @@ import {
 	user_retrieve,
 	user_update_from_players_data
 } from '../../src-server/managers/users';
-import { User, user_from_json } from '../../src-server/models/user';
+import { User } from '../../src-server/models/user';
 import { ADMIN, MEMBER, STUDENT, TEACHER } from '../../src-server/models/user_role';
 import { clear_server } from '../../src-server/managers/clear';
 import { run_command } from './exec_utils';
 import { Player } from '../../src-server/models/player';
 import { TimeControlRating } from '../../src-server/models/time_control_rating';
 import { EloRating } from '../../src-server/rating_framework/Elo/rating';
+import { user_from_json } from '../../src-server/io/user';
 
 const webpage_dir = 'tests/webpage';
 const db_dir = path.join(webpage_dir, 'database');

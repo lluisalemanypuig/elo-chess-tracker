@@ -24,7 +24,9 @@ Contact:
 */
 
 import { EdgeMetadata } from '../../../src-server/models/graph/edge_metadata';
-import { edge_from_json, Edge } from '../../../src-server/models/graph/edge';
+import { Edge } from '../../../src-server/models/graph/edge';
+
+import { edge_from_json } from '../../../src-server/io/graph/edge';
 
 describe('From JSON', () => {
 	test('string', () => {

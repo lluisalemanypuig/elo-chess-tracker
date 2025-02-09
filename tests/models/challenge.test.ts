@@ -23,7 +23,8 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { Challenge, challenge_from_json } from '../../src-server/models/challenge';
+import { challenge_from_json } from '../../src-server/io/challenge';
+import { Challenge } from '../../src-server/models/challenge';
 
 describe('Sets and gets', () => {
 	test('Constructor', () => {

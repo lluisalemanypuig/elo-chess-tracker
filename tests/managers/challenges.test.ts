@@ -43,8 +43,9 @@ import {
 	challenge_unset_result
 } from '../../src-server/managers/challenges';
 import { number_to_string } from '../../src-server/utils/misc';
-import { Challenge, challenge_from_json } from '../../src-server/models/challenge';
+import { Challenge } from '../../src-server/models/challenge';
 import { User } from '../../src-server/models/user';
+import { challenge_from_json } from '../../src-server/io/challenge';
 
 const webpage_dir = 'tests/webpage';
 const db_dir = path.join(webpage_dir, 'database');
