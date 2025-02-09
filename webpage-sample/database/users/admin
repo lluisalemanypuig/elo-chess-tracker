@@ -47,9 +47,18 @@
             }
         }
     ],
-    "games": {
-        "Classical": [],
-        "Rapid": [],
-        "Blitz": []
-    }
+    "games": [
+        {
+            "time_control": "Classical",
+            "records": []
+        },
+        {
+            "time_control": "Rapid",
+            "records": []
+        },
+        {
+            "time_control": "Blitz",
+            "records": []
+        }
+    ]
 }
