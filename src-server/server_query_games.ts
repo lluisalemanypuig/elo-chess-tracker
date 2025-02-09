@@ -61,6 +61,20 @@ function filter_game_list(filter_game_record: Function, filter_game: Function, u
 
 	const rating_system_manager = RatingSystemManager.get_instance();
 
+	/**
+	 * TODO: sort list of games by date. They are currently sorted by time control
+	 * id and then by date:
+	 *
+	 * 	Classical -- Newest
+	 * 	...
+	 * 	Classical -- Oldest
+	 * 	Blitz -- Newest
+	 * 	...
+	 * 	Blitz -- Oldest
+	 *
+	 * The order of the time control ids is unspecified
+	 */
+
 	for (const id of rating_system_manager.get_unique_time_controls_ids()) {
 		const games_id_dir = EnvironmentManager.get_instance().get_dir_games_time_control(id);
 
