@@ -21,3 +21,7 @@
   -   SEE_GRAPH_TEACHER
   -   SEE_GRAPH_ADMIN
   -   SEE_GRAPH_MEMBER
+
+- Update initialization tests to check graph reading
+
+- Update game creation tests with graph checking
