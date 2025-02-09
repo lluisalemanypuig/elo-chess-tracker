@@ -25,7 +25,7 @@ Contact:
 
 import { set_footer_version_number } from './client_load_version_number';
 import { ADMIN, user_role_to_string, UserRole } from '../src-server/models/user_role';
-import { CREATE_GAME, CREATE_USER, EDIT_USER, SEE_USER_GAMES } from '../src-server/models/user_action';
+import { CREATE_GAMES, CREATE_USER, EDIT_USER, SEE_GAMES_USER } from '../src-server/models/user_action';
 import { make_cookie_string } from '../src-server/utils/cookies';
 import { SessionID } from '../src-server/models/session_id';
 
@@ -78,13 +78,13 @@ function fill_action_links(user_actions: string[], user_roles: string[]) {
 		user_edit_link.text = 'Edit user';
 		action_links.appendChild(user_edit_link);
 	}
-	if (user_actions.includes(CREATE_GAME)) {
+	if (user_actions.includes(CREATE_GAMES)) {
 		let game_create_link = document.createElement('a') as HTMLAnchorElement;
 		game_create_link.href = '/games_create_page';
 		game_create_link.text = 'Create new game';
 		action_links.appendChild(game_create_link);
 	}
-	if (user_actions.includes(SEE_USER_GAMES)) {
+	if (user_actions.includes(SEE_GAMES_USER)) {
 		let see_user_games_link = document.createElement('a') as HTMLAnchorElement;
 		see_user_games_link.href = '/games_all_page';
 		see_user_games_link.text = 'See all games';
