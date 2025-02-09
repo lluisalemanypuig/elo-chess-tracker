@@ -1,14 +1,5 @@
 - Solve all TODO notes in the code
 
-- Add a UserAction that allows a user to create games only for certain types of
-  users.
-  CREATE_GAME // this already exists
-
-  -   CREATE_GAME_STUDENT
-  -   CREATE_GAME_TEACHER
-  -   CREATE_GAME_ADMIN
-  -   CREATE_GAME_MEMBER
-
 - Add a function in the client to
   -   Build all the graphs (one for each time control) in the server.
   -   View one's own graph.
