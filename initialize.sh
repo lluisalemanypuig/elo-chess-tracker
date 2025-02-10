@@ -29,6 +29,7 @@ rm -rf webpage/
 cp -r webpage-sample/ webpage/
 mkdir webpage/database/challenges
 mkdir webpage/database/games
+mkdir webpage/database/graphs
 mkdir webpage/ssl
 mkdir webpage/icons
 mv webpage/configuration_sample.json webpage/configuration.json
