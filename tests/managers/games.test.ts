@@ -34,7 +34,6 @@ import { run_command } from './exec_utils';
 import { EnvironmentManager } from '../../src-server/managers/environment_manager';
 import { Game } from '../../src-server/models/game';
 import { User } from '../../src-server/models/user';
-import { DateStringShort } from '../../src-server/utils/time';
 import { UsersManager } from '../../src-server/managers/users_manager';
 import { game_set_from_json } from '../../src-server/io/game';
 
@@ -1769,19 +1768,10 @@ describe('Edition of game results', () => {
 
 describe('Look for a game', () => {
 	test('"Blitz" games', () => {
-		const game_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Blitz');
-
 		{
-			const [game_record_set, game_file_path, game_set, game_record_set_idx, game_set_idx] = game_find_by_id(
-				'0000000001'
-			) as [DateStringShort[], string, Game[], number, number];
-
-			expect(game_record_set).toEqual(fs.readdirSync(game_dir));
-			expect(game_record_set[game_record_set_idx]).toEqual('2025-01-19');
-
-			expect(game_file_path).toEqual(path.join(game_dir, '2025-01-19'));
-
-			const game = game_set[game_set_idx];
+			const _game = game_find_by_id('0000000001');
+			expect(_game).not.toBe(undefined);
+			const game = _game as Game;
 			expect(game.get_id()).toEqual('0000000001');
 			expect(game.get_white()).toEqual('a');
 			expect(game.get_black()).toEqual('b');
@@ -1791,16 +1781,9 @@ describe('Look for a game', () => {
 		}
 
 		{
-			const [game_record_set, game_file_path, game_set, game_record_set_idx, game_set_idx] = game_find_by_id(
-				'0000000002'
-			) as [DateStringShort[], string, Game[], number, number];
-
-			expect(game_record_set).toEqual(fs.readdirSync(game_dir));
-			expect(game_record_set[game_record_set_idx]).toEqual('2025-01-19');
-
-			expect(game_file_path).toEqual(path.join(game_dir, '2025-01-19'));
-
-			const game = game_set[game_set_idx];
+			const _game = game_find_by_id('0000000002');
+			expect(_game).not.toBe(undefined);
+			const game = _game as Game;
 			expect(game.get_id()).toEqual('0000000002');
 			expect(game.get_white()).toEqual('c');
 			expect(game.get_black()).toEqual('d');
@@ -1810,16 +1793,9 @@ describe('Look for a game', () => {
 		}
 
 		{
-			const [game_record_set, game_file_path, game_set, game_record_set_idx, game_set_idx] = game_find_by_id(
-				'0000000020'
-			) as [DateStringShort[], string, Game[], number, number];
-
-			expect(game_record_set).toEqual(fs.readdirSync(game_dir));
-			expect(game_record_set[game_record_set_idx]).toEqual('2025-01-20');
-
-			expect(game_file_path).toEqual(path.join(game_dir, '2025-01-20'));
-
-			const game = game_set[game_set_idx];
+			const _game = game_find_by_id('0000000020');
+			expect(_game).not.toBe(undefined);
+			const game = _game as Game;
 			expect(game.get_id()).toEqual('0000000020');
 			expect(game.get_white()).toEqual('a');
 			expect(game.get_black()).toEqual('b');
@@ -1830,19 +1806,10 @@ describe('Look for a game', () => {
 	});
 
 	test('"Classical" games', () => {
-		const game_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Classical');
-
 		{
-			const [game_record_set, game_file_path, game_set, game_record_set_idx, game_set_idx] = game_find_by_id(
-				'0000000015'
-			) as [DateStringShort[], string, Game[], number, number];
-
-			expect(game_record_set).toEqual(fs.readdirSync(game_dir));
-			expect(game_record_set[game_record_set_idx]).toEqual('2025-01-20');
-
-			expect(game_file_path).toEqual(path.join(game_dir, '2025-01-20'));
-
-			const game = game_set[game_set_idx];
+			const _game = game_find_by_id('0000000015');
+			expect(_game).not.toBe(undefined);
+			const game = _game as Game;
 			expect(game.get_id()).toEqual('0000000015');
 			expect(game.get_white()).toEqual('c');
 			expect(game.get_black()).toEqual('d');
@@ -1852,16 +1819,9 @@ describe('Look for a game', () => {
 		}
 
 		{
-			const [game_record_set, game_file_path, game_set, game_record_set_idx, game_set_idx] = game_find_by_id(
-				'0000000021'
-			) as [DateStringShort[], string, Game[], number, number];
-
-			expect(game_record_set).toEqual(fs.readdirSync(game_dir));
-			expect(game_record_set[game_record_set_idx]).toEqual('2025-01-20');
-
-			expect(game_file_path).toEqual(path.join(game_dir, '2025-01-20'));
-
-			const game = game_set[game_set_idx];
+			const _game = game_find_by_id('0000000021');
+			expect(_game).not.toBe(undefined);
+			const game = _game as Game;
 			expect(game.get_id()).toEqual('0000000021');
 			expect(game.get_white()).toEqual('a');
 			expect(game.get_black()).toEqual('f');
@@ -1871,22 +1831,32 @@ describe('Look for a game', () => {
 		}
 
 		{
-			const [game_record_set, game_file_path, game_set, game_record_set_idx, game_set_idx] = game_find_by_id(
-				'0000000008'
-			) as [DateStringShort[], string, Game[], number, number];
-
-			expect(game_record_set).toEqual(fs.readdirSync(game_dir));
-			expect(game_record_set[game_record_set_idx]).toEqual('2025-01-19');
-
-			expect(game_file_path).toEqual(path.join(game_dir, '2025-01-19'));
-
-			const game = game_set[game_set_idx];
+			const _game = game_find_by_id('0000000008');
+			expect(_game).not.toBe(undefined);
+			const game = _game as Game;
 			expect(game.get_id()).toEqual('0000000008');
 			expect(game.get_white()).toEqual('a');
 			expect(game.get_black()).toEqual('f');
 			expect(game.get_result()).toEqual('black_wins');
 			expect(game.get_time_control_id()).toEqual('Classical');
 			expect(game.get_time_control_name()).toEqual('Classical (90 + 30)');
+		}
+	});
+
+	test('Nonexistent games', () => {
+		{
+			const _game = game_find_by_id('1200003433');
+			expect(_game).toBe(undefined);
+		}
+
+		{
+			const _game = game_find_by_id('1288883433');
+			expect(_game).toBe(undefined);
+		}
+
+		{
+			const _game = game_find_by_id('1299999433');
+			expect(_game).toBe(undefined);
 		}
 	});
 });
