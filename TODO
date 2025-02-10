@@ -16,5 +16,3 @@
 - Update initialization tests to check graph reading
 
 - Update game creation tests with graph checking
-
-- Write an iterator over games to simplify the code in src-server/managers/games.ts
