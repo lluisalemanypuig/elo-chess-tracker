@@ -1,6 +1,7 @@
 #!/bin/bash
 
 echo "Compiling..."
+mkdir -p js-source
 cd js-source
 rm -rf *
 cd ..
