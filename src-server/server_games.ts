@@ -33,7 +33,7 @@ import { is_user_logged_in } from './managers/session';
 import { CREATE_GAMES, EDIT_GAMES_USER } from './models/user_action';
 import { User } from './models/user';
 import { game_add_new, game_edit_result, game_find_by_id, recalculate_all_ratings } from './managers/games';
-import { Game, GameID, GameResult } from './models/game';
+import { GameID, GameResult } from './models/game';
 import { user_retrieve } from './managers/users';
 import { ADMIN } from './models/user_role';
 import { SessionID } from './models/session_id';
@@ -195,20 +195,16 @@ export async function post_games_edit_result(req: any, res: any) {
 	debug(log_now(), `    New result: '${new_result}'`);
 
 	if (!GamesManager.get_instance().game_exists(game_id)) {
-		res.send({ r: '0', reason: `Game with ID ${game_id} not found.` });
+		res.send({ r: '0', reason: `Game with ID ${game_id} was not found (1).` });
 		return;
 	}
 
-	const search_result = game_find_by_id(game_id);
-	const [_, __, game_set, ___, game_idx] = search_result as [
-		DateStringShort[],
-		DateStringShort,
-		Game[],
-		number,
-		number
-	];
+	const game = game_find_by_id(game_id);
+	if (game == undefined) {
+		res.send({ r: '0', reason: `Game with ID ${game_id} was not found (2).` });
+		return;
+	}
 
-	const game = game_set[game_idx];
 	const is_editable = can_user_edit_a_game(
 		user,
 		user_retrieve(game.get_white()) as User,

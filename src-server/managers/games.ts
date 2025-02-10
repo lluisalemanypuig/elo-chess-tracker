@@ -32,12 +32,7 @@ import { DateStringLongMillis, DateStringShort, log_now, long_date_to_short_date
 import { Player } from '../models/player';
 import { Game, GameID, GameResult } from '../models/game';
 import { User } from '../models/user';
-import {
-	search,
-	where_should_be_inserted,
-	search_linear_by_key,
-	where_should_be_inserted_by_key
-} from '../utils/searching';
+import { where_should_be_inserted } from '../utils/searching';
 import { GamesManager } from './games_manager';
 import { UsersManager } from './users_manager';
 import { RatingSystemManager } from './rating_system_manager';
@@ -47,7 +42,7 @@ import { Rating } from '../rating_framework/rating';
 import { TimeControlRating } from '../models/time_control_rating';
 import { TimeControlID } from '../models/time_control';
 import { graph_update } from './graphs';
-import { game_set_from_json } from '../io/game';
+import { GamesIterator } from './games_iterator';
 
 /// Returns g1 < g2 using dates
 function game_compare_dates(g1: Game, g2: Game): number {
@@ -60,11 +55,34 @@ function game_compare_dates(g1: Game, g2: Game): number {
 	return 1;
 }
 
-function read_game_date_record(game_record_id: DateStringShort): Game[] {
-	debug(log_now(), `Read game record file '${game_record_id}'...`);
-	const data = fs.readFileSync(game_record_id, 'utf8');
-	debug(log_now(), `    Game record '${game_record_id}' read.`);
-	return game_set_from_json(data);
+/// Return the game where player 'username' is involved with
+/// date after later than date 'when'.
+function game_next_of_player(
+	username: string,
+	time_control_id: TimeControlID,
+	when: DateStringLongMillis
+): Game | undefined {
+	const games_dir = EnvironmentManager.get_instance().get_dir_games_time_control(time_control_id);
+
+	// The file into which we have to add the new game.
+	const record_str = long_date_to_short_date(when);
+
+	let games_iter = new GamesIterator(games_dir);
+	let found = games_iter.locate_first_game_after(record_str, when);
+	if (!found) {
+		return undefined;
+	}
+
+	// TODO: optimize this function to only iterate over record files present in
+	// the user's data.
+	while (!games_iter.end_record_list()) {
+		const g = games_iter.get_current_game();
+		if (g.is_user_involved(username)) {
+			return g;
+		}
+		games_iter.next_game();
+	}
+	return undefined;
 }
 
 /// Creates a new game with no players using the parameters given
@@ -137,107 +155,6 @@ function game_new(
 	);
 }
 
-/// Return the game where player 'username' is involved with
-/// date after later than date 'when'.
-function game_next_of_player(
-	username: string,
-	time_control_id: TimeControlID,
-	when: DateStringLongMillis
-): Game | null {
-	debug(log_now(), `Find the game of user '${username}' right after date '${when}'`);
-
-	const games_dir = EnvironmentManager.get_instance().get_dir_games_time_control(time_control_id);
-
-	// The file into which we have to add the new game.
-	const date_record_str = long_date_to_short_date(when);
-	debug(log_now(), `    Date: '${date_record_str}'`);
-
-	// The files currently existing in the 'games_directory'
-	debug(log_now(), `Reading directory '${games_dir}'...`);
-	const all_date_record_strs = fs.readdirSync(games_dir);
-	debug(log_now(), `    Directory contents: '${all_date_record_strs}'`);
-
-	// There are no game records. There is no next game
-	if (all_date_record_strs.length == 0) {
-		return null;
-	}
-
-	// Does the record corresponding to the game exist?
-	let [idx_in_date_record_list, record_exists] = where_should_be_inserted(all_date_record_strs, date_record_str);
-
-	// there is no next game
-	if (idx_in_date_record_list == all_date_record_strs.length) {
-		return null;
-	}
-
-	if (record_exists) {
-		// Insert the current game in an existing record and update
-		// the games ahead of this game
-
-		const date_record_file: string = path.join(games_dir, date_record_str);
-		debug(log_now(), `Inspecting existing record '${date_record_file}'...`);
-		const game_set = read_game_date_record(date_record_file);
-
-		debug(
-			log_now(),
-			`    Record contains: '${game_set.map(function (elem): string {
-				return elem.get_date();
-			})}'`
-		);
-		debug(log_now(), `    Look for a game with date '${when}'`);
-
-		// where should the current game be inserted
-		const [game_idx, game_exists] = where_should_be_inserted_by_key(
-			// convert each game into a string
-			game_set,
-			when,
-			(g: Game): string => {
-				return g.get_date();
-			},
-			(when1: string, when2: string): number => {
-				return when1.localeCompare(when2);
-			}
-		);
-
-		debug(log_now(), `    Game exists? '${game_exists}'. At '${game_idx}'`);
-		if (game_exists) {
-			throw new Error(`Game already exists with date '${when}' at index ${game_idx}`);
-		}
-
-		// try to find the game in the game set
-		for (let i = game_idx; i < game_set.length; ++i) {
-			if (game_set[i].is_user_involved(username) && game_set[i].get_time_control_id() == time_control_id) {
-				return game_set[i];
-			}
-		}
-
-		// if the record already exists then 'record_index_in_list' points
-		// to the current game record, but we should update starting at the
-		// next record!
-		++idx_in_date_record_list;
-	}
-
-	debug(log_now(), 'Inspecting the rest of the records...');
-	for (let idx = idx_in_date_record_list; idx < all_date_record_strs.length; ++idx) {
-		const date_record_str = all_date_record_strs[idx];
-
-		// files already contain the '.json' extension
-		const date_record_file = path.join(games_dir, date_record_str);
-
-		// read and parse the next file
-		const game_set = read_game_date_record(date_record_file);
-
-		for (let i = 0; i < game_set.length; ++i) {
-			if (game_set[i].is_user_involved(username) && game_set[i].get_time_control_id() == time_control_id) {
-				return game_set[i];
-			}
-		}
-	}
-
-	// no 'next' game was found
-	return null;
-}
-
 function updated_player(time_control_id: TimeControlID, player: string, rating: Rating): Player {
 	let p = (user_retrieve(player) as User).clone();
 	p.set_rating(time_control_id, rating);
@@ -246,8 +163,7 @@ function updated_player(time_control_id: TimeControlID, player: string, rating: 
 
 /// Updates the given game record
 function update_game_record(
-	game_set: Game[],
-	start_at: number,
+	games_iter: GamesIterator,
 	time_control_id: TimeControlID,
 	updated_players: Player[],
 	player_to_index: Map<string, number>
@@ -256,18 +172,11 @@ function update_game_record(
 		return player_to_index.has(username);
 	};
 
-	for (let i = start_at; i < game_set.length; ++i) {
-		if (game_set[i].get_time_control_id() != time_control_id) {
-			continue;
-		}
+	while (!games_iter.end_record_single()) {
+		let g = games_iter.get_current_game();
 
-		debug(log_now(), `    Updating game '${i}'`);
-
-		const white = game_set[i].get_white();
-		const black = game_set[i].get_black();
-
-		const white_rating = game_set[i].get_white_rating();
-		const black_rating = game_set[i].get_black_rating();
+		const white = g.get_white();
+		const black = g.get_black();
 
 		// were White or Black updated in previous iterations?
 		const white_was_updated = was_updated(white);
@@ -278,25 +187,17 @@ function update_game_record(
 
 		// set the player information in the game to the most updated version
 		if (white_was_updated) {
-			debug(log_now(), `    White rating in the game: ${JSON.stringify(white_rating)}`);
-			debug(log_now(), `        White updated: ${JSON.stringify(updated_players[white_idx as number])}`);
-			game_set[i].set_white_rating(updated_players[white_idx as number].get_rating(time_control_id).clone());
-			debug(log_now(), `        White in the game: ${JSON.stringify(game_set[i].get_white_rating())}`);
+			g.set_white_rating(updated_players[white_idx as number].get_rating(time_control_id).clone());
 		}
 		if (black_was_updated) {
-			debug(log_now(), `    Black in the game: ${JSON.stringify(black_rating)}`);
-			debug(log_now(), `        Black updated: ${JSON.stringify(updated_players[black_idx as number])}`);
-			game_set[i].set_black_rating(updated_players[black_idx as number].get_rating(time_control_id).clone());
-			debug(log_now(), `        Black in the game: ${JSON.stringify(game_set[i].get_black_rating())}`);
+			g.set_black_rating(updated_players[black_idx as number].get_rating(time_control_id).clone());
 		}
 
 		if (white_was_updated || black_was_updated) {
 			// calculate result of game
-			const [white_after, black_after] = RatingSystemManager.get_instance().apply_rating_function(game_set[i]);
+			const [white_after, black_after] = RatingSystemManager.get_instance().apply_rating_function(g);
 
 			if (!white_was_updated) {
-				debug(log_now(), `    White has been updated for the first time: ${JSON.stringify(white_after)}`);
-
 				// White has been updated in this game for the first time:
 				// - should be updated in future games
 				// - should be inserted into the 'updated_players' set
@@ -307,8 +208,6 @@ function update_game_record(
 			}
 
 			if (!black_was_updated) {
-				debug(log_now(), `    Black has been updated for the first time: ${JSON.stringify(black_after)}`);
-
 				// Black has been updated in this game for the first time:
 				// - should be updated in future games
 				// - should be inserted into the 'updated_players' set
@@ -318,6 +217,8 @@ function update_game_record(
 				updated_players[black_idx as number] = updated_player(time_control_id, black, black_after);
 			}
 		}
+
+		games_iter.next_game_record();
 	}
 }
 
@@ -328,68 +229,34 @@ function update_game_record(
  * @post Users in the server are update (both memory and user files)
  */
 function game_insert_in_history(g: Game, record_id: DateStringShort): void {
-	// some player's rating will change and will have to be updated
 	let updated_players: Player[] = [];
 
+	const time_control_id = g.get_time_control_id();
 	// apply rating formula
 	{
 		let [white_after, black_after] = RatingSystemManager.get_instance().apply_rating_function(g);
-		updated_players.push(updated_player(g.get_time_control_id(), g.get_white(), white_after));
-		updated_players.push(updated_player(g.get_time_control_id(), g.get_black(), black_after));
+		updated_players.push(updated_player(time_control_id, g.get_white(), white_after));
+		updated_players.push(updated_player(time_control_id, g.get_black(), black_after));
 	}
 
 	const games_dir = EnvironmentManager.get_instance().get_dir_games_time_control(g.get_time_control_id());
+	const game_record_file = path.join(games_dir, record_id);
 
-	debug(log_now(), 'Adding game into the history...');
-	debug(log_now(), `    Game '${JSON.stringify(g)}'`);
+	let games_iter = new GamesIterator(games_dir);
 
-	debug(log_now(), `    Game record string: '${record_id}'`);
-	const date_record_file: string = path.join(games_dir, record_id);
-	debug(log_now(), `    File: '${date_record_file}'`);
-
-	// The files currently existing in the 'games_directory'
-	debug(log_now(), `Reading directory '${games_dir}'...`);
-	const all_date_record_strs = fs.readdirSync(games_dir);
-	debug(log_now(), `    Directory contents: '${all_date_record_strs}'`);
-
-	// There are no game records. Create the file and dump the game into it.
-	if (all_date_record_strs.length == 0) {
-		debug(log_now(), 'There are no game records.');
-		debug(log_now(), `Simply write into file '${date_record_file}'`);
-		fs.writeFileSync(date_record_file, JSON.stringify([g], null, 4));
-
-		// update the players in the server memory
+	if (games_iter.get_all_records().length == 0) {
+		fs.writeFileSync(game_record_file, JSON.stringify([g], null, 4));
 		user_update_from_players_data(updated_players);
 		return;
 	}
 
-	debug(log_now(), `Find '${record_id}' in '${all_date_record_strs}'`);
-	// Does the record corresponding to the game exist?
-	let [idx_in_record_list, record_exists] = where_should_be_inserted(all_date_record_strs, record_id);
-
+	const record_exists = games_iter.locate_record(record_id);
 	if (!record_exists) {
-		debug(log_now(), `    There is no record with date '${record_id}'`);
-		debug(log_now(), `    The new record should be placed at '${idx_in_record_list}'`);
-	} else {
-		debug(log_now(), `    There is a record with date '${record_id}'`);
-		debug(log_now(), `    The new record is at '${idx_in_record_list}'`);
-	}
-
-	if (!record_exists) {
-		debug(log_now(), `Writing game into game record file '${date_record_file}'...`);
-
-		// The file does not exist. Create the file and dump the game into it.
-		fs.writeFileSync(date_record_file, JSON.stringify([g], null, 4));
-	}
-
-	// The record file did not exist => no games on that day
-	// The record file is the last => no games ahead of this one
-	// ==> Update user in their files and server memory
-	if (!record_exists && idx_in_record_list == all_date_record_strs.length) {
-		debug(log_now(), 'The game has been inserted into the last game record file');
-		// update the players in the server memory
-		user_update_from_players_data(updated_players);
-		return;
+		fs.writeFileSync(game_record_file, JSON.stringify([g], null, 4));
+		if (games_iter.end_record_list()) {
+			user_update_from_players_data(updated_players);
+			return;
+		}
 	}
 
 	let player_to_index: Map<string, number> = new Map();
@@ -397,62 +264,30 @@ function game_insert_in_history(g: Game, record_id: DateStringShort): void {
 	player_to_index.set(g.get_black(), 1);
 
 	if (record_exists) {
-		// Insert the current game in an existing record and update
-		// the games ahead of this game
+		let game_set = games_iter.get_current_game_set();
 
-		debug(log_now(), `Update existing record '${date_record_file}'...`);
-
-		let game_set = read_game_date_record(date_record_file);
-
-		// where should the current game be inserted
 		const [game_idx, game_exists] = where_should_be_inserted(game_set, g, game_compare_dates);
-
-		// The game should not exist in its record.
-		// This assumes that different games will never have the exact same 'when'.
 		if (game_exists) {
-			throw new Error(`Game of the exact same when field '${g.get_date()}' already exists`);
+			throw new Error(`Game of the exact same date field '${g.get_date()}' already exists`);
 		}
 
-		// insert game into array
 		game_set.splice(game_idx, 0, g);
 
-		debug(log_now(), `    Update game record '${record_id}'`);
-
-		// update record of the current game
-		update_game_record(game_set, game_idx + 1, g.get_time_control_id(), updated_players, player_to_index);
-
-		debug(log_now(), `    Writing game record '${date_record_file}'...`);
-		fs.writeFileSync(date_record_file, JSON.stringify(game_set, null, 4));
-		debug(log_now(), `        Game record '${date_record_file}' written.`);
-
-		// if the record already exists then 'record_index_in_list' points
-		// to the current game record, but we should update starting at the
-		// next record!
-		++idx_in_record_list;
+		games_iter.set_to_game(game_idx + 1);
+		update_game_record(games_iter, time_control_id, updated_players, player_to_index);
+		fs.writeFileSync(game_record_file, JSON.stringify(game_set, null, 4));
 	}
 
-	debug(log_now(), 'Update the rest of the records...');
-	for (let idx = idx_in_record_list; idx < all_date_record_strs.length; ++idx) {
-		const date_record_str = all_date_record_strs[idx];
+	games_iter.next_record();
+	while (!games_iter.end_record_list()) {
+		update_game_record(games_iter, time_control_id, updated_players, player_to_index);
 
-		// files already contain the '.json' extension
-		const date_record_file = path.join(games_dir, date_record_str);
+		fs.writeFileSync(
+			path.join(games_dir, games_iter.get_current_record_name()),
+			JSON.stringify(games_iter.get_current_game_set(), null, 4)
+		);
 
-		// read and parse the next file
-		let game_set = read_game_date_record(date_record_file);
-
-		// update the current record
-		debug(log_now(), `    Updating game record '${date_record_file}'...`);
-		update_game_record(game_set, 0, g.get_time_control_id(), updated_players, player_to_index);
-		debug(log_now(), `        Number of updated players: '${updated_players.length}'...`);
-		for (let j = 0; j < updated_players.length; ++j) {
-			debug(log_now(), `        Player: '${JSON.stringify(updated_players[j])}'...`);
-		}
-
-		// update the record file
-		debug(log_now(), `    Writing game record '${date_record_file}'...`);
-		fs.writeFileSync(date_record_file, JSON.stringify(game_set, null, 4));
-		debug(log_now(), `        Game record '${date_record_file}' written.`);
+		games_iter.next_record();
 	}
 
 	user_update_from_players_data(updated_players);
@@ -476,14 +311,10 @@ export function game_add_new(
 	const black_username = black.get_username();
 	const g = game_new(white_username, black_username, result, time_control_id, time_control_name, when);
 
-	debug(log_now(), `Add game into the list of games played by both users...`);
-
 	white.add_game(time_control_id, game_record);
 	black.add_game(time_control_id, game_record);
 
-	debug(log_now(), `Inserting the game into the history...`);
 	game_insert_in_history(g, game_record);
-	debug(log_now(), `Updating the hash table (game id -> game record)`);
 
 	GamesManager.get_instance().add_game(g.get_id(), game_record, time_control_id);
 	graph_update(white_username, black_username, result, time_control_id);
@@ -492,65 +323,39 @@ export function game_add_new(
 /**
  * @brief Looks for the game of identifier @e game_id.
  * @param game_id The game G to be returned.
- * @returns A tuple with the following values:
- * 1. game_record_set: All the game record ids in the games directory that
- *    corresponds to the time control of G.
- * 2. game_file_path: The path to the file that contains G.
- * 3. game_set: All the games within (2), including G.
- * 4. game_record_set_idx: The index within (1) of the file that contains G.
- * 5. game_set_idx: The index of G within (3).
+ * @returns The game object that has identifier equal to @e game_id.
  */
-export function game_find_by_id(game_id: GameID): [DateStringShort[], string, Game[], number, number] {
+export function game_find_by_id(game_id: GameID): Game | undefined {
 	const __info = GamesManager.get_instance().get_game_info(game_id);
 
 	// game_id does not exist
 	if (__info == undefined) {
-		throw new Error(`Game id '${game_id}' does not exist in the Games Manager`);
+		return undefined;
 	}
 
-	const game_record_id = __info.game_record;
 	const time_control_id = __info.time_control_id;
-
+	const game_record = __info.game_record;
 	const games_dir = EnvironmentManager.get_instance().get_dir_games_time_control(time_control_id);
-	const game_file_path: string = path.join(games_dir, game_record_id);
-	debug(log_now(), `    File: '${game_file_path}'`);
 
-	// The files currently existing in the 'games_directory'
-	debug(log_now(), `Reading directory '${games_dir}'...`);
-	const game_record_set = fs.readdirSync(games_dir);
-	debug(log_now(), `    Directory contents: '${game_record_set}'`);
-
-	// Ensure there are game records
-	if (game_record_set.length == 0) {
+	let games_iter = new GamesIterator(games_dir);
+	if (games_iter.get_number_of_records() == 0) {
 		throw new Error(`There are no game records in database for time control ${time_control_id}.`);
 	}
 
-	// check that the file actually exists
-	debug(log_now(), `Searching for '${game_record_id}' in '${game_record_set}'.`);
-	const game_record_set_idx = search(game_record_set, game_record_id);
-	if (game_record_set_idx == -1) {
+	const res = games_iter.locate_record(game_record);
+	if (!res) {
 		throw new Error(
-			`There is no game record '${game_record_id}' in the database for time control ${time_control_id}.`
+			`There is no game record '${game_record}' in the database for time control ${time_control_id}.`
 		);
 	}
 
-	// read games in record
-	const game_set = read_game_date_record(game_file_path);
-
-	// find the game 'game_id' in the array 'game_set' and check that it exists
-	const game_set_idx = search_linear_by_key(game_set, (g: Game): boolean => {
-		return g.get_id() == game_id;
-	});
-	if (game_set_idx == -1) {
-		throw new Error(`There is no game with id '${game_id}' in game record '${game_record_id}'`);
+	while (!games_iter.end_record_single() && games_iter.get_current_game().get_id() != game_id) {
+		games_iter.next_game_record();
 	}
-
-	const game = game_set[game_set_idx];
-	if (game.get_id() != game_id) {
-		throw new Error(`The game found has a different id. Searching for '${game_id}'. Found '${game.get_id()}'`);
+	if (games_iter.end_record_single()) {
+		return undefined;
 	}
-
-	return [game_record_set, game_file_path, game_set, game_record_set_idx, game_set_idx];
+	return games_iter.get_current_game();
 }
 
 /**
@@ -559,15 +364,27 @@ export function game_find_by_id(game_id: GameID): [DateStringShort[], string, Ga
  * @param new_result The (new) result of the game
  */
 export function game_edit_result(game_id: GameID, new_result: GameResult): void {
-	debug(log_now(), `Editing game '${game_id}'`);
+	const __info = GamesManager.get_instance().get_game_info(game_id);
 
-	let [all_game_records, game_record_file, game_set, idx_in_record_list, idx_in_game_set] = game_find_by_id(
-		game_id
-	) as [DateStringShort[], DateStringShort, Game[], number, number];
+	// game_id does not exist
+	if (__info == undefined) {
+		throw new Error(`Game id '${game_id}' does not exist in the Games Manager`);
+	}
 
-	let game = game_set[idx_in_game_set];
+	const time_control_id = __info.time_control_id;
+	const game_record = __info.game_record;
+	const games_dir = EnvironmentManager.get_instance().get_dir_games_time_control(time_control_id);
+
+	let games_iter = new GamesIterator(games_dir);
+	const found = games_iter.locate_game(game_record, game_id);
+	if (!found) {
+		throw new Error(`Could not find game '${game_id}'.`);
+	}
+
+	let game = games_iter.get_current_game();
 
 	const old_result = game.get_result();
+	game.set_result(new_result);
 
 	// avoid unnecessary work
 	if (old_result == new_result) {
@@ -576,15 +393,7 @@ export function game_edit_result(game_id: GameID, new_result: GameResult): void 
 
 	const white = game.get_white();
 	const black = game.get_black();
-	const time_control_id = game.get_time_control_id();
-	const games_dir = EnvironmentManager.get_instance().get_dir_games_time_control(time_control_id);
 
-	// ---------------------------------------------------------
-	// actually apply changes
-
-	game.set_result(new_result);
-
-	// some games will change and users will have to be updated
 	let updated_players: Player[] = [];
 
 	// apply rating formula
@@ -599,40 +408,24 @@ export function game_edit_result(game_id: GameID, new_result: GameResult): void 
 	player_to_index.set(black, 1);
 
 	// update record of the current game
-	update_game_record(game_set, idx_in_game_set + 1, game.get_time_control_id(), updated_players, player_to_index);
-	debug(log_now(), `    Writing game record '${game_record_file}'...`);
-	fs.writeFileSync(game_record_file, JSON.stringify(game_set, null, 4));
-	debug(log_now(), `        Game record '${game_record_file}' written.`);
+	games_iter.next_game_record();
 
-	debug(log_now(), 'Update the rest of the records...');
-	for (let idx = idx_in_record_list + 1; idx < all_game_records.length; ++idx) {
-		const date_record_str = all_game_records[idx];
+	while (!games_iter.end_record_list()) {
+		update_game_record(games_iter, time_control_id, updated_players, player_to_index);
 
-		// files already contain the '.json' extension
-		const date_record_filename = path.join(games_dir, date_record_str);
+		fs.writeFileSync(
+			path.join(games_dir, games_iter.get_current_record_name()),
+			JSON.stringify(games_iter.get_current_game_set(), null, 4)
+		);
 
-		// read and parse the next file
-		const game_set = read_game_date_record(date_record_filename);
-
-		// update the current record
-		debug(log_now(), `    Updating game record '${date_record_filename}'...`);
-		update_game_record(game_set, 0, game.get_time_control_id(), updated_players, player_to_index);
-		debug(log_now(), `        Number of updated players: '${updated_players.length}'...`);
-		for (let j = 0; j < updated_players.length; ++j) {
-			debug(log_now(), `        Player: '${JSON.stringify(updated_players[j])}'...`);
-		}
-
-		// update the record file
-		debug(log_now(), `    Writing game record '${date_record_filename}'...`);
-		fs.writeFileSync(date_record_filename, JSON.stringify(game_set, null, 4));
-		debug(log_now(), `        Game record '${date_record_filename}' written.`);
+		games_iter.next_record();
 	}
 
 	user_update_from_players_data(updated_players);
 }
 
 export function recalculate_all_ratings() {
-	const all_time_controls = RatingSystemManager.get_instance().get_time_controls();
+	const all_time_controls = RatingSystemManager.get_instance().get_unique_time_controls_ids();
 
 	let mem = UsersManager.get_instance();
 
@@ -646,10 +439,7 @@ export function recalculate_all_ratings() {
 		let ratings: TimeControlRating[] = [];
 		// update the current record for all time controls
 		for (let k = 0; k < all_time_controls.length; ++k) {
-			let tcr = new TimeControlRating(
-				all_time_controls[k].id,
-				RatingSystemManager.get_instance().get_new_rating()
-			);
+			let tcr = new TimeControlRating(all_time_controls[k], RatingSystemManager.get_instance().get_new_rating());
 			ratings.push(tcr);
 		}
 
@@ -658,38 +448,17 @@ export function recalculate_all_ratings() {
 	}
 
 	for (let k = 0; k < all_time_controls.length; ++k) {
-		const games_dir = EnvironmentManager.get_instance().get_dir_games_time_control(all_time_controls[k].id);
+		const time_control = all_time_controls[k];
+		const games_dir = EnvironmentManager.get_instance().get_dir_games_time_control(time_control);
 
-		// The files currently existing in the 'games_directory'
-		debug(log_now(), `Reading directory '${games_dir}'...`);
-		const all_date_records = fs.readdirSync(games_dir);
-		debug(log_now(), `    Directory contents: '${all_date_records}'`);
+		let games_iter = new GamesIterator(games_dir);
+		while (!games_iter.end_record_list()) {
+			update_game_record(games_iter, time_control, updated_players, player_to_index);
 
-		for (let i = 0; i < all_date_records.length; ++i) {
-			const date_record_str = all_date_records[i];
-
-			// files already contain the '.json' extension
-			const date_record_filename = path.join(games_dir, date_record_str);
-
-			// read and parse the next file
-			const game_set = read_game_date_record(date_record_filename);
-
-			// update the current record for all time controls
-			for (let k = 0; k < all_time_controls.length; ++k) {
-				const time_control = all_time_controls[k];
-
-				debug(log_now(), `    Updating game record '${date_record_filename}'...`);
-				update_game_record(game_set, 0, time_control.id, updated_players, player_to_index);
-				debug(log_now(), `        Number of updated players: '${updated_players.length}'...`);
-				for (let j = 0; j < updated_players.length; ++j) {
-					debug(log_now(), `        Player: '${JSON.stringify(updated_players[j])}'...`);
-				}
-			}
-
-			// update the record file
-			debug(log_now(), `    Writing game record '${date_record_filename}'...`);
-			fs.writeFileSync(date_record_filename, JSON.stringify(game_set, null, 4));
-			debug(log_now(), `        Game record '${date_record_filename}' written.`);
+			const filename = path.join(games_dir, games_iter.get_current_record_name());
+			const game_set = games_iter.get_current_game_set();
+			fs.writeFileSync(filename, JSON.stringify(game_set, null, 4));
+			games_iter.next_record();
 		}
 	}
 
