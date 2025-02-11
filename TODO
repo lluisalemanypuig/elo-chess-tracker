@@ -16,6 +16,3 @@
 - Update initialization tests to check graph reading
 
 - Update game creation tests with graph checking
-
-- Add some tests in tests/managers/games.test.ts to check that the games created
-  and stored are sorted by date.
