@@ -39,7 +39,6 @@ import { RatingSystemManager } from './rating_system_manager';
 import { EnvironmentManager } from './environment_manager';
 import { user_retrieve, user_update_from_players_data } from './users';
 import { Rating } from '../rating_framework/rating';
-import { TimeControlRating } from '../models/time_control_rating';
 import { TimeControlID } from '../models/time_control';
 import { graph_update } from './graphs';
 import { GamesIterator } from './games_iterator';
@@ -195,26 +194,21 @@ function update_game_record(
 
 		if (white_was_updated || black_was_updated) {
 			// calculate result of game
-			const [white_after, black_after] = RatingSystemManager.get_instance().apply_rating_function(g);
+			const [rating_white_after, rating_black_after] =
+				RatingSystemManager.get_instance().apply_rating_function(g);
 
-			if (!white_was_updated) {
-				// White has been updated in this game for the first time:
-				// - should be updated in future games
-				// - should be inserted into the 'updated_players' set
-				updated_players.push(updated_player(time_control_id, white, white_after));
-				player_to_index.set(white, updated_players.length - 1);
+			if (white_was_updated) {
+				updated_players[white_idx as number].set_rating(time_control_id, rating_white_after);
 			} else {
-				updated_players[white_idx as number] = updated_player(time_control_id, white, white_after);
+				updated_players.push(updated_player(time_control_id, white, rating_white_after));
+				player_to_index.set(white, updated_players.length - 1);
 			}
 
-			if (!black_was_updated) {
-				// Black has been updated in this game for the first time:
-				// - should be updated in future games
-				// - should be inserted into the 'updated_players' set
-				updated_players.push(updated_player(time_control_id, black, black_after));
-				player_to_index.set(black, updated_players.length - 1);
+			if (black_was_updated) {
+				updated_players[black_idx as number].set_rating(time_control_id, rating_black_after);
 			} else {
-				updated_players[black_idx as number] = updated_player(time_control_id, black, black_after);
+				updated_players.push(updated_player(time_control_id, black, rating_black_after));
+				player_to_index.set(black, updated_players.length - 1);
 			}
 		}
 
@@ -425,7 +419,8 @@ export function game_edit_result(game_id: GameID, new_result: GameResult): void 
 }
 
 export function recalculate_all_ratings() {
-	const all_time_controls = RatingSystemManager.get_instance().get_unique_time_controls_ids();
+	const rating_system = RatingSystemManager.get_instance();
+	const all_time_controls = rating_system.get_unique_time_controls_ids();
 
 	let mem = UsersManager.get_instance();
 
@@ -436,14 +431,12 @@ export function recalculate_all_ratings() {
 	for (let i = 0; i < mem.num_users(); ++i) {
 		const username = (mem.get_user_at(i) as User).get_username();
 
-		let ratings: TimeControlRating[] = [];
-		// update the current record for all time controls
+		let p = new Player(username, []);
 		for (let k = 0; k < all_time_controls.length; ++k) {
-			let tcr = new TimeControlRating(all_time_controls[k], RatingSystemManager.get_instance().get_new_rating());
-			ratings.push(tcr);
+			p.add_rating(all_time_controls[k], rating_system.get_new_rating());
 		}
 
-		updated_players.push(new Player(username, ratings));
+		updated_players.push(p);
 		player_to_index.set(username, i);
 	}
 
@@ -455,9 +448,10 @@ export function recalculate_all_ratings() {
 		while (!games_iter.end_record_list()) {
 			update_game_record(games_iter, time_control, updated_players, player_to_index);
 
-			const filename = path.join(games_dir, games_iter.get_current_record_name());
-			const game_set = games_iter.get_current_game_set();
-			fs.writeFileSync(filename, JSON.stringify(game_set, null, 4));
+			fs.writeFileSync(
+				path.join(games_dir, games_iter.get_current_record_name()),
+				JSON.stringify(games_iter.get_current_game_set(), null, 4)
+			);
 			games_iter.next_record();
 		}
 	}
