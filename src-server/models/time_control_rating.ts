@@ -30,7 +30,7 @@ import { TimeControlID } from './time_control';
  * @brief A pair of time control id and rating
  */
 export class TimeControlRating {
-	public time_control: TimeControlID;
+	public readonly time_control: TimeControlID;
 	public rating: Rating;
 
 	constructor(id: TimeControlID, data: Rating) {
