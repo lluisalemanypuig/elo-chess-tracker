@@ -326,9 +326,9 @@ describe('Sequential game creation', () => {
 	test('Add "Classical" games', () => {
 		const classical_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Classical');
 
-		game_add_new(u('a'), u('b'), 'white_wins', 'Classical', 'Classical (90 + 30)', '2025-01-19', '17:06:00:000');
+		game_add_new(u('a'), u('b'), 'white_wins', 'Classical', 'Classical (90 + 30)', '2025-01-09', '17:06:00:000');
 		{
-			const game_set = game_set_from_json(fs.readFileSync(path.join(classical_dir, '2025-01-19'), 'utf8'));
+			const game_set = game_set_from_json(fs.readFileSync(path.join(classical_dir, '2025-01-09'), 'utf8'));
 			expect(game_set.length).toBe(1);
 
 			expect(game_set[0].get_id()).toBe('0000000005');
@@ -337,7 +337,7 @@ describe('Sequential game creation', () => {
 			expect(game_set[0].get_result()).toBe('white_wins');
 			expect(game_set[0].get_time_control_id()).toBe('Classical');
 			expect(game_set[0].get_time_control_name()).toBe('Classical (90 + 30)');
-			expect(game_set[0].get_date()).toBe('2025-01-19..17:06:00:000');
+			expect(game_set[0].get_date()).toBe('2025-01-09..17:06:00:000');
 
 			expect(a.get_games('Blitz')?.length).toBe(1);
 			expect(b.get_games('Blitz')?.length).toBe(1);
@@ -366,9 +366,9 @@ describe('Sequential game creation', () => {
 			expect(f.get_rating('Classical').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
 		}
 
-		game_add_new(u('c'), u('d'), 'black_wins', 'Classical', 'Classical (90 + 30)', '2025-01-19', '17:06:10:000');
+		game_add_new(u('c'), u('d'), 'black_wins', 'Classical', 'Classical (90 + 30)', '2025-01-09', '17:06:10:000');
 		{
-			const game_set = game_set_from_json(fs.readFileSync(path.join(classical_dir, '2025-01-19'), 'utf8'));
+			const game_set = game_set_from_json(fs.readFileSync(path.join(classical_dir, '2025-01-09'), 'utf8'));
 			expect(game_set.length).toBe(2);
 
 			expect(game_set[0].get_id()).toBe('0000000005');
@@ -377,7 +377,7 @@ describe('Sequential game creation', () => {
 			expect(game_set[0].get_result()).toBe('white_wins');
 			expect(game_set[0].get_time_control_id()).toBe('Classical');
 			expect(game_set[0].get_time_control_name()).toBe('Classical (90 + 30)');
-			expect(game_set[0].get_date()).toBe('2025-01-19..17:06:00:000');
+			expect(game_set[0].get_date()).toBe('2025-01-09..17:06:00:000');
 
 			expect(game_set[1].get_id()).toBe('0000000006');
 			expect(game_set[1].get_white()).toBe('c');
@@ -385,7 +385,7 @@ describe('Sequential game creation', () => {
 			expect(game_set[1].get_result()).toBe('black_wins');
 			expect(game_set[1].get_time_control_id()).toBe('Classical');
 			expect(game_set[1].get_time_control_name()).toBe('Classical (90 + 30)');
-			expect(game_set[1].get_date()).toBe('2025-01-19..17:06:10:000');
+			expect(game_set[1].get_date()).toBe('2025-01-09..17:06:10:000');
 
 			expect(a.get_games('Blitz')?.length).toBe(1);
 			expect(b.get_games('Blitz')?.length).toBe(1);
@@ -414,9 +414,9 @@ describe('Sequential game creation', () => {
 			expect(f.get_rating('Classical').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
 		}
 
-		game_add_new(u('e'), u('f'), 'draw', 'Classical', 'Classical (90 + 30)', '2025-01-19', '17:06:20:000');
+		game_add_new(u('e'), u('f'), 'draw', 'Classical', 'Classical (90 + 30)', '2025-01-09', '17:06:20:000');
 		{
-			const game_set = game_set_from_json(fs.readFileSync(path.join(classical_dir, '2025-01-19'), 'utf8'));
+			const game_set = game_set_from_json(fs.readFileSync(path.join(classical_dir, '2025-01-09'), 'utf8'));
 			expect(game_set.length).toBe(3);
 
 			expect(game_set[0].get_id()).toBe('0000000005');
@@ -425,7 +425,7 @@ describe('Sequential game creation', () => {
 			expect(game_set[0].get_result()).toBe('white_wins');
 			expect(game_set[0].get_time_control_id()).toBe('Classical');
 			expect(game_set[0].get_time_control_name()).toBe('Classical (90 + 30)');
-			expect(game_set[0].get_date()).toBe('2025-01-19..17:06:00:000');
+			expect(game_set[0].get_date()).toBe('2025-01-09..17:06:00:000');
 
 			expect(game_set[1].get_id()).toBe('0000000006');
 			expect(game_set[1].get_white()).toBe('c');
@@ -433,7 +433,7 @@ describe('Sequential game creation', () => {
 			expect(game_set[1].get_result()).toBe('black_wins');
 			expect(game_set[1].get_time_control_id()).toBe('Classical');
 			expect(game_set[1].get_time_control_name()).toBe('Classical (90 + 30)');
-			expect(game_set[1].get_date()).toBe('2025-01-19..17:06:10:000');
+			expect(game_set[1].get_date()).toBe('2025-01-09..17:06:10:000');
 
 			expect(game_set[2].get_id()).toBe('0000000007');
 			expect(game_set[2].get_white()).toBe('e');
@@ -441,7 +441,7 @@ describe('Sequential game creation', () => {
 			expect(game_set[2].get_result()).toBe('draw');
 			expect(game_set[2].get_time_control_id()).toBe('Classical');
 			expect(game_set[2].get_time_control_name()).toBe('Classical (90 + 30)');
-			expect(game_set[2].get_date()).toBe('2025-01-19..17:06:20:000');
+			expect(game_set[2].get_date()).toBe('2025-01-09..17:06:20:000');
 
 			expect(a.get_games('Blitz')?.length).toBe(1);
 			expect(b.get_games('Blitz')?.length).toBe(1);
@@ -470,9 +470,9 @@ describe('Sequential game creation', () => {
 			expect(f.get_rating('Classical').num_won_drawn_lost()).toEqual([1, 0, 1, 0]);
 		}
 
-		game_add_new(u('a'), u('f'), 'black_wins', 'Classical', 'Classical (90 + 30)', '2025-01-19', '17:06:30:000');
+		game_add_new(u('a'), u('f'), 'black_wins', 'Classical', 'Classical (90 + 30)', '2025-01-09', '17:06:30:000');
 		{
-			const game_set = game_set_from_json(fs.readFileSync(path.join(classical_dir, '2025-01-19'), 'utf8'));
+			const game_set = game_set_from_json(fs.readFileSync(path.join(classical_dir, '2025-01-09'), 'utf8'));
 			expect(game_set.length).toBe(4);
 
 			expect(game_set[0].get_id()).toBe('0000000005');
@@ -481,7 +481,7 @@ describe('Sequential game creation', () => {
 			expect(game_set[0].get_result()).toBe('white_wins');
 			expect(game_set[0].get_time_control_id()).toBe('Classical');
 			expect(game_set[0].get_time_control_name()).toBe('Classical (90 + 30)');
-			expect(game_set[0].get_date()).toBe('2025-01-19..17:06:00:000');
+			expect(game_set[0].get_date()).toBe('2025-01-09..17:06:00:000');
 
 			expect(game_set[1].get_id()).toBe('0000000006');
 			expect(game_set[1].get_white()).toBe('c');
@@ -489,7 +489,7 @@ describe('Sequential game creation', () => {
 			expect(game_set[1].get_result()).toBe('black_wins');
 			expect(game_set[1].get_time_control_id()).toBe('Classical');
 			expect(game_set[1].get_time_control_name()).toBe('Classical (90 + 30)');
-			expect(game_set[1].get_date()).toBe('2025-01-19..17:06:10:000');
+			expect(game_set[1].get_date()).toBe('2025-01-09..17:06:10:000');
 
 			expect(game_set[2].get_id()).toBe('0000000007');
 			expect(game_set[2].get_white()).toBe('e');
@@ -497,7 +497,7 @@ describe('Sequential game creation', () => {
 			expect(game_set[2].get_result()).toBe('draw');
 			expect(game_set[2].get_time_control_id()).toBe('Classical');
 			expect(game_set[2].get_time_control_name()).toBe('Classical (90 + 30)');
-			expect(game_set[2].get_date()).toBe('2025-01-19..17:06:20:000');
+			expect(game_set[2].get_date()).toBe('2025-01-09..17:06:20:000');
 
 			expect(game_set[3].get_id()).toBe('0000000008');
 			expect(game_set[3].get_white()).toBe('a');
@@ -505,7 +505,7 @@ describe('Sequential game creation', () => {
 			expect(game_set[3].get_result()).toBe('black_wins');
 			expect(game_set[3].get_time_control_id()).toBe('Classical');
 			expect(game_set[3].get_time_control_name()).toBe('Classical (90 + 30)');
-			expect(game_set[3].get_date()).toBe('2025-01-19..17:06:30:000');
+			expect(game_set[3].get_date()).toBe('2025-01-09..17:06:30:000');
 
 			expect(a.get_games('Blitz')?.length).toBe(1);
 			expect(b.get_games('Blitz')?.length).toBe(1);
@@ -752,9 +752,9 @@ describe('Inverse game creation', () => {
 	test('Add "Classical" games', () => {
 		const classical_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Classical');
 
-		game_add_new(u('a'), u('f'), 'draw', 'Classical', 'Classical (90 + 30)', '2025-01-20', '17:06:30:000');
+		game_add_new(u('a'), u('f'), 'draw', 'Classical', 'Classical (90 + 30)', '2025-01-10', '17:06:30:000');
 		{
-			const game_set = game_set_from_json(fs.readFileSync(path.join(classical_dir, '2025-01-20'), 'utf8'));
+			const game_set = game_set_from_json(fs.readFileSync(path.join(classical_dir, '2025-01-10'), 'utf8'));
 			expect(game_set.length).toBe(1);
 
 			expect(game_set[0].get_id()).toBe('0000000013');
@@ -763,7 +763,7 @@ describe('Inverse game creation', () => {
 			expect(game_set[0].get_result()).toBe('draw');
 			expect(game_set[0].get_time_control_id()).toBe('Classical');
 			expect(game_set[0].get_time_control_name()).toBe('Classical (90 + 30)');
-			expect(game_set[0].get_date()).toBe('2025-01-20..17:06:30:000');
+			expect(game_set[0].get_date()).toBe('2025-01-10..17:06:30:000');
 
 			expect(a.get_games('Blitz')?.length).toBe(2);
 			expect(b.get_games('Blitz')?.length).toBe(2);
@@ -792,9 +792,9 @@ describe('Inverse game creation', () => {
 			expect(f.get_rating('Classical').num_won_drawn_lost()).toEqual([3, 1, 2, 0]);
 		}
 
-		game_add_new(u('e'), u('f'), 'draw', 'Classical', 'Classical (90 + 30)', '2025-01-20', '17:06:20:000');
+		game_add_new(u('e'), u('f'), 'draw', 'Classical', 'Classical (90 + 30)', '2025-01-10', '17:06:20:000');
 		{
-			const game_set = game_set_from_json(fs.readFileSync(path.join(classical_dir, '2025-01-20'), 'utf8'));
+			const game_set = game_set_from_json(fs.readFileSync(path.join(classical_dir, '2025-01-10'), 'utf8'));
 			expect(game_set.length).toBe(2);
 
 			expect(game_set[0].get_id()).toBe('0000000014');
@@ -803,7 +803,7 @@ describe('Inverse game creation', () => {
 			expect(game_set[0].get_result()).toBe('draw');
 			expect(game_set[0].get_time_control_id()).toBe('Classical');
 			expect(game_set[0].get_time_control_name()).toBe('Classical (90 + 30)');
-			expect(game_set[0].get_date()).toBe('2025-01-20..17:06:20:000');
+			expect(game_set[0].get_date()).toBe('2025-01-10..17:06:20:000');
 
 			expect(game_set[1].get_id()).toBe('0000000013');
 			expect(game_set[1].get_white()).toBe('a');
@@ -811,7 +811,7 @@ describe('Inverse game creation', () => {
 			expect(game_set[1].get_result()).toBe('draw');
 			expect(game_set[1].get_time_control_id()).toBe('Classical');
 			expect(game_set[1].get_time_control_name()).toBe('Classical (90 + 30)');
-			expect(game_set[1].get_date()).toBe('2025-01-20..17:06:30:000');
+			expect(game_set[1].get_date()).toBe('2025-01-10..17:06:30:000');
 
 			expect(a.get_games('Blitz')?.length).toBe(2);
 			expect(b.get_games('Blitz')?.length).toBe(2);
@@ -840,9 +840,9 @@ describe('Inverse game creation', () => {
 			expect(f.get_rating('Classical').num_won_drawn_lost()).toEqual([4, 1, 3, 0]);
 		}
 
-		game_add_new(u('c'), u('d'), 'black_wins', 'Classical', 'Classical (90 + 30)', '2025-01-20', '17:06:10:000');
+		game_add_new(u('c'), u('d'), 'black_wins', 'Classical', 'Classical (90 + 30)', '2025-01-10', '17:06:10:000');
 		{
-			const game_set = game_set_from_json(fs.readFileSync(path.join(classical_dir, '2025-01-20'), 'utf8'));
+			const game_set = game_set_from_json(fs.readFileSync(path.join(classical_dir, '2025-01-10'), 'utf8'));
 			expect(game_set.length).toBe(3);
 
 			expect(game_set[0].get_id()).toBe('0000000015');
@@ -851,7 +851,7 @@ describe('Inverse game creation', () => {
 			expect(game_set[0].get_result()).toBe('black_wins');
 			expect(game_set[0].get_time_control_id()).toBe('Classical');
 			expect(game_set[0].get_time_control_name()).toBe('Classical (90 + 30)');
-			expect(game_set[0].get_date()).toBe('2025-01-20..17:06:10:000');
+			expect(game_set[0].get_date()).toBe('2025-01-10..17:06:10:000');
 
 			expect(game_set[1].get_id()).toBe('0000000014');
 			expect(game_set[1].get_white()).toBe('e');
@@ -859,7 +859,7 @@ describe('Inverse game creation', () => {
 			expect(game_set[1].get_result()).toBe('draw');
 			expect(game_set[1].get_time_control_id()).toBe('Classical');
 			expect(game_set[1].get_time_control_name()).toBe('Classical (90 + 30)');
-			expect(game_set[1].get_date()).toBe('2025-01-20..17:06:20:000');
+			expect(game_set[1].get_date()).toBe('2025-01-10..17:06:20:000');
 
 			expect(game_set[2].get_id()).toBe('0000000013');
 			expect(game_set[2].get_white()).toBe('a');
@@ -867,7 +867,7 @@ describe('Inverse game creation', () => {
 			expect(game_set[2].get_result()).toBe('draw');
 			expect(game_set[2].get_time_control_id()).toBe('Classical');
 			expect(game_set[2].get_time_control_name()).toBe('Classical (90 + 30)');
-			expect(game_set[2].get_date()).toBe('2025-01-20..17:06:30:000');
+			expect(game_set[2].get_date()).toBe('2025-01-10..17:06:30:000');
 
 			expect(a.get_games('Blitz')?.length).toBe(2);
 			expect(b.get_games('Blitz')?.length).toBe(2);
@@ -896,9 +896,9 @@ describe('Inverse game creation', () => {
 			expect(f.get_rating('Classical').num_won_drawn_lost()).toEqual([4, 1, 3, 0]);
 		}
 
-		game_add_new(u('a'), u('b'), 'white_wins', 'Classical', 'Classical (90 + 30)', '2025-01-20', '17:06:00:000');
+		game_add_new(u('a'), u('b'), 'white_wins', 'Classical', 'Classical (90 + 30)', '2025-01-10', '17:06:00:000');
 		{
-			const game_set = game_set_from_json(fs.readFileSync(path.join(classical_dir, '2025-01-20'), 'utf8'));
+			const game_set = game_set_from_json(fs.readFileSync(path.join(classical_dir, '2025-01-10'), 'utf8'));
 			expect(game_set.length).toBe(4);
 
 			expect(game_set[0].get_id()).toBe('0000000016');
@@ -907,7 +907,7 @@ describe('Inverse game creation', () => {
 			expect(game_set[0].get_result()).toBe('white_wins');
 			expect(game_set[0].get_time_control_id()).toBe('Classical');
 			expect(game_set[0].get_time_control_name()).toBe('Classical (90 + 30)');
-			expect(game_set[0].get_date()).toBe('2025-01-20..17:06:00:000');
+			expect(game_set[0].get_date()).toBe('2025-01-10..17:06:00:000');
 
 			expect(game_set[1].get_id()).toBe('0000000015');
 			expect(game_set[1].get_white()).toBe('c');
@@ -915,7 +915,7 @@ describe('Inverse game creation', () => {
 			expect(game_set[1].get_result()).toBe('black_wins');
 			expect(game_set[1].get_time_control_id()).toBe('Classical');
 			expect(game_set[1].get_time_control_name()).toBe('Classical (90 + 30)');
-			expect(game_set[1].get_date()).toBe('2025-01-20..17:06:10:000');
+			expect(game_set[1].get_date()).toBe('2025-01-10..17:06:10:000');
 
 			expect(game_set[2].get_id()).toBe('0000000014');
 			expect(game_set[2].get_white()).toBe('e');
@@ -923,7 +923,7 @@ describe('Inverse game creation', () => {
 			expect(game_set[2].get_result()).toBe('draw');
 			expect(game_set[2].get_time_control_id()).toBe('Classical');
 			expect(game_set[2].get_time_control_name()).toBe('Classical (90 + 30)');
-			expect(game_set[2].get_date()).toBe('2025-01-20..17:06:20:000');
+			expect(game_set[2].get_date()).toBe('2025-01-10..17:06:20:000');
 
 			expect(game_set[3].get_id()).toBe('0000000013');
 			expect(game_set[3].get_white()).toBe('a');
@@ -931,7 +931,7 @@ describe('Inverse game creation', () => {
 			expect(game_set[3].get_result()).toBe('draw');
 			expect(game_set[3].get_time_control_id()).toBe('Classical');
 			expect(game_set[3].get_time_control_name()).toBe('Classical (90 + 30)');
-			expect(game_set[3].get_date()).toBe('2025-01-20..17:06:30:000');
+			expect(game_set[3].get_date()).toBe('2025-01-10..17:06:30:000');
 
 			expect(a.get_games('Blitz')?.length).toBe(2);
 			expect(b.get_games('Blitz')?.length).toBe(2);
@@ -1304,9 +1304,9 @@ describe('Zig-zag game creation', () => {
 
 	test('Add "Classical" games', () => {
 		const blitz_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Classical');
-		game_add_new(u('a'), u('f'), 'draw', 'Classical', 'Classical (90 + 30)', '2025-01-20', '17:06:25:000');
+		game_add_new(u('a'), u('f'), 'draw', 'Classical', 'Classical (90 + 30)', '2025-01-10', '17:06:25:000');
 		{
-			const game_set = game_set_from_json(fs.readFileSync(path.join(blitz_dir, '2025-01-20'), 'utf8'));
+			const game_set = game_set_from_json(fs.readFileSync(path.join(blitz_dir, '2025-01-10'), 'utf8'));
 			expect(game_set.length).toBe(5);
 
 			expect(game_set[0].get_id()).toBe('0000000016');
@@ -1315,7 +1315,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_set[0].get_result()).toBe('white_wins');
 			expect(game_set[0].get_time_control_id()).toBe('Classical');
 			expect(game_set[0].get_time_control_name()).toBe('Classical (90 + 30)');
-			expect(game_set[0].get_date()).toBe('2025-01-20..17:06:00:000');
+			expect(game_set[0].get_date()).toBe('2025-01-10..17:06:00:000');
 
 			expect(game_set[1].get_id()).toBe('0000000015');
 			expect(game_set[1].get_white()).toBe('c');
@@ -1323,7 +1323,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_set[1].get_result()).toBe('black_wins');
 			expect(game_set[1].get_time_control_id()).toBe('Classical');
 			expect(game_set[1].get_time_control_name()).toBe('Classical (90 + 30)');
-			expect(game_set[1].get_date()).toBe('2025-01-20..17:06:10:000');
+			expect(game_set[1].get_date()).toBe('2025-01-10..17:06:10:000');
 
 			expect(game_set[2].get_id()).toBe('0000000014');
 			expect(game_set[2].get_white()).toBe('e');
@@ -1331,7 +1331,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_set[2].get_result()).toBe('draw');
 			expect(game_set[2].get_time_control_id()).toBe('Classical');
 			expect(game_set[2].get_time_control_name()).toBe('Classical (90 + 30)');
-			expect(game_set[2].get_date()).toBe('2025-01-20..17:06:20:000');
+			expect(game_set[2].get_date()).toBe('2025-01-10..17:06:20:000');
 
 			expect(game_set[3].get_id()).toBe('0000000021');
 			expect(game_set[3].get_white()).toBe('a');
@@ -1339,7 +1339,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_set[3].get_result()).toBe('draw');
 			expect(game_set[3].get_time_control_id()).toBe('Classical');
 			expect(game_set[3].get_time_control_name()).toBe('Classical (90 + 30)');
-			expect(game_set[3].get_date()).toBe('2025-01-20..17:06:25:000');
+			expect(game_set[3].get_date()).toBe('2025-01-10..17:06:25:000');
 
 			expect(game_set[4].get_id()).toBe('0000000013');
 			expect(game_set[4].get_white()).toBe('a');
@@ -1347,7 +1347,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_set[4].get_result()).toBe('draw');
 			expect(game_set[4].get_time_control_id()).toBe('Classical');
 			expect(game_set[4].get_time_control_name()).toBe('Classical (90 + 30)');
-			expect(game_set[4].get_date()).toBe('2025-01-20..17:06:30:000');
+			expect(game_set[4].get_date()).toBe('2025-01-10..17:06:30:000');
 
 			expect(a.get_games('Classical')?.length).toBe(2);
 			expect(b.get_games('Classical')?.length).toBe(2);
@@ -1376,9 +1376,9 @@ describe('Zig-zag game creation', () => {
 			expect(f.get_rating('Classical').num_won_drawn_lost()).toEqual([5, 1, 4, 0]);
 		}
 
-		game_add_new(u('e'), u('f'), 'draw', 'Classical', 'Classical (90 + 30)', '2025-01-20', '17:06:05:000');
+		game_add_new(u('e'), u('f'), 'draw', 'Classical', 'Classical (90 + 30)', '2025-01-10', '17:06:05:000');
 		{
-			const game_set = game_set_from_json(fs.readFileSync(path.join(blitz_dir, '2025-01-20'), 'utf8'));
+			const game_set = game_set_from_json(fs.readFileSync(path.join(blitz_dir, '2025-01-10'), 'utf8'));
 			expect(game_set.length).toBe(6);
 
 			expect(game_set[0].get_id()).toBe('0000000016');
@@ -1387,7 +1387,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_set[0].get_result()).toBe('white_wins');
 			expect(game_set[0].get_time_control_id()).toBe('Classical');
 			expect(game_set[0].get_time_control_name()).toBe('Classical (90 + 30)');
-			expect(game_set[0].get_date()).toBe('2025-01-20..17:06:00:000');
+			expect(game_set[0].get_date()).toBe('2025-01-10..17:06:00:000');
 
 			expect(game_set[1].get_id()).toBe('0000000022');
 			expect(game_set[1].get_white()).toBe('e');
@@ -1395,7 +1395,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_set[1].get_result()).toBe('draw');
 			expect(game_set[1].get_time_control_id()).toBe('Classical');
 			expect(game_set[1].get_time_control_name()).toBe('Classical (90 + 30)');
-			expect(game_set[1].get_date()).toBe('2025-01-20..17:06:05:000');
+			expect(game_set[1].get_date()).toBe('2025-01-10..17:06:05:000');
 
 			expect(game_set[2].get_id()).toBe('0000000015');
 			expect(game_set[2].get_white()).toBe('c');
@@ -1403,7 +1403,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_set[2].get_result()).toBe('black_wins');
 			expect(game_set[2].get_time_control_id()).toBe('Classical');
 			expect(game_set[2].get_time_control_name()).toBe('Classical (90 + 30)');
-			expect(game_set[2].get_date()).toBe('2025-01-20..17:06:10:000');
+			expect(game_set[2].get_date()).toBe('2025-01-10..17:06:10:000');
 
 			expect(game_set[3].get_id()).toBe('0000000014');
 			expect(game_set[3].get_white()).toBe('e');
@@ -1411,7 +1411,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_set[3].get_result()).toBe('draw');
 			expect(game_set[3].get_time_control_id()).toBe('Classical');
 			expect(game_set[3].get_time_control_name()).toBe('Classical (90 + 30)');
-			expect(game_set[3].get_date()).toBe('2025-01-20..17:06:20:000');
+			expect(game_set[3].get_date()).toBe('2025-01-10..17:06:20:000');
 
 			expect(game_set[4].get_id()).toBe('0000000021');
 			expect(game_set[4].get_white()).toBe('a');
@@ -1419,7 +1419,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_set[4].get_result()).toBe('draw');
 			expect(game_set[4].get_time_control_id()).toBe('Classical');
 			expect(game_set[4].get_time_control_name()).toBe('Classical (90 + 30)');
-			expect(game_set[4].get_date()).toBe('2025-01-20..17:06:25:000');
+			expect(game_set[4].get_date()).toBe('2025-01-10..17:06:25:000');
 
 			expect(game_set[5].get_id()).toBe('0000000013');
 			expect(game_set[5].get_white()).toBe('a');
@@ -1427,7 +1427,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_set[5].get_result()).toBe('draw');
 			expect(game_set[5].get_time_control_id()).toBe('Classical');
 			expect(game_set[5].get_time_control_name()).toBe('Classical (90 + 30)');
-			expect(game_set[5].get_date()).toBe('2025-01-20..17:06:30:000');
+			expect(game_set[5].get_date()).toBe('2025-01-10..17:06:30:000');
 
 			expect(a.get_games('Classical')?.length).toBe(2);
 			expect(b.get_games('Classical')?.length).toBe(2);
@@ -1456,9 +1456,9 @@ describe('Zig-zag game creation', () => {
 			expect(f.get_rating('Classical').num_won_drawn_lost()).toEqual([6, 1, 5, 0]);
 		}
 
-		game_add_new(u('c'), u('d'), 'white_wins', 'Classical', 'Classical (90 + 30)', '2025-01-20', '17:06:15:000');
+		game_add_new(u('c'), u('d'), 'white_wins', 'Classical', 'Classical (90 + 30)', '2025-01-10', '17:06:15:000');
 		{
-			const game_set = game_set_from_json(fs.readFileSync(path.join(blitz_dir, '2025-01-20'), 'utf8'));
+			const game_set = game_set_from_json(fs.readFileSync(path.join(blitz_dir, '2025-01-10'), 'utf8'));
 			expect(game_set.length).toBe(7);
 
 			expect(game_set[0].get_id()).toBe('0000000016');
@@ -1467,7 +1467,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_set[0].get_result()).toBe('white_wins');
 			expect(game_set[0].get_time_control_id()).toBe('Classical');
 			expect(game_set[0].get_time_control_name()).toBe('Classical (90 + 30)');
-			expect(game_set[0].get_date()).toBe('2025-01-20..17:06:00:000');
+			expect(game_set[0].get_date()).toBe('2025-01-10..17:06:00:000');
 
 			expect(game_set[1].get_id()).toBe('0000000022');
 			expect(game_set[1].get_white()).toBe('e');
@@ -1475,7 +1475,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_set[1].get_result()).toBe('draw');
 			expect(game_set[1].get_time_control_id()).toBe('Classical');
 			expect(game_set[1].get_time_control_name()).toBe('Classical (90 + 30)');
-			expect(game_set[1].get_date()).toBe('2025-01-20..17:06:05:000');
+			expect(game_set[1].get_date()).toBe('2025-01-10..17:06:05:000');
 
 			expect(game_set[2].get_id()).toBe('0000000015');
 			expect(game_set[2].get_white()).toBe('c');
@@ -1483,7 +1483,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_set[2].get_result()).toBe('black_wins');
 			expect(game_set[2].get_time_control_id()).toBe('Classical');
 			expect(game_set[2].get_time_control_name()).toBe('Classical (90 + 30)');
-			expect(game_set[2].get_date()).toBe('2025-01-20..17:06:10:000');
+			expect(game_set[2].get_date()).toBe('2025-01-10..17:06:10:000');
 
 			expect(game_set[3].get_id()).toBe('0000000023');
 			expect(game_set[3].get_white()).toBe('c');
@@ -1491,7 +1491,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_set[3].get_result()).toBe('white_wins');
 			expect(game_set[3].get_time_control_id()).toBe('Classical');
 			expect(game_set[3].get_time_control_name()).toBe('Classical (90 + 30)');
-			expect(game_set[3].get_date()).toBe('2025-01-20..17:06:15:000');
+			expect(game_set[3].get_date()).toBe('2025-01-10..17:06:15:000');
 
 			expect(game_set[4].get_id()).toBe('0000000014');
 			expect(game_set[4].get_white()).toBe('e');
@@ -1499,7 +1499,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_set[4].get_result()).toBe('draw');
 			expect(game_set[4].get_time_control_id()).toBe('Classical');
 			expect(game_set[4].get_time_control_name()).toBe('Classical (90 + 30)');
-			expect(game_set[4].get_date()).toBe('2025-01-20..17:06:20:000');
+			expect(game_set[4].get_date()).toBe('2025-01-10..17:06:20:000');
 
 			expect(game_set[5].get_id()).toBe('0000000021');
 			expect(game_set[5].get_white()).toBe('a');
@@ -1507,7 +1507,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_set[5].get_result()).toBe('draw');
 			expect(game_set[5].get_time_control_id()).toBe('Classical');
 			expect(game_set[5].get_time_control_name()).toBe('Classical (90 + 30)');
-			expect(game_set[5].get_date()).toBe('2025-01-20..17:06:25:000');
+			expect(game_set[5].get_date()).toBe('2025-01-10..17:06:25:000');
 
 			expect(game_set[6].get_id()).toBe('0000000013');
 			expect(game_set[6].get_white()).toBe('a');
@@ -1515,7 +1515,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_set[6].get_result()).toBe('draw');
 			expect(game_set[6].get_time_control_id()).toBe('Classical');
 			expect(game_set[6].get_time_control_name()).toBe('Classical (90 + 30)');
-			expect(game_set[6].get_date()).toBe('2025-01-20..17:06:30:000');
+			expect(game_set[6].get_date()).toBe('2025-01-10..17:06:30:000');
 
 			expect(a.get_games('Classical')?.length).toBe(2);
 			expect(b.get_games('Classical')?.length).toBe(2);
@@ -1544,9 +1544,9 @@ describe('Zig-zag game creation', () => {
 			expect(f.get_rating('Classical').num_won_drawn_lost()).toEqual([6, 1, 5, 0]);
 		}
 
-		game_add_new(u('a'), u('b'), 'black_wins', 'Classical', 'Classical (90 + 30)', '2025-01-20', '17:05:55:000');
+		game_add_new(u('a'), u('b'), 'black_wins', 'Classical', 'Classical (90 + 30)', '2025-01-10', '17:05:55:000');
 		{
-			const game_set = game_set_from_json(fs.readFileSync(path.join(blitz_dir, '2025-01-20'), 'utf8'));
+			const game_set = game_set_from_json(fs.readFileSync(path.join(blitz_dir, '2025-01-10'), 'utf8'));
 			expect(game_set.length).toBe(8);
 
 			expect(game_set[0].get_id()).toBe('0000000024');
@@ -1555,7 +1555,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_set[0].get_result()).toBe('black_wins');
 			expect(game_set[0].get_time_control_id()).toBe('Classical');
 			expect(game_set[0].get_time_control_name()).toBe('Classical (90 + 30)');
-			expect(game_set[0].get_date()).toBe('2025-01-20..17:05:55:000');
+			expect(game_set[0].get_date()).toBe('2025-01-10..17:05:55:000');
 
 			expect(game_set[1].get_id()).toBe('0000000016');
 			expect(game_set[1].get_white()).toBe('a');
@@ -1563,7 +1563,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_set[1].get_result()).toBe('white_wins');
 			expect(game_set[1].get_time_control_id()).toBe('Classical');
 			expect(game_set[1].get_time_control_name()).toBe('Classical (90 + 30)');
-			expect(game_set[1].get_date()).toBe('2025-01-20..17:06:00:000');
+			expect(game_set[1].get_date()).toBe('2025-01-10..17:06:00:000');
 
 			expect(game_set[2].get_id()).toBe('0000000022');
 			expect(game_set[2].get_white()).toBe('e');
@@ -1571,7 +1571,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_set[2].get_result()).toBe('draw');
 			expect(game_set[2].get_time_control_id()).toBe('Classical');
 			expect(game_set[2].get_time_control_name()).toBe('Classical (90 + 30)');
-			expect(game_set[2].get_date()).toBe('2025-01-20..17:06:05:000');
+			expect(game_set[2].get_date()).toBe('2025-01-10..17:06:05:000');
 
 			expect(game_set[3].get_id()).toBe('0000000015');
 			expect(game_set[3].get_white()).toBe('c');
@@ -1579,7 +1579,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_set[3].get_result()).toBe('black_wins');
 			expect(game_set[3].get_time_control_id()).toBe('Classical');
 			expect(game_set[3].get_time_control_name()).toBe('Classical (90 + 30)');
-			expect(game_set[3].get_date()).toBe('2025-01-20..17:06:10:000');
+			expect(game_set[3].get_date()).toBe('2025-01-10..17:06:10:000');
 
 			expect(game_set[4].get_id()).toBe('0000000023');
 			expect(game_set[4].get_white()).toBe('c');
@@ -1587,7 +1587,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_set[4].get_result()).toBe('white_wins');
 			expect(game_set[4].get_time_control_id()).toBe('Classical');
 			expect(game_set[4].get_time_control_name()).toBe('Classical (90 + 30)');
-			expect(game_set[4].get_date()).toBe('2025-01-20..17:06:15:000');
+			expect(game_set[4].get_date()).toBe('2025-01-10..17:06:15:000');
 
 			expect(game_set[5].get_id()).toBe('0000000014');
 			expect(game_set[5].get_white()).toBe('e');
@@ -1595,7 +1595,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_set[5].get_result()).toBe('draw');
 			expect(game_set[5].get_time_control_id()).toBe('Classical');
 			expect(game_set[5].get_time_control_name()).toBe('Classical (90 + 30)');
-			expect(game_set[5].get_date()).toBe('2025-01-20..17:06:20:000');
+			expect(game_set[5].get_date()).toBe('2025-01-10..17:06:20:000');
 
 			expect(game_set[6].get_id()).toBe('0000000021');
 			expect(game_set[6].get_white()).toBe('a');
@@ -1603,7 +1603,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_set[6].get_result()).toBe('draw');
 			expect(game_set[6].get_time_control_id()).toBe('Classical');
 			expect(game_set[6].get_time_control_name()).toBe('Classical (90 + 30)');
-			expect(game_set[6].get_date()).toBe('2025-01-20..17:06:25:000');
+			expect(game_set[6].get_date()).toBe('2025-01-10..17:06:25:000');
 
 			expect(game_set[7].get_id()).toBe('0000000013');
 			expect(game_set[7].get_white()).toBe('a');
@@ -1611,7 +1611,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_set[7].get_result()).toBe('draw');
 			expect(game_set[7].get_time_control_id()).toBe('Classical');
 			expect(game_set[7].get_time_control_name()).toBe('Classical (90 + 30)');
-			expect(game_set[7].get_date()).toBe('2025-01-20..17:06:30:000');
+			expect(game_set[7].get_date()).toBe('2025-01-10..17:06:30:000');
 
 			expect(a.get_games('Classical')?.length).toBe(2);
 			expect(b.get_games('Classical')?.length).toBe(2);
