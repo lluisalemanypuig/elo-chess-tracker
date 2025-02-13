@@ -26,7 +26,12 @@ Contact:
 import fs from 'fs';
 import path from 'path';
 
-import { game_add_new, game_edit_result, game_find_by_id } from '../../src-server/managers/games';
+import {
+	game_add_new,
+	game_edit_result,
+	game_find_by_id,
+	recalculate_all_ratings
+} from '../../src-server/managers/games';
 import { server_init_from_data } from '../../src-server/managers/initialization';
 import { user_add_new } from '../../src-server/managers/users';
 import { ADMIN } from '../../src-server/models/user_role';
@@ -1929,6 +1934,59 @@ describe('Check all games are located where they should be', () => {
 				expect(long_date_to_short_date(gi.get_date())).toEqual(current_record);
 			}
 			games_iter.next_record();
+		}
+	});
+});
+
+describe('Recalculation of ratings', () => {
+	let blitz: Game[] = [];
+	let classical: Game[] = [];
+
+	test('Read Blitz', () => {
+		const game_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Blitz');
+		let games_iter = new GamesIterator(game_dir);
+		while (!games_iter.end_record_list()) {
+			blitz = blitz.concat(games_iter.get_current_game_set());
+			games_iter.next_record();
+		}
+	});
+	test('Read Classical', () => {
+		const game_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Classical');
+		let games_iter = new GamesIterator(game_dir);
+		while (!games_iter.end_record_list()) {
+			classical = classical.concat(games_iter.get_current_game_set());
+			games_iter.next_record();
+		}
+	});
+
+	test('Recalculate', () => {
+		recalculate_all_ratings();
+	});
+
+	test('Read Blitz and compare', () => {
+		let all_games: Game[] = [];
+		const game_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Blitz');
+		let games_iter = new GamesIterator(game_dir);
+		while (!games_iter.end_record_list()) {
+			all_games = all_games.concat(games_iter.get_current_game_set());
+			games_iter.next_record();
+		}
+		expect(all_games.length).toEqual(blitz.length);
+		for (let i = 0; i < all_games.length; ++i) {
+			expect(all_games[i]).toEqual(blitz[i]);
+		}
+	});
+	test('Read Classical and compare', () => {
+		let all_games: Game[] = [];
+		const game_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Classical');
+		let games_iter = new GamesIterator(game_dir);
+		while (!games_iter.end_record_list()) {
+			all_games = all_games.concat(games_iter.get_current_game_set());
+			games_iter.next_record();
+		}
+		expect(all_games.length).toEqual(classical.length);
+		for (let i = 0; i < all_games.length; ++i) {
+			expect(all_games[i]).toEqual(classical[i]);
 		}
 	});
 });
