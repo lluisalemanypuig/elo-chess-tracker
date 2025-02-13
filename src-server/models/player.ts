@@ -72,8 +72,8 @@ export class Player {
 	/// Returns the rating of the player under the given time control id
 	get_rating(id: TimeControlID): Rating {
 		const index = this.index_time_control_id(id);
-		if (index >= this.ratings.length) {
-			console.log(`Rating with id '${id}' does not exist!`);
+		if (index == -1) {
+			throw new Error(`Rating with id '${id}' does not exist!`);
 		}
 		return this.ratings[index].rating;
 	}
@@ -81,9 +81,8 @@ export class Player {
 	/// Sets the classical rating of the player
 	set_rating(id: TimeControlID, rating: Rating): void {
 		const index = this.index_time_control_id(id);
-		if (index >= this.ratings.length) {
-			console.log(`Rating with id '${id}' does not exist!`);
-			return;
+		if (index == -1) {
+			throw new Error(`Rating with id '${id}' does not exist!`);
 		}
 		this.ratings[index].rating = rating;
 	}
@@ -97,7 +96,7 @@ export class Player {
 	clone(): Player {
 		return new Player(
 			this.username,
-			copyarray(this.ratings, (tcr: TimeControlRating) => {
+			copyarray(this.ratings, (tcr: TimeControlRating): TimeControlRating => {
 				return tcr.clone();
 			})
 		);
