@@ -155,7 +155,7 @@ function game_new(
 }
 
 function updated_player(time_control_id: TimeControlID, player: string, rating: Rating): Player {
-	let p = (user_retrieve(player) as User).clone();
+	let p = (user_retrieve(player) as User).clone_as_player();
 	p.set_rating(time_control_id, rating);
 	return p;
 }
