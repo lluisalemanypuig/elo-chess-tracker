@@ -37,6 +37,7 @@ import { EDIT_USER } from './models/user_action';
 import { SessionIDManager } from './managers/session_id_manager';
 import { SessionID } from './models/session_id';
 import { can_user_edit } from './utils/user_relationships';
+import { UsersManager } from './managers/users_manager';
 
 export async function get_users_edit_page(req: any, res: any) {
 	debug(log_now(), 'GET users_edit_page...');
@@ -78,14 +79,16 @@ export async function post_users_edit(req: any, res: any) {
 	}
 	const editor = r[2] as User;
 
-	const _edited = user_retrieve(req.body.u);
+	const mem = UsersManager.get_instance();
+
+	const edited_rid = req.body.u;
+	const _edited = mem.get_user_by_random_id(edited_rid);
 	if (_edited == undefined) {
-		res.send({
-			r: '0',
-			reason: `User '${req.body.u}' to be modified does not exist.`
-		});
+		debug(log_now(), `Random id '${edited_rid}' for user is not valid.`);
+		res.send({ r: '0', reason: 'Invalid user' });
 		return;
 	}
+
 	const edited = _edited as User;
 
 	debug(log_now(), `User '${editor.get_username()}' is trying to modify user '${edited.get_username()}'`);

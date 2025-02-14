@@ -27,7 +27,7 @@ import Debug from 'debug';
 const debug = Debug('ELO_TRACKER:server_query_users');
 
 import { log_now } from './utils/time';
-import { user_get_all__name_randid, user_retrieve } from './managers/users';
+import { user_get_all__name_randid } from './managers/users';
 import { is_user_logged_in } from './managers/session';
 import { User } from './models/user';
 import { UsersManager } from './managers/users_manager';
@@ -108,21 +108,22 @@ export async function post_query_users_edit(req: any, res: any) {
 		return;
 	}
 
-	const modified = user_retrieve(req.body.u);
-	if (modified == undefined) {
-		res.send({
-			r: '0',
-			reason: `User '${req.body.u}' to be modified does not exist.`
-		});
+	const mem = UsersManager.get_instance();
+
+	const to_edit_rid = req.body.u;
+	const _to_edit = mem.get_user_by_random_id(to_edit_rid);
+	if (_to_edit == undefined) {
+		debug(log_now(), `Random id '${to_edit_rid}' for edited user is not valid.`);
+		res.send({ r: '0', reason: 'Invalid user' });
 		return;
 	}
 
-	const umodified = modified as User;
+	const to_edit = _to_edit as User;
 	res.send({
 		r: '1',
-		first_name: umodified.get_first_name(),
-		last_name: umodified.get_last_name(),
-		roles: umodified.get_roles()
+		first_name: to_edit.get_first_name(),
+		last_name: to_edit.get_last_name(),
+		roles: to_edit.get_roles()
 	});
 }
 
