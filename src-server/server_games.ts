@@ -114,7 +114,7 @@ export async function post_games_create(req: any, res: any) {
 	const _white = mem.get_user_by_random_id(white_rid);
 	if (_white == undefined) {
 		debug(log_now(), `Random id '${white_rid}' for White is not valid.`);
-		res.send('Invalid values');
+		res.send({ r: '0', reason: 'Invalid values' });
 		return;
 	}
 
@@ -122,7 +122,7 @@ export async function post_games_create(req: any, res: any) {
 	const _black = mem.get_user_by_random_id(black_rid);
 	if (_black == undefined) {
 		debug(log_now(), `Random id '${black_rid}' for Black is not valid.`);
-		res.send('Invalid values');
+		res.send({ r: '0', reason: 'Invalid values' });
 		return;
 	}
 
