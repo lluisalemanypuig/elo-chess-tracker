@@ -25,7 +25,7 @@ Contact:
 
 import { set_footer_version_number } from './client_load_version_number';
 
-async function login_button_clicked(_event: any) {
+async function log_into_webpage(_event: any) {
 	// username box
 	const _username_box = document.getElementById('username_box');
 	if (_username_box == null) {
@@ -80,10 +80,19 @@ async function set_login_page_title() {
 	title.textContent = data as string;
 }
 
+async function password_box_key_down(_event: any) {
+	if (_event.key == 'Enter') {
+		log_into_webpage(_event);
+	}
+}
+
 window.onload = function () {
 	// define behaviour of login button
 	let login_button = document.getElementById('login_button') as HTMLButtonElement;
-	login_button.onclick = login_button_clicked;
+	login_button.onclick = log_into_webpage;
+
+	let password_box = document.getElementById('password_box') as HTMLInputElement;
+	password_box.onkeydown = password_box_key_down;
 
 	set_login_page_title();
 
