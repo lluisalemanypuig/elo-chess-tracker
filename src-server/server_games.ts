@@ -42,8 +42,8 @@ import { GamesManager } from './managers/games_manager';
 import { can_user_create_a_game, can_user_edit_a_game } from './utils/user_relationships';
 import { UsersManager } from './managers/users_manager';
 
-export async function get_games_own_page(req: any, res: any) {
-	debug(log_now(), 'GET games_own_page...');
+export async function get_games_list_own_page(req: any, res: any) {
+	debug(log_now(), 'GET games_list_own_page...');
 
 	const session = SessionID.from_cookie(req.cookies);
 	const r = is_user_logged_in(session);
@@ -53,11 +53,11 @@ export async function get_games_own_page(req: any, res: any) {
 		return;
 	}
 
-	res.sendFile(path.join(__dirname, '../html/games_own.html'));
+	res.sendFile(path.join(__dirname, '../html/games_list_own.html'));
 }
 
-export async function get_games_all_page(req: any, res: any) {
-	debug(log_now(), 'GET games_all_page...');
+export async function get_games_list_all_page(req: any, res: any) {
+	debug(log_now(), 'GET games_list_all_page...');
 
 	const session = SessionID.from_cookie(req.cookies);
 	const r = is_user_logged_in(session);
@@ -67,7 +67,7 @@ export async function get_games_all_page(req: any, res: any) {
 		return;
 	}
 
-	res.sendFile(path.join(__dirname, '../html/games_all.html'));
+	res.sendFile(path.join(__dirname, '../html/games_list_all.html'));
 }
 
 export async function get_games_create_page(req: any, res: any) {

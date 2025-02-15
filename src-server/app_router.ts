@@ -198,9 +198,9 @@ import { post_games_edit_result } from './server_games';
 router.post('/games_edit_result', post_games_edit_result);
 
 // retrieve list of games
-import { get_games_all_page, get_games_own_page } from './server_games';
-router.get('/games_own_page', get_games_own_page);
-router.get('/games_all_page', get_games_all_page);
+import { get_games_list_all_page, get_games_list_own_page } from './server_games';
+router.get('/games_list_own_page', get_games_list_own_page);
+router.get('/games_list_all_page', get_games_list_all_page);
 
 // retrieve ranking of players
 import { get_ranking_users_page } from './server_users_ranking';
