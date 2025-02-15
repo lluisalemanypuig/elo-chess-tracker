@@ -1,21 +1,29 @@
 #!/bin/bash
 
+function apply_browserify() {
+    in=$1
+
+    echo "    $1"
+    browserify $in > bdl__$1
+}
+
 cd js-source
 
-browserify client_load_version_number.js > bdl__client_load_version_number.js
 
-browserify client_login.js > bdl__client_login.js
+apply_browserify client_load_version_number.js
 
-browserify client_home.js > bdl__client_home.js
+apply_browserify client_login.js
 
-browserify client_users_new.js > bdl__client_users_new.js
-browserify client_users_edit.js > bdl__client_users_edit.js
-browserify client_users_ranking.js > bdl__client_users_ranking.js
-browserify client_users_password_change.js > bdl__client_users_password_change.js
+apply_browserify client_home.js
 
-browserify client_challenges.js > bdl__client_challenges.js
+apply_browserify client_users_new.js
+apply_browserify client_users_edit.js
+apply_browserify client_users_ranking.js
+apply_browserify client_users_password_change.js
 
-browserify client_games_list.js > bdl__client_games_list.js
-browserify client_games_create.js > bdl__client_games_create.js
+apply_browserify client_challenges.js
+
+apply_browserify client_games_list.js
+apply_browserify client_games_create.js
 
 cd ..
