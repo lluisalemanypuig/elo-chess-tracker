@@ -45,6 +45,11 @@ import {
 	SEE_GAMES_STUDENT,
 	SEE_GAMES_TEACHER,
 	SEE_GAMES_USER,
+	SEE_GRAPHS_ADMIN,
+	SEE_GRAPHS_MEMBER,
+	SEE_GRAPHS_STUDENT,
+	SEE_GRAPHS_TEACHER,
+	SEE_GRAPHS_USER,
 	CREATE_GAMES,
 	CREATE_GAMES_ADMIN,
 	CREATE_GAMES_TEACHER,
@@ -122,5 +127,16 @@ export function can_user_send_challenge(sender: User, receiver: User): boolean {
 			(receiver.is(MEMBER) && sender.can_do(CHALLENGE_MEMBER)) ||
 			(receiver.is(STUDENT) && sender.can_do(CHALLENGE_STUDENT)) ||
 			(receiver.is(TEACHER) && sender.can_do(CHALLENGE_TEACHER)))
+	);
+}
+
+/// Can a user (@e u) see another user's graph (@e other)?
+export function can_user_see_graph(u: User, other: User): boolean {
+	return (
+		u.can_do(SEE_GRAPHS_USER) &&
+		((other.is(ADMIN) && u.can_do(SEE_GRAPHS_ADMIN)) ||
+			(other.is(MEMBER) && u.can_do(SEE_GRAPHS_MEMBER)) ||
+			(other.is(STUDENT) && u.can_do(SEE_GRAPHS_STUDENT)) ||
+			(other.is(TEACHER) && u.can_do(SEE_GRAPHS_TEACHER)))
 	);
 }

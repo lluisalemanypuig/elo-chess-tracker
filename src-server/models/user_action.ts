@@ -83,6 +83,17 @@ export const SEE_GAMES_MEMBER = 'see_games_member';
 /// Can see student' games
 export const SEE_GAMES_STUDENT = 'see_games_student';
 
+/// Can see graphs
+export const SEE_GRAPHS_USER = 'see_graphs_user';
+/// Can see an admin's graphs
+export const SEE_GRAPHS_ADMIN = 'see_graphs_admin';
+/// Can see an teacher's graphs
+export const SEE_GRAPHS_TEACHER = 'see_graphs_teacher';
+/// Can see an member's graphs
+export const SEE_GRAPHS_MEMBER = 'see_graphs_member';
+/// Can see an student's graphs
+export const SEE_GRAPHS_STUDENT = 'see_graphs_student';
+
 /// Can challenge a user
 export const CHALLENGE_USER = 'challenge_user';
 /// Can see admin's games
@@ -128,6 +139,12 @@ export const all_actions = [
 	SEE_GAMES_MEMBER,
 	SEE_GAMES_STUDENT,
 
+	SEE_GRAPHS_USER,
+	SEE_GRAPHS_ADMIN,
+	SEE_GRAPHS_TEACHER,
+	SEE_GRAPHS_MEMBER,
+	SEE_GRAPHS_STUDENT,
+
 	CHALLENGE_USER,
 	CHALLENGE_ADMIN,
 	CHALLENGE_TEACHER,
@@ -145,6 +162,7 @@ export const EDIT_USERS_ID = 'edit_users';
 export const EDIT_GAMES_ID = 'edit_games';
 export const ASSIGN_ROLE_ID = 'assign_role';
 export const SEE_GAMES_ID = 'see_games';
+export const SEE_GRAPHS_ID = 'see_graphs';
 export const CHALLENGE_ID = 'challenge';
 
 /// All action ids that can be performed in this web
@@ -154,6 +172,7 @@ export const all_action_ids = [
 	EDIT_GAMES_ID,
 	ASSIGN_ROLE_ID,
 	SEE_GAMES_ID,
+	SEE_GRAPHS_ID,
 	CHALLENGE_ID
 ] as const;
 
@@ -172,6 +191,8 @@ export function get_generic_role_action_name(id: UserActionID): UserAction {
 			return ASSIGN_ROLE_USER;
 		case SEE_GAMES_ID:
 			return SEE_GAMES_USER;
+		case SEE_GRAPHS_ID:
+			return SEE_GRAPHS_USER;
 		case CHALLENGE_ID:
 			return CHALLENGE_USER;
 	}
@@ -248,6 +269,18 @@ export function get_role_action_name(id: UserActionID, r: UserRole): UserAction 
 					return SEE_GAMES_MEMBER;
 				case STUDENT:
 					return SEE_GAMES_STUDENT;
+			}
+			throw new Error(`Unhandled user role ${r} in ${id}`);
+		case SEE_GRAPHS_ID:
+			switch (r) {
+				case ADMIN:
+					return SEE_GRAPHS_ADMIN;
+				case TEACHER:
+					return SEE_GRAPHS_TEACHER;
+				case MEMBER:
+					return SEE_GRAPHS_MEMBER;
+				case STUDENT:
+					return SEE_GRAPHS_STUDENT;
 			}
 			throw new Error(`Unhandled user role ${r} in ${id}`);
 		case CHALLENGE_ID:
