@@ -1,18 +1,5 @@
 - Solve all TODO notes in the code
 
-- Add a function in the client to
-  -   Build all the graphs (one for each time control) in the server.
-  -   View one's own graph.
-  -   View the entire server graph -- with permission only.
-  -   View the graph of a specific user -- with permission only (see below)
+- For specific tasks, see:
 
-- Add new UserActions to allow a user to see the graph of other players
-  -   SEE_GRAPH
-  -   SEE_GRAPH_STUDENT
-  -   SEE_GRAPH_TEACHER
-  -   SEE_GRAPH_ADMIN
-  -   SEE_GRAPH_MEMBER
-
-- Update initialization tests to check graph reading
-
-- Update game creation tests with graph checking
+  https://www.notion.so/team/4463dc94-2a77-4d30-ab51-304525abde76/join
