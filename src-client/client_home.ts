@@ -85,10 +85,10 @@ function fill_action_links(user_actions: string[], user_roles: string[]) {
 		action_links.appendChild(game_create_link);
 	}
 	if (user_actions.includes(SEE_GAMES_USER)) {
-		let see_user_games_link = document.createElement('a') as HTMLAnchorElement;
-		see_user_games_link.href = '/games_list_all_page';
-		see_user_games_link.text = 'See all games';
-		action_links.appendChild(see_user_games_link);
+		let see_all_games_link = document.createElement('a') as HTMLAnchorElement;
+		see_all_games_link.href = '/games_list_all_page';
+		see_all_games_link.text = 'See all games';
+		action_links.appendChild(see_all_games_link);
 	}
 }
 
