@@ -32,6 +32,7 @@ import { log_now } from './utils/time';
 
 import { SessionIDManager } from './managers/session_id_manager';
 import { EnvironmentManager } from './managers/environment_manager';
+import { SessionID } from './models/session_id';
 
 let router = express.Router();
 router.get('/', (req: any, res: any) => {
@@ -202,6 +203,12 @@ import { get_games_list_all_page, get_games_list_own_page } from './server_games
 router.get('/games_list_own_page', get_games_list_own_page);
 router.get('/games_list_all_page', get_games_list_all_page);
 
+// retrieve list of games
+import { get_graphs_own_page, get_graphs_user_page, get_graphs_full_page } from './server_graphs';
+router.get('/graphs_own_page', get_graphs_own_page);
+router.get('/graphs_user_page', get_graphs_user_page);
+router.get('/graphs_full_page', get_graphs_full_page);
+
 // retrieve ranking of players
 import { get_ranking_users_page } from './server_users_ranking';
 router.get('/ranking_users_page', get_ranking_users_page);
@@ -222,7 +229,10 @@ router.post('/challenges_disagree_result', post_challenge_disagree_result);
 
 // recalculation of all Elo ratings
 import { post_recalculate_Elo_ratings } from './server_games';
-import { SessionID } from './models/session_id';
 router.post('/recalculate_Elo_ratings', post_recalculate_Elo_ratings);
+
+// recalculation of all graphs
+import { post_recalculate_graphs } from './server_graphs';
+router.post('/recalculate_graphs', post_recalculate_graphs);
 
 export { router };

@@ -25,7 +25,13 @@ Contact:
 
 import { set_footer_version_number } from './client_load_version_number';
 import { ADMIN, user_role_to_string, UserRole } from '../src-server/models/user_role';
-import { CREATE_GAMES, CREATE_USER, EDIT_USER, SEE_GAMES_USER } from '../src-server/models/user_action';
+import {
+	CREATE_GAMES,
+	CREATE_USER,
+	EDIT_USER,
+	SEE_GAMES_USER,
+	SEE_GRAPHS_USER
+} from '../src-server/models/user_action';
 import { make_cookie_string } from '../src-server/utils/cookies';
 import { SessionID } from '../src-server/models/session_id';
 
@@ -53,7 +59,6 @@ function fill_action_links(user_actions: string[], user_roles: string[]) {
 
 	if (user_roles.includes(ADMIN)) {
 		let recalculate_Elo_ratings_link = document.createElement('u') as HTMLElement;
-
 		recalculate_Elo_ratings_link.id = 'recalculate_Elo_ratings_link';
 		recalculate_Elo_ratings_link.textContent = 'Recalculate Elo ratings';
 		recalculate_Elo_ratings_link.onclick = async function () {
@@ -65,6 +70,19 @@ function fill_action_links(user_actions: string[], user_roles: string[]) {
 			await response.json();
 		};
 		action_links.appendChild(recalculate_Elo_ratings_link);
+
+		let recalculate_graphs_link = document.createElement('u') as HTMLElement;
+		recalculate_graphs_link.id = 'recalculate_graphs';
+		recalculate_graphs_link.textContent = 'Recalculate graphs';
+		recalculate_graphs_link.onclick = async function () {
+			const response = await fetch('/recalculate_graphs', {
+				method: 'POST',
+				headers: { 'Content-type': 'application/json; charset=UTF-8' }
+			});
+
+			await response.json();
+		};
+		action_links.appendChild(recalculate_graphs_link);
 	}
 	if (user_actions.includes(CREATE_USER)) {
 		let user_create_link = document.createElement('a') as HTMLAnchorElement;
@@ -89,6 +107,17 @@ function fill_action_links(user_actions: string[], user_roles: string[]) {
 		see_all_games_link.href = '/games_list_all_page';
 		see_all_games_link.text = 'See all games';
 		action_links.appendChild(see_all_games_link);
+	}
+	if (user_actions.includes(SEE_GRAPHS_USER)) {
+		let see_user_graph_link = document.createElement('a') as HTMLAnchorElement;
+		see_user_graph_link.href = '/graphs_user_page';
+		see_user_graph_link.text = 'See the graph of a user';
+		action_links.appendChild(see_user_graph_link);
+
+		let see_full_graph_link = document.createElement('a') as HTMLAnchorElement;
+		see_full_graph_link.href = '/graphs_full_page';
+		see_full_graph_link.text = 'See the full graph';
+		action_links.appendChild(see_full_graph_link);
 	}
 }
 
