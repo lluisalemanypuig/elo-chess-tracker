@@ -227,8 +227,8 @@ export async function post_games_edit_result(req: any, res: any) {
 	return;
 }
 
-export async function post_recalculate_Elo_ratings(req: any, res: any) {
-	debug(log_now(), 'POST recalculate_Elo_ratings...');
+export async function post_recalculate_ratings(req: any, res: any) {
+	debug(log_now(), 'POST recalculate_ratings...');
 
 	const session = SessionID.from_cookie(req.cookies);
 	const r = is_user_logged_in(session);
@@ -239,14 +239,14 @@ export async function post_recalculate_Elo_ratings(req: any, res: any) {
 	}
 
 	if (!(r[2] as User).is(ADMIN)) {
-		debug(log_now(), `User '${session.username}' cannot recalculate Elo ratings.`);
+		debug(log_now(), `User '${session.username}' cannot recalculate ratings.`);
 		res.send('403 - Forbidden');
 		return;
 	}
 
-	debug(log_now(), `Recalculating Elo ratings...`);
+	debug(log_now(), `Recalculating ratings...`);
 
-	// actually recalculating Elo ratings
+	// actually recalculating ratings
 	recalculate_all_ratings();
 
 	res.send({ r: '1' });

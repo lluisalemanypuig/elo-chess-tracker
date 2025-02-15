@@ -57,33 +57,6 @@ export async function logout_link_clicked(_event: any) {
 function fill_action_links(user_actions: string[], user_roles: string[]) {
 	let action_links = document.getElementById('special_action_links') as HTMLDivElement;
 
-	if (user_roles.includes(ADMIN)) {
-		let recalculate_Elo_ratings_link = document.createElement('u') as HTMLElement;
-		recalculate_Elo_ratings_link.id = 'recalculate_Elo_ratings_link';
-		recalculate_Elo_ratings_link.textContent = 'Recalculate Elo ratings';
-		recalculate_Elo_ratings_link.onclick = async function () {
-			const response = await fetch('/recalculate_Elo_ratings', {
-				method: 'POST',
-				headers: { 'Content-type': 'application/json; charset=UTF-8' }
-			});
-
-			await response.json();
-		};
-		action_links.appendChild(recalculate_Elo_ratings_link);
-
-		let recalculate_graphs_link = document.createElement('u') as HTMLElement;
-		recalculate_graphs_link.id = 'recalculate_graphs';
-		recalculate_graphs_link.textContent = 'Recalculate graphs';
-		recalculate_graphs_link.onclick = async function () {
-			const response = await fetch('/recalculate_graphs', {
-				method: 'POST',
-				headers: { 'Content-type': 'application/json; charset=UTF-8' }
-			});
-
-			await response.json();
-		};
-		action_links.appendChild(recalculate_graphs_link);
-	}
 	if (user_actions.includes(CREATE_USER)) {
 		let user_create_link = document.createElement('a') as HTMLAnchorElement;
 		user_create_link.href = '/users_create_page';
@@ -118,6 +91,34 @@ function fill_action_links(user_actions: string[], user_roles: string[]) {
 		see_full_graph_link.href = '/graphs_full_page';
 		see_full_graph_link.text = 'See the full graph';
 		action_links.appendChild(see_full_graph_link);
+	}
+
+	if (user_roles.includes(ADMIN)) {
+		let recalculate_ratings_link = document.createElement('u') as HTMLElement;
+		recalculate_ratings_link.id = 'recalculate_ratings_link';
+		recalculate_ratings_link.textContent = 'Recalculate ratings';
+		recalculate_ratings_link.onclick = async function () {
+			const response = await fetch('/recalculate_ratings', {
+				method: 'POST',
+				headers: { 'Content-type': 'application/json; charset=UTF-8' }
+			});
+
+			await response.json();
+		};
+		action_links.appendChild(recalculate_ratings_link);
+
+		let recalculate_graphs_link = document.createElement('u') as HTMLElement;
+		recalculate_graphs_link.id = 'recalculate_graphs';
+		recalculate_graphs_link.textContent = 'Recalculate graphs';
+		recalculate_graphs_link.onclick = async function () {
+			const response = await fetch('/recalculate_graphs', {
+				method: 'POST',
+				headers: { 'Content-type': 'application/json; charset=UTF-8' }
+			});
+
+			await response.json();
+		};
+		action_links.appendChild(recalculate_graphs_link);
 	}
 }
 

@@ -228,8 +228,8 @@ router.post('/challenges_agree_result', post_challenge_agree_result);
 router.post('/challenges_disagree_result', post_challenge_disagree_result);
 
 // recalculation of all Elo ratings
-import { post_recalculate_Elo_ratings } from './server_games';
-router.post('/recalculate_Elo_ratings', post_recalculate_Elo_ratings);
+import { post_recalculate_ratings } from './server_games';
+router.post('/recalculate_ratings', post_recalculate_ratings);
 
 // recalculation of all graphs
 import { post_recalculate_graphs } from './server_graphs';

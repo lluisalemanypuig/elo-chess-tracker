@@ -37,7 +37,7 @@ Contact:
 	margin-bottom: 30px;
 }
 
-a, #logout_link, #recalculate_Elo_ratings_link, #recalculate_graphs {
+a, #logout_link, #recalculate_ratings_link, #recalculate_graphs {
 	color: blue;
 	cursor: pointer
 }
