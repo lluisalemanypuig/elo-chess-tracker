@@ -48,7 +48,7 @@ import {
 	can_user_edit_a_game,
 	can_user_create_a_game,
 	can_user_see_a_game
-} from '../../src-server/utils/user_relationships';
+} from '../../src-server/models/user_relationships';
 
 describe('Edition', () => {
 	const editor_admin = new User('un', 'f', 'l', new Password('a', 'b'), [ADMIN], [], []);

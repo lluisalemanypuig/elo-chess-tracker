@@ -36,7 +36,7 @@ import { EDIT_USER } from './models/user_action';
 
 import { SessionIDManager } from './managers/session_id_manager';
 import { SessionID } from './models/session_id';
-import { can_user_edit } from './utils/user_relationships';
+import { can_user_edit } from './models/user_relationships';
 import { UsersManager } from './managers/users_manager';
 
 export async function get_users_edit_page(req: any, res: any) {

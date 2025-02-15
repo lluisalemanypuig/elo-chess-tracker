@@ -23,7 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { User } from '../models/user';
+import { User } from './user';
 import {
 	CHALLENGE_ADMIN,
 	CHALLENGE_MEMBER,
@@ -55,8 +55,8 @@ import {
 	CREATE_GAMES_TEACHER,
 	CREATE_GAMES_STUDENT,
 	CREATE_GAMES_MEMBER
-} from '../models/user_action';
-import { ADMIN, MEMBER, STUDENT, TEACHER, UserRole } from '../models/user_role';
+} from './user_action';
+import { ADMIN, MEMBER, STUDENT, TEACHER, UserRole } from './user_role';
 
 /// Can a user (@e editor) edit another user (@e edited)?
 export function can_user_edit(editor: User, edited: User): boolean {

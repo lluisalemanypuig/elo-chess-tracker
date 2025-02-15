@@ -39,7 +39,7 @@ import { ADMIN } from './models/user_role';
 import { SessionID } from './models/session_id';
 import { TimeControlID } from './models/time_control';
 import { GamesManager } from './managers/games_manager';
-import { can_user_create_a_game, can_user_edit_a_game } from './utils/user_relationships';
+import { can_user_create_a_game, can_user_edit_a_game } from './models/user_relationships';
 import { UsersManager } from './managers/users_manager';
 
 export async function get_games_list_own_page(req: any, res: any) {
