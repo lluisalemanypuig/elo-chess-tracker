@@ -141,14 +141,21 @@ export type UserAction = (typeof all_actions)[number];
 // -----------------------------------------------------------------------------
 
 export const CREATE_GAME_ID = 'create_game';
-export const EDIT_ID = 'edit';
+export const EDIT_USERS_ID = 'edit_users';
 export const EDIT_GAMES_ID = 'edit_games';
-export const ASSIGN_ROLE_ID = 'assign';
-export const SEE_ID = 'see';
+export const ASSIGN_ROLE_ID = 'assign_role';
+export const SEE_GAMES_ID = 'see_games';
 export const CHALLENGE_ID = 'challenge';
 
 /// All action ids that can be performed in this web
-export const all_action_ids = [CREATE_GAME_ID, EDIT_ID, EDIT_GAMES_ID, ASSIGN_ROLE_ID, SEE_ID, CHALLENGE_ID] as const;
+export const all_action_ids = [
+	CREATE_GAME_ID,
+	EDIT_USERS_ID,
+	EDIT_GAMES_ID,
+	ASSIGN_ROLE_ID,
+	SEE_GAMES_ID,
+	CHALLENGE_ID
+] as const;
 
 /// All actions as type
 export type UserActionID = (typeof all_action_ids)[number];
@@ -157,13 +164,13 @@ export function get_generic_role_action_name(id: UserActionID): UserAction {
 	switch (id) {
 		case CREATE_GAME_ID:
 			return CREATE_GAMES;
-		case EDIT_ID:
+		case EDIT_USERS_ID:
 			return EDIT_USER;
 		case EDIT_GAMES_ID:
 			return EDIT_GAMES_USER;
 		case ASSIGN_ROLE_ID:
 			return ASSIGN_ROLE_USER;
-		case SEE_ID:
+		case SEE_GAMES_ID:
 			return SEE_GAMES_USER;
 		case CHALLENGE_ID:
 			return CHALLENGE_USER;
@@ -195,7 +202,7 @@ export function get_role_action_name(id: UserActionID, r: UserRole): UserAction 
 					return CREATE_GAMES_STUDENT;
 			}
 			throw new Error(`Unhandled user role ${r} in ${id}`);
-		case EDIT_ID:
+		case EDIT_USERS_ID:
 			switch (r) {
 				case ADMIN:
 					return EDIT_ADMIN;
@@ -231,7 +238,7 @@ export function get_role_action_name(id: UserActionID, r: UserRole): UserAction 
 					return ASSIGN_ROLE_STUDENT;
 			}
 			throw new Error(`Unhandled user role ${r} in ${id}`);
-		case SEE_ID:
+		case SEE_GAMES_ID:
 			switch (r) {
 				case ADMIN:
 					return SEE_GAMES_ADMIN;
