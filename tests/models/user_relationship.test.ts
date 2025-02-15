@@ -38,7 +38,13 @@ import {
 	CREATE_GAMES_MEMBER,
 	CREATE_GAMES_ADMIN,
 	CREATE_GAMES_STUDENT,
-	CREATE_GAMES_TEACHER
+	CREATE_GAMES_TEACHER,
+	CHALLENGE_ADMIN,
+	CHALLENGE_STUDENT,
+	CHALLENGE_MEMBER,
+	SEE_GRAPHS_ADMIN,
+	SEE_GRAPHS_STUDENT,
+	SEE_GRAPHS_MEMBER
 } from '../../src-server/models/user_action';
 import { ADMIN, MEMBER, STUDENT, TEACHER } from '../../src-server/models/user_role';
 import { UserRoleToUserAction } from '../../src-server/models/user_role_action';
@@ -47,7 +53,9 @@ import {
 	can_user_edit,
 	can_user_edit_a_game,
 	can_user_create_a_game,
-	can_user_see_a_game
+	can_user_see_a_game,
+	can_user_send_challenge,
+	can_user_see_graph
 } from '../../src-server/models/user_relationships';
 
 describe('Edition', () => {
@@ -336,5 +344,115 @@ describe('Can a user create a game?', () => {
 		expect(can_user_create_a_game(teacher, teacher, student)).toBe(true);
 		expect(can_user_create_a_game(teacher, student, member)).toBe(false);
 		expect(can_user_create_a_game(teacher, admin, member)).toBe(true);
+	});
+});
+
+describe('Can a user challenge?', () => {
+	const admin = new User('un', 'f', 'l', new Password('a', 'b'), [ADMIN], [], []);
+	const teacher = new User('un', 'f', 'l', new Password('a', 'b'), [TEACHER], [], []);
+	const member = new User('un', 'f', 'l', new Password('a', 'b'), [MEMBER], [], []);
+	const student = new User('un', 'f', 'l', new Password('a', 'b'), [STUDENT], [], []);
+
+	test('Admin', () => {
+		let rel = UserRoleToUserAction.get_instance();
+		rel.clear();
+		initialize_permissions({
+			admin: [CHALLENGE_ADMIN, CHALLENGE_STUDENT],
+			teacher: [],
+			student: [],
+			member: []
+		});
+
+		expect(can_user_send_challenge(admin, admin)).toBe(true);
+		expect(can_user_send_challenge(admin, teacher)).toBe(false);
+		expect(can_user_send_challenge(admin, student)).toBe(true);
+		expect(can_user_send_challenge(admin, member)).toBe(false);
+	});
+
+	test('Teacher (1)', () => {
+		let rel = UserRoleToUserAction.get_instance();
+		rel.clear();
+		initialize_permissions({
+			admin: [],
+			teacher: [CHALLENGE_ADMIN, CHALLENGE_STUDENT],
+			student: [],
+			member: []
+		});
+
+		expect(can_user_send_challenge(teacher, admin)).toBe(true);
+		expect(can_user_send_challenge(teacher, teacher)).toBe(false);
+		expect(can_user_send_challenge(teacher, student)).toBe(true);
+		expect(can_user_send_challenge(teacher, member)).toBe(false);
+	});
+
+	test('Teacher (2)', () => {
+		let rel = UserRoleToUserAction.get_instance();
+		rel.clear();
+		initialize_permissions({
+			admin: [],
+			teacher: [CHALLENGE_ADMIN, CHALLENGE_STUDENT, CHALLENGE_MEMBER],
+			student: [],
+			member: []
+		});
+
+		expect(can_user_send_challenge(teacher, admin)).toBe(true);
+		expect(can_user_send_challenge(teacher, teacher)).toBe(false);
+		expect(can_user_send_challenge(teacher, student)).toBe(true);
+		expect(can_user_send_challenge(teacher, member)).toBe(true);
+	});
+});
+
+describe('Can a user see a graph?', () => {
+	const admin = new User('un', 'f', 'l', new Password('a', 'b'), [ADMIN], [], []);
+	const teacher = new User('un', 'f', 'l', new Password('a', 'b'), [TEACHER], [], []);
+	const member = new User('un', 'f', 'l', new Password('a', 'b'), [MEMBER], [], []);
+	const student = new User('un', 'f', 'l', new Password('a', 'b'), [STUDENT], [], []);
+
+	test('Admin', () => {
+		let rel = UserRoleToUserAction.get_instance();
+		rel.clear();
+		initialize_permissions({
+			admin: [SEE_GRAPHS_ADMIN, SEE_GRAPHS_STUDENT],
+			teacher: [],
+			student: [],
+			member: []
+		});
+
+		expect(can_user_see_graph(admin, admin)).toBe(true);
+		expect(can_user_see_graph(admin, teacher)).toBe(false);
+		expect(can_user_see_graph(admin, student)).toBe(true);
+		expect(can_user_see_graph(admin, member)).toBe(false);
+	});
+
+	test('Teacher (1)', () => {
+		let rel = UserRoleToUserAction.get_instance();
+		rel.clear();
+		initialize_permissions({
+			admin: [],
+			teacher: [SEE_GRAPHS_ADMIN, SEE_GRAPHS_STUDENT],
+			student: [],
+			member: []
+		});
+
+		expect(can_user_see_graph(teacher, admin)).toBe(true);
+		expect(can_user_see_graph(teacher, teacher)).toBe(false);
+		expect(can_user_see_graph(teacher, student)).toBe(true);
+		expect(can_user_see_graph(teacher, member)).toBe(false);
+	});
+
+	test('Teacher (2)', () => {
+		let rel = UserRoleToUserAction.get_instance();
+		rel.clear();
+		initialize_permissions({
+			admin: [],
+			teacher: [SEE_GRAPHS_ADMIN, SEE_GRAPHS_STUDENT, SEE_GRAPHS_MEMBER],
+			student: [],
+			member: []
+		});
+
+		expect(can_user_see_graph(teacher, admin)).toBe(true);
+		expect(can_user_see_graph(teacher, teacher)).toBe(false);
+		expect(can_user_see_graph(teacher, student)).toBe(true);
+		expect(can_user_see_graph(teacher, member)).toBe(true);
 	});
 });
