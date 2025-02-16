@@ -37,6 +37,7 @@ import { search_linear_by_key } from './utils/searching';
 import { UsersManager } from './managers/users_manager';
 import { Edge } from './models/graph/edge';
 import { EdgeMetadata } from './models/graph/edge_metadata';
+import { can_user_see_graph } from './models/user_relationships';
 
 class NodeInfo {
 	// to disambiguate between users with the same full name
@@ -153,7 +154,7 @@ function retrieve_graph_user(username: string, time_control_id: TimeControlID): 
 	return [list_nodes, list_edges];
 }
 
-function retrieve_graph_full(time_control_id: TimeControlID): [NodeInfo[], EdgeInfo[]] {
+function retrieve_graph_full(querier: User, time_control_id: TimeControlID): [NodeInfo[], EdgeInfo[]] {
 	const users = UsersManager.get_instance();
 	const graphs = GraphsManager.get_instance();
 
@@ -163,9 +164,12 @@ function retrieve_graph_full(time_control_id: TimeControlID): [NodeInfo[], EdgeI
 	let list_edges: EdgeInfo[] = [];
 	for (let idx = 0; idx < users.num_users(); ++idx) {
 		const this_user = users.get_user_at(idx) as User;
-		const this_user_rand_id = users.get_user_random_ID_at(idx) as number;
-		const username = this_user.get_username();
+		if (!can_user_see_graph(querier, this_user)) {
+			continue;
+		}
 
+		const username = this_user.get_username();
+		const this_user_rand_id = users.get_user_random_ID_at(idx) as number;
 		{
 			let i = new NodeInfo();
 			i.full_name = this_user.get_full_name();
@@ -176,6 +180,11 @@ function retrieve_graph_full(time_control_id: TimeControlID): [NodeInfo[], EdgeI
 
 		G.get_outgoing_edges(username)?.forEach((e: Edge) => {
 			const edge_user_idx = users.get_user_index_by_username(e.neighbor) as number;
+			const edge_user = users.get_user_at(edge_user_idx) as User;
+			if (!can_user_see_graph(querier, edge_user)) {
+				return;
+			}
+
 			const edge_user_rand_id = users.get_user_random_ID_at(edge_user_idx) as number;
 
 			let ei = new EdgeInfo();
@@ -253,7 +262,10 @@ export async function post_query_graphs_full(req: any, res: any) {
 		`User ${session.username} is querying the graph of the entire server of time control ${time_control_id}.`
 	);
 
-	const [list_nodes, list_edges] = retrieve_graph_full(time_control_id);
+	const [list_nodes, list_edges] = retrieve_graph_full(
+		UsersManager.get_instance().get_user_by_username(session.username) as User,
+		time_control_id
+	);
 	res.send({
 		r: '1',
 		nodes: list_nodes,
