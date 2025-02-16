@@ -35,24 +35,9 @@ describe('Write to and read from disk', () => {
 		let g = new Graph();
 
 		g.add_edge('A', 'B', 'white_wins');
-		expect(g.get_data('A', 'B')).toEqual(new EdgeMetadata(1, 0, 0));
-		expect(g.get_degree('A')).toBe(1);
-		expect(g.get_oponents('A')).toEqual(['B']);
-
 		g.add_edge('B', 'A', 'white_wins');
-		expect(g.get_data('B', 'A')).toEqual(new EdgeMetadata(1, 0, 0));
-		expect(g.get_degree('B')).toBe(1);
-		expect(g.get_oponents('B')).toEqual(['A']);
-
 		g.add_edge('A', 'B', 'draw');
-		expect(g.get_data('A', 'B')).toEqual(new EdgeMetadata(1, 1, 0));
-		expect(g.get_degree('A')).toBe(1);
-		expect(g.get_oponents('A')).toEqual(['B']);
-
 		g.add_edge('B', 'A', 'draw');
-		expect(g.get_data('B', 'A')).toEqual(new EdgeMetadata(1, 1, 0));
-		expect(g.get_degree('B')).toBe(1);
-		expect(g.get_oponents('B')).toEqual(['A']);
 
 		if (fs.existsSync('graph_test/')) {
 			fs.rmdirSync('graph_test/', { recursive: true });
@@ -65,47 +50,30 @@ describe('Write to and read from disk', () => {
 		expect(fs.readdirSync('graph_test').length).toBe(2);
 
 		const g = graph_from_json('graph_test/');
-		expect(g.get_data('A', 'B')).toEqual(new EdgeMetadata(1, 1, 0));
-		expect(g.get_degree('A')).toBe(1);
-		expect(g.get_oponents('A')).toEqual(['B']);
 
-		expect(g.get_data('B', 'A')).toEqual(new EdgeMetadata(1, 1, 0));
-		expect(g.get_degree('B')).toBe(1);
-		expect(g.get_oponents('B')).toEqual(['A']);
+		expect(g.get_data_as_white('A', 'B')).toEqual(new EdgeMetadata(1, 1, 0));
+		expect(g.get_data_as_black('A', 'B')).toEqual(new EdgeMetadata(0, 1, 1));
+		expect(g.get_out_degree('A')).toBe(1);
+		expect(g.get_in_degree('A')).toBe(1);
+		expect(g.get_black_opponents('A')).toEqual(['B']);
+		expect(g.get_white_opponents('A')).toEqual(['B']);
+		expect(g.get_data_as_white('B', 'A')).toEqual(new EdgeMetadata(1, 1, 0));
+		expect(g.get_data_as_black('B', 'A')).toEqual(new EdgeMetadata(0, 1, 1));
+		expect(g.get_out_degree('B')).toBe(1);
+		expect(g.get_in_degree('B')).toBe(1);
+		expect(g.get_black_opponents('B')).toEqual(['A']);
+		expect(g.get_white_opponents('B')).toEqual(['A']);
 	});
 
 	test('3 users -- write', () => {
 		let g = new Graph();
 
 		g.add_edge('A', 'B', 'white_wins');
-		expect(g.get_data('A', 'B')).toEqual(new EdgeMetadata(1, 0, 0));
-		expect(g.get_degree('A')).toBe(1);
-		expect(g.get_oponents('A')).toEqual(['B']);
-
 		g.add_edge('A', 'C', 'black_wins');
-		expect(g.get_data('A', 'C')).toEqual(new EdgeMetadata(0, 0, 1));
-		expect(g.get_degree('A')).toBe(2);
-		expect(g.get_oponents('A')).toEqual(['B', 'C']);
-
 		g.add_edge('B', 'C', 'draw');
-		expect(g.get_data('B', 'C')).toEqual(new EdgeMetadata(0, 1, 0));
-		expect(g.get_degree('B')).toBe(1);
-		expect(g.get_oponents('B')).toEqual(['C']);
-
 		g.add_edge('C', 'B', 'white_wins');
-		expect(g.get_data('C', 'B')).toEqual(new EdgeMetadata(1, 0, 0));
-		expect(g.get_degree('C')).toBe(1);
-		expect(g.get_oponents('C')).toEqual(['B']);
-
 		g.add_edge('C', 'A', 'white_wins');
-		expect(g.get_data('C', 'A')).toEqual(new EdgeMetadata(1, 0, 0));
-		expect(g.get_degree('C')).toBe(2);
-		expect(g.get_oponents('C')).toEqual(['A', 'B']);
-
 		g.add_edge('C', 'B', 'black_wins');
-		expect(g.get_data('C', 'B')).toEqual(new EdgeMetadata(1, 0, 1));
-		expect(g.get_degree('C')).toBe(2);
-		expect(g.get_oponents('C')).toEqual(['A', 'B']);
 
 		if (fs.existsSync('graph_test/')) {
 			fs.rmdirSync('graph_test/', { recursive: true });
@@ -118,19 +86,31 @@ describe('Write to and read from disk', () => {
 		expect(fs.readdirSync('graph_test').length).toBe(3);
 		const g = graph_from_json('graph_test/');
 
-		expect(g.get_data('A', 'B')).toEqual(new EdgeMetadata(1, 0, 0));
-		expect(g.get_data('A', 'C')).toEqual(new EdgeMetadata(0, 0, 1));
-		expect(g.get_degree('A')).toBe(2);
-		expect(g.get_oponents('A')).toEqual(['B', 'C']);
+		expect(g.get_data_as_white('A', 'B')).toEqual(new EdgeMetadata(1, 0, 0));
+		expect(g.get_data_as_black('A', 'B')).toEqual(undefined);
+		expect(g.get_data_as_white('A', 'C')).toEqual(new EdgeMetadata(0, 0, 1));
+		expect(g.get_data_as_black('A', 'C')).toEqual(new EdgeMetadata(0, 0, 1));
+		expect(g.get_out_degree('A')).toBe(2);
+		expect(g.get_in_degree('A')).toBe(1);
+		expect(g.get_black_opponents('A')).toEqual(['B', 'C']);
+		expect(g.get_white_opponents('A')).toEqual(['C']);
 
-		expect(g.get_data('B', 'A')).toBe(undefined);
-		expect(g.get_data('B', 'C')).toEqual(new EdgeMetadata(0, 1, 0));
-		expect(g.get_degree('B')).toBe(1);
-		expect(g.get_oponents('B')).toEqual(['C']);
+		expect(g.get_data_as_white('B', 'A')).toEqual(undefined);
+		expect(g.get_data_as_black('B', 'A')).toEqual(new EdgeMetadata(0, 0, 1));
+		expect(g.get_data_as_white('B', 'C')).toEqual(new EdgeMetadata(0, 1, 0));
+		expect(g.get_data_as_black('B', 'C')).toEqual(new EdgeMetadata(1, 0, 1));
+		expect(g.get_out_degree('B')).toBe(1);
+		expect(g.get_in_degree('B')).toBe(2);
+		expect(g.get_black_opponents('B')).toEqual(['C']);
+		expect(g.get_white_opponents('B')).toEqual(['A', 'C']);
 
-		expect(g.get_data('C', 'A')).toEqual(new EdgeMetadata(1, 0, 0));
-		expect(g.get_data('C', 'B')).toEqual(new EdgeMetadata(1, 0, 1));
-		expect(g.get_degree('C')).toBe(2);
-		expect(g.get_oponents('C')).toEqual(['A', 'B']);
+		expect(g.get_data_as_white('C', 'A')).toEqual(new EdgeMetadata(1, 0, 0));
+		expect(g.get_data_as_black('C', 'A')).toEqual(new EdgeMetadata(1, 0, 0));
+		expect(g.get_data_as_white('C', 'B')).toEqual(new EdgeMetadata(1, 0, 1));
+		expect(g.get_data_as_black('C', 'B')).toEqual(new EdgeMetadata(0, 1, 0));
+		expect(g.get_out_degree('C')).toBe(2);
+		expect(g.get_in_degree('C')).toBe(2);
+		expect(g.get_black_opponents('C')).toEqual(['A', 'B']);
+		expect(g.get_white_opponents('C')).toEqual(['A', 'B']);
 	});
 });
