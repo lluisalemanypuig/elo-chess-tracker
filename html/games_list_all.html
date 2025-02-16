@@ -43,9 +43,14 @@ Contact:
 
 				<h1>All games</h1>
 
+				<div id="label_and_time_control" class="label-and-select">
+					<label>Time control:</label>
+					<select id="time_control_select"></select>
+				</div>
+
 				<div id="games_list">
 					<table id="games_table">
-						<tr>
+						<thead>
 							<th>Game ID</th>
 							<th>White</th>
 							<th>Black</th>
@@ -56,7 +61,8 @@ Contact:
 							<th>Increment White</th>
 							<th>Black Rating</th>
 							<th>Increment Black</th>
-						</tr>
+						</thead>
+						<tbody></tbody>
 					</table>
 				</div>
 			</div>
