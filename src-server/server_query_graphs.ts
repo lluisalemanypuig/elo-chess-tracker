@@ -54,7 +54,7 @@ class EdgeInfo {
 }
 
 function edge_size(m: EdgeMetadata): number {
-	return 10 * m.num_games_won + 7 * m.num_games_drawn + m.num_games_lost;
+	return m.num_games_won + m.num_games_drawn + m.num_games_lost;
 }
 
 function retrieve_graph_user(username: string, time_control_id: TimeControlID): [NodeInfo[], EdgeInfo[]] {
@@ -78,8 +78,6 @@ function retrieve_graph_user(username: string, time_control_id: TimeControlID): 
 	let list_edges: EdgeInfo[] = [];
 
 	G.get_outgoing_edges(username)?.forEach((e: Edge) => {
-		debug(log_now(), `    Processing out edge: ${e.neighbor}`);
-
 		const edge_user_idx = users.get_user_index_by_username(e.neighbor) as number;
 		const edge_user_rand_id = users.get_user_random_ID_at(edge_user_idx) as number;
 		const edge_user = users.get_user_at(edge_user_idx) as User;
@@ -101,8 +99,6 @@ function retrieve_graph_user(username: string, time_control_id: TimeControlID): 
 		}
 	});
 	G.get_ingoing_edges(username)?.forEach((e: Edge) => {
-		debug(log_now(), `    Processing in edge: ${e.neighbor}`);
-
 		const edge_user_idx = users.get_user_index_by_username(e.neighbor) as number;
 		const edge_user_rand_id = users.get_user_random_ID_at(edge_user_idx) as number;
 
@@ -179,8 +175,6 @@ function retrieve_graph_full(time_control_id: TimeControlID): [NodeInfo[], EdgeI
 		}
 
 		G.get_outgoing_edges(username)?.forEach((e: Edge) => {
-			debug(log_now(), `    Processing out edge: ${e.neighbor}`);
-
 			const edge_user_idx = users.get_user_index_by_username(e.neighbor) as number;
 			const edge_user_rand_id = users.get_user_random_ID_at(edge_user_idx) as number;
 
