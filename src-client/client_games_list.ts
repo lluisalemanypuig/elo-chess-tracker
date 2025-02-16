@@ -23,6 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
+import { fill_time_controls } from './client_utils_time_control_select';
 import { set_footer_version_number } from './client_utils_version_number';
 
 function new_text_cell(text: string) {
@@ -115,7 +116,7 @@ function new_select_cell_result(original_result: string, game_id: string) {
 	return select_result;
 }
 
-window.onload = async function () {
+async function fill_games_list_time_control(time_control_id: string) {
 	const val = document.getElementById('type_of_list')?.getAttribute('value');
 
 	const query_to_server: string = (() => {
@@ -128,9 +129,9 @@ window.onload = async function () {
 		return '?';
 	})();
 
-	// "query" the server
 	const response = await fetch(query_to_server, {
-		method: 'GET',
+		method: 'POST',
+		body: JSON.stringify({ tc_i: time_control_id }),
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
 
@@ -141,9 +142,7 @@ window.onload = async function () {
 
 	const games = data.games as any[];
 
-	let table = document.getElementById('games_table') as HTMLTableElement;
-	let tbody = table.getElementsByTagName('tbody')[0];
-
+	let new_tbody = document.createElement('tbody');
 	for (let i = 0; i < games.length; i++) {
 		let row = document.createElement('tr');
 
@@ -169,8 +168,26 @@ window.onload = async function () {
 			row.appendChild(new_button_cell('Edit', games[i].id));
 		}
 
-		tbody.appendChild(row);
+		new_tbody.appendChild(row);
 	}
+
+	let table = document.getElementById('games_table') as HTMLTableElement;
+	let old_tbody = table.getElementsByTagName('tbody')[0] as HTMLElement;
+	old_tbody.parentNode?.replaceChild(new_tbody, old_tbody);
+}
+
+async function fill_games_list(_event: any) {
+	const time_control_select = document.getElementById('time_control_select') as HTMLSelectElement;
+	const time_control_id = time_control_select.options[time_control_select.selectedIndex].value;
+	fill_games_list_time_control(time_control_id);
+}
+
+window.onload = async function () {
+	fill_time_controls('time_control_select');
+	fill_games_list_time_control('');
+
+	let time_control = document.getElementById('time_control_select') as HTMLSelectElement;
+	time_control.onchange = fill_games_list;
 
 	set_footer_version_number();
 };
