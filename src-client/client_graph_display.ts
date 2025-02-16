@@ -65,8 +65,8 @@ async function display_graph(_event: any) {
 
 	const val = document.getElementById('graph-viewer')?.getAttribute('value');
 	const query_to_server: string = (() => {
-		if (val == 'all') {
-			return '/query_graphs_all';
+		if (val == 'full') {
+			return '/query_graphs_full';
 		}
 		if (val == 'own') {
 			return '/query_graphs_own';
