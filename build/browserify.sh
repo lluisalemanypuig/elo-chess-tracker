@@ -26,4 +26,6 @@ apply_browserify client_challenges.js
 apply_browserify client_games_list.js
 apply_browserify client_games_create.js
 
+apply_browserify client_graph_display.js
+
 cd ..
