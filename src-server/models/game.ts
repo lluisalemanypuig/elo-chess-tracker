@@ -30,6 +30,17 @@ import { DateStringLongMillis } from '../utils/time';
 /// Result of a game
 export type GameResult = 'white_wins' | 'black_wins' | 'draw';
 
+export function opposite_result(res: GameResult): GameResult {
+	if (res == 'draw') {
+		return 'draw';
+	}
+	if (res == 'white_wins') {
+		return 'black_wins';
+	}
+	// res == "black_wins"
+	return 'white_wins';
+}
+
 /// A type for game IDs.
 export type GameID = string;
 

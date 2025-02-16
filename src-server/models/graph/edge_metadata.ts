@@ -59,6 +59,16 @@ export class EdgeMetadata {
 		);
 	}
 
+	reverse(): void {
+		const w = this.num_games_won;
+		this.num_games_won = this.num_games_lost;
+		this.num_games_lost = w;
+	}
+
+	clone(): EdgeMetadata {
+		return new EdgeMetadata(this.num_games_won, this.num_games_drawn, this.num_games_lost);
+	}
+
 	static empty(): EdgeMetadata {
 		return new EdgeMetadata(0, 0, 0);
 	}
