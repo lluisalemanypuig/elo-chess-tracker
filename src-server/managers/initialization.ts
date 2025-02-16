@@ -246,7 +246,7 @@ function init_games(): void {
 }
 
 function init_graphs(): void {
-	debug(log_now(), 'Initialize games...');
+	debug(log_now(), 'Initialize graphs...');
 
 	const ratings = RatingSystemManager.get_instance();
 	let graph_manager = GraphsManager.get_instance();
@@ -258,6 +258,7 @@ function init_graphs(): void {
 			fs.mkdirSync(graphs_dir);
 			graph_manager.add_graph(id, new Graph());
 		} else {
+			debug(log_now(), `    Found directory ${graphs_dir}`);
 			const g_id = graph_from_json(graphs_dir);
 			graph_manager.add_graph(id, g_id);
 		}
