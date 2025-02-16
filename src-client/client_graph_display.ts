@@ -64,7 +64,6 @@ async function display_graph(_event: any) {
 	let graph = new Graph({ type: 'directed' });
 
 	for (const node of data.nodes) {
-		console.log(`Adding node with random id: ${node.random_id}`);
 		const name = graph.addNode(node.random_id, { size: node.size, label: node.full_name });
 		graph.setNodeAttribute(name, 'color', 'blue');
 	}
