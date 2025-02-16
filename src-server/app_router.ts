@@ -204,12 +204,12 @@ router.get('/games_list_own_page', get_games_list_own_page);
 router.get('/games_list_all_page', get_games_list_all_page);
 
 // retrieve graphs of the webpage
-import { get_graphs_own_page, get_graphs_user_page, get_graphs_full_page } from './server_graphs';
+import { get_graphs_own_page, get_graphs_full_page } from './server_graphs';
 router.get('/graphs_own_page', get_graphs_own_page);
-router.get('/graphs_user_page', get_graphs_user_page);
 router.get('/graphs_full_page', get_graphs_full_page);
-import { post_query_graphs_own } from './server_query_graphs';
+import { post_query_graphs_full, post_query_graphs_own } from './server_query_graphs';
 router.post('/query_graphs_own', post_query_graphs_own);
+router.post('/query_graphs_full', post_query_graphs_full);
 
 // retrieve ranking of players
 import { get_ranking_users_page } from './server_users_ranking';

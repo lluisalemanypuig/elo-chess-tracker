@@ -130,7 +130,7 @@ function retrieve_graph_user(username: string, time_control_id: TimeControlID): 
 		}
 	});
 
-	{
+	if (list_nodes.length > 0) {
 		let max: number = list_nodes[0].size;
 		let min: number = list_nodes[0].size;
 		for (const i of list_nodes) {
@@ -142,7 +142,70 @@ function retrieve_graph_user(username: string, time_control_id: TimeControlID): 
 		}
 	}
 
-	{
+	if (list_edges.length > 0) {
+		let max: number = list_edges[0].size;
+		let min: number = list_edges[0].size;
+		for (const ei of list_edges) {
+			max = ei.size > max ? ei.size : max;
+			min = ei.size < min ? ei.size : min;
+		}
+		for (let ei of list_edges) {
+			ei.size = 20 * ((ei.size - min) / (max - min)) + 1;
+		}
+	}
+
+	return [list_nodes, list_edges];
+}
+
+function retrieve_graph_full(time_control_id: TimeControlID): [NodeInfo[], EdgeInfo[]] {
+	const users = UsersManager.get_instance();
+	const graphs = GraphsManager.get_instance();
+
+	const G = graphs.get_graph(time_control_id) as Graph;
+
+	let list_nodes: NodeInfo[] = [];
+	let list_edges: EdgeInfo[] = [];
+	for (let idx = 0; idx < users.num_users(); ++idx) {
+		const this_user = users.get_user_at(idx) as User;
+		const this_user_rand_id = users.get_user_random_ID_at(idx) as number;
+		const username = this_user.get_username();
+
+		{
+			let i = new NodeInfo();
+			i.full_name = this_user.get_full_name();
+			i.random_id = users.get_user_random_ID_at(idx) as number;
+			i.size = this_user.get_rating(time_control_id).rating;
+			list_nodes.push(i);
+		}
+
+		G.get_outgoing_edges(username)?.forEach((e: Edge) => {
+			debug(log_now(), `    Processing out edge: ${e.neighbor}`);
+
+			const edge_user_idx = users.get_user_index_by_username(e.neighbor) as number;
+			const edge_user_rand_id = users.get_user_random_ID_at(edge_user_idx) as number;
+
+			let ei = new EdgeInfo();
+			ei.source = this_user_rand_id;
+			ei.target = edge_user_rand_id;
+			ei.label = e.metadata.to_string();
+			ei.size = edge_size(e.metadata);
+			list_edges.push(ei);
+		});
+	}
+
+	if (list_nodes.length > 0) {
+		let max: number = list_nodes[0].size;
+		let min: number = list_nodes[0].size;
+		for (const i of list_nodes) {
+			max = i.size > max ? i.size : max;
+			min = i.size < min ? i.size : min;
+		}
+		for (let i of list_nodes) {
+			i.size = 20 * ((i.size - min) / (max - min)) + 5;
+		}
+	}
+
+	if (list_edges.length > 0) {
 		let max: number = list_edges[0].size;
 		let min: number = list_edges[0].size;
 		for (const ei of list_edges) {
@@ -172,6 +235,31 @@ export async function post_query_graphs_own(req: any, res: any) {
 	debug(log_now(), `User ${session.username} is querying their own graph of time control ${time_control_id}.`);
 
 	const [list_nodes, list_edges] = retrieve_graph_user(session.username, time_control_id);
+	res.send({
+		r: '1',
+		nodes: list_nodes,
+		edges: list_edges
+	});
+}
+
+export async function post_query_graphs_full(req: any, res: any) {
+	debug(log_now(), 'POST query_graphs_full...');
+
+	const session = SessionID.from_cookie(req.cookies);
+	const r = is_user_logged_in(session);
+
+	if (!r[0]) {
+		res.send({ r: '0', reason: r[1] });
+		return;
+	}
+
+	const time_control_id = req.body.tc_i as TimeControlID;
+	debug(
+		log_now(),
+		`User ${session.username} is querying the graph of the entire server of time control ${time_control_id}.`
+	);
+
+	const [list_nodes, list_edges] = retrieve_graph_full(time_control_id);
 	res.send({
 		r: '1',
 		nodes: list_nodes,

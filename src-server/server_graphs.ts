@@ -48,20 +48,6 @@ export async function get_graphs_own_page(req: any, res: any) {
 	res.sendFile(path.join(__dirname, '../html/graphs_own.html'));
 }
 
-export async function get_graphs_user_page(req: any, res: any) {
-	debug(log_now(), 'GET graphs_user_page...');
-
-	const session = SessionID.from_cookie(req.cookies);
-	const r = is_user_logged_in(session);
-
-	if (!r[0]) {
-		res.send(r[1]);
-		return;
-	}
-
-	res.sendFile(path.join(__dirname, '../html/graphs_user.html'));
-}
-
 export async function get_graphs_full_page(req: any, res: any) {
 	debug(log_now(), 'GET graphs_full_page...');
 
