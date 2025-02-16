@@ -84,9 +84,11 @@ async function display_graph(_event: any) {
 		}
 	}
 
+	let i = 0;
 	for (let node of graph.nodes()) {
-		graph.setNodeAttribute(node, 'x', Math.random());
-		graph.setNodeAttribute(node, 'y', Math.random());
+		graph.setNodeAttribute(node, 'x', i);
+		graph.setNodeAttribute(node, 'y', i * i - i);
+		++i;
 	}
 	const res = forceAtlas2(graph, { iterations: 100 });
 	for (let node of graph.nodes()) {
