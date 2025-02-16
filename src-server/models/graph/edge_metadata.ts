@@ -51,6 +51,10 @@ export class EdgeMetadata {
 		this.num_games_lost += other.num_games_lost;
 	}
 
+	to_string(): string {
+		return `${this.num_games_won}/${this.num_games_drawn}/${this.num_games_lost}`;
+	}
+
 	static from_result(result: GameResult): EdgeMetadata {
 		return new EdgeMetadata(
 			result == 'white_wins' ? 1 : 0,
