@@ -23,7 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { set_footer_version_number } from './client_load_version_number';
+import { set_footer_version_number } from './client_utils_version_number';
 
 async function submit_button_clicked() {
 	let old_password_box = document.getElementById('old_password_box') as HTMLInputElement;

@@ -3,7 +3,9 @@ import Graph from 'graphology';
 import Sigma from 'sigma';
 import { EdgeArrowProgram } from 'sigma/rendering';
 import forceAtlas2 from 'graphology-layout-forceatlas2';
-import { set_footer_version_number } from './client_load_version_number';
+
+import { set_footer_version_number } from './client_utils_version_number';
+import { fill_time_controls } from './client_utils_time_control_select';
 
 let s: Sigma;
 
@@ -12,34 +14,6 @@ function resize_viewer() {
 	let viewer = document.getElementById('graph-viewer') as HTMLDivElement;
 	const new_height = viewport_height - 20 - 20;
 	viewer.setAttribute('style', `width: 100%; height: ${new_height}px`);
-}
-
-async function fill_time_controls() {
-	const response_time_control = await fetch('/query_time_controls', {
-		method: 'GET',
-		headers: { 'Content-type': 'application/json; charset=UTF-8' }
-	});
-	const time_control = await response_time_control.json();
-	if (time_control.r == '0') {
-		alert(time_control.reason);
-		return;
-	}
-
-	// fill time control lists
-	let time_control_select = document.getElementById('time_control_select') as HTMLSelectElement;
-	const time_control_data = time_control.data;
-	{
-		let option_null = document.createElement('option');
-		option_null.text = '';
-		option_null.value = '';
-		time_control_select.appendChild(option_null);
-	}
-	for (let i = 0; i < time_control_data.length; ++i) {
-		let option_i = document.createElement('option');
-		option_i.text = time_control_data[i].name;
-		option_i.value = time_control_data[i].id;
-		time_control_select.appendChild(option_i);
-	}
 }
 
 function initialize_sigma() {

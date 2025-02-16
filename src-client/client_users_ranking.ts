@@ -23,7 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { set_footer_version_number } from './client_load_version_number';
+import { set_footer_version_number } from './client_utils_version_number';
 
 async function fill_time_controls() {
 	const response_time_control = await fetch('/query_time_controls', {
