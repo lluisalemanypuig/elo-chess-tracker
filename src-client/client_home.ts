@@ -82,11 +82,6 @@ function fill_action_links(user_actions: string[], user_roles: string[]) {
 		action_links.appendChild(see_all_games_link);
 	}
 	if (user_actions.includes(SEE_GRAPHS_USER)) {
-		let see_user_graph_link = document.createElement('a') as HTMLAnchorElement;
-		see_user_graph_link.href = '/graphs_user_page';
-		see_user_graph_link.text = 'See the graph of a user';
-		action_links.appendChild(see_user_graph_link);
-
 		let see_full_graph_link = document.createElement('a') as HTMLAnchorElement;
 		see_full_graph_link.href = '/graphs_full_page';
 		see_full_graph_link.text = 'See the full graph';
