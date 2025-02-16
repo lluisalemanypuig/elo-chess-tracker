@@ -10,7 +10,7 @@ function apply_browserify() {
 cd js-source
 
 
-apply_browserify client_load_version_number.js
+apply_browserify client_utils_version_number.js
 
 apply_browserify client_login.js
 
