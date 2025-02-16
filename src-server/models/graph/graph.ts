@@ -42,10 +42,10 @@ export class Graph {
 	private in_adjacency_list: Map<string, Neighborhood> = new Map();
 
 	/// An iterator to the list of users who played as White.
-	get_entries(): MapIterator<string> {
+	get_out_entries(): MapIterator<string> {
 		return this.adjacency_list.keys();
 	}
-	/// An iterator to the list of users who played as White.
+	/// An iterator to the list of users who played as Black.
 	get_in_entries(): MapIterator<string> {
 		return this.in_adjacency_list.keys();
 	}
@@ -274,7 +274,7 @@ export class Graph {
 		return (_u_list as Neighborhood).length;
 	}
 	/// Returns the list of opponents and the metadata of @e u.
-	get_in_edges(u: string): Neighborhood | undefined {
+	get_ingoing_edges(u: string): Neighborhood | undefined {
 		return this.in_adjacency_list.get(u);
 	}
 

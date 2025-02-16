@@ -69,7 +69,7 @@ export function graph_to_file(dir: string, changes: string[], g: Graph): void {
  * @param g The graph to be saved.
  */
 export function graph_full_to_file(dir: string, g: Graph): void {
-	for (const username of g.get_entries()) {
+	for (const username of g.get_out_entries()) {
 		neighborhood_to_file(dir, username, g.get_outgoing_edges(username) as Neighborhood);
 	}
 }
