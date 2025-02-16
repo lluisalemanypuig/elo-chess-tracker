@@ -161,9 +161,9 @@ router.get('/query_challenges_pending_result', get_query_challenges_pending_resu
 router.get('/query_challenges_confirm_result_other', get_query_challenges_confirm_result_other);
 router.get('/query_challenges_confirm_result_self', get_query_challenges_confirm_result_self);
 
-import { get_query_games_list_own, get_query_games_list_all } from './server_query_games';
-router.get('/query_games_own', get_query_games_list_own);
-router.get('/query_games_all', get_query_games_list_all);
+import { post_query_games_list_own, post_query_games_list_all } from './server_query_games';
+router.post('/query_games_own', post_query_games_list_own);
+router.post('/query_games_all', post_query_games_list_all);
 
 // query time controls
 import { get_query_time_control } from './server_query_time_control';
