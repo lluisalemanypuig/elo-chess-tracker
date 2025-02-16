@@ -25,52 +25,48 @@ Contact:
 
 <!DOCTYPE html>
 <html>
+	<head>
+		<meta charset="UTF-8" />
+		<script type="text/javascript" src="js-source/bdl__client_users_ranking.js"></script>
+		<script type="text/javascript" src="js-source/bdl__client_load_version_number.js"></script>
 
-<head>
-	<meta charset="UTF-8">
-	<script type="text/javascript" src="js-source/bdl__client_users_ranking.js"> </script>
-	<script type="text/javascript" src="js-source/bdl__client_load_version_number.js"> </script>
+		<link rel="stylesheet" href="html/css/main.css" />
+		<link rel="stylesheet" href="html/css/elo_table.css" />
+		<link rel="stylesheet" href="html/css/footer_copyright_notice.css" />
+	</head>
 
-	<link rel="stylesheet" href="html/css/main.css">
-	<link rel="stylesheet" href="html/css/elo_table.css">
-	<link rel="stylesheet" href="html/css/footer_copyright_notice.css">
-</head>
+	<body>
+		<meta name="viewport" content="width=device-width,initial-scale=1" />
+		<div class="page-wrapper">
+			<div class="main-content">
+				<h1>Ranking</h1>
 
-<body>
-	<meta name="viewport" content="width=device-width,initial-scale=1" />
-	<div class="page-wrapper">
-		
-		<div class="main-content">
-			<h1>Ranking</h1>
-		
-			<div class="label-and-select" >
-				<label>Time control:</label>
-				<select id="time_control_select"></select>
+				<div class="label-and-select">
+					<label>Time control:</label>
+					<select id="time_control_select"></select>
+				</div>
+
+				<div id="users_ranking">
+					<table id="users_table">
+						<thead>
+							<tr>
+								<th>Player</th>
+								<th>Rating</th>
+								<th>Games played</th>
+								<th>Won</th>
+								<th>Drawn</th>
+								<th>Lost</th>
+							</tr>
+						</thead>
+						<tbody></tbody>
+					</table>
+				</div>
 			</div>
-			
-			<div id="users_ranking">
-				<table id="users_table">
-					<thead>
-						<tr>
-							<th>Player</th>
-							<th>Rating</th>
-							<th>Games played</th>
-							<th>Won</th>
-							<th>Drawn</th>
-							<th>Lost</th>
-						</tr>
-					</thead>
-					<tbody>
-					</tbody>
-				</table>
-			</div>
+
+			<footer class="footer_copyright_notice">
+				Elo chess tracker (<i id="version_number"></i>). Code
+				<a href="https://github.com/lluisalemanypuig/elo-chess-tracker">online at Github</a>.
+			</footer>
 		</div>
-
-		<footer class="footer_copyright_notice">
-			Elo chess tracker (<i id="version_number"></i>). Code <a
-				href="https://github.com/lluisalemanypuig/elo-chess-tracker">online at Github</a>.
-		</footer>
-
-	</div>
-</body>
+	</body>
 </html>

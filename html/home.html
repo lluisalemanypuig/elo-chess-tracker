@@ -25,54 +25,51 @@ Contact:
 
 <!DOCTYPE html>
 <html>
+	<head>
+		<meta charset="UTF-8" />
+		<script type="text/javascript" src="js-source/bdl__client_home.js"></script>
+		<script type="text/javascript" src="js-source/bdl__client_load_version_number.js"></script>
 
-<head>
-	<meta charset="UTF-8">
-	<script type="text/javascript" src="js-source/bdl__client_home.js"> </script>
-	<script type="text/javascript" src="js-source/bdl__client_load_version_number.js"> </script>
+		<link rel="stylesheet" href="html/css/main.css" />
+		<link rel="stylesheet" href="html/css/home.css" />
+		<link rel="stylesheet" href="html/css/elo_table.css" />
+		<link rel="stylesheet" href="html/css/footer_copyright_notice.css" />
+	</head>
 
-	<link rel="stylesheet" href="html/css/main.css">
-	<link rel="stylesheet" href="html/css/home.css">
-	<link rel="stylesheet" href="html/css/elo_table.css">
-	<link rel="stylesheet" href="html/css/footer_copyright_notice.css">
-</head>
+	<body>
+		<meta name="viewport" content="width=device-width,initial-scale=1" />
+		<div class="page-wrapper">
+			<div class="main-content">
+				<h1 id="title_home_page" align="center"></h1>
 
-<body>
-	<meta name="viewport" content="width=device-width,initial-scale=1"/>
-	<div class="page-wrapper">
-		
-		<div class="main-content">
-			<h1 id="title_home_page" align="center"></h1>
-		
-			<p><img src="/icon_home_page"></p>
-		
-			<label id="user_name_and_roles"></label>
-		
-			<table class="ratings-table" id="user_ratings_table">
-				<tr>
-					<th>Time control</th>
-					<th>Rating</th>
-					<th>Total games</th>
-					<th>Won</th>
-					<th>Drawn</th>
-					<th>Lost</th>
-				</tr>
-			</table>
-		
-			<a href="/challenges_page">Challenges</a>
-			<a href="/games_list_own_page">My games</a>
-			<a href="/graphs_own_page">My graph</a>
-			<a href="/ranking_users_page">Ranking</a>
-			<div class="special-links" id="special_action_links"></div>
-			<a href="/users_password_change">Change my password</a>
-			<u id="logout_link">Logout</u>
+				<p><img src="/icon_home_page" /></p>
+
+				<label id="user_name_and_roles"></label>
+
+				<table class="ratings-table" id="user_ratings_table">
+					<tr>
+						<th>Time control</th>
+						<th>Rating</th>
+						<th>Total games</th>
+						<th>Won</th>
+						<th>Drawn</th>
+						<th>Lost</th>
+					</tr>
+				</table>
+
+				<a href="/challenges_page">Challenges</a>
+				<a href="/games_list_own_page">My games</a>
+				<a href="/graphs_own_page">My graph</a>
+				<a href="/ranking_users_page">Ranking</a>
+				<div class="special-links" id="special_action_links"></div>
+				<a href="/users_password_change">Change my password</a>
+				<u id="logout_link">Logout</u>
+			</div>
+
+			<footer class="footer_copyright_notice">
+				Elo chess tracker (<i id="version_number"></i>). Code
+				<a href="https://github.com/lluisalemanypuig/elo-chess-tracker">online at Github</a>.
+			</footer>
 		</div>
-		
-		<footer class="footer_copyright_notice">
-			Elo chess tracker (<i id="version_number"></i>). Code <a
-				href="https://github.com/lluisalemanypuig/elo-chess-tracker">online at Github</a>.
-		</footer>
-
-	</div>
-</body>
+	</body>
 </html>

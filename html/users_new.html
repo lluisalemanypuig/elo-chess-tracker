@@ -25,56 +25,52 @@ Contact:
 
 <!DOCTYPE html>
 <html>
+	<head>
+		<meta charset="UTF-8" />
+		<script type="text/javascript" src="js-source/bdl__client_users_new.js"></script>
+		<script type="text/javascript" src="js-source/bdl__client_load_version_number.js"></script>
 
-<head>
-	<meta charset="UTF-8">
-	<script type="text/javascript" src="js-source/bdl__client_users_new.js"> </script>
-	<script type="text/javascript" src="js-source/bdl__client_load_version_number.js"> </script>
+		<link rel="stylesheet" href="html/css/main.css" />
+		<link rel="stylesheet" href="html/css/footer_copyright_notice.css" />
+	</head>
 
-	<link rel="stylesheet" href="html/css/main.css">
-	<link rel="stylesheet" href="html/css/footer_copyright_notice.css">
-</head>
+	<body>
+		<meta name="viewport" content="width=device-width,initial-scale=1" />
+		<div class="page-wrapper">
+			<div class="main-content">
+				<h1 id="user_new_title">Create a new user</h1>
 
-<body>
-	<meta name="viewport" content="width=device-width,initial-scale=1"/>
-	<div class="page-wrapper">
-	
-		<div class="main-content">
-			<h1 id="user_new_title">Create a new user</h1>
+				<div class="label-and-input">
+					<label>Username:</label>
+					<input type="text" id="username_box" name="username_box" />
+				</div>
 
-			<div class="label-and-input">
-				<label>Username:</label>
-				<input type="text" id="username_box" name="username_box">
+				<div class="label-and-input">
+					<label>First name:</label>
+					<input type="text" id="first_name_box" name="first_name_box" />
+				</div>
+
+				<div class="label-and-input">
+					<label>Last name:</label>
+					<input type="text" id="last_name_box" name="last_name_box" />
+				</div>
+
+				<label>Role:</label>
+				<div id="role_checkboxes"></div>
+
+				<div class="label-and-input">
+					<label>Password:</label>
+					<input type="password" id="password_box" name="password_box" />
+				</div>
+
+				<!-- submit data -->
+				<button type="button" id="submit_new_user_button" name="submit_new_user_button">Submit</button>
 			</div>
 
-			<div class="label-and-input">
-				<label>First name:</label>
-				<input type="text" id="first_name_box" name="first_name_box">
-			</div>
-
-			<div class="label-and-input">
-				<label>Last name:</label>
-				<input type="text" id="last_name_box" name="last_name_box">
-			</div>
-
-			<label>Role:</label>
-			<div id="role_checkboxes">
-			</div>
-
-			<div class="label-and-input">
-				<label>Password:</label>
-				<input type="password" id="password_box" name="password_box">
-			</div>
-
-			<!-- submit data -->
-			<button type="button" id="submit_new_user_button" name="submit_new_user_button">Submit</button>
+			<footer class="footer_copyright_notice">
+				Elo chess tracker (<i id="version_number"></i>). Code
+				<a href="https://github.com/lluisalemanypuig/elo-chess-tracker">online at Github</a>.
+			</footer>
 		</div>
-
-		<footer class="footer_copyright_notice">
-			Elo chess tracker (<i id="version_number"></i>). Code <a
-				href="https://github.com/lluisalemanypuig/elo-chess-tracker">online at Github</a>.
-		</footer>
-
-	</div>
-</body>
+	</body>
 </html>

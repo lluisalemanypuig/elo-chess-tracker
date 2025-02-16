@@ -25,58 +25,54 @@ Contact:
 
 <!DOCTYPE html>
 <html>
+	<head>
+		<meta charset="UTF-8" />
+		<script type="text/javascript" src="js-source/bdl__client_users_edit.js"></script>
+		<script type="text/javascript" src="js-source/bdl__client_load_version_number.js"></script>
 
-<head>
-	<meta charset="UTF-8">
-	<script type="text/javascript" src="js-source/bdl__client_users_edit.js"> </script>
-	<script type="text/javascript" src="js-source/bdl__client_load_version_number.js"> </script>
+		<link rel="stylesheet" href="html/css/main.css" />
+		<link rel="stylesheet" href="html/css/footer_copyright_notice.css" />
+	</head>
 
-	<link rel="stylesheet" href="html/css/main.css">
-	<link rel="stylesheet" href="html/css/footer_copyright_notice.css">
-</head>
+	<body>
+		<meta name="viewport" content="width=device-width,initial-scale=1" />
+		<div class="page-wrapper">
+			<div class="main-content">
+				<h1 id="user_edit_title">Edit an existing user</h1>
 
-<body>
-	<meta name="viewport" content="width=device-width,initial-scale=1"/>
-	<div class="page-wrapper">
+				<!-- User selection  -->
+				<div class="label-and-input">
+					<label for="username_datalist">Select user:</label>
+					<input list="username_datalist" id="username_list" name="username_list" />
+					<datalist id="username_datalist">
+						<option value="asdf"></option>
+					</datalist>
+				</div>
 
-		<div class="main-content">
-			<h1 id="user_edit_title">Edit an existing user</h1>
+				<!-- First Name -->
+				<div class="label-and-input">
+					<label for="first_name_box">First name:</label>
+					<input type="text" id="first_name_box" name="first_name_box" />
+				</div>
 
-			<!-- User selection  -->
-			<div class="label-and-input">
-				<label for="username_datalist">Select user:</label>
-				<input list="username_datalist" id="username_list" name="username_list">
-				<datalist id="username_datalist">
-					<option value="asdf">
-				</datalist>
+				<!-- Last Name -->
+				<div class="label-and-input">
+					<label for="last_name_box">Last name:</label>
+					<input type="text" id="last_name_box" name="last_name_box" />
+				</div>
+
+				<!-- Role -->
+				<label>Role:</label>
+				<div id="role_checkboxes"></div>
+
+				<!-- submit data -->
+				<button type="button" id="submit_button" name="submit_button">Submit</button><br /><br />
 			</div>
 
-			<!-- First Name -->
-			<div class="label-and-input">
-				<label for="first_name_box">First name:</label>
-				<input type="text" id="first_name_box" name="first_name_box">
-			</div>
-
-			<!-- Last Name -->
-			<div class="label-and-input">
-				<label for="last_name_box">Last name:</label>
-				<input type="text" id="last_name_box" name="last_name_box">
-			</div>
-
-			<!-- Role -->
-			<label>Role:</label>
-			<div id="role_checkboxes">
-			</div>
-
-			<!-- submit data -->
-			<button type="button" id="submit_button" name="submit_button">Submit</button><br><br>
+			<footer class="footer_copyright_notice">
+				Elo chess tracker (<i id="version_number"></i>). Code
+				<a href="https://github.com/lluisalemanypuig/elo-chess-tracker">online at Github</a>.
+			</footer>
 		</div>
-
-		<footer class="footer_copyright_notice">
-			Elo chess tracker (<i id="version_number"></i>). Code <a
-				href="https://github.com/lluisalemanypuig/elo-chess-tracker">online at Github</a>.
-		</footer>
-
-	</div>
-</body>
+	</body>
 </html>
