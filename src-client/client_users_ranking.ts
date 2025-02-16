@@ -23,35 +23,8 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
+import { fill_time_controls } from './client_utils_time_control_select';
 import { set_footer_version_number } from './client_utils_version_number';
-
-async function fill_time_controls() {
-	const response_time_control = await fetch('/query_time_controls', {
-		method: 'GET',
-		headers: { 'Content-type': 'application/json; charset=UTF-8' }
-	});
-	const time_control = await response_time_control.json();
-	if (time_control.r == '0') {
-		alert(time_control.reason);
-		return;
-	}
-
-	// fill time control lists
-	let time_control_select = document.getElementById('time_control_select') as HTMLSelectElement;
-	const time_control_data = time_control.data;
-	{
-		let option_null = document.createElement('option');
-		option_null.text = '';
-		option_null.value = '';
-		time_control_select.appendChild(option_null);
-	}
-	for (let i = 0; i < time_control_data.length; ++i) {
-		let option_i = document.createElement('option');
-		option_i.text = time_control_data[i].name;
-		option_i.value = time_control_data[i].id;
-		time_control_select.appendChild(option_i);
-	}
-}
 
 async function fill_ranking(_event: any) {
 	const time_control_select = document.getElementById('time_control_select') as HTMLSelectElement;
@@ -105,7 +78,7 @@ async function fill_ranking(_event: any) {
 }
 
 window.onload = async function () {
-	fill_time_controls();
+	fill_time_controls('time_control_select');
 
 	let time_control_select = document.getElementById('time_control_select') as HTMLSelectElement;
 	time_control_select.onchange = fill_ranking;

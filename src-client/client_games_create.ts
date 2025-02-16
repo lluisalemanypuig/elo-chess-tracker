@@ -23,6 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
+import { fill_time_controls } from './client_utils_time_control_select';
 import { set_footer_version_number } from './client_utils_version_number';
 
 async function initialize_window_client_games_create() {
@@ -40,17 +41,6 @@ async function initialize_window_client_games_create() {
 		return;
 	}
 
-	// query the server for the list of time controls
-	const response_time_control = await fetch('/query_time_controls', {
-		method: 'GET',
-		headers: { 'Content-type': 'application/json; charset=UTF-8' }
-	});
-	const data_time_control = await response_time_control.json();
-	if (data_time_control.r == '0') {
-		alert(data_time_control.reason);
-		return;
-	}
-
 	// fill username lists
 	let options = '';
 	{
@@ -62,15 +52,7 @@ async function initialize_window_client_games_create() {
 	white_datalist.innerHTML = options;
 	black_datalist.innerHTML = options;
 
-	// fill time control lists
-	let time_control_select = document.getElementById('time_control_select') as HTMLSelectElement;
-	const time_controls = data_time_control.data;
-	for (let i = 0; i < time_controls.length; ++i) {
-		let option_i = document.createElement('option');
-		option_i.text = time_controls[i].name;
-		option_i.value = time_controls[i].id;
-		time_control_select.appendChild(option_i);
-	}
+	fill_time_controls('time_control_select');
 }
 
 async function submit_new_game(_event: any) {

@@ -101,9 +101,9 @@ async function display_graph(_event: any) {
 
 window.onresize = resize_viewer;
 
-window.onload = function () {
+window.onload = async function () {
 	resize_viewer();
-	fill_time_controls();
+	fill_time_controls('time_control_select');
 	set_footer_version_number();
 	initialize_sigma();
 
