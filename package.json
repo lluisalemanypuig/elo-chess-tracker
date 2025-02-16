@@ -43,6 +43,13 @@
 		"ts-jest": "^29.2.5"
 	},
 	"dependencies": {
-		"jtest": "^0.0.1"
+		"@sigma/edge-curve": "^3.1.0",
+		"@types/sigmajs": "^1.0.32",
+		"graphology": "^0.26.0",
+		"graphology-layout": "^0.6.1",
+		"graphology-layout-forceatlas2": "^0.10.1",
+		"graphology-types": "^0.24.8",
+		"jtest": "^0.0.1",
+		"sigma": "^3.0.1"
 	}
 }
