@@ -38,6 +38,7 @@ import { UsersManager } from './managers/users_manager';
 import { Edge } from './models/graph/edge';
 import { EdgeMetadata } from './models/graph/edge_metadata';
 import { can_user_see_graph } from './models/user_relationships';
+import { SEE_GRAPHS_USER } from './models/user_action';
 
 class NodeInfo {
 	// to disambiguate between users with the same full name
@@ -254,6 +255,14 @@ export async function post_query_graphs_full(req: any, res: any) {
 	if (!r[0]) {
 		res.send({ r: '0', reason: r[1] });
 		return;
+	}
+
+	{
+		const user = r[2] as User;
+		if (!user.can_do(SEE_GRAPHS_USER)) {
+			res.send({ r: '0', reason: 'You do not have enough permissions.' });
+			return;
+		}
 	}
 
 	const time_control_id = req.body.tc_i as TimeControlID;
