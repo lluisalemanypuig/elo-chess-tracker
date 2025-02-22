@@ -19,6 +19,12 @@ let max_rating: number;
 
 let min_games: number;
 let max_games: number;
+let min_edge_weight: number;
+let max_edge_weight: number;
+
+function weight_edge(weight: any): number {
+	return 10 * weight.wins + 5 * weight.draws + weight.losses;
+}
 
 function resize_viewer() {
 	const viewport_height = window.innerHeight;
@@ -89,12 +95,18 @@ async function load_graph() {
 
 	min_games = 9999;
 	max_games = 0;
+	min_edge_weight = 9999;
+	max_edge_weight = 0;
 	for (const edge of graph_data.edges) {
 		server_graph.addEdge(edge.source, edge.target, { label: edge.label });
 
 		const num_games = edge.weight.wins + edge.weight.draws + edge.weight.losses;
 		min_games = num_games < min_games ? num_games : min_games;
 		max_games = num_games > max_games ? num_games : max_games;
+
+		const edge_w = weight_edge(edge.weight);
+		min_edge_weight = edge_w < min_edge_weight ? edge_w : min_edge_weight;
+		max_edge_weight = edge_w > max_edge_weight ? edge_w : max_edge_weight;
 	}
 
 	for (let u of server_graph.nodeEntries()) {
@@ -175,6 +187,22 @@ function color_picker_edge_changed(_event: any) {
 				k = 1;
 			} else {
 				k = (num_games - min_games) / (max_games - min_games);
+			}
+			server_graph.setEdgeAttribute(edge.source, edge.target, 'color', color_interpolator(k));
+		}
+	} else if (option == 'dynamic_results') {
+		const color_interpolator = scaleLinear<string>()
+			.domain([0, 1])
+			.interpolate(interpolateRgb)
+			.range(['#F6F5F4', color_picker_node.value]);
+
+		for (const edge of graph_data.edges) {
+			const edge_w = weight_edge(edge.weight);
+			let k: number;
+			if (edge_w == min_edge_weight && edge_w == max_edge_weight) {
+				k = 1;
+			} else {
+				k = (edge_w - min_edge_weight) / (max_edge_weight - min_edge_weight);
 			}
 			server_graph.setEdgeAttribute(edge.source, edge.target, 'color', color_interpolator(k));
 		}
