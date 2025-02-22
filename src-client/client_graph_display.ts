@@ -262,10 +262,33 @@ function size_picker_edge_changed(_event: any) {
 	const select_node_size = document.getElementById('select_edge_size') as HTMLSelectElement;
 	const option = select_node_size.options[select_node_size.selectedIndex].value;
 	const size_picker_node = document.getElementById('size_picker_edge') as HTMLInputElement;
+	const M = parseInt(size_picker_node.value);
 
 	if (option == 'fixed') {
 		for (const edge of graph_data.edges) {
 			server_graph.setEdgeAttribute(edge.source, edge.target, 'size', size_picker_node.value);
+		}
+	} else if (option == 'dynamic_games') {
+		for (const edge of graph_data.edges) {
+			const num_games = edge.weight.wins + edge.weight.draws + edge.weight.losses;
+			let k: number;
+			if (num_games == min_games && num_games == max_games) {
+				k = 1;
+			} else {
+				k = M * normalize(num_games, min_games, max_games);
+			}
+			server_graph.setEdgeAttribute(edge.source, edge.target, 'size', k);
+		}
+	} else if (option == 'dynamic_results') {
+		for (const edge of graph_data.edges) {
+			const edge_w = weight_edge(edge.weight);
+			let k: number;
+			if (edge_w == min_edge_weight && edge_w == max_edge_weight) {
+				k = 1;
+			} else {
+				k = M * normalize(edge_w, min_edge_weight, max_edge_weight);
+			}
+			server_graph.setEdgeAttribute(edge.source, edge.target, 'size', k);
 		}
 	}
 
@@ -273,15 +296,6 @@ function size_picker_edge_changed(_event: any) {
 }
 
 function select_edge_size_changed(_event: any) {
-	const select_edge_size = document.getElementById('select_edge_size') as HTMLSelectElement;
-	const option = select_edge_size.options[select_edge_size.selectedIndex].value;
-	const size_picker_edge = document.getElementById('size_picker_edge') as HTMLInputElement;
-	if (option == 'fixed') {
-		size_picker_edge.style.visibility = 'visible';
-	} else {
-		size_picker_edge.style.visibility = 'hidden';
-	}
-
 	if (!graph_loaded) {
 		return;
 	}
