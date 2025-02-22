@@ -26,6 +26,10 @@ function weight_edge(weight: any): number {
 	return 10 * weight.wins + 5 * weight.draws + weight.losses;
 }
 
+function normalize(v: number, min: number, max: number): number {
+	return (v - min) / (max - min);
+}
+
 function resize_viewer() {
 	const viewport_height = window.innerHeight;
 	let viewer = document.getElementById('graph-viewer') as HTMLDivElement;
@@ -186,7 +190,7 @@ function color_picker_edge_changed(_event: any) {
 			if (num_games == min_games && num_games == max_games) {
 				k = 1;
 			} else {
-				k = (num_games - min_games) / (max_games - min_games);
+				k = normalize(num_games, min_games, max_games);
 			}
 			server_graph.setEdgeAttribute(edge.source, edge.target, 'color', color_interpolator(k));
 		}
@@ -202,7 +206,7 @@ function color_picker_edge_changed(_event: any) {
 			if (edge_w == min_edge_weight && edge_w == max_edge_weight) {
 				k = 1;
 			} else {
-				k = (edge_w - min_edge_weight) / (max_edge_weight - min_edge_weight);
+				k = normalize(edge_w, min_edge_weight, max_edge_weight);
 			}
 			server_graph.setEdgeAttribute(edge.source, edge.target, 'color', color_interpolator(k));
 		}
@@ -236,7 +240,7 @@ function size_picker_node_changed(_event: any) {
 		const k = parseInt(size_picker_node.value);
 		for (const node of graph_data.nodes) {
 			const r = node.weight.rating;
-			server_graph.setNodeAttribute(node.id, 'size', k * ((r - min_rating) / (max_rating - min_rating)) + 3);
+			server_graph.setNodeAttribute(node.id, 'size', k * normalize(r, min_rating, max_rating) + 3);
 		}
 	}
 	display_graph();
