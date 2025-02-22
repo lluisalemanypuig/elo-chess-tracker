@@ -117,7 +117,7 @@ function new_select_cell_result(original_result: string, game_id: string) {
 }
 
 async function fill_games_list_time_control(time_control_id: string) {
-	const val = document.getElementById('type_of_list')?.getAttribute('value');
+	const val = document.getElementById('table_games')?.getAttribute('value');
 
 	const query_to_server: string = (() => {
 		if (val == 'all') {
