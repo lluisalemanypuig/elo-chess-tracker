@@ -152,27 +152,30 @@ function size_picker_node_changed(_event: any) {
 
 	const select_node_size = document.getElementById('select_node_size') as HTMLSelectElement;
 	const option = select_node_size.options[select_node_size.selectedIndex].value;
+	const size_picker_node = document.getElementById('size_picker_node') as HTMLInputElement;
 
 	if (option == 'fixed') {
-		const size_picker_node = document.getElementById('size_picker_node') as HTMLInputElement;
 		for (const node of graph_data.nodes) {
 			server_graph.setNodeAttribute(node.id, 'size', size_picker_node.value);
 		}
+	} else if (option == 'dynamic_size') {
+		let min_rating: number = 99999;
+		let max_rating: number = 0;
+		for (const node of graph_data.nodes) {
+			const r = node.weight.rating;
+			min_rating = r < min_rating ? r : min_rating;
+			max_rating = r > max_rating ? r : max_rating;
+		}
+		const k = parseInt(size_picker_node.value);
+		for (const node of graph_data.nodes) {
+			const r = node.weight.rating;
+			server_graph.setNodeAttribute(node.id, 'size', k * ((r - min_rating) / (max_rating - min_rating)) + 3);
+		}
 	}
-
 	display_graph();
 }
 
 function select_node_size_changed(_event: any) {
-	const select_node_size = document.getElementById('select_node_size') as HTMLSelectElement;
-	const option = select_node_size.options[select_node_size.selectedIndex].value;
-	const size_picker_node = document.getElementById('size_picker_node') as HTMLInputElement;
-	if (option == 'fixed') {
-		size_picker_node.style.visibility = 'visible';
-	} else {
-		size_picker_node.style.visibility = 'hidden';
-	}
-
 	if (!graph_loaded) {
 		return;
 	}
