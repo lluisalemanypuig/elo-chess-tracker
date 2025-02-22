@@ -70,9 +70,9 @@ export function recalculate_all_graphs() {
 
 	const unique_time_controls = RatingSystemManager.get_instance().get_unique_time_controls_ids();
 	for (const time_control_id of unique_time_controls) {
-		const dir = EnvironmentManager.get_instance().get_dir_games_time_control(time_control_id);
+		const games_dir = EnvironmentManager.get_instance().get_dir_games_time_control(time_control_id);
 		let g = new Graph();
-		let iter = new GamesIterator(dir);
+		let iter = new GamesIterator(games_dir);
 		while (!iter.end_record_list()) {
 			const game = iter.get_current_game();
 			g.add_edge(game.get_white(), game.get_black(), game.get_result());
@@ -80,6 +80,7 @@ export function recalculate_all_graphs() {
 		}
 		manager.add_graph(time_control_id, g);
 
-		graph_full_to_file(dir, g);
+		const graphs_dir = EnvironmentManager.get_instance().get_dir_graphs_time_control(time_control_id);
+		graph_full_to_file(graphs_dir, g);
 	}
 }
