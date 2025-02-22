@@ -116,7 +116,7 @@ function color_picker_node_changed(_event: any) {
 			server_graph.setNodeAttribute(node.id, 'color', color_picker_node.value);
 		}
 	} else if (option == 'dynamic_rating') {
-		const colorInterpolator = scaleLinear<string>()
+		const color_interpolator = scaleLinear<string>()
 			.domain([0, 1])
 			.interpolate(interpolateRgb)
 			.range(['#F6F5F4', color_picker_node.value]);
@@ -125,7 +125,7 @@ function color_picker_node_changed(_event: any) {
 		console.log('max_rating', max_rating);
 		for (const node of graph_data.nodes) {
 			const k = (node.weight.rating - min_rating) / (max_rating - min_rating);
-			server_graph.setNodeAttribute(node.id, 'color', colorInterpolator(k));
+			server_graph.setNodeAttribute(node.id, 'color', color_interpolator(k));
 		}
 	}
 
@@ -154,7 +154,34 @@ function color_picker_edge_changed(_event: any) {
 		for (const edge of graph_data.edges) {
 			server_graph.setEdgeAttribute(edge.source, edge.target, 'color', color);
 		}
-	} else if (option == 'dynamic_rating') {
+	} else if (option == 'dynamic_games') {
+		const color_interpolator = scaleLinear<string>()
+			.domain([0, 1])
+			.interpolate(interpolateRgb)
+			.range(['#F6F5F4', color_picker_node.value]);
+
+		console.log('min_rating', min_rating);
+		console.log('max_rating', max_rating);
+
+		let min_games: number = 99999;
+		let max_games: number = 0;
+
+		for (const edge of graph_data.edges) {
+			const num_games = edge.weight.wins + edge.weight.draws + edge.weight.losses;
+			min_games = num_games < min_games ? num_games : min_games;
+			max_games = num_games > max_games ? num_games : max_games;
+		}
+
+		for (const edge of graph_data.edges) {
+			const num_games = edge.weight.wins + edge.weight.draws + edge.weight.losses;
+			let k: number;
+			if (num_games == min_games && num_games == max_games) {
+				k = 1;
+			} else {
+				k = (num_games - min_games) / (max_games - min_games);
+			}
+			server_graph.setEdgeAttribute(edge.source, edge.target, 'color', color_interpolator(k));
+		}
 	}
 
 	display_graph();
