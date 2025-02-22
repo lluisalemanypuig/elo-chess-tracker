@@ -36,27 +36,30 @@ import { Graph } from './models/graph/graph';
 import { search_linear_by_key } from './utils/searching';
 import { UsersManager } from './managers/users_manager';
 import { Edge } from './models/graph/edge';
-import { EdgeMetadata } from './models/graph/edge_metadata';
 import { can_user_see_graph } from './models/user_relationships';
 import { SEE_GRAPHS_USER } from './models/user_action';
 
+class NodeWeight {
+	rating: number = 0;
+}
+
 class NodeInfo {
-	// to disambiguate between users with the same full name
-	random_id: number = 0;
+	id: number = 0;
 	full_name: string = '';
-	// the higher the rating is, the larger the size
-	size: number = 0;
+	weight: NodeWeight = new NodeWeight();
+}
+
+class EdgeWeight {
+	wins: number = 0;
+	draws: number = 0;
+	losses: number = 0;
 }
 
 class EdgeInfo {
 	source: number = 0;
 	target: number = 0;
 	label: string = '';
-	size: number = 0;
-}
-
-function edge_size(m: EdgeMetadata): number {
-	return m.num_games_won + m.num_games_drawn + m.num_games_lost;
+	weight: EdgeWeight = new EdgeWeight();
 }
 
 function retrieve_graph_user(username: string, time_control_id: TimeControlID): [NodeInfo[], EdgeInfo[]] {
@@ -73,8 +76,8 @@ function retrieve_graph_user(username: string, time_control_id: TimeControlID): 
 	{
 		let i = new NodeInfo();
 		i.full_name = this_user.get_full_name();
-		i.random_id = this_user_rand_id;
-		i.size = this_user.get_rating(time_control_id).rating;
+		i.id = this_user_rand_id;
+		i.weight.rating = this_user.get_rating(time_control_id).rating;
 		list_nodes = [i];
 	}
 	let list_edges: EdgeInfo[] = [];
@@ -86,9 +89,9 @@ function retrieve_graph_user(username: string, time_control_id: TimeControlID): 
 
 		{
 			let i = new NodeInfo();
-			i.random_id = edge_user_rand_id;
+			i.id = edge_user_rand_id;
 			i.full_name = edge_user.get_full_name();
-			i.size = edge_user.get_rating(time_control_id).rating;
+			i.weight.rating = edge_user.get_rating(time_control_id).rating;
 			list_nodes.push(i);
 		}
 		{
@@ -96,7 +99,9 @@ function retrieve_graph_user(username: string, time_control_id: TimeControlID): 
 			ei.source = this_user_rand_id;
 			ei.target = edge_user_rand_id;
 			ei.label = e.metadata.to_string();
-			ei.size = edge_size(e.metadata);
+			ei.weight.wins = e.metadata.num_games_won;
+			ei.weight.draws = e.metadata.num_games_drawn;
+			ei.weight.losses = e.metadata.num_games_lost;
 			list_edges.push(ei);
 		}
 	});
@@ -105,15 +110,15 @@ function retrieve_graph_user(username: string, time_control_id: TimeControlID): 
 		const edge_user_rand_id = users.get_user_random_ID_at(edge_user_idx) as number;
 
 		const idx = search_linear_by_key(list_nodes, (i: NodeInfo): boolean => {
-			return i.random_id == edge_user_rand_id;
+			return i.id == edge_user_rand_id;
 		});
 
 		if (idx == -1) {
 			const edge_user = users.get_user_at(edge_user_idx) as User;
 			{
 				let i = new NodeInfo();
-				i.random_id = edge_user_rand_id;
-				i.size = edge_user.get_rating(time_control_id).rating;
+				i.id = edge_user_rand_id;
+				i.weight.rating = edge_user.get_rating(time_control_id).rating;
 				i.full_name = edge_user.get_full_name();
 				list_nodes.push(i);
 			}
@@ -122,35 +127,13 @@ function retrieve_graph_user(username: string, time_control_id: TimeControlID): 
 				ei.source = edge_user_rand_id;
 				ei.target = this_user_rand_id;
 				ei.label = e.metadata.to_string();
-				ei.size = edge_size(e.metadata);
+				ei.weight.wins = e.metadata.num_games_won;
+				ei.weight.draws = e.metadata.num_games_drawn;
+				ei.weight.losses = e.metadata.num_games_lost;
 				list_edges.push(ei);
 			}
 		}
 	});
-
-	if (list_nodes.length > 0) {
-		let max: number = list_nodes[0].size;
-		let min: number = list_nodes[0].size;
-		for (const i of list_nodes) {
-			max = i.size > max ? i.size : max;
-			min = i.size < min ? i.size : min;
-		}
-		for (let i of list_nodes) {
-			i.size = 20 * ((i.size - min) / (max - min)) + 5;
-		}
-	}
-
-	if (list_edges.length > 0) {
-		let max: number = list_edges[0].size;
-		let min: number = list_edges[0].size;
-		for (const ei of list_edges) {
-			max = ei.size > max ? ei.size : max;
-			min = ei.size < min ? ei.size : min;
-		}
-		for (let ei of list_edges) {
-			ei.size = 20 * ((ei.size - min) / (max - min)) + 1;
-		}
-	}
 
 	return [list_nodes, list_edges];
 }
@@ -174,8 +157,8 @@ function retrieve_graph_full(querier: User, time_control_id: TimeControlID): [No
 		{
 			let i = new NodeInfo();
 			i.full_name = this_user.get_full_name();
-			i.random_id = users.get_user_random_ID_at(idx) as number;
-			i.size = this_user.get_rating(time_control_id).rating;
+			i.id = users.get_user_random_ID_at(idx) as number;
+			i.weight.rating = this_user.get_rating(time_control_id).rating;
 			list_nodes.push(i);
 		}
 
@@ -192,33 +175,11 @@ function retrieve_graph_full(querier: User, time_control_id: TimeControlID): [No
 			ei.source = this_user_rand_id;
 			ei.target = edge_user_rand_id;
 			ei.label = e.metadata.to_string();
-			ei.size = edge_size(e.metadata);
+			ei.weight.wins = e.metadata.num_games_won;
+			ei.weight.draws = e.metadata.num_games_drawn;
+			ei.weight.losses = e.metadata.num_games_lost;
 			list_edges.push(ei);
 		});
-	}
-
-	if (list_nodes.length > 0) {
-		let max: number = list_nodes[0].size;
-		let min: number = list_nodes[0].size;
-		for (const i of list_nodes) {
-			max = i.size > max ? i.size : max;
-			min = i.size < min ? i.size : min;
-		}
-		for (let i of list_nodes) {
-			i.size = 20 * ((i.size - min) / (max - min)) + 5;
-		}
-	}
-
-	if (list_edges.length > 0) {
-		let max: number = list_edges[0].size;
-		let min: number = list_edges[0].size;
-		for (const ei of list_edges) {
-			max = ei.size > max ? ei.size : max;
-			min = ei.size < min ? ei.size : min;
-		}
-		for (let ei of list_edges) {
-			ei.size = 20 * ((ei.size - min) / (max - min)) + 1;
-		}
 	}
 
 	return [list_nodes, list_edges];
@@ -257,12 +218,10 @@ export async function post_query_graphs_full(req: any, res: any) {
 		return;
 	}
 
-	{
-		const user = r[2] as User;
-		if (!user.can_do(SEE_GRAPHS_USER)) {
-			res.send({ r: '0', reason: 'You do not have enough permissions.' });
-			return;
-		}
+	const user = r[2] as User;
+	if (!user.can_do(SEE_GRAPHS_USER)) {
+		res.send({ r: '0', reason: 'You do not have enough permissions.' });
+		return;
 	}
 
 	const time_control_id = req.body.tc_i as TimeControlID;
@@ -271,10 +230,7 @@ export async function post_query_graphs_full(req: any, res: any) {
 		`User ${session.username} is querying the graph of the entire server of time control ${time_control_id}.`
 	);
 
-	const [list_nodes, list_edges] = retrieve_graph_full(
-		UsersManager.get_instance().get_user_by_username(session.username) as User,
-		time_control_id
-	);
+	const [list_nodes, list_edges] = retrieve_graph_full(user, time_control_id);
 	res.send({
 		r: '1',
 		nodes: list_nodes,
