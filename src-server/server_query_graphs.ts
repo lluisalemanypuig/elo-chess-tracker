@@ -146,6 +146,7 @@ function retrieve_graph_full(querier: User, time_control_id: TimeControlID): [No
 
 	let list_nodes: NodeInfo[] = [];
 	let list_edges: EdgeInfo[] = [];
+
 	for (let idx = 0; idx < users.num_users(); ++idx) {
 		const this_user = users.get_user_at(idx) as User;
 		if (!can_user_see_graph(querier, this_user)) {
@@ -154,14 +155,8 @@ function retrieve_graph_full(querier: User, time_control_id: TimeControlID): [No
 
 		const username = this_user.get_username();
 		const this_user_rand_id = users.get_user_random_ID_at(idx) as number;
-		{
-			let i = new NodeInfo();
-			i.full_name = this_user.get_full_name();
-			i.id = users.get_user_random_ID_at(idx) as number;
-			i.weight.rating = this_user.get_rating(time_control_id).rating;
-			list_nodes.push(i);
-		}
 
+		let out_degree = 0;
 		G.get_outgoing_edges(username)?.forEach((e: Edge) => {
 			const edge_user_idx = users.get_user_index_by_username(e.neighbor) as number;
 			const edge_user = users.get_user_at(edge_user_idx) as User;
@@ -179,7 +174,18 @@ function retrieve_graph_full(querier: User, time_control_id: TimeControlID): [No
 			ei.weight.draws = e.metadata.num_games_drawn;
 			ei.weight.losses = e.metadata.num_games_lost;
 			list_edges.push(ei);
+
+			++out_degree;
 		});
+
+		const degree = G.get_in_degree(username) + out_degree;
+		if (degree > 0) {
+			let i = new NodeInfo();
+			i.full_name = this_user.get_full_name();
+			i.id = users.get_user_random_ID_at(idx) as number;
+			i.weight.rating = this_user.get_rating(time_control_id).rating;
+			list_nodes.push(i);
+		}
 	}
 
 	return [list_nodes, list_edges];
