@@ -46,14 +46,40 @@ Contact:
 				<div class="label-and-select">
 					<label>Time control:</label>
 					<select id="select_time_control"></select>
+
 					<label>Node color:</label>
-					<select id="select_node_color"></select>
-					<label>Node size:</label>
-					<select id="select_node_size"></select>
+					<select id="select_node_color">
+						<option value="fixed">Single color</option>
+						<option value="dynamic_rating">Color by rating</option>
+					</select>
+					<input type="color" id="color_picker_node" value="#1A5FB4" />
+
 					<label>Edge color:</label>
-					<select id="select_edge_color"></select>
+					<select id="select_edge_color">
+						<option value="fixed">Single color</option>
+						<option value="dynamic_games">Color by games</option>
+						<option value="dynamic_results">Color by results</option>
+					</select>
+					<input type="color" id="color_picker_edge" value="#62A0EA" />
+				</div>
+				<div class="label-and-select">
+					<label></label>
+					<select style="visibility: hidden"></select>
+
+					<label>Node size:</label>
+					<select id="select_node_size">
+						<option value="fixed">Fixed size</option>
+						<option value="dynamic_size">Size by rating</option>
+					</select>
+					<input type="number" id="size_picker_node" value="3" style="width: 56px" />
+
 					<label>Edge size:</label>
-					<select id="select_edge_size"></select>
+					<select id="select_edge_size">
+						<option value="fixed">Fixed size</option>
+						<option value="dynamic_games">Size by games</option>
+						<option value="dynamic_results">Size by results</option>
+					</select>
+					<input type="number" id="size_picker_edge" value="1" style="width: 56px" />
 				</div>
 
 				<div id="graph-viewer" value="own" style="height: 200px; width: 100%; background: white"></div>
