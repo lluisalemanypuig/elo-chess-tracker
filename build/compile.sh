@@ -19,6 +19,6 @@ echo "Fix imports..."
 ./build/fix_imports.sh
 
 if [ "$?" == "0" ]; then
-    echo "Browserify..."
-    ./build/browserify.sh
+    echo "esbuild..."
+    ./build/esbuild.sh
 fi

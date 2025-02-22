@@ -51,9 +51,9 @@ Now follow instructions to explain how to install the webpage.
 
         $ npm install -g ts-node
 
--   [`browserify`](https://browserify.org/). You may need superuser privileges (`sudo`) to install it.
+-   [`esbuild `](https://esbuild.github.io/). You may need superuser privileges (`sudo`) to install it.
 
-        $ npm install -g browserify
+        $ npm install -g --save-exact --save-dev esbuild
 
 ### Install all packages required to run the website
 
