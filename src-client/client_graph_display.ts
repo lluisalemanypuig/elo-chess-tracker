@@ -236,7 +236,7 @@ function size_picker_node_changed(_event: any) {
 		for (const node of graph_data.nodes) {
 			server_graph.setNodeAttribute(node.id, 'size', size_picker_node.value);
 		}
-	} else if (option == 'dynamic_size') {
+	} else if (option == 'dynamic_rating') {
 		const k = parseInt(size_picker_node.value);
 		for (const node of graph_data.nodes) {
 			const r = node.weight.rating;
@@ -261,9 +261,9 @@ function size_picker_edge_changed(_event: any) {
 
 	const select_node_size = document.getElementById('select_edge_size') as HTMLSelectElement;
 	const option = select_node_size.options[select_node_size.selectedIndex].value;
+	const size_picker_node = document.getElementById('size_picker_edge') as HTMLInputElement;
 
 	if (option == 'fixed') {
-		const size_picker_node = document.getElementById('size_picker_edge') as HTMLInputElement;
 		for (const edge of graph_data.edges) {
 			server_graph.setEdgeAttribute(edge.source, edge.target, 'size', size_picker_node.value);
 		}
