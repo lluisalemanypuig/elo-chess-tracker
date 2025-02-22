@@ -23,12 +23,14 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { graph_to_file } from '../io/graph/graph';
+import { graph_full_to_file, graph_to_file } from '../io/graph/graph';
 import { GameResult } from '../models/game';
 import { Graph } from '../models/graph/graph';
 import { TimeControlID } from '../models/time_control';
 import { EnvironmentManager } from './environment_manager';
+import { GamesIterator } from './games_iterator';
 import { GraphsManager } from './graphs_manager';
+import { RatingSystemManager } from './rating_system_manager';
 
 export function graph_update(w: string, b: string, result: GameResult, id: TimeControlID): void {
 	let manager = GraphsManager.get_instance();
@@ -60,4 +62,24 @@ export function graph_modify_edge(
 
 	const graphs_dir = EnvironmentManager.get_instance().get_dir_graphs_time_control(id);
 	graph_to_file(graphs_dir, [w], g);
+}
+
+export function recalculate_all_graphs() {
+	let manager = GraphsManager.get_instance();
+	manager.clear();
+
+	const unique_time_controls = RatingSystemManager.get_instance().get_unique_time_controls_ids();
+	for (const time_control_id of unique_time_controls) {
+		const dir = EnvironmentManager.get_instance().get_dir_games_time_control(time_control_id);
+		let g = new Graph();
+		let iter = new GamesIterator(dir);
+		while (!iter.end_record_list()) {
+			const game = iter.get_current_game();
+			g.add_edge(game.get_white(), game.get_black(), game.get_result());
+			iter.next_game();
+		}
+		manager.add_graph(time_control_id, g);
+
+		graph_full_to_file(dir, g);
+	}
 }

@@ -33,6 +33,8 @@ import { is_user_logged_in } from './managers/session';
 import { CREATE_GAMES } from './models/user_action';
 import { User } from './models/user';
 import { SessionID } from './models/session_id';
+import { ADMIN } from './models/user_role';
+import { recalculate_all_graphs } from './managers/graphs';
 
 export async function get_graphs_own_page(req: any, res: any) {
 	debug(log_now(), 'GET graphs_own_page...');
@@ -68,4 +70,28 @@ export async function get_graphs_full_page(req: any, res: any) {
 	res.sendFile(path.join(__dirname, '../html/graphs_full.html'));
 }
 
-export async function post_recalculate_graphs(_req: any, _res: any) {}
+export async function post_recalculate_graphs(req: any, res: any) {
+	debug(log_now(), 'POST recalculate_graphs...');
+
+	const session = SessionID.from_cookie(req.cookies);
+	const r = is_user_logged_in(session);
+
+	if (!r[0]) {
+		res.send(r[1]);
+		return;
+	}
+
+	if (!(r[2] as User).is(ADMIN)) {
+		debug(log_now(), `User '${session.username}' cannot recalculate graphs.`);
+		res.send('403 - Forbidden');
+		return;
+	}
+
+	debug(log_now(), `Recalculating ratings...`);
+
+	// actually recalculating ratings
+	recalculate_all_graphs();
+
+	res.send({ r: '1' });
+	return;
+}

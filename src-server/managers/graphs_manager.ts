@@ -50,6 +50,10 @@ export class GraphsManager {
 
 	private graph_list: [TimeControlID, Graph][] = [];
 
+	clear(): void {
+		this.graph_list = [];
+	}
+
 	add_graph(id: TimeControlID, g: Graph): void {
 		const idx = search_linear_by_key(this.graph_list, (pair: [TimeControlID, Graph]): boolean => {
 			return pair[0] == id;
