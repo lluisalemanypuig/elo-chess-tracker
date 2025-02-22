@@ -27,8 +27,8 @@ import { fill_time_controls } from './client_utils_time_control_select';
 import { set_footer_version_number } from './client_utils_version_number';
 
 async function initialize_window_client_games_create() {
-	let white_datalist = document.getElementById('white_datalist') as HTMLDataListElement;
-	let black_datalist = document.getElementById('black_datalist') as HTMLDataListElement;
+	let datalist_white_users = document.getElementById('datalist_white_users') as HTMLDataListElement;
+	let datalist_black_users = document.getElementById('datalist_black_users') as HTMLDataListElement;
 
 	// query the server for the list of users
 	const response_user_list = await fetch('/query_users_list', {
@@ -49,31 +49,31 @@ async function initialize_window_client_games_create() {
 			options += `<option value="${elem[0]}" id="${elem[1]}">`;
 		});
 	}
-	white_datalist.innerHTML = options;
-	black_datalist.innerHTML = options;
+	datalist_white_users.innerHTML = options;
+	datalist_black_users.innerHTML = options;
 
-	fill_time_controls('time_control_select');
+	fill_time_controls('select_time_control');
 }
 
 async function submit_new_game(_event: any) {
-	const white_input = document.getElementById('white_list') as HTMLInputElement;
-	const black_input = document.getElementById('black_list') as HTMLInputElement;
-	const result_select = document.getElementById('result_select') as HTMLSelectElement;
-	const time_control_select = document.getElementById('time_control_select') as HTMLSelectElement;
-	const game_date_input = document.getElementById('game_date_input') as HTMLInputElement;
-	const game_time_input = document.getElementById('game_time_input') as HTMLInputElement;
+	const white_input = document.getElementById('list_white_users') as HTMLInputElement;
+	const black_input = document.getElementById('list_black_users') as HTMLInputElement;
+	const select_result_game = document.getElementById('select_result_game') as HTMLSelectElement;
+	const select_time_control = document.getElementById('select_time_control') as HTMLSelectElement;
+	const input_game_date = document.getElementById('input_game_date') as HTMLInputElement;
+	const input_game_time = document.getElementById('input_game_time') as HTMLInputElement;
 
 	const white_option = document.querySelector('option[value="' + white_input.value + '"]');
 	const black_option = document.querySelector('option[value="' + black_input.value + '"]');
-	const result = result_select.options[result_select.selectedIndex].value;
-	const time_control_id = time_control_select.options[time_control_select.selectedIndex].value;
-	const time_control_name = time_control_select.options[time_control_select.selectedIndex].text;
+	const result = select_result_game.options[select_result_game.selectedIndex].value;
+	const time_control_id = select_time_control.options[select_time_control.selectedIndex].value;
+	const time_control_name = select_time_control.options[select_time_control.selectedIndex].text;
 
-	if (game_date_input.value == '') {
+	if (input_game_date.value == '') {
 		alert('Invalid date');
 		return;
 	}
-	if (game_time_input.value == '') {
+	if (input_game_time.value == '') {
 		alert('Invalid time');
 		return;
 	}
@@ -91,9 +91,9 @@ async function submit_new_game(_event: any) {
 			r: result,
 			tc_i: time_control_id,
 			tc_n: time_control_name,
-			d: game_date_input.value,
+			d: input_game_date.value,
 			t:
-				game_time_input.value +
+				input_game_time.value +
 				':' +
 				(rand_sec.length == 1 ? '0' : '') +
 				rand_sec +

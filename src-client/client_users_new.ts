@@ -36,20 +36,20 @@ async function submit_new_user_clicked(_event: any) {
 	const username_box = _username_box as HTMLInputElement;
 
 	// first_name box
-	const _first_name_box = document.getElementById('first_name_box');
-	if (_first_name_box == null) {
-		console.log("Element 'first_name_box' does not exist.");
+	const _box_first_name = document.getElementById('box_first_name');
+	if (_box_first_name == null) {
+		console.log("Element 'box_first_name' does not exist.");
 		return;
 	}
-	const first_name_box = _first_name_box as HTMLInputElement;
+	const box_first_name = _box_first_name as HTMLInputElement;
 
 	// last_name box
-	const _last_name_box = document.getElementById('last_name_box');
-	if (_last_name_box == null) {
-		console.log("Element 'last_name_box' does not exist.");
+	const _box_last_name = document.getElementById('box_last_name');
+	if (_box_last_name == null) {
+		console.log("Element 'box_last_name' does not exist.");
 		return;
 	}
-	const last_name_box = _last_name_box as HTMLInputElement;
+	const box_last_name = _box_last_name as HTMLInputElement;
 
 	// password box
 	const _password_box = document.getElementById('password_box');
@@ -60,8 +60,8 @@ async function submit_new_user_clicked(_event: any) {
 	const password_box = _password_box as HTMLInputElement;
 
 	const username = username_box.value;
-	const firstname = first_name_box.value;
-	const lastname = last_name_box.value;
+	const firstname = box_first_name.value;
+	const lastname = box_last_name.value;
 
 	let roles: string[] = [];
 	all_user_roles.forEach(function (str: string) {
@@ -130,7 +130,7 @@ window.onload = function () {
 	};
 
 	// fill in select role dropdown with values
-	let role_div = document.getElementById('role_checkboxes') as HTMLDivElement;
+	let role_div = document.getElementById('div_role_checkboxes') as HTMLDivElement;
 	all_user_roles.forEach(function (str: string) {
 		add_checkbox(role_div, user_role_to_string[str as UserRole], str);
 	});

@@ -67,7 +67,7 @@ function new_button_cell(text: string, game_id: string) {
 	return button;
 }
 
-function result_selection_changed(event: any) {
+function select_result_gameion_changed(event: any) {
 	const select = event.target;
 
 	let button = document.getElementById(select.getAttribute('button_id')) as HTMLButtonElement;
@@ -109,7 +109,7 @@ function new_select_cell_result(original_result: string, game_id: string) {
 
 	select_result.id = 'select_result-' + game_id;
 	select_result.value = result_from_text_to_value(original_result);
-	select_result.onchange = result_selection_changed;
+	select_result.onchange = select_result_gameion_changed;
 	select_result.setAttribute('original_value', result_from_text_to_value(original_result));
 	select_result.setAttribute('button_id', 'button_edit-' + game_id);
 
@@ -171,22 +171,22 @@ async function fill_games_list_time_control(time_control_id: string) {
 		new_tbody.appendChild(row);
 	}
 
-	let table = document.getElementById('games_table') as HTMLTableElement;
+	let table = document.getElementById('table_games') as HTMLTableElement;
 	let old_tbody = table.getElementsByTagName('tbody')[0] as HTMLElement;
 	old_tbody.parentNode?.replaceChild(new_tbody, old_tbody);
 }
 
 async function fill_games_list(_event: any) {
-	const time_control_select = document.getElementById('time_control_select') as HTMLSelectElement;
-	const time_control_id = time_control_select.options[time_control_select.selectedIndex].value;
+	const select_time_control = document.getElementById('select_time_control') as HTMLSelectElement;
+	const time_control_id = select_time_control.options[select_time_control.selectedIndex].value;
 	fill_games_list_time_control(time_control_id);
 }
 
 window.onload = async function () {
-	fill_time_controls('time_control_select');
+	fill_time_controls('select_time_control');
 	fill_games_list_time_control('');
 
-	let time_control = document.getElementById('time_control_select') as HTMLSelectElement;
+	let time_control = document.getElementById('select_time_control') as HTMLSelectElement;
 	time_control.onchange = fill_games_list;
 
 	set_footer_version_number();

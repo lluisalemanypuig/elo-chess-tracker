@@ -35,18 +35,18 @@ export async function fill_time_controls(element_id: string) {
 	}
 
 	// fill time control lists
-	let time_control_select = document.getElementById(element_id) as HTMLSelectElement;
+	let select_time_control = document.getElementById(element_id) as HTMLSelectElement;
 	const time_control_data = time_control.data;
 	{
 		let option_null = document.createElement('option');
 		option_null.text = '';
 		option_null.value = '';
-		time_control_select.appendChild(option_null);
+		select_time_control.appendChild(option_null);
 	}
 	for (let i = 0; i < time_control_data.length; ++i) {
 		let option_i = document.createElement('option');
 		option_i.text = time_control_data[i].name;
 		option_i.value = time_control_data[i].id;
-		time_control_select.appendChild(option_i);
+		select_time_control.appendChild(option_i);
 	}
 }

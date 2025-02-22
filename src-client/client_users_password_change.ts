@@ -25,12 +25,12 @@ Contact:
 
 import { set_footer_version_number } from './client_utils_version_number';
 
-async function submit_button_clicked() {
-	let old_password_box = document.getElementById('old_password_box') as HTMLInputElement;
-	let new_password_box = document.getElementById('new_password_box') as HTMLInputElement;
-	let repeat_password_box = document.getElementById('repeat_password_box') as HTMLInputElement;
+async function button_submit_clicked() {
+	let box_old_password = document.getElementById('box_old_password') as HTMLInputElement;
+	let box_new_password = document.getElementById('box_new_password') as HTMLInputElement;
+	let box_repeat_password = document.getElementById('box_repeat_password') as HTMLInputElement;
 
-	if (new_password_box.value != repeat_password_box.value) {
+	if (box_new_password.value != box_repeat_password.value) {
 		alert('The passwords must coincide');
 		return;
 	}
@@ -38,8 +38,8 @@ async function submit_button_clicked() {
 	const response = await fetch('/users_password_change', {
 		method: 'POST',
 		body: JSON.stringify({
-			old: old_password_box.value,
-			new: new_password_box.value
+			old: box_old_password.value,
+			new: box_new_password.value
 		}),
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
@@ -55,8 +55,8 @@ async function submit_button_clicked() {
 }
 
 window.onload = function () {
-	let submit_button = document.getElementById('submit_button') as HTMLButtonElement;
-	submit_button.onclick = submit_button_clicked;
+	let button_submit = document.getElementById('button_submit') as HTMLButtonElement;
+	button_submit.onclick = button_submit_clicked;
 
 	set_footer_version_number();
 };

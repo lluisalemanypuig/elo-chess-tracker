@@ -33,8 +33,8 @@ function initialize_sigma() {
 }
 
 async function load_graph() {
-	const time_control_select = document.getElementById('time_control_select') as HTMLSelectElement;
-	const time_control_id = time_control_select.options[time_control_select.selectedIndex].value;
+	const select_time_control = document.getElementById('select_time_control') as HTMLSelectElement;
+	const time_control_id = select_time_control.options[select_time_control.selectedIndex].value;
 
 	if (time_control_id == '') {
 		return;
@@ -176,20 +176,20 @@ window.onresize = resize_viewer;
 
 window.onload = async function () {
 	resize_viewer();
-	fill_time_controls('time_control_select');
+	fill_time_controls('select_time_control');
 	set_footer_version_number();
 	initialize_sigma();
 
-	let time_control_select = document.getElementById('time_control_select') as HTMLSelectElement;
-	time_control_select.onchange = load_and_display;
+	let select_time_control = document.getElementById('select_time_control') as HTMLSelectElement;
+	select_time_control.onchange = load_and_display;
 
-	let node_color_select = document.getElementById('node_color_select') as HTMLSelectElement;
-	node_color_select.onchange = change_node_color;
-	let node_size_select = document.getElementById('node_size_select') as HTMLSelectElement;
-	node_size_select.onchange = change_node_size;
+	let select_node_color = document.getElementById('select_node_color') as HTMLSelectElement;
+	select_node_color.onchange = change_node_color;
+	let select_node_size = document.getElementById('select_node_size') as HTMLSelectElement;
+	select_node_size.onchange = change_node_size;
 
-	let edge_color_select = document.getElementById('edge_color_select') as HTMLSelectElement;
-	edge_color_select.onchange = change_edge_color;
-	let edge_size_select = document.getElementById('edge_size_select') as HTMLSelectElement;
-	edge_size_select.onchange = change_edge_size;
+	let select_edge_color = document.getElementById('select_edge_color') as HTMLSelectElement;
+	select_edge_color.onchange = change_edge_color;
+	let select_edge_size = document.getElementById('select_edge_size') as HTMLSelectElement;
+	select_edge_size.onchange = change_edge_size;
 };

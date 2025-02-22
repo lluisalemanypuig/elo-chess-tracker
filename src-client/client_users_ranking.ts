@@ -27,8 +27,8 @@ import { fill_time_controls } from './client_utils_time_control_select';
 import { set_footer_version_number } from './client_utils_version_number';
 
 async function fill_ranking(_event: any) {
-	const time_control_select = document.getElementById('time_control_select') as HTMLSelectElement;
-	const time_control_id = time_control_select.options[time_control_select.selectedIndex].value;
+	const select_time_control = document.getElementById('select_time_control') as HTMLSelectElement;
+	const time_control_id = select_time_control.options[select_time_control.selectedIndex].value;
 
 	if (time_control_id == '') {
 		return;
@@ -78,10 +78,10 @@ async function fill_ranking(_event: any) {
 }
 
 window.onload = async function () {
-	fill_time_controls('time_control_select');
+	fill_time_controls('select_time_control');
 
-	let time_control_select = document.getElementById('time_control_select') as HTMLSelectElement;
-	time_control_select.onchange = fill_ranking;
+	let select_time_control = document.getElementById('select_time_control') as HTMLSelectElement;
+	select_time_control.onchange = fill_ranking;
 
 	set_footer_version_number();
 };

@@ -31,8 +31,8 @@ function create_label_text(text: string): HTMLLabelElement {
 	return label;
 }
 
-async function fill_username_datalist() {
-	let username_datalist = document.getElementById('username_datalist') as HTMLDataListElement;
+async function fill_datalist_username() {
+	let datalist_username = document.getElementById('datalist_username') as HTMLDataListElement;
 
 	// "query" the server
 	const response = await fetch('/query_users_list', {
@@ -52,7 +52,7 @@ async function fill_username_datalist() {
 	list.forEach(function (elem: [string, number]) {
 		options += `<option value="${elem[0]}" id="${elem[1]}">`;
 	});
-	username_datalist.innerHTML = options;
+	datalist_username.innerHTML = options;
 }
 
 async function send_challenge_button_clicked(_event: any) {
@@ -266,7 +266,7 @@ async function fill_challenges_pending_result() {
 			div.appendChild(create_label_text('Result:'));
 
 			let select = document.createElement('select');
-			select.id = 'result_select_' + elem.id;
+			select.id = 'select_result_game_' + elem.id;
 
 			let option_1 = document.createElement('option') as HTMLOptionElement;
 			option_1.text = '1 - 0';
@@ -293,7 +293,7 @@ async function fill_challenges_pending_result() {
 			div.appendChild(create_label_text('Time control:'));
 
 			let select = document.createElement('select');
-			select.id = 'time_control_select_' + elem.id;
+			select.id = 'select_time_control_' + elem.id;
 
 			for (let i = 0; i < time_control_data.length; ++i) {
 				let option_i = document.createElement('option') as HTMLOptionElement;
@@ -331,14 +331,14 @@ async function submit_result_challenge_button_clicked(event: any) {
 
 	let white_select = document.getElementById('white_select_' + challenge_id) as HTMLSelectElement;
 	let black_select = document.getElementById('black_select_' + challenge_id) as HTMLSelectElement;
-	let result_select = document.getElementById('result_select_' + challenge_id) as HTMLSelectElement;
-	let time_control_select = document.getElementById('time_control_select_' + challenge_id) as HTMLSelectElement;
+	let select_result_game = document.getElementById('select_result_game_' + challenge_id) as HTMLSelectElement;
+	let select_time_control = document.getElementById('select_time_control_' + challenge_id) as HTMLSelectElement;
 
 	let white_username = white_select.options[white_select.selectedIndex].value;
 	let black_username = black_select.options[black_select.selectedIndex].value;
-	let result = result_select.options[result_select.selectedIndex].value;
-	let time_control_id = time_control_select.options[time_control_select.selectedIndex].value;
-	let time_control_name = time_control_select.options[time_control_select.selectedIndex].text;
+	let result = select_result_game.options[select_result_game.selectedIndex].value;
+	let time_control_id = select_time_control.options[select_time_control.selectedIndex].value;
+	let time_control_name = select_time_control.options[select_time_control.selectedIndex].text;
 
 	// "query" the server
 	const response = await fetch('/challenges_set_result', {
@@ -468,7 +468,7 @@ async function disagree_challenge_result_tag_clicked(event: any) {
 
 window.onload = function () {
 	// fill in username dropdown with values
-	fill_username_datalist();
+	fill_datalist_username();
 
 	// link button 'submit_challenge' click behaviour
 	let send_challenge_button = document.getElementById('send_challenge_button') as HTMLButtonElement;
