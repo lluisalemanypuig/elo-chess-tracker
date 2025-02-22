@@ -90,52 +90,129 @@ async function load_graph() {
 	graph_loaded = true;
 }
 
-function change_node_color(_event: any) {
+function color_picker_node_changed(_event: any) {
 	if (!graph_loaded) {
 		return;
 	}
 
-	for (const node of graph_data.nodes) {
-		server_graph.setNodeAttribute(node.id, 'color', 'blue');
+	const select_node_color = document.getElementById('select_node_color') as HTMLSelectElement;
+	const option = select_node_color.options[select_node_color.selectedIndex].value;
+
+	if (option == 'fixed') {
+		const color_picker_node = document.getElementById('color_picker_node') as HTMLInputElement;
+		for (const node of graph_data.nodes) {
+			server_graph.setNodeAttribute(node.id, 'color', color_picker_node.value);
+		}
+	} else if (option == 'dynamic_rating') {
 	}
 
 	display_graph();
 }
 
-function change_node_size(_event: any) {
+function select_node_color_changed(_event: any) {
 	if (!graph_loaded) {
 		return;
 	}
 
-	for (const node of graph_data.nodes) {
-		server_graph.setNodeAttribute(node.id, 'size', 2);
+	color_picker_node_changed(null);
+}
+
+function color_picker_edge_changed(_event: any) {
+	if (!graph_loaded) {
+		return;
+	}
+
+	const select_node_color = document.getElementById('select_edge_color') as HTMLSelectElement;
+	const option = select_node_color.options[select_node_color.selectedIndex].value;
+	const color_picker_node = document.getElementById('color_picker_edge') as HTMLInputElement;
+
+	if (option == 'fixed') {
+		const color = color_picker_node.value;
+		for (const edge of graph_data.edges) {
+			server_graph.setEdgeAttribute(edge.source, edge.target, 'color', color);
+		}
+	} else if (option == 'dynamic_rating') {
 	}
 
 	display_graph();
 }
 
-function change_edge_color(_event: any) {
+function select_edge_color_changed(_event: any) {
 	if (!graph_loaded) {
 		return;
 	}
 
-	for (const edge of graph_data.edges) {
-		server_graph.setEdgeAttribute(edge.source, edge.target, 'color', 'red');
+	color_picker_edge_changed(null);
+}
+
+function size_picker_node_changed(_event: any) {
+	if (!graph_loaded) {
+		return;
+	}
+
+	const select_node_size = document.getElementById('select_node_size') as HTMLSelectElement;
+	const option = select_node_size.options[select_node_size.selectedIndex].value;
+
+	if (option == 'fixed') {
+		const size_picker_node = document.getElementById('size_picker_node') as HTMLInputElement;
+		for (const node of graph_data.nodes) {
+			server_graph.setNodeAttribute(node.id, 'size', size_picker_node.value);
+		}
 	}
 
 	display_graph();
 }
 
-function change_edge_size(_event: any) {
+function select_node_size_changed(_event: any) {
+	const select_node_size = document.getElementById('select_node_size') as HTMLSelectElement;
+	const option = select_node_size.options[select_node_size.selectedIndex].value;
+	const size_picker_node = document.getElementById('size_picker_node') as HTMLInputElement;
+	if (option == 'fixed') {
+		size_picker_node.style.visibility = 'visible';
+	} else {
+		size_picker_node.style.visibility = 'hidden';
+	}
+
 	if (!graph_loaded) {
 		return;
 	}
 
-	for (const edge of graph_data.edges) {
-		server_graph.setEdgeAttribute(edge.source, edge.target, 'size', edge.size);
+	size_picker_node_changed(null);
+}
+
+function size_picker_edge_changed(_event: any) {
+	if (!graph_loaded) {
+		return;
+	}
+
+	const select_node_size = document.getElementById('select_edge_size') as HTMLSelectElement;
+	const option = select_node_size.options[select_node_size.selectedIndex].value;
+
+	if (option == 'fixed') {
+		const size_picker_node = document.getElementById('size_picker_edge') as HTMLInputElement;
+		for (const edge of graph_data.edges) {
+			server_graph.setEdgeAttribute(edge.source, edge.target, 'size', size_picker_node.value);
+		}
 	}
 
 	display_graph();
+}
+
+function select_edge_size_changed(_event: any) {
+	const select_edge_size = document.getElementById('select_edge_size') as HTMLSelectElement;
+	const option = select_edge_size.options[select_edge_size.selectedIndex].value;
+	const size_picker_edge = document.getElementById('size_picker_edge') as HTMLInputElement;
+	if (option == 'fixed') {
+		size_picker_edge.style.visibility = 'visible';
+	} else {
+		size_picker_edge.style.visibility = 'hidden';
+	}
+
+	if (!graph_loaded) {
+		return;
+	}
+
+	size_picker_edge_changed(null);
 }
 
 function compute_coordinates() {
@@ -157,18 +234,17 @@ function compute_coordinates() {
 }
 
 function display_graph() {
-	console.log('Display coordinates...');
 	compute_coordinates();
-	console.log('Clear sigma...');
 	s.clear();
-	console.log('Set sigma...');
 	s.setGraph(server_graph);
 }
 
 async function load_and_display(_event: any) {
-	console.log('About to load a graph...');
 	await load_graph();
-	console.log('About to display the graph...');
+	size_picker_node_changed(null);
+	color_picker_node_changed(null);
+	size_picker_edge_changed(null);
+	color_picker_edge_changed(null);
 	display_graph();
 }
 
@@ -184,12 +260,22 @@ window.onload = async function () {
 	select_time_control.onchange = load_and_display;
 
 	let select_node_color = document.getElementById('select_node_color') as HTMLSelectElement;
-	select_node_color.onchange = change_node_color;
-	let select_node_size = document.getElementById('select_node_size') as HTMLSelectElement;
-	select_node_size.onchange = change_node_size;
+	select_node_color.onchange = select_node_color_changed;
+	let color_picker_node = document.getElementById('color_picker_node') as HTMLInputElement;
+	color_picker_node.onchange = color_picker_node_changed;
 
 	let select_edge_color = document.getElementById('select_edge_color') as HTMLSelectElement;
-	select_edge_color.onchange = change_edge_color;
+	select_edge_color.onchange = select_edge_color_changed;
+	let color_picker_edge = document.getElementById('color_picker_edge') as HTMLInputElement;
+	color_picker_edge.onchange = color_picker_edge_changed;
+
+	let select_node_size = document.getElementById('select_node_size') as HTMLSelectElement;
+	select_node_size.onchange = select_node_size_changed;
+	let size_picker_node = document.getElementById('size_picker_node') as HTMLInputElement;
+	size_picker_node.onchange = size_picker_node_changed;
+
 	let select_edge_size = document.getElementById('select_edge_size') as HTMLSelectElement;
-	select_edge_size.onchange = change_edge_size;
+	select_edge_size.onchange = select_edge_size_changed;
+	let size_picker_edge = document.getElementById('size_picker_edge') as HTMLInputElement;
+	size_picker_edge.onchange = size_picker_edge_changed;
 };
