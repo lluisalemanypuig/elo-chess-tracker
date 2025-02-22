@@ -17,6 +17,9 @@ let graph_loaded: boolean = false;
 let min_rating: number = 99999;
 let max_rating: number = 0;
 
+let min_games: number = 99999;
+let max_games: number = 0;
+
 function resize_viewer() {
 	const viewport_height = window.innerHeight;
 	let viewer = document.getElementById('graph-viewer') as HTMLDivElement;
@@ -77,16 +80,21 @@ async function load_graph() {
 	min_rating = 99999;
 	max_rating = 0;
 	for (const node of graph_data.nodes) {
+		server_graph.addNode(node.id, { label: node.full_name });
+
 		const r = node.weight.rating;
 		min_rating = r < min_rating ? r : min_rating;
 		max_rating = r > max_rating ? r : max_rating;
 	}
-	for (const node of graph_data.nodes) {
-		server_graph.addNode(node.id, { label: node.full_name });
-	}
 
+	min_games = 0;
+	max_games = 0;
 	for (const edge of graph_data.edges) {
 		server_graph.addEdge(edge.source, edge.target, { label: edge.label });
+
+		const num_games = edge.weight.wins + edge.weight.draws + edge.weight.losses;
+		min_games = num_games < min_games ? num_games : min_games;
+		max_games = num_games > max_games ? num_games : max_games;
 	}
 
 	for (let u of server_graph.nodeEntries()) {
@@ -159,18 +167,6 @@ function color_picker_edge_changed(_event: any) {
 			.domain([0, 1])
 			.interpolate(interpolateRgb)
 			.range(['#F6F5F4', color_picker_node.value]);
-
-		console.log('min_rating', min_rating);
-		console.log('max_rating', max_rating);
-
-		let min_games: number = 99999;
-		let max_games: number = 0;
-
-		for (const edge of graph_data.edges) {
-			const num_games = edge.weight.wins + edge.weight.draws + edge.weight.losses;
-			min_games = num_games < min_games ? num_games : min_games;
-			max_games = num_games > max_games ? num_games : max_games;
-		}
 
 		for (const edge of graph_data.edges) {
 			const num_games = edge.weight.wins + edge.weight.draws + edge.weight.losses;
