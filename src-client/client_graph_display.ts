@@ -3,6 +3,8 @@ import Graph from 'graphology';
 import Sigma from 'sigma';
 import { EdgeArrowProgram } from 'sigma/rendering';
 import forceAtlas2 from 'graphology-layout-forceatlas2';
+import { scaleLinear } from 'd3-scale';
+import { interpolateRgb } from 'd3-interpolate';
 
 import { set_footer_version_number } from './client_utils_version_number';
 import { fill_time_controls } from './client_utils_time_control_select';
@@ -11,6 +13,9 @@ let s: Sigma;
 let graph_data: any;
 let server_graph: Graph;
 let graph_loaded: boolean = false;
+
+let min_rating: number = 99999;
+let max_rating: number = 0;
 
 function resize_viewer() {
 	const viewport_height = window.innerHeight;
@@ -69,6 +74,13 @@ async function load_graph() {
 	}
 	server_graph = new Graph({ type: 'directed' });
 
+	min_rating = 99999;
+	max_rating = 0;
+	for (const node of graph_data.nodes) {
+		const r = node.weight.rating;
+		min_rating = r < min_rating ? r : min_rating;
+		max_rating = r > max_rating ? r : max_rating;
+	}
 	for (const node of graph_data.nodes) {
 		server_graph.addNode(node.id, { label: node.full_name });
 	}
@@ -97,13 +109,24 @@ function color_picker_node_changed(_event: any) {
 
 	const select_node_color = document.getElementById('select_node_color') as HTMLSelectElement;
 	const option = select_node_color.options[select_node_color.selectedIndex].value;
+	const color_picker_node = document.getElementById('color_picker_node') as HTMLInputElement;
 
 	if (option == 'fixed') {
-		const color_picker_node = document.getElementById('color_picker_node') as HTMLInputElement;
 		for (const node of graph_data.nodes) {
 			server_graph.setNodeAttribute(node.id, 'color', color_picker_node.value);
 		}
 	} else if (option == 'dynamic_rating') {
+		const colorInterpolator = scaleLinear<string>()
+			.domain([0, 1])
+			.interpolate(interpolateRgb)
+			.range(['#F6F5F4', color_picker_node.value]);
+
+		console.log('min_rating', min_rating);
+		console.log('max_rating', max_rating);
+		for (const node of graph_data.nodes) {
+			const k = (node.weight.rating - min_rating) / (max_rating - min_rating);
+			server_graph.setNodeAttribute(node.id, 'color', colorInterpolator(k));
+		}
 	}
 
 	display_graph();
@@ -159,13 +182,6 @@ function size_picker_node_changed(_event: any) {
 			server_graph.setNodeAttribute(node.id, 'size', size_picker_node.value);
 		}
 	} else if (option == 'dynamic_size') {
-		let min_rating: number = 99999;
-		let max_rating: number = 0;
-		for (const node of graph_data.nodes) {
-			const r = node.weight.rating;
-			min_rating = r < min_rating ? r : min_rating;
-			max_rating = r > max_rating ? r : max_rating;
-		}
 		const k = parseInt(size_picker_node.value);
 		for (const node of graph_data.nodes) {
 			const r = node.weight.rating;
