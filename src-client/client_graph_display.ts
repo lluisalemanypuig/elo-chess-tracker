@@ -14,11 +14,11 @@ let graph_data: any;
 let server_graph: Graph;
 let graph_loaded: boolean = false;
 
-let min_rating: number = 99999;
-let max_rating: number = 0;
+let min_rating: number;
+let max_rating: number;
 
-let min_games: number = 99999;
-let max_games: number = 0;
+let min_games: number;
+let max_games: number;
 
 function resize_viewer() {
 	const viewport_height = window.innerHeight;
@@ -87,7 +87,7 @@ async function load_graph() {
 		max_rating = r > max_rating ? r : max_rating;
 	}
 
-	min_games = 0;
+	min_games = 9999;
 	max_games = 0;
 	for (const edge of graph_data.edges) {
 		server_graph.addEdge(edge.source, edge.target, { label: edge.label });
