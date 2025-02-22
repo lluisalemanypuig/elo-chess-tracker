@@ -44,7 +44,11 @@
 	},
 	"dependencies": {
 		"@sigma/edge-curve": "^3.1.0",
+		"@types/d3-interpolate": "^3.0.4",
+		"@types/d3-scale": "^4.0.9",
 		"@types/sigmajs": "^1.0.32",
+		"d3-interpolate": "^3.0.1",
+		"d3-scale": "^4.0.2",
 		"graphology": "^0.26.0",
 		"graphology-layout": "^0.6.1",
 		"graphology-layout-forceatlas2": "^0.10.1",
