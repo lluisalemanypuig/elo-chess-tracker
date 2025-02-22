@@ -56,9 +56,9 @@ async function initialize_window_client_games_create() {
 }
 
 async function submit_new_game(_event: any) {
-	const white_input = document.getElementById('list_white_users') as HTMLInputElement;
-	const black_input = document.getElementById('list_black_users') as HTMLInputElement;
-	const select_result_game = document.getElementById('select_result_game') as HTMLSelectElement;
+	let white_input = document.getElementById('list_white_users') as HTMLInputElement;
+	let black_input = document.getElementById('list_black_users') as HTMLInputElement;
+	let select_result_game = document.getElementById('select_result_game') as HTMLSelectElement;
 	const select_time_control = document.getElementById('select_time_control') as HTMLSelectElement;
 	const input_game_date = document.getElementById('input_game_date') as HTMLInputElement;
 	const input_game_time = document.getElementById('input_game_time') as HTMLInputElement;
@@ -110,7 +110,9 @@ async function submit_new_game(_event: any) {
 		return;
 	}
 
-	window.location.href = '/games_create_page';
+	white_input.value = '';
+	black_input.value = '';
+	select_result_game.value = '';
 }
 
 window.onload = async function () {
