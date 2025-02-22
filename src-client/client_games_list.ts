@@ -67,7 +67,7 @@ function new_button_cell(text: string, game_id: string) {
 	return button;
 }
 
-function select_result_gameion_changed(event: any) {
+function select_result_game_on_change(event: any) {
 	const select = event.target;
 
 	let button = document.getElementById(select.getAttribute('button_id')) as HTMLButtonElement;
@@ -109,7 +109,7 @@ function new_select_cell_result(original_result: string, game_id: string) {
 
 	select_result.id = 'select_result-' + game_id;
 	select_result.value = result_from_text_to_value(original_result);
-	select_result.onchange = select_result_gameion_changed;
+	select_result.onchange = select_result_game_on_change;
 	select_result.setAttribute('original_value', result_from_text_to_value(original_result));
 	select_result.setAttribute('button_id', 'button_edit-' + game_id);
 
