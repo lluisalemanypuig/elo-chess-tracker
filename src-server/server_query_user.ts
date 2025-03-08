@@ -146,14 +146,16 @@ export async function post_query_user_ranking(req: any, res: any) {
 		const mem = UsersManager.get_instance();
 		for (let i = 0; i < mem.num_users(); ++i) {
 			const user = mem.get_user_at(i) as User;
-			users.push({
-				name: user.get_full_name(),
-				rating: Math.round(user.get_rating(time_control_id).rating),
-				total_games: user.get_rating(time_control_id).num_games,
-				won: user.get_rating(time_control_id).won,
-				drawn: user.get_rating(time_control_id).drawn,
-				lost: user.get_rating(time_control_id).lost
-			});
+			if (user.get_rating(time_control_id).num_games > 0) {
+				users.push({
+					name: user.get_full_name(),
+					rating: Math.round(user.get_rating(time_control_id).rating),
+					total_games: user.get_rating(time_control_id).num_games,
+					won: user.get_rating(time_control_id).won,
+					drawn: user.get_rating(time_control_id).drawn,
+					lost: user.get_rating(time_control_id).lost
+				});
+			}
 		}
 	}
 	users.sort((u1: any, u2: any): number => {
