@@ -36,8 +36,8 @@ import { is_role_string_correct } from './models/user_role';
 import { CREATE_USER, ASSIGN_ROLE_USER, get_role_action_name, ASSIGN_ROLE_ID } from './models/user_action';
 import { SessionID } from './models/session_id';
 
-export async function get_users_create_page(req: any, res: any) {
-	debug(log_now(), 'GET users_create_page...');
+export async function get_page_user_create(req: any, res: any) {
+	debug(log_now(), 'GET /user/create...');
 
 	const session = SessionID.from_cookie(req.cookies);
 	const r = is_user_logged_in(session);
@@ -53,11 +53,11 @@ export async function get_users_create_page(req: any, res: any) {
 		return;
 	}
 
-	res.sendFile(path.join(__dirname, '../html/users_new.html'));
+	res.sendFile(path.join(__dirname, '../html/user/new.html'));
 }
 
-export async function post_users_create(req: any, res: any) {
-	debug(log_now(), 'POST users_create');
+export async function post_user_create(req: any, res: any) {
+	debug(log_now(), 'POST /user/create');
 
 	const session = SessionID.from_cookie(req.cookies);
 	const r = is_user_logged_in(session);

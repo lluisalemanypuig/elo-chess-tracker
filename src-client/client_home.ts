@@ -37,7 +37,7 @@ import { SessionID } from '../src-server/models/session_id';
 
 export async function logout_link_clicked(_event: any) {
 	// "query" the server
-	await fetch('/user_log_out', { method: 'POST' });
+	await fetch('/user/logout', { method: 'POST' });
 
 	// whether logout was successful or not, empty the cookies
 	document.cookie = make_cookie_string({
@@ -59,31 +59,31 @@ function fill_action_links(user_actions: string[], user_roles: string[]) {
 
 	if (user_actions.includes(CREATE_USER)) {
 		let user_create_link = document.createElement('a') as HTMLAnchorElement;
-		user_create_link.href = '/users_create_page';
+		user_create_link.href = '/user/create';
 		user_create_link.text = 'Create new user';
 		action_links.appendChild(user_create_link);
 	}
 	if (user_actions.includes(EDIT_USER)) {
 		let user_edit_link = document.createElement('a') as HTMLAnchorElement;
-		user_edit_link.href = '/users_edit_page';
+		user_edit_link.href = '/user/edit';
 		user_edit_link.text = 'Edit user';
 		action_links.appendChild(user_edit_link);
 	}
 	if (user_actions.includes(CREATE_GAMES)) {
 		let game_create_link = document.createElement('a') as HTMLAnchorElement;
-		game_create_link.href = '/games_create_page';
+		game_create_link.href = '/game/create';
 		game_create_link.text = 'Create new game';
 		action_links.appendChild(game_create_link);
 	}
 	if (user_actions.includes(SEE_GAMES_USER)) {
 		let see_all_games_link = document.createElement('a') as HTMLAnchorElement;
-		see_all_games_link.href = '/games_list_all_page';
+		see_all_games_link.href = '/game/list/all';
 		see_all_games_link.text = 'See all games';
 		action_links.appendChild(see_all_games_link);
 	}
 	if (user_actions.includes(SEE_GRAPHS_USER)) {
 		let see_full_graph_link = document.createElement('a') as HTMLAnchorElement;
-		see_full_graph_link.href = '/graphs_full_page';
+		see_full_graph_link.href = '/graph/full';
 		see_full_graph_link.text = 'See the full graph';
 		action_links.appendChild(see_full_graph_link);
 	}
@@ -119,7 +119,7 @@ function fill_action_links(user_actions: string[], user_roles: string[]) {
 
 async function fill_own_info() {
 	// "query" the server
-	const response = await fetch('/query_users_home', {
+	const response = await fetch('/query/user/home', {
 		method: 'GET',
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
@@ -167,7 +167,7 @@ async function fill_own_info() {
 }
 
 async function set_home_page_title() {
-	const response = await fetch('/title_home_page', {
+	const response = await fetch('/title/home_page', {
 		method: 'GET',
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});

@@ -39,8 +39,8 @@ import { SessionID } from './models/session_id';
 import { can_user_edit } from './models/user_relationships';
 import { UsersManager } from './managers/users_manager';
 
-export async function get_users_edit_page(req: any, res: any) {
-	debug(log_now(), 'GET users_edit_page...');
+export async function get_page_user_edit(req: any, res: any) {
+	debug(log_now(), 'GET /user/edit...');
 
 	const session = SessionID.from_cookie(req.cookies);
 
@@ -64,11 +64,11 @@ export async function get_users_edit_page(req: any, res: any) {
 		return;
 	}
 
-	res.sendFile(path.join(__dirname, '../html/users_edit.html'));
+	res.sendFile(path.join(__dirname, '../html/user/edit.html'));
 }
 
-export async function post_users_edit(req: any, res: any) {
-	debug(log_now(), 'POST users_edit...');
+export async function post_user_edit(req: any, res: any) {
+	debug(log_now(), 'POST /user/edit...');
 
 	const session = SessionID.from_cookie(req.cookies);
 	const r = is_user_logged_in(session);

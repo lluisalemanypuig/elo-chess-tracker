@@ -191,8 +191,8 @@ function retrieve_graph_full(querier: User, time_control_id: TimeControlID): [No
 	return [list_nodes, list_edges];
 }
 
-export async function post_query_graphs_own(req: any, res: any) {
-	debug(log_now(), 'POST query_graphs_own...');
+export async function post_query_graph_own(req: any, res: any) {
+	debug(log_now(), 'POST /query/graph/own...');
 
 	const session = SessionID.from_cookie(req.cookies);
 	const r = is_user_logged_in(session);
@@ -213,8 +213,8 @@ export async function post_query_graphs_own(req: any, res: any) {
 	});
 }
 
-export async function post_query_graphs_full(req: any, res: any) {
-	debug(log_now(), 'POST query_graphs_full...');
+export async function post_query_graph_full(req: any, res: any) {
+	debug(log_now(), 'POST /query/graph/full...');
 
 	const session = SessionID.from_cookie(req.cookies);
 	const r = is_user_logged_in(session);

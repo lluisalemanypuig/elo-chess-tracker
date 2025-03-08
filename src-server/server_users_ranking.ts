@@ -32,8 +32,8 @@ import { log_now } from './utils/time';
 import { is_user_logged_in } from './managers/session';
 import { SessionID } from './models/session_id';
 
-export async function get_ranking_users_page(req: any, res: any) {
-	debug(log_now(), 'GET users_ranking_page...');
+export async function get_page_user_ranking(req: any, res: any) {
+	debug(log_now(), 'GET /user/ranking...');
 
 	const session = SessionID.from_cookie(req.cookies);
 	const r = is_user_logged_in(session);
@@ -43,5 +43,5 @@ export async function get_ranking_users_page(req: any, res: any) {
 		return;
 	}
 
-	res.sendFile(path.join(__dirname, '../html/users_ranking.html'));
+	res.sendFile(path.join(__dirname, '../html/user/ranking.html'));
 }

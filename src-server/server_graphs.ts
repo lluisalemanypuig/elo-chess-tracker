@@ -36,8 +36,8 @@ import { SessionID } from './models/session_id';
 import { ADMIN } from './models/user_role';
 import { recalculate_all_graphs } from './managers/graphs';
 
-export async function get_graphs_own_page(req: any, res: any) {
-	debug(log_now(), 'GET graphs_own_page...');
+export async function get_page_graph_own(req: any, res: any) {
+	debug(log_now(), 'GET /graph/own...');
 
 	const session = SessionID.from_cookie(req.cookies);
 	const r = is_user_logged_in(session);
@@ -47,11 +47,11 @@ export async function get_graphs_own_page(req: any, res: any) {
 		return;
 	}
 
-	res.sendFile(path.join(__dirname, '../html/graphs_own.html'));
+	res.sendFile(path.join(__dirname, '../html/graph/own.html'));
 }
 
-export async function get_graphs_full_page(req: any, res: any) {
-	debug(log_now(), 'GET graphs_full_page...');
+export async function get_page_graph_full(req: any, res: any) {
+	debug(log_now(), 'GET /graph/full...');
 
 	const session = SessionID.from_cookie(req.cookies);
 	const r = is_user_logged_in(session);
@@ -67,11 +67,11 @@ export async function get_graphs_full_page(req: any, res: any) {
 		return;
 	}
 
-	res.sendFile(path.join(__dirname, '../html/graphs_full.html'));
+	res.sendFile(path.join(__dirname, '../html/graph/full.html'));
 }
 
 export async function post_recalculate_graphs(req: any, res: any) {
-	debug(log_now(), 'POST recalculate_graphs...');
+	debug(log_now(), 'POST /recalculate_graphs...');
 
 	const session = SessionID.from_cookie(req.cookies);
 	const r = is_user_logged_in(session);

@@ -27,48 +27,42 @@ Contact:
 <html>
 	<head>
 		<meta charset="UTF-8" />
-		<title>Edit a user</title>
+		<title>Ranking</title>
 
-		<script type="text/javascript" src="js-source/bdl__client_users_edit.js"></script>
-		<script type="text/javascript" src="js-source/bdl__client_utils_version_number.js"></script>
+		<script type="text/javascript" src="/js-source/bdl__client_users_ranking.js"></script>
+		<script type="text/javascript" src="/js-source/bdl__client_utils_version_number.js"></script>
 
-		<link rel="stylesheet" href="html/css/main.css" />
-		<link rel="stylesheet" href="html/css/footer_copyright_notice.css" />
+		<link rel="stylesheet" href="/html/css/main.css" />
+		<link rel="stylesheet" href="/html/css/elo_table.css" />
+		<link rel="stylesheet" href="/html/css/footer_copyright_notice.css" />
 	</head>
 
 	<body>
 		<meta name="viewport" content="width=device-width,initial-scale=1" />
 		<div class="page-wrapper">
 			<div class="main-content">
-				<h2>Edit an existing user</h2>
+				<h2>Ranking</h2>
 
-				<!-- User selection  -->
-				<div class="label-and-input">
-					<label for="datalist_username">Select user:</label>
-					<input list="datalist_username" id="username_list" name="username_list" />
-					<datalist id="datalist_username">
-						<option value="asdf"></option>
-					</datalist>
+				<div class="label-and-select">
+					<label>Time control:</label>
+					<select id="select_time_control"></select>
 				</div>
 
-				<!-- First Name -->
-				<div class="label-and-input">
-					<label for="box_first_name">First name:</label>
-					<input type="text" id="box_first_name" name="box_first_name" />
+				<div>
+					<table id="users_table">
+						<thead>
+							<tr>
+								<th>Player</th>
+								<th>Rating</th>
+								<th>Games played</th>
+								<th>Won</th>
+								<th>Drawn</th>
+								<th>Lost</th>
+							</tr>
+						</thead>
+						<tbody></tbody>
+					</table>
 				</div>
-
-				<!-- Last Name -->
-				<div class="label-and-input">
-					<label for="box_last_name">Last name:</label>
-					<input type="text" id="box_last_name" name="box_last_name" />
-				</div>
-
-				<!-- Role -->
-				<label>Role:</label>
-				<div id="div_role_checkboxes"></div>
-
-				<!-- submit data -->
-				<button type="button" id="button_submit" name="button_submit">Submit</button><br /><br />
 			</div>
 
 			<footer class="footer_copyright_notice">

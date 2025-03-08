@@ -35,7 +35,7 @@ async function fill_datalist_username() {
 	let datalist_username = document.getElementById('datalist_username') as HTMLDataListElement;
 
 	// "query" the server
-	const response = await fetch('/query_users_list', {
+	const response = await fetch('/query/user/list', {
 		method: 'GET',
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
@@ -112,7 +112,7 @@ async function decline_challenge_tag_clicked(event: any) {
 }
 
 async function fill_challenges_received() {
-	const response = await fetch('/query_challenges_received', {
+	const response = await fetch('/query/challenges/received', {
 		method: 'GET',
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
@@ -156,7 +156,7 @@ async function fill_challenges_received() {
 }
 
 async function fill_challenges_sent() {
-	const response = await fetch('/query_challenges_sent', {
+	const response = await fetch('/query/challenges/sent', {
 		method: 'GET',
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
@@ -181,13 +181,13 @@ async function fill_challenges_sent() {
 }
 
 async function fill_challenges_pending_result() {
-	const response_challenges_pending = await fetch('/query_challenges_pending_result', {
+	const response_challenges_pending = await fetch('/query/challenges/pending_result', {
 		method: 'GET',
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
 	const challenges_pending = await response_challenges_pending.json();
 
-	const response_time_control = await fetch('/query_time_controls', {
+	const response_time_control = await fetch('/query/time_controls', {
 		method: 'GET',
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
@@ -364,7 +364,7 @@ async function submit_result_challenge_button_clicked(event: any) {
 }
 
 async function fill_challenges_confirm_result_other() {
-	const response = await fetch('/query_challenges_confirm_result_other', {
+	const response = await fetch('/query/challenges/confirm_result/other', {
 		method: 'GET',
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
@@ -391,7 +391,7 @@ async function fill_challenges_confirm_result_other() {
 }
 
 async function fill_challenges_confirm_result_self() {
-	const response = await fetch('/query_challenges_confirm_result_self', {
+	const response = await fetch('/query/challenges/confirm_result/self', {
 		method: 'GET',
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});

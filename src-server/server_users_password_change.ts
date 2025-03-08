@@ -36,8 +36,8 @@ import { Password } from './models/password';
 import { user_overwrite } from './managers/users';
 import { SessionID } from './models/session_id';
 
-export async function get_users_password_change_page(req: any, res: any) {
-	debug(log_now(), 'GET users_password_change_page...');
+export async function get_user_password_change_page(req: any, res: any) {
+	debug(log_now(), 'GET /user/password_change_page...');
 
 	const session = SessionID.from_cookie(req.cookies);
 
@@ -47,11 +47,11 @@ export async function get_users_password_change_page(req: any, res: any) {
 		return;
 	}
 
-	res.sendFile(path.join(__dirname, '../html/users_password_change.html'));
+	res.sendFile(path.join(__dirname, '../html/user/password_change.html'));
 }
 
-export async function post_users_password_change(req: any, res: any) {
-	debug(log_now(), 'POST users_password_change...');
+export async function post_user_password_change(req: any, res: any) {
+	debug(log_now(), 'POST /user/password_change...');
 
 	const session = SessionID.from_cookie(req.cookies);
 	const old_password = req.body.old;

@@ -31,7 +31,7 @@ async function initialize_window_client_games_create() {
 	let datalist_black_users = document.getElementById('datalist_black_users') as HTMLDataListElement;
 
 	// query the server for the list of users
-	const response_user_list = await fetch('/query_users_list', {
+	const response_user_list = await fetch('/query/user/list', {
 		method: 'GET',
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
@@ -83,7 +83,7 @@ async function submit_new_game(_event: any) {
 
 	const rand_sec = `${Math.floor(Math.random() * 59)}`;
 	const rand_milli = `${Math.floor(Math.random() * 999)}`;
-	const response = await fetch('/games_create', {
+	const response = await fetch('/game/create', {
 		method: 'POST',
 		body: JSON.stringify({
 			w: white,

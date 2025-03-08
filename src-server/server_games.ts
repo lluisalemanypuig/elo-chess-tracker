@@ -42,8 +42,8 @@ import { GamesManager } from './managers/games_manager';
 import { can_user_create_a_game, can_user_edit_a_game } from './models/user_relationships';
 import { UsersManager } from './managers/users_manager';
 
-export async function get_games_list_own_page(req: any, res: any) {
-	debug(log_now(), 'GET games_list_own_page...');
+export async function get_page_game_list_own(req: any, res: any) {
+	debug(log_now(), 'GET /game/list/own...');
 
 	const session = SessionID.from_cookie(req.cookies);
 	const r = is_user_logged_in(session);
@@ -53,11 +53,11 @@ export async function get_games_list_own_page(req: any, res: any) {
 		return;
 	}
 
-	res.sendFile(path.join(__dirname, '../html/games_list_own.html'));
+	res.sendFile(path.join(__dirname, '../html/game/list/own.html'));
 }
 
-export async function get_games_list_all_page(req: any, res: any) {
-	debug(log_now(), 'GET games_list_all_page...');
+export async function get_page_game_list_all(req: any, res: any) {
+	debug(log_now(), 'GET /game/list/all...');
 
 	const session = SessionID.from_cookie(req.cookies);
 	const r = is_user_logged_in(session);
@@ -67,11 +67,11 @@ export async function get_games_list_all_page(req: any, res: any) {
 		return;
 	}
 
-	res.sendFile(path.join(__dirname, '../html/games_list_all.html'));
+	res.sendFile(path.join(__dirname, '../html/game/list/all.html'));
 }
 
-export async function get_games_create_page(req: any, res: any) {
-	debug(log_now(), 'GET games_create_page...');
+export async function get_page_game_create(req: any, res: any) {
+	debug(log_now(), 'GET /game/create...');
 
 	const session = SessionID.from_cookie(req.cookies);
 	const r = is_user_logged_in(session);
@@ -87,11 +87,11 @@ export async function get_games_create_page(req: any, res: any) {
 		return;
 	}
 
-	res.sendFile(path.join(__dirname, '../html/games_create.html'));
+	res.sendFile(path.join(__dirname, '../html/game/create.html'));
 }
 
-export async function post_games_create(req: any, res: any) {
-	debug(log_now(), 'POST games_create...');
+export async function post_game_create(req: any, res: any) {
+	debug(log_now(), 'POST /game/create...');
 
 	const session = SessionID.from_cookie(req.cookies);
 	const r = is_user_logged_in(session);
@@ -170,8 +170,8 @@ export async function post_games_create(req: any, res: any) {
 	return;
 }
 
-export async function post_games_edit_result(req: any, res: any) {
-	debug(log_now(), 'POST games_edit_result...');
+export async function post_game_edit_result(req: any, res: any) {
+	debug(log_now(), 'POST /game/edit_result...');
 
 	const session = SessionID.from_cookie(req.cookies);
 	const r = is_user_logged_in(session);
@@ -228,7 +228,7 @@ export async function post_games_edit_result(req: any, res: any) {
 }
 
 export async function post_recalculate_ratings(req: any, res: any) {
-	debug(log_now(), 'POST recalculate_ratings...');
+	debug(log_now(), 'POST /recalculate_ratings...');
 
 	const session = SessionID.from_cookie(req.cookies);
 	const r = is_user_logged_in(session);

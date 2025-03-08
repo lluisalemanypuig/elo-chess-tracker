@@ -35,7 +35,7 @@ async function button_submit_clicked() {
 		return;
 	}
 
-	const response = await fetch('/users_password_change', {
+	const response = await fetch('/user/password_change', {
 		method: 'POST',
 		body: JSON.stringify({
 			old: box_old_password.value,

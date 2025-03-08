@@ -127,8 +127,8 @@ function filter_game_list(
 	return data_to_return;
 }
 
-export async function post_query_games_list_own(req: any, res: any) {
-	debug(log_now(), 'POST query_games_list_own...');
+export async function post_query_game_list_own(req: any, res: any) {
+	debug(log_now(), 'POST /query/game/list/own...');
 
 	const session = SessionID.from_cookie(req.cookies);
 	const r = is_user_logged_in(session);
@@ -180,8 +180,8 @@ export async function post_query_games_list_own(req: any, res: any) {
 	});
 }
 
-export async function post_query_games_list_all(req: any, res: any) {
-	debug(log_now(), 'POST query_games_list_all...');
+export async function post_query_game_list_all(req: any, res: any) {
+	debug(log_now(), 'POST /query/game/list/all...');
 
 	const session = SessionID.from_cookie(req.cookies);
 	const r = is_user_logged_in(session);

@@ -27,37 +27,46 @@ Contact:
 <html>
 	<head>
 		<meta charset="UTF-8" />
-		<title>Password change</title>
+		<title>Create a new user</title>
 
-		<script type="text/javascript" src="js-source/bdl__client_users_password_change.js"></script>
-		<script type="text/javascript" src="js-source/bdl__client_utils_version_number.js"></script>
+		<script type="text/javascript" src="/js-source/bdl__client_users_new.js"></script>
+		<script type="text/javascript" src="/js-source/bdl__client_utils_version_number.js"></script>
 
-		<link rel="stylesheet" href="html/css/main.css" />
-		<link rel="stylesheet" href="html/css/footer_copyright_notice.css" />
+		<link rel="stylesheet" href="/html/css/main.css" />
+		<link rel="stylesheet" href="/html/css/footer_copyright_notice.css" />
 	</head>
 
 	<body>
 		<meta name="viewport" content="width=device-width,initial-scale=1" />
 		<div class="page-wrapper">
 			<div class="main-content">
-				<h2>Change password</h2>
+				<h2 id="user_new_title">Create a new user</h2>
 
 				<div class="label-and-input">
-					<label for="box_old_password">Old password:</label>
-					<input type="password" id="box_old_password" name="box_old_password" />
+					<label>Username:</label>
+					<input type="text" id="username_box" name="username_box" />
 				</div>
 
 				<div class="label-and-input">
-					<label for="box_new_password">New password:</label>
-					<input type="password" id="box_new_password" name="box_new_password" />
+					<label>First name:</label>
+					<input type="text" id="box_first_name" name="box_first_name" />
 				</div>
 
 				<div class="label-and-input">
-					<label for="box_repeat_password">Repeat password:</label>
-					<input type="password" id="box_repeat_password" name="box_repeat_password" />
+					<label>Last name:</label>
+					<input type="text" id="box_last_name" name="box_last_name" />
 				</div>
 
-				<button type="button" id="button_submit" name="button_submit">Change password</button>
+				<label>Role:</label>
+				<div id="div_role_checkboxes"></div>
+
+				<div class="label-and-input">
+					<label>Password:</label>
+					<input type="password" id="password_box" name="password_box" />
+				</div>
+
+				<!-- submit data -->
+				<button type="button" id="submit_new_user_button" name="submit_new_user_button">Submit</button>
 			</div>
 
 			<footer class="footer_copyright_notice">

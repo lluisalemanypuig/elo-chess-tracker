@@ -35,8 +35,8 @@ import { TimeControlRating } from './models/time_control_rating';
 import { SessionID } from './models/session_id';
 
 /// Returns the list of user full names and usernames sorted by name
-export async function get_query_users_list(req: any, res: any) {
-	debug(log_now(), 'GET query_users_list...');
+export async function get_query_user_list(req: any, res: any) {
+	debug(log_now(), 'GET /query/user/list...');
 
 	const session = SessionID.from_cookie(req.cookies);
 	const r = is_user_logged_in(session);
@@ -60,8 +60,8 @@ export async function get_query_users_list(req: any, res: any) {
 	res.send({ data: list });
 }
 
-export async function get_query_users_home(req: any, res: any) {
-	debug(log_now(), 'GET query_users_home...');
+export async function get_query_user_home(req: any, res: any) {
+	debug(log_now(), 'GET /query/user/home...');
 
 	const session = SessionID.from_cookie(req.cookies);
 	const r = is_user_logged_in(session);
@@ -97,8 +97,8 @@ export async function get_query_users_home(req: any, res: any) {
  * @param res
  * @returns
  */
-export async function post_query_users_edit(req: any, res: any) {
-	debug(log_now(), 'POST query_users_edit...');
+export async function post_query_user_edit(req: any, res: any) {
+	debug(log_now(), 'POST /query/user/edit...');
 
 	const session = SessionID.from_cookie(req.cookies);
 	const r = is_user_logged_in(session);
@@ -127,8 +127,8 @@ export async function post_query_users_edit(req: any, res: any) {
 	});
 }
 
-export async function post_query_users_ranking(req: any, res: any) {
-	debug(log_now(), 'POST query_users_ranking...');
+export async function post_query_user_ranking(req: any, res: any) {
+	debug(log_now(), 'POST /query/user/ranking...');
 
 	const session = SessionID.from_cookie(req.cookies);
 	const r = is_user_logged_in(session);

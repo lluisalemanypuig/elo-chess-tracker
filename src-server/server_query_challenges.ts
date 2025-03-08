@@ -34,9 +34,9 @@ import { challenge_set_retrieve } from './managers/challenges';
 import { Challenge } from './models/challenge';
 import { SessionID } from './models/session_id';
 
-/// Query the server for challenges sent by me
-export async function get_query_challenges_received(req: any, res: any) {
-	debug(log_now(), 'GET query_challenges_received...');
+/// Query the server for challenges received sento to me by other users
+export async function get_query_challenge_received(req: any, res: any) {
+	debug(log_now(), 'GET /query/challenge/received...');
 
 	const session = SessionID.from_cookie(req.cookies);
 	const r = is_user_logged_in(session);
@@ -75,9 +75,9 @@ export async function get_query_challenges_received(req: any, res: any) {
 	res.send({ r: '1', c: all_challenges_received });
 }
 
-/// Query the server for challenges sent to me
-export async function get_query_challenges_sent(req: any, res: any) {
-	debug(log_now(), 'GET query_challenges_sent...');
+/// Query the server for challenges sent to other users by me
+export async function get_query_challenge_sent(req: any, res: any) {
+	debug(log_now(), 'GET /query/challenge/sent...');
 
 	const session = SessionID.from_cookie(req.cookies);
 	const r = is_user_logged_in(session);
@@ -116,8 +116,8 @@ export async function get_query_challenges_sent(req: any, res: any) {
 }
 
 /// Query the server for accepted challenges whose result has not been set yet.
-export async function get_query_challenges_pending_result(req: any, res: any) {
-	debug(log_now(), 'GET query_challenges_pending_result...');
+export async function get_query_challenge_pending_result(req: any, res: any) {
+	debug(log_now(), 'GET /query/challenge/pending_result...');
 
 	const session = SessionID.from_cookie(req.cookies);
 	const r = is_user_logged_in(session);
@@ -175,8 +175,8 @@ export async function get_query_challenges_pending_result(req: any, res: any) {
 }
 
 /// Query the server for accepted challenges whose result has been set by me
-export async function get_query_challenges_confirm_result_other(req: any, res: any) {
-	debug(log_now(), 'GET query_challenges_confirm_result_other...');
+export async function get_query_challenge_confirm_result_other(req: any, res: any) {
+	debug(log_now(), 'GET /query/challenge/confirm_result/other...');
 
 	const session = SessionID.from_cookie(req.cookies);
 	const r = is_user_logged_in(session);
@@ -248,8 +248,8 @@ export async function get_query_challenges_confirm_result_other(req: any, res: a
 }
 
 /// Query the server for accepted challenges whose result has been set by my opponent
-export async function get_query_challenges_confirm_result_self(req: any, res: any) {
-	debug(log_now(), 'GET query_challenges_confirm_result_self...');
+export async function get_query_challenge_confirm_result_self(req: any, res: any) {
+	debug(log_now(), 'GET /query/challenge/confirm_result/self...');
 
 	const session = SessionID.from_cookie(req.cookies);
 	const r = is_user_logged_in(session);

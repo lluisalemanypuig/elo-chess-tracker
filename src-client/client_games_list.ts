@@ -38,7 +38,7 @@ async function edit_button_was_clicked(event: any) {
 	const game_id = button.getAttribute('game_id');
 	const new_result = (document.getElementById(button.getAttribute('select_id') as string) as HTMLSelectElement).value;
 
-	const response = await fetch('/games_edit_result', {
+	const response = await fetch('/game/edit_result', {
 		method: 'POST',
 		body: JSON.stringify({
 			game_id: game_id,
@@ -121,10 +121,10 @@ async function fill_games_list_time_control(time_control_id: string) {
 
 	const query_to_server: string = (() => {
 		if (val == 'all') {
-			return '/query_games_all';
+			return '/query/game/list/all';
 		}
 		if (val == 'own') {
-			return '/query_games_own';
+			return '/query/game/list/own';
 		}
 		return '?';
 	})();

@@ -94,7 +94,7 @@ async function submit_new_user_clicked(_event: any) {
 		return;
 	}
 
-	const response = await fetch('/users_create', {
+	const response = await fetch('/user/create', {
 		method: 'POST',
 		body: JSON.stringify({
 			u: username,

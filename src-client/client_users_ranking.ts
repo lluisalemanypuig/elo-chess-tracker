@@ -41,7 +41,7 @@ async function fill_ranking(_event: any) {
 	};
 
 	// "query" the server
-	const response = await fetch('/query_users_ranking', {
+	const response = await fetch('/query/user/ranking', {
 		method: 'POST',
 		body: JSON.stringify({ tc_i: time_control_id }),
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }

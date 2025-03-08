@@ -48,7 +48,7 @@ async function log_into_webpage(_event: any) {
 	}
 
 	// "query" the server
-	const response = await fetch('/user_log_in', {
+	const response = await fetch('/user/login', {
 		method: 'POST',
 		body: JSON.stringify({ u: username, p: password }),
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
@@ -69,7 +69,7 @@ async function log_into_webpage(_event: any) {
 }
 
 async function set_login_page_title() {
-	const response = await fetch('/title_login_page', {
+	const response = await fetch('/title/login_page', {
 		method: 'GET',
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});

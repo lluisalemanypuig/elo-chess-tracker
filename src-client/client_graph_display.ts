@@ -61,10 +61,10 @@ async function load_graph() {
 	const val = document.getElementById('graph-viewer')?.getAttribute('value');
 	const query_to_server: string = (() => {
 		if (val == 'full') {
-			return '/query_graphs_full';
+			return '/query/graph/full';
 		}
 		if (val == 'own') {
-			return '/query_graphs_own';
+			return '/query/graph/own';
 		}
 		return '?';
 	})();

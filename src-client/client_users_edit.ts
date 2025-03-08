@@ -36,7 +36,7 @@ async function fill_datalist_username() {
 		datalist_username.appendChild(opt);
 	}
 
-	const response = await fetch('/query_users_list', {
+	const response = await fetch('/query/user/list', {
 		method: 'GET',
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
@@ -66,7 +66,7 @@ async function user_was_changed(_event: any) {
 
 	if (username_option != null) {
 		const username = (username_option as HTMLOptionElement).id;
-		const response = await fetch('/query_users_edit', {
+		const response = await fetch('/query/user/edit', {
 			method: 'POST',
 			body: JSON.stringify({ u: username }),
 			headers: { 'Content-type': 'application/json; charset=UTF-8' }
@@ -109,7 +109,7 @@ async function submit_was_clicked(_event: any) {
 		}
 	});
 
-	const response = await fetch('/users_edit', {
+	const response = await fetch('/user/edit', {
 		method: 'POST',
 		body: JSON.stringify({
 			u: username,

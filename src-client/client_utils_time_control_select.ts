@@ -24,7 +24,7 @@ Contact:
 */
 
 export async function fill_time_controls(element_id: string) {
-	const response_time_control = await fetch('/query_time_controls', {
+	const response_time_control = await fetch('/query/time_controls', {
 		method: 'GET',
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});

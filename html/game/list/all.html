@@ -27,46 +27,44 @@ Contact:
 <html>
 	<head>
 		<meta charset="UTF-8" />
-		<title>Create a new user</title>
+		<title>Club's games</title>
 
-		<script type="text/javascript" src="js-source/bdl__client_users_new.js"></script>
-		<script type="text/javascript" src="js-source/bdl__client_utils_version_number.js"></script>
+		<script type="text/javascript" src="/js-source/bdl__client_games_list.js"></script>
+		<script type="text/javascript" src="/js-source/bdl__client_utils_version_number.js"></script>
 
-		<link rel="stylesheet" href="html/css/main.css" />
-		<link rel="stylesheet" href="html/css/footer_copyright_notice.css" />
+		<link rel="stylesheet" href="/html/css/main.css" />
+		<link rel="stylesheet" href="/html/css/elo_table.css" />
+		<link rel="stylesheet" href="/html/css/footer_copyright_notice.css" />
 	</head>
 
 	<body>
 		<meta name="viewport" content="width=device-width,initial-scale=1" />
 		<div class="page-wrapper">
 			<div class="main-content">
-				<h2 id="user_new_title">Create a new user</h2>
+				<h2>All games</h2>
 
-				<div class="label-and-input">
-					<label>Username:</label>
-					<input type="text" id="username_box" name="username_box" />
+				<div class="label-and-select">
+					<label>Time control:</label>
+					<select id="select_time_control"></select>
 				</div>
 
-				<div class="label-and-input">
-					<label>First name:</label>
-					<input type="text" id="box_first_name" name="box_first_name" />
+				<div>
+					<table id="table_games" value="all">
+						<thead>
+							<th>Game ID</th>
+							<th>White</th>
+							<th>Black</th>
+							<th>Result</th>
+							<th>Time control</th>
+							<th>Date</th>
+							<th>White Rating</th>
+							<th>Increment White</th>
+							<th>Black Rating</th>
+							<th>Increment Black</th>
+						</thead>
+						<tbody></tbody>
+					</table>
 				</div>
-
-				<div class="label-and-input">
-					<label>Last name:</label>
-					<input type="text" id="box_last_name" name="box_last_name" />
-				</div>
-
-				<label>Role:</label>
-				<div id="div_role_checkboxes"></div>
-
-				<div class="label-and-input">
-					<label>Password:</label>
-					<input type="password" id="password_box" name="password_box" />
-				</div>
-
-				<!-- submit data -->
-				<button type="button" id="submit_new_user_button" name="submit_new_user_button">Submit</button>
 			</div>
 
 			<footer class="footer_copyright_notice">

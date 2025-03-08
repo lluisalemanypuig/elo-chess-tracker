@@ -42,8 +42,8 @@ import { User } from './models/user';
  * @returns Data
  * @post Creates a new session id for the user.
  */
-export async function post_user_log_in(req: any, res: any) {
-	debug(log_now(), `POST user_log_in`);
+export async function post_user_login(req: any, res: any) {
+	debug(log_now(), `POST /user/login`);
 
 	const username = req.body.u;
 	const password_plain_text = req.body.p;
@@ -100,8 +100,8 @@ export async function post_user_log_in(req: any, res: any) {
  * @param res
  * @post Deletes the user's session id.
  */
-export async function post_user_log_out(req: any, res: any) {
-	debug(log_now(), `POST user_log_out`);
+export async function post_user_logout(req: any, res: any) {
+	debug(log_now(), `POST /user/logout`);
 
 	const session = SessionID.from_cookie(req.cookies);
 
