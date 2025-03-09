@@ -40,7 +40,14 @@ Full source code of elo-chess-tracker:
 
 				<div class="label-and-select">
 					<label>Time control:</label>
-					<select id="select_time_control"></select>
+					<select
+						id="select_time_control"
+						hx-get="/query/html/time_controls"
+						hx-trigger="load"
+						hx-swap="beforeend"
+					>
+						<option value=""></option>
+					</select>
 
 					<label>Node color:</label>
 					<select id="select_node_color">

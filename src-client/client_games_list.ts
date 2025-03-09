@@ -19,7 +19,6 @@ Full source code of elo-chess-tracker:
 	https://github.com/lluisalemanypuig/elo-chess-tracker
 */
 
-import { fill_time_controls } from './client_utils_time_control_select';
 import 'htmx.org';
 
 function new_text_cell(text: string) {
@@ -179,7 +178,6 @@ async function fill_games_list(_event: any) {
 }
 
 window.onload = async function () {
-	fill_time_controls('select_time_control');
 	fill_games_list_time_control('');
 
 	let time_control = document.getElementById('select_time_control') as HTMLSelectElement;

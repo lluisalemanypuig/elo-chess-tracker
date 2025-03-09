@@ -21,8 +21,6 @@ Full source code of elo-chess-tracker:
 
 import 'htmx.org';
 
-import { fill_time_controls } from './client_utils_time_control_select';
-
 async function fill_ranking(_event: any) {
 	const select_time_control = document.getElementById('select_time_control') as HTMLSelectElement;
 	const time_control_id = select_time_control.options[select_time_control.selectedIndex].value;
@@ -75,8 +73,6 @@ async function fill_ranking(_event: any) {
 }
 
 window.onload = async function () {
-	fill_time_controls('select_time_control');
-
 	let select_time_control = document.getElementById('select_time_control') as HTMLSelectElement;
 	select_time_control.onchange = fill_ranking;
 };

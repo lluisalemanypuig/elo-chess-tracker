@@ -19,6 +19,8 @@ Full source code of elo-chess-tracker:
 	https://github.com/lluisalemanypuig/elo-chess-tracker
 */
 
+import 'htmx.org';
+
 import EdgeCurveProgram from '@sigma/edge-curve';
 import Graph from 'graphology';
 import Sigma from 'sigma';
@@ -26,8 +28,6 @@ import { EdgeArrowProgram } from 'sigma/rendering';
 import forceAtlas2 from 'graphology-layout-forceatlas2';
 import { scaleLinear } from 'd3-scale';
 import { interpolateRgb } from 'd3-interpolate';
-
-import { fill_time_controls } from './client_utils_time_control_select';
 
 let s: Sigma;
 let graph_data: any;
@@ -360,7 +360,6 @@ window.onresize = resize_viewer;
 
 window.onload = async function () {
 	resize_viewer();
-	fill_time_controls('select_time_control');
 	initialize_sigma();
 
 	let select_time_control = document.getElementById('select_time_control') as HTMLSelectElement;

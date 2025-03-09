@@ -20,6 +20,7 @@ Full source code of elo-chess-tracker:
 */
 
 import 'htmx.org';
+
 import { ADMIN, user_role_to_string, UserRole } from '../src-server/models/user_role';
 import {
 	CREATE_GAMES,
