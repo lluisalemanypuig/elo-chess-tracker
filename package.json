@@ -53,6 +53,7 @@
 		"graphology-layout": "^0.6.1",
 		"graphology-layout-forceatlas2": "^0.10.1",
 		"graphology-types": "^0.24.8",
+		"htmx.org": "^2.0.4",
 		"jtest": "^0.0.1",
 		"sigma": "^3.0.1"
 	}
