@@ -138,9 +138,11 @@ import {
 	post_query_user_edit,
 	get_query_user_list,
 	get_query_user_home,
-	post_query_user_ranking
+	post_query_user_ranking,
+	get_query_html_user_list
 } from './server_query_user';
 router.get('/query/user/list', get_query_user_list);
+router.get('/query/html/user/list', get_query_html_user_list);
 router.get('/query/user/home', get_query_user_home);
 
 // these queries need to be 'post'-ed because we

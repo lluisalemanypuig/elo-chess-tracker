@@ -48,16 +48,33 @@ export async function get_query_user_list(req: any, res: any) {
 
 	let list = user_get_all__name_randid();
 	list.sort(function (a: [string, number], b: [string, number]): number {
-		if (a[0] < b[0]) {
-			return -1;
-		}
-		if (a[0] == b[0]) {
-			return 0;
-		}
-		return 1;
+		return a[0].localeCompare(b[0]);
 	});
 
 	res.send({ data: list });
+}
+
+export async function get_query_html_user_list(req: any, res: any) {
+	debug(log_now(), 'GET /query/html/user/list...');
+
+	const session = SessionID.from_cookie(req.cookies);
+	const r = is_user_logged_in(session);
+
+	if (!r[0]) {
+		req.send({ r: '0', reason: r[1] });
+		return;
+	}
+
+	let list = user_get_all__name_randid();
+	list.sort(function (a: [string, number], b: [string, number]): number {
+		return a[0].localeCompare(b[0]);
+	});
+
+	let data: string = '';
+	for (const [name, rand_id] of list) {
+		data += `<option value="${name}" id="${rand_id}">`;
+	}
+	res.send(data);
 }
 
 export async function get_query_user_home(req: any, res: any) {
