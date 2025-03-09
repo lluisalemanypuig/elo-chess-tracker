@@ -147,7 +147,7 @@ export function user_add_new(
 export function user_get_all__name_randid(): [string, number][] {
 	let res: [string, number][] = [];
 
-	let mem = UsersManager.get_instance();
+	const mem = UsersManager.get_instance();
 	for (let i = 0; i < mem.num_users(); ++i) {
 		const user = mem.get_user_at(i) as User;
 		const random_id = mem.get_user_random_ID_at(i) as UserRandomID;
