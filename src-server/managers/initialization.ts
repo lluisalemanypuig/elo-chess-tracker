@@ -160,10 +160,10 @@ function init_users(): void {
 		// maybe the file the user was read from has to be updated
 		let update_user_file: boolean = false;
 		// make sure that all users have a rating for every time control
-		const all_time_controls = rating_system.get_time_controls();
-		for (let i = 0; i < all_time_controls.length; ++i) {
-			if (!user.has_rating(all_time_controls[i].id)) {
-				user.add_rating(all_time_controls[i].id, rating_system.get_new_rating());
+		const unique_time_controls_ids = rating_system.get_unique_time_controls_ids();
+		for (let i = 0; i < unique_time_controls_ids.length; ++i) {
+			if (!user.has_rating(unique_time_controls_ids[i])) {
+				user.add_rating(unique_time_controls_ids[i], rating_system.get_new_rating());
 				update_user_file = true;
 			}
 		}
