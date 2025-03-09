@@ -37,9 +37,11 @@ Full source code of elo-chess-tracker:
 		<meta name="viewport" content="width=device-width,initial-scale=1" />
 		<div class="page-wrapper">
 			<div class="main-content">
-				<h1 id="title_home_page" align="center"></h1>
+				<h1 align="center" hx-get="/title/home_page" hx-trigger="load" hx-swap="textContent"></h1>
 
-				<p><img src="/icon/home_page" /></p>
+				<div>
+					<img src="/icon/home_page" />
+				</div>
 
 				<label id="user_name_and_roles"></label>
 

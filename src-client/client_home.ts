@@ -163,24 +163,10 @@ async function fill_own_info() {
 	}
 }
 
-async function set_home_page_title() {
-	const response = await fetch('/title/home_page', {
-		method: 'GET',
-		headers: { 'Content-type': 'application/json; charset=UTF-8' }
-	});
-	const data = await response.text();
-
-	// set the title of the page
-	let title = document.getElementById('title_home_page') as HTMLElement;
-	title.textContent = data as string;
-}
-
 window.onload = function () {
 	// display user info
 	fill_own_info();
 
 	let logout_link = document.getElementById('logout_link') as HTMLLinkElement;
 	logout_link.onclick = logout_link_clicked;
-
-	set_home_page_title();
 };

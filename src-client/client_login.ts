@@ -64,18 +64,6 @@ async function log_into_webpage(_event: any) {
 	window.location.href = '/home';
 }
 
-async function set_login_page_title() {
-	const response = await fetch('/title/login_page', {
-		method: 'GET',
-		headers: { 'Content-type': 'application/json; charset=UTF-8' }
-	});
-	const data = await response.text();
-
-	// set the title of the page
-	let title = document.getElementById('title_login_page') as HTMLElement;
-	title.textContent = data as string;
-}
-
 async function password_box_key_down(_event: any) {
 	if (_event.key == 'Enter') {
 		log_into_webpage(_event);
@@ -89,6 +77,4 @@ window.onload = function () {
 
 	let password_box = document.getElementById('password_box') as HTMLInputElement;
 	password_box.onkeydown = password_box_key_down;
-
-	set_login_page_title();
 };
