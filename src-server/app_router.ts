@@ -65,7 +65,7 @@ router.get('/home', (req: any, res: any) => {
 });
 
 // serve all *.css files
-router.get('/html/*.css', (req: any, res: any) => {
+router.get('/css/*.css', (req: any, res: any) => {
 	debug(log_now(), 'GET css file...');
 	debug(log_now(), `    request: ${req.url}`);
 	const filepath = path.join(__dirname, '..', req.url);
