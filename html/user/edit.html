@@ -41,8 +41,12 @@ Full source code of elo-chess-tracker:
 				<div class="label-and-input">
 					<label for="datalist_username">Select user:</label>
 					<input list="datalist_username" id="username_list" name="username_list" />
-					<datalist id="datalist_username">
-						<option value="asdf"></option>
+					<datalist
+						id="datalist_username"
+						hx-swap="innerHTML"
+						hx-get="/query/html/user/list"
+						hx-trigger="load"
+					>
 					</datalist>
 				</div>
 

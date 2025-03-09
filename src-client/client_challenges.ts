@@ -27,30 +27,6 @@ function create_label_text(text: string): HTMLLabelElement {
 	return label;
 }
 
-async function fill_datalist_username() {
-	let datalist_username = document.getElementById('datalist_username') as HTMLDataListElement;
-
-	// "query" the server
-	const response = await fetch('/query/user/list', {
-		method: 'GET',
-		headers: { 'Content-type': 'application/json; charset=UTF-8' }
-	});
-
-	const data = await response.json();
-	if (data.r == '0') {
-		alert(data.reason);
-		return;
-	}
-
-	const list = data.data as [string, number][];
-
-	let options = '';
-	list.forEach(function (elem: [string, number]) {
-		options += `<option value="${elem[0]}" id="${elem[1]}">`;
-	});
-	datalist_username.innerHTML = options;
-}
-
 async function send_challenge_button_clicked(_event: any) {
 	let username_list_input = document.getElementById('username_list') as HTMLInputElement;
 	const username_option = document.querySelector('option[value="' + username_list_input.value + '"]');
@@ -463,9 +439,6 @@ async function disagree_challenge_result_tag_clicked(event: any) {
 }
 
 window.onload = function () {
-	// fill in username dropdown with values
-	fill_datalist_username();
-
 	// link button 'submit_challenge' click behaviour
 	let send_challenge_button = document.getElementById('send_challenge_button') as HTMLButtonElement;
 	send_challenge_button.onclick = send_challenge_button_clicked;

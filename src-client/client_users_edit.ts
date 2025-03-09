@@ -23,31 +23,6 @@ import 'htmx.org';
 
 import { UserRole, all_user_roles, user_role_to_string } from '../src-server/models/user_role';
 
-async function fill_datalist_username() {
-	let datalist_username = document.getElementById('datalist_username') as HTMLDataListElement;
-
-	{
-		let opt = document.createElement('option');
-		opt.text = '';
-		opt.value = '';
-		datalist_username.appendChild(opt);
-	}
-
-	const response = await fetch('/query/user/list', {
-		method: 'GET',
-		headers: { 'Content-type': 'application/json; charset=UTF-8' }
-	});
-
-	const data = await response.json();
-	const list = data.data as [string, number][];
-
-	let options = '';
-	list.forEach(function (elem: [string, number]) {
-		options += `<option value="${elem[0]}" id="${elem[1]}">`;
-	});
-	datalist_username.innerHTML = options;
-}
-
 async function user_was_changed(_event: any) {
 	all_user_roles.forEach(function (role: string) {
 		let checkbox_role = document.getElementById('checkbox_' + role) as HTMLInputElement;
@@ -127,9 +102,6 @@ async function submit_was_clicked(_event: any) {
 }
 
 window.onload = function () {
-	// fill in username datalist with values
-	fill_datalist_username();
-
 	// imlement behaviour of data list
 	let datalist_username_input = document.getElementById('username_list') as HTMLInputElement;
 	datalist_username_input.onselectionchange = user_was_changed;
