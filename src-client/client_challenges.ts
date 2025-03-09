@@ -23,7 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { set_footer_version_number } from './client_utils_version_number';
+import 'htmx.org';
 
 function create_label_text(text: string): HTMLLabelElement {
 	let label = document.createElement('label') as HTMLLabelElement;
@@ -480,6 +480,4 @@ window.onload = function () {
 	fill_challenges_pending_result();
 	fill_challenges_confirm_result_other();
 	fill_challenges_confirm_result_self();
-
-	set_footer_version_number();
 };

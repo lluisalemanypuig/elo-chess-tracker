@@ -23,7 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { set_footer_version_number } from './client_utils_version_number';
+import 'htmx.org';
 
 async function log_into_webpage(_event: any) {
 	// username box
@@ -95,6 +95,4 @@ window.onload = function () {
 	password_box.onkeydown = password_box_key_down;
 
 	set_login_page_title();
-
-	set_footer_version_number();
 };

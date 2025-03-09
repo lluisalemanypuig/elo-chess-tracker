@@ -6,8 +6,6 @@ function apply_esbuild() {
 
 cd js-source
 
-apply_esbuild client_utils_version_number.js
-
 apply_esbuild client_login.js
 
 apply_esbuild client_home.js

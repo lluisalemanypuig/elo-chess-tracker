@@ -23,8 +23,9 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
+import 'htmx.org';
+
 import { fill_time_controls } from './client_utils_time_control_select';
-import { set_footer_version_number } from './client_utils_version_number';
 
 async function fill_ranking(_event: any) {
 	const select_time_control = document.getElementById('select_time_control') as HTMLSelectElement;
@@ -82,6 +83,4 @@ window.onload = async function () {
 
 	let select_time_control = document.getElementById('select_time_control') as HTMLSelectElement;
 	select_time_control.onchange = fill_ranking;
-
-	set_footer_version_number();
 };

@@ -24,7 +24,7 @@ Contact:
 */
 
 import { fill_time_controls } from './client_utils_time_control_select';
-import { set_footer_version_number } from './client_utils_version_number';
+import 'htmx.org';
 
 async function initialize_window_client_games_create() {
 	let datalist_white_users = document.getElementById('datalist_white_users') as HTMLDataListElement;
@@ -120,6 +120,4 @@ window.onload = async function () {
 
 	let submit = document.getElementById('submit_new_game_button') as HTMLButtonElement;
 	submit.onclick = submit_new_game;
-
-	set_footer_version_number();
 };

@@ -31,7 +31,6 @@ import forceAtlas2 from 'graphology-layout-forceatlas2';
 import { scaleLinear } from 'd3-scale';
 import { interpolateRgb } from 'd3-interpolate';
 
-import { set_footer_version_number } from './client_utils_version_number';
 import { fill_time_controls } from './client_utils_time_control_select';
 
 let s: Sigma;
@@ -366,7 +365,6 @@ window.onresize = resize_viewer;
 window.onload = async function () {
 	resize_viewer();
 	fill_time_controls('select_time_control');
-	set_footer_version_number();
 	initialize_sigma();
 
 	let select_time_control = document.getElementById('select_time_control') as HTMLSelectElement;

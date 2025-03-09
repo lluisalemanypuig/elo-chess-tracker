@@ -23,7 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { set_footer_version_number } from './client_utils_version_number';
+import 'htmx.org';
 import { ADMIN, user_role_to_string, UserRole } from '../src-server/models/user_role';
 import {
 	CREATE_GAMES,
@@ -186,6 +186,4 @@ window.onload = function () {
 	logout_link.onclick = logout_link_clicked;
 
 	set_home_page_title();
-
-	set_footer_version_number();
 };

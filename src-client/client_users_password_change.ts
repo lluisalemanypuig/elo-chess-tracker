@@ -23,7 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { set_footer_version_number } from './client_utils_version_number';
+import 'htmx.org';
 
 async function button_submit_clicked() {
 	let box_old_password = document.getElementById('box_old_password') as HTMLInputElement;
@@ -57,6 +57,4 @@ async function button_submit_clicked() {
 window.onload = function () {
 	let button_submit = document.getElementById('button_submit') as HTMLButtonElement;
 	button_submit.onclick = button_submit_clicked;
-
-	set_footer_version_number();
 };

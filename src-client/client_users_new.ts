@@ -23,7 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { set_footer_version_number } from './client_utils_version_number';
+import 'htmx.org';
 import { UserRole, all_user_roles, user_role_to_string } from '../src-server/models/user_role';
 
 async function submit_new_user_clicked(_event: any) {
@@ -139,6 +139,4 @@ window.onload = function () {
 	// link button click with function
 	let submit_new_user = document.getElementById('submit_new_user_button') as HTMLLinkElement;
 	submit_new_user.onclick = submit_new_user_clicked;
-
-	set_footer_version_number();
 };

@@ -30,7 +30,6 @@ Contact:
 		<title>My games</title>
 
 		<script type="text/javascript" src="/js-source/bdl__client_games_list.js"></script>
-		<script type="text/javascript" src="/js-source/bdl__client_utils_version_number.js"></script>
 
 		<link rel="stylesheet" href="/html/css/main.css" />
 		<link rel="stylesheet" href="/html/css/elo_table.css" />
@@ -68,7 +67,7 @@ Contact:
 			</div>
 
 			<footer class="footer_copyright_notice">
-				Elo chess tracker (<i id="version_number"></i>). Code
+				Elo chess tracker (<i hx-get="/version_number" hx-trigger="load"></i>). Code
 				<a href="https://github.com/lluisalemanypuig/elo-chess-tracker">online at Github</a>.
 			</footer>
 		</div>

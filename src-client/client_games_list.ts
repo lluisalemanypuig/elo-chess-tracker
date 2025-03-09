@@ -24,7 +24,7 @@ Contact:
 */
 
 import { fill_time_controls } from './client_utils_time_control_select';
-import { set_footer_version_number } from './client_utils_version_number';
+import 'htmx.org';
 
 function new_text_cell(text: string) {
 	let cell = document.createElement('td');
@@ -188,6 +188,4 @@ window.onload = async function () {
 
 	let time_control = document.getElementById('select_time_control') as HTMLSelectElement;
 	time_control.onchange = fill_games_list;
-
-	set_footer_version_number();
 };

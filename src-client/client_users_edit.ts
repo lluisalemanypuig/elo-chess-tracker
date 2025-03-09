@@ -23,7 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { set_footer_version_number } from './client_utils_version_number';
+import 'htmx.org';
 import { UserRole, all_user_roles, user_role_to_string } from '../src-server/models/user_role';
 
 async function fill_datalist_username() {
@@ -158,6 +158,4 @@ window.onload = function () {
 		add_checkbox(role_div, user_role_to_string[role as UserRole], role);
 	});
 	role_div.appendChild(document.createElement('br'));
-
-	set_footer_version_number();
 };
