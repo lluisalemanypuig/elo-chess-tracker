@@ -30,7 +30,7 @@ import path from 'path';
 
 import { log_now } from './utils/time';
 import { is_user_logged_in } from './managers/session';
-import { CREATE_GAMES } from './models/user_action';
+import { SEE_GRAPHS_USER } from './models/user_action';
 import { User } from './models/user';
 import { SessionID } from './models/session_id';
 import { ADMIN } from './models/user_role';
@@ -43,11 +43,11 @@ export async function get_page_graph_own(req: any, res: any) {
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
-		res.send(r[1]);
+		res.status(401).send(r[1]);
 		return;
 	}
 
-	res.sendFile(path.join(__dirname, '../html/graph/own.html'));
+	res.status(200).sendFile(path.join(__dirname, '../html/graph/own.html'));
 }
 
 export async function get_page_graph_full(req: any, res: any) {
@@ -57,17 +57,17 @@ export async function get_page_graph_full(req: any, res: any) {
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
-		res.send(r[1]);
+		res.status(401).send(r[1]);
 		return;
 	}
 
-	if (!(r[2] as User).can_do(CREATE_GAMES)) {
-		debug(log_now(), `User '${session.username}' cannot create users.`);
-		res.send('403 - Forbidden');
+	if (!(r[2] as User).can_do(SEE_GRAPHS_USER)) {
+		debug(log_now(), `User '${session.username}' cannot see the whole graph.`);
+		res.status(403).send('You cannot see the whole graph.');
 		return;
 	}
 
-	res.sendFile(path.join(__dirname, '../html/graph/full.html'));
+	res.status(200).sendFile(path.join(__dirname, '../html/graph/full.html'));
 }
 
 export async function post_recalculate_graphs(req: any, res: any) {
@@ -77,13 +77,13 @@ export async function post_recalculate_graphs(req: any, res: any) {
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
-		res.send(r[1]);
+		res.status(401).send(r[1]);
 		return;
 	}
 
 	if (!(r[2] as User).is(ADMIN)) {
 		debug(log_now(), `User '${session.username}' cannot recalculate graphs.`);
-		res.send('403 - Forbidden');
+		res.status(403).send('You cannot recalculate the graphs.');
 		return;
 	}
 
@@ -92,6 +92,5 @@ export async function post_recalculate_graphs(req: any, res: any) {
 	// actually recalculating ratings
 	recalculate_all_graphs();
 
-	res.send({ r: '1' });
-	return;
+	res.status(200).send({ r: '1' });
 }

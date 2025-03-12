@@ -56,11 +56,11 @@ export async function get_page_challenge(req: any, res: any) {
 
 	const r = is_user_logged_in(session);
 	if (!r[0]) {
-		res.send(r[1]);
+		res.status(401).send(r[1]);
 		return;
 	}
 
-	res.sendFile(path.join(__dirname, '../html/challenges.html'));
+	res.status(200).sendFile(path.join(__dirname, '../html/challenges.html'));
 }
 
 export async function post_challenge_send(req: any, res: any) {
@@ -71,21 +71,14 @@ export async function post_challenge_send(req: any, res: any) {
 
 	const r = is_user_logged_in(session);
 	if (!r[0]) {
-		debug(log_now(), `User '${session.username}' is not logged in or does not exist.`);
-		res.send({
-			r: '0',
-			reason: r[1]
-		});
+		res.status(401).send(r[1]);
 		return;
 	}
 
 	const sender = r[2] as User;
 	if (!sender.can_do(CHALLENGE_USER)) {
 		debug(log_now(), `User '${session.username}' cannot challenge other users.`);
-		res.send({
-			r: '0',
-			reason: 'You cannot challenge other users'
-		});
+		res.status(403).send('You cannot challenge other users');
 		return;
 	}
 
@@ -95,37 +88,27 @@ export async function post_challenge_send(req: any, res: any) {
 
 	if (_receiver == undefined) {
 		debug(log_now(), `User receiver of the challenge '${to_random_id}' does not exist.`);
-		res.send({
-			r: '0',
-			reason: 'User does not exist'
-		});
+		res.status(404).send('User receiver of the challenge does not exist');
 		return;
 	}
 
 	const receiver = _receiver as User;
 	if (receiver.get_username() == sender.get_username()) {
 		debug(log_now(), `A challenge cannot be sent to oneself.`);
-		res.send({
-			r: '0',
-			reason: 'Self challenges are not allowed'
-		});
+		res.status(403).send('You cannot challenge yourself.');
 		return;
 	}
 
 	if (!can_user_send_challenge(sender, receiver)) {
 		debug(log_now(), `Sender '${sender.get_username()}' cannot challenge user '${receiver.get_username()}'.`);
-		res.send({
-			r: '0',
-			reason: 'You cannot challenge this user'
-		});
+		res.status(403).send('You cannot challenge this user.');
 		return;
 	}
 
 	debug(log_now(), `Send challenge from '${sender.get_username()}' to '${receiver.get_username()}'`);
 	challenge_send_new(sender.get_username(), receiver.get_username(), log_now_millis());
 
-	res.send({ r: '1' });
-	return;
+	res.status(200).send();
 }
 
 export async function post_challenge_accept(req: any, res: any) {
@@ -135,7 +118,7 @@ export async function post_challenge_accept(req: any, res: any) {
 
 	const r = is_user_logged_in(session);
 	if (!r[0]) {
-		res.send(r[1]);
+		res.status(401).send(r[1]);
 		return;
 	}
 
@@ -145,10 +128,7 @@ export async function post_challenge_accept(req: any, res: any) {
 
 	const _c = ChallengesManager.get_instance().get_challenge_by_id(challenge_id);
 	if (_c == undefined) {
-		res.send({
-			r: '0',
-			reason: 'Challenge does not exist'
-		});
+		res.status(404).send('Challenge does not exist');
 		return;
 	}
 	const c = _c as Challenge;
@@ -156,15 +136,12 @@ export async function post_challenge_accept(req: any, res: any) {
 	debug(log_now(), `Challenge '${challenge_id}' involves players '${c.get_sent_by()}' and '${c.get_sent_to()}'`);
 
 	if (session.username != c.get_sent_to()) {
-		res.send({
-			r: '0',
-			reason: 'You cannot accept this challenge'
-		});
+		res.status(403).send('You cannot accept this challenge');
 		return;
 	}
 
 	challenge_accept(c);
-	res.send({ r: '1' });
+	res.status(200).send();
 }
 
 export async function post_challenge_decline(req: any, res: any) {
@@ -174,7 +151,7 @@ export async function post_challenge_decline(req: any, res: any) {
 
 	const r = is_user_logged_in(session);
 	if (!r[0]) {
-		res.send(r[1]);
+		res.status(401).send(r[1]);
 		return;
 	}
 
@@ -184,10 +161,7 @@ export async function post_challenge_decline(req: any, res: any) {
 
 	const _c = ChallengesManager.get_instance().get_challenge_by_id(challenge_id);
 	if (_c == undefined) {
-		res.send({
-			r: '0',
-			reason: 'Challenge does not exist'
-		});
+		res.status(404).send('Challenge does not exist');
 		return;
 	}
 	const c = _c as Challenge;
@@ -195,15 +169,12 @@ export async function post_challenge_decline(req: any, res: any) {
 	debug(log_now(), `Challenge '${challenge_id}' involves players '${c.get_sent_by()}' and '${c.get_sent_to()}'`);
 
 	if (session.username != c.get_sent_to()) {
-		res.send({
-			r: '0',
-			reason: 'You cannot decline this challenge'
-		});
+		res.status(403).send('You cannot decline this challenge');
 		return;
 	}
 
 	challenge_decline(c);
-	res.send({ r: '1' });
+	res.status(200).send();
 }
 
 export async function post_challenge_set_result(req: any, res: any) {
@@ -212,7 +183,7 @@ export async function post_challenge_set_result(req: any, res: any) {
 	const session = SessionID.from_cookie(req.cookies);
 	const r = is_user_logged_in(session);
 	if (!r[0]) {
-		res.send(r[1]);
+		res.status(401).send(r[1]);
 		return;
 	}
 
@@ -233,80 +204,49 @@ export async function post_challenge_set_result(req: any, res: any) {
 	debug(log_now(), `    Result: '${result}'`);
 
 	if (white_username == black_username) {
-		res.send({
-			r: '0',
-			reason: 'White and Black cannot be the same players.'
-		});
+		res.status(500).send('White and Black cannot be the same players.');
 		return;
 	}
 	if (!user_exists(white_username)) {
-		res.send({
-			r: '0',
-			reason: `White user does not exist.`
-		});
+		res.status(404).send(`White user does not exist.`);
 		return;
 	}
 	if (!user_exists(black_username)) {
-		res.send({
-			r: '0',
-			reason: `Black user does not exist.`
-		});
-		return;
-	}
-
-	if (setter_user != white_username && setter_user != black_username) {
-		debug(
-			log_now(),
-			`User '${setter_user}' is trying to set the result of a challenge where he/she is not involved`
-		);
-		res.send({
-			r: '0',
-			reason: 'You are not part of this challenge.'
-		});
+		res.status(404).send(`Black user does not exist.`);
 		return;
 	}
 
 	let _c = ChallengesManager.get_instance().get_challenge_by_id(challenge_id);
 	if (_c == undefined) {
-		res.send({
-			r: '0',
-			reason: `Challenge '${challenge_id}' does not exist.`
-		});
+		res.status(404).send(`Challenge does not exist.`);
 		return;
 	}
 	let c = _c as Challenge;
 
 	{
 		const original_setter = c.get_result_set_by();
-		if (c.get_result_set_by() != undefined) {
+		if (original_setter != undefined && original_setter != setter_user) {
 			debug(
 				log_now(),
 				`User '${setter_user}' is trying to override the result of
 			challenge '${challenge_id}' which was set by '${original_setter}'
 			on '${c.get_when_result_set()}'`
 			);
-			res.send({
-				r: '0',
-				reason: 'The result of this challenge has to be set by the original setter, which you are not.'
-			});
+			res.status(403).send(
+				'The result of this challenge has to be set by the original setter, which you are not.'
+			);
 			return;
 		}
 	}
 
 	if (white_username != c.get_sent_by() && white_username != c.get_sent_to()) {
 		debug(log_now(), `White '${white_username}' is not part of challenge '${challenge_id}'.`);
-		res.send({
-			r: '0',
-			reason: `White user sent is not part of this challenge.`
-		});
+		res.status(403).send(`White user sent is not part of this challenge.`);
 		return;
 	}
 	if (black_username != c.get_sent_by() && black_username != c.get_sent_to()) {
 		debug(log_now(), `Black '${black_username}' is not part of challenge '${challenge_id}'.`);
-		res.send({
-			r: '0',
-			reason: `Black user sent is not part of this challenge.`
-		});
+		res.status(403).send(`Black user sent is not part of this challenge.`);
 		return;
 	}
 
@@ -321,7 +261,7 @@ export async function post_challenge_set_result(req: any, res: any) {
 		time_control_name
 	);
 
-	res.send({ r: '1' });
+	res.status(200).send();
 }
 
 export async function post_challenge_agree(req: any, res: any) {
@@ -331,22 +271,19 @@ export async function post_challenge_agree(req: any, res: any) {
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
-		res.send(r[1]);
+		res.status(401).send(r[1]);
 		return;
 	}
 
 	const challenge_id: ChallengeID = req.body.challenge_id;
 	let _c = ChallengesManager.get_instance().get_challenge_by_id(challenge_id);
 	if (_c == undefined) {
-		res.send({
-			r: '0',
-			reason: 'Challenge does not exist'
-		});
+		res.status(404).send('Challenge does not exist');
 		return;
 	}
 
 	challenge_agree_result(_c as Challenge);
-	res.send({ r: '1' });
+	res.status(200).send();
 }
 
 export async function post_challenge_disagree(req: any, res: any) {
@@ -356,20 +293,17 @@ export async function post_challenge_disagree(req: any, res: any) {
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
-		res.send(r[1]);
+		res.status(401).send(r[1]);
 		return;
 	}
 
 	const challenge_id: ChallengeID = req.body.challenge_id;
 	let _c = ChallengesManager.get_instance().get_challenge_by_id(challenge_id);
 	if (_c == undefined) {
-		res.send({
-			r: '0',
-			reason: 'Challenge does not exist'
-		});
+		res.status(404).send('Challenge does not exist');
 		return;
 	}
 
 	challenge_unset_result(_c as Challenge);
-	res.send({ r: '1' });
+	res.status(200).send();
 }

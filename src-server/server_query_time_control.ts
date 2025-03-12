@@ -38,7 +38,7 @@ export async function get_query_time_controls(req: any, res: any) {
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
-		res.send(r[1]);
+		res.status(401).send(r[1]);
 		return;
 	}
 
@@ -50,10 +50,7 @@ export async function get_query_time_controls(req: any, res: any) {
 			name: tcs[i].name
 		});
 	}
-	res.send({
-		r: '1',
-		data: all_time_controls
-	});
+	res.status(200).send(all_time_controls);
 }
 
 export async function get_query_html_time_controls(req: any, res: any) {
@@ -63,7 +60,7 @@ export async function get_query_html_time_controls(req: any, res: any) {
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
-		res.send(r[1]);
+		res.satus(401).send(r[1]);
 		return;
 	}
 
@@ -72,5 +69,5 @@ export async function get_query_html_time_controls(req: any, res: any) {
 	for (let i = 0; i < tcs.length; ++i) {
 		html += `<option value="${tcs[i].id}">${tcs[i].name}</option>`;
 	}
-	res.send(html);
+	res.status(200).send(html);
 }

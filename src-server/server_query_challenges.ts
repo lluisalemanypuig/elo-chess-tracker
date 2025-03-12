@@ -42,7 +42,7 @@ export async function get_query_challenge_received(req: any, res: any) {
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
-		res.send({ r: '0', reason: r[1] });
+		res.status(401).send(r[1]);
 		return;
 	}
 
@@ -72,7 +72,7 @@ export async function get_query_challenge_received(req: any, res: any) {
 
 	debug(log_now(), `Found '${all_challenges_received.length}' challenges`);
 
-	res.send({ r: '1', c: all_challenges_received });
+	res.status(200).send(all_challenges_received);
 }
 
 /// Query the server for challenges sent to other users by me
@@ -83,7 +83,7 @@ export async function get_query_challenge_sent(req: any, res: any) {
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
-		res.send({ r: '0', reason: r[1] });
+		res.status(401).send(r[1]);
 		return;
 	}
 
@@ -112,7 +112,7 @@ export async function get_query_challenge_sent(req: any, res: any) {
 
 	debug(log_now(), `Found '${all_challenges.length}' challenges`);
 
-	res.send({ r: '1', c: all_challenges });
+	res.status(200).send(all_challenges);
 }
 
 /// Query the server for accepted challenges whose result has not been set yet.
@@ -123,7 +123,7 @@ export async function get_query_challenge_pending_result(req: any, res: any) {
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
-		res.send({ r: '0', reason: r[1] });
+		res.status(401).send(r[1]);
 		return;
 	}
 
@@ -171,7 +171,7 @@ export async function get_query_challenge_pending_result(req: any, res: any) {
 
 	debug(log_now(), `Found '${all_challenges.length}' challenges`);
 
-	res.send({ r: '1', c: all_challenges });
+	res.status(200).send(all_challenges);
 }
 
 /// Query the server for accepted challenges whose result has been set by me
@@ -182,7 +182,7 @@ export async function get_query_challenge_confirm_result_other(req: any, res: an
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
-		res.send({ r: '0', reason: r[1] });
+		res.status(401).send(r[1]);
 		return;
 	}
 
@@ -244,7 +244,7 @@ export async function get_query_challenge_confirm_result_other(req: any, res: an
 
 	debug(log_now(), `Found '${all_challenges.length}' challenges`);
 
-	res.send({ r: '1', c: all_challenges });
+	res.status(200).send(all_challenges);
 }
 
 /// Query the server for accepted challenges whose result has been set by my opponent
@@ -255,7 +255,7 @@ export async function get_query_challenge_confirm_result_self(req: any, res: any
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
-		res.send({ r: '0', reason: r[1] });
+		res.status(401).send(r[1]);
 		return;
 	}
 
@@ -317,5 +317,5 @@ export async function get_query_challenge_confirm_result_self(req: any, res: any
 
 	debug(log_now(), `Found '${all_challenges.length}' challenges`);
 
-	res.send({ r: '1', c: all_challenges });
+	res.status(200).send(all_challenges);
 }

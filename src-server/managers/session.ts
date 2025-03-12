@@ -102,11 +102,11 @@ export function is_user_logged_in(session: SessionID): [boolean, string, User | 
 	const user = user_retrieve(session.username);
 	if (user == undefined) {
 		debug(log_now(), `User '${session.username}' does not exist.`);
-		return [false, '403 - Forbidden', undefined];
+		return [false, 'Forbidden access', undefined];
 	}
 	if (!SessionIDManager.get_instance().has_session_id(session)) {
 		debug(log_now(), `Session does not exist for user '${session.username}'.`);
-		return [false, '403 - Forbidden', undefined];
+		return [false, 'Forbidden access', undefined];
 	}
 	return [true, '', user as User];
 }

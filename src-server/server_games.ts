@@ -38,7 +38,6 @@ import { user_retrieve } from './managers/users';
 import { ADMIN } from './models/user_role';
 import { SessionID } from './models/session_id';
 import { TimeControlID } from './models/time_control';
-import { GamesManager } from './managers/games_manager';
 import { can_user_create_a_game, can_user_edit_a_game } from './models/user_relationships';
 import { UsersManager } from './managers/users_manager';
 
@@ -49,11 +48,11 @@ export async function get_page_game_list_own(req: any, res: any) {
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
-		res.send(r[1]);
+		res.status(401).send(r[1]);
 		return;
 	}
 
-	res.sendFile(path.join(__dirname, '../html/game/list/own.html'));
+	res.status(200).sendFile(path.join(__dirname, '../html/game/list/own.html'));
 }
 
 export async function get_page_game_list_all(req: any, res: any) {
@@ -63,11 +62,11 @@ export async function get_page_game_list_all(req: any, res: any) {
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
-		res.send(r[1]);
+		res.status(401).send(r[1]);
 		return;
 	}
 
-	res.sendFile(path.join(__dirname, '../html/game/list/all.html'));
+	res.status(200).sendFile(path.join(__dirname, '../html/game/list/all.html'));
 }
 
 export async function get_page_game_create(req: any, res: any) {
@@ -77,17 +76,17 @@ export async function get_page_game_create(req: any, res: any) {
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
-		res.send(r[1]);
+		res.status(401).send(r[1]);
 		return;
 	}
 
 	if (!(r[2] as User).can_do(CREATE_GAMES)) {
-		debug(log_now(), `User '${session.username}' cannot create users.`);
-		res.send('403 - Forbidden');
+		debug(log_now(), `User '${session.username}' cannot create games.`);
+		res.status(403).send('You cannot create games.');
 		return;
 	}
 
-	res.sendFile(path.join(__dirname, '../html/game/create.html'));
+	res.status(200).sendFile(path.join(__dirname, '../html/game/create.html'));
 }
 
 export async function post_game_create(req: any, res: any) {
@@ -97,14 +96,14 @@ export async function post_game_create(req: any, res: any) {
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
-		res.send(r[1]);
+		res.status(401).send(r[1]);
 		return;
 	}
 
 	const creator = r[2] as User;
 	if (!creator.can_do(CREATE_GAMES)) {
 		debug(log_now(), `User '${session.username}' cannot create users.`);
-		res.send('403 - Forbidden');
+		res.status(403).send('You cannot create games');
 		return;
 	}
 
@@ -114,7 +113,7 @@ export async function post_game_create(req: any, res: any) {
 	const _white = mem.get_user_by_random_id(white_rid);
 	if (_white == undefined) {
 		debug(log_now(), `Random id '${white_rid}' for White is not valid.`);
-		res.send({ r: '0', reason: 'Invalid values' });
+		res.status(500).send('Invalid white user sent to the server.');
 		return;
 	}
 
@@ -122,7 +121,7 @@ export async function post_game_create(req: any, res: any) {
 	const _black = mem.get_user_by_random_id(black_rid);
 	if (_black == undefined) {
 		debug(log_now(), `Random id '${black_rid}' for Black is not valid.`);
-		res.send({ r: '0', reason: 'Invalid values' });
+		res.status(500).send('Invalid black user sent to the server.');
 		return;
 	}
 
@@ -134,9 +133,23 @@ export async function post_game_create(req: any, res: any) {
 	const game_date: DateStringShort = req.body.d;
 	const game_time: string = req.body.t; // HH:mm:ss:SSS
 
+	if (white.get_username() == black.get_username()) {
+		res.status(500).send('The players cannot be the same.');
+		return;
+	}
+
+	if (game_date == '') {
+		res.status(500).send('The selected date is incorrect.');
+		return;
+	}
+	if (game_time == '') {
+		res.status(500).send('The selected time is incorrect.');
+		return;
+	}
+
 	if (!can_user_create_a_game(creator, white, black)) {
 		debug(log_now(), `User cannot create this game.`);
-		res.send({ r: '0', reason: 'You do not have enough permissions to create this game' });
+		res.status(403).send('You cannot create this game.');
 		return;
 	}
 
@@ -148,26 +161,11 @@ export async function post_game_create(req: any, res: any) {
 	debug(log_now(), `    Date of game: '${game_date}'`);
 	debug(log_now(), `    Time of game: '${game_time}'`);
 
-	if (white.get_username() == black.get_username()) {
-		res.send({ r: '0', reason: 'The players cannot be the same' });
-		return;
-	}
-
-	if (game_date == '') {
-		res.send({ r: '0', reason: 'The selected date is incorrect' });
-		return;
-	}
-	if (game_time == '') {
-		res.send({ r: '0', reason: 'The selected time is incorrect' });
-		return;
-	}
-
 	debug(log_now(), `Adding the new game`);
 
 	game_add_new(white, black, result, time_control_id, time_control_name, game_date, game_time);
 
-	res.send({ r: '1' });
-	return;
+	res.status(201).send();
 }
 
 export async function post_game_edit_result(req: any, res: any) {
@@ -177,14 +175,14 @@ export async function post_game_edit_result(req: any, res: any) {
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
-		res.send(r[1]);
+		res.status(401).send(r[1]);
 		return;
 	}
 
 	const user = r[2] as User;
 	if (!user.can_do(EDIT_GAMES_USER)) {
-		debug(log_now(), `User '${session.username}' cannot create users.`);
-		res.send('403 - Forbidden');
+		debug(log_now(), `User '${session.username}' cannot edit games.`);
+		res.status(403).send('You cannot edit games');
 		return;
 	}
 
@@ -194,14 +192,9 @@ export async function post_game_edit_result(req: any, res: any) {
 	debug(log_now(), `    Game ID: '${game_id}'`);
 	debug(log_now(), `    New result: '${new_result}'`);
 
-	if (!GamesManager.get_instance().game_exists(game_id)) {
-		res.send({ r: '0', reason: `Game with ID ${game_id} was not found (1).` });
-		return;
-	}
-
 	const game = game_find_by_id(game_id);
 	if (game == undefined) {
-		res.send({ r: '0', reason: `Game with ID ${game_id} was not found (2).` });
+		res.status(404).send(`Game was not found.`);
 		return;
 	}
 
@@ -211,10 +204,7 @@ export async function post_game_edit_result(req: any, res: any) {
 		user_retrieve(game.get_black()) as User
 	);
 	if (!is_editable) {
-		res.send({
-			r: '0',
-			reason: `You lack permissions to edit game with ID ${game_id}.`
-		});
+		res.status(403).send(`You lack permissions to edit this game.`);
 		return;
 	}
 
@@ -223,8 +213,7 @@ export async function post_game_edit_result(req: any, res: any) {
 	// actually edit the game now
 	game_edit_result(game_id, new_result);
 
-	res.send({ r: '1' });
-	return;
+	res.status(200).send();
 }
 
 export async function post_recalculate_ratings(req: any, res: any) {
@@ -234,13 +223,13 @@ export async function post_recalculate_ratings(req: any, res: any) {
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
-		res.send(r[1]);
+		res.status(401).send(r[1]);
 		return;
 	}
 
 	if (!(r[2] as User).is(ADMIN)) {
 		debug(log_now(), `User '${session.username}' cannot recalculate ratings.`);
-		res.send('403 - Forbidden');
+		res.status(403).send('You cannot recalculate ratings.');
 		return;
 	}
 
@@ -249,6 +238,5 @@ export async function post_recalculate_ratings(req: any, res: any) {
 	// actually recalculating ratings
 	recalculate_all_ratings();
 
-	res.send({ r: '1' });
-	return;
+	res.status(200).send();
 }

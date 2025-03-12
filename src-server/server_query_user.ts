@@ -42,7 +42,7 @@ export async function get_query_user_list(req: any, res: any) {
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
-		req.send({ r: '0', reason: r[1] });
+		res.status(401).send(r[1]);
 		return;
 	}
 
@@ -51,7 +51,7 @@ export async function get_query_user_list(req: any, res: any) {
 		return a[0].localeCompare(b[0]);
 	});
 
-	res.send({ data: list });
+	res.status(200).send(list);
 }
 
 export async function get_query_html_user_list(req: any, res: any) {
@@ -61,7 +61,7 @@ export async function get_query_html_user_list(req: any, res: any) {
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
-		req.send({ r: '0', reason: r[1] });
+		res.status(401).send(r[1]);
 		return;
 	}
 
@@ -74,7 +74,7 @@ export async function get_query_html_user_list(req: any, res: any) {
 	for (const [name, rand_id] of list) {
 		data += `<option value="${name}" id="${rand_id}">`;
 	}
-	res.send(data);
+	res.status(200).send(data);
 }
 
 export async function get_query_user_home(req: any, res: any) {
@@ -84,7 +84,7 @@ export async function get_query_user_home(req: any, res: any) {
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
-		res.send({ r: '0', reason: r[1] });
+		res.status(401).send(r[1]);
 		return;
 	}
 
@@ -99,8 +99,7 @@ export async function get_query_user_home(req: any, res: any) {
 		ratings_user.push({ id: value.time_control, v: R });
 	});
 
-	res.send({
-		r: '1',
+	res.status(200).send({
 		fullname: user.get_full_name(),
 		roles: user.get_roles(),
 		actions: user.get_actions(),
@@ -121,7 +120,7 @@ export async function post_query_user_edit(req: any, res: any) {
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
-		res.send({ r: '0', reason: r[1] });
+		res.status(401).send(r[1]);
 		return;
 	}
 
@@ -131,13 +130,12 @@ export async function post_query_user_edit(req: any, res: any) {
 	const _to_edit = mem.get_user_by_random_id(to_edit_rid);
 	if (_to_edit == undefined) {
 		debug(log_now(), `Random id '${to_edit_rid}' for edited user is not valid.`);
-		res.send({ r: '0', reason: 'Invalid user' });
+		res.status(404).send('Invalid user');
 		return;
 	}
 
 	const to_edit = _to_edit as User;
-	res.send({
-		r: '1',
+	res.status(200).send({
 		first_name: to_edit.get_first_name(),
 		last_name: to_edit.get_last_name(),
 		roles: to_edit.get_roles()
@@ -151,7 +149,7 @@ export async function post_query_user_ranking(req: any, res: any) {
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
-		res.send({ r: '0', reason: r[1] });
+		res.status(401).send(r[1]);
 		return;
 	}
 
@@ -185,5 +183,5 @@ export async function post_query_user_ranking(req: any, res: any) {
 		return -1;
 	});
 
-	res.send({ r: '1', users: users });
+	res.status(200).send(users);
 }

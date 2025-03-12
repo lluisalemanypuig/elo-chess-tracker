@@ -43,11 +43,11 @@ export async function get_user_password_change_page(req: any, res: any) {
 
 	const r = is_user_logged_in(session);
 	if (!r[0]) {
-		res.send(r[1]);
+		res.status(401).send(r[1]);
 		return;
 	}
 
-	res.sendFile(path.join(__dirname, '../html/user/password_change.html'));
+	res.status(200).sendFile(path.join(__dirname, '../html/user/password_change.html'));
 }
 
 export async function post_user_password_change(req: any, res: any) {
@@ -59,7 +59,7 @@ export async function post_user_password_change(req: any, res: any) {
 
 	const r = is_user_logged_in(session);
 	if (!r[0]) {
-		res.send(r[1]);
+		res.status(200).send(r[1]);
 		return;
 	}
 	let user = r[2] as User;
@@ -76,10 +76,7 @@ export async function post_user_password_change(req: any, res: any) {
 	// is the password correct?
 	if (!is_password_correct) {
 		debug(log_now(), `    Password for '${session.username}' is incorrect`);
-		res.status(404).send({
-			r: '0',
-			reason: 'Old password is not correct.'
-		});
+		res.status(500).send('Old password is not correct.');
 		return;
 	}
 
@@ -93,5 +90,5 @@ export async function post_user_password_change(req: any, res: any) {
 	// overwrite user data
 	user_overwrite(user);
 
-	res.send({ r: '1' });
+	res.status(200).send();
 }

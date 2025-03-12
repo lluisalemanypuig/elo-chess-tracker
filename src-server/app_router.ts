@@ -56,12 +56,12 @@ router.get('/home', (req: any, res: any) => {
 	const session = SessionID.from_cookie(req.cookies);
 	if (!SessionIDManager.get_instance().has_session_id(session)) {
 		debug(log_now(), '    Session id does not exist.');
-		res.send('Computer says no');
+		res.status(401).send('Forbidden');
 		return;
 	}
 
 	debug(log_now(), '    Access granted');
-	res.sendFile(path.join(__dirname, '../html/home.html'));
+	res.status(200).sendFile(path.join(__dirname, '../html/home.html'));
 });
 
 // serve all *.css files
@@ -70,7 +70,7 @@ router.get('/css/*.css', (req: any, res: any) => {
 	debug(log_now(), `    request: ${req.url}`);
 	const filepath = path.join(__dirname, '..', req.url);
 	debug(log_now(), `    file to send: ${filepath}`);
-	res.sendFile(filepath);
+	res.status(200).sendFile(filepath);
 });
 
 /* ************************************************************************** */
@@ -78,8 +78,7 @@ router.get('/css/*.css', (req: any, res: any) => {
 router.get('/version_number', (req: any, res: any) => {
 	debug(log_now(), 'GET version_number...');
 	debug(log_now(), `    request: ${req.url}`);
-	res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
-	res.send('XX.YY');
+	res.status(200).setHeader('Cache-Control', 'public, max-age=864000, immutable').send('XX.YY');
 });
 
 /* ************************************************************************** */
@@ -89,38 +88,37 @@ router.get('/favicon.ico', (req: any, res: any) => {
 	debug(log_now(), `    request: ${req.url}`);
 	const filepath = EnvironmentManager.get_instance().get_icon_favicon();
 	debug(log_now(), `    file to send: ${filepath}`);
-	res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
-	res.sendFile(filepath);
+	res.status(200).setHeader('Cache-Control', 'public, max-age=864000, immutable').sendFile(filepath);
 });
 router.get('/icon/login_page', (req: any, res: any) => {
 	debug(log_now(), 'GET /icon/login_page...');
 	debug(log_now(), `    request: ${req.url}`);
 	const filepath = EnvironmentManager.get_instance().get_icon_login_page();
 	debug(log_now(), `    file to send: ${filepath}`);
-	res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
-	res.sendFile(filepath);
+	res.status(200).setHeader('Cache-Control', 'public, max-age=864000, immutable').sendFile(filepath);
 });
 router.get('/icon/home_page', (req: any, res: any) => {
 	debug(log_now(), 'GET /icon/home_page...');
 	debug(log_now(), `    request: ${req.url}`);
 	const filepath = EnvironmentManager.get_instance().get_icon_home_page();
 	debug(log_now(), `    file to send: ${filepath}`);
-	res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
-	res.sendFile(filepath);
+	res.status(200).setHeader('Cache-Control', 'public, max-age=864000, immutable').sendFile(filepath);
 });
 
 /* PAGE TITLES */
 router.get('/title/login_page', (req: any, res: any) => {
 	debug(log_now(), 'GET /title/login_page...');
 	debug(log_now(), `    request: ${req.url}`);
-	res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
-	res.send(EnvironmentManager.get_instance().get_title_login_page());
+	res.status(200)
+		.setHeader('Cache-Control', 'public, max-age=864000, immutable')
+		.send(EnvironmentManager.get_instance().get_title_login_page());
 });
 router.get('/title/home_page', (req: any, res: any) => {
 	debug(log_now(), 'GET /title/home_page...');
 	debug(log_now(), `    request: ${req.url}`);
-	res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
-	res.send(EnvironmentManager.get_instance().get_title_home_page());
+	res.status(200)
+		.setHeader('Cache-Control', 'public, max-age=864000, immutable')
+		.send(EnvironmentManager.get_instance().get_title_home_page());
 });
 
 /* ************************************************************************** */
@@ -131,7 +129,7 @@ router.get('/js-source/*', (req: any, res: any) => {
 	debug(log_now(), `    request: ${req.url}`);
 	const filepath = path.join(__dirname, '..', req.url);
 	debug(log_now(), `    file to send: ${filepath}`);
-	res.sendFile(filepath);
+	res.status(200).sendFile(filepath);
 });
 
 import {
@@ -158,11 +156,11 @@ import {
 	get_query_challenge_confirm_result_other,
 	get_query_challenge_confirm_result_self
 } from './server_query_challenges';
-router.get('/query/challenges/received', get_query_challenge_received);
-router.get('/query/challenges/sent', get_query_challenge_sent);
-router.get('/query/challenges/pending_result', get_query_challenge_pending_result);
-router.get('/query/challenges/confirm_result/other', get_query_challenge_confirm_result_other);
-router.get('/query/challenges/confirm_result/self', get_query_challenge_confirm_result_self);
+router.get('/query/challenge/received', get_query_challenge_received);
+router.get('/query/challenge/sent', get_query_challenge_sent);
+router.get('/query/challenge/pending_result', get_query_challenge_pending_result);
+router.get('/query/challenge/confirm_result/other', get_query_challenge_confirm_result_other);
+router.get('/query/challenge/confirm_result/self', get_query_challenge_confirm_result_self);
 
 import { post_query_game_list_own, post_query_game_list_all } from './server_query_games';
 router.post('/query/game/list/own', post_query_game_list_own);

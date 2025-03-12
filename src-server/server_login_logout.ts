@@ -55,7 +55,7 @@ export async function post_user_login(req: any, res: any) {
 	// nonexistent user
 	if (_user_data == undefined) {
 		debug(log_now(), `    User ${username} does not exist`);
-		res.status(404).send({ r: '0' });
+		res.status(404).send('Incorrect user or password.');
 		return;
 	}
 
@@ -68,7 +68,7 @@ export async function post_user_login(req: any, res: any) {
 	// correct password
 	if (!is_password_correct) {
 		debug(log_now(), `    Password for '${username}' is incorrect`);
-		res.status(404).send({ r: '0' });
+		res.status(404).send('Incorrect user or password.');
 		return;
 	}
 
@@ -78,7 +78,6 @@ export async function post_user_login(req: any, res: any) {
 
 	// send response
 	res.status(200).send({
-		r: '1', // result of trying to log in
 		cookies: [
 			make_cookie_string({
 				name: SessionID.get_field_name_0(),
@@ -112,16 +111,17 @@ export async function post_user_logout(req: any, res: any) {
 	// in order to log out a user, the must have been logged in with the given
 	// session id token
 	if (!SessionIDManager.get_instance().has_session_id(session)) {
-		debug(log_now(), `    User '${session.username}' was never logged in with this session id.`);
-		res.status(200).send('error');
+		debug(
+			log_now(),
+			`    User '${session.username}' was never logged in with this session id but it is fine, since they are logging out.`
+		);
+		res.status(200).send();
 	} else {
 		debug(log_now(), `    User '${session.username}' was logged in.`);
 		debug(log_now(), `    Deleting session id of user '${session.username}'...`);
 		session_id_delete(session);
 		debug(log_now(), `        Deleted.`);
 		// send response
-		res.status(200).send('success');
+		res.status(200).send();
 	}
-
-	return;
 }

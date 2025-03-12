@@ -134,11 +134,11 @@ export async function post_query_game_list_own(req: any, res: any) {
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
-		res.send({ r: '0', reason: r[1] });
+		res.status(401).send(r[1]);
 		return;
 	}
 
-	const user = user_retrieve(session.username) as User;
+	const user = r[2] as User;
 	const time_control_id = req.body.tc_i;
 
 	let data_to_return: any[] = [];
@@ -174,10 +174,7 @@ export async function post_query_game_list_own(req: any, res: any) {
 
 	debug(log_now(), `Found '${data_to_return.length}' games involving '${session.username}'`);
 
-	res.send({
-		r: '1',
-		games: data_to_return
-	});
+	res.status(200).send(data_to_return);
 }
 
 export async function post_query_game_list_all(req: any, res: any) {
@@ -187,13 +184,13 @@ export async function post_query_game_list_all(req: any, res: any) {
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
-		res.send({ r: '0', reason: r[1] });
+		res.status(401).send(r[1]);
 		return;
 	}
 
-	const user = user_retrieve(session.username) as User;
+	const user = r[2] as User;
 	if (!user.can_do(SEE_GAMES_USER)) {
-		res.send('403 - Forbidden');
+		res.status(403).send('You cannot see the entire list of games in the web.');
 		return;
 	}
 
@@ -232,9 +229,5 @@ export async function post_query_game_list_all(req: any, res: any) {
 		}
 	}
 
-	res.send({
-		r: '1',
-		games: data_to_return,
-		actions: user.get_actions()
-	});
+	res.status(200).send(data_to_return);
 }

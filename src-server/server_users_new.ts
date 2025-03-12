@@ -43,17 +43,23 @@ export async function get_page_user_create(req: any, res: any) {
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
-		res.send(r[1]);
+		res.status(401).send(r[1]);
 		return;
 	}
 
-	if (!(r[2] as User).can_do(CREATE_USER)) {
+	const user = r[2] as User;
+	if (!user.can_do(CREATE_USER)) {
 		debug(log_now(), `User '${session.username}' cannot create users.`);
-		res.send('403 - Forbidden');
+		res.status(403).send('You cannot create users.');
+		return;
+	}
+	if (!user.can_do(ASSIGN_ROLE_USER)) {
+		debug(log_now(), `User '${session.username}' cannot assign roles to users.`);
+		res.status(403).send(`You cannot assign roles and thus cannot create users.`);
 		return;
 	}
 
-	res.sendFile(path.join(__dirname, '../html/user/new.html'));
+	res.status(200).sendFile(path.join(__dirname, '../html/user/new.html'));
 }
 
 export async function post_user_create(req: any, res: any) {
@@ -63,22 +69,19 @@ export async function post_user_create(req: any, res: any) {
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
-		res.send(r[1]);
+		res.status(401).send(r[1]);
 		return;
 	}
 
 	const registerer = r[2] as User;
 	if (!registerer.can_do(CREATE_USER)) {
 		debug(log_now(), `User '${session.username}' cannot create users.`);
-		res.send('403 - Forbidden');
+		res.status(403).send('You cannot create users.');
 		return;
 	}
 	if (!registerer.can_do(ASSIGN_ROLE_USER)) {
 		debug(log_now(), `User '${session.username}' cannot assign roles to users.`);
-		res.send({
-			r: '0',
-			reason: `User '${session.username}' cannot assign roles and thus cannot create users.`
-		});
+		res.status(403).send(`You cannot assign roles and thus cannot create users.`);
 		return;
 	}
 
@@ -95,33 +98,24 @@ export async function post_user_create(req: any, res: any) {
 	debug(log_now(), `    Roles: '${roles}'`);
 
 	if (user_exists(username)) {
-		res.send({
-			r: '0',
-			reason: `User '${username}' already exists`
-		});
+		res.status(500).send(`This user already exists`);
 		return;
 	}
 
 	for (let i = 0; i < roles.length; ++i) {
 		const r = roles[i];
 		if (!is_role_string_correct(r)) {
-			res.send({
-				r: '0',
-				reason: `Role string '${r}' is not correct.`
-			});
+			res.status(500).send(`Role string '${r}' is not correct.`);
 			return;
 		}
 
 		const action = get_role_action_name(ASSIGN_ROLE_ID, r);
 		if (!registerer.can_do(action)) {
-			res.send({
-				r: '0',
-				reason: `User '${session.username}' cannot do ${action} role.`
-			});
+			res.status(403).send(`You cannot do ${action}.`);
 			return;
 		}
 	}
 
 	user_add_new(username, firstname, lastname, password, roles);
-	res.send({ r: '1' });
+	res.status(201).send();
 }

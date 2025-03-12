@@ -39,9 +39,9 @@ export async function get_page_user_ranking(req: any, res: any) {
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
-		res.send(r[1]);
+		res.status(401).send(r[1]);
 		return;
 	}
 
-	res.sendFile(path.join(__dirname, '../html/user/ranking.html'));
+	res.status(200).sendFile(path.join(__dirname, '../html/user/ranking.html'));
 }

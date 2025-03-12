@@ -30,11 +30,9 @@ import path from 'path';
 
 import { log_now } from './utils/time';
 import { is_user_logged_in } from './managers/session';
-import { user_retrieve, user_rename_and_reassign_roles } from './managers/users';
+import { user_rename_and_reassign_roles } from './managers/users';
 import { User } from './models/user';
 import { EDIT_USER } from './models/user_action';
-
-import { SessionIDManager } from './managers/session_id_manager';
 import { SessionID } from './models/session_id';
 import { can_user_edit } from './models/user_relationships';
 import { UsersManager } from './managers/users_manager';
@@ -43,28 +41,21 @@ export async function get_page_user_edit(req: any, res: any) {
 	debug(log_now(), 'GET /user/edit...');
 
 	const session = SessionID.from_cookie(req.cookies);
+	const r = is_user_logged_in(session);
 
-	if (!SessionIDManager.get_instance().has_session_id(session)) {
-		debug(log_now(), `    User '${session.username}' is not logged in.`);
-		res.send('403 - Forbidden');
+	if (!r[0]) {
+		res.status(401).send(r[1]);
 		return;
 	}
 
-	const _user = user_retrieve(session.username);
-	if (_user == undefined) {
-		debug(log_now(), `    User '${session.username}' does not exist.`);
-		res.send('403 - Forbidden');
-		return;
-	}
-
-	const user = _user as User;
+	const user = r[2] as User;
 	if (!user.can_do(EDIT_USER)) {
 		debug(log_now(), `    User '${session.username}' does not have sufficient permissions.`);
-		res.send('403 - Forbidden');
+		res.status(403).send('You cannot edit users');
 		return;
 	}
 
-	res.sendFile(path.join(__dirname, '../html/user/edit.html'));
+	res.status(200).sendFile(path.join(__dirname, '../html/user/edit.html'));
 }
 
 export async function post_user_edit(req: any, res: any) {
@@ -74,7 +65,7 @@ export async function post_user_edit(req: any, res: any) {
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
-		res.send({ r: '0', reason: r[1] });
+		res.status(401).send(r[1]);
 		return;
 	}
 	const editor = r[2] as User;
@@ -85,7 +76,7 @@ export async function post_user_edit(req: any, res: any) {
 	const _edited = mem.get_user_by_random_id(edited_rid);
 	if (_edited == undefined) {
 		debug(log_now(), `Random id '${edited_rid}' for user is not valid.`);
-		res.send({ r: '0', reason: 'Invalid user' });
+		res.status(404).send('Invalid user');
 		return;
 	}
 
@@ -94,10 +85,7 @@ export async function post_user_edit(req: any, res: any) {
 	debug(log_now(), `User '${editor.get_username()}' is trying to modify user '${edited.get_username()}'`);
 
 	if (!can_user_edit(editor, edited)) {
-		res.send({
-			r: '0',
-			reason: 'You do not have enough permissions to edit this user.'
-		});
+		res.status(403).send('You do not have enough permissions to edit this user.');
 		return;
 	}
 
@@ -107,5 +95,5 @@ export async function post_user_edit(req: any, res: any) {
 
 	user_rename_and_reassign_roles(edited.get_username(), req.body.f, req.body.l, req.body.r);
 
-	res.send({ r: '1' });
+	res.status(200).send();
 }

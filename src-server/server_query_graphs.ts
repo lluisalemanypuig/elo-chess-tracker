@@ -198,7 +198,7 @@ export async function post_query_graph_own(req: any, res: any) {
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
-		res.send({ r: '0', reason: r[1] });
+		res.status(401).send(r[1]);
 		return;
 	}
 
@@ -220,13 +220,13 @@ export async function post_query_graph_full(req: any, res: any) {
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
-		res.send({ r: '0', reason: r[1] });
+		res.status(401).send(r[1]);
 		return;
 	}
 
 	const user = r[2] as User;
 	if (!user.can_do(SEE_GRAPHS_USER)) {
-		res.send({ r: '0', reason: 'You do not have enough permissions.' });
+		res.status(403).send('You do not have enough permissions.');
 		return;
 	}
 
@@ -237,8 +237,7 @@ export async function post_query_graph_full(req: any, res: any) {
 	);
 
 	const [list_nodes, list_edges] = retrieve_graph_full(user, time_control_id);
-	res.send({
-		r: '1',
+	res.status(200).send({
 		nodes: list_nodes,
 		edges: list_edges
 	});
