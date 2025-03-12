@@ -26,14 +26,18 @@ async function initialize_window_client_games_create() {
 	let datalist_black_users = document.getElementById('datalist_black_users') as HTMLDataListElement;
 
 	// query the server for the list of users
-	const response_user_list = await fetch('/query/html/user/list', {
+	const response = await fetch('/query/html/user/list', {
 		method: 'GET',
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
-	const data_user_list = await response_user_list.text();
+	const data = await response.text();
+	if (response.status >= 400) {
+		alert(`${response.status} -- ${response.statusText}\nMessage: '${data}'`);
+		return;
+	}
 
-	datalist_white_users.innerHTML = data_user_list;
-	datalist_black_users.innerHTML = data_user_list;
+	datalist_white_users.innerHTML = data;
+	datalist_black_users.innerHTML = data;
 }
 
 async function submit_new_game(_event: any) {
@@ -84,10 +88,9 @@ async function submit_new_game(_event: any) {
 		}),
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
-
-	const data = await response.json();
-	if (data.r == '0') {
-		alert(data.reason);
+	if (response.status >= 400) {
+		const message = await response.text();
+		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
 		return;
 	}
 

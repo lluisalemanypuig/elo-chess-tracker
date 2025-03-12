@@ -41,10 +41,9 @@ async function edit_button_was_clicked(event: any) {
 		}),
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
-
-	const data = await response.json();
-	if (data.r == '0') {
-		alert(data.reason);
+	if (response.status >= 400) {
+		const message = await response.text();
+		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
 		return;
 	}
 
@@ -129,13 +128,13 @@ async function fill_games_list_time_control(time_control_id: string) {
 		body: JSON.stringify({ tc_i: time_control_id }),
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
-
-	const data = await response.json();
-	if (data.r == '0') {
+	if (response.status >= 400) {
+		const message = await response.text();
+		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
 		return;
 	}
 
-	const games = data.games as any[];
+	const games = (await response.json()) as any[];
 
 	let new_tbody = document.createElement('tbody');
 	for (let i = 0; i < games.length; i++) {

@@ -49,12 +49,13 @@ async function log_into_webpage(_event: any) {
 		body: JSON.stringify({ u: username, p: password }),
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
-
-	const data = await response.json();
-	if (data.r == '0') {
-		alert('Incorrect user or password.');
+	if (response.status >= 400) {
+		const message = await response.text();
+		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
 		return;
 	}
+
+	const data = await response.json();
 
 	// put identity cookies
 	let cookies = data['cookies'];

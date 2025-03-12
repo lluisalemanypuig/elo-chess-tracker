@@ -41,13 +41,13 @@ async function fill_ranking(_event: any) {
 		body: JSON.stringify({ tc_i: time_control_id }),
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
-
-	const data = await response.json();
-	if (data.r == '0') {
+	if (response.status >= 400) {
+		const message = await response.text();
+		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
 		return;
 	}
 
-	const users = data.users as any[];
+	const users = (await response.json()) as any[];
 
 	let table = document.getElementById('users_table') as HTMLTableElement;
 

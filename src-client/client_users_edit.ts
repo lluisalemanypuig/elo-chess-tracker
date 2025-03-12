@@ -43,13 +43,13 @@ async function user_was_changed(_event: any) {
 			body: JSON.stringify({ u: username }),
 			headers: { 'Content-type': 'application/json; charset=UTF-8' }
 		});
-
-		const data = await response.json();
-		if (data.r == '0') {
-			alert(data.reason);
+		if (response.status >= 400) {
+			const message = await response.text();
+			alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
 			return;
 		}
 
+		const data = await response.json();
 		box_first_name.value = data.first_name;
 		box_last_name.value = data.last_name;
 
@@ -91,14 +91,13 @@ async function submit_was_clicked(_event: any) {
 		}),
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
-
-	const data = await response.json();
-	if (data.r == '0') {
-		alert(data.reason);
+	if (response.status >= 400) {
+		const message = await response.text();
+		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
 		return;
 	}
 
-	window.location.href = '/';
+	window.location.href = '/home';
 }
 
 window.onload = function () {

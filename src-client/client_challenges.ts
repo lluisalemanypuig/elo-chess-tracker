@@ -35,15 +35,14 @@ async function send_challenge_button_clicked(_event: any) {
 		const random_user_id = username_option.id;
 
 		// "query" the server
-		const response = await fetch('/challenges_send', {
+		const response = await fetch('/challenge/send', {
 			method: 'POST',
 			body: JSON.stringify({ to: random_user_id }),
 			headers: { 'Content-type': 'application/json; charset=UTF-8' }
 		});
-
-		const data = await response.json();
-		if (data.r == '0') {
-			alert(data.reason);
+		if (response.status >= 400) {
+			const message = await response.text();
+			alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
 			return;
 		}
 
@@ -55,50 +54,50 @@ async function accept_challenge_tag_clicked(event: any) {
 	let tag_clicked = event.target;
 	let challenge_id = tag_clicked.id;
 
-	const response = await fetch('/challenges_accept', {
+	const response = await fetch('/challenge/accept', {
 		method: 'POST',
 		body: JSON.stringify({ challenge_id: challenge_id }),
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
-	const data = await response.json();
-
-	if (data.r == '1') {
-		window.location.href = '/challenges_page';
+	if (response.status >= 400) {
+		const message = await response.text();
+		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
+		return;
 	}
+	window.location.href = '/challenges_page';
 }
 
 async function decline_challenge_tag_clicked(event: any) {
 	let tag_clicked = event.target;
 	let challenge_id = tag_clicked.id;
 
-	const response = await fetch('/challenges_decline', {
+	const response = await fetch('/challenge/decline', {
 		method: 'POST',
 		body: JSON.stringify({ challenge_id: challenge_id }),
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
-	const data = await response.json();
-
-	if (data.r == '1') {
-		window.location.href = '/challenges_page';
+	if (response.status >= 400) {
+		const message = await response.text();
+		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
+		return;
 	}
+	window.location.href = '/challenges_page';
 }
 
 async function fill_challenges_received() {
-	const response = await fetch('/query/challenges/received', {
+	const response = await fetch('/query/challenge/received', {
 		method: 'GET',
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
-	const data = await response.json();
-
-	if (data.r == '0') {
-		// something went wrong, do nothing
+	if (response.status >= 400) {
+		const message = await response.text();
+		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
 		return;
 	}
-
-	const challenge_data = data.c as any[];
+	const data = (await response.json()) as any[];
 
 	let challenge_list = document.createElement('ul') as HTMLUListElement;
-	challenge_data.forEach(function (elem: any) {
+	data.forEach(function (elem: any) {
 		let li = document.createElement('li') as HTMLLIElement;
 		li.appendChild(
 			document.createTextNode(`Challenge sent by ${elem.sent_by}. Sent on ${elem.sent_when.replace('..', ' ')}. `)
@@ -128,21 +127,19 @@ async function fill_challenges_received() {
 }
 
 async function fill_challenges_sent() {
-	const response = await fetch('/query/challenges/sent', {
+	const response = await fetch('/query/challenge/sent', {
 		method: 'GET',
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
-	const data = await response.json();
-
-	if (data.r == '0') {
-		// something went wrong, do nothing
+	if (response.status >= 400) {
+		const message = await response.text();
+		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
 		return;
 	}
-
-	const challenge_data = data.c as any[];
+	const data = (await response.json()) as any[];
 
 	let challenge_list = document.createElement('ul') as HTMLUListElement;
-	challenge_data.forEach(function (elem: any) {
+	data.forEach(function (elem: any) {
 		let li = document.createElement('li') as HTMLLIElement;
 		li.textContent = `Challenge sent to ${elem.sent_to}. Sent on ${elem.sent_when.replace('..', ' ')}.`;
 
@@ -153,25 +150,28 @@ async function fill_challenges_sent() {
 }
 
 async function fill_challenges_pending_result() {
-	const response_challenges_pending = await fetch('/query/challenges/pending_result', {
+	const response_pending = await fetch('/query/challenge/pending_result', {
 		method: 'GET',
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
-	const challenges_pending = await response_challenges_pending.json();
-
-	const response_time_control = await fetch('/query/time_controls', {
-		method: 'GET',
-		headers: { 'Content-type': 'application/json; charset=UTF-8' }
-	});
-	const time_control = await response_time_control.json();
-
-	if (challenges_pending.r == '0') {
-		// something went wrong, do nothing
+	if (response_pending.status >= 400) {
+		const message = await response_pending.text();
+		alert(`${response_pending.status} -- ${response_pending.statusText}\nMessage: '${message}'`);
 		return;
 	}
 
-	const challenge_data = challenges_pending.c as any[];
-	const time_control_data = time_control.data as any[];
+	const response_tc = await fetch('/query/time_controls', {
+		method: 'GET',
+		headers: { 'Content-type': 'application/json; charset=UTF-8' }
+	});
+	if (response_tc.status >= 400) {
+		const message = await response_tc.text();
+		alert(`${response_tc.status} -- ${response_tc.statusText}\nMessage: '${message}'`);
+		return;
+	}
+
+	const challenge_data = await response_pending.json();
+	const time_control_data = await response_tc.json();
 
 	let all_challenges_list = document.getElementById('challenges_pending_result__list') as HTMLDivElement;
 	challenge_data.forEach(function (elem: any, index: number) {
@@ -313,7 +313,7 @@ async function submit_result_challenge_button_clicked(event: any) {
 	let time_control_name = select_time_control.options[select_time_control.selectedIndex].text;
 
 	// "query" the server
-	const response = await fetch('/challenges_set_result', {
+	const response = await fetch('/challenge/set_result', {
 		method: 'POST',
 		body: JSON.stringify({
 			challenge_id: challenge_id,
@@ -325,10 +325,9 @@ async function submit_result_challenge_button_clicked(event: any) {
 		}),
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
-
-	const data = await response.json();
-	if (data.r == '0') {
-		alert(data.reason);
+	if (response.status >= 400) {
+		const message = await response.text();
+		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
 		return;
 	}
 
@@ -336,18 +335,17 @@ async function submit_result_challenge_button_clicked(event: any) {
 }
 
 async function fill_challenges_confirm_result_other() {
-	const response = await fetch('/query/challenges/confirm_result/other', {
+	const response = await fetch('/query/challenge/confirm_result/other', {
 		method: 'GET',
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
-	const data = await response.json();
-
-	if (data.r == '0') {
-		// something went wrong, do nothing
+	if (response.status >= 400) {
+		const message = await response.text();
+		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
 		return;
 	}
 
-	const challenge_data = data.c as any[];
+	const challenge_data = (await response.json()) as any[];
 
 	let challenge_list = document.createElement('ul') as HTMLUListElement;
 	challenge_data.forEach(function (elem: any) {
@@ -363,18 +361,17 @@ async function fill_challenges_confirm_result_other() {
 }
 
 async function fill_challenges_confirm_result_self() {
-	const response = await fetch('/query/challenges/confirm_result/self', {
+	const response = await fetch('/query/challenge/confirm_result/self', {
 		method: 'GET',
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
-	const data = await response.json();
-
-	if (data.r == '0') {
-		// something went wrong, do nothing
+	if (response.status >= 400) {
+		const message = await response.text();
+		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
 		return;
 	}
 
-	const challenge_data = data.c as any[];
+	const challenge_data = (await response.json()) as any[];
 
 	let challenge_list = document.createElement('ul') as HTMLUListElement;
 	challenge_data.forEach(function (elem: any) {
@@ -410,32 +407,36 @@ async function agree_challenge_result_tag_clicked(event: any) {
 	let tag_clicked = event.target;
 	let challenge_id = tag_clicked.id;
 
-	const response = await fetch('/challenges_agree_result', {
+	const response = await fetch('/challenge/agree_result', {
 		method: 'POST',
 		body: JSON.stringify({ challenge_id: challenge_id }),
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
-	const data = await response.json();
-
-	if (data.r == '1') {
-		window.location.href = '/challenges_page';
+	if (response.status >= 400) {
+		const message = await response.text();
+		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
+		return;
 	}
+
+	window.location.href = '/challenges_page';
 }
 
 async function disagree_challenge_result_tag_clicked(event: any) {
 	let tag_clicked = event.target;
 	let challenge_id = tag_clicked.id;
 
-	const response = await fetch('/challenges_disagree_result', {
+	const response = await fetch('/challenge/disagree_result', {
 		method: 'POST',
 		body: JSON.stringify({ challenge_id: challenge_id }),
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
-	const data = await response.json();
-
-	if (data.r == '1') {
-		window.location.href = '/challenges_page';
+	if (response.status >= 400) {
+		const message = await response.text();
+		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
+		return;
 	}
+
+	window.location.href = '/challenges_page';
 }
 
 window.onload = function () {

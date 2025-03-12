@@ -94,8 +94,11 @@ function fill_action_links(user_actions: string[], user_roles: string[]) {
 				method: 'POST',
 				headers: { 'Content-type': 'application/json; charset=UTF-8' }
 			});
-
-			await response.json();
+			if (response.status >= 400) {
+				const message = await response.text();
+				alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
+				return;
+			}
 		};
 		action_links.appendChild(recalculate_ratings_link);
 
@@ -107,8 +110,11 @@ function fill_action_links(user_actions: string[], user_roles: string[]) {
 				method: 'POST',
 				headers: { 'Content-type': 'application/json; charset=UTF-8' }
 			});
-
-			await response.json();
+			if (response.status >= 400) {
+				const message = await response.text();
+				alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
+				return;
+			}
 		};
 		action_links.appendChild(recalculate_graphs_link);
 	}
@@ -120,12 +126,13 @@ async function fill_own_info() {
 		method: 'GET',
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
-
-	const data = await response.json();
-	if (data.r == '0') {
-		alert(data.reason);
+	if (response.status >= 400) {
+		const message = await response.text();
+		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
 		return;
 	}
+
+	const data = await response.json();
 
 	// add hrefs according to the user's permissions.
 	fill_action_links(data.actions, data.roles);

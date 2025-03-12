@@ -95,12 +95,13 @@ async function load_graph() {
 		body: JSON.stringify({ tc_i: time_control_id }),
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
-
-	graph_data = await response.json();
-	if (graph_data.r == '0') {
-		graph_loaded = false;
+	if (response.status >= 400) {
+		const message = await response.text();
+		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
 		return;
 	}
+
+	graph_data = await response.json();
 
 	if (graph_loaded) {
 		server_graph.clear();

@@ -102,11 +102,9 @@ async function submit_new_user_clicked(_event: any) {
 		}),
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
-
-	// report result
-	const data = await response.json();
-	if (data.r == '0') {
-		alert(`Could not create new user: '${data.reason}'`);
+	if (response.status >= 400) {
+		const message = await response.text();
+		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
 		return;
 	}
 

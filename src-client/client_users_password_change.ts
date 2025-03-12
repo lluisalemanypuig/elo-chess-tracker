@@ -39,10 +39,9 @@ async function button_submit_clicked() {
 		}),
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
-	const data = await response.json();
-
-	if (data.r == '0') {
-		alert(data.reason);
+	if (response.status >= 400) {
+		const message = await response.text();
+		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
 		return;
 	}
 
