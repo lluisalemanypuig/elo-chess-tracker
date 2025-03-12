@@ -26,26 +26,14 @@ async function initialize_window_client_games_create() {
 	let datalist_black_users = document.getElementById('datalist_black_users') as HTMLDataListElement;
 
 	// query the server for the list of users
-	const response_user_list = await fetch('/query/user/list', {
+	const response_user_list = await fetch('/query/html/user/list', {
 		method: 'GET',
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
-	const data_user_list = await response_user_list.json();
-	if (data_user_list.r == '0') {
-		alert(data_user_list.reason);
-		return;
-	}
+	const data_user_list = await response_user_list.text();
 
-	// fill username lists
-	let options = '';
-	{
-		const user_list = data_user_list.data as [string, number][];
-		user_list.forEach(function (elem: [string, number]) {
-			options += `<option value="${elem[0]}" id="${elem[1]}">`;
-		});
-	}
-	datalist_white_users.innerHTML = options;
-	datalist_black_users.innerHTML = options;
+	datalist_white_users.innerHTML = data_user_list;
+	datalist_black_users.innerHTML = data_user_list;
 }
 
 async function submit_new_game(_event: any) {
