@@ -2,8 +2,8 @@
 	"name": "chess-elo-tracker",
 	"version": "20xx.yy.00",
 	"scripts": {
-		"start": "node ./js-source/app_main.js",
-		"devstart": "DEBUG=ELO_TRACKER:* nodemon ./js-source/app_main.js",
+		"start": "node ./js/app_main.js",
+		"devstart": "DEBUG=ELO_TRACKER:* nodemon ./js/app_main.js",
 		"serverstart": "DEBUG=ELO_TRACKER:* npm run devstart",
 		"test": "jest --runInBand"
 	},

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd js-source
+cd js
 
 for f in $(ls client_*); do
     echo "    Fix imports for: $f"

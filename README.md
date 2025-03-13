@@ -261,8 +261,8 @@ Available actions are
 
 Once the configuration file has been properly edited, now we can run the website. To do so, use **one** of the following commands (we recommend using the last one)
 
-    $ node ./js-source/app_main.js configuration-file /path/to/configuration.json
-    $ DEBUG=ELO_TRACKER:* nodemon ./js-source/app_main.js configuration-file /path/to/configuration.json
+    $ node ./js/app_main.js configuration-file /path/to/configuration.json
+    $ DEBUG=ELO_TRACKER:* nodemon ./js/app_main.js configuration-file /path/to/configuration.json
     $ DEBUG=ELO_TRACKER:* npm run devstart configuration-file /path/to/configuration.json
 
 ## Access the website from a local network

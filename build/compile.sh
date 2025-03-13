@@ -1,8 +1,8 @@
 #!/bin/bash
 
 echo "Compiling..."
-mkdir -p js-source
-cd js-source
+mkdir -p js
+cd js
 rm -rf *
 cd ..
 tsc
@@ -12,7 +12,7 @@ if [ "$?" != "0" ]; then
     exit
 fi
 
-echo "Flatten js-source directory..."
+echo "Flatten js/ directory..."
 ./build/flatten_js_source.sh
 
 echo "Fix imports..."

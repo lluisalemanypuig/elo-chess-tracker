@@ -41,7 +41,7 @@ let app = express();
 debug(log_now(), 'Building app...');
 
 /* connect POST and GET queries with actual code */
-//let indexRouter = require('../js-source/routes/index');
+//let indexRouter = require('../js/routes/index');
 //app.use('/', indexRouter);
 
 debug(log_now(), '    Set stuff...');

@@ -124,8 +124,8 @@ router.get('/title/home_page', (req: any, res: any) => {
 /* ************************************************************************** */
 
 // serve all javascript files!
-router.get('/js-source/*', (req: any, res: any) => {
-	debug(log_now(), 'GET a file in js-source...');
+router.get('/js/*', (req: any, res: any) => {
+	debug(log_now(), 'GET a file in js/');
 	debug(log_now(), `    request: ${req.url}`);
 	const filepath = path.join(__dirname, '..', req.url);
 	debug(log_now(), `    file to send: ${filepath}`);

@@ -4,7 +4,7 @@ package-lock.json
 README.html
 
 node_modules/
-js-source/
+js/
 webpage/
 certificate/
 graph_test/

@@ -4,7 +4,7 @@ function apply_esbuild() {
     esbuild $1 --bundle --outfile=bdl__$1
 }
 
-cd js-source
+cd js
 
 apply_esbuild client_login.js
 

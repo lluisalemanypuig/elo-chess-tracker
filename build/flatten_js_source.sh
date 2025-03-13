@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd js-source
+cd js
 
 mv src-client/* .
 mv src-server/* .
