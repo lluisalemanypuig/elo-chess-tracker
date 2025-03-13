@@ -32,7 +32,7 @@ import { log_now } from './utils/time';
 import { is_user_logged_in } from './managers/session';
 import { user_rename_and_reassign_roles } from './managers/users';
 import { User } from './models/user';
-import { EDIT_USER } from './models/user_action';
+import { ASSIGN_ROLE_ID, EDIT_USER, get_role_action_name } from './models/user_action';
 import { SessionID } from './models/session_id';
 import { can_user_edit } from './models/user_relationships';
 import { UsersManager } from './managers/users_manager';
@@ -89,11 +89,25 @@ export async function post_user_edit(req: any, res: any) {
 		return;
 	}
 
-	debug(log_now(), `    First name: '${req.body.f}'`);
-	debug(log_now(), `    Last name: '${req.body.l}'`);
-	debug(log_now(), `    Roles: '${req.body.r}'`);
+	const first_name = req.body.f;
+	const last_name = req.body.l;
+	const roles = req.body.r;
 
-	user_rename_and_reassign_roles(edited.get_username(), req.body.f, req.body.l, req.body.r);
+	debug(log_now(), `    First name: '${first_name}'`);
+	debug(log_now(), `    Last name: '${last_name}'`);
+	debug(log_now(), `    Roles: '${roles}'`);
+
+	for (const role of roles) {
+		if (!editor.is(role)) {
+			const action = get_role_action_name(ASSIGN_ROLE_ID, role);
+			if (!editor.can_do(action)) {
+				res.status(403).send(`You do not have enough permissions to assign role '${role}'.`);
+				return;
+			}
+		}
+	}
+
+	user_rename_and_reassign_roles(edited.get_username(), first_name, last_name, roles);
 
 	res.status(200).send();
 }
