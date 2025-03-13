@@ -52,9 +52,17 @@ export class UsersManager {
 	/// The list of random user IDS for every user.
 	private random_ids: UserRandomID[] = [];
 
+	all(): User[] {
+		return this.users;
+	}
+
 	clear(): void {
 		this.users = [];
 		this.random_ids = [];
+	}
+
+	exists(username: string): boolean {
+		return this.get_user_by_username(username) != undefined;
 	}
 
 	add_user(u: User): void {
@@ -75,13 +83,13 @@ export class UsersManager {
 		const idx = search_linear_by_key(this.users, (u: User): boolean => {
 			return u.get_username() == username;
 		});
-		return this.get_user_at(idx);
+		return idx != -1 ? this.get_user_at(idx) : undefined;
 	}
 	get_user_by_random_id(rid: UserRandomID): User | undefined {
 		const idx = search_linear_by_key(this.random_ids, (id: UserRandomID): boolean => {
 			return id == rid;
 		});
-		return this.get_user_at(idx);
+		return idx != -1 ? this.get_user_at(idx) : undefined;
 	}
 
 	get_user_at(idx: number): User | undefined {

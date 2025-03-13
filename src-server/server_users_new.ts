@@ -30,11 +30,12 @@ import path from 'path';
 
 import { log_now } from './utils/time';
 import { is_user_logged_in } from './managers/session';
-import { user_add_new, user_exists } from './managers/users';
+import { user_add_new } from './managers/users';
 import { User } from './models/user';
 import { is_role_string_correct } from './models/user_role';
 import { CREATE_USER, ASSIGN_ROLE_USER, get_role_action_name, ASSIGN_ROLE_ID } from './models/user_action';
 import { SessionID } from './models/session_id';
+import { UsersManager } from './managers/users_manager';
 
 export async function get_page_user_create(req: any, res: any) {
 	debug(log_now(), 'GET /user/create...');
@@ -97,7 +98,7 @@ export async function post_user_create(req: any, res: any) {
 	debug(log_now(), `    Last name: '${lastname}'`);
 	debug(log_now(), `    Roles: '${roles}'`);
 
-	if (user_exists(username)) {
+	if (UsersManager.get_instance().exists(username)) {
 		res.status(500).send(`This user already exists`);
 		return;
 	}

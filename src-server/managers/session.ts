@@ -30,9 +30,9 @@ import { User } from '../models/user';
 const debug = Debug('ELO_TRACKER:server_session');
 
 import { SessionIDManager } from './session_id_manager';
-import { user_retrieve } from './users';
 import { SessionID } from '../models/session_id';
 import { shuffle } from '../utils/shuffle_random';
+import { UsersManager } from './users_manager';
 
 const character_samples =
 	"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+-*/ª!·$%&/()=?¿¡'º|@#~€¬^{},;.:_";
@@ -99,7 +99,7 @@ export function session_user_delete_all(username: string): void {
  * Checks that a user logged in or not using the cookies.
  */
 export function is_user_logged_in(session: SessionID): [boolean, string, User | undefined] {
-	const user = user_retrieve(session.username);
+	const user = UsersManager.get_instance().get_user_by_username(session.username);
 	if (user == undefined) {
 		debug(log_now(), `User '${session.username}' does not exist.`);
 		return [false, 'Forbidden access', undefined];

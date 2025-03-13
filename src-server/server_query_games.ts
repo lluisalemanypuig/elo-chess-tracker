@@ -31,7 +31,6 @@ import fs from 'fs';
 
 import { DateStringShort, log_now } from './utils/time';
 import { is_user_logged_in } from './managers/session';
-import { user_retrieve } from './managers/users';
 import { User } from './models/user';
 import { Game } from './models/game';
 import { RatingSystemManager } from './managers/rating_system_manager';
@@ -41,6 +40,7 @@ import { SessionID } from './models/session_id';
 import { can_user_edit_a_game, can_user_see_a_game } from './models/user_relationships';
 import { TimeControlID } from './models/time_control';
 import { game_set_from_json } from './io/game';
+import { UsersManager } from './managers/users_manager';
 
 function increment(g: Game): any {
 	const [white_after, black_after] = RatingSystemManager.get_instance().apply_rating_function(g);
@@ -71,6 +71,8 @@ function filter_game_list(
 	debug(log_now(), `Reading directory '${games_id_dir}'...`);
 	const game_record_file_list = fs.readdirSync(games_id_dir);
 	debug(log_now(), `    Directory contents: '${game_record_file_list}'`);
+
+	let manager = UsersManager.get_instance();
 
 	for (let i = game_record_file_list.length - 1; i >= 0; --i) {
 		const game_record_file = path.join(games_id_dir, game_record_file_list[i]);
@@ -104,8 +106,8 @@ function filter_game_list(
 				return '1/2 - 1/2';
 			})();
 
-			const white = user_retrieve(g.get_white()) as User;
-			const black = user_retrieve(g.get_black()) as User;
+			const white = manager.get_user_by_username(g.get_white()) as User;
+			const black = manager.get_user_by_username(g.get_black()) as User;
 			const is_editable: boolean = can_user_edit_a_game(user, white, black);
 
 			data_to_return.push({
@@ -194,6 +196,7 @@ export async function post_query_game_list_all(req: any, res: any) {
 		return;
 	}
 
+	let manager = UsersManager.get_instance();
 	const time_control_id = req.body.tc_i;
 
 	let data_to_return: any[] = [];
@@ -205,8 +208,8 @@ export async function post_query_game_list_all(req: any, res: any) {
 				return true;
 			},
 			(g: Game): boolean => {
-				const white = user_retrieve(g.get_white()) as User;
-				const black = user_retrieve(g.get_black()) as User;
+				const white = manager.get_user_by_username(g.get_white()) as User;
+				const black = manager.get_user_by_username(g.get_black()) as User;
 				return can_user_see_a_game(user, white, black);
 			}
 		);
@@ -220,8 +223,8 @@ export async function post_query_game_list_all(req: any, res: any) {
 					return true;
 				},
 				(g: Game): boolean => {
-					const white = user_retrieve(g.get_white()) as User;
-					const black = user_retrieve(g.get_black()) as User;
+					const white = manager.get_user_by_username(g.get_white()) as User;
+					const black = manager.get_user_by_username(g.get_black()) as User;
 					return can_user_see_a_game(user, white, black);
 				}
 			);

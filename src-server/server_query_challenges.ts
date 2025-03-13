@@ -28,11 +28,11 @@ const debug = Debug('ELO_TRACKER:server_query_challenges');
 
 import { log_now } from './utils/time';
 import { is_user_logged_in } from './managers/session';
-import { user_retrieve } from './managers/users';
 import { User } from './models/user';
 import { challenge_set_retrieve } from './managers/challenges';
 import { Challenge } from './models/challenge';
 import { SessionID } from './models/session_id';
+import { UsersManager } from './managers/users_manager';
 
 /// Query the server for challenges received sento to me by other users
 export async function get_query_challenge_received(req: any, res: any) {
@@ -57,10 +57,12 @@ export async function get_query_challenge_received(req: any, res: any) {
 		return true;
 	});
 
+	let manager = UsersManager.get_instance();
+
 	let all_challenges_received: any[] = [];
 	for (let i = 0; i < to_return.length; ++i) {
 		const c = to_return[i];
-		const sent_by = (user_retrieve(c.get_sent_by() as string) as User).get_full_name();
+		const sent_by = (manager.get_user_by_username(c.get_sent_by() as string) as User).get_full_name();
 
 		// return only basic information
 		all_challenges_received.push({
@@ -98,6 +100,8 @@ export async function get_query_challenge_sent(req: any, res: any) {
 		return true;
 	});
 
+	let manager = UsersManager.get_instance();
+
 	let all_challenges: any[] = [];
 	for (let i = 0; i < to_return.length; ++i) {
 		const c = to_return[i];
@@ -105,7 +109,7 @@ export async function get_query_challenge_sent(req: any, res: any) {
 		// return only basic information
 		all_challenges.push({
 			id: c.get_id(),
-			sent_to: (user_retrieve(c.get_sent_to() as string) as User).get_full_name(),
+			sent_to: (manager.get_user_by_username(c.get_sent_to() as string) as User).get_full_name(),
 			sent_when: c.get_when_challenge_sent()
 		});
 	}
@@ -144,11 +148,13 @@ export async function get_query_challenge_pending_result(req: any, res: any) {
 		return true;
 	});
 
+	let manager = UsersManager.get_instance();
+
 	let all_challenges: any[] = [];
 	for (let i = 0; i < to_return.length; ++i) {
 		const c = to_return[i];
-		const user_sent_to = user_retrieve(c.get_sent_to()) as User;
-		const user_sent_by = user_retrieve(c.get_sent_by()) as User;
+		const user_sent_to = manager.get_user_by_username(c.get_sent_to()) as User;
+		const user_sent_by = manager.get_user_by_username(c.get_sent_by()) as User;
 
 		const opponent: string = ((): string => {
 			if (user_sent_by.get_username() == session.username) {
@@ -207,11 +213,13 @@ export async function get_query_challenge_confirm_result_other(req: any, res: an
 		return true;
 	});
 
+	let manager = UsersManager.get_instance();
+
 	let all_challenges: any[] = [];
 	for (let i = 0; i < to_return.length; ++i) {
 		const c = to_return[i];
-		const user_sent_to = user_retrieve(c.get_sent_to()) as User;
-		const user_sent_by = user_retrieve(c.get_sent_by()) as User;
+		const user_sent_to = manager.get_user_by_username(c.get_sent_to()) as User;
+		const user_sent_by = manager.get_user_by_username(c.get_sent_by()) as User;
 
 		const opponent: string = ((): string => {
 			if (user_sent_by.get_username() == session.username) {
@@ -235,8 +243,8 @@ export async function get_query_challenge_confirm_result_other(req: any, res: an
 			id: c.get_id(),
 			opponent: opponent,
 			sent_when: c.get_when_challenge_sent(),
-			white: (user_retrieve(c.get_white() as string) as User).get_full_name(),
-			black: (user_retrieve(c.get_black() as string) as User).get_full_name(),
+			white: (manager.get_user_by_username(c.get_white() as string) as User).get_full_name(),
+			black: (manager.get_user_by_username(c.get_black() as string) as User).get_full_name(),
 			result: nice_result,
 			time_control: c.get_time_control_name()
 		});
@@ -280,11 +288,13 @@ export async function get_query_challenge_confirm_result_self(req: any, res: any
 		return true;
 	});
 
+	let manager = UsersManager.get_instance();
+
 	let all_challenges: any[] = [];
 	for (let i = 0; i < to_return.length; ++i) {
 		const c = to_return[i];
-		const user_sent_to = user_retrieve(c.get_sent_to()) as User;
-		const user_sent_by = user_retrieve(c.get_sent_by()) as User;
+		const user_sent_to = manager.get_user_by_username(c.get_sent_to()) as User;
+		const user_sent_by = manager.get_user_by_username(c.get_sent_by()) as User;
 
 		const opponent: string = ((): string => {
 			if (user_sent_by.get_username() == session.username) {
@@ -308,8 +318,8 @@ export async function get_query_challenge_confirm_result_self(req: any, res: any
 			id: c.get_id(),
 			opponent: opponent,
 			sent_when: c.get_when_challenge_sent(),
-			white: (user_retrieve(c.get_white() as string) as User).get_full_name(),
-			black: (user_retrieve(c.get_black() as string) as User).get_full_name(),
+			white: (manager.get_user_by_username(c.get_white() as string) as User).get_full_name(),
+			black: (manager.get_user_by_username(c.get_black() as string) as User).get_full_name(),
 			result: nice_result,
 			time_control: c.get_time_control_name()
 		});

@@ -38,7 +38,6 @@ import {
 	challenge_unset_result,
 	challenge_agree_result
 } from './managers/challenges';
-import { user_exists } from './managers/users';
 import { Challenge, ChallengeID } from './models/challenge';
 import { User } from './models/user';
 import { CHALLENGE_USER } from './models/user_action';
@@ -207,11 +206,13 @@ export async function post_challenge_set_result(req: any, res: any) {
 		res.status(500).send('White and Black cannot be the same players.');
 		return;
 	}
-	if (!user_exists(white_username)) {
+
+	const manager = UsersManager.get_instance();
+	if (!manager.exists(white_username)) {
 		res.status(404).send(`White user does not exist.`);
 		return;
 	}
-	if (!user_exists(black_username)) {
+	if (!manager.exists(black_username)) {
 		res.status(404).send(`Black user does not exist.`);
 		return;
 	}

@@ -37,7 +37,7 @@ import { GamesManager } from './games_manager';
 import { UsersManager } from './users_manager';
 import { RatingSystemManager } from './rating_system_manager';
 import { EnvironmentManager } from './environment_manager';
-import { user_retrieve, user_update_from_players_data } from './users';
+import { user_update_from_players_data } from './users';
 import { Rating } from '../rating_framework/rating';
 import { TimeControlID } from '../models/time_control';
 import { graph_update } from './graphs';
@@ -113,7 +113,7 @@ function game_new(
 			}
 		} else {
 			// there is no next game for white
-			const white_user = user_retrieve(white);
+			const white_user = UsersManager.get_instance().get_user_by_username(white);
 			if (white_user == undefined) {
 				throw new Error(`White user '${white}' is not in the users database`);
 			}
@@ -133,7 +133,7 @@ function game_new(
 				black_to_assign = next.get_black_rating().clone();
 			}
 		} else {
-			const black_user = user_retrieve(black);
+			const black_user = UsersManager.get_instance().get_user_by_username(black);
 			if (black_user == undefined) {
 				throw new Error(`Black user '${black}' is not in the users database`);
 			}
@@ -155,7 +155,7 @@ function game_new(
 }
 
 function updated_player(time_control_id: TimeControlID, player: string, rating: Rating): Player {
-	let p = (user_retrieve(player) as User).clone_as_player();
+	let p = (UsersManager.get_instance().get_user_by_username(player) as User).clone_as_player();
 	p.set_rating(time_control_id, rating);
 	return p;
 }

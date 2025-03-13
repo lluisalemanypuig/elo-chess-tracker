@@ -39,23 +39,6 @@ import { RatingSystemManager } from './rating_system_manager';
 import { TimeControlRating } from '../models/time_control_rating';
 import { log_now } from '../utils/time';
 
-/**
- * @brief Returns a User object from a username.
- * @param username Username of the player.
- * @param server_conf Directories of the database.
- * @returns Undefined or a User if the user exists.
- */
-export function user_retrieve(username: string): User | undefined {
-	let mem = UsersManager.get_instance();
-	for (let i = 0; i < mem.num_users(); ++i) {
-		const user = mem.get_user_at(i) as User;
-		if (user.get_username() == username) {
-			return user;
-		}
-	}
-	return undefined;
-}
-
 /// Dump the data in user @e u into its corresponding file.
 export function user_overwrite(user: User): void {
 	const user_dir = EnvironmentManager.get_instance().get_dir_users();
@@ -70,27 +53,12 @@ export function user_rename_and_reassign_roles(
 	last_name: string,
 	roles: UserRole[]
 ): User {
-	let user = user_retrieve(username) as User;
+	let user = UsersManager.get_instance().get_user_by_username(username) as User;
 	user.set_first_name(first_name);
 	user.set_last_name(last_name);
 	user.set_roles(roles);
 	user_overwrite(user);
 	return user;
-}
-
-/// Does a user exist?
-export function user_exists(username: string): boolean {
-	return user_retrieve(username) != undefined;
-}
-
-/// Returns a copy of all users
-export function user_get_all(): User[] {
-	let all_users: User[] = [];
-	let mem = UsersManager.get_instance();
-	for (let i = 0; i < mem.num_users(); ++i) {
-		all_users.push((mem.get_user_at(i) as User).clone());
-	}
-	return all_users;
 }
 
 /**
@@ -163,12 +131,13 @@ export function user_get_all__name_randid(): [string, number][] {
  */
 export function user_update_from_players_data(players: Player[]): void {
 	const server_dirs = EnvironmentManager.get_instance();
+	let manager = UsersManager.get_instance();
 
 	let users_to_update: User[] = [];
 
 	debug(log_now(), 'Updating users in the server...');
 	for (let i = 0; i < players.length; ++i) {
-		let u = user_retrieve(players[i].get_username()) as User;
+		let u = manager.get_user_by_username(players[i].get_username()) as User;
 
 		const all_ratings_u = players[i].get_all_ratings();
 		for (let j = 0; j < all_ratings_u.length; ++j) {

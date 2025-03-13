@@ -34,7 +34,6 @@ import { CREATE_GAMES, EDIT_GAMES_USER } from './models/user_action';
 import { User } from './models/user';
 import { game_add_new, game_edit_result, game_find_by_id, recalculate_all_ratings } from './managers/games';
 import { GameID, GameResult } from './models/game';
-import { user_retrieve } from './managers/users';
 import { ADMIN } from './models/user_role';
 import { SessionID } from './models/session_id';
 import { TimeControlID } from './models/time_control';
@@ -197,11 +196,12 @@ export async function post_game_edit_result(req: any, res: any) {
 		res.status(404).send(`Game was not found.`);
 		return;
 	}
+	let manager = UsersManager.get_instance();
 
 	const is_editable = can_user_edit_a_game(
 		user,
-		user_retrieve(game.get_white()) as User,
-		user_retrieve(game.get_black()) as User
+		manager.get_user_by_username(game.get_white()) as User,
+		manager.get_user_by_username(game.get_black()) as User
 	);
 	if (!is_editable) {
 		res.status(403).send(`You lack permissions to edit this game.`);
