@@ -46,7 +46,7 @@ async function send_challenge_button_clicked(_event: any) {
 			return;
 		}
 
-		window.location.href = '/challenges_page';
+		window.location.href = '/challenge';
 	}
 }
 
@@ -64,7 +64,7 @@ async function accept_challenge_tag_clicked(event: any) {
 		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
 		return;
 	}
-	window.location.href = '/challenges_page';
+	window.location.href = '/challenge';
 }
 
 async function decline_challenge_tag_clicked(event: any) {
@@ -81,7 +81,7 @@ async function decline_challenge_tag_clicked(event: any) {
 		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
 		return;
 	}
-	window.location.href = '/challenges_page';
+	window.location.href = '/challenge';
 }
 
 async function fill_challenges_received() {
@@ -160,7 +160,7 @@ async function fill_challenges_pending_result() {
 		return;
 	}
 
-	const response_tc = await fetch('/query/time_controls', {
+	const response_tc = await fetch('/query/html/time_controls', {
 		method: 'GET',
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
@@ -171,7 +171,7 @@ async function fill_challenges_pending_result() {
 	}
 
 	const challenge_data = await response_pending.json();
-	const time_control_data = await response_tc.json();
+	const time_control_data = await response_tc.text();
 
 	let all_challenges_list = document.getElementById('challenges_pending_result__list') as HTMLDivElement;
 	challenge_data.forEach(function (elem: any, index: number) {
@@ -266,14 +266,7 @@ async function fill_challenges_pending_result() {
 
 			let select = document.createElement('select');
 			select.id = 'select_time_control_' + elem.id;
-
-			for (let i = 0; i < time_control_data.length; ++i) {
-				let option_i = document.createElement('option') as HTMLOptionElement;
-				option_i.text = time_control_data[i].name;
-				option_i.value = time_control_data[i].id;
-				select.appendChild(option_i);
-			}
-
+			select.innerHTML = time_control_data;
 			div.appendChild(select);
 			challenge_div.appendChild(div);
 		}
@@ -331,7 +324,7 @@ async function submit_result_challenge_button_clicked(event: any) {
 		return;
 	}
 
-	window.location.href = '/challenges_page';
+	window.location.href = '/challenge';
 }
 
 async function fill_challenges_confirm_result_other() {
@@ -407,7 +400,7 @@ async function agree_challenge_result_tag_clicked(event: any) {
 	let tag_clicked = event.target;
 	let challenge_id = tag_clicked.id;
 
-	const response = await fetch('/challenge/agree_result', {
+	const response = await fetch('/challenge/agree', {
 		method: 'POST',
 		body: JSON.stringify({ challenge_id: challenge_id }),
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
@@ -418,14 +411,14 @@ async function agree_challenge_result_tag_clicked(event: any) {
 		return;
 	}
 
-	window.location.href = '/challenges_page';
+	window.location.href = '/challenge';
 }
 
 async function disagree_challenge_result_tag_clicked(event: any) {
 	let tag_clicked = event.target;
 	let challenge_id = tag_clicked.id;
 
-	const response = await fetch('/challenge/disagree_result', {
+	const response = await fetch('/challenge/disagree', {
 		method: 'POST',
 		body: JSON.stringify({ challenge_id: challenge_id }),
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
@@ -436,7 +429,7 @@ async function disagree_challenge_result_tag_clicked(event: any) {
 		return;
 	}
 
-	window.location.href = '/challenges_page';
+	window.location.href = '/challenge';
 }
 
 window.onload = function () {
