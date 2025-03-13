@@ -219,8 +219,8 @@ router.get('/graph/own', get_page_graph_own);
 router.get('/graph/full', get_page_graph_full);
 
 // challenges management
-import { get_page_challenge } from './server_challenges';
-router.get('/challenge', get_page_challenge);
+import { get_challenge_page } from './server_challenges';
+router.get('/challenge', get_challenge_page);
 import { post_challenge_send } from './server_challenges';
 router.post('/challenge/send', post_challenge_send);
 import { post_challenge_accept, post_challenge_decline } from './server_challenges';
