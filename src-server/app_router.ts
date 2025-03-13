@@ -171,8 +171,7 @@ router.post('/query/graph/own', post_query_graph_own);
 router.post('/query/graph/full', post_query_graph_full);
 
 // query time controls
-import { get_query_time_controls, get_query_html_time_controls } from './server_query_time_control';
-router.get('/query/time_controls', get_query_time_controls);
+import { get_query_html_time_controls } from './server_query_time_control';
 router.get('/query/html/time_controls', get_query_html_time_controls);
 
 // user login and logout

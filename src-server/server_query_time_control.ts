@@ -31,28 +31,6 @@ import { is_user_logged_in } from './managers/session';
 import { RatingSystemManager } from './managers/rating_system_manager';
 import { SessionID } from './models/session_id';
 
-export async function get_query_time_controls(req: any, res: any) {
-	debug(log_now(), 'GET /query/time_controls...');
-
-	const session = SessionID.from_cookie(req.cookies);
-	const r = is_user_logged_in(session);
-
-	if (!r[0]) {
-		res.status(401).send(r[1]);
-		return;
-	}
-
-	const tcs = RatingSystemManager.get_instance().get_time_controls();
-	let all_time_controls: any[] = [];
-	for (let i = 0; i < tcs.length; ++i) {
-		all_time_controls.push({
-			id: tcs[i].id,
-			name: tcs[i].name
-		});
-	}
-	res.status(200).send(all_time_controls);
-}
-
 export async function get_query_html_time_controls(req: any, res: any) {
 	debug(log_now(), 'GET /query/html/time_controls...');
 
