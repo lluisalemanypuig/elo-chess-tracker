@@ -24,6 +24,7 @@ import 'htmx.org';
 function create_label_text(text: string): HTMLLabelElement {
 	let label = document.createElement('label') as HTMLLabelElement;
 	label.textContent = text;
+	label.className = 'label';
 	return label;
 }
 
@@ -275,16 +276,17 @@ async function fill_challenges_pending_result() {
 
 		// submit button
 		{
-			let submit_result_button_clicked = document.createElement('button');
-			submit_result_button_clicked.textContent = 'Submit result';
-			submit_result_button_clicked.id = elem.id;
-			submit_result_button_clicked.onclick = submit_result_challenge_button_clicked;
-			submit_result_button_clicked.style.marginTop = '5px';
+			let submit_result_button = document.createElement('button');
+			submit_result_button.textContent = 'Submit result';
+			submit_result_button.id = elem.id;
+			submit_result_button.onclick = submit_result_challenge_button_clicked;
+			submit_result_button.style.marginTop = '5px';
+			submit_result_button.className = 'submitbutton';
 			if (index < challenge_data.length - 1) {
-				submit_result_button_clicked.style.marginBottom = '20px';
+				submit_result_button.style.marginBottom = '20px';
 			}
 
-			all_challenges_list.appendChild(submit_result_button_clicked);
+			all_challenges_list.appendChild(submit_result_button);
 		}
 	});
 	(document.getElementById('challenges_pending_result') as HTMLDivElement).appendChild(all_challenges_list);
