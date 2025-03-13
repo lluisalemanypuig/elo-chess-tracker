@@ -1,0 +1,88 @@
+/*
+Elo rating for a Chess Club
+Copyright (C) 2023 - 2025  Lluís Alemany Puig
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program. If not, see <https://www.gnu.org/licenses/>.
+
+Full source code of elo-chess-tracker:
+	https://github.com/lluisalemanypuig/elo-chess-tracker
+*/
+
+/* Based on the style of button-39 copied from: https: //getcssscan.com/css-buttons-examples */
+
+.loginbutton {
+    background-color: #FFFFFF;
+    border: 1px solid rgb(176, 180, 185);
+    border-radius: .5rem;
+    box-sizing: border-box;
+    color: #111827;
+    font-size: 1rem;
+    font-weight: 450;
+    line-height: 1.25rem;
+    padding: .75rem 1rem;
+    text-align: center;
+    text-decoration: none #D1D5DB solid;
+    text-decoration-thickness: auto;
+    box-shadow: 0 4px 6px 0 rgba(55, 54, 54, 0.75);
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+}
+
+.loginbutton:hover {
+    background-color: rgb(234, 237, 239);
+}
+
+.loginbutton:focus {
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+}
+
+.loginbutton:focus-visible {
+    box-shadow: none;
+}
+
+.submitbutton {
+    background-color: #FFFFFF;
+    border: 1px solid rgb(209, 213, 219);
+    border-radius: .5rem;
+    box-sizing: border-box;
+    color: #111827;
+    font-size: .875rem;
+    font-weight: 350;
+    line-height: 1.25rem;
+    padding: .75rem 1rem;
+    text-align: center;
+    text-decoration: none #D1D5DB solid;
+    text-decoration-thickness: auto;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+}
+
+.submitbutton:hover {
+    background-color: rgb(249, 250, 251);
+}
+
+.submitbutton:focus {
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+}
+
+.submitbutton:focus-visible {
+    box-shadow: none;
+}

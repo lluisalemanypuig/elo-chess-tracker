@@ -52,6 +52,7 @@ html, body {
 
 .main-content > * {
 	margin-bottom: 15px;
+	font-family: "Inter var", ui-sans-serif, system-ui, -apple-system, system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 
 @media (max-width: 768px) {
@@ -70,16 +71,6 @@ html, body {
 	}
 }
 
-/* Button styles */
-
-.login-button {
-	display: inline-flex;
-	justify-content: center;
-	align-items: center;
-	width: 100px;
-	height: 30px;
-}
-
 /* Label and input text box */
 
 .label-and-input {
@@ -91,7 +82,7 @@ html, body {
 }
 
 .label-and-input label {
-	width: 150px;
+	width: 175px;
 	text-align: center;
 }
 
@@ -113,7 +104,7 @@ html, body {
 }
 
 .label-and-select label {
-	width: 150px;
+	width: 175px;
 	text-align: center;
 }
 
