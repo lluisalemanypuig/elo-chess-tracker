@@ -28,6 +28,9 @@ Full source code of elo-chess-tracker:
 		<script type="text/javascript" src="/js/bdl__client_games_create.js"></script>
 
 		<link rel="stylesheet" href="/css/main.css" />
+		<link rel="stylesheet" href="/css/titles.css" />
+		<link rel="stylesheet" href="/css/labels.css" />
+		<link rel="stylesheet" href="/css/buttons.css" />
 		<link rel="stylesheet" href="/css/footer_copyright_notice.css" />
 	</head>
 
@@ -35,22 +38,22 @@ Full source code of elo-chess-tracker:
 		<meta name="viewport" content="width=device-width,initial-scale=1" />
 		<div class="page-wrapper">
 			<div class="main-content">
-				<h2>Create a new game</h2>
+				<h2 class="title title2">Create a new game</h2>
 
 				<div class="label-and-input">
-					<label>White:</label>
+					<label class="label">White:</label>
 					<input list="datalist_white_users" id="list_white_users" />
 					<datalist id="datalist_white_users"></datalist>
 				</div>
 
 				<div class="label-and-input">
-					<label>Black:</label>
+					<label class="label">Black:</label>
 					<input list="datalist_black_users" id="list_black_users" />
 					<datalist id="datalist_black_users"></datalist>
 				</div>
 
 				<div class="label-and-select">
-					<label>Result:</label>
+					<label class="label">Result:</label>
 					<select id="select_result_game">
 						<option value="white_wins">1 - 0</option>
 						<option value="draw">1/2 - 1/2</option>
@@ -59,7 +62,7 @@ Full source code of elo-chess-tracker:
 				</div>
 
 				<div class="label-and-select">
-					<label>Time control:</label>
+					<label class="label">Time control:</label>
 					<select
 						id="select_time_control"
 						hx-get="/query/html/time_controls"
@@ -71,17 +74,17 @@ Full source code of elo-chess-tracker:
 				</div>
 
 				<div class="label-and-input">
-					<label for="input_game_date">Date:</label>
+					<label class="label" for="input_game_date">Date:</label>
 					<input type="date" id="input_game_date" />
 				</div>
 
 				<div class="label-and-input">
-					<label for="input_game_time">Time:</label>
+					<label class="label" for="input_game_time">Time:</label>
 					<input type="time" id="input_game_time" />
 				</div>
 
 				<!-- submit data -->
-				<button type="button" id="submit_new_game_button">Submit</button>
+				<button class="submitbutton" type="button" id="submit_new_game_button">Submit</button>
 			</div>
 
 			<footer class="footer_copyright_notice">

@@ -29,7 +29,9 @@ Full source code of elo-chess-tracker:
 
 		<link rel="stylesheet" href="/css/main.css" />
 		<link rel="stylesheet" href="/css/home.css" />
-		<link rel="stylesheet" href="/css/elo_table.css" />
+		<link rel="stylesheet" href="/css/rating_table.css" />
+		<link rel="stylesheet" href="/css/labels.css" />
+		<link rel="stylesheet" href="/css/titles.css" />
 		<link rel="stylesheet" href="/css/footer_copyright_notice.css" />
 	</head>
 
@@ -37,7 +39,13 @@ Full source code of elo-chess-tracker:
 		<meta name="viewport" content="width=device-width,initial-scale=1" />
 		<div class="page-wrapper">
 			<div class="main-content">
-				<h1 align="center" hx-get="/title/home_page" hx-trigger="load" hx-swap="textContent"></h1>
+				<h1
+					class="title title1"
+					align="center"
+					hx-get="/title/home_page"
+					hx-trigger="load"
+					hx-swap="textContent"
+				></h1>
 
 				<div>
 					<img src="/icon/home_page" />

@@ -28,6 +28,9 @@ Full source code of elo-chess-tracker:
 		<script type="text/javascript" src="/js/bdl__client_users_edit.js"></script>
 
 		<link rel="stylesheet" href="/css/main.css" />
+		<link rel="stylesheet" href="/css/titles.css" />
+		<link rel="stylesheet" href="/css/labels.css" />
+		<link rel="stylesheet" href="/css/buttons.css" />
 		<link rel="stylesheet" href="/css/footer_copyright_notice.css" />
 	</head>
 
@@ -35,11 +38,11 @@ Full source code of elo-chess-tracker:
 		<meta name="viewport" content="width=device-width,initial-scale=1" />
 		<div class="page-wrapper">
 			<div class="main-content">
-				<h2>Edit an existing user</h2>
+				<h2 class="title title2">Edit an existing user</h2>
 
 				<!-- User selection  -->
 				<div class="label-and-input">
-					<label for="datalist_username">Select user:</label>
+					<label class="label" for="datalist_username">Select user:</label>
 					<input list="datalist_username" id="username_list" />
 					<datalist
 						id="datalist_username"
@@ -52,22 +55,22 @@ Full source code of elo-chess-tracker:
 
 				<!-- First Name -->
 				<div class="label-and-input">
-					<label for="box_first_name">First name:</label>
+					<label class="label" for="box_first_name">First name:</label>
 					<input type="text" id="box_first_name" />
 				</div>
 
 				<!-- Last Name -->
 				<div class="label-and-input">
-					<label for="box_last_name">Last name:</label>
+					<label class="label" for="box_last_name">Last name:</label>
 					<input type="text" id="box_last_name" />
 				</div>
 
 				<!-- Role -->
-				<label>Role:</label>
+				<label class="title title3">Role:</label>
 				<div id="div_role_checkboxes"></div>
 
 				<!-- submit data -->
-				<button type="button" id="button_submit">Submit</button><br /><br />
+				<button class="submitbutton" type="button" id="button_submit">Submit</button><br /><br />
 			</div>
 
 			<footer class="footer_copyright_notice">

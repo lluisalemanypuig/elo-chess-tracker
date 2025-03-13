@@ -29,6 +29,8 @@ Full source code of elo-chess-tracker:
 
 		<link rel="stylesheet" href="/css/main.css" />
 		<link rel="stylesheet" href="/css/challenges.css" />
+		<link rel="stylesheet" href="/css/titles.css" />
+		<link rel="stylesheet" href="/css/buttons.css" />
 		<link rel="stylesheet" href="/css/footer_copyright_notice.css" />
 	</head>
 
@@ -36,7 +38,7 @@ Full source code of elo-chess-tracker:
 		<meta name="viewport" content="width=device-width,initial-scale=1" />
 		<div class="page-wrapper">
 			<div class="main-content">
-				<h2>Challenge a user</h2>
+				<h2 class="title title2">Challenge a user</h2>
 
 				<div class="label-and-input">
 					<label>Select a user:</label>
@@ -50,27 +52,27 @@ Full source code of elo-chess-tracker:
 				</div>
 
 				<!-- submit challenge -->
-				<button type="button" id="send_challenge_button">Send challenge</button>
+				<button class="submitbutton" type="button" id="send_challenge_button">Send challenge</button>
 
 				<div class="challenge-list" id="challenges_received">
-					<h2>Challenges received</h2>
+					<h2 class="title title2">Challenges received</h2>
 				</div>
 
 				<div class="challenge-list" id="challenges_sent">
-					<h2>Challenges sent to others</h2>
+					<h2 class="title title2">Challenges sent to others</h2>
 				</div>
 
 				<div class="challenge-list" id="challenges_pending_result">
-					<h2>Set the result of a game</h2>
+					<h2 class="title title2">Set the result of a game</h2>
 					<div id="challenges_pending_result__list"></div>
 				</div>
 
 				<div class="challenge-list" id="challenges_confirm_result_other">
-					<h2>Results to be confirmed</h2>
+					<h2 class="title title2">Results to be confirmed</h2>
 				</div>
 
 				<div class="challenge-list" id="challenges_confirm_result_self">
-					<h2>Results I have to confirm</h2>
+					<h2 class="title title2">Results I have to confirm</h2>
 				</div>
 			</div>
 
