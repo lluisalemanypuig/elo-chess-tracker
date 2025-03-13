@@ -29,11 +29,8 @@ import fs from 'fs';
 import { server_init_from_data } from '../../src-server/managers/initialization';
 import {
 	user_add_new,
-	user_exists,
-	user_get_all,
 	user_get_all__name_randid,
 	user_rename_and_reassign_roles,
-	user_retrieve,
 	user_update_from_players_data
 } from '../../src-server/managers/users';
 import { User } from '../../src-server/models/user';
@@ -44,6 +41,7 @@ import { Player } from '../../src-server/models/player';
 import { TimeControlRating } from '../../src-server/models/time_control_rating';
 import { EloRating } from '../../src-server/rating_framework/Elo/rating';
 import { user_from_json } from '../../src-server/io/user';
+import { UsersManager } from '../../src-server/managers/users_manager';
 
 const webpage_dir = 'tests/webpage';
 const db_dir = path.join(webpage_dir, 'database');
@@ -178,6 +176,18 @@ const classical = {
 		student: []
 	}
 };
+
+function user_exists(username: string): boolean {
+	return UsersManager.get_instance().exists(username);
+}
+
+function user_retrieve(username: string): User | undefined {
+	return UsersManager.get_instance().get_user_by_username(username);
+}
+
+function user_get_all(): User[] {
+	return UsersManager.get_instance().all();
+}
 
 describe('Create users', () => {
 	test('In an empty server', async () => {
