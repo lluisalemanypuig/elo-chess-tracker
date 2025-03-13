@@ -90,7 +90,7 @@ function fill_action_links(user_actions: string[], user_roles: string[]) {
 		recalculate_ratings_link.id = 'recalculate_ratings_link';
 		recalculate_ratings_link.textContent = 'Recalculate ratings';
 		recalculate_ratings_link.onclick = async function () {
-			const response = await fetch('/recalculate_ratings', {
+			const response = await fetch('/recalculate/ratings', {
 				method: 'POST',
 				headers: { 'Content-type': 'application/json; charset=UTF-8' }
 			});
@@ -106,7 +106,7 @@ function fill_action_links(user_actions: string[], user_roles: string[]) {
 		recalculate_graphs_link.id = 'recalculate_graphs';
 		recalculate_graphs_link.textContent = 'Recalculate graphs';
 		recalculate_graphs_link.onclick = async function () {
-			const response = await fetch('/recalculate_graphs', {
+			const response = await fetch('/recalculate/graphs', {
 				method: 'POST',
 				headers: { 'Content-type': 'application/json; charset=UTF-8' }
 			});
