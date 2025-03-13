@@ -233,10 +233,10 @@ router.post('/challenge/disagree', post_challenge_disagree);
 
 // recalculation of all Elo ratings
 import { post_recalculate_ratings } from './server_games';
-router.post('/recalculate_ratings', post_recalculate_ratings);
+router.post('/recalculate/ratings', post_recalculate_ratings);
 
 // recalculation of all graphs
 import { post_recalculate_graphs } from './server_graphs';
-router.post('/recalculate_graphs', post_recalculate_graphs);
+router.post('/recalculate/graphs', post_recalculate_graphs);
 
 export { router };

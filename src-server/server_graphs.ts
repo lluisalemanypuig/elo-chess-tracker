@@ -71,7 +71,7 @@ export async function get_page_graph_full(req: any, res: any) {
 }
 
 export async function post_recalculate_graphs(req: any, res: any) {
-	debug(log_now(), 'POST /recalculate_graphs...');
+	debug(log_now(), 'POST /recalculate/graphs...');
 
 	const session = SessionID.from_cookie(req.cookies);
 	const r = is_user_logged_in(session);

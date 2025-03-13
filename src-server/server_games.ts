@@ -217,7 +217,7 @@ export async function post_game_edit_result(req: any, res: any) {
 }
 
 export async function post_recalculate_ratings(req: any, res: any) {
-	debug(log_now(), 'POST /recalculate_ratings...');
+	debug(log_now(), 'POST /recalculate/ratings...');
 
 	const session = SessionID.from_cookie(req.cookies);
 	const r = is_user_logged_in(session);
