@@ -282,7 +282,7 @@ async function fill_challenges_pending_result() {
 		{
 			let submit_result_button = document.createElement('button');
 			submit_result_button.textContent = 'Submit result';
-			submit_result_button.className = 'button_submit';
+			submit_result_button.className = 'button_submit_challenge';
 			submit_result_button.id = elem.id;
 			submit_result_button.onclick = submit_result_challenge_button_clicked;
 			submit_result_button.style.marginTop = '5px';

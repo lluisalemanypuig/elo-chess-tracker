@@ -77,18 +77,18 @@ html, body {
 	display: flex;
 	align-items: center;
 	justify-content: flex-start;
-	gap: 10px;
+	gap: 5px;
 	margin-bottom: 10px;
 }
 
 .label_and_input label {
-	width: 175px;
+	width: 150px;
 	text-align: center;
 }
 
 .label_and_input input {
-	max-height: 25px;
-	width: 200px;
+	max-height: 30px;
+	width: 175px;
 	padding: 5px;
 	box-sizing: border-box;
 }
@@ -99,18 +99,18 @@ html, body {
 	display: flex;
 	align-items: center;
 	justify-content: flex-start;
-	gap: 10px;
+	gap: 5px;
 	margin-bottom: 15px;
 }
 
 .label-and-select label {
-	width: 175px;
+	width: 150px;
 	text-align: center;
 }
 
 .label-and-select select {
-	max-height: 25px;
-	width: 200px;
+	max-height: 30px;
+	width: 175px;
 	padding: 5px;
 	box-sizing: border-box;
 }

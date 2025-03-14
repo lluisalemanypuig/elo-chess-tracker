@@ -102,7 +102,7 @@ function new_select_cell_result(original_result: string, game_id: string) {
 		add_result_option('0 - 1');
 	}
 
-	select_result.className = 'select_edit_challenge';
+	select_result.className = 'select_edit_game';
 	select_result.id = 'select_result_' + game_id;
 	select_result.value = result_from_text_to_value(original_result);
 	select_result.onchange = select_result_game_on_change;

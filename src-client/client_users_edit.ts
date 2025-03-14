@@ -125,5 +125,4 @@ window.onload = function () {
 	all_user_roles.forEach(function (role: string) {
 		add_checkbox(role_div, user_role_to_string[role as UserRole], role);
 	});
-	role_div.appendChild(document.createElement('br'));
 };

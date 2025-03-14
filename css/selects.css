@@ -36,7 +36,7 @@ Full source code of elo-chess-tracker:
 }
 
 .select_basic:hover {
-    background-color: rgb(234, 237, 239);
+    background-color: rgb(220, 217, 217);
 }
 
 .select_basic:focus {
@@ -48,7 +48,7 @@ Full source code of elo-chess-tracker:
     box-shadow: none;
 }
 
-.select_edit_challenge {
+.select_edit_game {
     background-color: #FFFFFF;
     border: 1px solid rgb(176, 180, 185);
     border-radius: .5rem;
@@ -64,15 +64,15 @@ Full source code of elo-chess-tracker:
     -webkit-user-select: none;
 }
 
-.select_edit_challenge:hover {
-    background-color: rgb(234, 237, 239);
+.select_edit_game:hover {
+    background-color: rgb(220, 217, 217);
 }
 
-.select_edit_challenge:focus {
+.select_edit_game:focus {
     outline: 2px solid transparent;
     outline-offset: 2px;
 }
 
-.select_edit_challenge:focus-visible {
+.select_edit_game:focus-visible {
     box-shadow: none;
 }
