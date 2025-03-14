@@ -109,7 +109,7 @@ Full source code of elo-chess-tracker:
     box-shadow: none;
 }
 
-.inputdate {
+.input_date {
     background-color: #FFFFFF;
     border: 1px solid rgb(176, 180, 185);
     border-radius: .5rem;
@@ -126,15 +126,15 @@ Full source code of elo-chess-tracker:
     -webkit-user-select: none;
 }
 
-.inputdate:hover {
+.input_date:hover {
     background-color: rgb(234, 237, 239);
 }
 
-.inputdate:focus {
+.input_date:focus {
     outline: 2px solid transparent;
     outline-offset: 2px;
 }
 
-.inputdate:focus-visible {
+.input_date:focus-visible {
     box-shadow: none;
 }
