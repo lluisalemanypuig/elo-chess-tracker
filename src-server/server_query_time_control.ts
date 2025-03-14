@@ -49,3 +49,22 @@ export async function get_query_html_time_controls(req: any, res: any) {
 	}
 	res.status(200).send(html);
 }
+
+export async function get_query_html_time_controls_unique(req: any, res: any) {
+	debug(log_now(), 'GET /query/html/time_controls_unique...');
+
+	const session = SessionID.from_cookie(req.cookies);
+	const r = is_user_logged_in(session);
+
+	if (!r[0]) {
+		res.satus(401).send(r[1]);
+		return;
+	}
+
+	let html: string = '';
+	const tcs = RatingSystemManager.get_instance().get_unique_time_controls_ids();
+	for (let i = 0; i < tcs.length; ++i) {
+		html += `<option value="${tcs[i]}">${tcs[i]}</option>`;
+	}
+	res.status(200).send(html);
+}
