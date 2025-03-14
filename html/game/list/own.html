@@ -28,9 +28,11 @@ Full source code of elo-chess-tracker:
 		<script type="text/javascript" src="/js/bdl__client_games_list.js"></script>
 
 		<link rel="stylesheet" href="/css/main.css" />
-		<link rel="stylesheet" href="/css/rating_table.css" />
+		<link rel="stylesheet" href="/css/tables.css" />
 		<link rel="stylesheet" href="/css/titles.css" />
-		<link rel="stylesheet" href="/css/footer_copyright_notice.css" />
+		<link rel="stylesheet" href="/css/selects.css" />
+		<link rel="stylesheet" href="/css/buttons.css" />
+		<link rel="stylesheet" href="/css/footers.css" />
 	</head>
 
 	<body>
@@ -42,17 +44,18 @@ Full source code of elo-chess-tracker:
 				<div class="label-and-select">
 					<label>Time control:</label>
 					<select
+						class="select_basic"
 						id="select_time_control"
 						hx-get="/query/html/time_controls"
 						hx-trigger="load"
 						hx-swap="beforeend"
 					>
-						<option value=""></option>
+						<option value="">All</option>
 					</select>
 				</div>
 
 				<div>
-					<table id="table_games" value="own">
+					<table class="table_games" id="table_games" value="own">
 						<thead>
 							<th>Game ID</th>
 							<th>White</th>

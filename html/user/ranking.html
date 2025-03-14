@@ -30,8 +30,9 @@ Full source code of elo-chess-tracker:
 		<link rel="stylesheet" href="/css/main.css" />
 		<link rel="stylesheet" href="/css/titles.css" />
 		<link rel="stylesheet" href="/css/labels.css" />
-		<link rel="stylesheet" href="/css/rating_table.css" />
-		<link rel="stylesheet" href="/css/footer_copyright_notice.css" />
+		<link rel="stylesheet" href="/css/tables.css" />
+		<link rel="stylesheet" href="/css/selects.css" />
+		<link rel="stylesheet" href="/css/footers.css" />
 	</head>
 
 	<body>
@@ -41,8 +42,9 @@ Full source code of elo-chess-tracker:
 				<h2 class="title title2">Ranking</h2>
 
 				<div class="label-and-select">
-					<label class="label">Time control:</label>
+					<label class="label_basic">Time control:</label>
 					<select
+						class="select_basic"
 						id="select_time_control"
 						hx-get="/query/html/time_controls"
 						hx-trigger="load"
@@ -53,7 +55,7 @@ Full source code of elo-chess-tracker:
 				</div>
 
 				<div>
-					<table id="users_table">
+					<table class="table_users" id="users_table">
 						<thead>
 							<tr>
 								<th>Player</th>

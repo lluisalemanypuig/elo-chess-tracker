@@ -53,9 +53,10 @@ async function edit_button_was_clicked(event: any) {
 function new_button_cell(text: string, game_id: string) {
 	let button = document.createElement('button') as HTMLButtonElement;
 	button.textContent = text;
-	button.id = 'button_edit-' + game_id;
+	button.className = 'button_edit_game';
+	button.id = 'button_edit_' + game_id;
 	button.setAttribute('game_id', game_id);
-	button.setAttribute('select_id', 'select_result-' + game_id);
+	button.setAttribute('select_id', 'select_result_' + game_id);
 	button.onclick = edit_button_was_clicked;
 	button.disabled = true;
 	return button;
@@ -101,7 +102,8 @@ function new_select_cell_result(original_result: string, game_id: string) {
 		add_result_option('0 - 1');
 	}
 
-	select_result.id = 'select_result-' + game_id;
+	select_result.className = 'select_edit_challenge';
+	select_result.id = 'select_result_' + game_id;
 	select_result.value = result_from_text_to_value(original_result);
 	select_result.onchange = select_result_game_on_change;
 	select_result.setAttribute('original_value', result_from_text_to_value(original_result));

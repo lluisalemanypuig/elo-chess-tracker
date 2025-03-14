@@ -181,7 +181,7 @@ async function fill_challenges_pending_result() {
 
 		// append paragraph to element list
 		all_challenges_list.appendChild(li);
-		li.classList.add('challenge-list-item');
+		li.classList.add('challenge_list_item');
 
 		let challenge_div = document.createElement('div') as HTMLDivElement;
 
@@ -194,6 +194,7 @@ async function fill_challenges_pending_result() {
 
 			let select = document.createElement('select');
 			select.id = 'white_select_' + elem.id;
+			select.className = 'select_basic';
 
 			let option_1 = document.createElement('option') as HTMLOptionElement;
 			option_1.text = elem.sent_to_name;
@@ -217,6 +218,7 @@ async function fill_challenges_pending_result() {
 
 			let select = document.createElement('select');
 			select.id = 'black_select_' + elem.id;
+			select.className = 'select_basic';
 
 			let option_1 = document.createElement('option') as HTMLOptionElement;
 			option_1.text = elem.sent_by_name;
@@ -240,6 +242,7 @@ async function fill_challenges_pending_result() {
 
 			let select = document.createElement('select');
 			select.id = 'select_result_game_' + elem.id;
+			select.className = 'select_basic';
 
 			let option_1 = document.createElement('option') as HTMLOptionElement;
 			option_1.text = '1 - 0';
@@ -267,6 +270,7 @@ async function fill_challenges_pending_result() {
 
 			let select = document.createElement('select');
 			select.id = 'select_time_control_' + elem.id;
+			select.className = 'select_basic';
 			select.innerHTML = time_control_data;
 			div.appendChild(select);
 			challenge_div.appendChild(div);
@@ -278,10 +282,10 @@ async function fill_challenges_pending_result() {
 		{
 			let submit_result_button = document.createElement('button');
 			submit_result_button.textContent = 'Submit result';
+			submit_result_button.className = 'button_submit';
 			submit_result_button.id = elem.id;
 			submit_result_button.onclick = submit_result_challenge_button_clicked;
 			submit_result_button.style.marginTop = '5px';
-			submit_result_button.className = 'submitbutton';
 			if (index < challenge_data.length - 1) {
 				submit_result_button.style.marginBottom = '20px';
 			}

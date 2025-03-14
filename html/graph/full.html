@@ -30,18 +30,20 @@ Full source code of elo-chess-tracker:
 		<link rel="stylesheet" href="/css/main.css" />
 		<link rel="stylesheet" href="/css/titles.css" />
 		<link rel="stylesheet" href="/css/labels.css" />
-		<link rel="stylesheet" href="/css/footer_copyright_notice.css" />
+		<link rel="stylesheet" href="/css/selects.css" />
+		<link rel="stylesheet" href="/css/footers.css" />
 	</head>
 
 	<body>
 		<meta name="viewport" content="width=device-width,initial-scale=1" />
 		<div class="page-wrapper">
 			<div class="main-content">
-				<h2 class="title title2">Graph</h2>
+				<h2 class="title title2">Server's graph</h2>
 
 				<div class="label-and-select">
-					<label class="label">Time control:</label>
+					<label class="label_basic">Time control:</label>
 					<select
+						class="select_basic"
 						id="select_time_control"
 						hx-get="/query/html/time_controls"
 						hx-trigger="load"
@@ -50,15 +52,15 @@ Full source code of elo-chess-tracker:
 						<option value=""></option>
 					</select>
 
-					<label class="label">Node color:</label>
-					<select id="select_node_color">
+					<label class="label_basic">Node color:</label>
+					<select class="select_basic" id="select_node_color">
 						<option value="fixed">Single color</option>
 						<option value="dynamic_rating">Color by rating</option>
 					</select>
 					<input type="color" id="color_picker_node" value="#1A5FB4" />
 
-					<label class="label">Edge color:</label>
-					<select id="select_edge_color">
+					<label class="label_basic">Edge color:</label>
+					<select class="select_basic" id="select_edge_color">
 						<option value="fixed">Single color</option>
 						<option value="dynamic_games">Color by games</option>
 						<option value="dynamic_results">Color by results</option>
@@ -66,18 +68,18 @@ Full source code of elo-chess-tracker:
 					<input type="color" id="color_picker_edge" value="#62A0EA" />
 				</div>
 				<div class="label-and-select">
-					<label class="label"></label>
-					<select style="visibility: hidden"></select>
+					<label class="label_basic"></label>
+					<select class="select_basic" style="visibility: hidden"></select>
 
-					<label class="label">Node size:</label>
-					<select id="select_node_size">
+					<label class="label_basic">Node size:</label>
+					<select class="select_basic" id="select_node_size">
 						<option value="fixed">Fixed size</option>
 						<option value="dynamic_rating">Size by rating</option>
 					</select>
 					<input type="number" id="size_picker_node" value="3" style="width: 56px" />
 
-					<label class="label">Edge size:</label>
-					<select id="select_edge_size">
+					<label class="label_basic">Edge size:</label>
+					<select class="select_basic" id="select_edge_size">
 						<option value="fixed">Fixed size</option>
 						<option value="dynamic_games">Size by games</option>
 						<option value="dynamic_results">Size by results</option>

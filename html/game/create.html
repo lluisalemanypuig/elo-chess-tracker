@@ -31,7 +31,9 @@ Full source code of elo-chess-tracker:
 		<link rel="stylesheet" href="/css/titles.css" />
 		<link rel="stylesheet" href="/css/labels.css" />
 		<link rel="stylesheet" href="/css/buttons.css" />
-		<link rel="stylesheet" href="/css/footer_copyright_notice.css" />
+		<link rel="stylesheet" href="/css/inputs.css" />
+		<link rel="stylesheet" href="/css/selects.css" />
+		<link rel="stylesheet" href="/css/footers.css" />
 	</head>
 
 	<body>
@@ -40,21 +42,22 @@ Full source code of elo-chess-tracker:
 			<div class="main-content">
 				<h2 class="title title2">Create a new game</h2>
 
-				<div class="label-and-input">
-					<label class="label">White:</label>
-					<input list="datalist_white_users" id="list_white_users" />
+				<div class="label_and_input">
+					<label class="label_basic">White:</label>
+					<input class="input_select" list="datalist_white_users" id="list_white_users" />
 					<datalist id="datalist_white_users"></datalist>
 				</div>
 
-				<div class="label-and-input">
-					<label class="label">Black:</label>
-					<input list="datalist_black_users" id="list_black_users" />
+				<div class="label_and_input">
+					<label class="label_basic">Black:</label>
+					<input class="input_select" list="datalist_black_users" id="list_black_users" />
 					<datalist id="datalist_black_users"></datalist>
 				</div>
 
 				<div class="label-and-select">
-					<label class="label">Result:</label>
-					<select id="select_result_game">
+					<label class="label_basic">Result:</label>
+					<select class="select_basic" id="select_result_game">
+						<option value=""></option>
 						<option value="white_wins">1 - 0</option>
 						<option value="draw">1/2 - 1/2</option>
 						<option value="black_wins">0 - 1</option>
@@ -62,8 +65,9 @@ Full source code of elo-chess-tracker:
 				</div>
 
 				<div class="label-and-select">
-					<label class="label">Time control:</label>
+					<label class="label_basic">Time control:</label>
 					<select
+						class="select_basic"
 						id="select_time_control"
 						hx-get="/query/html/time_controls"
 						hx-trigger="load"
@@ -73,18 +77,18 @@ Full source code of elo-chess-tracker:
 					</select>
 				</div>
 
-				<div class="label-and-input">
-					<label class="label" for="input_game_date">Date:</label>
-					<input type="date" id="input_game_date" />
+				<div class="label_and_input">
+					<label class="label_basic" for="input_game_date">Date:</label>
+					<input class="inputdate" type="date" id="input_game_date" />
 				</div>
 
-				<div class="label-and-input">
-					<label class="label" for="input_game_time">Time:</label>
-					<input type="time" id="input_game_time" />
+				<div class="label_and_input">
+					<label class="label_basic" for="input_game_time">Time:</label>
+					<input class="input_time" type="time" id="input_game_time" />
 				</div>
 
 				<!-- submit data -->
-				<button class="submitbutton" type="button" id="submit_new_game_button">Submit</button>
+				<button class="button_submit" type="button" id="submit_new_game_button">Submit</button>
 			</div>
 
 			<footer class="footer_copyright_notice">

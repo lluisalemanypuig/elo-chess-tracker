@@ -25,14 +25,6 @@ Full source code of elo-chess-tracker:
 	justify-content: center;
 }
 
-.ratings-table {
-	align-items: center;
-	justify-content: center;
-	height: 100%;
-	margin-top: 15px;
-	margin-bottom: 30px;
-}
-
 a, #logout_link, #recalculate_ratings_link, #recalculate_graphs {
 	color: blue;
 	cursor: pointer
