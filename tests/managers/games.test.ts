@@ -47,6 +47,8 @@ import { clear_server } from '../../src-server/managers/clear';
 import { GraphsManager } from '../../src-server/managers/graphs_manager';
 import { Graph } from '../../src-server/models/graph/graph';
 import { EdgeMetadata } from '../../src-server/models/graph/edge_metadata';
+import { graph_from_json } from '../../src-server/io/graph/graph';
+import { recalculate_all_graphs } from '../../src-server/managers/graphs';
 
 const configuration = {
 	ssl_certificate: {
@@ -2340,6 +2342,35 @@ for (let i = 0; i < N; ++i) {
 			for (let i = 0; i < all_games.length; ++i) {
 				expect(all_games[i]).toEqual(classical[i]);
 			}
+		});
+	});
+
+	describe(`(${i}) Recalculation of graphs`, () => {
+		let blitz: Graph | undefined = undefined;
+		let classical: Graph | undefined = undefined;
+
+		test('Read Blitz', () => {
+			const graph_dir = EnvironmentManager.get_instance().get_dir_graphs_time_control('Blitz');
+			blitz = graph_from_json(graph_dir);
+		});
+		test('Read Classical', () => {
+			const graph_dir = EnvironmentManager.get_instance().get_dir_graphs_time_control('Classical');
+			classical = graph_from_json(graph_dir);
+		});
+
+		test('Recalculate', () => {
+			recalculate_all_graphs();
+		});
+
+		test('Read Blitz and compare', () => {
+			const graph_dir = EnvironmentManager.get_instance().get_dir_graphs_time_control('Blitz');
+			const blitz2 = graph_from_json(graph_dir);
+			expect(blitz).toEqual(blitz2);
+		});
+		test('Read Classical and compare', () => {
+			const graph_dir = EnvironmentManager.get_instance().get_dir_graphs_time_control('Classical');
+			const classical2 = graph_from_json(graph_dir);
+			expect(classical).toEqual(classical2);
 		});
 	});
 
