@@ -43,6 +43,7 @@ import { UsersManager } from '../../src-server/managers/users_manager';
 import { game_set_from_json } from '../../src-server/io/game';
 import { GamesIterator } from '../../src-server/managers/games_iterator';
 import { long_date_to_short_date } from '../../src-server/utils/time';
+import { clear_server } from '../../src-server/managers/clear';
 
 const configuration = {
 	ssl_certificate: {
@@ -1773,220 +1774,234 @@ describe('Edition of game results', () => {
 	});
 });
 
-describe('Look for a game', () => {
-	test('"Blitz" games', () => {
-		{
-			const _game = game_find_by_id('0000000001');
-			expect(_game).not.toBe(undefined);
-			const game = _game as Game;
-			expect(game.get_id()).toEqual('0000000001');
-			expect(game.get_white()).toEqual('a');
-			expect(game.get_black()).toEqual('b');
-			expect(game.get_result()).toEqual('draw');
-			expect(game.get_time_control_id()).toEqual('Blitz');
-			expect(game.get_time_control_name()).toEqual('Blitz (5 + 3)');
-		}
-
-		{
-			const _game = game_find_by_id('0000000002');
-			expect(_game).not.toBe(undefined);
-			const game = _game as Game;
-			expect(game.get_id()).toEqual('0000000002');
-			expect(game.get_white()).toEqual('c');
-			expect(game.get_black()).toEqual('d');
-			expect(game.get_result()).toEqual('draw');
-			expect(game.get_time_control_id()).toEqual('Blitz');
-			expect(game.get_time_control_name()).toEqual('Blitz (5 + 3)');
-		}
-
-		{
-			const _game = game_find_by_id('0000000020');
-			expect(_game).not.toBe(undefined);
-			const game = _game as Game;
-			expect(game.get_id()).toEqual('0000000020');
-			expect(game.get_white()).toEqual('a');
-			expect(game.get_black()).toEqual('b');
-			expect(game.get_result()).toEqual('black_wins');
-			expect(game.get_time_control_id()).toEqual('Blitz');
-			expect(game.get_time_control_name()).toEqual('Blitz (5 + 3)');
-		}
-	});
-
-	test('"Classical" games', () => {
-		{
-			const _game = game_find_by_id('0000000015');
-			expect(_game).not.toBe(undefined);
-			const game = _game as Game;
-			expect(game.get_id()).toEqual('0000000015');
-			expect(game.get_white()).toEqual('c');
-			expect(game.get_black()).toEqual('d');
-			expect(game.get_result()).toEqual('black_wins');
-			expect(game.get_time_control_id()).toEqual('Classical');
-			expect(game.get_time_control_name()).toEqual('Classical (90 + 30)');
-		}
-
-		{
-			const _game = game_find_by_id('0000000021');
-			expect(_game).not.toBe(undefined);
-			const game = _game as Game;
-			expect(game.get_id()).toEqual('0000000021');
-			expect(game.get_white()).toEqual('a');
-			expect(game.get_black()).toEqual('f');
-			expect(game.get_result()).toEqual('black_wins');
-			expect(game.get_time_control_id()).toEqual('Classical');
-			expect(game.get_time_control_name()).toEqual('Classical (90 + 30)');
-		}
-
-		{
-			const _game = game_find_by_id('0000000008');
-			expect(_game).not.toBe(undefined);
-			const game = _game as Game;
-			expect(game.get_id()).toEqual('0000000008');
-			expect(game.get_white()).toEqual('a');
-			expect(game.get_black()).toEqual('f');
-			expect(game.get_result()).toEqual('black_wins');
-			expect(game.get_time_control_id()).toEqual('Classical');
-			expect(game.get_time_control_name()).toEqual('Classical (90 + 30)');
-		}
-	});
-
-	test('Nonexistent games', () => {
-		{
-			const _game = game_find_by_id('1200003433');
-			expect(_game).toBe(undefined);
-		}
-
-		{
-			const _game = game_find_by_id('1288883433');
-			expect(_game).toBe(undefined);
-		}
-
-		{
-			const _game = game_find_by_id('1299999433');
-			expect(_game).toBe(undefined);
-		}
-	});
-});
-
-describe('Check all games are sorted by date', () => {
-	test('Blitz', () => {
-		let all_games: Game[] = [];
-		const game_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Blitz');
-		let games_iter = new GamesIterator(game_dir);
-		while (!games_iter.end_record_list()) {
-			all_games = all_games.concat(games_iter.get_current_game_set());
-			games_iter.next_record();
-		}
-
-		expect(all_games.length).toBe(12);
-		for (let i = 1; i < all_games.length; ++i) {
-			const gi1 = all_games[i - 1];
-			const gi = all_games[i];
-			expect(gi1.get_date() < gi.get_date()).toBe(true);
-		}
-	});
-
-	test('Classical', () => {
-		let all_games: Game[] = [];
-		const game_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Classical');
-		let games_iter = new GamesIterator(game_dir);
-		while (!games_iter.end_record_list()) {
-			all_games = all_games.concat(games_iter.get_current_game_set());
-			games_iter.next_record();
-		}
-
-		expect(all_games.length).toBe(12);
-		for (let i = 1; i < all_games.length; ++i) {
-			const gi1 = all_games[i - 1];
-			const gi = all_games[i];
-			expect(gi1.get_date() < gi.get_date()).toBe(true);
-		}
-	});
-});
-
-describe('Check all games are located where they should be', () => {
-	test('Blitz', () => {
-		const game_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Blitz');
-		let games_iter = new GamesIterator(game_dir);
-		while (!games_iter.end_record_list()) {
-			let current_games = games_iter.get_current_game_set();
-			const current_record = games_iter.get_current_record_name();
-
-			for (let i = 0; i < current_games.length; ++i) {
-				const gi = current_games[i];
-				expect(gi.get_time_control_id()).toEqual('Blitz');
-				expect(long_date_to_short_date(gi.get_date())).toEqual(current_record);
+const N = 2;
+for (let i = 0; i < N; ++i) {
+	describe(`(${i}) Look for a game`, () => {
+		test('"Blitz" games', () => {
+			{
+				const _game = game_find_by_id('0000000001');
+				expect(_game).not.toBe(undefined);
+				const game = _game as Game;
+				expect(game.get_id()).toEqual('0000000001');
+				expect(game.get_white()).toEqual('a');
+				expect(game.get_black()).toEqual('b');
+				expect(game.get_result()).toEqual('draw');
+				expect(game.get_time_control_id()).toEqual('Blitz');
+				expect(game.get_time_control_name()).toEqual('Blitz (5 + 3)');
 			}
-			games_iter.next_record();
-		}
-	});
 
-	test('Classical', () => {
-		const game_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Classical');
-		let games_iter = new GamesIterator(game_dir);
-		while (!games_iter.end_record_list()) {
-			let current_games = games_iter.get_current_game_set();
-			const current_record = games_iter.get_current_record_name();
-
-			for (let i = 0; i < current_games.length; ++i) {
-				const gi = current_games[i];
-				expect(gi.get_time_control_id()).toEqual('Classical');
-				expect(long_date_to_short_date(gi.get_date())).toEqual(current_record);
+			{
+				const _game = game_find_by_id('0000000002');
+				expect(_game).not.toBe(undefined);
+				const game = _game as Game;
+				expect(game.get_id()).toEqual('0000000002');
+				expect(game.get_white()).toEqual('c');
+				expect(game.get_black()).toEqual('d');
+				expect(game.get_result()).toEqual('draw');
+				expect(game.get_time_control_id()).toEqual('Blitz');
+				expect(game.get_time_control_name()).toEqual('Blitz (5 + 3)');
 			}
-			games_iter.next_record();
-		}
-	});
-});
 
-describe('Recalculation of ratings', () => {
-	let blitz: Game[] = [];
-	let classical: Game[] = [];
+			{
+				const _game = game_find_by_id('0000000020');
+				expect(_game).not.toBe(undefined);
+				const game = _game as Game;
+				expect(game.get_id()).toEqual('0000000020');
+				expect(game.get_white()).toEqual('a');
+				expect(game.get_black()).toEqual('b');
+				expect(game.get_result()).toEqual('black_wins');
+				expect(game.get_time_control_id()).toEqual('Blitz');
+				expect(game.get_time_control_name()).toEqual('Blitz (5 + 3)');
+			}
+		});
 
-	test('Read Blitz', () => {
-		const game_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Blitz');
-		let games_iter = new GamesIterator(game_dir);
-		while (!games_iter.end_record_list()) {
-			blitz = blitz.concat(games_iter.get_current_game_set());
-			games_iter.next_record();
-		}
-	});
-	test('Read Classical', () => {
-		const game_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Classical');
-		let games_iter = new GamesIterator(game_dir);
-		while (!games_iter.end_record_list()) {
-			classical = classical.concat(games_iter.get_current_game_set());
-			games_iter.next_record();
-		}
+		test('"Classical" games', () => {
+			{
+				const _game = game_find_by_id('0000000015');
+				expect(_game).not.toBe(undefined);
+				const game = _game as Game;
+				expect(game.get_id()).toEqual('0000000015');
+				expect(game.get_white()).toEqual('c');
+				expect(game.get_black()).toEqual('d');
+				expect(game.get_result()).toEqual('black_wins');
+				expect(game.get_time_control_id()).toEqual('Classical');
+				expect(game.get_time_control_name()).toEqual('Classical (90 + 30)');
+			}
+
+			{
+				const _game = game_find_by_id('0000000021');
+				expect(_game).not.toBe(undefined);
+				const game = _game as Game;
+				expect(game.get_id()).toEqual('0000000021');
+				expect(game.get_white()).toEqual('a');
+				expect(game.get_black()).toEqual('f');
+				expect(game.get_result()).toEqual('black_wins');
+				expect(game.get_time_control_id()).toEqual('Classical');
+				expect(game.get_time_control_name()).toEqual('Classical (90 + 30)');
+			}
+
+			{
+				const _game = game_find_by_id('0000000008');
+				expect(_game).not.toBe(undefined);
+				const game = _game as Game;
+				expect(game.get_id()).toEqual('0000000008');
+				expect(game.get_white()).toEqual('a');
+				expect(game.get_black()).toEqual('f');
+				expect(game.get_result()).toEqual('black_wins');
+				expect(game.get_time_control_id()).toEqual('Classical');
+				expect(game.get_time_control_name()).toEqual('Classical (90 + 30)');
+			}
+		});
+
+		test('Nonexistent games', () => {
+			{
+				const _game = game_find_by_id('1200003433');
+				expect(_game).toBe(undefined);
+			}
+
+			{
+				const _game = game_find_by_id('1288883433');
+				expect(_game).toBe(undefined);
+			}
+
+			{
+				const _game = game_find_by_id('1299999433');
+				expect(_game).toBe(undefined);
+			}
+		});
 	});
 
-	test('Recalculate', () => {
-		recalculate_all_ratings();
+	describe(`(${i}) Check all games are sorted by date`, () => {
+		test('Blitz', () => {
+			let all_games: Game[] = [];
+			const game_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Blitz');
+			let games_iter = new GamesIterator(game_dir);
+			while (!games_iter.end_record_list()) {
+				all_games = all_games.concat(games_iter.get_current_game_set());
+				games_iter.next_record();
+			}
+
+			expect(all_games.length).toBe(12);
+			for (let i = 1; i < all_games.length; ++i) {
+				const gi1 = all_games[i - 1];
+				const gi = all_games[i];
+				expect(gi1.get_date() < gi.get_date()).toBe(true);
+			}
+		});
+
+		test('Classical', () => {
+			let all_games: Game[] = [];
+			const game_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Classical');
+			let games_iter = new GamesIterator(game_dir);
+			while (!games_iter.end_record_list()) {
+				all_games = all_games.concat(games_iter.get_current_game_set());
+				games_iter.next_record();
+			}
+
+			expect(all_games.length).toBe(12);
+			for (let i = 1; i < all_games.length; ++i) {
+				const gi1 = all_games[i - 1];
+				const gi = all_games[i];
+				expect(gi1.get_date() < gi.get_date()).toBe(true);
+			}
+		});
 	});
 
-	test('Read Blitz and compare', () => {
-		let all_games: Game[] = [];
-		const game_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Blitz');
-		let games_iter = new GamesIterator(game_dir);
-		while (!games_iter.end_record_list()) {
-			all_games = all_games.concat(games_iter.get_current_game_set());
-			games_iter.next_record();
-		}
-		expect(all_games.length).toEqual(blitz.length);
-		for (let i = 0; i < all_games.length; ++i) {
-			expect(all_games[i]).toEqual(blitz[i]);
-		}
+	describe(`(${i}) Check all games are located where they should be`, () => {
+		test('Blitz', () => {
+			const game_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Blitz');
+			let games_iter = new GamesIterator(game_dir);
+			while (!games_iter.end_record_list()) {
+				let current_games = games_iter.get_current_game_set();
+				const current_record = games_iter.get_current_record_name();
+
+				for (let i = 0; i < current_games.length; ++i) {
+					const gi = current_games[i];
+					expect(gi.get_time_control_id()).toEqual('Blitz');
+					expect(long_date_to_short_date(gi.get_date())).toEqual(current_record);
+				}
+				games_iter.next_record();
+			}
+		});
+
+		test('Classical', () => {
+			const game_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Classical');
+			let games_iter = new GamesIterator(game_dir);
+			while (!games_iter.end_record_list()) {
+				let current_games = games_iter.get_current_game_set();
+				const current_record = games_iter.get_current_record_name();
+
+				for (let i = 0; i < current_games.length; ++i) {
+					const gi = current_games[i];
+					expect(gi.get_time_control_id()).toEqual('Classical');
+					expect(long_date_to_short_date(gi.get_date())).toEqual(current_record);
+				}
+				games_iter.next_record();
+			}
+		});
 	});
-	test('Read Classical and compare', () => {
-		let all_games: Game[] = [];
-		const game_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Classical');
-		let games_iter = new GamesIterator(game_dir);
-		while (!games_iter.end_record_list()) {
-			all_games = all_games.concat(games_iter.get_current_game_set());
-			games_iter.next_record();
-		}
-		expect(all_games.length).toEqual(classical.length);
-		for (let i = 0; i < all_games.length; ++i) {
-			expect(all_games[i]).toEqual(classical[i]);
-		}
+
+	describe(`(${i}) Recalculation of ratings`, () => {
+		let blitz: Game[] = [];
+		let classical: Game[] = [];
+
+		test('Read Blitz', () => {
+			const game_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Blitz');
+			let games_iter = new GamesIterator(game_dir);
+			while (!games_iter.end_record_list()) {
+				blitz = blitz.concat(games_iter.get_current_game_set());
+				games_iter.next_record();
+			}
+		});
+		test('Read Classical', () => {
+			const game_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Classical');
+			let games_iter = new GamesIterator(game_dir);
+			while (!games_iter.end_record_list()) {
+				classical = classical.concat(games_iter.get_current_game_set());
+				games_iter.next_record();
+			}
+		});
+
+		test('Recalculate', () => {
+			recalculate_all_ratings();
+		});
+
+		test('Read Blitz and compare', () => {
+			let all_games: Game[] = [];
+			const game_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Blitz');
+			let games_iter = new GamesIterator(game_dir);
+			while (!games_iter.end_record_list()) {
+				all_games = all_games.concat(games_iter.get_current_game_set());
+				games_iter.next_record();
+			}
+			expect(all_games.length).toEqual(blitz.length);
+			for (let i = 0; i < all_games.length; ++i) {
+				expect(all_games[i]).toEqual(blitz[i]);
+			}
+		});
+		test('Read Classical and compare', () => {
+			let all_games: Game[] = [];
+			const game_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Classical');
+			let games_iter = new GamesIterator(game_dir);
+			while (!games_iter.end_record_list()) {
+				all_games = all_games.concat(games_iter.get_current_game_set());
+				games_iter.next_record();
+			}
+			expect(all_games.length).toEqual(classical.length);
+			for (let i = 0; i < all_games.length; ++i) {
+				expect(all_games[i]).toEqual(classical[i]);
+			}
+		});
 	});
-});
+
+	if (i < N - 1) {
+		describe(`(${i}) Turn the server off and on again`, () => {
+			test('Clear the server memory', () => {
+				expect(() => clear_server()).not.toThrow();
+			});
+			test('Reload server data', () => {
+				expect(() => server_init_from_data('tests/webpage', configuration)).not.toThrow();
+			});
+		});
+	}
+}
