@@ -36,6 +36,8 @@ import { GamesManager } from '../../src-server/managers/games_manager';
 import { SessionIDManager } from '../../src-server/managers/session_id_manager';
 import { UsersManager } from '../../src-server/managers/users_manager';
 import { run_command } from './exec_utils';
+import { GraphsManager } from '../../src-server/managers/graphs_manager';
+import { Graph } from '../../src-server/models/graph/graph';
 
 const webpage_dir = 'tests/webpage';
 const icons_dir = path.join(webpage_dir, 'icons');
@@ -182,6 +184,13 @@ describe('Configure server', () => {
 		expect(environment_manager.get_title_home_page()).toEqual('Home title');
 	});
 
+	test('Check GraphsManager', () => {
+		const graphs_manager = GraphsManager.get_instance();
+		expect(graphs_manager.get_graph('Blitz')).toEqual(new Graph());
+		expect(graphs_manager.get_graph('Rapid')).toEqual(new Graph());
+		expect(graphs_manager.get_graph('Classical')).toEqual(new Graph());
+	});
+
 	test('Clear the server memory', () => {
 		expect(() => clear_server()).not.toThrow();
 	});
@@ -259,5 +268,12 @@ describe('Configure server', () => {
 
 		expect(environment_manager.get_title_login_page()).toEqual('');
 		expect(environment_manager.get_title_home_page()).toEqual('');
+	});
+
+	test('Check GraphsManager', () => {
+		const graphs_manager = GraphsManager.get_instance();
+		expect(graphs_manager.get_graph('Blitz')).toEqual(new Graph());
+		expect(graphs_manager.get_graph('Rapid')).toEqual(new Graph());
+		expect(graphs_manager.get_graph('Classical')).toEqual(new Graph());
 	});
 });
