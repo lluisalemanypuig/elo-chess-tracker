@@ -40,7 +40,7 @@ import { EnvironmentManager } from './environment_manager';
 import { user_update_from_players_data } from './users';
 import { Rating } from '../rating_framework/rating';
 import { TimeControlID } from '../models/time_control';
-import { graph_update } from './graphs';
+import { graph_modify_edge, graph_update } from './graphs';
 import { GamesIterator } from './games_iterator';
 
 /// Returns g1 < g2 using dates
@@ -376,9 +376,7 @@ export function game_edit_result(game_id: GameID, new_result: GameResult): void 
 	}
 
 	let game = games_iter.get_current_game();
-
 	const old_result = game.get_result();
-	game.set_result(new_result);
 
 	// avoid unnecessary work
 	if (old_result == new_result) {
@@ -388,9 +386,15 @@ export function game_edit_result(game_id: GameID, new_result: GameResult): void 
 	const white = game.get_white();
 	const black = game.get_black();
 
-	let updated_players: Player[] = [];
+	/* Update the graphs */
 
-	// apply rating formula
+	graph_modify_edge(white, black, old_result, new_result, time_control_id);
+
+	/* Update the game files */
+
+	game.set_result(new_result);
+
+	let updated_players: Player[] = [];
 	{
 		let [white_after, black_after] = RatingSystemManager.get_instance().apply_rating_function(game);
 		updated_players.push(updated_player(time_control_id, white, white_after));
