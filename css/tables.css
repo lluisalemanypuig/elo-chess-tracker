@@ -19,6 +19,8 @@ Full source code of elo-chess-tracker:
 	https://github.com/lluisalemanypuig/elo-chess-tracker
 */
 
+/* table_ratings */
+
 .table_ratings {
 	align-items: center;
 	justify-content: center;
@@ -26,24 +28,18 @@ Full source code of elo-chess-tracker:
 	margin-top: 15px;
 	margin-bottom: 30px;
 	border: 1px solid;
-	color: black
+	color: black;
 }
 
-.table_ratings {
-	border: 1px solid;
-	color: black
-}
-
-.table_ratings, td, th {
+.table_ratings, th, td {
 	border-collapse: collapse;
 	border-right: 1px solid;
-	color: black
-}
-
-.table_ratings, td, th {
+	color: black;
 	padding: 5px;
 	text-align: center;
 }
+
+/* table_games */
 
 .table_games {
 	align-items: center;
@@ -52,24 +48,18 @@ Full source code of elo-chess-tracker:
 	margin-top: 15px;
 	margin-bottom: 30px;
 	border: 1px solid;
-	color: black
+	color: black;
 }
 
-.table_games {
-	border: 1px solid;
-	color: black
-}
-
-.table_games, td, th {
+.table_games, th, td {
 	border-collapse: collapse;
 	border-right: 1px solid;
-	color: black
-}
-
-.table_games, td, th {
+	color: black;
 	padding: 5px;
 	text-align: center;
 }
+
+/* table_users */
 
 .table_users {
 	align-items: center;
@@ -78,21 +68,13 @@ Full source code of elo-chess-tracker:
 	margin-top: 15px;
 	margin-bottom: 30px;
 	border: 1px solid;
-	color: black
+	color: black;
 }
 
-.table_users {
-	border: 1px solid;
-	color: black
-}
-
-.table_users, td, th {
+.table_users, th, td {
 	border-collapse: collapse;
 	border-right: 1px solid;
-	color: black
-}
-
-.table_users, td, th {
+	color: black;
 	padding: 5px;
 	text-align: center;
 }

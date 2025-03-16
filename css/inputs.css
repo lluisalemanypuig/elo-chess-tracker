@@ -19,6 +19,8 @@ Full source code of elo-chess-tracker:
 	https://github.com/lluisalemanypuig/elo-chess-tracker
 */
 
+/* input_text */
+
 .input_text {
     background-color: #FFFFFF;
     border: 1px solid rgb(176, 180, 185);
@@ -48,6 +50,8 @@ Full source code of elo-chess-tracker:
 .input_text:focus-visible {
     box-shadow: none;
 }
+
+/* input_select */
 
 .input_select {
     background-color: #FFFFFF;
@@ -79,6 +83,8 @@ Full source code of elo-chess-tracker:
     box-shadow: none;
 }
 
+/* input_time */
+
 .input_time {
     background-color: #FFFFFF;
     border: 1px solid rgb(176, 180, 185);
@@ -108,6 +114,8 @@ Full source code of elo-chess-tracker:
 .input_time:focus-visible {
     box-shadow: none;
 }
+
+/* input_date */
 
 .input_date {
     background-color: #FFFFFF;

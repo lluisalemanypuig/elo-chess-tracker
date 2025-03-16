@@ -21,6 +21,8 @@ Full source code of elo-chess-tracker:
 
 /* Based on the style of button-39 copied from: https: //getcssscan.com/css-buttons-examples */
 
+/* button_login */
+
 .button_login {
     background-color: #FFFFFF;
     border: 1px solid rgb(176, 180, 185);
@@ -53,6 +55,8 @@ Full source code of elo-chess-tracker:
 .button_login:focus-visible {
     box-shadow: none;
 }
+
+/* button_submit */
 
 .button_submit {
     background-color: #FFFFFF;
@@ -87,6 +91,8 @@ Full source code of elo-chess-tracker:
     box-shadow: none;
 }
 
+/* button_submit_challenge */
+
 .button_submit_challenge {
     background-color: #FFFFFF;
     border: 1px solid rgb(158, 160, 163);
@@ -119,6 +125,8 @@ Full source code of elo-chess-tracker:
 .button_submit_challenge:focus-visible {
     box-shadow: none;
 }
+
+/* button_edit_game */
 
 .button_edit_game {
     background-color: #FFFFFF;
