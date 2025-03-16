@@ -106,7 +106,7 @@ export async function post_user_logout(req: any, res: any) {
 
 	debug(log_now(), `    Cookie:`);
 	debug(log_now(), `        Username:   '${session.username}'`);
-	debug(log_now(), `        Session ID: '${session.token}'`);
+	// debug(log_now(), `        Session ID: '${session.token}'`);
 
 	// in order to log out a user, the must have been logged in with the given
 	// session id token
