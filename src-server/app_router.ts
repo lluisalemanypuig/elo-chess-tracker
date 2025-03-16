@@ -42,10 +42,14 @@ router.get('/', (req: any, res: any) => {
 	const mem = SessionIDManager.get_instance();
 	if (mem.has_session_id(session)) {
 		debug(log_now(), `    Session id for user '${session.username}' exists. Please, come in.`);
-		res.sendFile(path.join(__dirname, '../html/home.html'));
+		res.status(200)
+			.setHeader('Cache-Control', 'public, max-age=864000, immutable')
+			.sendFile(path.join(__dirname, '../html/home.html'));
 	} else {
 		debug(log_now(), `    Session id does not exist. Login using your credentials`);
-		res.sendFile(path.join(__dirname, '../html/login_screen.html'));
+		res.status(200)
+			.setHeader('Cache-Control', 'public, max-age=864000, immutable')
+			.sendFile(path.join(__dirname, '../html/login_screen.html'));
 	}
 });
 
@@ -61,7 +65,9 @@ router.get('/home', (req: any, res: any) => {
 	}
 
 	debug(log_now(), '    Access granted');
-	res.status(200).sendFile(path.join(__dirname, '../html/home.html'));
+	res.status(200)
+		.setHeader('Cache-Control', 'public, max-age=864000, immutable')
+		.sendFile(path.join(__dirname, '../html/home.html'));
 });
 
 // serve all *.css files
@@ -70,7 +76,7 @@ router.get('/css/*.css', (req: any, res: any) => {
 	debug(log_now(), `    request: ${req.url}`);
 	const filepath = path.join(__dirname, '..', req.url);
 	debug(log_now(), `    file to send: ${filepath}`);
-	res.status(200).sendFile(filepath);
+	res.status(200).setHeader('Cache-Control', 'public, max-age=864000, immutable').sendFile(filepath);
 });
 
 /* ************************************************************************** */

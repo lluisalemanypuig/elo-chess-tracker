@@ -47,7 +47,9 @@ export async function get_page_graph_own(req: any, res: any) {
 		return;
 	}
 
-	res.status(200).sendFile(path.join(__dirname, '../html/graph/own.html'));
+	res.status(200)
+		.setHeader('Cache-Control', 'public, max-age=864000, immutable')
+		.sendFile(path.join(__dirname, '../html/graph/own.html'));
 }
 
 export async function get_page_graph_full(req: any, res: any) {
@@ -67,7 +69,9 @@ export async function get_page_graph_full(req: any, res: any) {
 		return;
 	}
 
-	res.status(200).sendFile(path.join(__dirname, '../html/graph/full.html'));
+	res.status(200)
+		.setHeader('Cache-Control', 'public, max-age=864000, immutable')
+		.sendFile(path.join(__dirname, '../html/graph/full.html'));
 }
 
 export async function post_recalculate_graphs(req: any, res: any) {

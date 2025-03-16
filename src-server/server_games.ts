@@ -51,7 +51,9 @@ export async function get_page_game_list_own(req: any, res: any) {
 		return;
 	}
 
-	res.status(200).sendFile(path.join(__dirname, '../html/game/list/own.html'));
+	res.status(200)
+		.setHeader('Cache-Control', 'public, max-age=864000, immutable')
+		.sendFile(path.join(__dirname, '../html/game/list/own.html'));
 }
 
 export async function get_page_game_list_all(req: any, res: any) {
@@ -65,7 +67,9 @@ export async function get_page_game_list_all(req: any, res: any) {
 		return;
 	}
 
-	res.status(200).sendFile(path.join(__dirname, '../html/game/list/all.html'));
+	res.status(200)
+		.setHeader('Cache-Control', 'public, max-age=864000, immutable')
+		.sendFile(path.join(__dirname, '../html/game/list/all.html'));
 }
 
 export async function get_page_game_create(req: any, res: any) {
@@ -85,7 +89,9 @@ export async function get_page_game_create(req: any, res: any) {
 		return;
 	}
 
-	res.status(200).sendFile(path.join(__dirname, '../html/game/create.html'));
+	res.status(200)
+		.setHeader('Cache-Control', 'public, max-age=864000, immutable')
+		.sendFile(path.join(__dirname, '../html/game/create.html'));
 }
 
 export async function post_game_create(req: any, res: any) {

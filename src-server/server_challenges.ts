@@ -59,7 +59,9 @@ export async function get_challenge_page(req: any, res: any) {
 		return;
 	}
 
-	res.status(200).sendFile(path.join(__dirname, '../html/challenges.html'));
+	res.status(200)
+		.setHeader('Cache-Control', 'public, max-age=864000, immutable')
+		.sendFile(path.join(__dirname, '../html/challenges.html'));
 }
 
 export async function post_challenge_send(req: any, res: any) {

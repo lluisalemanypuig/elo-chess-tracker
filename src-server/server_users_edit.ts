@@ -55,7 +55,9 @@ export async function get_page_user_edit(req: any, res: any) {
 		return;
 	}
 
-	res.status(200).sendFile(path.join(__dirname, '../html/user/edit.html'));
+	res.status(200)
+		.setHeader('Cache-Control', 'public, max-age=864000, immutable')
+		.sendFile(path.join(__dirname, '../html/user/edit.html'));
 }
 
 export async function post_user_edit(req: any, res: any) {

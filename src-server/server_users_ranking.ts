@@ -43,5 +43,7 @@ export async function get_page_user_ranking(req: any, res: any) {
 		return;
 	}
 
-	res.status(200).sendFile(path.join(__dirname, '../html/user/ranking.html'));
+	res.status(200)
+		.setHeader('Cache-Control', 'public, max-age=864000, immutable')
+		.sendFile(path.join(__dirname, '../html/user/ranking.html'));
 }
