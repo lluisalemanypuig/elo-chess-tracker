@@ -30,6 +30,7 @@ import { GamesManager } from './games_manager';
 import { UsersManager } from './users_manager';
 import { SessionIDManager } from './session_id_manager';
 import { RatingSystemManager } from './rating_system_manager';
+import { GraphsManager } from './graphs_manager';
 
 /**
  * @brief Clear the memory of the server
@@ -41,6 +42,7 @@ export function clear_server(): void {
 	UsersManager.get_instance().clear();
 	ChallengesManager.get_instance().clear();
 	GamesManager.get_instance().clear();
+	GraphsManager.get_instance().clear();
 	ConfigurationManager.get_instance().clear();
 	EnvironmentManager.get_instance().clear();
 	SessionIDManager.get_instance().clear();
