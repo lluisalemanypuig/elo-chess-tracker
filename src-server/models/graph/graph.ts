@@ -35,10 +35,12 @@ export type Neighborhood = Edge[];
  */
 export class Graph {
 	/// The set of edges from a user A to all other users B against whom
-	/// A played as White.
+	/// A played as White. That is, edges of the form (A, B) where A is the
+	/// white player, and B is the black player.
 	private adjacency_list: Map<string, Neighborhood> = new Map();
 	/// The set of edges from a user A to all other users B against whom
-	/// A played as Black.
+	/// A played as Black. That is, edges of the form (A, B) where A is the
+	/// white player, and B is the black player.
 	private in_adjacency_list: Map<string, Neighborhood> = new Map();
 
 	/// An iterator to the list of users who played as White.
@@ -155,8 +157,8 @@ export class Graph {
 	}
 	/**
 	 * @brief The weight of edge (u,v) when 'u' plays as black.
-	 * @param u White player.
-	 * @param v Black player.
+	 * @param u Black player.
+	 * @param v White player.
 	 * @returns The summary of the games between @e u and @e v when @e u plays
 	 * as black.
 	 */
