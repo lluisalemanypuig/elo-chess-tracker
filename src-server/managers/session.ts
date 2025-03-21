@@ -105,7 +105,8 @@ export function is_user_logged_in(session: SessionID): [boolean, string, User | 
 		return [false, 'Forbidden access', undefined];
 	}
 	if (!SessionIDManager.get_instance().has_session_id(session)) {
-		debug(log_now(), `Session does not exist for user '${session.username}'.`);
+		debug(log_now(), `The session ID received for user '${session.username}' does not exist.`);
+		debug(log_now(), `The user is not logged in the device they are trying to log in from.`);
 		return [false, 'Forbidden access', undefined];
 	}
 	return [true, '', user as User];

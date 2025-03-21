@@ -46,7 +46,8 @@ router.get('/', (req: any, res: any) => {
 			.setHeader('Cache-Control', 'public, max-age=864000, immutable')
 			.sendFile(path.join(__dirname, '../html/home.html'));
 	} else {
-		debug(log_now(), `    Session id does not exist. Login using your credentials`);
+		debug(log_now(), `    No session id exists.`);
+		debug(log_now(), `    User ${req.cookies.user} will have to login using their credentials.`);
 		res.status(200)
 			.setHeader('Cache-Control', 'public, max-age=864000, immutable')
 			.sendFile(path.join(__dirname, '../html/login_screen.html'));
@@ -58,13 +59,14 @@ router.get('/home', (req: any, res: any) => {
 	debug(log_now(), 'GET /home');
 
 	const session = SessionID.from_cookie(req.cookies);
-	if (!SessionIDManager.get_instance().has_session_id(session)) {
-		debug(log_now(), '    Session id does not exist.');
+	const r = is_user_logged_in(session);
+	if (!r[0]) {
+		debug(log_now(), `    User ${session.username} is not logged in.`);
 		res.status(401).send('Forbidden');
 		return;
 	}
 
-	debug(log_now(), '    Access granted');
+	debug(log_now(), `    User ${session.username} is logged in. Access granted.`);
 	res.status(200)
 		.setHeader('Cache-Control', 'public, max-age=864000, immutable')
 		.sendFile(path.join(__dirname, '../html/home.html'));
@@ -81,47 +83,41 @@ router.get('/css/*.css', (req: any, res: any) => {
 
 /* ************************************************************************** */
 /* Version number */
-router.get('/version_number', (req: any, res: any) => {
+router.get('/version_number', (_req: any, res: any) => {
 	debug(log_now(), 'GET version_number...');
-	debug(log_now(), `    request: ${req.url}`);
 	res.status(200).setHeader('Cache-Control', 'public, max-age=864000, immutable').send('XX.YY');
 });
 
 /* ************************************************************************** */
 /* ICONS */
-router.get('/favicon.ico', (req: any, res: any) => {
+router.get('/favicon.ico', (_req: any, res: any) => {
 	debug(log_now(), 'GET favicon.ico...');
-	debug(log_now(), `    request: ${req.url}`);
 	const filepath = EnvironmentManager.get_instance().get_icon_favicon();
 	debug(log_now(), `    file to send: ${filepath}`);
 	res.status(200).setHeader('Cache-Control', 'public, max-age=864000, immutable').sendFile(filepath);
 });
-router.get('/icon/login_page', (req: any, res: any) => {
+router.get('/icon/login_page', (_req: any, res: any) => {
 	debug(log_now(), 'GET /icon/login_page...');
-	debug(log_now(), `    request: ${req.url}`);
 	const filepath = EnvironmentManager.get_instance().get_icon_login_page();
 	debug(log_now(), `    file to send: ${filepath}`);
 	res.status(200).setHeader('Cache-Control', 'public, max-age=864000, immutable').sendFile(filepath);
 });
-router.get('/icon/home_page', (req: any, res: any) => {
+router.get('/icon/home_page', (_req: any, res: any) => {
 	debug(log_now(), 'GET /icon/home_page...');
-	debug(log_now(), `    request: ${req.url}`);
 	const filepath = EnvironmentManager.get_instance().get_icon_home_page();
 	debug(log_now(), `    file to send: ${filepath}`);
 	res.status(200).setHeader('Cache-Control', 'public, max-age=864000, immutable').sendFile(filepath);
 });
 
 /* PAGE TITLES */
-router.get('/title/login_page', (req: any, res: any) => {
+router.get('/title/login_page', (_req: any, res: any) => {
 	debug(log_now(), 'GET /title/login_page...');
-	debug(log_now(), `    request: ${req.url}`);
 	res.status(200)
 		.setHeader('Cache-Control', 'public, max-age=864000, immutable')
 		.send(EnvironmentManager.get_instance().get_title_login_page());
 });
-router.get('/title/home_page', (req: any, res: any) => {
+router.get('/title/home_page', (_req: any, res: any) => {
 	debug(log_now(), 'GET /title/home_page...');
-	debug(log_now(), `    request: ${req.url}`);
 	res.status(200)
 		.setHeader('Cache-Control', 'public, max-age=864000, immutable')
 		.send(EnvironmentManager.get_instance().get_title_home_page());
@@ -244,6 +240,7 @@ router.post('/recalculate/ratings', post_recalculate_ratings);
 
 // recalculation of all graphs
 import { post_recalculate_graphs } from './server_graphs';
+import { is_user_logged_in } from './managers/session';
 router.post('/recalculate/graphs', post_recalculate_graphs);
 
 export { router };
