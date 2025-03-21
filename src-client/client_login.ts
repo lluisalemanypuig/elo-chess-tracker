@@ -58,7 +58,7 @@ async function log_into_webpage(_event: any) {
 	const data = await response.json();
 
 	// put identity cookies
-	let cookies = data['cookies'];
+	const cookies = data['cookies'];
 	for (let i = 0; i < cookies.length; ++i) {
 		document.cookie = cookies[i];
 	}
