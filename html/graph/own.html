@@ -32,68 +32,79 @@ Full source code of elo-chess-tracker:
 		<link rel="stylesheet" href="/css/labels.css" />
 		<link rel="stylesheet" href="/css/selects.css" />
 		<link rel="stylesheet" href="/css/footers.css" />
+		<link rel="stylesheet" href="/css/graphs.css" />
 	</head>
 
 	<body>
 		<meta name="viewport" content="width=device-width,initial-scale=1" />
-		<div class="page-wrapper">
-			<div class="main-content">
-				<h2 class="title title2">My graph</h2>
 
-				<div class="label-and-select">
-					<label class="label_basic">Time control:</label>
-					<select
-						class="select_basic"
-						id="select_time_control"
-						hx-get="/query/html/time_controls_unique"
-						hx-trigger="load"
-						hx-swap="beforeend"
-					>
-						<option value=""></option>
-					</select>
+		<div class="menu_and_graph">
+			<div class="menu">
+				<div class="page-wrapper">
+					<div class="main-content">
+						<h2 class="title title2">My graph</h2>
+						<div class="label-and-select">
+							<label class="label_basic">Time control:</label>
+							<select
+								class="select_basic"
+								id="select_time_control"
+								hx-get="/query/html/time_controls_unique"
+								hx-trigger="load"
+								hx-swap="beforeend"
+							>
+								<option value=""></option>
+							</select>
+							<input type="color" id="color_picker_node" value="#1A5FB4" style="visibility: hidden" />
+						</div>
+						<div class="label-and-select">
+							<label class="label_basic">Node color:</label>
+							<select class="select_basic" id="select_node_color">
+								<option value="fixed">Single color</option>
+								<option value="dynamic_rating">Color by rating</option>
+							</select>
+							<input type="color" id="color_picker_node" value="#1A5FB4" />
+						</div>
+						<div class="label-and-select">
+							<label class="label_basic">Node size:</label>
+							<select class="select_basic" id="select_node_size">
+								<option value="fixed">Fixed size</option>
+								<option value="dynamic_rating">Size by rating</option>
+							</select>
+							<input type="number" id="size_picker_node" value="25" style="width: 56px" />
+						</div>
+						<div class="label-and-select">
+							<label class="label_basic">Edge color:</label>
+							<select class="select_basic" id="select_edge_color">
+								<option value="fixed">Single color</option>
+								<option value="dynamic_games">Color by games</option>
+								<option value="dynamic_results">Color by results</option>
+							</select>
+							<input type="color" id="color_picker_edge" value="#62A0EA" />
+						</div>
+						<div class="label-and-select">
+							<label class="label_basic">Edge size:</label>
+							<select class="select_basic" id="select_edge_size">
+								<option value="fixed">Fixed size</option>
+								<option value="dynamic_games">Size by games</option>
+								<option value="dynamic_results">Size by results</option>
+							</select>
+							<input type="number" id="size_picker_edge" value="10" style="width: 56px" />
+						</div>
+					</div>
 
-					<label class="label_basic">Node color:</label>
-					<select class="select_basic" id="select_node_color">
-						<option value="fixed">Single color</option>
-						<option value="dynamic_rating">Color by rating</option>
-					</select>
-					<input type="color" id="color_picker_node" value="#1A5FB4" />
-
-					<label class="label_basic">Edge color:</label>
-					<select class="select_basic" id="select_edge_color">
-						<option value="fixed">Single color</option>
-						<option value="dynamic_games">Color by games</option>
-						<option value="dynamic_results">Color by results</option>
-					</select>
-					<input type="color" id="color_picker_edge" value="#62A0EA" />
+					<footer id="copyright" class="footer_copyright_notice">
+						Elo chess tracker (v<i hx-get="/version_number" hx-trigger="load"></i>). Code
+						<a href="https://github.com/lluisalemanypuig/elo-chess-tracker">online at Github</a>.
+					</footer>
 				</div>
-				<div class="label-and-select">
-					<label class="label_basic"></label>
-					<select class="select_basic" style="visibility: hidden"></select>
-
-					<label class="label_basic">Node size:</label>
-					<select class="select_basic" id="select_node_size">
-						<option value="fixed">Fixed size</option>
-						<option value="dynamic_rating">Size by rating</option>
-					</select>
-					<input type="number" id="size_picker_node" value="25" style="width: 56px" />
-
-					<label class="label_basic">Edge size:</label>
-					<select class="select_basic" id="select_edge_size">
-						<option value="fixed">Fixed size</option>
-						<option value="dynamic_games">Size by games</option>
-						<option value="dynamic_results">Size by results</option>
-					</select>
-					<input type="number" id="size_picker_edge" value="10" style="width: 56px" />
-				</div>
-
-				<div id="graph-viewer" value="own" style="height: 200px; width: 100%; background: white"></div>
 			</div>
 
-			<footer id="copyright" class="footer_copyright_notice">
-				Elo chess tracker (v<i hx-get="/version_number" hx-trigger="load"></i>). Code
-				<a href="https://github.com/lluisalemanypuig/elo-chess-tracker">online at Github</a>.
-			</footer>
+			<div
+				class="graph_container"
+				id="graph-viewer"
+				value="own"
+				style="width: 100%; height: 100%; background: white"
+			></div>
 		</div>
 	</body>
 </html>
