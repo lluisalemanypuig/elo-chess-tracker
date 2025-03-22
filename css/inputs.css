@@ -146,3 +146,67 @@ Full source code of elo-chess-tracker:
 .input_date:focus-visible {
     box-shadow: none;
 }
+
+/* input_number */
+
+.input_number {
+    background-color: #FFFFFF;
+    border: 1px solid rgb(176, 180, 185);
+    border-radius: .5rem;
+    box-sizing: border-box;
+    color: #111827;
+    font-size: 1rem;
+    font-weight: 400;
+    text-align: center;
+    width: 64px;
+    height: 30px;
+    text-decoration: none #D1D5DB solid;
+    text-decoration-thickness: auto;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.input_number:hover {
+    background-color: rgb(234, 237, 239);
+}
+
+.input_number:focus {
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+}
+
+.input_number:focus-visible {
+    box-shadow: none;
+}
+
+/* input_color */
+
+.input_color {
+    background-color: #FFFFFF;
+    border: 1px solid rgb(176, 180, 185);
+    border-radius: .5rem;
+    box-sizing: border-box;
+    color: #111827;
+    font-size: 1rem;
+    font-weight: 450;
+    width: 64px;
+    height: 30px;
+    text-align: center;
+    text-decoration: none #D1D5DB solid;
+    text-decoration-thickness: auto;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.input_color:hover {
+    background-color: rgb(234, 237, 239);
+}
+
+.input_color:focus {
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+}
+
+.input_color:focus-visible {
+    box-shadow: none;
+}

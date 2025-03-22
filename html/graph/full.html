@@ -33,6 +33,7 @@ Full source code of elo-chess-tracker:
 		<link rel="stylesheet" href="/css/selects.css" />
 		<link rel="stylesheet" href="/css/footers.css" />
 		<link rel="stylesheet" href="/css/graphs.css" />
+		<link rel="stylesheet" href="/css/inputs.css" />
 	</head>
 
 	<body>
@@ -62,7 +63,7 @@ Full source code of elo-chess-tracker:
 								<option value="fixed">Single color</option>
 								<option value="dynamic_rating">Color by rating</option>
 							</select>
-							<input type="color" id="color_picker_node" value="#1A5FB4" />
+							<input class="input_color" type="color" id="color_picker_node" value="#1A5FB4" />
 						</div>
 						<div class="label-and-select">
 							<label class="label_basic">Node size:</label>
@@ -70,7 +71,7 @@ Full source code of elo-chess-tracker:
 								<option value="fixed">Fixed size</option>
 								<option value="dynamic_rating">Size by rating</option>
 							</select>
-							<input type="number" id="size_picker_node" value="25" style="width: 56px" />
+							<input class="input_number" type="number" id="size_picker_node" value="25" />
 						</div>
 						<div class="label-and-select">
 							<label class="label_basic">Edge color:</label>
@@ -79,7 +80,7 @@ Full source code of elo-chess-tracker:
 								<option value="dynamic_games">Color by games</option>
 								<option value="dynamic_results">Color by results</option>
 							</select>
-							<input type="color" id="color_picker_edge" value="#62A0EA" />
+							<input class="input_color" type="color" id="color_picker_edge" value="#62A0EA" />
 						</div>
 						<div class="label-and-select">
 							<label class="label_basic">Edge size:</label>
@@ -88,7 +89,7 @@ Full source code of elo-chess-tracker:
 								<option value="dynamic_games">Size by games</option>
 								<option value="dynamic_results">Size by results</option>
 							</select>
-							<input type="number" id="size_picker_edge" value="10" style="width: 56px" />
+							<input class="input_number" type="number" id="size_picker_edge" value="10" />
 						</div>
 					</div>
 
