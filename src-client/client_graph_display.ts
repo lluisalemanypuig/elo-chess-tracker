@@ -47,6 +47,9 @@ function weight_edge(weight: any): number {
 }
 
 function normalize(v: number, min: number, max: number): number {
+	if (max == min) {
+		return 1;
+	}
 	return (v - min) / (max - min);
 }
 
@@ -261,7 +264,7 @@ function size_picker_node_changed(_event: any) {
 		const k = parseInt(size_picker_node.value);
 		for (const node of graph_data.nodes) {
 			const r = node.weight.rating;
-			server_graph.setNodeAttribute(node.id, 'size', k * normalize(r, min_rating, max_rating) + 3);
+			server_graph.setNodeAttribute(node.id, 'size', k * normalize(r, min_rating, max_rating));
 		}
 	}
 	display_graph();
