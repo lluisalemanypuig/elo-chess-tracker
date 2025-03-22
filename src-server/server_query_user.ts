@@ -155,14 +155,14 @@ export async function post_query_user_ranking(req: any, res: any) {
 
 	const time_control_id = req.body.tc_i;
 
-	let users: any[] = [];
-
+	let users_without_games: any[] = [];
+	let users_with_games: any[] = [];
 	{
 		const mem = UsersManager.get_instance();
 		for (let i = 0; i < mem.num_users(); ++i) {
 			const user = mem.get_user_at(i) as User;
 			if (user.get_rating(time_control_id).num_games > 0) {
-				users.push({
+				users_with_games.push({
 					name: user.get_full_name(),
 					rating: Math.round(user.get_rating(time_control_id).rating),
 					total_games: user.get_rating(time_control_id).num_games,
@@ -170,10 +170,16 @@ export async function post_query_user_ranking(req: any, res: any) {
 					drawn: user.get_rating(time_control_id).drawn,
 					lost: user.get_rating(time_control_id).lost
 				});
+			} else {
+				users_without_games.push({
+					name: user.get_full_name(),
+					rating: Math.round(user.get_rating(time_control_id).rating)
+				});
 			}
 		}
 	}
-	users.sort((u1: any, u2: any): number => {
+
+	users_with_games.sort((u1: any, u2: any): number => {
 		if (u1.rating < u2.rating) {
 			return 1;
 		}
@@ -183,5 +189,8 @@ export async function post_query_user_ranking(req: any, res: any) {
 		return -1;
 	});
 
-	res.status(200).send(users);
+	debug(log_now(), `    Found ${users_with_games.length} users with games.`);
+	debug(log_now(), `    Found ${users_without_games.length} users without games.`);
+
+	res.status(200).send({ with_games: users_with_games, without_games: users_without_games });
 }
