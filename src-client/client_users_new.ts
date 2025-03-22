@@ -107,6 +107,8 @@ async function submit_new_user_clicked(_event: any) {
 		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
 		return;
 	}
+
+	window.location.href = '/home';
 }
 
 window.onload = function () {
