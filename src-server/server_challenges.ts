@@ -28,7 +28,7 @@ const debug = Debug('ELO_TRACKER:server_challenges');
 
 import path from 'path';
 
-import { log_now, log_now_millis } from './utils/time';
+import { log_now } from './utils/time';
 import { is_user_logged_in } from './managers/session';
 import {
 	challenge_accept,
@@ -107,7 +107,7 @@ export async function post_challenge_send(req: any, res: any) {
 	}
 
 	debug(log_now(), `Send challenge from '${sender.get_username()}' to '${receiver.get_username()}'`);
-	challenge_send_new(sender.get_username(), receiver.get_username(), log_now_millis());
+	challenge_send_new(sender.get_username(), receiver.get_username(), log_now());
 
 	res.status(200).send();
 }
@@ -256,7 +256,7 @@ export async function post_challenge_set_result(req: any, res: any) {
 	challenge_set_result(
 		c,
 		setter_user,
-		log_now_millis(),
+		log_now(),
 		white_username,
 		black_username,
 		result,

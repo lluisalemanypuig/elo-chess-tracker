@@ -28,7 +28,7 @@ import path from 'path';
 import Debug from 'debug';
 const debug = Debug('ELO_TRACKER:server_challenges');
 
-import { DateStringLongMillis, log_now, long_date_to_short_and_tiny_date } from '../utils/time';
+import { DateStringLong, log_now, long_date_to_short_and_tiny_date } from '../utils/time';
 import { ChallengesManager } from './challenges_manager';
 import { EnvironmentManager } from './environment_manager';
 import { Challenge } from '../models/challenge';
@@ -66,7 +66,7 @@ export function challenge_set_retrieve(
  * @param when Timestamp
  * @returns The id of the challenge
  */
-export function challenge_send_new(sender: string, receiver: string, when: DateStringLongMillis): Challenge {
+export function challenge_send_new(sender: string, receiver: string, when: DateStringLong): Challenge {
 	debug(log_now(), 'Adding a new challenge...');
 
 	let mem = ChallengesManager.get_instance();
@@ -127,7 +127,7 @@ export function challenge_decline(c: Challenge): void {
 export function challenge_set_result(
 	c: Challenge,
 	by: string,
-	when: DateStringLongMillis,
+	when: DateStringLong,
 	white: string,
 	black: string,
 	result: GameResult,
@@ -166,6 +166,7 @@ export function challenge_agree_result(c: Challenge): void {
 	const white = mem.get_user_by_username(c.get_white() as string) as User;
 	const black = mem.get_user_by_username(c.get_black() as string) as User;
 
+	const rand_milli = `${Math.floor(Math.random() * 999)}`;
 	game_add_new(
 		white,
 		black,
@@ -173,7 +174,7 @@ export function challenge_agree_result(c: Challenge): void {
 		c.get_time_control_id() as TimeControlID,
 		c.get_time_control_name() as string,
 		split[0],
-		split[1]
+		split[1] + ':' + (rand_milli.length == 1 ? '00' : rand_milli.length == 2 ? '0' : '') + rand_milli
 	);
 
 	{
