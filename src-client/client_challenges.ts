@@ -28,6 +28,10 @@ function create_label_text(text: string): HTMLLabelElement {
 	return label;
 }
 
+function format_date(date: string) {
+	return date.replace('..', ', ').replace('-', '/').replace('-', '/');
+}
+
 async function send_challenge_button_clicked(_event: any) {
 	let username_list_input = document.getElementById('username_list') as HTMLInputElement;
 	const username_option = document.querySelector('option[value="' + username_list_input.value + '"]');
@@ -98,33 +102,47 @@ async function fill_challenges_received() {
 	const data = (await response.json()) as any[];
 
 	let challenge_list = document.createElement('ul') as HTMLUListElement;
+	challenge_list.className = 'challenge_items';
 	data.forEach(function (elem: any) {
-		let li = document.createElement('li') as HTMLLIElement;
-		li.appendChild(
-			document.createTextNode(`Challenge sent by ${elem.sent_by}. Sent on ${elem.sent_when.replace('..', ' ')}. `)
-		);
+		{
+			let li = document.createElement('li') as HTMLLIElement;
+			li.className = 'challenge_items_bullet';
+			li.textContent = `Challenge sent by ${elem.sent_by}.`;
+			challenge_list.appendChild(li);
 
-		// add accept tag
-		let accept_tag = document.createElement('a') as HTMLAnchorElement;
-		accept_tag.id = elem.id;
-		accept_tag.onclick = accept_challenge_tag_clicked;
-		accept_tag.setAttribute('style', 'color:blue;text-decoration:underline;cursor:pointer');
-		accept_tag.textContent = 'Accept.';
-		li.appendChild(accept_tag);
-		li.appendChild(document.createTextNode(' '));
+			li = document.createElement('li') as HTMLLIElement;
+			li.className = 'challenge_items_nobullet';
+			li.textContent = `Sent on ${format_date(elem.sent_when)}.`;
+			challenge_list.appendChild(li);
+		}
 
-		// add decline tag
-		let decline_tag = document.createElement('a') as HTMLAnchorElement;
-		decline_tag.id = elem.id;
-		decline_tag.onclick = decline_challenge_tag_clicked;
-		decline_tag.setAttribute('style', 'color:blue;text-decoration:underline;cursor:pointer');
-		decline_tag.textContent = 'Decline.';
-		li.appendChild(decline_tag);
+		{
+			// accept tag
+			let accept_tag = document.createElement('a') as HTMLAnchorElement;
+			accept_tag.id = elem.id;
+			accept_tag.onclick = accept_challenge_tag_clicked;
+			accept_tag.setAttribute('style', 'color:blue;text-decoration:underline;cursor:pointer');
+			accept_tag.textContent = 'Accept.';
 
-		// append paragraph to element list
-		challenge_list.appendChild(li);
+			// decline tag
+			let decline_tag = document.createElement('a') as HTMLAnchorElement;
+			decline_tag.id = elem.id;
+			decline_tag.onclick = decline_challenge_tag_clicked;
+			decline_tag.setAttribute('style', 'color:blue;text-decoration:underline;cursor:pointer');
+			decline_tag.textContent = 'Decline.';
+
+			let li = document.createElement('li') as HTMLLIElement;
+			li.className = 'challenge_items_nobullet';
+			li.appendChild(accept_tag);
+			li.appendChild(document.createTextNode(' '));
+			li.appendChild(decline_tag);
+			challenge_list.appendChild(li);
+		}
 	});
-	(document.getElementById('challenges_received') as HTMLDivElement).appendChild(challenge_list);
+
+	if (data.length > 0) {
+		(document.getElementById('challenges_received') as HTMLDivElement).appendChild(challenge_list);
+	}
 }
 
 async function fill_challenges_sent() {
@@ -140,14 +158,23 @@ async function fill_challenges_sent() {
 	const data = (await response.json()) as any[];
 
 	let challenge_list = document.createElement('ul') as HTMLUListElement;
+	challenge_list.className = 'challenge_items';
+
 	data.forEach(function (elem: any) {
 		let li = document.createElement('li') as HTMLLIElement;
-		li.textContent = `Challenge sent to ${elem.sent_to}. Sent on ${elem.sent_when.replace('..', ' ')}.`;
+		li.className = 'challenge_items_bullet';
+		li.textContent = `Challenge sent to ${elem.sent_to}.`;
+		challenge_list.appendChild(li);
 
-		// append paragraph to element list
+		li = document.createElement('li') as HTMLLIElement;
+		li.className = 'challenge_items_nobullet';
+		li.textContent = `Sent on ${format_date(elem.sent_when)}.`;
 		challenge_list.appendChild(li);
 	});
-	(document.getElementById('challenges_sent') as HTMLDivElement).appendChild(challenge_list);
+
+	if (data.length > 0) {
+		(document.getElementById('challenges_sent') as HTMLDivElement).appendChild(challenge_list);
+	}
 }
 
 async function fill_challenges_pending_result() {
@@ -176,12 +203,24 @@ async function fill_challenges_pending_result() {
 
 	let all_challenges_list = document.getElementById('challenges_pending_result__list') as HTMLDivElement;
 	challenge_data.forEach(function (elem: any, index: number) {
-		let li = document.createElement('li') as HTMLLIElement;
-		li.textContent = `Challenge with ${elem.opponent}, sent on ${elem.sent_when.replace('..', ' ')}.`;
+		{
+			let header = document.createElement('ul') as HTMLUListElement;
+			header.className = 'challenge_items';
+			{
+				let li = document.createElement('li') as HTMLLIElement;
+				li.className = 'challenge_items_bullet';
+				li.textContent = `Challenge with ${elem.opponent}.`;
+				header.appendChild(li);
+			}
 
-		// append paragraph to element list
-		all_challenges_list.appendChild(li);
-		li.classList.add('challenge_list_item');
+			{
+				let li = document.createElement('li') as HTMLLIElement;
+				li.className = 'challenge_items_nobullet';
+				li.textContent = `Sent on ${format_date(elem.sent_when)}.`;
+				header.appendChild(li);
+			}
+			all_challenges_list.appendChild(header);
+		}
 
 		let challenge_div = document.createElement('div') as HTMLDivElement;
 
@@ -292,8 +331,9 @@ async function fill_challenges_pending_result() {
 
 			all_challenges_list.appendChild(submit_result_button);
 		}
+
+		(document.getElementById('challenges_pending_result') as HTMLDivElement).appendChild(all_challenges_list);
 	});
-	(document.getElementById('challenges_pending_result') as HTMLDivElement).appendChild(all_challenges_list);
 }
 
 async function submit_result_challenge_button_clicked(event: any) {
@@ -347,16 +387,47 @@ async function fill_challenges_confirm_result_other() {
 	const challenge_data = (await response.json()) as any[];
 
 	let challenge_list = document.createElement('ul') as HTMLUListElement;
+	challenge_list.className = 'challenge_items';
 	challenge_data.forEach(function (elem: any) {
-		let li = document.createElement('li') as HTMLLIElement;
-		li.textContent = `On ${elem.sent_when.replace('..', ' ')}. White: ${elem.white}. Black: ${
-			elem.black
-		}. Result: ${elem.result}. Time control: ${elem.time_control}`;
+		{
+			let li = document.createElement('li') as HTMLLIElement;
+			li.className = 'challenge_items_bullet';
+			li.textContent = `On ${format_date(elem.sent_when)}.`;
+			challenge_list.appendChild(li);
+		}
 
-		// append paragraph to element list
-		challenge_list.appendChild(li);
+		{
+			let li = document.createElement('li') as HTMLLIElement;
+			li.className = 'challenge_items_nobullet';
+			li.textContent = `White: ${elem.white}.`;
+			challenge_list.appendChild(li);
+		}
+
+		{
+			let li = document.createElement('li') as HTMLLIElement;
+			li.className = 'challenge_items_nobullet';
+			li.textContent = `Black: ${elem.black}.`;
+			challenge_list.appendChild(li);
+		}
+
+		{
+			let li = document.createElement('li') as HTMLLIElement;
+			li.className = 'challenge_items_nobullet';
+			li.textContent = `Result: ${elem.result}.`;
+			challenge_list.appendChild(li);
+		}
+
+		{
+			let li = document.createElement('li') as HTMLLIElement;
+			li.className = 'challenge_items_nobullet';
+			li.textContent = `Time control: ${elem.time_control}.`;
+			challenge_list.appendChild(li);
+		}
 	});
-	(document.getElementById('challenges_confirm_result_other') as HTMLDivElement).appendChild(challenge_list);
+
+	if (challenge_data.length > 0) {
+		(document.getElementById('challenges_confirm_result_other') as HTMLDivElement).appendChild(challenge_list);
+	}
 }
 
 async function fill_challenges_confirm_result_self() {
@@ -373,33 +444,70 @@ async function fill_challenges_confirm_result_self() {
 	const challenge_data = (await response.json()) as any[];
 
 	let challenge_list = document.createElement('ul') as HTMLUListElement;
+	challenge_list.className = 'challenge_items';
 	challenge_data.forEach(function (elem: any) {
-		let li = document.createElement('li') as HTMLLIElement;
-		li.textContent = `On ${elem.sent_when.replace('..', ' ')}. White: ${elem.white}. Black: ${
-			elem.black
-		}. Result: ${elem.result}. Time control: ${elem.time_control}. `;
+		{
+			let li = document.createElement('li') as HTMLLIElement;
+			li.className = 'challenge_items_bullet';
+			li.textContent = `On ${format_date(elem.sent_when)}.`;
+			challenge_list.appendChild(li);
+		}
 
-		// add accept tag
-		let accept_tag = document.createElement('a') as HTMLAnchorElement;
-		accept_tag.id = elem.id;
-		accept_tag.onclick = agree_challenge_result_tag_clicked;
-		accept_tag.setAttribute('style', 'color:blue;text-decoration:underline;cursor:pointer');
-		accept_tag.textContent = 'Agree.';
-		li.appendChild(accept_tag);
-		li.appendChild(document.createTextNode(' '));
+		{
+			let li = document.createElement('li') as HTMLLIElement;
+			li.className = 'challenge_items_nobullet';
+			li.textContent = `White: ${elem.white}.`;
+			challenge_list.appendChild(li);
+		}
 
-		// add decline tag
-		let decline_tag = document.createElement('a') as HTMLAnchorElement;
-		decline_tag.id = elem.id;
-		decline_tag.onclick = disagree_challenge_result_tag_clicked;
-		decline_tag.setAttribute('style', 'color:blue;text-decoration:underline;cursor:pointer');
-		decline_tag.textContent = 'Disagree.';
-		li.appendChild(decline_tag);
+		{
+			let li = document.createElement('li') as HTMLLIElement;
+			li.className = 'challenge_items_nobullet';
+			li.textContent = `Black: ${elem.black}.`;
+			challenge_list.appendChild(li);
+		}
 
-		// append paragraph to element list
-		challenge_list.appendChild(li);
+		{
+			let li = document.createElement('li') as HTMLLIElement;
+			li.className = 'challenge_items_nobullet';
+			li.textContent = `Result: ${elem.result}.`;
+			challenge_list.appendChild(li);
+		}
+
+		{
+			let li = document.createElement('li') as HTMLLIElement;
+			li.className = 'challenge_items_nobullet';
+			li.textContent = `Time control: ${elem.time_control}.`;
+			challenge_list.appendChild(li);
+		}
+
+		{
+			// accept tag
+			let accept_tag = document.createElement('a') as HTMLAnchorElement;
+			accept_tag.id = elem.id;
+			accept_tag.onclick = agree_challenge_result_tag_clicked;
+			accept_tag.setAttribute('style', 'color:blue;text-decoration:underline;cursor:pointer');
+			accept_tag.textContent = 'Agree.';
+
+			// decline tag
+			let decline_tag = document.createElement('a') as HTMLAnchorElement;
+			decline_tag.id = elem.id;
+			decline_tag.onclick = disagree_challenge_result_tag_clicked;
+			decline_tag.setAttribute('style', 'color:blue;text-decoration:underline;cursor:pointer');
+			decline_tag.textContent = 'Disagree.';
+
+			let li = document.createElement('li') as HTMLLIElement;
+			li.className = 'challenge_items_nobullet';
+			li.appendChild(accept_tag);
+			li.appendChild(document.createTextNode(' '));
+			li.appendChild(decline_tag);
+			challenge_list.appendChild(li);
+		}
 	});
-	(document.getElementById('challenges_confirm_result_self') as HTMLDivElement).appendChild(challenge_list);
+
+	if (challenge_data.length > 0) {
+		(document.getElementById('challenges_confirm_result_self') as HTMLDivElement).appendChild(challenge_list);
+	}
 }
 
 async function agree_challenge_result_tag_clicked(event: any) {

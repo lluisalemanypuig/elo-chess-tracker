@@ -31,9 +31,20 @@ Full source code of elo-chess-tracker:
 	width: 100%;
 }
 
-/* challenge_list_item */
+/* challenge_items */
 
-.challenge_list_item {
-	margin-top: 10px;
-	margin-bottom: 20px;
+.challenge_items {
+	display: inline-block;
+	text-align: left;
+	padding-left: 0;
+}
+
+.challenge_items_bullet {
+	list-style-type: disc;
+	list-style-position: inside;
+}
+
+.challenge_items_nobullet {
+	list-style-type: none;
+	padding-left: 1em;
 }
