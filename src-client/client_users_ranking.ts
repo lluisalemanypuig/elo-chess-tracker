@@ -47,28 +47,50 @@ async function fill_ranking(_event: any) {
 		return;
 	}
 
-	const users = (await response.json()) as any[];
+	const list_of_users = (await response.json()) as any;
 
-	let table = document.getElementById('users_table') as HTMLTableElement;
+	{
+		let table = document.getElementById('users_table_with_games') as HTMLTableElement;
+		let old_tbody = table.getElementsByTagName('tbody')[0];
+		let new_tbody = document.createElement('tbody');
 
-	let old_tbody = table.getElementsByTagName('tbody')[0];
-	let new_tbody = document.createElement('tbody');
+		const users = list_of_users.with_games;
+		for (var i = 0; i < users.length; i++) {
+			let row = document.createElement('tr');
+			row.appendChild(new_cell(users[i].name));
+			row.appendChild(new_cell(users[i].rating));
+			row.appendChild(new_cell(users[i].total_games));
+			row.appendChild(new_cell(users[i].won));
+			row.appendChild(new_cell(users[i].drawn));
+			row.appendChild(new_cell(users[i].lost));
+			new_tbody.appendChild(row);
+		}
 
-	for (var i = 0; i < users.length; i++) {
-		let row = document.createElement('tr');
-
-		row.appendChild(new_cell(users[i].name));
-		row.appendChild(new_cell(users[i].rating));
-		row.appendChild(new_cell(users[i].total_games));
-		row.appendChild(new_cell(users[i].won));
-		row.appendChild(new_cell(users[i].drawn));
-		row.appendChild(new_cell(users[i].lost));
-
-		new_tbody.appendChild(row);
+		if (old_tbody.parentNode != undefined) {
+			old_tbody.parentNode.replaceChild(new_tbody, old_tbody);
+		}
 	}
 
-	if (old_tbody.parentNode != undefined) {
-		old_tbody.parentNode.replaceChild(new_tbody, old_tbody);
+	{
+		let table = document.getElementById('users_table_without_games') as HTMLTableElement;
+		let old_tbody = table.getElementsByTagName('tbody')[0];
+		let new_tbody = document.createElement('tbody');
+
+		const users = list_of_users.without_games;
+		for (var i = 0; i < users.length; i++) {
+			let row = document.createElement('tr');
+			row.appendChild(new_cell(users[i].name));
+			row.appendChild(new_cell(users[i].rating));
+			row.appendChild(new_cell('-'));
+			row.appendChild(new_cell('-'));
+			row.appendChild(new_cell('-'));
+			row.appendChild(new_cell('-'));
+			new_tbody.appendChild(row);
+		}
+
+		if (old_tbody.parentNode != undefined) {
+			old_tbody.parentNode.replaceChild(new_tbody, old_tbody);
+		}
 	}
 }
 
