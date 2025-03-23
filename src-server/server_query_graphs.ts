@@ -74,11 +74,11 @@ function retrieve_graph_user(username: string, time_control_id: TimeControlID): 
 
 	let list_nodes: NodeInfo[];
 	{
-		let i = new NodeInfo();
-		i.full_name = this_user.get_full_name();
-		i.id = this_user_rand_id;
-		i.weight.rating = this_user.get_rating(time_control_id).rating;
-		list_nodes = [i];
+		let node = new NodeInfo();
+		node.full_name = this_user.get_full_name();
+		node.id = this_user_rand_id;
+		node.weight.rating = this_user.get_rating(time_control_id).rating;
+		list_nodes = [node];
 	}
 	let list_edges: EdgeInfo[] = [];
 
@@ -87,52 +87,49 @@ function retrieve_graph_user(username: string, time_control_id: TimeControlID): 
 		const edge_user_rand_id = users.get_user_random_ID_at(edge_user_idx) as number;
 		const edge_user = users.get_user_at(edge_user_idx) as User;
 
-		{
-			let i = new NodeInfo();
-			i.id = edge_user_rand_id;
-			i.full_name = edge_user.get_full_name();
-			i.weight.rating = edge_user.get_rating(time_control_id).rating;
-			list_nodes.push(i);
-		}
-		{
-			let ei = new EdgeInfo();
-			ei.source = this_user_rand_id;
-			ei.target = edge_user_rand_id;
-			ei.label = e.metadata.to_string();
-			ei.weight.wins = e.metadata.num_games_won;
-			ei.weight.draws = e.metadata.num_games_drawn;
-			ei.weight.losses = e.metadata.num_games_lost;
-			list_edges.push(ei);
-		}
+		let node = new NodeInfo();
+		node.id = edge_user_rand_id;
+		node.full_name = edge_user.get_full_name();
+		node.weight.rating = edge_user.get_rating(time_control_id).rating;
+		list_nodes.push(node);
+
+		let edge = new EdgeInfo();
+		edge.source = this_user_rand_id;
+		edge.target = edge_user_rand_id;
+		edge.label = e.metadata.to_string();
+		edge.weight.wins = e.metadata.num_games_won;
+		edge.weight.draws = e.metadata.num_games_drawn;
+		edge.weight.losses = e.metadata.num_games_lost;
+		list_edges.push(edge);
 	});
 	G.get_ingoing_edges(username)?.forEach((e: Edge) => {
-		const edge_user_idx = users.get_user_index_by_username(e.neighbor) as number;
-		const edge_user_rand_id = users.get_user_random_ID_at(edge_user_idx) as number;
+		const neighbor_idx = users.get_user_index_by_username(e.neighbor) as number;
+		const neighbor_rand_id = users.get_user_random_ID_at(neighbor_idx) as number;
+
+		console.log(`Inspecting neighbor ${e.neighbor}`);
 
 		const idx = search_linear_by_key(list_nodes, (i: NodeInfo): boolean => {
-			return i.id == edge_user_rand_id;
+			return i.id == neighbor_rand_id;
 		});
 
 		if (idx == -1) {
-			const edge_user = users.get_user_at(edge_user_idx) as User;
-			{
-				let i = new NodeInfo();
-				i.id = edge_user_rand_id;
-				i.weight.rating = edge_user.get_rating(time_control_id).rating;
-				i.full_name = edge_user.get_full_name();
-				list_nodes.push(i);
-			}
-			{
-				let ei = new EdgeInfo();
-				ei.source = edge_user_rand_id;
-				ei.target = this_user_rand_id;
-				ei.label = e.metadata.to_string();
-				ei.weight.wins = e.metadata.num_games_won;
-				ei.weight.draws = e.metadata.num_games_drawn;
-				ei.weight.losses = e.metadata.num_games_lost;
-				list_edges.push(ei);
-			}
+			const edge_user = users.get_user_at(neighbor_idx) as User;
+
+			let node = new NodeInfo();
+			node.id = neighbor_rand_id;
+			node.weight.rating = edge_user.get_rating(time_control_id).rating;
+			node.full_name = edge_user.get_full_name();
+			list_nodes.push(node);
 		}
+
+		let edge = new EdgeInfo();
+		edge.source = neighbor_rand_id;
+		edge.target = this_user_rand_id;
+		edge.label = e.metadata.to_string();
+		edge.weight.wins = e.metadata.num_games_won;
+		edge.weight.draws = e.metadata.num_games_drawn;
+		edge.weight.losses = e.metadata.num_games_lost;
+		list_edges.push(edge);
 	});
 
 	return [list_nodes, list_edges];
@@ -166,25 +163,25 @@ function retrieve_graph_full(querier: User, time_control_id: TimeControlID): [No
 
 			const edge_user_rand_id = users.get_user_random_ID_at(edge_user_idx) as number;
 
-			let ei = new EdgeInfo();
-			ei.source = this_user_rand_id;
-			ei.target = edge_user_rand_id;
-			ei.label = e.metadata.to_string();
-			ei.weight.wins = e.metadata.num_games_won;
-			ei.weight.draws = e.metadata.num_games_drawn;
-			ei.weight.losses = e.metadata.num_games_lost;
-			list_edges.push(ei);
+			let edge = new EdgeInfo();
+			edge.source = this_user_rand_id;
+			edge.target = edge_user_rand_id;
+			edge.label = e.metadata.to_string();
+			edge.weight.wins = e.metadata.num_games_won;
+			edge.weight.draws = e.metadata.num_games_drawn;
+			edge.weight.losses = e.metadata.num_games_lost;
+			list_edges.push(edge);
 
 			++out_degree;
 		});
 
 		const degree = G.get_in_degree(username) + out_degree;
 		if (degree > 0) {
-			let i = new NodeInfo();
-			i.full_name = this_user.get_full_name();
-			i.id = users.get_user_random_ID_at(idx) as number;
-			i.weight.rating = this_user.get_rating(time_control_id).rating;
-			list_nodes.push(i);
+			let node = new NodeInfo();
+			node.full_name = this_user.get_full_name();
+			node.id = users.get_user_random_ID_at(idx) as number;
+			node.weight.rating = this_user.get_rating(time_control_id).rating;
+			list_nodes.push(node);
 		}
 	}
 
