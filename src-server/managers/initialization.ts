@@ -26,7 +26,7 @@ Contact:
 import fs from 'fs';
 import path from 'path';
 import Debug from 'debug';
-const debug = Debug('ELO_TRACKER:server_initialization');
+const debug = Debug('ELO_TRACKER:managers/initialization');
 
 import { log_now } from '../utils/time';
 import { EnvironmentManager } from './environment_manager';

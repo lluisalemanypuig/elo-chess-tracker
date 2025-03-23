@@ -24,7 +24,7 @@ Contact:
 */
 
 import Debug from 'debug';
-const debug = Debug('ELO_TRACKER:server_time_control');
+const debug = Debug('ELO_TRACKER:server_query_time_control');
 
 import { log_now } from './utils/time';
 import { is_user_logged_in } from './managers/session';

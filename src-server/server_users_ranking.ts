@@ -24,7 +24,7 @@ Contact:
 */
 
 import Debug from 'debug';
-const debug = Debug('ELO_TRACKER:server_ranking');
+const debug = Debug('ELO_TRACKER:server_users_ranking');
 
 import path from 'path';
 

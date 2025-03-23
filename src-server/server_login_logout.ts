@@ -24,7 +24,7 @@ Contact:
 */
 
 import Debug from 'debug';
-const debug = Debug('ELO_TRACKER:server_login');
+const debug = Debug('ELO_TRACKER:server_login_logout');
 
 import { log_now } from './utils/time';
 import { is_password_of_user_correct } from './utils/encrypt';

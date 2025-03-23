@@ -24,7 +24,7 @@ Contact:
 */
 
 import Debug from 'debug';
-const debug = Debug('ELO_TRACKER:server_user_edit');
+const debug = Debug('ELO_TRACKER:server_users_edit');
 
 import path from 'path';
 

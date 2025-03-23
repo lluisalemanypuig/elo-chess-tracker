@@ -26,7 +26,7 @@ Contact:
 import fs from 'fs';
 import path from 'path';
 import Debug from 'debug';
-const debug = Debug('ELO_TRACKER:server_challenges');
+const debug = Debug('ELO_TRACKER:managers/challenges');
 
 import { DateStringLong, log_now, long_date_to_short_and_tiny_date } from '../utils/time';
 import { ChallengesManager } from './challenges_manager';

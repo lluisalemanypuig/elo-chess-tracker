@@ -24,7 +24,7 @@ Contact:
 */
 
 import Debug from 'debug';
-const debug = Debug('ELO_TRACKER:server_games');
+const debug = Debug('ELO_TRACKER:server_users_password_changes');
 
 import path from 'path';
 

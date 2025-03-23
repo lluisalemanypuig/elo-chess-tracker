@@ -27,7 +27,7 @@ import Debug from 'debug';
 
 import { log_now } from '../utils/time';
 import { User } from '../models/user';
-const debug = Debug('ELO_TRACKER:server_session');
+const debug = Debug('ELO_TRACKER:managers/session');
 
 import { SessionIDManager } from './session_id_manager';
 import { SessionID } from '../models/session_id';

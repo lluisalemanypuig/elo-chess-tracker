@@ -25,6 +25,10 @@ Contact:
 
 // Code adapted from: https://www.w3schools.com/js/js_cookies.asp
 
+import Debug from 'debug';
+import { log_now } from './time';
+const debug = Debug('ELO_TRACKER:utils/cookies');
+
 /**
  * @brief Constructs a cookie from a JSON object.
  *
@@ -75,6 +79,9 @@ export function make_cookie_string(values: any): string {
 		secure = values['secure'];
 	}
 	cookie += ';' + encodeURIComponent(secure);
+
+	debug(log_now(), 'Cookie constructed:');
+	debug(log_now(), '    ', cookie);
 
 	return cookie;
 }

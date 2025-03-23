@@ -26,7 +26,7 @@ Contact:
 import path from 'path';
 import fs from 'fs';
 import Debug from 'debug';
-const debug = Debug('ELO_TRACKER:server_game_history');
+const debug = Debug('ELO_TRACKER:managers/games');
 
 import { DateStringLongMillis, DateStringShort, log_now, long_date_to_short_date } from '../utils/time';
 import { Player } from '../models/player';
