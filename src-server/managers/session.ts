@@ -104,10 +104,18 @@ export function is_user_logged_in(session: SessionID): [boolean, string, User | 
 		debug(log_now(), `User '${session.username}' does not exist.`);
 		return [false, 'Forbidden access', undefined];
 	}
+
+	debug(log_now(), `User '${session.username}' exists and is trying to access the page.`);
+	debug(log_now(), `Checking now if the user has a valid session ID.`);
+
+	// at this point, the user exists --> check if the session id received exists
 	if (!SessionIDManager.get_instance().has_session_id(session)) {
-		debug(log_now(), `The session ID received for user '${session.username}' does not exist.`);
-		debug(log_now(), `The user is not logged in the device they are trying to log in from.`);
+		debug(log_now(), `    The session ID received for user '${session.username}' does not exist.`);
+		debug(log_now(), '    This means that the user is not logged into the web in.');
+		debug(log_now(), '    the device they are trying to access the web from.');
 		return [false, 'Forbidden access', undefined];
+	} else {
+		debug(log_now(), `    Valid session ID received for user '${session.username}'.`);
 	}
 	return [true, '', user as User];
 }
