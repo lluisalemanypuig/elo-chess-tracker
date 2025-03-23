@@ -30,47 +30,9 @@ import Debug from 'debug';
 const debug = Debug('ELO_TRACKER:app_router');
 import { log_now } from './utils/time';
 
-import { SessionIDManager } from './managers/session_id_manager';
 import { EnvironmentManager } from './managers/environment_manager';
-import { SessionID } from './models/session_id';
 
 let router = express.Router();
-router.get('/', (req: any, res: any) => {
-	debug(log_now(), `Username received in cookie: '${req.cookies.user}'`);
-
-	const session = SessionID.from_cookie(req.cookies);
-	const mem = SessionIDManager.get_instance();
-	if (mem.has_session_id(session)) {
-		debug(log_now(), `    Session id for user '${session.username}' exists. Please, come in.`);
-		res.status(200)
-			.setHeader('Cache-Control', 'public, max-age=864000, immutable')
-			.sendFile(path.join(__dirname, '../html/home.html'));
-	} else {
-		debug(log_now(), `    No session id exists.`);
-		debug(log_now(), `    User ${req.cookies.user} will have to login using their credentials.`);
-		res.status(200)
-			.setHeader('Cache-Control', 'public, max-age=864000, immutable')
-			.sendFile(path.join(__dirname, '../html/login_screen.html'));
-	}
-});
-
-// retrieve home page
-router.get('/home', (req: any, res: any) => {
-	debug(log_now(), 'GET /home');
-
-	const session = SessionID.from_cookie(req.cookies);
-	const r = is_user_logged_in(session);
-	if (!r[0]) {
-		debug(log_now(), `    User ${session.username} is not logged in.`);
-		res.status(401).send('Forbidden');
-		return;
-	}
-
-	debug(log_now(), `    User ${session.username} is logged in. Access granted.`);
-	res.status(200)
-		.setHeader('Cache-Control', 'public, max-age=864000, immutable')
-		.sendFile(path.join(__dirname, '../html/home.html'));
-});
 
 // serve all *.css files
 router.get('/css/*.css', (req: any, res: any) => {
@@ -124,6 +86,11 @@ router.get('/title/home_page', (_req: any, res: any) => {
 });
 
 /* ************************************************************************** */
+
+// route the login page and the home page
+import { get_home_page, get_login_page } from './server_home';
+router.get('/', get_login_page);
+router.get('/home', get_home_page);
 
 // serve all javascript files!
 router.get('/js/*', (req: any, res: any) => {
@@ -240,7 +207,6 @@ router.post('/recalculate/ratings', post_recalculate_ratings);
 
 // recalculation of all graphs
 import { post_recalculate_graphs } from './server_graphs';
-import { is_user_logged_in } from './managers/session';
 router.post('/recalculate/graphs', post_recalculate_graphs);
 
 export { router };
