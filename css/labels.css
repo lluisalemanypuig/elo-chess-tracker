@@ -22,9 +22,9 @@ Full source code of elo-chess-tracker:
 /* label_basic */
 
 .label_basic {
-    background-color: #FFFFFF;
+    background-color: rgb(255, 255, 255);
     box-sizing: border-box;
-    color: #111827;
+    color: rgb(17, 24, 39);
     font-size: 1rem;
     font-weight: 300;
     line-height: 1.25rem;

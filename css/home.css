@@ -26,7 +26,7 @@ Full source code of elo-chess-tracker:
 }
 
 a, #logout_link, #recalculate_ratings_link, #recalculate_graphs {
-	color: blue;
+	color: rgb(0, 0, 255);
 	cursor: pointer
 }
 
