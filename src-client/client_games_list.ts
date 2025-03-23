@@ -107,7 +107,7 @@ function new_select_cell_result(original_result: string, game_id: string) {
 	select_result.value = result_from_text_to_value(original_result);
 	select_result.onchange = select_result_game_on_change;
 	select_result.setAttribute('original_value', result_from_text_to_value(original_result));
-	select_result.setAttribute('button_id', 'button_edit-' + game_id);
+	select_result.setAttribute('button_id', 'button_edit_' + game_id);
 
 	return select_result;
 }
