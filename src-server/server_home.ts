@@ -68,7 +68,7 @@ export async function get_home_page(req: any, res: any) {
 	const r = is_user_logged_in(session);
 	if (!r[0]) {
 		debug(log_now(), `    User ${session.username} is not logged in.`);
-		res.status(401).send('Forbidden');
+		res.status(401).send(r[1]);
 		return;
 	}
 
