@@ -21,7 +21,7 @@ Full source code of elo-chess-tracker:
 
 import 'htmx.org';
 
-import EdgeCurveProgram from '@sigma/edge-curve';
+import { EdgeCurvedArrowProgram } from '@sigma/edge-curve';
 import Graph from 'graphology';
 import Sigma from 'sigma';
 import { EdgeArrowProgram } from 'sigma/rendering';
@@ -68,7 +68,7 @@ function initialize_sigma() {
 		renderEdgeLabels: true,
 		edgeProgramClasses: {
 			straight: EdgeArrowProgram,
-			curved: EdgeCurveProgram
+			curvedArrow: EdgeCurvedArrowProgram
 		}
 	});
 }
@@ -141,7 +141,7 @@ async function load_graph() {
 		for (let v of server_graph.outNeighborEntries(u.node)) {
 			const found = server_graph.hasDirectedEdge(v.neighbor, u.node);
 			if (found) {
-				server_graph.setEdgeAttribute(u.node, v.neighbor, 'type', 'curved');
+				server_graph.setEdgeAttribute(u.node, v.neighbor, 'type', 'curvedArrow');
 				server_graph.setEdgeAttribute(u.node, v.neighbor, 'curvature', 0.25);
 			}
 		}
