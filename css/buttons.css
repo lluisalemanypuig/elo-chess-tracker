@@ -129,26 +129,35 @@ Full source code of elo-chess-tracker:
 /* button_edit_game */
 
 .button_edit_game {
-    background-color: #FFFFFF;
     border: 1px solid rgb(209, 213, 219);
     border-radius: .5rem;
     box-sizing: border-box;
-    color: #111827;
     font-size: .875rem;
-    font-weight: 350;
+    color: #111827;
     padding: .5rem 1.25rem;
     text-align: center;
     text-decoration: none #D1D5DB solid;
     text-decoration-thickness: auto;
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    cursor: pointer;
     user-select: none;
     -webkit-user-select: none;
     touch-action: manipulation;
 }
 
+.button_edit_game:disabled {
+    font-weight: 350;
+    background-color: #dcdcdc;
+    cursor: hand;
+}
+
+.button_edit_game:enabled {
+    font-weight: 350;
+    background-color: #ffffff;
+    cursor: pointer;
+}
+
 .button_edit_game:hover {
-    background-color: rgb(220, 217, 217);
+    background-color: #dcdcdc;
 }
 
 .button_edit_game:focus {
