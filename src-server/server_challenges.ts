@@ -49,7 +49,7 @@ import { GameResult } from './models/game';
 import { UsersManager } from './managers/users_manager';
 import { ConfigurationManager } from './managers/configuration_manager';
 
-export async function get_challenge_page(req: any, res: any) {
+export async function get_page_challenge(req: any, res: any) {
 	debug(log_now(), 'GET /challenge...');
 
 	const session = SessionID.from_cookie(req.cookies);

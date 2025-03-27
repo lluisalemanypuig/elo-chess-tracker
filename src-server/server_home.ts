@@ -32,7 +32,7 @@ import { SessionID } from './models/session_id';
 import { is_user_logged_in } from './managers/session';
 import { ConfigurationManager } from './managers/configuration_manager';
 
-export async function get_login_page(req: any, res: any) {
+export async function get_page_login(req: any, res: any) {
 	let send_home: boolean;
 
 	if ('user' in req.cookies) {
@@ -62,7 +62,7 @@ export async function get_login_page(req: any, res: any) {
 	}
 }
 
-export async function get_home_page(req: any, res: any) {
+export async function get_page_home(req: any, res: any) {
 	debug(log_now(), 'GET /home');
 
 	const session = SessionID.from_cookie(req.cookies);

@@ -112,9 +112,9 @@ router.get('/title/home_page', (_req: any, res: any) => {
 /* ************************************************************************** */
 
 // route the login page and the home page
-import { get_home_page, get_login_page } from './server_home';
-router.get('/', get_login_page);
-router.get('/home', get_home_page);
+import { get_page_home, get_page_login } from './server_home';
+router.get('/', get_page_login);
+router.get('/home', get_page_home);
 
 // serve all javascript files!
 router.get('/js/*', (req: any, res: any) => {
@@ -179,26 +179,26 @@ router.post('/user/logout', post_user_logout);
 
 // creation of a new user
 import { post_user_create, get_page_user_create } from './server_users_new';
-router.get('/user/create', get_page_user_create);
+router.get('/page/user/create', get_page_user_create);
 router.post('/user/create', post_user_create);
 
 // edition of an existing user
 import { post_user_edit, get_page_user_edit } from './server_users_edit';
-router.get('/user/edit', get_page_user_edit);
+router.get('/page/user/edit', get_page_user_edit);
 router.post('/user/edit', post_user_edit);
 
 // change of password
-import { get_user_password_change_page, post_user_password_change } from './server_users_password_change';
-router.get('/user/password_change', get_user_password_change_page);
+import { get_page_user_password_change, post_user_password_change } from './server_users_password_change';
+router.get('/page/user/password_change', get_page_user_password_change);
 router.post('/user/password_change', post_user_password_change);
 
 // retrieve ranking of players
 import { get_page_user_ranking } from './server_users_ranking';
-router.get('/user/ranking', get_page_user_ranking);
+router.get('/page/user/ranking', get_page_user_ranking);
 
 // create a new game
 import { get_page_game_create, post_game_create } from './server_games';
-router.get('/game/create', get_page_game_create);
+router.get('/page/game/create', get_page_game_create);
 router.post('/game/create', post_game_create);
 
 // editing a game's result
@@ -207,17 +207,17 @@ router.post('/game/edit_result', post_game_edit_result);
 
 // retrieve list of games
 import { get_page_game_list_all, get_page_game_list_own } from './server_games';
-router.get('/game/list/own', get_page_game_list_own);
-router.get('/game/list/all', get_page_game_list_all);
+router.get('/page/game/list/own', get_page_game_list_own);
+router.get('/page/game/list/all', get_page_game_list_all);
 
 // retrieve graphs of the webpage
 import { get_page_graph_own, get_page_graph_full } from './server_graphs';
-router.get('/graph/own', get_page_graph_own);
-router.get('/graph/full', get_page_graph_full);
+router.get('/page/graph/own', get_page_graph_own);
+router.get('/page/graph/full', get_page_graph_full);
 
 // challenges management
-import { get_challenge_page } from './server_challenges';
-router.get('/challenge', get_challenge_page);
+import { get_page_challenge } from './server_challenges';
+router.get('/challenge', get_page_challenge);
 import { post_challenge_send } from './server_challenges';
 router.post('/challenge/send', post_challenge_send);
 import { post_challenge_accept, post_challenge_decline } from './server_challenges';

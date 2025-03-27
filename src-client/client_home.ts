@@ -56,31 +56,31 @@ function fill_action_links(user_actions: string[], user_roles: string[]) {
 
 	if (user_actions.includes(CREATE_USER)) {
 		let user_create_link = document.createElement('a') as HTMLAnchorElement;
-		user_create_link.href = '/user/create';
+		user_create_link.href = '/page/user/create';
 		user_create_link.text = 'Create new user';
 		action_links.appendChild(user_create_link);
 	}
 	if (user_actions.includes(EDIT_USER)) {
 		let user_edit_link = document.createElement('a') as HTMLAnchorElement;
-		user_edit_link.href = '/user/edit';
+		user_edit_link.href = '/page/user/edit';
 		user_edit_link.text = 'Edit user';
 		action_links.appendChild(user_edit_link);
 	}
 	if (user_actions.includes(CREATE_GAMES)) {
 		let game_create_link = document.createElement('a') as HTMLAnchorElement;
-		game_create_link.href = '/game/create';
+		game_create_link.href = '/page/game/create';
 		game_create_link.text = 'Create new game';
 		action_links.appendChild(game_create_link);
 	}
 	if (user_actions.includes(SEE_GAMES_USER)) {
 		let see_all_games_link = document.createElement('a') as HTMLAnchorElement;
-		see_all_games_link.href = '/game/list/all';
+		see_all_games_link.href = '/page/game/list/all';
 		see_all_games_link.text = 'See all games';
 		action_links.appendChild(see_all_games_link);
 	}
 	if (user_actions.includes(SEE_GRAPHS_USER)) {
 		let see_full_graph_link = document.createElement('a') as HTMLAnchorElement;
-		see_full_graph_link.href = '/graph/full';
+		see_full_graph_link.href = '/page/graph/full';
 		see_full_graph_link.text = 'See the full graph';
 		action_links.appendChild(see_full_graph_link);
 	}

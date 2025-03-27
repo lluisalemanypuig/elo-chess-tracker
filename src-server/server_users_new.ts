@@ -39,7 +39,7 @@ import { UsersManager } from './managers/users_manager';
 import { ConfigurationManager } from './managers/configuration_manager';
 
 export async function get_page_user_create(req: any, res: any) {
-	debug(log_now(), 'GET /user/create...');
+	debug(log_now(), 'GET /page/user/create...');
 
 	const session = SessionID.from_cookie(req.cookies);
 	const r = is_user_logged_in(session);

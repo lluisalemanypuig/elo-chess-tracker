@@ -42,7 +42,7 @@ import { UsersManager } from './managers/users_manager';
 import { ConfigurationManager } from './managers/configuration_manager';
 
 export async function get_page_game_list_own(req: any, res: any) {
-	debug(log_now(), 'GET /game/list/own...');
+	debug(log_now(), 'GET /page/game/list/own...');
 
 	const session = SessionID.from_cookie(req.cookies);
 	const r = is_user_logged_in(session);
@@ -78,7 +78,7 @@ export async function get_page_game_list_all(req: any, res: any) {
 }
 
 export async function get_page_game_create(req: any, res: any) {
-	debug(log_now(), 'GET /game/create...');
+	debug(log_now(), 'GET /page/game/create...');
 
 	const session = SessionID.from_cookie(req.cookies);
 	const r = is_user_logged_in(session);

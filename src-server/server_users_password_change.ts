@@ -37,8 +37,8 @@ import { user_overwrite } from './managers/users';
 import { SessionID } from './models/session_id';
 import { ConfigurationManager } from './managers/configuration_manager';
 
-export async function get_user_password_change_page(req: any, res: any) {
-	debug(log_now(), 'GET /user/password_change_page...');
+export async function get_page_user_password_change(req: any, res: any) {
+	debug(log_now(), 'GET /page/user/password_change_page...');
 
 	const session = SessionID.from_cookie(req.cookies);
 
