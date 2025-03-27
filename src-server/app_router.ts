@@ -40,14 +40,22 @@ router.get('/css/*.css', (req: any, res: any) => {
 	debug(log_now(), `    request: ${req.url}`);
 	const filepath = path.join(__dirname, '..', req.url);
 	debug(log_now(), `    file to send: ${filepath}`);
-	res.status(200).setHeader('Cache-Control', 'public, max-age=864000, immutable').sendFile(filepath);
+	res.status(200);
+	if (ConfigurationManager.get_instance().is_production()) {
+		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
+	}
+	res.sendFile(filepath);
 });
 
 /* ************************************************************************** */
 /* Version number */
 router.get('/version_number', (_req: any, res: any) => {
 	debug(log_now(), 'GET version_number...');
-	res.status(200).setHeader('Cache-Control', 'public, max-age=864000, immutable').send('XX.YY');
+	res.status(200);
+	if (ConfigurationManager.get_instance().is_production()) {
+		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
+	}
+	res.send('XX.YY');
 });
 
 /* ************************************************************************** */
@@ -56,33 +64,49 @@ router.get('/favicon.ico', (_req: any, res: any) => {
 	debug(log_now(), 'GET favicon.ico...');
 	const filepath = EnvironmentManager.get_instance().get_icon_favicon();
 	debug(log_now(), `    file to send: ${filepath}`);
-	res.status(200).setHeader('Cache-Control', 'public, max-age=864000, immutable').sendFile(filepath);
+	res.status(200);
+	if (ConfigurationManager.get_instance().is_production()) {
+		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
+	}
+	res.sendFile(filepath);
 });
 router.get('/icon/login_page', (_req: any, res: any) => {
 	debug(log_now(), 'GET /icon/login_page...');
 	const filepath = EnvironmentManager.get_instance().get_icon_login_page();
 	debug(log_now(), `    file to send: ${filepath}`);
-	res.status(200).setHeader('Cache-Control', 'public, max-age=864000, immutable').sendFile(filepath);
+	res.status(200);
+	if (ConfigurationManager.get_instance().is_production()) {
+		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
+	}
+	res.sendFile(filepath);
 });
 router.get('/icon/home_page', (_req: any, res: any) => {
 	debug(log_now(), 'GET /icon/home_page...');
 	const filepath = EnvironmentManager.get_instance().get_icon_home_page();
 	debug(log_now(), `    file to send: ${filepath}`);
-	res.status(200).setHeader('Cache-Control', 'public, max-age=864000, immutable').sendFile(filepath);
+	res.status(200);
+	if (ConfigurationManager.get_instance().is_production()) {
+		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
+	}
+	res.sendFile(filepath);
 });
 
 /* PAGE TITLES */
 router.get('/title/login_page', (_req: any, res: any) => {
 	debug(log_now(), 'GET /title/login_page...');
-	res.status(200)
-		.setHeader('Cache-Control', 'public, max-age=864000, immutable')
-		.send(EnvironmentManager.get_instance().get_title_login_page());
+	res.status(200);
+	if (ConfigurationManager.get_instance().is_production()) {
+		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
+	}
+	res.send(EnvironmentManager.get_instance().get_title_login_page());
 });
 router.get('/title/home_page', (_req: any, res: any) => {
 	debug(log_now(), 'GET /title/home_page...');
-	res.status(200)
-		.setHeader('Cache-Control', 'public, max-age=864000, immutable')
-		.send(EnvironmentManager.get_instance().get_title_home_page());
+	res.status(200);
+	if (ConfigurationManager.get_instance().is_production()) {
+		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
+	}
+	res.send(EnvironmentManager.get_instance().get_title_home_page());
 });
 
 /* ************************************************************************** */
@@ -98,7 +122,11 @@ router.get('/js/*', (req: any, res: any) => {
 	debug(log_now(), `    request: ${req.url}`);
 	const filepath = path.join(__dirname, '..', req.url);
 	debug(log_now(), `    file to send: ${filepath}`);
-	res.status(200).sendFile(filepath);
+	res.status(200);
+	if (ConfigurationManager.get_instance().is_production()) {
+		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
+	}
+	res.sendFile(filepath);
 });
 
 import {
@@ -207,6 +235,7 @@ router.post('/recalculate/ratings', post_recalculate_ratings);
 
 // recalculation of all graphs
 import { post_recalculate_graphs } from './server_graphs';
+import { ConfigurationManager } from './managers/configuration_manager';
 router.post('/recalculate/graphs', post_recalculate_graphs);
 
 export { router };

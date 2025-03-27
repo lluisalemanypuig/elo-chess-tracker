@@ -46,6 +46,7 @@ export class ConfigurationManager {
 		return ConfigurationManager.instance;
 	}
 
+	private readonly production: boolean = false;
 	private port_http: string = '';
 	private port_https: string = '';
 
@@ -66,5 +67,9 @@ export class ConfigurationManager {
 	}
 	get_port_https(): string {
 		return this.port_https;
+	}
+
+	is_production(): boolean {
+		return this.production;
 	}
 }

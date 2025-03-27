@@ -36,6 +36,7 @@ import { is_role_string_correct } from './models/user_role';
 import { CREATE_USER, ASSIGN_ROLE_USER, get_role_action_name, ASSIGN_ROLE_ID } from './models/user_action';
 import { SessionID } from './models/session_id';
 import { UsersManager } from './managers/users_manager';
+import { ConfigurationManager } from './managers/configuration_manager';
 
 export async function get_page_user_create(req: any, res: any) {
 	debug(log_now(), 'GET /user/create...');
@@ -60,9 +61,11 @@ export async function get_page_user_create(req: any, res: any) {
 		return;
 	}
 
-	res.status(200)
-		.setHeader('Cache-Control', 'public, max-age=864000, immutable')
-		.sendFile(path.join(__dirname, '../html/user/new.html'));
+	res.status(200);
+	if (ConfigurationManager.get_instance().is_production()) {
+		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
+	}
+	res.sendFile(path.join(__dirname, '../html/user/new.html'));
 }
 
 export async function post_user_create(req: any, res: any) {

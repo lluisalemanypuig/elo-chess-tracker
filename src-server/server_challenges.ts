@@ -47,6 +47,7 @@ import { ChallengesManager } from './managers/challenges_manager';
 import { TimeControlID } from './models/time_control';
 import { GameResult } from './models/game';
 import { UsersManager } from './managers/users_manager';
+import { ConfigurationManager } from './managers/configuration_manager';
 
 export async function get_challenge_page(req: any, res: any) {
 	debug(log_now(), 'GET /challenge...');
@@ -59,9 +60,11 @@ export async function get_challenge_page(req: any, res: any) {
 		return;
 	}
 
-	res.status(200)
-		.setHeader('Cache-Control', 'public, max-age=864000, immutable')
-		.sendFile(path.join(__dirname, '../html/challenges.html'));
+	res.status(200);
+	if (ConfigurationManager.get_instance().is_production()) {
+		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
+	}
+	res.sendFile(path.join(__dirname, '../html/challenges.html'));
 }
 
 export async function post_challenge_send(req: any, res: any) {

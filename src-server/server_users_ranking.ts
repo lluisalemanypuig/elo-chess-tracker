@@ -31,6 +31,7 @@ import path from 'path';
 import { log_now } from './utils/time';
 import { is_user_logged_in } from './managers/session';
 import { SessionID } from './models/session_id';
+import { ConfigurationManager } from './managers/configuration_manager';
 
 export async function get_page_user_ranking(req: any, res: any) {
 	debug(log_now(), 'GET /user/ranking...');
@@ -43,7 +44,9 @@ export async function get_page_user_ranking(req: any, res: any) {
 		return;
 	}
 
-	res.status(200)
-		.setHeader('Cache-Control', 'public, max-age=864000, immutable')
-		.sendFile(path.join(__dirname, '../html/user/ranking.html'));
+	res.status(200);
+	if (ConfigurationManager.get_instance().is_production()) {
+		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
+	}
+	res.sendFile(path.join(__dirname, '../html/user/ranking.html'));
 }

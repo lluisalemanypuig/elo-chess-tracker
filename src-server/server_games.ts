@@ -39,6 +39,7 @@ import { SessionID } from './models/session_id';
 import { TimeControlID } from './models/time_control';
 import { can_user_create_a_game, can_user_edit_a_game } from './models/user_relationships';
 import { UsersManager } from './managers/users_manager';
+import { ConfigurationManager } from './managers/configuration_manager';
 
 export async function get_page_game_list_own(req: any, res: any) {
 	debug(log_now(), 'GET /game/list/own...');
@@ -51,9 +52,11 @@ export async function get_page_game_list_own(req: any, res: any) {
 		return;
 	}
 
-	res.status(200)
-		.setHeader('Cache-Control', 'public, max-age=864000, immutable')
-		.sendFile(path.join(__dirname, '../html/game/list/own.html'));
+	res.status(200);
+	if (ConfigurationManager.get_instance().is_production()) {
+		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
+	}
+	res.sendFile(path.join(__dirname, '../html/game/list/own.html'));
 }
 
 export async function get_page_game_list_all(req: any, res: any) {
@@ -67,9 +70,11 @@ export async function get_page_game_list_all(req: any, res: any) {
 		return;
 	}
 
-	res.status(200)
-		.setHeader('Cache-Control', 'public, max-age=864000, immutable')
-		.sendFile(path.join(__dirname, '../html/game/list/all.html'));
+	res.status(200);
+	if (ConfigurationManager.get_instance().is_production()) {
+		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
+	}
+	res.sendFile(path.join(__dirname, '../html/game/list/all.html'));
 }
 
 export async function get_page_game_create(req: any, res: any) {
@@ -89,9 +94,11 @@ export async function get_page_game_create(req: any, res: any) {
 		return;
 	}
 
-	res.status(200)
-		.setHeader('Cache-Control', 'public, max-age=864000, immutable')
-		.sendFile(path.join(__dirname, '../html/game/create.html'));
+	res.status(200);
+	if (ConfigurationManager.get_instance().is_production()) {
+		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
+	}
+	res.sendFile(path.join(__dirname, '../html/game/create.html'));
 }
 
 export async function post_game_create(req: any, res: any) {

@@ -30,6 +30,7 @@ const debug = Debug('ELO_TRACKER:server_home');
 import { log_now } from './utils/time';
 import { SessionID } from './models/session_id';
 import { is_user_logged_in } from './managers/session';
+import { ConfigurationManager } from './managers/configuration_manager';
 
 export async function get_login_page(req: any, res: any) {
 	let send_home: boolean;
@@ -50,14 +51,14 @@ export async function get_login_page(req: any, res: any) {
 		send_home = false;
 	}
 
+	res.status(200);
+	if (ConfigurationManager.get_instance().is_production()) {
+		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
+	}
 	if (send_home) {
-		res.status(200)
-			.setHeader('Cache-Control', 'public, max-age=864000, immutable')
-			.sendFile(path.join(__dirname, '../html/home.html'));
+		res.sendFile(path.join(__dirname, '../html/home.html'));
 	} else {
-		res.status(200)
-			.setHeader('Cache-Control', 'public, max-age=864000, immutable')
-			.sendFile(path.join(__dirname, '../html/login_screen.html'));
+		res.sendFile(path.join(__dirname, '../html/login_screen.html'));
 	}
 }
 
@@ -73,7 +74,9 @@ export async function get_home_page(req: any, res: any) {
 	}
 
 	debug(log_now(), `    User ${session.username} is logged in. Access granted.`);
-	res.status(200)
-		.setHeader('Cache-Control', 'public, max-age=864000, immutable')
-		.sendFile(path.join(__dirname, '../html/home.html'));
+	res.status(200);
+	if (ConfigurationManager.get_instance().is_production()) {
+		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
+	}
+	res.sendFile(path.join(__dirname, '../html/home.html'));
 }

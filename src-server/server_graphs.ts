@@ -35,6 +35,7 @@ import { User } from './models/user';
 import { SessionID } from './models/session_id';
 import { ADMIN } from './models/user_role';
 import { recalculate_all_graphs } from './managers/graphs';
+import { ConfigurationManager } from './managers/configuration_manager';
 
 export async function get_page_graph_own(req: any, res: any) {
 	debug(log_now(), 'GET /graph/own...');
@@ -47,9 +48,11 @@ export async function get_page_graph_own(req: any, res: any) {
 		return;
 	}
 
-	res.status(200)
-		.setHeader('Cache-Control', 'public, max-age=864000, immutable')
-		.sendFile(path.join(__dirname, '../html/graph/own.html'));
+	res.status(200);
+	if (ConfigurationManager.get_instance().is_production()) {
+		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
+	}
+	res.sendFile(path.join(__dirname, '../html/graph/own.html'));
 }
 
 export async function get_page_graph_full(req: any, res: any) {
@@ -69,9 +72,11 @@ export async function get_page_graph_full(req: any, res: any) {
 		return;
 	}
 
-	res.status(200)
-		.setHeader('Cache-Control', 'public, max-age=864000, immutable')
-		.sendFile(path.join(__dirname, '../html/graph/full.html'));
+	res.status(200);
+	if (ConfigurationManager.get_instance().is_production()) {
+		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
+	}
+	res.sendFile(path.join(__dirname, '../html/graph/full.html'));
 }
 
 export async function post_recalculate_graphs(req: any, res: any) {

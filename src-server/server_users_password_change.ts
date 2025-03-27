@@ -35,6 +35,7 @@ import { User } from './models/user';
 import { Password } from './models/password';
 import { user_overwrite } from './managers/users';
 import { SessionID } from './models/session_id';
+import { ConfigurationManager } from './managers/configuration_manager';
 
 export async function get_user_password_change_page(req: any, res: any) {
 	debug(log_now(), 'GET /user/password_change_page...');
@@ -47,9 +48,11 @@ export async function get_user_password_change_page(req: any, res: any) {
 		return;
 	}
 
-	res.status(200)
-		.setHeader('Cache-Control', 'public, max-age=864000, immutable')
-		.sendFile(path.join(__dirname, '../html/user/password_change.html'));
+	res.status(200);
+	if (ConfigurationManager.get_instance().is_production()) {
+		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
+	}
+	res.sendFile(path.join(__dirname, '../html/user/password_change.html'));
 }
 
 export async function post_user_password_change(req: any, res: any) {
