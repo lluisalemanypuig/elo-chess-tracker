@@ -59,7 +59,10 @@ function new_button_cell(text: string, game_id: string) {
 	button.setAttribute('select_id', 'select_result_' + game_id);
 	button.onclick = edit_button_on_click;
 	button.disabled = true;
-	return button;
+
+	let cell = document.createElement('td');
+	cell.appendChild(button);
+	return cell;
 }
 
 function select_result_game_on_change(event: any) {
@@ -108,7 +111,10 @@ function new_select_cell(original_result: string, game_id: string) {
 	select.onchange = select_result_game_on_change;
 	select.setAttribute('original_value', result_from_text_to_value(original_result));
 	select.setAttribute('button_id', 'button_edit_' + game_id);
-	return select;
+
+	let cell = document.createElement('td');
+	cell.appendChild(select);
+	return cell;
 }
 
 async function fill_games_list_time_control(time_control_id: string) {
