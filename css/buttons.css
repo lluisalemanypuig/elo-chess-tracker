@@ -126,9 +126,9 @@ Full source code of elo-chess-tracker:
     box-shadow: none;
 }
 
-/* button_edit_game */
+/* button_delete_game */
 
-.button_edit_game {
+.button_delete_game {
     border: 1px solid rgb(209, 213, 219);
     border-radius: .5rem;
     box-sizing: border-box;
@@ -144,27 +144,27 @@ Full source code of elo-chess-tracker:
     touch-action: manipulation;
 }
 
-.button_edit_game:disabled {
+.button_delete_game:disabled {
     font-weight: 350;
     background-color: rgb(220, 220, 220);
     cursor: hand;
 }
 
-.button_edit_game:enabled {
+.button_delete_game:enabled {
     font-weight: 350;
     background-color: rgb(255, 255, 255);
     cursor: pointer;
 }
 
-.button_edit_game:hover {
+.button_delete_game:hover {
     background-color: rgb(220, 220, 220);
 }
 
-.button_edit_game:focus {
+.button_delete_game:focus {
     outline: 2px solid transparent;
     outline-offset: 2px;
 }
 
-.button_edit_game:focus-visible {
+.button_delete_game:focus-visible {
     box-shadow: none;
 }

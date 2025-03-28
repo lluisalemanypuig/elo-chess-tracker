@@ -95,6 +95,44 @@ function new_cell_select_result(original_result: string, game_id: string) {
 	return cell;
 }
 
+async function button_remove_on_click(event: any) {
+	const select = event.target;
+
+	const game_id = select.getAttribute('game_id');
+	const new_result = select.value;
+
+	if (new_result == select.getAttribute('original_value')) {
+		return;
+	}
+
+	const response = await fetch('/game/delete', {
+		method: 'POST',
+		body: JSON.stringify({ game_id: game_id }),
+		headers: { 'Content-type': 'application/json; charset=UTF-8' }
+	});
+
+	if (response.status >= 400) {
+		const message = await response.text();
+		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
+		return;
+	}
+
+	location.reload();
+}
+
+function new_cell_button_delete(game_id: string) {
+	let button = document.createElement('button') as HTMLButtonElement;
+	button.textContent = 'Delete';
+	button.className = 'button_delete_game';
+	button.id = 'button_delete_' + game_id;
+	button.setAttribute('game_id', game_id);
+	button.onclick = button_remove_on_click;
+
+	let cell = document.createElement('td');
+	cell.appendChild(button);
+	return cell;
+}
+
 async function fill_games_list_time_control(time_control_id: string) {
 	const val = document.getElementById('table_games')?.getAttribute('value');
 
@@ -142,6 +180,10 @@ async function fill_games_list_time_control(time_control_id: string) {
 		row.appendChild(new_text_cell(games[i].white_increment));
 		row.appendChild(new_text_cell(games[i].black_rating));
 		row.appendChild(new_text_cell(games[i].black_increment));
+
+		if (games[i].editable == 'y') {
+			row.appendChild(new_cell_button_delete(games[i].id));
+		}
 
 		new_tbody.appendChild(row);
 	}
