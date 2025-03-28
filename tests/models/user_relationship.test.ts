@@ -26,25 +26,25 @@ Contact:
 import { Password } from '../../src-server/models/password';
 import { User } from '../../src-server/models/user';
 import {
-	EDIT_STUDENT,
-	EDIT_TEACHER,
-	EDIT_GAMES_ADMIN,
-	EDIT_GAMES_STUDENT,
-	EDIT_GAMES_TEACHER,
-	EDIT_GAMES_MEMBER,
-	SEE_GAMES_ADMIN,
-	SEE_GAMES_MEMBER,
-	SEE_GAMES_STUDENT,
-	CREATE_GAMES_MEMBER,
-	CREATE_GAMES_ADMIN,
-	CREATE_GAMES_STUDENT,
-	CREATE_GAMES_TEACHER,
-	CHALLENGE_ADMIN,
-	CHALLENGE_STUDENT,
-	CHALLENGE_MEMBER,
-	SEE_GRAPHS_ADMIN,
-	SEE_GRAPHS_STUDENT,
-	SEE_GRAPHS_MEMBER
+	USER_EDIT_STUDENT,
+	USER_EDIT_TEACHER,
+	GAMES_EDIT_ADMIN,
+	GAMES_EDIT_STUDENT,
+	GAMES_EDIT_TEACHER,
+	GAMES_EDIT_MEMBER,
+	GAMES_SEE_ADMIN,
+	GAMES_SEE_MEMBER,
+	GAMES_SEE_STUDENT,
+	GAMES_CREATE_MEMBER,
+	GAMES_CREATE_ADMIN,
+	GAMES_CREATE_STUDENT,
+	GAMES_CREATE_TEACHER,
+	USER_CHALLENGE_ADMIN,
+	USER_CHALLENGE_STUDENT,
+	USER_CHALLENGE_MEMBER,
+	GRAPHS_SEE_ADMIN,
+	GRAPHS_SEE_STUDENT,
+	GRAPHS_SEE_MEMBER
 } from '../../src-server/models/user_action';
 import { ADMIN, MEMBER, STUDENT, TEACHER } from '../../src-server/models/user_role';
 import { UserRoleToUserAction } from '../../src-server/models/user_role_action';
@@ -73,7 +73,7 @@ describe('Edition', () => {
 		let rel = UserRoleToUserAction.get_instance();
 		rel.clear();
 		initialize_permissions({
-			admin: [EDIT_TEACHER],
+			admin: [USER_EDIT_TEACHER],
 			teacher: [],
 			student: [],
 			member: []
@@ -89,7 +89,7 @@ describe('Edition', () => {
 		let rel = UserRoleToUserAction.get_instance();
 		rel.clear();
 		initialize_permissions({
-			admin: [EDIT_TEACHER, EDIT_STUDENT],
+			admin: [USER_EDIT_TEACHER, USER_EDIT_STUDENT],
 			teacher: [],
 			student: [],
 			member: []
@@ -106,7 +106,7 @@ describe('Edition', () => {
 		rel.clear();
 		initialize_permissions({
 			admin: [],
-			teacher: [EDIT_TEACHER],
+			teacher: [USER_EDIT_TEACHER],
 			student: [],
 			member: []
 		});
@@ -122,7 +122,7 @@ describe('Edition', () => {
 		rel.clear();
 		initialize_permissions({
 			admin: [],
-			teacher: [EDIT_TEACHER, EDIT_STUDENT],
+			teacher: [USER_EDIT_TEACHER, USER_EDIT_STUDENT],
 			student: [],
 			member: []
 		});
@@ -139,7 +139,7 @@ describe('Edition', () => {
 		initialize_permissions({
 			admin: [],
 			teacher: [],
-			student: [EDIT_TEACHER],
+			student: [USER_EDIT_TEACHER],
 			member: []
 		});
 
@@ -155,7 +155,7 @@ describe('Edition', () => {
 		initialize_permissions({
 			admin: [],
 			teacher: [],
-			student: [EDIT_TEACHER, EDIT_STUDENT],
+			student: [USER_EDIT_TEACHER, USER_EDIT_STUDENT],
 			member: []
 		});
 
@@ -172,7 +172,7 @@ describe('Edition', () => {
 			admin: [],
 			teacher: [],
 			student: [],
-			member: [EDIT_TEACHER]
+			member: [USER_EDIT_TEACHER]
 		});
 
 		expect(can_user_edit(editor_member, edited_admin)).toBe(false);
@@ -188,7 +188,7 @@ describe('Edition', () => {
 			admin: [],
 			teacher: [],
 			student: [],
-			member: [EDIT_TEACHER, EDIT_STUDENT]
+			member: [USER_EDIT_TEACHER, USER_EDIT_STUDENT]
 		});
 
 		expect(can_user_edit(editor_member, edited_admin)).toBe(false);
@@ -208,7 +208,7 @@ describe('Can a user see a game?', () => {
 		let rel = UserRoleToUserAction.get_instance();
 		rel.clear();
 		initialize_permissions({
-			admin: [SEE_GAMES_ADMIN, SEE_GAMES_MEMBER],
+			admin: [GAMES_SEE_ADMIN, GAMES_SEE_MEMBER],
 			teacher: [],
 			student: [],
 			member: []
@@ -225,7 +225,7 @@ describe('Can a user see a game?', () => {
 		rel.clear();
 		initialize_permissions({
 			admin: [],
-			teacher: [SEE_GAMES_ADMIN, SEE_GAMES_STUDENT],
+			teacher: [GAMES_SEE_ADMIN, GAMES_SEE_STUDENT],
 			student: [],
 			member: []
 		});
@@ -247,7 +247,7 @@ describe('Can a user edit a game?', () => {
 		let rel = UserRoleToUserAction.get_instance();
 		rel.clear();
 		initialize_permissions({
-			admin: [EDIT_GAMES_ADMIN, EDIT_GAMES_MEMBER],
+			admin: [GAMES_EDIT_ADMIN, GAMES_EDIT_MEMBER],
 			teacher: [],
 			student: [],
 			member: []
@@ -264,7 +264,7 @@ describe('Can a user edit a game?', () => {
 		rel.clear();
 		initialize_permissions({
 			admin: [],
-			teacher: [EDIT_GAMES_ADMIN, EDIT_GAMES_STUDENT],
+			teacher: [GAMES_EDIT_ADMIN, GAMES_EDIT_STUDENT],
 			student: [],
 			member: []
 		});
@@ -280,7 +280,7 @@ describe('Can a user edit a game?', () => {
 		rel.clear();
 		initialize_permissions({
 			admin: [],
-			teacher: [EDIT_GAMES_ADMIN, EDIT_GAMES_TEACHER],
+			teacher: [GAMES_EDIT_ADMIN, GAMES_EDIT_TEACHER],
 			student: [],
 			member: []
 		});
@@ -302,7 +302,7 @@ describe('Can a user create a game?', () => {
 		let rel = UserRoleToUserAction.get_instance();
 		rel.clear();
 		initialize_permissions({
-			admin: [CREATE_GAMES_ADMIN, CREATE_GAMES_MEMBER],
+			admin: [GAMES_CREATE_ADMIN, GAMES_CREATE_MEMBER],
 			teacher: [],
 			student: [],
 			member: []
@@ -319,7 +319,7 @@ describe('Can a user create a game?', () => {
 		rel.clear();
 		initialize_permissions({
 			admin: [],
-			teacher: [CREATE_GAMES_ADMIN, CREATE_GAMES_STUDENT],
+			teacher: [GAMES_CREATE_ADMIN, GAMES_CREATE_STUDENT],
 			student: [],
 			member: []
 		});
@@ -335,7 +335,7 @@ describe('Can a user create a game?', () => {
 		rel.clear();
 		initialize_permissions({
 			admin: [],
-			teacher: [CREATE_GAMES_ADMIN, CREATE_GAMES_TEACHER],
+			teacher: [GAMES_CREATE_ADMIN, GAMES_CREATE_TEACHER],
 			student: [],
 			member: []
 		});
@@ -357,7 +357,7 @@ describe('Can a user challenge?', () => {
 		let rel = UserRoleToUserAction.get_instance();
 		rel.clear();
 		initialize_permissions({
-			admin: [CHALLENGE_ADMIN, CHALLENGE_STUDENT],
+			admin: [USER_CHALLENGE_ADMIN, USER_CHALLENGE_STUDENT],
 			teacher: [],
 			student: [],
 			member: []
@@ -374,7 +374,7 @@ describe('Can a user challenge?', () => {
 		rel.clear();
 		initialize_permissions({
 			admin: [],
-			teacher: [CHALLENGE_ADMIN, CHALLENGE_STUDENT],
+			teacher: [USER_CHALLENGE_ADMIN, USER_CHALLENGE_STUDENT],
 			student: [],
 			member: []
 		});
@@ -390,7 +390,7 @@ describe('Can a user challenge?', () => {
 		rel.clear();
 		initialize_permissions({
 			admin: [],
-			teacher: [CHALLENGE_ADMIN, CHALLENGE_STUDENT, CHALLENGE_MEMBER],
+			teacher: [USER_CHALLENGE_ADMIN, USER_CHALLENGE_STUDENT, USER_CHALLENGE_MEMBER],
 			student: [],
 			member: []
 		});
@@ -412,7 +412,7 @@ describe('Can a user see a graph?', () => {
 		let rel = UserRoleToUserAction.get_instance();
 		rel.clear();
 		initialize_permissions({
-			admin: [SEE_GRAPHS_ADMIN, SEE_GRAPHS_STUDENT],
+			admin: [GRAPHS_SEE_ADMIN, GRAPHS_SEE_STUDENT],
 			teacher: [],
 			student: [],
 			member: []
@@ -429,7 +429,7 @@ describe('Can a user see a graph?', () => {
 		rel.clear();
 		initialize_permissions({
 			admin: [],
-			teacher: [SEE_GRAPHS_ADMIN, SEE_GRAPHS_STUDENT],
+			teacher: [GRAPHS_SEE_ADMIN, GRAPHS_SEE_STUDENT],
 			student: [],
 			member: []
 		});
@@ -445,7 +445,7 @@ describe('Can a user see a graph?', () => {
 		rel.clear();
 		initialize_permissions({
 			admin: [],
-			teacher: [SEE_GRAPHS_ADMIN, SEE_GRAPHS_STUDENT, SEE_GRAPHS_MEMBER],
+			teacher: [GRAPHS_SEE_ADMIN, GRAPHS_SEE_STUDENT, GRAPHS_SEE_MEMBER],
 			student: [],
 			member: []
 		});
