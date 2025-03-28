@@ -37,7 +37,7 @@ import { RatingSystemManager } from './managers/rating_system_manager';
 import { EnvironmentManager } from './managers/environment_manager';
 import { GAMES_SEE } from './models/user_action';
 import { SessionID } from './models/session_id';
-import { can_user_edit_a_game, can_user_see_a_game } from './models/user_relationships';
+import { can_user_delete_a_game, can_user_edit_a_game, can_user_see_a_game } from './models/user_relationships';
 import { TimeControlID } from './models/time_control';
 import { game_set_from_json } from './io/game';
 import { UsersManager } from './managers/users_manager';
@@ -109,6 +109,7 @@ function filter_game_list(
 			const white = manager.get_user_by_username(g.get_white()) as User;
 			const black = manager.get_user_by_username(g.get_black()) as User;
 			const is_editable: boolean = can_user_edit_a_game(user, white, black);
+			const is_deleteable: boolean = can_user_delete_a_game(user, white, black);
 
 			data_to_return.push({
 				id: g.get_id(),
@@ -121,7 +122,8 @@ function filter_game_list(
 				black_rating: Math.round(g.get_black_rating().rating),
 				white_increment: inc.white_increment < 0 ? inc.white_increment : '+' + inc.white_increment,
 				black_increment: inc.black_increment < 0 ? inc.black_increment : '+' + inc.black_increment,
-				editable: is_editable ? 'y' : 'n'
+				editable: is_editable ? 'y' : 'n',
+				deleteable: is_deleteable ? 'y' : 'n'
 			});
 		}
 	}
