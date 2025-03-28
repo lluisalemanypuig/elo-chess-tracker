@@ -37,7 +37,7 @@ import { search_linear_by_key } from './utils/searching';
 import { UsersManager } from './managers/users_manager';
 import { Edge } from './models/graph/edge';
 import { can_user_see_graph } from './models/user_relationships';
-import { SEE_GRAPHS_USER } from './models/user_action';
+import { GRAPHS_SEE_USER } from './models/user_action';
 
 class NodeWeight {
 	rating: number = 0;
@@ -222,7 +222,7 @@ export async function post_query_graph_full(req: any, res: any) {
 	}
 
 	const user = r[2] as User;
-	if (!user.can_do(SEE_GRAPHS_USER)) {
+	if (!user.can_do(GRAPHS_SEE_USER)) {
 		res.status(403).send('You do not have enough permissions.');
 		return;
 	}

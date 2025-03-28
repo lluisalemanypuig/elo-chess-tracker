@@ -30,7 +30,7 @@ import path from 'path';
 
 import { DateStringShort, log_now } from './utils/time';
 import { is_user_logged_in } from './managers/session';
-import { CREATE_GAMES, EDIT_GAMES_USER } from './models/user_action';
+import { GAMES_CREATE, GAMES_EDIT } from './models/user_action';
 import { User } from './models/user';
 import { game_add_new, game_edit_result, game_find_by_id, recalculate_all_ratings } from './managers/games';
 import { GameID, GameResult } from './models/game';
@@ -88,7 +88,7 @@ export async function get_page_game_create(req: any, res: any) {
 		return;
 	}
 
-	if (!(r[2] as User).can_do(CREATE_GAMES)) {
+	if (!(r[2] as User).can_do(GAMES_CREATE)) {
 		debug(log_now(), `User '${session.username}' cannot create games.`);
 		res.status(403).send('You cannot create games.');
 		return;
@@ -113,7 +113,7 @@ export async function post_game_create(req: any, res: any) {
 	}
 
 	const creator = r[2] as User;
-	if (!creator.can_do(CREATE_GAMES)) {
+	if (!creator.can_do(GAMES_CREATE)) {
 		debug(log_now(), `User '${session.username}' cannot create users.`);
 		res.status(403).send('You cannot create games');
 		return;
@@ -192,7 +192,7 @@ export async function post_game_edit_result(req: any, res: any) {
 	}
 
 	const user = r[2] as User;
-	if (!user.can_do(EDIT_GAMES_USER)) {
+	if (!user.can_do(GAMES_EDIT)) {
 		debug(log_now(), `User '${session.username}' cannot edit games.`);
 		res.status(403).send('You cannot edit games');
 		return;

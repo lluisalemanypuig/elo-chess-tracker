@@ -30,7 +30,7 @@ import path from 'path';
 
 import { log_now } from './utils/time';
 import { is_user_logged_in } from './managers/session';
-import { SEE_GRAPHS_USER } from './models/user_action';
+import { GRAPHS_SEE_USER } from './models/user_action';
 import { User } from './models/user';
 import { SessionID } from './models/session_id';
 import { ADMIN } from './models/user_role';
@@ -66,7 +66,7 @@ export async function get_page_graph_full(req: any, res: any) {
 		return;
 	}
 
-	if (!(r[2] as User).can_do(SEE_GRAPHS_USER)) {
+	if (!(r[2] as User).can_do(GRAPHS_SEE_USER)) {
 		debug(log_now(), `User '${session.username}' cannot see the whole graph.`);
 		res.status(403).send('You cannot see the whole graph.');
 		return;

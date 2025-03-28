@@ -40,7 +40,7 @@ import {
 } from './managers/challenges';
 import { Challenge, ChallengeID } from './models/challenge';
 import { User } from './models/user';
-import { CHALLENGE_USER } from './models/user_action';
+import { USER_CHALLENGE } from './models/user_action';
 import { SessionID } from './models/session_id';
 import { can_user_send_challenge } from './models/user_relationships';
 import { ChallengesManager } from './managers/challenges_manager';
@@ -80,7 +80,7 @@ export async function post_challenge_send(req: any, res: any) {
 	}
 
 	const sender = r[2] as User;
-	if (!sender.can_do(CHALLENGE_USER)) {
+	if (!sender.can_do(USER_CHALLENGE)) {
 		debug(log_now(), `User '${session.username}' cannot challenge other users.`);
 		res.status(403).send('You cannot challenge other users');
 		return;

@@ -29,144 +29,144 @@ import { ADMIN, MEMBER, STUDENT, TEACHER, UserRole } from './user_role';
 export const CREATE_USER = 'create_user';
 
 /// Can create games
-export const CREATE_GAMES = 'create_games';
+export const GAMES_CREATE = 'create_games';
 /// Can create games where a player is an admin
-export const CREATE_GAMES_ADMIN = 'create_games_admin';
+export const GAMES_CREATE_ADMIN = 'create_games_admin';
 /// Can create games where a player is a teacher
-export const CREATE_GAMES_TEACHER = 'create_games_teacher';
+export const GAMES_CREATE_TEACHER = 'create_games_teacher';
 /// Can create games where a player is a member
-export const CREATE_GAMES_MEMBER = 'create_games_member';
+export const GAMES_CREATE_MEMBER = 'create_games_member';
 /// Can create games where a player is a student
-export const CREATE_GAMES_STUDENT = 'create_games_student';
+export const GAMES_CREATE_STUDENT = 'create_games_student';
 
 /// Can edit user games
-export const EDIT_GAMES_USER = 'edit_games_user';
+export const GAMES_EDIT = 'edit_games';
 /// Can edit admin games
-export const EDIT_GAMES_ADMIN = 'edit_games_admin';
+export const GAMES_EDIT_ADMIN = 'edit_games_admin';
 /// Can edit teacher games
-export const EDIT_GAMES_TEACHER = 'edit_games_teacher';
+export const GAMES_EDIT_TEACHER = 'edit_games_teacher';
 /// Can edit member games
-export const EDIT_GAMES_MEMBER = 'edit_games_member';
+export const GAMES_EDIT_MEMBER = 'edit_games_member';
 /// Can edit student games
-export const EDIT_GAMES_STUDENT = 'edit_games_student';
+export const GAMES_EDIT_STUDENT = 'edit_games_student';
 
 /// Can delete user games
-export const DELETE_GAMES_USER = 'delete_games_user';
+export const GAMES_DELETE = 'delete_games';
 /// Can delete admin games
-export const DELETE_GAMES_ADMIN = 'delete_games_admin';
+export const GAMES_DELETE_ADMIN = 'delete_games_admin';
 /// Can delete teacher games
-export const DELETE_GAMES_TEACHER = 'delete_games_teacher';
+export const GAMES_DELETE_TEACHER = 'delete_games_teacher';
 /// Can delete member games
-export const DELETE_GAMES_MEMBER = 'delete_games_member';
+export const GAMES_DELETE_MEMBER = 'delete_games_member';
 /// Can delete student games
-export const DELETE_GAMES_STUDENT = 'delete_games_student';
-
-/// Edit a user
-export const EDIT_USER = 'edit_user';
-/// Edit admin
-export const EDIT_ADMIN = 'edit_admin';
-/// Edit teacher
-export const EDIT_TEACHER = 'edit_teacher';
-/// Edit members
-export const EDIT_MEMBER = 'edit_member';
-/// Edit students
-export const EDIT_STUDENT = 'edit_student';
-
-/// Assign a role to a user
-export const ASSIGN_ROLE_USER = 'assign_role_user';
-/// Assign admin role
-export const ASSIGN_ROLE_ADMIN = 'assign_role_admin';
-/// Assign teacher role
-export const ASSIGN_ROLE_TEACHER = 'assign_role_teacher';
-/// Assign member role
-export const ASSIGN_ROLE_MEMBER = 'assign_role_member';
-/// Assign student role
-export const ASSIGN_ROLE_STUDENT = 'assign_role_student';
+export const GAMES_DELETE_STUDENT = 'delete_games_student';
 
 /// Can see a users games
-export const SEE_GAMES_USER = 'see_games_user';
+export const GAMES_SEE = 'see_games';
 /// Can see admin's games
-export const SEE_GAMES_ADMIN = 'see_games_admin';
+export const GAMES_SEE_ADMIN = 'see_games_admin';
 /// Can see teacher's games
-export const SEE_GAMES_TEACHER = 'see_games_teacher';
+export const GAMES_SEE_TEACHER = 'see_games_teacher';
 /// Can see members' games
-export const SEE_GAMES_MEMBER = 'see_games_member';
+export const GAMES_SEE_MEMBER = 'see_games_member';
 /// Can see student' games
-export const SEE_GAMES_STUDENT = 'see_games_student';
+export const GAMES_SEE_STUDENT = 'see_games_student';
+
+/// Edit a user
+export const USER_EDIT = 'edit_user';
+/// Edit admin
+export const USER_EDIT_ADMIN = 'edit_admin';
+/// Edit teacher
+export const USER_EDIT_TEACHER = 'edit_teacher';
+/// Edit members
+export const USER_EDIT_MEMBER = 'edit_member';
+/// Edit students
+export const USER_EDIT_STUDENT = 'edit_student';
+
+/// Assign a role to a user
+export const USER_ROLE_ASSIGN = 'assign_role_user';
+/// Assign admin role
+export const USER_ROLE_ASSIGN_ADMIN = 'assign_role_admin';
+/// Assign teacher role
+export const USER_ROLE_ASSIGN_TEACHER = 'assign_role_teacher';
+/// Assign member role
+export const USER_ROLE_ASSIGN_MEMBER = 'assign_role_member';
+/// Assign student role
+export const USER_ROLE_ASSIGN_STUDENT = 'assign_role_student';
 
 /// Can see graphs
-export const SEE_GRAPHS_USER = 'see_graphs_user';
+export const GRAPHS_SEE_USER = 'see_graphs';
 /// Can see an admin's graphs
-export const SEE_GRAPHS_ADMIN = 'see_graphs_admin';
+export const GRAPHS_SEE_ADMIN = 'see_graphs_admin';
 /// Can see an teacher's graphs
-export const SEE_GRAPHS_TEACHER = 'see_graphs_teacher';
+export const GRAPHS_SEE_TEACHER = 'see_graphs_teacher';
 /// Can see an member's graphs
-export const SEE_GRAPHS_MEMBER = 'see_graphs_member';
+export const GRAPHS_SEE_MEMBER = 'see_graphs_member';
 /// Can see an student's graphs
-export const SEE_GRAPHS_STUDENT = 'see_graphs_student';
+export const GRAPHS_SEE_STUDENT = 'see_graphs_student';
 
 /// Can challenge a user
-export const CHALLENGE_USER = 'challenge_user';
+export const USER_CHALLENGE = 'challenge_user';
 /// Can see admin's games
-export const CHALLENGE_ADMIN = 'challenge_admin';
+export const USER_CHALLENGE_ADMIN = 'challenge_admin';
 /// Can see teacher's games
-export const CHALLENGE_MEMBER = 'challenge_member';
+export const USER_CHALLENGE_MEMBER = 'challenge_member';
 /// Can see members' games
-export const CHALLENGE_TEACHER = 'challenge_teacher';
+export const USER_CHALLENGE_TEACHER = 'challenge_teacher';
 /// Can see student' games
-export const CHALLENGE_STUDENT = 'challenge_student';
+export const USER_CHALLENGE_STUDENT = 'challenge_student';
 
 /// All actions that can be performed in this web
 export const all_actions = [
 	CREATE_USER,
 
-	CREATE_GAMES,
-	CREATE_GAMES_ADMIN,
-	CREATE_GAMES_TEACHER,
-	CREATE_GAMES_MEMBER,
-	CREATE_GAMES_STUDENT,
+	GAMES_CREATE,
+	GAMES_CREATE_ADMIN,
+	GAMES_CREATE_TEACHER,
+	GAMES_CREATE_MEMBER,
+	GAMES_CREATE_STUDENT,
 
-	EDIT_GAMES_USER,
-	EDIT_GAMES_ADMIN,
-	EDIT_GAMES_TEACHER,
-	EDIT_GAMES_MEMBER,
-	EDIT_GAMES_STUDENT,
+	GAMES_EDIT,
+	GAMES_EDIT_ADMIN,
+	GAMES_EDIT_TEACHER,
+	GAMES_EDIT_MEMBER,
+	GAMES_EDIT_STUDENT,
 
-	DELETE_GAMES_USER,
-	DELETE_GAMES_ADMIN,
-	DELETE_GAMES_TEACHER,
-	DELETE_GAMES_MEMBER,
-	DELETE_GAMES_STUDENT,
+	GAMES_DELETE,
+	GAMES_DELETE_ADMIN,
+	GAMES_DELETE_TEACHER,
+	GAMES_DELETE_MEMBER,
+	GAMES_DELETE_STUDENT,
 
-	EDIT_USER,
-	EDIT_ADMIN,
-	EDIT_TEACHER,
-	EDIT_MEMBER,
-	EDIT_STUDENT,
+	GAMES_SEE,
+	GAMES_SEE_ADMIN,
+	GAMES_SEE_TEACHER,
+	GAMES_SEE_MEMBER,
+	GAMES_SEE_STUDENT,
 
-	ASSIGN_ROLE_USER,
-	ASSIGN_ROLE_ADMIN,
-	ASSIGN_ROLE_TEACHER,
-	ASSIGN_ROLE_MEMBER,
-	ASSIGN_ROLE_STUDENT,
+	USER_EDIT,
+	USER_EDIT_ADMIN,
+	USER_EDIT_TEACHER,
+	USER_EDIT_MEMBER,
+	USER_EDIT_STUDENT,
 
-	SEE_GAMES_USER,
-	SEE_GAMES_ADMIN,
-	SEE_GAMES_TEACHER,
-	SEE_GAMES_MEMBER,
-	SEE_GAMES_STUDENT,
+	USER_ROLE_ASSIGN,
+	USER_ROLE_ASSIGN_ADMIN,
+	USER_ROLE_ASSIGN_TEACHER,
+	USER_ROLE_ASSIGN_MEMBER,
+	USER_ROLE_ASSIGN_STUDENT,
 
-	SEE_GRAPHS_USER,
-	SEE_GRAPHS_ADMIN,
-	SEE_GRAPHS_TEACHER,
-	SEE_GRAPHS_MEMBER,
-	SEE_GRAPHS_STUDENT,
+	GRAPHS_SEE_USER,
+	GRAPHS_SEE_ADMIN,
+	GRAPHS_SEE_TEACHER,
+	GRAPHS_SEE_MEMBER,
+	GRAPHS_SEE_STUDENT,
 
-	CHALLENGE_USER,
-	CHALLENGE_ADMIN,
-	CHALLENGE_TEACHER,
-	CHALLENGE_MEMBER,
-	CHALLENGE_STUDENT
+	USER_CHALLENGE,
+	USER_CHALLENGE_ADMIN,
+	USER_CHALLENGE_TEACHER,
+	USER_CHALLENGE_MEMBER,
+	USER_CHALLENGE_STUDENT
 ] as const;
 
 /// All actions as type
@@ -174,25 +174,25 @@ export type UserAction = (typeof all_actions)[number];
 
 // -----------------------------------------------------------------------------
 
-export const CREATE_GAME_ID = 'create_game';
-export const EDIT_GAMES_ID = 'edit_games';
-export const DELETE_GAMES_ID = 'delete_games';
-export const EDIT_USERS_ID = 'edit_users';
-export const ASSIGN_ROLE_ID = 'assign_role';
-export const SEE_GAMES_ID = 'see_games';
-export const SEE_GRAPHS_ID = 'see_graphs';
-export const CHALLENGE_ID = 'challenge';
+export const GAMES_CREATE_ID = 'create_games';
+export const GAMES_EDIT_ID = 'edit_games';
+export const GAMES_DELETE_ID = 'delete_games';
+export const GAMES_SEE_ID = 'see_games';
+export const USER_EDIT_ID = 'edit_users';
+export const USER_ROLE_ASSIGN_ID = 'assign_role';
+export const USER_CHALLENGE_ID = 'challenge';
+export const GRAPHS_SEE_ID = 'see_graphs';
 
 /// All action ids that can be performed in this web
 export const all_action_ids = [
-	CREATE_GAME_ID,
-	EDIT_GAMES_ID,
-	DELETE_GAMES_ID,
-	EDIT_USERS_ID,
-	ASSIGN_ROLE_ID,
-	SEE_GAMES_ID,
-	SEE_GRAPHS_ID,
-	CHALLENGE_ID
+	GAMES_CREATE_ID,
+	GAMES_EDIT_ID,
+	GAMES_DELETE_ID,
+	USER_EDIT_ID,
+	USER_ROLE_ASSIGN_ID,
+	USER_CHALLENGE_ID,
+	GAMES_SEE_ID,
+	GRAPHS_SEE_ID
 ] as const;
 
 /// All actions as type
@@ -200,22 +200,22 @@ export type UserActionID = (typeof all_action_ids)[number];
 
 export function get_generic_role_action_name(id: UserActionID): UserAction {
 	switch (id) {
-		case CREATE_GAME_ID:
-			return CREATE_GAMES;
-		case EDIT_GAMES_ID:
-			return EDIT_GAMES_USER;
-		case DELETE_GAMES_ID:
-			return DELETE_GAMES_USER;
-		case EDIT_USERS_ID:
-			return EDIT_USER;
-		case ASSIGN_ROLE_ID:
-			return ASSIGN_ROLE_USER;
-		case SEE_GAMES_ID:
-			return SEE_GAMES_USER;
-		case SEE_GRAPHS_ID:
-			return SEE_GRAPHS_USER;
-		case CHALLENGE_ID:
-			return CHALLENGE_USER;
+		case GAMES_CREATE_ID:
+			return GAMES_CREATE;
+		case GAMES_EDIT_ID:
+			return GAMES_EDIT;
+		case GAMES_DELETE_ID:
+			return GAMES_DELETE;
+		case GAMES_SEE_ID:
+			return GAMES_SEE;
+		case USER_EDIT_ID:
+			return USER_EDIT;
+		case USER_ROLE_ASSIGN_ID:
+			return USER_ROLE_ASSIGN;
+		case USER_CHALLENGE_ID:
+			return USER_CHALLENGE;
+		case GRAPHS_SEE_ID:
+			return GRAPHS_SEE_USER;
 	}
 
 	throw new Error(`Wrong action identifier ${id}`);
@@ -228,104 +228,104 @@ export function get_generic_role_action_name(id: UserActionID): UserAction {
  *    id: "edit" (action)
  *    r: ADMIN (role)
  *
- *    result: EDIT_ADMIN (UserAction)
+ *    result: USER_EDIT_ADMIN (UserAction)
  */
 export function get_role_action_name(id: UserActionID, r: UserRole): UserAction {
 	switch (id) {
-		case CREATE_GAME_ID:
+		case GAMES_CREATE_ID:
 			switch (r) {
 				case ADMIN:
-					return CREATE_GAMES_ADMIN;
+					return GAMES_CREATE_ADMIN;
 				case TEACHER:
-					return CREATE_GAMES_TEACHER;
+					return GAMES_CREATE_TEACHER;
 				case MEMBER:
-					return CREATE_GAMES_MEMBER;
+					return GAMES_CREATE_MEMBER;
 				case STUDENT:
-					return CREATE_GAMES_STUDENT;
+					return GAMES_CREATE_STUDENT;
 			}
 			throw new Error(`Unhandled user role ${r} in ${id}`);
-		case EDIT_GAMES_ID:
+		case GAMES_EDIT_ID:
 			switch (r) {
 				case ADMIN:
-					return EDIT_GAMES_ADMIN;
+					return GAMES_EDIT_ADMIN;
 				case TEACHER:
-					return EDIT_GAMES_TEACHER;
+					return GAMES_EDIT_TEACHER;
 				case MEMBER:
-					return EDIT_GAMES_MEMBER;
+					return GAMES_EDIT_MEMBER;
 				case STUDENT:
-					return EDIT_GAMES_STUDENT;
+					return GAMES_EDIT_STUDENT;
 			}
 			throw new Error(`Unhandled user role ${r} in ${id}`);
-		case DELETE_GAMES_ID:
+		case GAMES_DELETE_ID:
 			switch (r) {
 				case ADMIN:
-					return DELETE_GAMES_ADMIN;
+					return GAMES_DELETE_ADMIN;
 				case TEACHER:
-					return DELETE_GAMES_TEACHER;
+					return GAMES_DELETE_TEACHER;
 				case MEMBER:
-					return DELETE_GAMES_MEMBER;
+					return GAMES_DELETE_MEMBER;
 				case STUDENT:
-					return DELETE_GAMES_STUDENT;
+					return GAMES_DELETE_STUDENT;
 			}
 			throw new Error(`Unhandled user role ${r} in ${id}`);
-		case EDIT_USERS_ID:
+		case GAMES_SEE_ID:
 			switch (r) {
 				case ADMIN:
-					return EDIT_ADMIN;
+					return GAMES_SEE_ADMIN;
 				case TEACHER:
-					return EDIT_TEACHER;
+					return GAMES_SEE_TEACHER;
 				case MEMBER:
-					return EDIT_MEMBER;
+					return GAMES_SEE_MEMBER;
 				case STUDENT:
-					return EDIT_STUDENT;
+					return GAMES_SEE_STUDENT;
 			}
 			throw new Error(`Unhandled user role ${r} in ${id}`);
-		case ASSIGN_ROLE_ID:
+		case USER_EDIT_ID:
 			switch (r) {
 				case ADMIN:
-					return ASSIGN_ROLE_ADMIN;
+					return USER_EDIT_ADMIN;
 				case TEACHER:
-					return ASSIGN_ROLE_TEACHER;
+					return USER_EDIT_TEACHER;
 				case MEMBER:
-					return ASSIGN_ROLE_MEMBER;
+					return USER_EDIT_MEMBER;
 				case STUDENT:
-					return ASSIGN_ROLE_STUDENT;
+					return USER_EDIT_STUDENT;
 			}
 			throw new Error(`Unhandled user role ${r} in ${id}`);
-		case SEE_GAMES_ID:
+		case USER_ROLE_ASSIGN_ID:
 			switch (r) {
 				case ADMIN:
-					return SEE_GAMES_ADMIN;
+					return USER_ROLE_ASSIGN_ADMIN;
 				case TEACHER:
-					return SEE_GAMES_TEACHER;
+					return USER_ROLE_ASSIGN_TEACHER;
 				case MEMBER:
-					return SEE_GAMES_MEMBER;
+					return USER_ROLE_ASSIGN_MEMBER;
 				case STUDENT:
-					return SEE_GAMES_STUDENT;
+					return USER_ROLE_ASSIGN_STUDENT;
 			}
 			throw new Error(`Unhandled user role ${r} in ${id}`);
-		case SEE_GRAPHS_ID:
+		case USER_CHALLENGE_ID:
 			switch (r) {
 				case ADMIN:
-					return SEE_GRAPHS_ADMIN;
+					return USER_CHALLENGE_ADMIN;
 				case TEACHER:
-					return SEE_GRAPHS_TEACHER;
+					return USER_CHALLENGE_TEACHER;
 				case MEMBER:
-					return SEE_GRAPHS_MEMBER;
+					return USER_CHALLENGE_MEMBER;
 				case STUDENT:
-					return SEE_GRAPHS_STUDENT;
+					return USER_CHALLENGE_STUDENT;
 			}
 			throw new Error(`Unhandled user role ${r} in ${id}`);
-		case CHALLENGE_ID:
+		case GRAPHS_SEE_ID:
 			switch (r) {
 				case ADMIN:
-					return CHALLENGE_ADMIN;
+					return GRAPHS_SEE_ADMIN;
 				case TEACHER:
-					return CHALLENGE_TEACHER;
+					return GRAPHS_SEE_TEACHER;
 				case MEMBER:
-					return CHALLENGE_MEMBER;
+					return GRAPHS_SEE_MEMBER;
 				case STUDENT:
-					return CHALLENGE_STUDENT;
+					return GRAPHS_SEE_STUDENT;
 			}
 			throw new Error(`Unhandled user role ${r} in ${id}`);
 	}

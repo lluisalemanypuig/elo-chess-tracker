@@ -33,7 +33,7 @@ import { is_user_logged_in } from './managers/session';
 import { user_add_new } from './managers/users';
 import { User } from './models/user';
 import { is_role_string_correct } from './models/user_role';
-import { CREATE_USER, ASSIGN_ROLE_USER, get_role_action_name, ASSIGN_ROLE_ID } from './models/user_action';
+import { CREATE_USER, USER_ROLE_ASSIGN, get_role_action_name, USER_ROLE_ASSIGN_ID } from './models/user_action';
 import { SessionID } from './models/session_id';
 import { UsersManager } from './managers/users_manager';
 import { ConfigurationManager } from './managers/configuration_manager';
@@ -55,7 +55,7 @@ export async function get_page_user_create(req: any, res: any) {
 		res.status(403).send('You cannot create users.');
 		return;
 	}
-	if (!user.can_do(ASSIGN_ROLE_USER)) {
+	if (!user.can_do(USER_ROLE_ASSIGN)) {
 		debug(log_now(), `User '${session.username}' cannot assign roles to users.`);
 		res.status(403).send(`You cannot assign roles and thus cannot create users.`);
 		return;
@@ -85,7 +85,7 @@ export async function post_user_create(req: any, res: any) {
 		res.status(403).send('You cannot create users.');
 		return;
 	}
-	if (!registerer.can_do(ASSIGN_ROLE_USER)) {
+	if (!registerer.can_do(USER_ROLE_ASSIGN)) {
 		debug(log_now(), `User '${session.username}' cannot assign roles to users.`);
 		res.status(403).send(`You cannot assign roles and thus cannot create users.`);
 		return;
@@ -115,7 +115,7 @@ export async function post_user_create(req: any, res: any) {
 			return;
 		}
 
-		const action = get_role_action_name(ASSIGN_ROLE_ID, r);
+		const action = get_role_action_name(USER_ROLE_ASSIGN_ID, r);
 		if (!registerer.can_do(action)) {
 			res.status(403).send(`You cannot do ${action}.`);
 			return;
