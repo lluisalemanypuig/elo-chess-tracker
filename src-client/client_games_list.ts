@@ -55,7 +55,7 @@ async function select_result_game_on_change(event: any) {
 	location.reload();
 }
 
-function new_select_cell(original_result: string, game_id: string) {
+function new_cell_select_result(original_result: string, game_id: string) {
 	let select = document.createElement('select') as HTMLSelectElement;
 
 	const result_from_text_to_value = function (text: string) {
@@ -130,7 +130,7 @@ async function fill_games_list_time_control(time_control_id: string) {
 		row.appendChild(new_text_cell(games[i].black));
 
 		if (games[i].editable == 'y') {
-			row.appendChild(new_select_cell(games[i].result, games[i].id));
+			row.appendChild(new_cell_select_result(games[i].result, games[i].id));
 		} else {
 			row.appendChild(new_text_cell(games[i].result));
 		}
