@@ -39,17 +39,6 @@ export const CREATE_GAMES_MEMBER = 'create_games_member';
 /// Can create games where a player is a student
 export const CREATE_GAMES_STUDENT = 'create_games_student';
 
-/// Edit a user
-export const EDIT_USER = 'edit_user';
-/// Edit admin
-export const EDIT_ADMIN = 'edit_admin';
-/// Edit teacher
-export const EDIT_TEACHER = 'edit_teacher';
-/// Edit members
-export const EDIT_MEMBER = 'edit_member';
-/// Edit students
-export const EDIT_STUDENT = 'edit_student';
-
 /// Can edit user games
 export const EDIT_GAMES_USER = 'edit_games_user';
 /// Can edit admin games
@@ -60,6 +49,17 @@ export const EDIT_GAMES_TEACHER = 'edit_games_teacher';
 export const EDIT_GAMES_MEMBER = 'edit_games_member';
 /// Can edit student games
 export const EDIT_GAMES_STUDENT = 'edit_games_student';
+
+/// Edit a user
+export const EDIT_USER = 'edit_user';
+/// Edit admin
+export const EDIT_ADMIN = 'edit_admin';
+/// Edit teacher
+export const EDIT_TEACHER = 'edit_teacher';
+/// Edit members
+export const EDIT_MEMBER = 'edit_member';
+/// Edit students
+export const EDIT_STUDENT = 'edit_student';
 
 /// Assign a role to a user
 export const ASSIGN_ROLE_USER = 'assign_role_user';
@@ -115,17 +115,17 @@ export const all_actions = [
 	CREATE_GAMES_MEMBER,
 	CREATE_GAMES_STUDENT,
 
-	EDIT_USER,
-	EDIT_ADMIN,
-	EDIT_TEACHER,
-	EDIT_MEMBER,
-	EDIT_STUDENT,
-
 	EDIT_GAMES_USER,
 	EDIT_GAMES_ADMIN,
 	EDIT_GAMES_TEACHER,
 	EDIT_GAMES_MEMBER,
 	EDIT_GAMES_STUDENT,
+
+	EDIT_USER,
+	EDIT_ADMIN,
+	EDIT_TEACHER,
+	EDIT_MEMBER,
+	EDIT_STUDENT,
 
 	ASSIGN_ROLE_USER,
 	ASSIGN_ROLE_ADMIN,
@@ -158,8 +158,8 @@ export type UserAction = (typeof all_actions)[number];
 // -----------------------------------------------------------------------------
 
 export const CREATE_GAME_ID = 'create_game';
-export const EDIT_USERS_ID = 'edit_users';
 export const EDIT_GAMES_ID = 'edit_games';
+export const EDIT_USERS_ID = 'edit_users';
 export const ASSIGN_ROLE_ID = 'assign_role';
 export const SEE_GAMES_ID = 'see_games';
 export const SEE_GRAPHS_ID = 'see_graphs';
@@ -168,8 +168,8 @@ export const CHALLENGE_ID = 'challenge';
 /// All action ids that can be performed in this web
 export const all_action_ids = [
 	CREATE_GAME_ID,
-	EDIT_USERS_ID,
 	EDIT_GAMES_ID,
+	EDIT_USERS_ID,
 	ASSIGN_ROLE_ID,
 	SEE_GAMES_ID,
 	SEE_GRAPHS_ID,
@@ -183,10 +183,10 @@ export function get_generic_role_action_name(id: UserActionID): UserAction {
 	switch (id) {
 		case CREATE_GAME_ID:
 			return CREATE_GAMES;
-		case EDIT_USERS_ID:
-			return EDIT_USER;
 		case EDIT_GAMES_ID:
 			return EDIT_GAMES_USER;
+		case EDIT_USERS_ID:
+			return EDIT_USER;
 		case ASSIGN_ROLE_ID:
 			return ASSIGN_ROLE_USER;
 		case SEE_GAMES_ID:
@@ -223,18 +223,6 @@ export function get_role_action_name(id: UserActionID, r: UserRole): UserAction 
 					return CREATE_GAMES_STUDENT;
 			}
 			throw new Error(`Unhandled user role ${r} in ${id}`);
-		case EDIT_USERS_ID:
-			switch (r) {
-				case ADMIN:
-					return EDIT_ADMIN;
-				case TEACHER:
-					return EDIT_TEACHER;
-				case MEMBER:
-					return EDIT_MEMBER;
-				case STUDENT:
-					return EDIT_STUDENT;
-			}
-			throw new Error(`Unhandled user role ${r} in ${id}`);
 		case EDIT_GAMES_ID:
 			switch (r) {
 				case ADMIN:
@@ -245,6 +233,18 @@ export function get_role_action_name(id: UserActionID, r: UserRole): UserAction 
 					return EDIT_GAMES_MEMBER;
 				case STUDENT:
 					return EDIT_GAMES_STUDENT;
+			}
+			throw new Error(`Unhandled user role ${r} in ${id}`);
+		case EDIT_USERS_ID:
+			switch (r) {
+				case ADMIN:
+					return EDIT_ADMIN;
+				case TEACHER:
+					return EDIT_TEACHER;
+				case MEMBER:
+					return EDIT_MEMBER;
+				case STUDENT:
+					return EDIT_STUDENT;
 			}
 			throw new Error(`Unhandled user role ${r} in ${id}`);
 		case ASSIGN_ROLE_ID:
