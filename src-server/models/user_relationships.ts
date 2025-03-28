@@ -35,11 +35,6 @@ import {
 	EDIT_STUDENT,
 	EDIT_TEACHER,
 	EDIT_USER,
-	EDIT_GAMES_ADMIN,
-	EDIT_GAMES_MEMBER,
-	EDIT_GAMES_STUDENT,
-	EDIT_GAMES_TEACHER,
-	EDIT_GAMES_USER,
 	SEE_GAMES_ADMIN,
 	SEE_GAMES_MEMBER,
 	SEE_GAMES_STUDENT,
@@ -54,7 +49,17 @@ import {
 	CREATE_GAMES_ADMIN,
 	CREATE_GAMES_TEACHER,
 	CREATE_GAMES_STUDENT,
-	CREATE_GAMES_MEMBER
+	CREATE_GAMES_MEMBER,
+	EDIT_GAMES_ADMIN,
+	EDIT_GAMES_MEMBER,
+	EDIT_GAMES_STUDENT,
+	EDIT_GAMES_TEACHER,
+	EDIT_GAMES_USER,
+	DELETE_GAMES_ADMIN,
+	DELETE_GAMES_MEMBER,
+	DELETE_GAMES_STUDENT,
+	DELETE_GAMES_TEACHER,
+	DELETE_GAMES_USER
 } from './user_action';
 import { ADMIN, MEMBER, STUDENT, TEACHER, UserRole } from './user_role';
 
@@ -111,6 +116,21 @@ export function can_user_edit_a_game(u: User, white: User, black: User): boolean
 			(u.can_do(EDIT_GAMES_TEACHER) && either_user_is(TEACHER)) ||
 			(u.can_do(EDIT_GAMES_STUDENT) && either_user_is(STUDENT)) ||
 			(u.can_do(EDIT_GAMES_MEMBER) && either_user_is(MEMBER)))
+	);
+}
+
+/// Can a user (@e u) delete a game between two players (@e white and @e black)?
+export function can_user_delete_a_game(u: User, white: User, black: User): boolean {
+	const either_user_is = function (r: UserRole): boolean {
+		return white.is(r) || black.is(r);
+	};
+
+	return (
+		u.can_do(DELETE_GAMES_USER) &&
+		((u.can_do(DELETE_GAMES_ADMIN) && either_user_is(ADMIN)) ||
+			(u.can_do(DELETE_GAMES_TEACHER) && either_user_is(TEACHER)) ||
+			(u.can_do(DELETE_GAMES_STUDENT) && either_user_is(STUDENT)) ||
+			(u.can_do(DELETE_GAMES_MEMBER) && either_user_is(MEMBER)))
 	);
 }
 

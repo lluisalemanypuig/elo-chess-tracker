@@ -50,6 +50,17 @@ export const EDIT_GAMES_MEMBER = 'edit_games_member';
 /// Can edit student games
 export const EDIT_GAMES_STUDENT = 'edit_games_student';
 
+/// Can delete user games
+export const DELETE_GAMES_USER = 'delete_games_user';
+/// Can delete admin games
+export const DELETE_GAMES_ADMIN = 'delete_games_admin';
+/// Can delete teacher games
+export const DELETE_GAMES_TEACHER = 'delete_games_teacher';
+/// Can delete member games
+export const DELETE_GAMES_MEMBER = 'delete_games_member';
+/// Can delete student games
+export const DELETE_GAMES_STUDENT = 'delete_games_student';
+
 /// Edit a user
 export const EDIT_USER = 'edit_user';
 /// Edit admin
@@ -121,6 +132,12 @@ export const all_actions = [
 	EDIT_GAMES_MEMBER,
 	EDIT_GAMES_STUDENT,
 
+	DELETE_GAMES_USER,
+	DELETE_GAMES_ADMIN,
+	DELETE_GAMES_TEACHER,
+	DELETE_GAMES_MEMBER,
+	DELETE_GAMES_STUDENT,
+
 	EDIT_USER,
 	EDIT_ADMIN,
 	EDIT_TEACHER,
@@ -159,6 +176,7 @@ export type UserAction = (typeof all_actions)[number];
 
 export const CREATE_GAME_ID = 'create_game';
 export const EDIT_GAMES_ID = 'edit_games';
+export const DELETE_GAMES_ID = 'delete_games';
 export const EDIT_USERS_ID = 'edit_users';
 export const ASSIGN_ROLE_ID = 'assign_role';
 export const SEE_GAMES_ID = 'see_games';
@@ -169,6 +187,7 @@ export const CHALLENGE_ID = 'challenge';
 export const all_action_ids = [
 	CREATE_GAME_ID,
 	EDIT_GAMES_ID,
+	DELETE_GAMES_ID,
 	EDIT_USERS_ID,
 	ASSIGN_ROLE_ID,
 	SEE_GAMES_ID,
@@ -185,6 +204,8 @@ export function get_generic_role_action_name(id: UserActionID): UserAction {
 			return CREATE_GAMES;
 		case EDIT_GAMES_ID:
 			return EDIT_GAMES_USER;
+		case DELETE_GAMES_ID:
+			return DELETE_GAMES_USER;
 		case EDIT_USERS_ID:
 			return EDIT_USER;
 		case ASSIGN_ROLE_ID:
@@ -233,6 +254,18 @@ export function get_role_action_name(id: UserActionID, r: UserRole): UserAction 
 					return EDIT_GAMES_MEMBER;
 				case STUDENT:
 					return EDIT_GAMES_STUDENT;
+			}
+			throw new Error(`Unhandled user role ${r} in ${id}`);
+		case DELETE_GAMES_ID:
+			switch (r) {
+				case ADMIN:
+					return DELETE_GAMES_ADMIN;
+				case TEACHER:
+					return DELETE_GAMES_TEACHER;
+				case MEMBER:
+					return DELETE_GAMES_MEMBER;
+				case STUDENT:
+					return DELETE_GAMES_STUDENT;
 			}
 			throw new Error(`Unhandled user role ${r} in ${id}`);
 		case EDIT_USERS_ID:
