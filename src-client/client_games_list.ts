@@ -27,11 +27,15 @@ function new_text_cell(text: string) {
 	return cell;
 }
 
-async function edit_button_on_click(event: any) {
-	let button = event.target as HTMLButtonElement;
+async function select_result_game_on_change(event: any) {
+	const select = event.target;
 
-	const game_id = button.getAttribute('game_id');
-	const new_result = (document.getElementById(button.getAttribute('select_id') as string) as HTMLSelectElement).value;
+	const game_id = select.getAttribute('game_id');
+	const new_result = select.value;
+
+	if (new_result == select.getAttribute('original_value')) {
+		return;
+	}
 
 	const response = await fetch('/game/edit_result', {
 		method: 'POST',
@@ -41,6 +45,7 @@ async function edit_button_on_click(event: any) {
 		}),
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
+
 	if (response.status >= 400) {
 		const message = await response.text();
 		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
@@ -48,33 +53,6 @@ async function edit_button_on_click(event: any) {
 	}
 
 	location.reload();
-}
-
-function new_button_cell(text: string, game_id: string) {
-	let button = document.createElement('button') as HTMLButtonElement;
-	button.textContent = text;
-	button.className = 'button_edit_game';
-	button.id = 'button_edit_' + game_id;
-	button.setAttribute('game_id', game_id);
-	button.setAttribute('select_id', 'select_result_' + game_id);
-	button.onclick = edit_button_on_click;
-	button.disabled = true;
-
-	let cell = document.createElement('td');
-	cell.appendChild(button);
-	return cell;
-}
-
-function select_result_game_on_change(event: any) {
-	const select = event.target;
-
-	let button = document.getElementById(select.getAttribute('button_id')) as HTMLButtonElement;
-
-	if (select.value != select.getAttribute('original_value')) {
-		button.disabled = false;
-	} else {
-		button.disabled = true;
-	}
 }
 
 function new_select_cell(original_result: string, game_id: string) {
@@ -110,7 +88,7 @@ function new_select_cell(original_result: string, game_id: string) {
 	select.value = result_from_text_to_value(original_result);
 	select.onchange = select_result_game_on_change;
 	select.setAttribute('original_value', result_from_text_to_value(original_result));
-	select.setAttribute('button_id', 'button_edit_' + game_id);
+	select.setAttribute('game_id', game_id);
 
 	let cell = document.createElement('td');
 	cell.appendChild(select);
@@ -164,10 +142,6 @@ async function fill_games_list_time_control(time_control_id: string) {
 		row.appendChild(new_text_cell(games[i].white_increment));
 		row.appendChild(new_text_cell(games[i].black_rating));
 		row.appendChild(new_text_cell(games[i].black_increment));
-
-		if (games[i].editable == 'y') {
-			row.appendChild(new_button_cell('Edit', games[i].id));
-		}
 
 		new_tbody.appendChild(row);
 	}
