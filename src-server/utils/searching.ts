@@ -85,7 +85,7 @@ export function search<T>(arr: T[], x: T, Comparison: Function = generic_compare
  * @brief Returns whether @e x is in @e arr or not.
  * @tparam T Type of elements in the array.
  * @param arr Array.
- * @param x Element of type @e T.
+ * @param x Element of type @e U.
  * @param Comparison Takes two elements of type @e T, F(e1,e2), and returns:
  * - a value < 0 if "e1 < e2",
  * - a value = 0 if "e1 == e2",
