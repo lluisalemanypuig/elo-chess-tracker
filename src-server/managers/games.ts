@@ -302,12 +302,13 @@ function game_insert_in_history(g: Game, record_id: DateStringShort): void {
 		games_iter.set_to_game(game_idx + 1);
 		update_game_record(games_iter, time_control_id, updated_players, player_to_index);
 		fs.writeFileSync(game_record_file, JSON.stringify(game_set, null, 4));
+
+		games_iter.next_record();
 	}
 
 	debug(log_now(), `The game record for game '${g.get_id()}' has been created/updated.`);
 	debug(log_now(), `Going to update the next game records.`);
 
-	games_iter.next_record();
 	while (!games_iter.end_record_list()) {
 		update_game_record(games_iter, time_control_id, updated_players, player_to_index);
 
