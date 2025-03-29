@@ -151,7 +151,7 @@ export async function post_query_game_list_own(req: any, res: any) {
 			user,
 			time_control_id,
 			(time_id: TimeControlID, record_id: DateStringShort): boolean => {
-				const array = user.get_games(time_id) as DateStringShort[];
+				const array = user.get_games(time_id);
 				return array.includes(record_id);
 			},
 			(g: Game): boolean => {
@@ -165,7 +165,7 @@ export async function post_query_game_list_own(req: any, res: any) {
 				user,
 				tid,
 				(time_id: TimeControlID, record_id: DateStringShort): boolean => {
-					const array = user.get_games(time_id) as DateStringShort[];
+					const array = user.get_games(time_id);
 					return array.includes(record_id);
 				},
 				(g: Game): boolean => {
