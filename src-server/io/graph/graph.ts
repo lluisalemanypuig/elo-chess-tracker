@@ -50,13 +50,20 @@ export function neighborhood_to_file(dir: string, username: string, edges: Neigh
  * This function only saves a portion of the graph, that is, the portions
  * corresponding to those users for which there has been a change. Each file
  * created or updated corresponds to a specific user of the server.
+ *
+ * If the portion to be saved is empty, the file is deleted.
  * @param dir The directory where to save the graph.
  * @param changes The users for which their portion graph is to be saved.
  * @param g The graph to be saved.
  */
 export function graph_to_file(dir: string, changes: string[], g: Graph): void {
 	for (const username of changes) {
-		neighborhood_to_file(dir, username, g.get_outgoing_edges(username) as Neighborhood);
+		if (g.get_out_degree(username) > 0) {
+			neighborhood_to_file(dir, username, g.get_outgoing_edges(username) as Neighborhood);
+		} else {
+			const filename = path.join(dir, username);
+			fs.rmSync(filename);
+		}
 	}
 }
 

@@ -122,6 +122,55 @@ export class Graph {
 		Graph.insert_into_list(b, w, b_edge, _b_in_list as Neighborhood);
 	}
 
+	private static delete_from_list(_u: string, v: string, result: GameResult, N_u: Neighborhood): void {
+		const index = search_by_key(
+			N_u,
+			v,
+			(e: Edge): string => {
+				return e.neighbor;
+			},
+			(a: string, b: string): number => {
+				return a.localeCompare(b);
+			}
+		);
+		N_u[index].metadata.decrease(result);
+		if (N_u[index].metadata.all_zero()) {
+			N_u.splice(index, 1);
+		}
+	}
+	/**
+	 * @brief Deletes the result of a game from the graph.
+	 *
+	 * If the metadata of the corresponding edges goes down to zero, the corresponding
+	 * edges are deleted entirely from the graph.
+	 * @param w White player
+	 * @param b Black player
+	 * @param result Result of the game.
+	 */
+	delete_edge(w: string, b: string, result: GameResult): void {
+		// delete from w's outgoing edges list
+		let _w_out_list = this.adjacency_list.get(w);
+		if (_w_out_list == undefined) {
+			throw new Error(`Player '${w}' does not have any outgoing edge, and so no edge to '${b}'.`);
+		}
+		let w_out_list = _w_out_list as Neighborhood;
+		Graph.delete_from_list(w, b, result, w_out_list);
+		if (w_out_list.length == 0) {
+			this.adjacency_list.delete(w);
+		}
+
+		// delete from b's ingoing edges list
+		let _b_in_list = this.in_adjacency_list.get(b);
+		if (_b_in_list == undefined) {
+			throw new Error(`Player '${b}' does not have any ingoing edge, and so no edge from '${w}'.`);
+		}
+		let b_in_list = _b_in_list as Neighborhood;
+		Graph.delete_from_list(b, w, opposite_result(result), b_in_list);
+		if (b_in_list.length == 0) {
+			this.in_adjacency_list.delete(b);
+		}
+	}
+
 	/**
 	 * @brief The weight of edge (u,v) when 'u' plays as white.
 	 * @param u White player.

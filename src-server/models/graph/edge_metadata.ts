@@ -73,6 +73,20 @@ export class EdgeMetadata {
 		return new EdgeMetadata(this.num_games_won, this.num_games_drawn, this.num_games_lost);
 	}
 
+	decrease(res: GameResult): void {
+		if (res == 'white_wins') {
+			this.num_games_won -= 1;
+		} else if (res == 'draw') {
+			this.num_games_drawn -= 1;
+		} else {
+			this.num_games_lost -= 1;
+		}
+	}
+
+	all_zero(): boolean {
+		return this.num_games_drawn == 0 && this.num_games_lost == 0 && this.num_games_won == 0;
+	}
+
 	static empty(): EdgeMetadata {
 		return new EdgeMetadata(0, 0, 0);
 	}
