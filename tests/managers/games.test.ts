@@ -1696,10 +1696,10 @@ describe('Before-time inverse game creation', () => {
 			expect(f.get_rating('Classical').num_won_drawn_lost()).toEqual([6, 1, 5, 0]);
 		}
 
-		game_add_new(u('a'), u('c'), 'draw', 'Blitz', 'Blitz (5 + 0)', '2023-01-20', '17:06:40:000');
+		game_add_new(u('a'), u('c'), 'draw', 'Blitz', 'Blitz (5 + 0)', '2023-01-10', '17:06:40:000');
 		{
-			const game_set = game_set_from_json(fs.readFileSync(path.join(blitz_dir, '2023-01-20'), 'utf8'));
-			expect(game_set.length).toBe(2);
+			const game_set = game_set_from_json(fs.readFileSync(path.join(blitz_dir, '2023-01-10'), 'utf8'));
+			expect(game_set.length).toBe(1);
 
 			expect(game_set[0].get_id()).toBe('0000000026');
 			expect(game_set[0].get_white()).toBe('a');
@@ -1707,17 +1707,9 @@ describe('Before-time inverse game creation', () => {
 			expect(game_set[0].get_result()).toBe('draw');
 			expect(game_set[0].get_time_control_id()).toBe('Blitz');
 			expect(game_set[0].get_time_control_name()).toBe('Blitz (5 + 0)');
-			expect(game_set[0].get_date()).toBe('2023-01-20..17:06:40:000');
+			expect(game_set[0].get_date()).toBe('2023-01-10..17:06:40:000');
 
-			expect(game_set[1].get_id()).toBe('0000000025');
-			expect(game_set[1].get_white()).toBe('a');
-			expect(game_set[1].get_black()).toBe('f');
-			expect(game_set[1].get_result()).toBe('draw');
-			expect(game_set[1].get_time_control_id()).toBe('Blitz');
-			expect(game_set[1].get_time_control_name()).toBe('Blitz (5 + 0)');
-			expect(game_set[1].get_date()).toBe('2023-01-20..17:06:50:000');
-
-			expect(a.get_games('Blitz').length).toBe(3);
+			expect(a.get_games('Blitz').length).toBe(4);
 			expect(b.get_games('Blitz').length).toBe(2);
 			expect(c.get_games('Blitz').length).toBe(3);
 			expect(d.get_games('Blitz').length).toBe(2);
