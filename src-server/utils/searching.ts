@@ -71,14 +71,7 @@ function generic_compare<T>(e1: T, e2: T): number {
  * @pre Elements in @e arr are sorted by @e F.
  */
 export function search<T>(arr: T[], x: T, Comparison: Function = generic_compare): number {
-	return search_by_key(
-		arr,
-		x,
-		(e1: T) => {
-			return e1;
-		},
-		Comparison
-	);
+	return search_by_key(arr, x, Comparison);
 }
 
 /**
@@ -93,18 +86,13 @@ export function search<T>(arr: T[], x: T, Comparison: Function = generic_compare
  * @returns The index of the element if it is in the array. Returns -1 if it is not.
  * @pre Elements in @e arr are sorted by @e F.
  */
-export function search_by_key<T, U>(
-	arr: T[],
-	x: U,
-	M: (input: T) => U,
-	Comparison: Function = generic_compare
-): number {
+export function search_by_key<T, U>(arr: T[], x: U, Comparison: Function = generic_compare): number {
 	let i: number = 0;
 	let j: number = arr.length - 1;
 	while (i < j) {
 		const m: number = Math.floor((i + j) / 2);
 
-		const comp = Comparison(x, M(arr[m]));
+		const comp = Comparison(x, arr[m]);
 		const is_equal = comp == 0;
 		const is_less_than = comp == -1;
 
@@ -117,7 +105,7 @@ export function search_by_key<T, U>(
 			i = m + 1;
 		}
 	}
-	if (i == j && Comparison(x, M(arr[i])) == 0) {
+	if (i == j && Comparison(x, arr[i]) == 0) {
 		return i;
 	}
 	return -1;

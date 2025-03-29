@@ -123,16 +123,9 @@ export class Graph {
 	}
 
 	private static delete_from_list(_u: string, v: string, result: GameResult, N_u: Neighborhood): void {
-		const index = search_by_key(
-			N_u,
-			v,
-			(e: Edge): string => {
-				return e.neighbor;
-			},
-			(a: string, b: string): number => {
-				return a.localeCompare(b);
-			}
-		);
+		const index = search_by_key(N_u, v, (a: string, b: Edge): number => {
+			return a.localeCompare(b.neighbor);
+		});
 		N_u[index].metadata.decrease(result);
 		if (N_u[index].metadata.all_zero()) {
 			N_u.splice(index, 1);
@@ -185,16 +178,9 @@ export class Graph {
 		}
 
 		const w_list = _w_list as Neighborhood;
-		const b_idx = search_by_key(
-			w_list,
-			v,
-			function (a: Edge) {
-				return a.neighbor;
-			},
-			function (s: string, t: string): number {
-				return s.localeCompare(t);
-			}
-		);
+		const b_idx = search_by_key(w_list, v, function (s: string, t: Edge): number {
+			return s.localeCompare(t.neighbor);
+		});
 		return b_idx == -1 ? undefined : w_list[b_idx].metadata;
 	}
 	/**
@@ -211,16 +197,9 @@ export class Graph {
 		}
 
 		const u_list = _u_list as Neighborhood;
-		const v_idx = search_by_key(
-			u_list,
-			v,
-			function (a: Edge) {
-				return a.neighbor;
-			},
-			function (s: string, t: string): number {
-				return s.localeCompare(t);
-			}
-		);
+		const v_idx = search_by_key(u_list, v, function (s: string, t: Edge): number {
+			return s.localeCompare(t.neighbor);
+		});
 		return v_idx == -1 ? undefined : u_list[v_idx].metadata;
 	}
 
@@ -231,16 +210,9 @@ export class Graph {
 		new_res: GameResult,
 		N_u: Neighborhood
 	): void {
-		const b_idx = search_by_key(
-			N_u,
-			v,
-			function (a: Edge) {
-				return a.neighbor;
-			},
-			function (s: string, t: string): number {
-				return s.localeCompare(t);
-			}
-		);
+		const b_idx = search_by_key(N_u, v, function (s: string, t: Edge): number {
+			return s.localeCompare(t.neighbor);
+		});
 		if (b_idx == -1) {
 			throw new Error(`The edge from '${u}' to '${v}' does not exist.`);
 		}
