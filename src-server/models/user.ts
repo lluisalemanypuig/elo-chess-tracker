@@ -39,13 +39,15 @@ export type UserRandomID = number;
 export class TimeControlGames {
 	public time_control: TimeControlID = '';
 	public records: DateStringShort[] = [];
+	public num_games: number[] = [];
 
-	constructor(id: TimeControlID, list: DateStringShort[]) {
+	constructor(id: TimeControlID, list: DateStringShort[], amounts: number[]) {
 		this.time_control = id;
 		this.records = list;
+		this.num_games = amounts;
 	}
 	clone(): TimeControlGames {
-		return new TimeControlGames(this.time_control, this.records);
+		return new TimeControlGames(this.time_control, this.records, this.num_games);
 	}
 }
 
@@ -165,10 +167,12 @@ export class User extends Player {
 			throw new Error(`User does not have time control id '${id}'`);
 		}
 
-		let games_list = this.games[idx].records;
-		let [index, exists] = where_should_be_inserted(games_list, g);
+		const [index, exists] = where_should_be_inserted(this.games[idx].records, g);
 		if (!exists) {
-			games_list.splice(index, 0, g);
+			this.games[idx].records.splice(index, 0, g);
+			this.games[idx].num_games.splice(index, 0, 1);
+		} else {
+			this.games[idx].num_games[index] += 1;
 		}
 	}
 

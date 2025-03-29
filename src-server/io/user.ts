@@ -39,7 +39,7 @@ export function time_control_games_from_json(json: any): TimeControlGames {
 		const json_parse = JSON.parse(json);
 		return time_control_games_from_json(json_parse);
 	}
-	return new TimeControlGames(json['time_control'], json['records']);
+	return new TimeControlGames(json['time_control'], json['records'], json['num_games']);
 }
 
 /**

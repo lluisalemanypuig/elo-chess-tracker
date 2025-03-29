@@ -86,7 +86,7 @@ export function user_add_new(
 	let ratings: TimeControlRating[] = [];
 	rating_system.get_unique_time_controls_ids().forEach((id: string) => {
 		ratings.push(new TimeControlRating(id, rating_system.get_new_rating()));
-		game_list.push(new TimeControlGames(id, []));
+		game_list.push(new TimeControlGames(id, [], []));
 	});
 
 	const password = encrypt_password_for_user(username, pass);
