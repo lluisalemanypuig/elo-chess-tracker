@@ -145,11 +145,14 @@ export class User extends Player {
 	 * @param id The time control id.
 	 * @returns A list of strings pointing to game records.
 	 */
-	get_games(id: TimeControlID): DateStringShort[] | undefined {
+	get_games(id: TimeControlID): DateStringShort[] {
 		const idx = search_linear_by_key(this.games, (v: TimeControlGames): boolean => {
 			return v.time_control == id;
 		});
-		return idx != -1 ? this.games[idx].records : undefined;
+		if (idx == -1) {
+			throw new Error(`Rating with id '${id}' does not exist!`);
+		}
+		return this.games[idx].records;
 	}
 
 	/**
