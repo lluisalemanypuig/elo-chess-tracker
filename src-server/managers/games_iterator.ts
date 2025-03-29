@@ -97,6 +97,10 @@ export class GamesIterator {
 		return this.game_idx;
 	}
 
+	delete_current_game(): void {
+		this.game_set.splice(this.game_idx, 1);
+	}
+
 	/**
 	 * @brief Returns true if the iteration reached its end.
 	 *
