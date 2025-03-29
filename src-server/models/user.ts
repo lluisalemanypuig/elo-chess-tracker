@@ -156,6 +156,21 @@ export class User extends Player {
 	}
 
 	/**
+	 * @brief Returns the number of games played by this user at every game record.
+	 * @param id The time control id.
+	 * @returns A list of strings pointing to game records.
+	 */
+	get_number_of_games(id: TimeControlID): number[] {
+		const idx = search_linear_by_key(this.games, (v: TimeControlGames): boolean => {
+			return v.time_control == id;
+		});
+		if (idx == -1) {
+			throw new Error(`Rating with id '${id}' does not exist!`);
+		}
+		return this.games[idx].num_games;
+	}
+
+	/**
 	 * @brief Inserts a new game record string into @ref games.
 	 *
 	 * If the record string already exists, does nothing.
