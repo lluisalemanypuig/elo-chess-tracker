@@ -96,15 +96,12 @@ function new_cell_select_result(original_result: string, game_id: string) {
 }
 
 async function button_remove_on_click(event: any) {
-	const select = event.target;
+	const button = event.target;
 
-	const game_id = select.getAttribute('game_id');
-	const new_result = select.value;
+	let select_time_control = document.getElementById('select_time_control') as HTMLSelectElement;
+	let previous_time_control_id = select_time_control.options[select_time_control.selectedIndex].value;
 
-	if (new_result == select.getAttribute('original_value')) {
-		return;
-	}
-
+	const game_id = button.getAttribute('game_id');
 	const response = await fetch('/game/delete', {
 		method: 'POST',
 		body: JSON.stringify({ game_id: game_id }),
@@ -117,7 +114,7 @@ async function button_remove_on_click(event: any) {
 		return;
 	}
 
-	location.reload();
+	fill_games_list_time_control(previous_time_control_id);
 }
 
 function new_cell_button_delete(game_id: string) {
