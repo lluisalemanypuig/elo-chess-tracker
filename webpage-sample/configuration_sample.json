@@ -49,6 +49,7 @@
 			"assign_role_admin",  "assign_role_teacher",  "assign_role_member",  "assign_role_student",
 
 			"create_games_admin", "create_games_teacher", "create_games_member", "create_games_student",
+			"delete_games_admin", "delete_games_teacher", "delete_games_member", "delete_games_student",
 
 			"edit_admin",         "edit_teacher",         "edit_member",         "edit_student",
 			"edit_games_admin",   "edit_games_teacher",   "edit_games_member",   "edit_games_student",
