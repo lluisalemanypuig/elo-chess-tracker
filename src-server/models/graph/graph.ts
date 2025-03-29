@@ -52,7 +52,7 @@ export class Graph {
 		return this.in_adjacency_list.keys();
 	}
 
-	private insert_into_list(_u: string, v: string, edge: Edge, N_u: Neighborhood): void {
+	private static insert_into_list(_u: string, v: string, edge: Edge, N_u: Neighborhood): void {
 		const [edge_idx, exists]: [number, boolean] = where_should_be_inserted_by_key(
 			N_u,
 			v,
@@ -83,8 +83,7 @@ export class Graph {
 			_w_out_list = this.adjacency_list.get(w);
 		}
 		const w_edge = new Edge(b, EdgeMetadata.from_result(result));
-		let w_out_list = _w_out_list as Neighborhood;
-		this.insert_into_list(w, b, w_edge, w_out_list);
+		Graph.insert_into_list(w, b, w_edge, _w_out_list as Neighborhood);
 
 		// insert into b's ingoing edges list
 		let _b_in_list = this.in_adjacency_list.get(b);
@@ -92,12 +91,8 @@ export class Graph {
 			this.in_adjacency_list.set(b, []);
 			_b_in_list = this.in_adjacency_list.get(b);
 		}
-
-		let em = EdgeMetadata.from_result(result);
-		em.reverse();
-		const b_edge = new Edge(w, em);
-		let b_in_list = _b_in_list as Neighborhood;
-		this.insert_into_list(b, w, b_edge, b_in_list);
+		const b_edge = new Edge(w, EdgeMetadata.from_result(opposite_result(result)));
+		Graph.insert_into_list(b, w, b_edge, _b_in_list as Neighborhood);
 	}
 	/**
 	 * @brief Add an edge between White @e w and Black @e b, with result.
@@ -112,8 +107,7 @@ export class Graph {
 			this.adjacency_list.set(w, []);
 			_w_out_list = this.adjacency_list.get(w);
 		}
-		let w_out_list = _w_out_list as Neighborhood;
-		this.insert_into_list(w, b, w_edge, w_out_list);
+		Graph.insert_into_list(w, b, w_edge, _w_out_list as Neighborhood);
 
 		// insert into b's ingoing edges list
 		let _b_in_list = this.in_adjacency_list.get(b);
@@ -125,8 +119,7 @@ export class Graph {
 		let em = w_edge.metadata.clone();
 		em.reverse();
 		const b_edge = new Edge(w, em);
-		let b_in_list = _b_in_list as Neighborhood;
-		this.insert_into_list(b, w, b_edge, b_in_list);
+		Graph.insert_into_list(b, w, b_edge, _b_in_list as Neighborhood);
 	}
 
 	/**
