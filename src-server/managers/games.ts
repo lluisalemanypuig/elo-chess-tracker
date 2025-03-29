@@ -42,6 +42,7 @@ import { Rating } from '../rating_framework/rating';
 import { TimeControlID } from '../models/time_control';
 import { graph_delete_edge, graph_modify_edge, graph_update } from './graphs';
 import { GamesIterator } from './games_iterator';
+import { TimeControlRating } from '../models/time_control_rating';
 
 /// Returns g1 < g2 using dates
 function game_compare_dates(g1: Game, g2: Game): number {
@@ -154,10 +155,8 @@ function game_new(
 	);
 }
 
-function updated_player(time_control_id: TimeControlID, player: string, rating: Rating): Player {
-	let p = (UsersManager.get_instance().get_user_by_username(player) as User).clone_as_player();
-	p.set_rating(time_control_id, rating);
-	return p;
+function rating_into_player(time_control_id: TimeControlID, player: string, rating: Rating): Player {
+	return new Player(player, [new TimeControlRating(time_control_id, rating)]);
 }
 
 /// Updates the given game record
@@ -167,32 +166,40 @@ function update_game_record(
 	updated_players: Player[],
 	player_to_index: Map<string, number>
 ): void {
-	const was_updated = (username: string): boolean => {
-		return player_to_index.has(username);
-	};
+	debug(log_now(), `    Updating '${games_iter.get_current_record_name()}'...`);
+	debug(log_now(), `    Before update:`);
+	for (const player of updated_players) {
+		debug(log_now(), `        ${player.get_username()}.`);
+		debug(log_now(), `            ${player.get_rating(time_control_id).num_games}.`);
+		debug(log_now(), `            ${player.get_rating(time_control_id).won}.`);
+		debug(log_now(), `            ${player.get_rating(time_control_id).drawn}.`);
+		debug(log_now(), `            ${player.get_rating(time_control_id).lost}.`);
+	}
 
+	let i: number = 0;
 	while (!games_iter.end_record_single()) {
+		debug(log_now(), `        Updating game ${i}/${games_iter.get_current_game_set().length}.`);
+
 		let g = games_iter.get_current_game();
 
 		const white = g.get_white();
 		const black = g.get_black();
 
-		// were White or Black updated in previous iterations?
-		const white_was_updated = was_updated(white);
-		const black_was_updated = was_updated(black);
-
 		const white_idx = player_to_index.get(white);
 		const black_idx = player_to_index.get(black);
 
-		// set the player information in the game to the most updated version
-		if (white_was_updated) {
-			g.set_white_rating(updated_players[white_idx as number].get_rating(time_control_id).clone());
-		}
-		if (black_was_updated) {
-			g.set_black_rating(updated_players[black_idx as number].get_rating(time_control_id).clone());
-		}
+		const white_was_updated = white_idx != undefined;
+		const black_was_updated = black_idx != undefined;
 
 		if (white_was_updated || black_was_updated) {
+			// set the player information in the game to the most updated version
+			if (white_was_updated) {
+				g.set_white_rating(updated_players[white_idx as number].get_rating(time_control_id).clone());
+			}
+			if (black_was_updated) {
+				g.set_black_rating(updated_players[black_idx as number].get_rating(time_control_id).clone());
+			}
+
 			// calculate result of game
 			const [rating_white_after, rating_black_after] =
 				RatingSystemManager.get_instance().apply_rating_function(g);
@@ -200,19 +207,30 @@ function update_game_record(
 			if (white_was_updated) {
 				updated_players[white_idx as number].set_rating(time_control_id, rating_white_after);
 			} else {
-				updated_players.push(updated_player(time_control_id, white, rating_white_after));
+				updated_players.push(rating_into_player(time_control_id, white, rating_white_after));
 				player_to_index.set(white, updated_players.length - 1);
 			}
 
 			if (black_was_updated) {
 				updated_players[black_idx as number].set_rating(time_control_id, rating_black_after);
 			} else {
-				updated_players.push(updated_player(time_control_id, black, rating_black_after));
+				updated_players.push(rating_into_player(time_control_id, black, rating_black_after));
 				player_to_index.set(black, updated_players.length - 1);
 			}
 		}
 
 		games_iter.next_game_record();
+		++i;
+	}
+
+	debug(log_now(), `    Updating '${games_iter.get_current_record_name()}'...`);
+	debug(log_now(), `    Before update:`);
+	for (const player of updated_players) {
+		debug(log_now(), `        ${player.get_username()}.`);
+		debug(log_now(), `            ${player.get_rating(time_control_id).num_games}.`);
+		debug(log_now(), `            ${player.get_rating(time_control_id).won}.`);
+		debug(log_now(), `            ${player.get_rating(time_control_id).drawn}.`);
+		debug(log_now(), `            ${player.get_rating(time_control_id).lost}.`);
 	}
 }
 
@@ -225,12 +243,14 @@ function update_game_record(
 function game_insert_in_history(g: Game, record_id: DateStringShort): void {
 	let updated_players: Player[] = [];
 
+	const white_username = g.get_white();
+	const black_username = g.get_black();
 	const time_control_id = g.get_time_control_id();
-	// apply rating formula
+
 	{
-		let [white_after, black_after] = RatingSystemManager.get_instance().apply_rating_function(g);
-		updated_players.push(updated_player(time_control_id, g.get_white(), white_after));
-		updated_players.push(updated_player(time_control_id, g.get_black(), black_after));
+		let [white_rating_after, black_rating_after] = RatingSystemManager.get_instance().apply_rating_function(g);
+		updated_players.push(rating_into_player(time_control_id, white_username, white_rating_after));
+		updated_players.push(rating_into_player(time_control_id, black_username, black_rating_after));
 	}
 
 	const games_dir = EnvironmentManager.get_instance().get_dir_games_time_control(time_control_id);
@@ -259,13 +279,13 @@ function game_insert_in_history(g: Game, record_id: DateStringShort): void {
 			user_update_from_player_data(updated_players);
 			return;
 		}
-
-		debug(log_now(), `There is some game record file beyond the current game record -- those have to be updated.`);
 	}
 
+	debug(log_now(), `There is some game record file beyond the current game record -- those have to be updated.`);
+
 	let player_to_index: Map<string, number> = new Map();
-	player_to_index.set(g.get_white(), 0);
-	player_to_index.set(g.get_black(), 1);
+	player_to_index.set(white_username, 0);
+	player_to_index.set(black_username, 1);
 
 	if (record_exists) {
 		debug(log_now(), `The game record for game '${g.get_id()}' exists.`);
@@ -284,7 +304,7 @@ function game_insert_in_history(g: Game, record_id: DateStringShort): void {
 		fs.writeFileSync(game_record_file, JSON.stringify(game_set, null, 4));
 	}
 
-	debug(log_now(), `The game record for game '${g.get_id()}' has been updated.`);
+	debug(log_now(), `The game record for game '${g.get_id()}' has been created/updated.`);
 	debug(log_now(), `Going to update the next game records.`);
 
 	games_iter.next_record();
@@ -319,8 +339,6 @@ export function game_add_new(
 	const white_username = white.get_username();
 	const black_username = black.get_username();
 	const g = game_new(white_username, black_username, result, time_control_id, time_control_name, when);
-
-	console.log(g);
 
 	white.add_game(time_control_id, game_record);
 	black.add_game(time_control_id, game_record);
@@ -414,8 +432,8 @@ export function game_edit_result(game_id: GameID, new_result: GameResult): void 
 	let updated_players: Player[] = [];
 	{
 		let [white_after, black_after] = RatingSystemManager.get_instance().apply_rating_function(game);
-		updated_players.push(updated_player(time_control_id, white, white_after));
-		updated_players.push(updated_player(time_control_id, black, black_after));
+		updated_players.push(rating_into_player(time_control_id, white, white_after));
+		updated_players.push(rating_into_player(time_control_id, black, black_after));
 	}
 
 	let player_to_index: Map<string, number> = new Map();
@@ -474,8 +492,8 @@ export function game_delete(game_id: GameID): void {
 	{
 		const white_before = game.get_white_rating();
 		const black_before = game.get_black_rating();
-		updated_players.push(updated_player(time_control_id, white, white_before));
-		updated_players.push(updated_player(time_control_id, black, black_before));
+		updated_players.push(rating_into_player(time_control_id, white, white_before));
+		updated_players.push(rating_into_player(time_control_id, black, black_before));
 	}
 
 	let player_to_index: Map<string, number> = new Map();
