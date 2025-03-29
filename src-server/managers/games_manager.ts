@@ -115,4 +115,9 @@ export class GamesManager {
 	get_game_info(game_id: GameID): GameInfo | undefined {
 		return this.game_info.get(game_id);
 	}
+
+	/// Delete a game ID from the manager
+	delete_game_id(id: GameID): void {
+		this.game_info.delete(id);
+	}
 }
