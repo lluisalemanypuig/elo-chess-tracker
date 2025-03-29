@@ -129,35 +129,23 @@ export function user_get_all__name_randid(): [string, number][] {
  * @param players Set of players to be updated.
  * @post Users in the server (memory and database) are updated.
  */
-export function user_update_from_players_data(players: Player[]): void {
-	const server_dirs = EnvironmentManager.get_instance();
+export function user_update_from_player_data(players: Player[]): void {
+	const users_directory = EnvironmentManager.get_instance().get_dir_users();
 	let manager = UsersManager.get_instance();
-
-	let users_to_update: User[] = [];
-
-	debug(log_now(), 'Updating users in the server...');
-	for (let i = 0; i < players.length; ++i) {
-		let u = manager.get_user_by_username(players[i].get_username()) as User;
-
-		const all_ratings_u = players[i].get_all_ratings();
-		for (let j = 0; j < all_ratings_u.length; ++j) {
-			u.set_rating(all_ratings_u[j].time_control, all_ratings_u[j].rating);
-		}
-
-		users_to_update.push(u);
-	}
-
-	// lengths must be equal
-	if (users_to_update.length != players.length) {
-		throw new Error("Lengths of 'users_to_update' and 'players' is not the same.");
-	}
-
 	let mem = UsersManager.get_instance();
 
 	debug(log_now(), 'Updating users...');
-	for (let i = 0; i < users_to_update.length; ++i) {
-		let u = users_to_update[i];
-		const user_filename = path.join(server_dirs.get_dir_users(), u.get_username());
+	for (let i = 0; i < players.length; ++i) {
+		const username = players[i].get_username();
+
+		let u: User = manager.get_user_by_username(username) as User;
+
+		const ratings_player = players[i].get_all_ratings();
+		for (let j = 0; j < ratings_player.length; ++j) {
+			u.set_rating(ratings_player[j].time_control, ratings_player[j].rating);
+		}
+
+		const user_filename = path.join(users_directory, username);
 
 		// update player file
 		debug(log_now(), `    User file '${user_filename}'...`);

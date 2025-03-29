@@ -37,7 +37,7 @@ import { GamesManager } from './games_manager';
 import { UsersManager } from './users_manager';
 import { RatingSystemManager } from './rating_system_manager';
 import { EnvironmentManager } from './environment_manager';
-import { user_update_from_players_data } from './users';
+import { user_update_from_player_data } from './users';
 import { Rating } from '../rating_framework/rating';
 import { TimeControlID } from '../models/time_control';
 import { graph_delete_edge, graph_modify_edge, graph_update } from './graphs';
@@ -233,24 +233,34 @@ function game_insert_in_history(g: Game, record_id: DateStringShort): void {
 		updated_players.push(updated_player(time_control_id, g.get_black(), black_after));
 	}
 
-	const games_dir = EnvironmentManager.get_instance().get_dir_games_time_control(g.get_time_control_id());
+	const games_dir = EnvironmentManager.get_instance().get_dir_games_time_control(time_control_id);
 	const game_record_file = path.join(games_dir, record_id);
 
 	let games_iter = new GamesIterator(games_dir);
 
+	// the directory is completely empty
 	if (games_iter.get_all_records().length == 0) {
+		debug(log_now(), `There are no game record files for time control '${time_control_id}'.`);
+
 		fs.writeFileSync(game_record_file, JSON.stringify([g], null, 4));
-		user_update_from_players_data(updated_players);
+		user_update_from_player_data(updated_players);
 		return;
 	}
 
+	// there are some files in the directory
 	const record_exists = games_iter.locate_record(record_id);
 	if (!record_exists) {
+		debug(log_now(), `The game record for game '${g.get_id()}' does not exist.`);
+
 		fs.writeFileSync(game_record_file, JSON.stringify([g], null, 4));
 		if (games_iter.end_record_list()) {
-			user_update_from_players_data(updated_players);
+			debug(log_now(), `The new game record file is beyond every other game record.`);
+
+			user_update_from_player_data(updated_players);
 			return;
 		}
+
+		debug(log_now(), `There is some game record file beyond the current game record -- those have to be updated.`);
 	}
 
 	let player_to_index: Map<string, number> = new Map();
@@ -258,6 +268,8 @@ function game_insert_in_history(g: Game, record_id: DateStringShort): void {
 	player_to_index.set(g.get_black(), 1);
 
 	if (record_exists) {
+		debug(log_now(), `The game record for game '${g.get_id()}' exists.`);
+
 		let game_set = games_iter.get_current_game_set();
 
 		const [game_idx, game_exists] = where_should_be_inserted(game_set, g, game_compare_dates);
@@ -272,6 +284,9 @@ function game_insert_in_history(g: Game, record_id: DateStringShort): void {
 		fs.writeFileSync(game_record_file, JSON.stringify(game_set, null, 4));
 	}
 
+	debug(log_now(), `The game record for game '${g.get_id()}' has been updated.`);
+	debug(log_now(), `Going to update the next game records.`);
+
 	games_iter.next_record();
 	while (!games_iter.end_record_list()) {
 		update_game_record(games_iter, time_control_id, updated_players, player_to_index);
@@ -284,7 +299,7 @@ function game_insert_in_history(g: Game, record_id: DateStringShort): void {
 		games_iter.next_record();
 	}
 
-	user_update_from_players_data(updated_players);
+	user_update_from_player_data(updated_players);
 }
 
 /**
@@ -304,6 +319,8 @@ export function game_add_new(
 	const white_username = white.get_username();
 	const black_username = black.get_username();
 	const g = game_new(white_username, black_username, result, time_control_id, time_control_name, when);
+
+	console.log(g);
 
 	white.add_game(time_control_id, game_record);
 	black.add_game(time_control_id, game_record);
@@ -419,7 +436,7 @@ export function game_edit_result(game_id: GameID, new_result: GameResult): void 
 		games_iter.next_record();
 	}
 
-	user_update_from_players_data(updated_players);
+	user_update_from_player_data(updated_players);
 }
 
 export function game_delete(game_id: GameID): void {
@@ -499,7 +516,7 @@ export function game_delete(game_id: GameID): void {
 	let b = users_manager.get_user_by_username(black) as User;
 	b.delete_game(time_control_id, game_record);
 
-	user_update_from_players_data(updated_players);
+	user_update_from_player_data(updated_players);
 }
 
 export function recalculate_all_ratings() {
@@ -540,5 +557,5 @@ export function recalculate_all_ratings() {
 		}
 	}
 
-	user_update_from_players_data(updated_players);
+	user_update_from_player_data(updated_players);
 }
