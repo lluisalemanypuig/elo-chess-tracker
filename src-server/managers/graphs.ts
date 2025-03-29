@@ -64,6 +64,19 @@ export function graph_modify_edge(
 	graph_to_file(graphs_dir, [w], g);
 }
 
+export function graph_delete_edge(w: string, b: string, result: GameResult, id: TimeControlID): void {
+	let manager = GraphsManager.get_instance();
+	let _g = manager.get_graph(id);
+	if (_g == undefined) {
+		throw new Error(`Graph of time control id '${id}' does not exist.`);
+	}
+	let g = _g as Graph;
+	g.delete_edge(w, b, result);
+
+	const graphs_dir = EnvironmentManager.get_instance().get_dir_graphs_time_control(id);
+	graph_to_file(graphs_dir, [w], g);
+}
+
 export function recalculate_all_graphs() {
 	let manager = GraphsManager.get_instance();
 	manager.clear();

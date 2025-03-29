@@ -422,6 +422,81 @@ export function game_edit_result(game_id: GameID, new_result: GameResult): void 
 	user_update_from_players_data(updated_players);
 }
 
+export function game_delete(game_id: GameID): void {
+	let games_manager = GamesManager.get_instance();
+	const __info = games_manager.get_game_info(game_id);
+
+	// game_id does not exist
+	if (__info == undefined) {
+		throw new Error(`Game id '${game_id}' does not exist in the Games Manager`);
+	}
+
+	const time_control_id = __info.time_control_id;
+	const game_record = __info.game_record;
+	const games_dir = EnvironmentManager.get_instance().get_dir_games_time_control(time_control_id);
+
+	let games_iter = new GamesIterator(games_dir);
+	const found = games_iter.locate_game(game_record, game_id);
+	if (!found) {
+		throw new Error(`Could not find game '${game_id}'.`);
+	}
+
+	let game = games_iter.get_current_game();
+
+	const white = game.get_white();
+	const black = game.get_black();
+
+	/* Update the game files */
+
+	let updated_players: Player[] = [];
+	{
+		const white_before = game.get_white_rating();
+		const black_before = game.get_black_rating();
+		updated_players.push(updated_player(time_control_id, white, white_before));
+		updated_players.push(updated_player(time_control_id, black, black_before));
+	}
+
+	let player_to_index: Map<string, number> = new Map();
+	player_to_index.set(white, 0);
+	player_to_index.set(black, 1);
+
+	// delete the current game in the record
+	games_iter.delete_current_game();
+	const record_is_empty = games_iter.get_current_game_set().length == 0;
+
+	while (!games_iter.end_record_list()) {
+		update_game_record(games_iter, time_control_id, updated_players, player_to_index);
+
+		fs.writeFileSync(
+			path.join(games_dir, games_iter.get_current_record_name()),
+			JSON.stringify(games_iter.get_current_game_set(), null, 4)
+		);
+
+		games_iter.next_record();
+	}
+
+	if (record_is_empty) {
+		const filename = path.join(games_dir, game_record);
+		fs.rmSync(filename);
+	}
+
+	/* Update games manager */
+
+	games_manager.delete_game_id(game_id);
+
+	/* Update all user instances */
+
+	let users_manager = UsersManager.get_instance();
+
+	let w = users_manager.get_user_by_username(white) as User;
+	w.delete_game(time_control_id, game_record);
+
+	let b = users_manager.get_user_by_username(black) as User;
+	b.delete_game(time_control_id, game_record);
+
+	user_update_from_players_data(updated_players);
+}
+
 export function recalculate_all_ratings() {
 	const rating_system = RatingSystemManager.get_instance();
 	const all_time_controls = rating_system.get_unique_time_controls_ids();
