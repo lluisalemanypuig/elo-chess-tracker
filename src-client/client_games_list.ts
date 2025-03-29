@@ -84,7 +84,6 @@ function new_cell_select_result(original_result: string, game_id: string) {
 	}
 
 	select.className = 'select_edit_game';
-	select.id = 'select_result_' + game_id;
 	select.value = result_from_text_to_value(original_result);
 	select.onchange = select_result_game_on_change;
 	select.setAttribute('original_value', result_from_text_to_value(original_result));
@@ -121,7 +120,6 @@ function new_cell_button_delete(game_id: string) {
 	let button = document.createElement('button') as HTMLButtonElement;
 	button.textContent = 'Delete';
 	button.className = 'button_delete_game';
-	button.id = 'button_delete_' + game_id;
 	button.setAttribute('game_id', game_id);
 	button.onclick = button_remove_on_click;
 
