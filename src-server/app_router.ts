@@ -201,6 +201,10 @@ import { get_page_game_create, post_game_create } from './server_games';
 router.get('/page/game/create', get_page_game_create);
 router.post('/game/create', post_game_create);
 
+// delete a game
+import { post_game_delete } from './server_games';
+router.post('/game/delete', post_game_delete);
+
 // editing a game's result
 import { post_game_edit_result } from './server_games';
 router.post('/game/edit_result', post_game_edit_result);
