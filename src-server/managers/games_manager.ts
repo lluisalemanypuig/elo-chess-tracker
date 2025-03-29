@@ -32,8 +32,8 @@ import { number_to_string } from '../utils/misc';
  * @brief The minimal summary of a game.
  */
 export class GameInfo {
-	game_record: DateStringShort;
-	time_control_id: TimeControlID;
+	public game_record: DateStringShort;
+	public time_control_id: TimeControlID;
 
 	constructor(_when: DateStringShort, _time_id: TimeControlID) {
 		this.game_record = _when;
