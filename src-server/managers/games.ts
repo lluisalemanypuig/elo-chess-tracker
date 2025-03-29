@@ -40,7 +40,7 @@ import { EnvironmentManager } from './environment_manager';
 import { user_update_from_players_data } from './users';
 import { Rating } from '../rating_framework/rating';
 import { TimeControlID } from '../models/time_control';
-import { graph_modify_edge, graph_update } from './graphs';
+import { graph_delete_edge, graph_modify_edge, graph_update } from './graphs';
 import { GamesIterator } from './games_iterator';
 
 /// Returns g1 < g2 using dates
@@ -443,8 +443,13 @@ export function game_delete(game_id: GameID): void {
 
 	let game = games_iter.get_current_game();
 
+	const result = game.get_result();
 	const white = game.get_white();
 	const black = game.get_black();
+
+	/* Update the graphs */
+
+	graph_delete_edge(white, black, result, time_control_id);
 
 	/* Update the game files */
 
