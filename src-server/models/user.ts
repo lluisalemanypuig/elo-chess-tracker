@@ -31,7 +31,7 @@ import { UserRoleToUserAction } from './user_role_action';
 import { TimeControlRating } from './time_control_rating';
 import { TimeControlID } from './time_control';
 import { copyarray } from '../utils/misc';
-import { search_linear_by_key, where_should_be_inserted } from '../utils/searching';
+import { search, search_linear_by_key, where_should_be_inserted } from '../utils/searching';
 import { DateStringShort } from '../utils/time';
 
 export type UserRandomID = number;
@@ -173,6 +173,28 @@ export class User extends Player {
 			this.games[idx].num_games.splice(index, 0, 1);
 		} else {
 			this.games[idx].num_games[index] += 1;
+		}
+	}
+
+	delete_game(id: TimeControlID, game_record: DateStringShort): void {
+		const idx = search_linear_by_key(this.games, (p: TimeControlGames): boolean => {
+			return p.time_control == id;
+		});
+		if (idx == -1) {
+			throw new Error(`User does not have time control id '${id}'`);
+		}
+
+		const index = search(this.games[idx].records, game_record);
+		if (index == -1) {
+			throw new Error(
+				`User '${this.username}' does not have game record '${game_record}' in time control '${id}': '${this.games[idx].records}'.`
+			);
+		}
+
+		this.games[idx].num_games[index] -= 1;
+		if (this.games[idx].num_games[index] == 0) {
+			this.games[idx].records.splice(index, 1);
+			this.games[idx].num_games.splice(index, 1);
 		}
 	}
 
