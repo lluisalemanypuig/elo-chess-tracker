@@ -110,48 +110,40 @@ describe('Searching in an array of structs -- locate an element', () => {
 
 	test('Empty', () => {
 		const arr: pair[] = [];
-		const search_func = (p: pair, q: pair) => {
-			if (p.name < q.name) {
-				return -1;
-			}
-			if (p.name == q.name) {
-				return 0;
-			}
-			return 1;
+		const search_func = (p: pair) => {
+			return (q: pair): number => {
+				return p.name.localeCompare(q.name);
+			};
 		};
 
-		expect(search(arr, new pair('A', 3), search_func)).toBe(-1);
-		expect(search(arr, new pair('A', 10), search_func)).toBe(-1);
-		expect(search(arr, new pair('B', 3), search_func)).toBe(-1);
-		expect(search(arr, new pair('B', 50), search_func)).toBe(-1);
-		expect(search(arr, new pair('C', 1), search_func)).toBe(-1);
-		expect(search(arr, new pair('C', 10), search_func)).toBe(-1);
-		expect(search(arr, new pair('D', 0), search_func)).toBe(-1);
-		expect(search(arr, new pair('D', 20), search_func)).toBe(-1);
-		expect(search(arr, new pair('M', 0), search_func)).toBe(-1);
-		expect(search(arr, new pair('M', 100), search_func)).toBe(-1);
-		expect(search(arr, new pair('Z', -9), search_func)).toBe(-1);
-		expect(search(arr, new pair('Z', 10), search_func)).toBe(-1);
+		expect(search_by_key(arr, search_func(new pair('A', 3)))).toBe(-1);
+		expect(search_by_key(arr, search_func(new pair('A', 10)))).toBe(-1);
+		expect(search_by_key(arr, search_func(new pair('B', 3)))).toBe(-1);
+		expect(search_by_key(arr, search_func(new pair('B', 50)))).toBe(-1);
+		expect(search_by_key(arr, search_func(new pair('C', 1)))).toBe(-1);
+		expect(search_by_key(arr, search_func(new pair('C', 10)))).toBe(-1);
+		expect(search_by_key(arr, search_func(new pair('D', 0)))).toBe(-1);
+		expect(search_by_key(arr, search_func(new pair('D', 20)))).toBe(-1);
+		expect(search_by_key(arr, search_func(new pair('M', 0)))).toBe(-1);
+		expect(search_by_key(arr, search_func(new pair('M', 100)))).toBe(-1);
+		expect(search_by_key(arr, search_func(new pair('Z', -9)))).toBe(-1);
+		expect(search_by_key(arr, search_func(new pair('Z', 10)))).toBe(-1);
 	});
 
 	test('Empty (key)', () => {
 		const arr: pair[] = [];
-		const search_func = (p: pair, q: pair) => {
-			if (p.name < q.name) {
-				return -1;
-			}
-			if (p.name == q.name) {
-				return 0;
-			}
-			return 1;
+		const search_func = (name: string) => {
+			return (q: pair): number => {
+				return name.localeCompare(q.name);
+			};
 		};
 
-		expect(search_by_key(arr, 'A', search_func)).toBe(-1);
-		expect(search_by_key(arr, 'B', search_func)).toBe(-1);
-		expect(search_by_key(arr, 'C', search_func)).toBe(-1);
-		expect(search_by_key(arr, 'D', search_func)).toBe(-1);
-		expect(search_by_key(arr, 'M', search_func)).toBe(-1);
-		expect(search_by_key(arr, 'Z', search_func)).toBe(-1);
+		expect(search_by_key(arr, search_func('A'))).toBe(-1);
+		expect(search_by_key(arr, search_func('B'))).toBe(-1);
+		expect(search_by_key(arr, search_func('C'))).toBe(-1);
+		expect(search_by_key(arr, search_func('D'))).toBe(-1);
+		expect(search_by_key(arr, search_func('M'))).toBe(-1);
+		expect(search_by_key(arr, search_func('Z'))).toBe(-1);
 
 		expect(
 			search_linear_by_key(arr, (p: pair): boolean => {
@@ -179,36 +171,32 @@ describe('Searching in an array of structs -- locate an element', () => {
 			new pair('M', 100),
 			new pair('Z', -9)
 		];
-		const search_func = (p: pair, q: pair) => {
-			if (p.name < q.name) {
-				return -1;
-			}
-			if (p.name == q.name) {
-				return 0;
-			}
-			return 1;
+		const search_func = (p: pair) => {
+			return (q: pair): number => {
+				return p.name.localeCompare(q.name);
+			};
 		};
 
-		expect(search(arr, new pair('A', 3), search_func)).toBe(0);
-		expect(search(arr, new pair('A', 10), search_func)).toBe(0);
-		expect(search(arr, new pair('B', 3), search_func)).toBe(1);
-		expect(search(arr, new pair('B', 50), search_func)).toBe(1);
-		expect(search(arr, new pair('C', 1), search_func)).toBe(2);
-		expect(search(arr, new pair('C', 10), search_func)).toBe(2);
-		expect(search(arr, new pair('D', 0), search_func)).toBe(3);
-		expect(search(arr, new pair('D', 20), search_func)).toBe(3);
-		expect(search(arr, new pair('M', 0), search_func)).toBe(4);
-		expect(search(arr, new pair('M', 100), search_func)).toBe(4);
-		expect(search(arr, new pair('Z', -9), search_func)).toBe(5);
-		expect(search(arr, new pair('Z', 10), search_func)).toBe(5);
+		expect(search_by_key(arr, search_func(new pair('A', 3)))).toBe(0);
+		expect(search_by_key(arr, search_func(new pair('A', 10)))).toBe(0);
+		expect(search_by_key(arr, search_func(new pair('B', 3)))).toBe(1);
+		expect(search_by_key(arr, search_func(new pair('B', 50)))).toBe(1);
+		expect(search_by_key(arr, search_func(new pair('C', 1)))).toBe(2);
+		expect(search_by_key(arr, search_func(new pair('C', 10)))).toBe(2);
+		expect(search_by_key(arr, search_func(new pair('D', 0)))).toBe(3);
+		expect(search_by_key(arr, search_func(new pair('D', 20)))).toBe(3);
+		expect(search_by_key(arr, search_func(new pair('M', 0)))).toBe(4);
+		expect(search_by_key(arr, search_func(new pair('M', 100)))).toBe(4);
+		expect(search_by_key(arr, search_func(new pair('Z', -9)))).toBe(5);
+		expect(search_by_key(arr, search_func(new pair('Z', 10)))).toBe(5);
 
-		expect(search(arr, new pair('a', 0), search_func)).toBe(-1);
-		expect(search(arr, new pair('E', 0), search_func)).toBe(-1);
-		expect(search(arr, new pair('F', 0), search_func)).toBe(-1);
-		expect(search(arr, new pair('G', 0), search_func)).toBe(-1);
-		expect(search(arr, new pair('H', 0), search_func)).toBe(-1);
-		expect(search(arr, new pair('Q', 0), search_func)).toBe(-1);
-		expect(search(arr, new pair('z', 0), search_func)).toBe(-1);
+		expect(search_by_key(arr, search_func(new pair('a', 0)))).toBe(-1);
+		expect(search_by_key(arr, search_func(new pair('E', 0)))).toBe(-1);
+		expect(search_by_key(arr, search_func(new pair('F', 0)))).toBe(-1);
+		expect(search_by_key(arr, search_func(new pair('G', 0)))).toBe(-1);
+		expect(search_by_key(arr, search_func(new pair('H', 0)))).toBe(-1);
+		expect(search_by_key(arr, search_func(new pair('Q', 0)))).toBe(-1);
+		expect(search_by_key(arr, search_func(new pair('z', 0)))).toBe(-1);
 
 		// 'search_linear' cannot be tested here since the equality operator '=='
 		// is funny in typescript/javascript. 'search_linear_by_key' is needed
@@ -224,30 +212,26 @@ describe('Searching in an array of structs -- locate an element', () => {
 			new pair('M', 100),
 			new pair('Z', -9)
 		];
-		const search_func = function (p: string, q: pair) {
-			if (p < q.name) {
-				return -1;
-			}
-			if (p == q.name) {
-				return 0;
-			}
-			return 1;
+		const search_func = (name: string) => {
+			return (q: pair): number => {
+				return name.localeCompare(q.name);
+			};
 		};
 
-		expect(search_by_key(arr, 'A', search_func)).toBe(0);
-		expect(search_by_key(arr, 'B', search_func)).toBe(1);
-		expect(search_by_key(arr, 'C', search_func)).toBe(2);
-		expect(search_by_key(arr, 'D', search_func)).toBe(3);
-		expect(search_by_key(arr, 'M', search_func)).toBe(4);
-		expect(search_by_key(arr, 'Z', search_func)).toBe(5);
+		expect(search_by_key(arr, search_func('A'))).toBe(0);
+		expect(search_by_key(arr, search_func('B'))).toBe(1);
+		expect(search_by_key(arr, search_func('C'))).toBe(2);
+		expect(search_by_key(arr, search_func('D'))).toBe(3);
+		expect(search_by_key(arr, search_func('M'))).toBe(4);
+		expect(search_by_key(arr, search_func('Z'))).toBe(5);
 
-		expect(search_by_key(arr, 'a', search_func)).toBe(-1);
-		expect(search_by_key(arr, 'E', search_func)).toBe(-1);
-		expect(search_by_key(arr, 'F', search_func)).toBe(-1);
-		expect(search_by_key(arr, 'G', search_func)).toBe(-1);
-		expect(search_by_key(arr, 'H', search_func)).toBe(-1);
-		expect(search_by_key(arr, 'Q', search_func)).toBe(-1);
-		expect(search_by_key(arr, 'z', search_func)).toBe(-1);
+		expect(search_by_key(arr, search_func('a'))).toBe(-1);
+		expect(search_by_key(arr, search_func('E'))).toBe(-1);
+		expect(search_by_key(arr, search_func('F'))).toBe(-1);
+		expect(search_by_key(arr, search_func('G'))).toBe(-1);
+		expect(search_by_key(arr, search_func('H'))).toBe(-1);
+		expect(search_by_key(arr, search_func('Q'))).toBe(-1);
+		expect(search_by_key(arr, search_func('z'))).toBe(-1);
 
 		expect(
 			search_linear_by_key(arr, (p: pair): boolean => {

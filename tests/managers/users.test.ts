@@ -31,7 +31,7 @@ import {
 	user_add_new,
 	user_get_all__name_randid,
 	user_rename_and_reassign_roles,
-	user_update_from_players_data
+	user_update_from_player_data
 } from '../../src-server/managers/users';
 import { User } from '../../src-server/models/user';
 import { ADMIN, MEMBER, STUDENT, TEACHER } from '../../src-server/models/user_role';
@@ -396,7 +396,7 @@ describe('Modify existing users', () => {
 		const ff_Blitz = new TimeControlRating('Blitz', new EloRating(2000, 10, 10, 0, 0, 40, false));
 		const rating_ff = [ff_Classical, ff_Blitz];
 
-		user_update_from_players_data([
+		user_update_from_player_data([
 			new Player('aa', rating_aa),
 			new Player('bb', rating_bb),
 			new Player('cc', rating_cc),
