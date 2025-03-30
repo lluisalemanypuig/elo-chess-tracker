@@ -177,7 +177,7 @@ async function fill_games_list_time_control(time_control_id: string) {
 		row.appendChild(new_text_cell(games[i].black_rating));
 		row.appendChild(new_text_cell(games[i].black_increment));
 
-		if (games[i].editable == 'y') {
+		if (games[i].deleteable == 'y') {
 			row.appendChild(new_cell_button_delete(games[i].id));
 		}
 
