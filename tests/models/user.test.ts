@@ -25,7 +25,7 @@ Contact:
 
 import { Password } from '../../src-server/models/password';
 import { TimeControlRating } from '../../src-server/models/time_control_rating';
-import { TimeControlGames, User } from '../../src-server/models/user';
+import { GameNumber, TimeControlGames, User } from '../../src-server/models/user';
 import {
 	USER_ROLE_ASSIGN_ADMIN,
 	USER_ROLE_ASSIGN_MEMBER,
@@ -72,7 +72,10 @@ describe('Elo', () => {
 			'Last',
 			new Password('asdf', 'ivrandom'),
 			[ADMIN, TEACHER],
-			[new TimeControlGames('blitz', ['2024-12-24'], [1]), new TimeControlGames('rapid', ['2024-12-25'], [1])],
+			[
+				new TimeControlGames('blitz', [new GameNumber('2024-12-24', 1)]),
+				new TimeControlGames('rapid', [new GameNumber('2024-12-25', 1)])
+			],
 			[new TimeControlRating('blitz', blitz), new TimeControlRating('classical', classical)]
 		);
 
@@ -87,8 +90,8 @@ describe('Elo', () => {
 		expect(u.get_first_name()).toEqual('First');
 		expect(u.get_last_name()).toEqual('Last');
 		expect(u.get_full_name()).toEqual('First Last');
-		expect(u.get_games('blitz')).toEqual(['2024-12-24']);
-		expect(u.get_games('rapid')).toEqual(['2024-12-25']);
+		expect(u.get_games('blitz')).toEqual([new GameNumber('2024-12-24', 1)]);
+		expect(u.get_games('rapid')).toEqual([new GameNumber('2024-12-25', 1)]);
 	});
 
 	test('basic sets', () => {
@@ -98,7 +101,10 @@ describe('Elo', () => {
 			'Last',
 			new Password('asdf', 'ivrandom'),
 			[ADMIN, TEACHER],
-			[new TimeControlGames('blitz', ['2024-12-24'], [1]), new TimeControlGames('rapid', ['2024-12-25'], [1])],
+			[
+				new TimeControlGames('blitz', [new GameNumber('2024-12-24', 1)]),
+				new TimeControlGames('rapid', [new GameNumber('2024-12-25', 1)])
+			],
 			[new TimeControlRating('blitz', blitz), new TimeControlRating('classical', classical)]
 		);
 
@@ -127,59 +133,82 @@ describe('Elo', () => {
 			'Last',
 			new Password('asdf', 'ivrandom'),
 			[ADMIN, TEACHER],
-			[new TimeControlGames('blitz', ['2024-12-24'], [1]), new TimeControlGames('rapid', ['2024-12-25'], [1])],
+			[
+				new TimeControlGames('blitz', [new GameNumber('2024-12-24', 1)]),
+				new TimeControlGames('rapid', [new GameNumber('2024-12-25', 1)])
+			],
 			[new TimeControlRating('blitz', blitz), new TimeControlRating('classical', classical)]
 		);
 
 		// blitz
 
-		expect(u.get_games('blitz')).toEqual(['2024-12-24']);
-		expect(u.get_number_of_games('blitz')).toEqual([1]);
+		expect(u.get_games('blitz')).toEqual([new GameNumber('2024-12-24', 1)]);
 
 		u.add_game('blitz', '2024-12-31');
-		expect(u.get_games('blitz')).toEqual(['2024-12-24', '2024-12-31']);
-		expect(u.get_number_of_games('blitz')).toEqual([1, 1]);
+		expect(u.get_games('blitz')).toEqual([new GameNumber('2024-12-24', 1), new GameNumber('2024-12-31', 1)]);
 
 		u.add_game('blitz', '2024-12-01');
-		expect(u.get_games('blitz')).toEqual(['2024-12-01', '2024-12-24', '2024-12-31']);
-		expect(u.get_number_of_games('blitz')).toEqual([1, 1, 1]);
+		expect(u.get_games('blitz')).toEqual([
+			new GameNumber('2024-12-01', 1),
+			new GameNumber('2024-12-24', 1),
+			new GameNumber('2024-12-31', 1)
+		]);
 
 		u.add_game('blitz', '2024-12-31');
-		expect(u.get_games('blitz')).toEqual(['2024-12-01', '2024-12-24', '2024-12-31']);
-		expect(u.get_number_of_games('blitz')).toEqual([1, 1, 2]);
+		expect(u.get_games('blitz')).toEqual([
+			new GameNumber('2024-12-01', 1),
+			new GameNumber('2024-12-24', 1),
+			new GameNumber('2024-12-31', 2)
+		]);
 
 		u.add_game('blitz', '2024-12-31');
-		expect(u.get_games('blitz')).toEqual(['2024-12-01', '2024-12-24', '2024-12-31']);
-		expect(u.get_number_of_games('blitz')).toEqual([1, 1, 3]);
+		expect(u.get_games('blitz')).toEqual([
+			new GameNumber('2024-12-01', 1),
+			new GameNumber('2024-12-24', 1),
+			new GameNumber('2024-12-31', 3)
+		]);
 
 		u.add_game('blitz', '2024-12-01');
-		expect(u.get_games('blitz')).toEqual(['2024-12-01', '2024-12-24', '2024-12-31']);
-		expect(u.get_number_of_games('blitz')).toEqual([2, 1, 3]);
+		expect(u.get_games('blitz')).toEqual([
+			new GameNumber('2024-12-01', 2),
+			new GameNumber('2024-12-24', 1),
+			new GameNumber('2024-12-31', 3)
+		]);
 
 		// rapid
 
-		expect(u.get_games('rapid')).toEqual(['2024-12-25']);
-		expect(u.get_number_of_games('rapid')).toEqual([1]);
+		expect(u.get_games('rapid')).toEqual([new GameNumber('2024-12-25', 1)]);
 
 		u.add_game('rapid', '2024-12-28');
-		expect(u.get_games('rapid')).toEqual(['2024-12-25', '2024-12-28']);
-		expect(u.get_number_of_games('rapid')).toEqual([1, 1]);
+		expect(u.get_games('rapid')).toEqual([new GameNumber('2024-12-25', 1), new GameNumber('2024-12-28', 1)]);
 
 		u.add_game('rapid', '2019-12-31');
-		expect(u.get_games('rapid')).toEqual(['2019-12-31', '2024-12-25', '2024-12-28']);
-		expect(u.get_number_of_games('rapid')).toEqual([1, 1, 1]);
+		expect(u.get_games('rapid')).toEqual([
+			new GameNumber('2019-12-31', 1),
+			new GameNumber('2024-12-25', 1),
+			new GameNumber('2024-12-28', 1)
+		]);
 
 		u.add_game('rapid', '2019-12-31');
-		expect(u.get_games('rapid')).toEqual(['2019-12-31', '2024-12-25', '2024-12-28']);
-		expect(u.get_number_of_games('rapid')).toEqual([2, 1, 1]);
+		expect(u.get_games('rapid')).toEqual([
+			new GameNumber('2019-12-31', 2),
+			new GameNumber('2024-12-25', 1),
+			new GameNumber('2024-12-28', 1)
+		]);
 
 		u.add_game('rapid', '2024-12-28');
-		expect(u.get_games('rapid')).toEqual(['2019-12-31', '2024-12-25', '2024-12-28']);
-		expect(u.get_number_of_games('rapid')).toEqual([2, 1, 2]);
+		expect(u.get_games('rapid')).toEqual([
+			new GameNumber('2019-12-31', 2),
+			new GameNumber('2024-12-25', 1),
+			new GameNumber('2024-12-28', 2)
+		]);
 
 		u.add_game('rapid', '2024-12-28');
-		expect(u.get_games('rapid')).toEqual(['2019-12-31', '2024-12-25', '2024-12-28']);
-		expect(u.get_number_of_games('rapid')).toEqual([2, 1, 3]);
+		expect(u.get_games('rapid')).toEqual([
+			new GameNumber('2019-12-31', 2),
+			new GameNumber('2024-12-25', 1),
+			new GameNumber('2024-12-28', 3)
+		]);
 	});
 });
 
