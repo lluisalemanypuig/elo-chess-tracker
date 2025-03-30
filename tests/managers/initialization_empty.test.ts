@@ -272,8 +272,8 @@ describe('Configure server', () => {
 
 	test('Check GraphsManager', () => {
 		const graphs_manager = GraphsManager.get_instance();
-		expect(graphs_manager.get_graph('Blitz')).toEqual(new Graph());
-		expect(graphs_manager.get_graph('Rapid')).toEqual(new Graph());
-		expect(graphs_manager.get_graph('Classical')).toEqual(new Graph());
+		expect(graphs_manager.get_graph('Blitz')).toEqual(undefined);
+		expect(graphs_manager.get_graph('Rapid')).toEqual(undefined);
+		expect(graphs_manager.get_graph('Classical')).toEqual(undefined);
 	});
 });
