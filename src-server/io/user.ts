@@ -23,10 +23,44 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { User } from '../models/user';
+import { GameNumber, User } from '../models/user';
 import { TimeControlGames } from '../models/user';
 import { password_from_json } from './password';
 import { time_control_rating_set_from_json } from './time_control_rating';
+
+/**
+ * @brief Parses a JSON string or object and returns a GameNumber.
+ * @param json A JSON string or object with data of a GameNumber.
+ * @returns A new TimeControlGames object.
+ * @pre If @e json is a string then it cannot start with '['.
+ */
+export function games_number_from_json(json: any): GameNumber {
+	console.log('asdf');
+	if (typeof json === 'string') {
+		const json_parse = JSON.parse(json);
+		return games_number_from_json(json_parse);
+	}
+	return new GameNumber(json['record'], json['amount']);
+}
+
+/**
+ * @brief Parses a JSON string or object and returns a GameNumber.
+ * @param json A JSON string or object with data of a GameNumber.
+ * @returns A new TimeControlGames object.
+ * @pre If @e json is a string then it cannot start with '['.
+ */
+export function games_number_set_from_json(json: any): GameNumber[] {
+	if (typeof json === 'string') {
+		const json_parse = JSON.parse(json);
+		return games_number_set_from_json(json_parse);
+	}
+
+	let data_set: GameNumber[] = [];
+	for (var data in json) {
+		data_set.push(games_number_from_json(json[data]));
+	}
+	return data_set;
+}
 
 /**
  * @brief Parses a JSON string or object and returns a TimeControlGames.
@@ -39,7 +73,7 @@ export function time_control_games_from_json(json: any): TimeControlGames {
 		const json_parse = JSON.parse(json);
 		return time_control_games_from_json(json_parse);
 	}
-	return new TimeControlGames(json['time_control'], json['records'], json['num_games']);
+	return new TimeControlGames(json['time_control'], games_number_set_from_json(json['records']));
 }
 
 /**

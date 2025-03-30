@@ -36,18 +36,25 @@ import { DateStringShort } from '../utils/time';
 
 export type UserRandomID = number;
 
+export class GameNumber {
+	public record: DateStringShort;
+	public amount: number;
+	constructor(r: DateStringShort, n: number) {
+		this.record = r;
+		this.amount = n;
+	}
+}
+
 export class TimeControlGames {
 	public time_control: TimeControlID = '';
-	public records: DateStringShort[] = [];
-	public num_games: number[] = [];
+	public records: GameNumber[] = [];
 
-	constructor(id: TimeControlID, list: DateStringShort[], amounts: number[]) {
+	constructor(id: TimeControlID, record_number: GameNumber[]) {
 		this.time_control = id;
-		this.records = list;
-		this.num_games = amounts;
+		this.records = record_number;
 	}
 	clone(): TimeControlGames {
-		return new TimeControlGames(this.time_control, this.records, this.num_games);
+		return new TimeControlGames(this.time_control, this.records);
 	}
 }
 
@@ -145,7 +152,7 @@ export class User extends Player {
 	 * @param id The time control id.
 	 * @returns A list of strings pointing to game records.
 	 */
-	get_games(id: TimeControlID): DateStringShort[] {
+	get_games(id: TimeControlID): GameNumber[] {
 		const idx = search_linear_by_key(this.games, (v: TimeControlGames): boolean => {
 			return v.time_control == id;
 		});
@@ -153,21 +160,6 @@ export class User extends Player {
 			throw new Error(`Rating with id '${id}' does not exist!`);
 		}
 		return this.games[idx].records;
-	}
-
-	/**
-	 * @brief Returns the number of games played by this user at every game record.
-	 * @param id The time control id.
-	 * @returns A list of strings pointing to game records.
-	 */
-	get_number_of_games(id: TimeControlID): number[] {
-		const idx = search_linear_by_key(this.games, (v: TimeControlGames): boolean => {
-			return v.time_control == id;
-		});
-		if (idx == -1) {
-			throw new Error(`Rating with id '${id}' does not exist!`);
-		}
-		return this.games[idx].num_games;
 	}
 
 	/**
@@ -185,17 +177,13 @@ export class User extends Player {
 			throw new Error(`User does not have time control id '${id}'`);
 		}
 
-		const [index, exists] = where_should_be_inserted_by_key(
-			this.games[idx].records,
-			(s: DateStringShort): number => {
-				return game_record.localeCompare(s);
-			}
-		);
+		const [index, exists] = where_should_be_inserted_by_key(this.games[idx].records, (s: GameNumber): number => {
+			return game_record.localeCompare(s.record);
+		});
 		if (!exists) {
-			this.games[idx].records.splice(index, 0, game_record);
-			this.games[idx].num_games.splice(index, 0, 1);
+			this.games[idx].records.splice(index, 0, new GameNumber(game_record, 1));
 		} else {
-			this.games[idx].num_games[index] += 1;
+			this.games[idx].records[index].amount += 1;
 		}
 	}
 
@@ -207,8 +195,8 @@ export class User extends Player {
 			throw new Error(`User does not have time control id '${id}'`);
 		}
 
-		const index = search_by_key(this.games[idx].records, (s: DateStringShort): number => {
-			return game_record.localeCompare(s);
+		const index = search_by_key(this.games[idx].records, (s: GameNumber): number => {
+			return game_record.localeCompare(s.record);
 		});
 		if (index == -1) {
 			throw new Error(
@@ -216,10 +204,9 @@ export class User extends Player {
 			);
 		}
 
-		this.games[idx].num_games[index] -= 1;
-		if (this.games[idx].num_games[index] == 0) {
+		this.games[idx].records[index].amount -= 1;
+		if (this.games[idx].records[index].amount == 0) {
 			this.games[idx].records.splice(index, 1);
-			this.games[idx].num_games.splice(index, 1);
 		}
 	}
 

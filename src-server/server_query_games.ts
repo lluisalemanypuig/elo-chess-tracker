@@ -31,7 +31,7 @@ import fs from 'fs';
 
 import { DateStringShort, log_now } from './utils/time';
 import { is_user_logged_in } from './managers/session';
-import { User } from './models/user';
+import { GameNumber, User } from './models/user';
 import { Game } from './models/game';
 import { RatingSystemManager } from './managers/rating_system_manager';
 import { EnvironmentManager } from './managers/environment_manager';
@@ -41,6 +41,7 @@ import { can_user_delete_a_game, can_user_edit_a_game, can_user_see_a_game } fro
 import { TimeControlID } from './models/time_control';
 import { game_set_from_json } from './io/game';
 import { UsersManager } from './managers/users_manager';
+import { search_by_key } from './utils/searching';
 
 function increment(g: Game): any {
 	const [white_after, black_after] = RatingSystemManager.get_instance().apply_rating_function(g);
@@ -77,7 +78,7 @@ function filter_game_list(
 	for (let i = game_record_file_list.length - 1; i >= 0; --i) {
 		const game_record_file = path.join(games_id_dir, game_record_file_list[i]);
 
-		if (!filter_game_record(time_control_id, game_record_file_list[i])) {
+		if (!filter_game_record(game_record_file_list[i])) {
 			continue;
 		}
 
@@ -145,18 +146,24 @@ export async function post_query_game_list_own(req: any, res: any) {
 	const user = r[2] as User;
 	const time_control_id = req.body.tc_i;
 
+	const filter_game_function = (g: Game): boolean => {
+		return g.is_user_involved(session.username);
+	};
+
 	let data_to_return: any[] = [];
 	if (time_control_id != '') {
 		data_to_return = filter_game_list(
 			user,
 			time_control_id,
-			(time_id: TimeControlID, record_id: DateStringShort): boolean => {
-				const array = user.get_games(time_id);
-				return array.includes(record_id);
+			(record_id: DateStringShort): boolean => {
+				const game_record_list = user.get_games(time_control_id);
+				return (
+					search_by_key(game_record_list, (r: GameNumber): number => {
+						return record_id.localeCompare(r.record);
+					}) != -1
+				);
 			},
-			(g: Game): boolean => {
-				return g.is_user_involved(session.username);
-			}
+			filter_game_function
 		);
 	} else {
 		const ratings = RatingSystemManager.get_instance();
@@ -164,13 +171,15 @@ export async function post_query_game_list_own(req: any, res: any) {
 			const data = filter_game_list(
 				user,
 				tid,
-				(time_id: TimeControlID, record_id: DateStringShort): boolean => {
-					const array = user.get_games(time_id);
-					return array.includes(record_id);
+				(record_id: DateStringShort): boolean => {
+					const game_record_list = user.get_games(tid);
+					return (
+						search_by_key(game_record_list, (r: GameNumber): number => {
+							return record_id.localeCompare(r.record);
+						}) != -1
+					);
 				},
-				(g: Game): boolean => {
-					return g.is_user_involved(session.username);
-				}
+				filter_game_function
 			);
 			data_to_return = data_to_return.concat(data);
 		}
