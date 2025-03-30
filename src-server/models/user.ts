@@ -31,7 +31,7 @@ import { UserRoleToUserAction } from './user_role_action';
 import { TimeControlRating } from './time_control_rating';
 import { TimeControlID } from './time_control';
 import { copyarray } from '../utils/misc';
-import { search, search_linear_by_key, where_should_be_inserted } from '../utils/searching';
+import { search_by_key, search_linear_by_key, where_should_be_inserted_by_key } from '../utils/searching';
 import { DateStringShort } from '../utils/time';
 
 export type UserRandomID = number;
@@ -175,9 +175,9 @@ export class User extends Player {
 	 *
 	 * If the record string already exists, does nothing.
 	 * @param id Time control id of the game.
-	 * @param g New game record string.
+	 * @param game_record New game record string.
 	 */
-	add_game(id: TimeControlID, g: DateStringShort): void {
+	add_game(id: TimeControlID, game_record: DateStringShort): void {
 		const idx = search_linear_by_key(this.games, (p: TimeControlGames): boolean => {
 			return p.time_control == id;
 		});
@@ -185,9 +185,14 @@ export class User extends Player {
 			throw new Error(`User does not have time control id '${id}'`);
 		}
 
-		const [index, exists] = where_should_be_inserted(this.games[idx].records, g);
+		const [index, exists] = where_should_be_inserted_by_key(
+			this.games[idx].records,
+			(s: DateStringShort): number => {
+				return game_record.localeCompare(s);
+			}
+		);
 		if (!exists) {
-			this.games[idx].records.splice(index, 0, g);
+			this.games[idx].records.splice(index, 0, game_record);
 			this.games[idx].num_games.splice(index, 0, 1);
 		} else {
 			this.games[idx].num_games[index] += 1;
@@ -202,7 +207,9 @@ export class User extends Player {
 			throw new Error(`User does not have time control id '${id}'`);
 		}
 
-		const index = search(this.games[idx].records, game_record);
+		const index = search_by_key(this.games[idx].records, (s: DateStringShort): number => {
+			return game_record.localeCompare(s);
+		});
 		if (index == -1) {
 			throw new Error(
 				`User '${this.username}' does not have game record '${game_record}' in time control '${id}': '${this.games[idx].records}'.`

@@ -32,7 +32,7 @@ import { DateStringLongMillis, DateStringShort, log_now, long_date_to_short_date
 import { Player } from '../models/player';
 import { Game, GameID, GameResult } from '../models/game';
 import { User } from '../models/user';
-import { where_should_be_inserted } from '../utils/searching';
+import { where_should_be_inserted_by_key } from '../utils/searching';
 import { GamesManager } from './games_manager';
 import { UsersManager } from './users_manager';
 import { RatingSystemManager } from './rating_system_manager';
@@ -45,14 +45,16 @@ import { GamesIterator } from './games_iterator';
 import { TimeControlRating } from '../models/time_control_rating';
 
 /// Returns g1 < g2 using dates
-function game_compare_dates(g1: Game, g2: Game): number {
-	if (g1.get_date() < g2.get_date()) {
-		return -1;
-	}
-	if (g1.get_date() == g2.get_date()) {
-		return 0;
-	}
-	return 1;
+function game_compare_dates(g: Game): Function {
+	return (g2: Game): number => {
+		if (g.get_date() < g2.get_date()) {
+			return -1;
+		}
+		if (g.get_date() == g2.get_date()) {
+			return 0;
+		}
+		return 1;
+	};
 }
 
 /// Return the game where player 'username' is involved with
@@ -292,7 +294,7 @@ function game_insert_in_history(g: Game, record_id: DateStringShort): void {
 
 		let game_set = games_iter.get_current_game_set();
 
-		const [game_idx, game_exists] = where_should_be_inserted(game_set, g, game_compare_dates);
+		const [game_idx, game_exists] = where_should_be_inserted_by_key(game_set, game_compare_dates(g));
 		if (game_exists) {
 			throw new Error(`Game of the exact same date field '${g.get_date()}' already exists`);
 		}
