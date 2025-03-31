@@ -27,6 +27,27 @@ function new_text_cell(text: string) {
 	return cell;
 }
 
+function new_rating_cell(rating: string, increment: string) {
+	let cell = document.createElement('td');
+
+	let s1 = document.createElement('span');
+	s1.textContent = rating + ' ';
+	cell.appendChild(s1);
+
+	if (increment[1] != '0') {
+		let s2 = document.createElement('span');
+		s2.textContent = increment;
+		if (increment[0] == '+') {
+			s2.style.color = 'green';
+		} else {
+			s2.style.color = 'red';
+		}
+		cell.appendChild(s2);
+	}
+
+	return cell;
+}
+
 async function select_result_game_on_change(event: any) {
 	const select = event.target;
 
@@ -172,10 +193,8 @@ async function fill_games_list_time_control(time_control_id: string) {
 		const when = games[i].date.substring(0, games[i].date.length - (3 + 1 + 2 + 1));
 		row.appendChild(new_text_cell(games[i].time_control));
 		row.appendChild(new_text_cell(when));
-		row.appendChild(new_text_cell(games[i].white_rating));
-		row.appendChild(new_text_cell(games[i].white_increment));
-		row.appendChild(new_text_cell(games[i].black_rating));
-		row.appendChild(new_text_cell(games[i].black_increment));
+		row.appendChild(new_rating_cell(games[i].white_rating, games[i].white_increment));
+		row.appendChild(new_rating_cell(games[i].black_rating, games[i].black_increment));
 
 		if (games[i].deleteable == 'y') {
 			row.appendChild(new_cell_button_delete(games[i].id));
