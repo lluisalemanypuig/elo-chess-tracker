@@ -71,7 +71,6 @@ function retrieve_graph_user(username: string, time_control_id: TimeControlID): 
 	const this_user = users.get_user_at(this_user_idx) as User;
 
 	const G = graphs.get_graph(time_control_id) as Graph;
-	console.log(G);
 
 	let list_nodes: NodeInfo[];
 	{
@@ -124,10 +123,10 @@ function retrieve_graph_user(username: string, time_control_id: TimeControlID): 
 		let edge = new EdgeInfo();
 		edge.source = neighbor_rand_id;
 		edge.target = this_user_rand_id;
-		edge.label = e.metadata.to_string();
-		edge.weight.wins = e.metadata.num_games_won;
+		edge.label = e.metadata.clone().reverse().to_string();
+		edge.weight.wins = e.metadata.num_games_lost;
 		edge.weight.draws = e.metadata.num_games_drawn;
-		edge.weight.losses = e.metadata.num_games_lost;
+		edge.weight.losses = e.metadata.num_games_won;
 		list_edges.push(edge);
 	});
 
@@ -202,8 +201,7 @@ export async function post_query_graph_own(req: any, res: any) {
 	debug(log_now(), `User ${session.username} is querying their own graph of time control ${time_control_id}.`);
 
 	const [list_nodes, list_edges] = retrieve_graph_user(session.username, time_control_id);
-	res.send({
-		r: '1',
+	res.status(200).send({
 		nodes: list_nodes,
 		edges: list_edges
 	});
