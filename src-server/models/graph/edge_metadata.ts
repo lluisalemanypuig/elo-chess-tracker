@@ -63,10 +63,11 @@ export class EdgeMetadata {
 		);
 	}
 
-	reverse(): void {
+	reverse(): EdgeMetadata {
 		const w = this.num_games_won;
 		this.num_games_won = this.num_games_lost;
 		this.num_games_lost = w;
+		return this;
 	}
 
 	clone(): EdgeMetadata {

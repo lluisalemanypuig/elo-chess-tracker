@@ -109,8 +109,7 @@ export class Graph {
 			_b_in_list = this.in_adjacency_list.get(b);
 		}
 
-		let em = w_edge.metadata.clone();
-		em.reverse();
+		const em = w_edge.metadata.clone().reverse();
 		const b_edge = new Edge(w, em);
 		Graph.insert_into_list(b, w, b_edge, _b_in_list as Neighborhood);
 	}
