@@ -283,7 +283,7 @@ export class Graph {
 		return (_u_list as Neighborhood).length;
 	}
 	/// Returns the list of opponents and the metadata of @e u.
-	get_ingoing_edges(u: string): Neighborhood | undefined {
+	get_incoming_edges(u: string): Neighborhood | undefined {
 		return this.in_adjacency_list.get(u);
 	}
 

@@ -71,6 +71,7 @@ function retrieve_graph_user(username: string, time_control_id: TimeControlID): 
 	const this_user = users.get_user_at(this_user_idx) as User;
 
 	const G = graphs.get_graph(time_control_id) as Graph;
+	console.log(G);
 
 	let list_nodes: NodeInfo[];
 	{
@@ -102,11 +103,9 @@ function retrieve_graph_user(username: string, time_control_id: TimeControlID): 
 		edge.weight.losses = e.metadata.num_games_lost;
 		list_edges.push(edge);
 	});
-	G.get_ingoing_edges(username)?.forEach((e: Edge) => {
+	G.get_incoming_edges(username)?.forEach((e: Edge) => {
 		const neighbor_idx = users.get_user_index_by_username(e.neighbor) as number;
 		const neighbor_rand_id = users.get_user_random_ID_at(neighbor_idx) as number;
-
-		console.log(`Inspecting neighbor ${e.neighbor}`);
 
 		const idx = search_linear_by_key(list_nodes, (i: NodeInfo): boolean => {
 			return i.id == neighbor_rand_id;
