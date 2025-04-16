@@ -36,10 +36,10 @@ export class SessionID {
 		this.username = username;
 	}
 
-	static get_field_name_0(): string {
+	static get_field_token_name(): string {
 		return 'token';
 	}
-	static get_field_name_1(): string {
+	static get_field_username_name(): string {
 		return 'username';
 	}
 

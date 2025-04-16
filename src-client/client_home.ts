@@ -32,12 +32,12 @@ export async function logout_link_clicked(_event: any) {
 
 	// whether logout was successful or not, empty the cookies
 	document.cookie = make_cookie_string({
-		name: SessionID.get_field_name_0(),
+		name: SessionID.get_field_token_name(),
 		value: '',
 		days: 1
 	});
 	document.cookie = make_cookie_string({
-		name: SessionID.get_field_name_1(),
+		name: SessionID.get_field_username_name(),
 		value: '',
 		days: 1
 	});

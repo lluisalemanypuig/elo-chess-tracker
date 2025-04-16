@@ -53,28 +53,28 @@ export function make_cookie_string(values: any): string {
 	}
 	const d = new Date();
 	d.setTime(d.getTime() + days * 24 * 60 * 60 * 1000);
-	cookie += ';expires=' + d.toUTCString();
+	cookie += '; expires=' + d.toUTCString();
 
 	// path
 	let path = '/';
 	if (values['path'] != undefined) {
 		path = values['path'];
 	}
-	cookie += ';path=' + encodeURIComponent(path);
+	cookie += '; path=' + encodeURIComponent(path);
 
 	// SameSite
 	let same_site = 'Lax';
 	if (values['SameSite'] != undefined) {
 		same_site = values['SameSite'];
 	}
-	cookie += ';samesite=' + encodeURIComponent(same_site);
+	cookie += '; samesite=' + encodeURIComponent(same_site);
 
 	// Secure
 	let secure = 'secure';
 	if (values['secure'] != undefined) {
 		secure = values['secure'];
 	}
-	cookie += ';' + encodeURIComponent(secure);
+	cookie += '; ' + encodeURIComponent(secure);
 
 	return cookie;
 }

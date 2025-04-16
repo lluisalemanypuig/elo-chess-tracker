@@ -80,12 +80,12 @@ export async function post_user_login(req: any, res: any) {
 	res.status(200).send({
 		cookies: [
 			make_cookie_string({
-				name: SessionID.get_field_name_0(),
+				name: SessionID.get_field_token_name(),
 				value: token,
 				days: 1
 			}),
 			make_cookie_string({
-				name: SessionID.get_field_name_1(),
+				name: SessionID.get_field_username_name(),
 				value: username,
 				days: 1
 			})
