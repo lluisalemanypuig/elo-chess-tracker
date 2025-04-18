@@ -156,6 +156,7 @@ function init_users(): void {
 		debug(log_now(), `        Reading file '${user_file}'`);
 		const user_data = fs.readFileSync(user_file, 'utf8');
 		let user = user_from_json(user_data);
+		debug(log_now(), `        User '${user.get_username()}' is at index '${i}'`);
 
 		// maybe the file the user was read from has to be updated
 		let update_user_file: boolean = false;
@@ -173,7 +174,6 @@ function init_users(): void {
 			debug(log_now(), `Overwriting file '${user_file}' of user '${user.get_username()}'`);
 			fs.writeFileSync(user_file, JSON.stringify(user, null, 4));
 		}
-		debug(log_now(), `    User '${user.get_username()}' is at index '${i}'`);
 	}
 	debug(log_now(), `    Found ${memory.num_users()} users.`);
 }
