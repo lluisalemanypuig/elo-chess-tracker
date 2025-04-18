@@ -35,7 +35,6 @@ import { time_control_rating_set_from_json } from './time_control_rating';
  * @pre If @e json is a string then it cannot start with '['.
  */
 export function games_number_from_json(json: any): GameNumber {
-	console.log('asdf');
 	if (typeof json === 'string') {
 		const json_parse = JSON.parse(json);
 		return games_number_from_json(json_parse);
