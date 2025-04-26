@@ -47,9 +47,8 @@ export function make_cookie_string(values: any): string {
 	const value = values['value'];
 	cookie += encodeURIComponent(name) + '=' + encodeURIComponent(value);
 
-	cookie += '; Domain=';
 	if (ConfigurationManager.is_production()) {
-		cookie += encodeURIComponent(ConfigurationManager.get_instance().get_domain_name());
+		cookie += '; Domain=' + encodeURIComponent(ConfigurationManager.get_instance().get_domain_name());
 	}
 
 	// time to expire
