@@ -61,7 +61,7 @@ export async function get_page_challenge(req: any, res: any) {
 	}
 
 	res.status(200);
-	if (ConfigurationManager.get_instance().is_production()) {
+	if (ConfigurationManager.is_production()) {
 		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
 	}
 	res.sendFile(path.join(__dirname, '../html/challenges.html'));
