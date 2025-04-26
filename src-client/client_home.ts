@@ -23,24 +23,16 @@ import 'htmx.org';
 
 import { ADMIN, user_role_to_string, UserRole } from '../src-server/models/user_role';
 import { GAMES_CREATE, CREATE_USER, USER_EDIT, GAMES_SEE, GRAPHS_SEE_USER } from '../src-server/models/user_action';
-import { make_cookie_string } from '../src-server/utils/cookies';
-import { SessionID } from '../src-server/models/session_id';
 
 export async function logout_link_clicked(_event: any) {
 	// "query" the server
-	await fetch('/user/logout', { method: 'POST' });
+	const response = await fetch('/user/logout', { method: 'POST' });
 
-	// whether logout was successful or not, empty the cookies
-	document.cookie = make_cookie_string({
-		name: SessionID.get_field_token_name(),
-		value: '',
-		days: 1
-	});
-	document.cookie = make_cookie_string({
-		name: SessionID.get_field_username_name(),
-		value: '',
-		days: 1
-	});
+	const data = await response.json();
+	const cookies = data['cookies'];
+	for (let i = 0; i < cookies.length; ++i) {
+		document.cookie = cookies[i];
+	}
 
 	window.location.href = '/';
 }
