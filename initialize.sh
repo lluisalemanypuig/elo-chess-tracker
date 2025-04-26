@@ -19,9 +19,21 @@ function configure_ssl_certificate {
 	sed -i "s/\$PUBLIC_PEM/$(escape_string "server.cert")/g" configuration.json
 	sed -i "s/\$PRIVATE_PEM/$(escape_string "server.key")/g" configuration.json
 	sed -i "s/\$PASSPHRASE_TXT/$(escape_string "")/g" configuration.json
-	
+	sed -i "s/\$DOMAIN_NAME/$(escape_string "$domain_name")/g" configuration.json
+
 	cd ..
 }
+
+domain_name=""
+for i in "$@"; do
+	case $i in
+
+		--domain-name=*)
+		domain_name="${i#*=}"
+		shift
+		;;
+	esac
+done
 
 ## Initialize the webpage configuration files with some preconfigured users
 
