@@ -12,10 +12,7 @@ for i in "$@"; do
 done
 
 echo "Setting configuration variables..."
-if [ $production == 1 ]; then
-    echo "    Production server"
-    ./build/set_production.sh
-fi
+./build/configuration_variables.sh $production
 
 echo "Compiling..."
 mkdir -p js
