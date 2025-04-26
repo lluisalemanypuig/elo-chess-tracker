@@ -1,16 +1,16 @@
 {
-	
+	"domain_name": "$DOMAIN_NAME",
 	"ssl_certificate": {
 		"public_key_file": "$PUBLIC_PEM",
 		"private_key_file": "$PRIVATE_PEM",
 		"passphrase_file": "$PASSPHRASE_TXT"
 	},
-	
+
 	"ports": {
 		"http": "8080",
 		"https": "8443"
 	},
-	
+
 	"favicon": "favicon.png",
 	"login_page": {
 		"title": "Login into My Chess Club",
@@ -20,9 +20,9 @@
 		"title": "My Chess Club",
 		"icon": "home.png"
 	},
-	
+
 	"rating_system": "Elo",
-	
+
 	"time_controls": [
 		{
 			"id": "Classical",
@@ -41,20 +41,41 @@
 			"name": "Blitz (5 + 3)"
 		}
 	],
-	
+
 	"permissions": {
 		"admin": [
 			"create_user",
 
-			"assign_role_admin",  "assign_role_teacher",  "assign_role_member",  "assign_role_student",
+			"assign_role_admin",
+			"assign_role_teacher",
+			"assign_role_member",
+			"assign_role_student",
 
-			"create_games_admin", "create_games_teacher", "create_games_member", "create_games_student",
-			"delete_games_admin", "delete_games_teacher", "delete_games_member", "delete_games_student",
+			"create_games_admin",
+			"create_games_teacher",
+			"create_games_member",
+			"create_games_student",
+			"delete_games_admin",
+			"delete_games_teacher",
+			"delete_games_member",
+			"delete_games_student",
 
-			"edit_admin",         "edit_teacher",         "edit_member",         "edit_student",
-			"edit_games_admin",   "edit_games_teacher",   "edit_games_member",   "edit_games_student",
-			"see_games_admin",    "see_games_teacher",    "see_games_member",    "see_games_student",
-			"challenge_admin",    "challenge_member",     "challenge_teacher",   "challenge_student"
+			"edit_admin",
+			"edit_teacher",
+			"edit_member",
+			"edit_student",
+			"edit_games_admin",
+			"edit_games_teacher",
+			"edit_games_member",
+			"edit_games_student",
+			"see_games_admin",
+			"see_games_teacher",
+			"see_games_member",
+			"see_games_student",
+			"challenge_admin",
+			"challenge_member",
+			"challenge_teacher",
+			"challenge_student"
 		],
 		"teacher": [
 			"create_user",
@@ -63,13 +84,12 @@
 			"edit_student",
 			"edit_games_student",
 			"see_games_student",
-			"challenge_admin",    "challenge_member",     "challenge_teacher",   "challenge_student"
+			"challenge_admin",
+			"challenge_member",
+			"challenge_teacher",
+			"challenge_student"
 		],
-		"member": [
-			"challenge_admin",    "challenge_member",     "challenge_teacher"
-		],
-		"student": [
-			"challenge_admin",    "challenge_member",     "challenge_teacher",   "challenge_student"
-		]
+		"member": ["challenge_admin", "challenge_member", "challenge_teacher"],
+		"student": ["challenge_admin", "challenge_member", "challenge_teacher", "challenge_student"]
 	}
 }
