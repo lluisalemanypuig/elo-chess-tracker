@@ -18,7 +18,6 @@ echo "Flatten js/ directory..."
 echo "Fix imports..."
 ./build/fix_imports.sh
 
-if [ "$?" == "0" ]; then
-    echo "esbuild..."
-    ./build/esbuild.sh
-fi
+echo "esbuild..."
+./build/esbuild.sh
+
