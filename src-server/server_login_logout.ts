@@ -28,7 +28,7 @@ const debug = Debug('ELO_TRACKER:server_login_logout');
 
 import { log_now } from './utils/time';
 import { is_password_of_user_correct } from './utils/encrypt';
-import { make_cookie_string } from './utils/cookies';
+import { empty_cookie, make_cookie_string } from './utils/cookies';
 import { session_id_add, session_id_delete } from './managers/session';
 import { SessionIDManager } from './managers/session_id_manager';
 import { SessionID } from './models/session_id';
@@ -115,13 +115,20 @@ export async function post_user_logout(req: any, res: any) {
 			log_now(),
 			`    User '${session.username}' was never logged in with this session id but it is fine, since they are logging out.`
 		);
-		res.status(200).send();
 	} else {
 		debug(log_now(), `    User '${session.username}' was logged in.`);
 		debug(log_now(), `    Deleting session id of user '${session.username}'...`);
 		session_id_delete(session);
 		debug(log_now(), `        Deleted.`);
-		// send response
-		res.status(200).send();
 	}
+	res.status(200).send({
+		cookies: [
+			empty_cookie({
+				name: SessionID.get_field_token_name()
+			}),
+			empty_cookie({
+				name: SessionID.get_field_username_name()
+			})
+		]
+	});
 }
