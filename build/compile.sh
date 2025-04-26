@@ -1,6 +1,7 @@
 #!/bin/bash
 
 production=0
+caching=0
 for i in "$@"; do
 	case $i in
 
@@ -8,11 +9,15 @@ for i in "$@"; do
 		production=1
 		shift
 		;;
+		--caching)
+		caching=1
+		shift
+		;;
 	esac
 done
 
 echo "Setting configuration variables..."
-./build/configuration_variables.sh $production
+./build/configuration_variables.sh $production $caching
 
 echo "Compiling..."
 mkdir -p js
