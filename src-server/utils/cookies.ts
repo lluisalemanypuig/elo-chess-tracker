@@ -23,32 +23,23 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
+/*
 import { ConfigurationManager } from '../managers/configuration_manager';
 
-// Code adapted from: https://www.w3schools.com/js/js_cookies.asp
+function get_domain_name(): string | undefined {
+	return ConfigurationManager.is_production() ? ConfigurationManager.get_instance().get_domain_name() : undefined;
+}
+*/
 
-/**
- * @brief Constructs a cookie from a JSON object.
- *
- * The object can contain
- * - (*) name: name of the cookie
- * - (*) value: value of the cookie
- * - (*) days: amount of days to expire. Default: '1'
- *
- * Fields marked with (*) are mandatory; those marked with (?) are optional.
- * @param values
- * @pre Parameter @e values must have entries: 'name' and 'values'.
- */
-export function make_cookie_string(values: any): string {
+function make_cookie(values: any): string {
 	let cookie: string = '';
 
 	// name and value of the cookie
-	const name = values['name'];
-	const value = values['value'];
-	cookie += encodeURIComponent(name) + '=' + encodeURIComponent(value);
+	cookie += encodeURIComponent(values['name']) + '=' + encodeURIComponent(values['value']);
 
-	if (ConfigurationManager.is_production()) {
-		cookie += '; Domain=' + encodeURIComponent(ConfigurationManager.get_instance().get_domain_name());
+	// domain
+	if (values['domain'] != undefined) {
+		cookie += '; Domain=' + encodeURIComponent(values['domain']);
 	}
 
 	// time to expire
@@ -58,16 +49,20 @@ export function make_cookie_string(values: any): string {
 	}
 	const d = new Date();
 	d.setTime(d.getTime() + days * 24 * 60 * 60 * 1000);
-	cookie += '; expires=' + d.toUTCString();
+	cookie += '; expires=' + encodeURIComponent(d.toUTCString());
 
 	// path
-	cookie += '; path=/';
+	if (values['path'] != undefined) {
+		cookie += '; path=' + encodeURIComponent(values['path']);
+	}
 
 	// SameSite
-	cookie += '; SameSite=Lax';
+	if (values['samesite'] != undefined) {
+		cookie += '; SameSite=' + encodeURIComponent(values['samesite']);
+	}
 
 	// security
-	if (ConfigurationManager.is_production()) {
+	if (values['secure'] != undefined) {
 		cookie += '; Secure';
 	}
 
@@ -75,37 +70,37 @@ export function make_cookie_string(values: any): string {
 }
 
 /**
- * @brief Constructs a cookie from a JSON object.
- *
- * The object can contain
- * - (*) name: name of the cookie
- *
- * Fields marked with (*) are mandatory; those marked with (?) are optional.
- * @param values
+ * @brief Constructs a cookie from the given parameters.
+ * @param name Name of the cookie.
+ * @param value Value of the cookie.
+ * @param days Expiry date of the cookie.
  * @pre Parameter @e values must have entries: 'name' and 'values'.
  */
-export function empty_cookie(values: any): string {
-	let cookie: string = '';
+export function make_cookie_string(name: string, value: string, days: number): string {
+	return make_cookie({
+		name: name,
+		value: value,
+		days: days,
+		path: '/',
+		samesite: 'Strict',
+		domain: undefined,
+		secure: 'Secure'
+	});
+}
 
-	// name and value of the cookie
-	const name = values['name'];
-	cookie += encodeURIComponent(name) + '=';
-
-	cookie += '; Domain=';
-	if (ConfigurationManager.should_cache_data()) {
-		cookie += encodeURIComponent(ConfigurationManager.get_instance().get_domain_name());
-	}
-
-	// path
-	cookie += '; path=/';
-
-	// SameSite
-	cookie += '; SameSite=Lax';
-
-	// security
-	if (ConfigurationManager.should_cache_data()) {
-		cookie += '; Secure';
-	}
-
-	return cookie;
+/**
+ * @brief Constructs a cookie from a JSON object.
+ * @param name Name of the cookie.
+ * @pre Parameter @e values must have entries: 'name' and 'values'.
+ */
+export function empty_cookie(name: string): string {
+	return make_cookie({
+		name: name,
+		value: '',
+		days: 1,
+		path: '/',
+		samesite: 'Strict',
+		domain: undefined,
+		secure: 'Secure'
+	});
 }

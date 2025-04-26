@@ -79,16 +79,8 @@ export async function post_user_login(req: any, res: any) {
 	// send response
 	res.status(200).send({
 		cookies: [
-			make_cookie_string({
-				name: SessionID.get_field_token_name(),
-				value: token,
-				days: 1
-			}),
-			make_cookie_string({
-				name: SessionID.get_field_username_name(),
-				value: username,
-				days: 1
-			})
+			make_cookie_string(SessionID.get_field_token_name(), token, 1),
+			make_cookie_string(SessionID.get_field_username_name(), username, 1)
 		]
 	});
 }
@@ -122,13 +114,6 @@ export async function post_user_logout(req: any, res: any) {
 		debug(log_now(), `        Deleted.`);
 	}
 	res.status(200).send({
-		cookies: [
-			empty_cookie({
-				name: SessionID.get_field_token_name()
-			}),
-			empty_cookie({
-				name: SessionID.get_field_username_name()
-			})
-		]
+		cookies: [empty_cookie(SessionID.get_field_token_name()), empty_cookie(SessionID.get_field_username_name())]
 	});
 }
