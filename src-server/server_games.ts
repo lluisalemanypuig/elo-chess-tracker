@@ -59,7 +59,7 @@ export async function get_page_game_list_own(req: any, res: any) {
 	}
 
 	res.status(200);
-	if (ConfigurationManager.is_production()) {
+	if (ConfigurationManager.should_cache_data()) {
 		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
 	}
 	res.sendFile(path.join(__dirname, '../html/game/list/own.html'));
@@ -77,7 +77,7 @@ export async function get_page_game_list_all(req: any, res: any) {
 	}
 
 	res.status(200);
-	if (ConfigurationManager.is_production()) {
+	if (ConfigurationManager.should_cache_data()) {
 		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
 	}
 	res.sendFile(path.join(__dirname, '../html/game/list/all.html'));
@@ -101,7 +101,7 @@ export async function get_page_game_create(req: any, res: any) {
 	}
 
 	res.status(200);
-	if (ConfigurationManager.is_production()) {
+	if (ConfigurationManager.should_cache_data()) {
 		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
 	}
 	res.sendFile(path.join(__dirname, '../html/game/create.html'));

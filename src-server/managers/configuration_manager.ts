@@ -76,6 +76,11 @@ export class ConfigurationManager {
 		return this.domain;
 	}
 
+	private static readonly cache_data: boolean = false;
+	static should_cache_data(): boolean {
+		return ConfigurationManager.cache_data;
+	}
+
 	private static readonly production: boolean = false;
 	static is_production(): boolean {
 		return ConfigurationManager.production;

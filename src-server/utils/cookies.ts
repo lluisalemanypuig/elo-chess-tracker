@@ -92,7 +92,7 @@ export function empty_cookie(values: any): string {
 	cookie += encodeURIComponent(name) + '=';
 
 	cookie += '; Domain=';
-	if (ConfigurationManager.is_production()) {
+	if (ConfigurationManager.should_cache_data()) {
 		cookie += encodeURIComponent(ConfigurationManager.get_instance().get_domain_name());
 	}
 
@@ -103,7 +103,7 @@ export function empty_cookie(values: any): string {
 	cookie += '; SameSite=Lax';
 
 	// security
-	if (ConfigurationManager.is_production()) {
+	if (ConfigurationManager.should_cache_data()) {
 		cookie += '; Secure';
 	}
 
