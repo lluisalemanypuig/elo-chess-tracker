@@ -68,6 +68,14 @@ export class ConfigurationManager {
 		return this.port_https;
 	}
 
+	private domain: string = '';
+	set_domain_name(d: string): void {
+		this.domain = d;
+	}
+	get_domain_name(): string {
+		return this.domain;
+	}
+
 	private static readonly production: boolean = false;
 	static is_production(): boolean {
 		return ConfigurationManager.production;

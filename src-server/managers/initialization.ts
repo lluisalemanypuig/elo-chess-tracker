@@ -84,6 +84,11 @@ function init_configuration_server_ports(configuration_data: any): void {
 	let server_conf = ConfigurationManager.get_instance();
 	server_conf.set_port_http(configuration_data.ports.http);
 	server_conf.set_port_https(configuration_data.ports.https);
+	server_conf.set_domain_name(configuration_data.domain_name);
+	debug(log_now(), `    Configuration parameters:`);
+	debug(log_now(), `        HTTP : ${server_conf.get_port_http()}`);
+	debug(log_now(), `        HTTPS: ${server_conf.get_port_https()}`);
+	debug(log_now(), `        Domain name: ${server_conf.get_domain_name()}`);
 }
 
 function init_environment_page_titles(configuration_data: any): void {
