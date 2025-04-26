@@ -30,9 +30,7 @@ export class ConfigurationManager {
 	/// The only instance of this class
 	private static instance: ConfigurationManager;
 
-	/**
-	 * @brief Construct the server configuration
-	 */
+	/// Construct the server configuration
 	constructor() {
 		if (ConfigurationManager.instance) {
 			return ConfigurationManager.instance;
@@ -46,13 +44,10 @@ export class ConfigurationManager {
 		return ConfigurationManager.instance;
 	}
 
+	/// The HTTP port of the server
 	private port_http: string = '';
+	/// The HTTPS port of the server
 	private port_https: string = '';
-
-	clear(): void {
-		this.port_http = '';
-		this.port_https = '';
-	}
 
 	set_port_http(http: string): void {
 		this.port_http = http;
@@ -68,12 +63,19 @@ export class ConfigurationManager {
 		return this.port_https;
 	}
 
+	/// The name of the domain the server can be accessed from
 	private domain: string = '';
 	set_domain_name(d: string): void {
 		this.domain = d;
 	}
 	get_domain_name(): string {
 		return this.domain;
+	}
+
+	clear(): void {
+		this.port_http = '';
+		this.port_https = '';
+		this.domain = '';
 	}
 
 	/// Cache results of GET/POST methods (e.g., titles and icons)
