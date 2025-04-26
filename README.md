@@ -91,7 +91,7 @@ Run the following command to turn all typescript source files into javascript so
 
 First, in the root directory of the repository, initialize the sample database and system configuration file with the following command
 
-    $ ./initialize.sh
+    $ ./initialize.sh --domain-name=your-domain-name
 
 This will prompt you to create a self-signed SSL certificate. Fill in the fields with the appropriate data. The script will set any necessary files in the [`configuration.json`](webpage-sample/configuration_sampe.json) file.
 
