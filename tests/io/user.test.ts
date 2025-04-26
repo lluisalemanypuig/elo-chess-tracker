@@ -33,7 +33,7 @@ describe('From JSON (Elo)', () => {
 
 	test('string (1)', () => {
 		const u = user_from_json(
-			'{ "username": "u", "first_name": "f", "last_name": "l", "password": { "encrypted": "a", "iv": "b" }, "roles": ["admin"], "games": [ {"time_control": "blitz", "records": ["2024-12-31"]}, {"time_control": "rapid", "records": ["2025-01-01"]} ], "ratings": [] }'
+			'{ "username": "u", "first_name": "f", "last_name": "l", "password": { "encrypted": "a", "iv": "b" }, "roles": ["admin"], "games": [ {"time_control": "blitz", "records": [{ "record": "2024-12-31", "amount": 1 }]}, {"time_control": "rapid", "records": [{ "record": "2025-01-01", "amount": 1 }] } ], "ratings": [] }'
 		);
 
 		expect(u.get_username()).toEqual('u');
@@ -42,22 +42,22 @@ describe('From JSON (Elo)', () => {
 		expect(u.get_password()).toEqual(new Password('a', 'b'));
 		expect(u.get_roles()).toEqual([ADMIN]);
 		expect(u.is(ADMIN)).toEqual(true);
-		expect(u.get_games('blitz')).toEqual(['2024-12-31']);
-		expect(u.get_games('rapid')).toEqual(['2025-01-01']);
+		expect(u.get_games('blitz')).toEqual([{ record: '2024-12-31', amount: 1 }]);
+		expect(u.get_games('rapid')).toEqual([{ record: '2025-01-01', amount: 1 }]);
 		expect(u.get_all_ratings()).toEqual([]);
 		expect(u.get_all_ratings().length).toBe(0);
 	});
 
 	test('string (2)', () => {
 		const u1 = user_from_json(
-			'{ "username": "u", "first_name": "f", "last_name": "l", "password": { "encrypted": "a", "iv": "b" }, "roles": ["admin", "student"], "games": [ { "time_control": "blitz", "records": ["2024-12-31"] }, {"time_control":"rapid", "records": ["2025-01-01"]} ], "ratings": [] }'
+			'{ "username": "u", "first_name": "f", "last_name": "l", "password": { "encrypted": "a", "iv": "b" }, "roles": ["admin", "student"], "games": [ { "time_control": "rapid", "records": [{ "record": "2025-01-01", "amount": 1 }] } ], "ratings": [] }'
 		);
 
 		expect(u1.get_roles()).toEqual([ADMIN, STUDENT]);
 		expect(u1.get_all_ratings().length).toBe(0);
 
 		const u2 = user_from_json(
-			'{ "username": "u", "first_name": "f", "last_name": "l", "password": { "encrypted": "a", "iv": "b" }, "roles": ["student", "admin"], "games": [ {"time_control_id": "blitz", "record_list": ["2024-12-31"]}, {"time_control_id": "rapid", "record_list": ["2025-01-01"]} ], "ratings": [] }'
+			'{ "username": "u", "first_name": "f", "last_name": "l", "password": { "encrypted": "a", "iv": "b" }, "roles": ["student", "admin"], "games": [ {"time_control_id": "blitz", "records": [{ "record": "2024-12-31", "amount": 1 }] }, {"time_control_id": "rapid", "records": [{ "record": "2025-01-01", "amount": 1 }] } ], "ratings": [] }'
 		);
 		expect(u2.get_roles()).toEqual([STUDENT, ADMIN]);
 		expect(u2.get_all_ratings().length).toBe(0);
@@ -65,7 +65,7 @@ describe('From JSON (Elo)', () => {
 
 	test('string (3)', () => {
 		const u = user_from_json(
-			'{ "username": "u", "first_name": "f", "last_name": "l", "password": { "encrypted": "a", "iv": "b" }, "roles": ["student", "admin"], "games": [ {"time_control": "blitz", "records": ["2024-12-31"]}, {"time_control": "rapid", "records": ["2025-01-01"]} ], "ratings": [ { "time_control": "blitz", "rating": { "rating": 1500, "num_games": 0, "won": 0, "drawn": 0, "lost": 0, "K": 40, "surpassed_2400": false } }, { "time_control": "classical", "rating": { "rating": 1700, "num_games": 0, "won": 0, "drawn": 0, "lost": 0, "K": 40, "surpassed_2400": false } } ] }'
+			'{ "username": "u", "first_name": "f", "last_name": "l", "password": { "encrypted": "a", "iv": "b" }, "roles": ["student", "admin"], "games": [ {"time_control": "blitz", "records": [{ "record": "2024-12-31", "amount": 1 }]}, {"time_control": "rapid", "records": [{ "record": "2025-01-01", "amount": 1 }]} ], "ratings": [ { "time_control": "blitz", "rating": { "rating": 1500, "num_games": 0, "won": 0, "drawn": 0, "lost": 0, "K": 40, "surpassed_2400": false } }, { "time_control": "classical", "rating": { "rating": 1700, "num_games": 0, "won": 0, "drawn": 0, "lost": 0, "K": 40, "surpassed_2400": false } } ] }'
 		);
 		expect(u.get_all_ratings().length).toBe(2);
 		expect(u.has_rating('classical')).toBe(true);
@@ -83,8 +83,8 @@ describe('From JSON (Elo)', () => {
 			},
 			roles: [ADMIN],
 			games: [
-				{ time_control: 'blitz', records: ['2024-12-31'] },
-				{ time_control: 'rapid', records: ['2025-01-01'] }
+				{ time_control: 'blitz', records: [{ record: '2024-12-31', amount: 1 }] },
+				{ time_control: 'rapid', records: [{ record: '2025-01-01', amount: 1 }] }
 			],
 			ratings: []
 		});
@@ -95,8 +95,8 @@ describe('From JSON (Elo)', () => {
 		expect(u.get_password()).toEqual(new Password('a', 'b'));
 		expect(u.get_roles()).toEqual([ADMIN]);
 		expect(u.is(ADMIN)).toEqual(true);
-		expect(u.get_games('blitz')).toEqual(['2024-12-31']);
-		expect(u.get_games('rapid')).toEqual(['2025-01-01']);
+		expect(u.get_games('blitz')).toEqual([{ record: '2024-12-31', amount: 1 }]);
+		expect(u.get_games('rapid')).toEqual([{ record: '2025-01-01', amount: 1 }]);
 		expect(u.get_all_ratings()).toEqual([]);
 		expect(u.get_all_ratings().length).toBe(0);
 	});
@@ -112,8 +112,8 @@ describe('From JSON (Elo)', () => {
 			},
 			roles: [ADMIN, STUDENT],
 			games: [
-				{ time_control: 'blitz', records: ['2024-12-31'] },
-				{ time_control: 'rapid', records: ['2025-01-01'] }
+				{ time_control: 'blitz', records: [{ record: '2024-12-31', amount: 1 }] },
+				{ time_control: 'rapid', records: [{ record: '2025-01-01', amount: 1 }] }
 			],
 			ratings: []
 		});
@@ -132,8 +132,8 @@ describe('From JSON (Elo)', () => {
 			},
 			roles: [STUDENT, ADMIN],
 			games: [
-				{ time_control: 'blitz', record_list: ['2024-12-31'] },
-				{ time_control: 'rapid', recors: ['2025-01-01'] }
+				{ time_control: 'blitz', records: [{ record: '2024-12-31', amount: 1 }] },
+				{ time_control: 'rapid', records: [{ record: '2025-01-01', amount: 1 }] }
 			],
 			ratings: []
 		});
@@ -154,8 +154,8 @@ describe('From JSON (Elo)', () => {
 			},
 			roles: [ADMIN, STUDENT],
 			games: [
-				{ time_control: 'blitz', records: ['2024-12-31'] },
-				{ time_control: 'rapid', records: ['2025-01-01'] }
+				{ time_control: 'blitz', records: [{ record: '2024-12-31', amount: 1 }] },
+				{ time_control: 'rapid', records: [{ record: '2025-01-01', amount: 1 }] }
 			],
 			ratings: [
 				{
