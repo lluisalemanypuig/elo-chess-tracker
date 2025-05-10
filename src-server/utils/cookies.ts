@@ -39,7 +39,7 @@ function make_cookie(values: any): string {
 
 	// domain
 	if (values['domain'] != undefined) {
-		cookie += '; Domain=' + encodeURIComponent(values['domain']);
+		cookie += '; Domain=' + values['domain'];
 	}
 
 	// time to expire
@@ -49,20 +49,20 @@ function make_cookie(values: any): string {
 	}
 	const d = new Date();
 	d.setTime(d.getTime() + days * 24 * 60 * 60 * 1000);
-	cookie += '; expires=' + encodeURIComponent(d.toUTCString());
+	cookie += '; expires=' + d.toUTCString();
 
 	// path
 	if (values['path'] != undefined) {
-		cookie += '; path=' + encodeURIComponent(values['path']);
+		cookie += '; path=' + values['path'];
 	}
 
 	// SameSite
 	if (values['samesite'] != undefined) {
-		cookie += '; SameSite=' + encodeURIComponent(values['samesite']);
+		cookie += '; SameSite=' + values['samesite'];
 	}
 
 	// security
-	if (values['secure'] != undefined) {
+	if (values['secure']) {
 		cookie += '; Secure';
 	}
 
@@ -82,9 +82,9 @@ export function make_cookie_string(name: string, value: string, days: number): s
 		value: value,
 		days: days,
 		path: '/',
-		samesite: 'Strict',
+		samesite: 'Lax',
 		domain: undefined,
-		secure: 'Secure'
+		secure: true
 	});
 }
 
@@ -99,8 +99,8 @@ export function empty_cookie(name: string): string {
 		value: '',
 		days: 1,
 		path: '/',
-		samesite: 'Strict',
+		samesite: 'Lax',
 		domain: undefined,
-		secure: 'Secure'
+		secure: true
 	});
 }
