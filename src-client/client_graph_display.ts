@@ -264,7 +264,7 @@ function size_picker_node_changed(_event: any) {
 		const k = parseInt(size_picker_node.value);
 		for (const node of graph_data.nodes) {
 			const r = node.weight.rating;
-			server_graph.setNodeAttribute(node.id, 'size', k * normalize(r, min_rating, max_rating));
+			server_graph.setNodeAttribute(node.id, 'size', k * (1 + normalize(r, min_rating, max_rating)));
 		}
 	}
 	display_graph();
