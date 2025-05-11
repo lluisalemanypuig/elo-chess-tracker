@@ -51,6 +51,7 @@ const db_games_Rapid_dir = path.join(db_games_dir, 'Rapid');
 const db_games_Blitz_dir = path.join(db_games_dir, 'Blitz');
 
 const configuration = {
+	domain_name: 'my_domain',
 	ssl_certificate: {
 		public_key_file: 'sadf',
 		private_key_file: 'qwer',
@@ -148,6 +149,7 @@ describe('Configure server', () => {
 		const configuration_manager = ConfigurationManager.get_instance();
 		expect(configuration_manager.get_port_http()).toBe('8080');
 		expect(configuration_manager.get_port_https()).toBe('8443');
+		expect(configuration_manager.get_domain_name()).toBe('my_domain');
 	});
 
 	test('Check SessionIDManager', () => {
