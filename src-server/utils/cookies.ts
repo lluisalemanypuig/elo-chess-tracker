@@ -23,45 +23,31 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-/*
-import { ConfigurationManager } from '../managers/configuration_manager';
-
-function get_domain_name(): string | undefined {
-	return ConfigurationManager.is_production() ? ConfigurationManager.get_instance().get_domain_name() : undefined;
-}
-*/
-
 function make_cookie(values: any): string {
 	let cookie: string = '';
 
-	// name and value of the cookie
 	cookie += encodeURIComponent(values['name']) + '=' + encodeURIComponent(values['value']);
 
-	// domain
 	if (values['domain'] != undefined) {
 		cookie += '; Domain=' + values['domain'];
 	}
 
-	// time to expire
-	let days = 1;
-	if (values['days'] != undefined) {
-		days = parseInt(values['days'], 10);
+	{
+		let days = 1;
+		if (values['days'] != undefined) {
+			days = parseInt(values['days'], 10);
+		}
+		const d = new Date();
+		d.setTime(d.getTime() + days * 24 * 60 * 60 * 1000);
+		cookie += '; expires=' + d.toUTCString();
 	}
-	const d = new Date();
-	d.setTime(d.getTime() + days * 24 * 60 * 60 * 1000);
-	cookie += '; expires=' + d.toUTCString();
 
-	// path
 	if (values['path'] != undefined) {
 		cookie += '; path=' + values['path'];
 	}
-
-	// SameSite
 	if (values['samesite'] != undefined) {
 		cookie += '; SameSite=' + values['samesite'];
 	}
-
-	// security
 	if (values['secure']) {
 		cookie += '; Secure';
 	}
