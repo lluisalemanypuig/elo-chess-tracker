@@ -190,6 +190,36 @@ export async function post_query_game_list_own(req: any, res: any) {
 	res.status(200).send(data_to_return);
 }
 
+function merge_by_date(v1: any[], v2: any[]): any[] {
+	let v3: any[] = [];
+	let i: number = 0;
+	let j: number = 0;
+	while (i < v1.length && j < v2.length) {
+		const comp = v1[i].date.localeCompare(v2[j].date);
+		if (comp < 0) {
+			v3.push(v2[j]);
+			++j;
+		} else if (comp > 0) {
+			v3.push(v1[i]);
+			++i;
+		} else {
+			v3.push(v1[i]);
+			v3.push(v2[j]);
+			++i;
+			++j;
+		}
+	}
+	while (i < v1.length) {
+		v3.push(v1[i]);
+		++i;
+	}
+	while (j < v2.length) {
+		v3.push(v2[j]);
+		++j;
+	}
+	return v3;
+}
+
 export async function post_query_game_list_all(req: any, res: any) {
 	debug(log_now(), 'POST /query/game/list/all...');
 
@@ -239,7 +269,7 @@ export async function post_query_game_list_all(req: any, res: any) {
 					return can_user_see_a_game(user, white, black);
 				}
 			);
-			data_to_return = data_to_return.concat(data);
+			data_to_return = merge_by_date(data_to_return, data);
 		}
 	}
 
