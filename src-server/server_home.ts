@@ -35,9 +35,9 @@ import { ConfigurationManager } from './managers/configuration_manager';
 export async function get_page_login(req: any, res: any) {
 	let send_home: boolean;
 
-	if ('user' in req.cookies) {
-		debug(log_now(), 'There is a user key in the cookies received.');
-		debug(log_now(), `    Value: ${res.cookies.user}`);
+	if (SessionID.get_field_username_name() in req.cookies) {
+		debug(log_now(), 'There is a username key in the cookies received.');
+		debug(log_now(), `    Value: ${req.cookies.username}`);
 
 		const session = SessionID.from_cookie(req.cookies);
 		const r = is_user_logged_in(session);
