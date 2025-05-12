@@ -261,10 +261,11 @@ function size_picker_node_changed(_event: any) {
 			server_graph.setNodeAttribute(node.id, 'size', size_picker_node.value);
 		}
 	} else if (option == 'dynamic_rating') {
-		const k = parseInt(size_picker_node.value);
+		const M = parseInt(size_picker_node.value);
 		for (const node of graph_data.nodes) {
 			const r = node.weight.rating;
-			server_graph.setNodeAttribute(node.id, 'size', k * (1 + normalize(r, min_rating, max_rating)));
+			const k = M * (1 + normalize(r, min_rating, max_rating));
+			server_graph.setNodeAttribute(node.id, 'size', k);
 		}
 	}
 	display_graph();
@@ -295,23 +296,13 @@ function size_picker_edge_changed(_event: any) {
 	} else if (option == 'dynamic_games') {
 		for (const edge of graph_data.edges) {
 			const num_games = edge.weight.wins + edge.weight.draws + edge.weight.losses;
-			let k: number;
-			if (num_games == min_games && num_games == max_games) {
-				k = 1;
-			} else {
-				k = M * normalize(num_games, min_games, max_games);
-			}
+			const k = M * (1 + normalize(num_games, min_games, max_games));
 			server_graph.setEdgeAttribute(edge.source, edge.target, 'size', k);
 		}
 	} else if (option == 'dynamic_results') {
 		for (const edge of graph_data.edges) {
 			const edge_w = weight_edge(edge.weight);
-			let k: number;
-			if (edge_w == min_edge_weight && edge_w == max_edge_weight) {
-				k = 1;
-			} else {
-				k = M * normalize(edge_w, min_edge_weight, max_edge_weight);
-			}
+			const k: number = M * (1 + normalize(edge_w, min_edge_weight, max_edge_weight));
 			server_graph.setEdgeAttribute(edge.source, edge.target, 'size', k);
 		}
 	}
