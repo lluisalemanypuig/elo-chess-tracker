@@ -102,7 +102,7 @@ export function is_user_logged_in(session: SessionID): [boolean, string, User | 
 	const user = UsersManager.get_instance().get_user_by_username(session.username);
 	if (user == undefined) {
 		debug(log_now(), `User '${session.username}' does not exist.`);
-		return [false, 'Forbidden access', undefined];
+		return [false, 'Forbidden access. <a href="/">Go home</a>.', undefined];
 	}
 
 	debug(log_now(), `User '${session.username}' exists and is trying to access the page.`);
