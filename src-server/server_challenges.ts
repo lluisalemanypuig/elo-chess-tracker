@@ -50,7 +50,7 @@ import { UsersManager } from './managers/users_manager';
 import { ConfigurationManager } from './managers/configuration_manager';
 
 export async function get_page_challenge(req: any, res: any) {
-	debug(log_now(), 'GET /challenge...');
+	debug(log_now(), 'GET /page/challenge...');
 
 	const session = SessionID.from_cookie(req.cookies);
 
