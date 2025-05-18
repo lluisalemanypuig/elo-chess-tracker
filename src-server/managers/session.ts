@@ -113,7 +113,7 @@ export function is_user_logged_in(session: SessionID): [boolean, string, User | 
 		debug(log_now(), `    The session ID received for user '${session.username}' does not exist.`);
 		debug(log_now(), '    This means that the user is not logged into the web in');
 		debug(log_now(), '    the device they are trying to access the web from.');
-		return [false, 'Forbidden access', undefined];
+		return [false, 'Forbidden access. <a href="/">Go home</a>.', undefined];
 	} else {
 		debug(log_now(), `    Valid session ID received for user '${session.username}'.`);
 	}
