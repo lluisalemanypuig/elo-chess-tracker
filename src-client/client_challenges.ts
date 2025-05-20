@@ -55,7 +55,7 @@ async function send_challenge_button_clicked(_event: any) {
 	}
 }
 
-async function accept_challenge_tag_clicked(event: any) {
+async function accept_challenge_button_clicked(event: any) {
 	let tag_clicked = event.target;
 	let challenge_id = tag_clicked.id;
 
@@ -89,6 +89,79 @@ async function decline_challenge_tag_clicked(event: any) {
 	window.location.href = '/page/challenge';
 }
 
+async function submit_result_challenge_button_clicked(event: any) {
+	let button_clicked = event.target;
+	let challenge_id = button_clicked.id;
+
+	let white_select = document.getElementById('white_select_' + challenge_id) as HTMLSelectElement;
+	let black_select = document.getElementById('black_select_' + challenge_id) as HTMLSelectElement;
+	let select_result_game = document.getElementById('select_result_game_' + challenge_id) as HTMLSelectElement;
+	let select_time_control = document.getElementById('select_time_control_' + challenge_id) as HTMLSelectElement;
+
+	let white_username = white_select.options[white_select.selectedIndex].value;
+	let black_username = black_select.options[black_select.selectedIndex].value;
+	let result = select_result_game.options[select_result_game.selectedIndex].value;
+	let time_control_id = select_time_control.options[select_time_control.selectedIndex].value;
+	let time_control_name = select_time_control.options[select_time_control.selectedIndex].text;
+
+	// "query" the server
+	const response = await fetch('/challenge/set_result', {
+		method: 'POST',
+		body: JSON.stringify({
+			challenge_id: challenge_id,
+			white: white_username,
+			black: black_username,
+			result: result,
+			time_control_id: time_control_id,
+			time_control_name: time_control_name
+		}),
+		headers: { 'Content-type': 'application/json; charset=UTF-8' }
+	});
+	if (response.status >= 400) {
+		const message = await response.text();
+		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
+		return;
+	}
+
+	window.location.href = '/page/challenge';
+}
+
+async function agree_challenge_result_button_clicked(event: any) {
+	let tag_clicked = event.target;
+	let challenge_id = tag_clicked.id;
+
+	const response = await fetch('/challenge/agree', {
+		method: 'POST',
+		body: JSON.stringify({ challenge_id: challenge_id }),
+		headers: { 'Content-type': 'application/json; charset=UTF-8' }
+	});
+	if (response.status >= 400) {
+		const message = await response.text();
+		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
+		return;
+	}
+
+	window.location.href = '/page/challenge';
+}
+
+async function disagree_challenge_result_button_clicked(event: any) {
+	let tag_clicked = event.target;
+	let challenge_id = tag_clicked.id;
+
+	const response = await fetch('/challenge/disagree', {
+		method: 'POST',
+		body: JSON.stringify({ challenge_id: challenge_id }),
+		headers: { 'Content-type': 'application/json; charset=UTF-8' }
+	});
+	if (response.status >= 400) {
+		const message = await response.text();
+		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
+		return;
+	}
+
+	window.location.href = '/page/challenge';
+}
+
 async function fill_challenges_received() {
 	const response = await fetch('/query/challenge/received', {
 		method: 'GET',
@@ -103,41 +176,53 @@ async function fill_challenges_received() {
 
 	let challenge_list = document.createElement('ul') as HTMLUListElement;
 	challenge_list.className = 'challenge_items';
-	data.forEach(function (elem: any) {
+	data.forEach(function (elem: any, index: number) {
+		let challenge_div = document.createElement('div') as HTMLDivElement;
 		{
 			let li = document.createElement('li') as HTMLLIElement;
 			li.className = 'challenge_items_bullet';
 			li.textContent = `Challenge sent by ${elem.sent_by}.`;
-			challenge_list.appendChild(li);
+			challenge_div.appendChild(li);
 
 			li = document.createElement('li') as HTMLLIElement;
 			li.className = 'challenge_items_nobullet';
 			li.textContent = `Sent on ${format_date(elem.sent_when)}.`;
-			challenge_list.appendChild(li);
+			challenge_div.appendChild(li);
 		}
+		challenge_list.appendChild(challenge_div);
+
+		let buttons_div = document.createElement('div') as HTMLDivElement;
+		buttons_div.setAttribute('align', 'center');
+		buttons_div.style.marginTop = '5px';
+		buttons_div.style.marginBottom = '5px';
 
 		{
 			// accept tag
-			let accept_tag = document.createElement('a') as HTMLAnchorElement;
-			accept_tag.id = elem.id;
-			accept_tag.onclick = accept_challenge_tag_clicked;
-			accept_tag.setAttribute('style', 'color:blue;text-decoration:underline;cursor:pointer');
-			accept_tag.textContent = 'Accept.';
-
-			// decline tag
-			let decline_tag = document.createElement('a') as HTMLAnchorElement;
-			decline_tag.id = elem.id;
-			decline_tag.onclick = decline_challenge_tag_clicked;
-			decline_tag.setAttribute('style', 'color:blue;text-decoration:underline;cursor:pointer');
-			decline_tag.textContent = 'Decline.';
-
-			let li = document.createElement('li') as HTMLLIElement;
-			li.className = 'challenge_items_nobullet';
-			li.appendChild(accept_tag);
-			li.appendChild(document.createTextNode(' '));
-			li.appendChild(decline_tag);
-			challenge_list.appendChild(li);
+			let accept_button = document.createElement('button') as HTMLButtonElement;
+			accept_button.id = elem.id;
+			accept_button.onclick = accept_challenge_button_clicked;
+			accept_button.className = 'button_accept_decline_challenge';
+			accept_button.textContent = 'Accept';
+			accept_button.style.marginRight = '5px';
+			buttons_div.appendChild(accept_button);
 		}
+
+		{
+			// decline tag
+			let decline_button = document.createElement('button') as HTMLButtonElement;
+			decline_button.id = elem.id;
+			decline_button.onclick = decline_challenge_tag_clicked;
+			decline_button.className = 'button_accept_decline_challenge';
+			decline_button.textContent = 'Decline';
+			decline_button.style.marginLeft = '5px';
+			buttons_div.appendChild(decline_button);
+		}
+
+		if (index < data.length - 1) {
+			buttons_div.style.marginBottom = '20px';
+		}
+
+		challenge_list.appendChild(buttons_div);
 	});
 
 	if (data.length > 0) {
@@ -336,43 +421,6 @@ async function fill_challenges_pending_result() {
 	});
 }
 
-async function submit_result_challenge_button_clicked(event: any) {
-	let button_clicked = event.target;
-	let challenge_id = button_clicked.id;
-
-	let white_select = document.getElementById('white_select_' + challenge_id) as HTMLSelectElement;
-	let black_select = document.getElementById('black_select_' + challenge_id) as HTMLSelectElement;
-	let select_result_game = document.getElementById('select_result_game_' + challenge_id) as HTMLSelectElement;
-	let select_time_control = document.getElementById('select_time_control_' + challenge_id) as HTMLSelectElement;
-
-	let white_username = white_select.options[white_select.selectedIndex].value;
-	let black_username = black_select.options[black_select.selectedIndex].value;
-	let result = select_result_game.options[select_result_game.selectedIndex].value;
-	let time_control_id = select_time_control.options[select_time_control.selectedIndex].value;
-	let time_control_name = select_time_control.options[select_time_control.selectedIndex].text;
-
-	// "query" the server
-	const response = await fetch('/challenge/set_result', {
-		method: 'POST',
-		body: JSON.stringify({
-			challenge_id: challenge_id,
-			white: white_username,
-			black: black_username,
-			result: result,
-			time_control_id: time_control_id,
-			time_control_name: time_control_name
-		}),
-		headers: { 'Content-type': 'application/json; charset=UTF-8' }
-	});
-	if (response.status >= 400) {
-		const message = await response.text();
-		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
-		return;
-	}
-
-	window.location.href = '/page/challenge';
-}
-
 async function fill_challenges_confirm_result_other() {
 	const response = await fetch('/query/challenge/confirm_result/other', {
 		method: 'GET',
@@ -445,105 +493,82 @@ async function fill_challenges_confirm_result_self() {
 
 	let challenge_list = document.createElement('ul') as HTMLUListElement;
 	challenge_list.className = 'challenge_items';
-	challenge_data.forEach(function (elem: any) {
+	challenge_data.forEach(function (elem: any, index: number) {
+		let confirmation_div = document.createElement('div') as HTMLDivElement;
 		{
 			let li = document.createElement('li') as HTMLLIElement;
 			li.className = 'challenge_items_bullet';
 			li.textContent = `On ${format_date(elem.sent_when)}.`;
-			challenge_list.appendChild(li);
+			confirmation_div.appendChild(li);
 		}
 
 		{
 			let li = document.createElement('li') as HTMLLIElement;
 			li.className = 'challenge_items_nobullet';
 			li.textContent = `White: ${elem.white}.`;
-			challenge_list.appendChild(li);
+			confirmation_div.appendChild(li);
 		}
 
 		{
 			let li = document.createElement('li') as HTMLLIElement;
 			li.className = 'challenge_items_nobullet';
 			li.textContent = `Black: ${elem.black}.`;
-			challenge_list.appendChild(li);
+			confirmation_div.appendChild(li);
 		}
 
 		{
 			let li = document.createElement('li') as HTMLLIElement;
 			li.className = 'challenge_items_nobullet';
 			li.textContent = `Result: ${elem.result}.`;
-			challenge_list.appendChild(li);
+			confirmation_div.appendChild(li);
 		}
 
 		{
 			let li = document.createElement('li') as HTMLLIElement;
 			li.className = 'challenge_items_nobullet';
 			li.textContent = `Time control: ${elem.time_control}.`;
-			challenge_list.appendChild(li);
+			confirmation_div.appendChild(li);
 		}
+
+		challenge_list.appendChild(confirmation_div);
+
+		let buttons_div = document.createElement('div') as HTMLDivElement;
+		buttons_div.setAttribute('align', 'center');
+		buttons_div.style.marginTop = '5px';
+		buttons_div.style.marginBottom = '5px';
 
 		{
 			// accept tag
-			let accept_tag = document.createElement('a') as HTMLAnchorElement;
-			accept_tag.id = elem.id;
-			accept_tag.onclick = agree_challenge_result_tag_clicked;
-			accept_tag.setAttribute('style', 'color:blue;text-decoration:underline;cursor:pointer');
-			accept_tag.textContent = 'Agree.';
-
-			// decline tag
-			let decline_tag = document.createElement('a') as HTMLAnchorElement;
-			decline_tag.id = elem.id;
-			decline_tag.onclick = disagree_challenge_result_tag_clicked;
-			decline_tag.setAttribute('style', 'color:blue;text-decoration:underline;cursor:pointer');
-			decline_tag.textContent = 'Disagree.';
-
-			let li = document.createElement('li') as HTMLLIElement;
-			li.className = 'challenge_items_nobullet';
-			li.appendChild(accept_tag);
-			li.appendChild(document.createTextNode(' '));
-			li.appendChild(decline_tag);
-			challenge_list.appendChild(li);
+			let accept_button = document.createElement('button') as HTMLButtonElement;
+			accept_button.id = elem.id;
+			accept_button.onclick = agree_challenge_result_button_clicked;
+			accept_button.className = 'button_agree_disagree_challenge';
+			accept_button.textContent = 'Agree';
+			accept_button.style.marginLeft = '5px';
+			buttons_div.appendChild(accept_button);
 		}
+
+		{
+			// decline tag
+			let disagree_button = document.createElement('button') as HTMLButtonElement;
+			disagree_button.id = elem.id;
+			disagree_button.onclick = disagree_challenge_result_button_clicked;
+			disagree_button.className = 'button_agree_disagree_challenge';
+			disagree_button.textContent = 'Disagree';
+			disagree_button.style.marginLeft = '5px';
+			buttons_div.appendChild(disagree_button);
+		}
+
+		if (index < challenge_data.length - 1) {
+			buttons_div.style.marginBottom = '20px';
+		}
+
+		challenge_list.appendChild(buttons_div);
 	});
 
 	if (challenge_data.length > 0) {
 		(document.getElementById('challenges_confirm_result_self') as HTMLDivElement).appendChild(challenge_list);
 	}
-}
-
-async function agree_challenge_result_tag_clicked(event: any) {
-	let tag_clicked = event.target;
-	let challenge_id = tag_clicked.id;
-
-	const response = await fetch('/challenge/agree', {
-		method: 'POST',
-		body: JSON.stringify({ challenge_id: challenge_id }),
-		headers: { 'Content-type': 'application/json; charset=UTF-8' }
-	});
-	if (response.status >= 400) {
-		const message = await response.text();
-		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
-		return;
-	}
-
-	window.location.href = '/page/challenge';
-}
-
-async function disagree_challenge_result_tag_clicked(event: any) {
-	let tag_clicked = event.target;
-	let challenge_id = tag_clicked.id;
-
-	const response = await fetch('/challenge/disagree', {
-		method: 'POST',
-		body: JSON.stringify({ challenge_id: challenge_id }),
-		headers: { 'Content-type': 'application/json; charset=UTF-8' }
-	});
-	if (response.status >= 400) {
-		const message = await response.text();
-		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
-		return;
-	}
-
-	window.location.href = '/page/challenge';
 }
 
 window.onload = function () {

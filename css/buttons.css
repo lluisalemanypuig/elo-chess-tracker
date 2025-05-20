@@ -168,3 +168,89 @@ Full source code of elo-chess-tracker:
 .button_delete_game:focus-visible {
     box-shadow: none;
 }
+
+/* button_accept_decline_challenge */
+
+.button_accept_decline_challenge {
+    border: 1px solid rgb(209, 213, 219);
+    border-radius: .5rem;
+    box-sizing: border-box;
+    font-size: .875rem;
+    color: rgb(17, 24, 39);
+    padding: .5rem 1.25rem;
+    text-align: center;
+    text-decoration: none rgb(209, 213, 219) solid;
+    text-decoration-thickness: auto;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.051);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+}
+
+.button_accept_decline_challenge:disabled {
+    font-weight: 350;
+    background-color: rgb(220, 220, 220);
+    cursor: hand;
+}
+
+.button_accept_decline_challenge:enabled {
+    font-weight: 350;
+    background-color: rgb(255, 255, 255);
+    cursor: pointer;
+}
+
+.button_accept_decline_challenge:hover {
+    background-color: rgb(220, 220, 220);
+}
+
+.button_accept_decline_challenge:focus {
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+}
+
+.button_accept_decline_challenge:focus-visible {
+    box-shadow: none;
+}
+
+/* button_agree_disagree_challenge */
+
+.button_agree_disagree_challenge {
+    border: 1px solid rgb(209, 213, 219);
+    border-radius: .5rem;
+    box-sizing: border-box;
+    font-size: .875rem;
+    color: rgb(17, 24, 39);
+    padding: .5rem 1.25rem;
+    text-align: center;
+    text-decoration: none rgb(209, 213, 219) solid;
+    text-decoration-thickness: auto;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.051);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+}
+
+.button_agree_disagree_challenge:disabled {
+    font-weight: 350;
+    background-color: rgb(220, 220, 220);
+    cursor: hand;
+}
+
+.button_agree_disagree_challenge:enabled {
+    font-weight: 350;
+    background-color: rgb(255, 255, 255);
+    cursor: pointer;
+}
+
+.button_agree_disagree_challenge:hover {
+    background-color: rgb(220, 220, 220);
+}
+
+.button_agree_disagree_challenge:focus {
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+}
+
+.button_agree_disagree_challenge:focus-visible {
+    box-shadow: none;
+}
