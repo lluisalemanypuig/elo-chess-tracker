@@ -126,29 +126,40 @@ The actual passwords do not include the quote characters `"`; they are only used
 Edit the configuration file `webpage/configuration.json` appropriately. This file contains the following fields
 
     {
-    	"ssl_certificate": {
-    		"public_key_file": "server.cert",
-    		"private_key_file": "server.key",
-    		"passphrase_file": ""
-    	},
-    	"ports": {
-    		"http": "8080",
-    		"https": "8443"
-    	},
+        "environment": {
+            "ssl_certificate": {
+                "public_key_file": "server.cert",
+                "private_key_file": server.key",
+                "passphrase_file": ""
+            },
+            "favicon": "favicon.png",
+            "login_page": {
+                "title": "Login into My Chess Club",
+                "icon": "login.png"
+            },
+            "home_page": {
+                "title": "My Chess Club",
+                "icon": "home.png"
+            }
+        },
 
-    	"favicon": "favicon.png",
-    	"login_page": {
-    		"title": "Login into My Chess Club",
-    		"icon": "login.png"
-    	},
-    	"home_page": {
-    		"title": "My Chess Club",
-    		"icon": "home.png"
-    	},
+    	"server": {
+            "domain_name": "coolclub.com",
+    	    "ports": {
+        		"http": "8080",
+    		    "https": "8443"
+    	    }
+        },
 
     	"rating_system": "Elo",
 
     	"time_controls": [ ],
+
+        "behavior": {
+            "challenges": {
+                "higher_rated_player_can_decline_challenge_from_lower_rated_player": false
+            }
+        },
 
     	"permissions": {
     		"admin": [ ],
