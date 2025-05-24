@@ -43,7 +43,7 @@ import { GameID, GameResult } from './models/game';
 import { ADMIN } from './models/user_role';
 import { SessionID } from './models/session_id';
 import { TimeControlID } from './models/time_control';
-import { can_user_create_a_game, can_user_delete_a_game, can_user_edit_a_game } from './models/user_relationships';
+import { can_user_create_a_game, can_user_delete_a_game, can_user_edit_a_game } from './managers/user_relationships';
 import { UsersManager } from './managers/users_manager';
 import { ConfigurationManager } from './managers/configuration_manager';
 

@@ -42,7 +42,7 @@ import { Challenge, ChallengeID } from './models/challenge';
 import { User } from './models/user';
 import { USER_CHALLENGE } from './models/user_action';
 import { SessionID } from './models/session_id';
-import { can_user_send_challenge } from './models/user_relationships';
+import { can_user_send_challenge } from './managers/user_relationships';
 import { ChallengesManager } from './managers/challenges_manager';
 import { TimeControlID } from './models/time_control';
 import { GameResult } from './models/game';

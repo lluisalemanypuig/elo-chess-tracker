@@ -37,7 +37,7 @@ import { RatingSystemManager } from './managers/rating_system_manager';
 import { EnvironmentManager } from './managers/environment_manager';
 import { GAMES_SEE } from './models/user_action';
 import { SessionID } from './models/session_id';
-import { can_user_delete_a_game, can_user_edit_a_game, can_user_see_a_game } from './models/user_relationships';
+import { can_user_delete_a_game, can_user_edit_a_game, can_user_see_a_game } from './managers/user_relationships';
 import { TimeControlID } from './models/time_control';
 import { game_set_from_json } from './io/game';
 import { UsersManager } from './managers/users_manager';

@@ -36,7 +36,7 @@ import { Graph } from './models/graph/graph';
 import { search_linear_by_key } from './utils/searching';
 import { UsersManager } from './managers/users_manager';
 import { Edge } from './models/graph/edge';
-import { can_user_see_graph } from './models/user_relationships';
+import { can_user_see_graph } from './managers/user_relationships';
 import { GRAPHS_SEE_USER } from './models/user_action';
 
 class NodeWeight {

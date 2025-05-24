@@ -34,7 +34,7 @@ import { user_rename_and_reassign_roles } from './managers/users';
 import { User } from './models/user';
 import { USER_ROLE_ASSIGN_ID, USER_EDIT, get_role_action_name } from './models/user_action';
 import { SessionID } from './models/session_id';
-import { can_user_edit } from './models/user_relationships';
+import { can_user_edit } from './managers/user_relationships';
 import { UsersManager } from './managers/users_manager';
 import { ConfigurationManager } from './managers/configuration_manager';
 
