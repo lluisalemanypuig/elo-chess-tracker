@@ -1,24 +1,27 @@
 {
-	"domain_name": "$DOMAIN_NAME",
-	"ssl_certificate": {
-		"public_key_file": "$PUBLIC_PEM",
-		"private_key_file": "$PRIVATE_PEM",
-		"passphrase_file": "$PASSPHRASE_TXT"
+	"environment": {
+		"ssl_certificate": {
+			"public_key_file": "$PUBLIC_PEM",
+			"private_key_file": "$PRIVATE_PEM",
+			"passphrase_file": "$PASSPHRASE_TXT"
+		},
+		"favicon": "favicon.png",
+		"login_page": {
+			"title": "Login into My Chess Club",
+			"icon": "login.png"
+		},
+		"home_page": {
+			"title": "My Chess Club",
+			"icon": "home.png"
+		}
 	},
 
-	"ports": {
-		"http": "8080",
-		"https": "8443"
-	},
-
-	"favicon": "favicon.png",
-	"login_page": {
-		"title": "Login into My Chess Club",
-		"icon": "login.png"
-	},
-	"home_page": {
-		"title": "My Chess Club",
-		"icon": "home.png"
+	"server": {
+		"domain_name": "$DOMAIN_NAME",
+		"ports": {
+			"http": "8080",
+			"https": "8443"
+		}
 	},
 
 	"rating_system": "Elo",
@@ -65,19 +68,19 @@
 			"delete_games_teacher",
 			"delete_games_member",
 			"delete_games_student",
+			"see_games_admin",
+			"see_games_teacher",
+			"see_games_member",
+			"see_games_student",
+			"edit_games_admin",
+			"edit_games_teacher",
+			"edit_games_member",
+			"edit_games_student",
 
 			"edit_admin",
 			"edit_teacher",
 			"edit_member",
 			"edit_student",
-			"edit_games_admin",
-			"edit_games_teacher",
-			"edit_games_member",
-			"edit_games_student",
-			"see_games_admin",
-			"see_games_teacher",
-			"see_games_member",
-			"see_games_student",
 			"challenge_admin",
 			"challenge_member",
 			"challenge_teacher",
