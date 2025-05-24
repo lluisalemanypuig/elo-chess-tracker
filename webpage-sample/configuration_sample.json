@@ -42,6 +42,12 @@
 		}
 	],
 
+	"behavior": {
+		"challenges": {
+			"higher_rated_player_can_decline_challenge_from_lower_rated_player": false
+		}
+	},
+
 	"permissions": {
 		"admin": [
 			"create_user",
