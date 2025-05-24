@@ -181,7 +181,8 @@ export async function get_query_challenge_pending_result(req: any, res: any) {
 			sent_to_name: user_sent_to.get_full_name(),
 			sent_to_username: user_sent_to.get_username(),
 			opponent: opponent,
-			sent_when: c.get_when_challenge_sent()
+			sent_when: c.get_when_challenge_sent(),
+			time_control_name: c.get_time_control_name()
 		});
 	}
 
