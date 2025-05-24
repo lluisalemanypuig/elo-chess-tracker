@@ -58,45 +58,50 @@ function init_environment_directories(base_directory: string): void {
 	debug(log_now(), `        Graphs directory: '${server_env.get_dir_graphs()}'`);
 }
 
-function init_environment_SSL(base_directory: string, configuration_data: any): void {
+function init_environment_SSL(base_directory: string, ssl: any): void {
 	let env = EnvironmentManager.get_instance();
-	env.set_SSL_info(
-		path.join(base_directory, '/ssl'),
-		configuration_data.ssl_certificate.public_key_file,
-		configuration_data.ssl_certificate.private_key_file,
-		configuration_data.ssl_certificate.passphrase_file
-	);
+	env.set_SSL_info(path.join(base_directory, '/ssl'), ssl.public_key_file, ssl.private_key_file, ssl.passphrase_file);
 	debug(log_now(), `    SSL base directory: '${env.get_dir_ssl()}'`);
 	debug(log_now(), `        Public key file: '${env.get_ssl_public_key_file()}'`);
 	debug(log_now(), `        Private key file: '${env.get_ssl_private_key_file()}'`);
 	debug(log_now(), `        Passphrase: '${env.get_ssl_passphrase_file()}'`);
 }
 
-function init_environment_icon_file_paths(base_directory: string, configuration_data: any): void {
+function init_environment_icon_file_paths(base_directory: string, environment: any): void {
 	EnvironmentManager.get_instance().set_icons_info(
 		path.join(base_directory, '/icons'),
-		'/' + configuration_data.favicon,
-		'/' + configuration_data.login_page.icon,
-		'/' + configuration_data.home_page.icon
+		'/' + environment.favicon,
+		'/' + environment.login_page.icon,
+		'/' + environment.home_page.icon
 	);
 }
 
-function init_configuration_server_ports(configuration_data: any): void {
+function init_environment_page_titles(environment: any): void {
+	EnvironmentManager.get_instance().set_titles_info(environment.login_page.title, environment.home_page.title);
+}
+
+function init_environment(base_directory: string, environment: any): void {
+	init_environment_directories(base_directory);
+	init_environment_SSL(base_directory, environment.ssl_certificate);
+	init_environment_page_titles(environment);
+	init_environment_icon_file_paths(base_directory, environment);
+}
+
+function init_server_ports(ports: any): void {
 	let server_conf = ConfigurationManager.get_instance();
-	server_conf.set_port_http(configuration_data.ports.http);
-	server_conf.set_port_https(configuration_data.ports.https);
-	server_conf.set_domain_name(configuration_data.domain_name);
+	server_conf.set_port_http(ports.http);
+	server_conf.set_port_https(ports.https);
 	debug(log_now(), `    Configuration parameters:`);
 	debug(log_now(), `        HTTP : ${server_conf.get_port_http()}`);
 	debug(log_now(), `        HTTPS: ${server_conf.get_port_https()}`);
-	debug(log_now(), `        Domain name: ${server_conf.get_domain_name()}`);
 }
 
-function init_environment_page_titles(configuration_data: any): void {
-	EnvironmentManager.get_instance().set_titles_info(
-		configuration_data.login_page.title,
-		configuration_data.home_page.title
-	);
+function init_server(configuration: any): void {
+	let server_conf = ConfigurationManager.get_instance();
+	server_conf.set_domain_name(configuration.domain_name);
+	debug(log_now(), `        Domain name: ${server_conf.get_domain_name()}`);
+
+	init_server_ports(configuration.ports);
 }
 
 function init_user_permissions(permission_data: any): void {
@@ -282,18 +287,15 @@ function init_graphs(): void {
 	}
 }
 
-export function server_init_from_data(base_directory: string, configuration_data: any): void {
+export function server_init_from_data(base_directory: string, configuration: any): void {
 	debug(log_now(), `    Base directory: '${base_directory}'`);
 
-	init_environment_directories(base_directory);
-	init_environment_SSL(base_directory, configuration_data);
-	init_environment_icon_file_paths(base_directory, configuration_data);
-	init_environment_page_titles(configuration_data);
-	init_configuration_server_ports(configuration_data);
-	init_user_permissions(configuration_data.permissions);
-	init_rating_framework(configuration_data.rating_system);
-	init_time_controls(configuration_data.time_controls);
-	init_behavior(configuration_data.behavior);
+	init_environment(base_directory, configuration.environment);
+	init_server(configuration.server);
+	init_user_permissions(configuration.permissions);
+	init_rating_framework(configuration.rating_system);
+	init_time_controls(configuration.time_controls);
+	init_behavior(configuration.behavior);
 
 	init_user_session_ids();
 	init_users();
