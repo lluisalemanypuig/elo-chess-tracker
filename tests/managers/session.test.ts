@@ -38,23 +38,28 @@ import { ADMIN, MEMBER, STUDENT } from '../../src-server/models/user_role';
 import { run_command } from './exec_utils';
 
 const configuration = {
-	ssl_certificate: {
-		public_key_file: 'sadf',
-		private_key_file: 'qwer',
-		passphrase_file: 'kgj68'
+	environment: {
+		ssl_certificate: {
+			public_key_file: 'sadf',
+			private_key_file: 'qwer',
+			passphrase_file: 'kgj68'
+		},
+		favicon: 'favicon.png',
+		login_page: {
+			title: 'Login title',
+			icon: 'login.png'
+		},
+		home_page: {
+			title: 'Home title',
+			icon: 'home.png'
+		}
 	},
-	ports: {
-		http: '8080',
-		https: '8443'
-	},
-	favicon: 'favicon.png',
-	login_page: {
-		title: 'Login title',
-		icon: 'login.png'
-	},
-	home_page: {
-		title: 'Home title',
-		icon: 'home.png'
+	server: {
+		domain_name: '',
+		ports: {
+			http: '8080',
+			https: '8443'
+		}
 	},
 	rating_system: 'Elo',
 	time_controls: [
@@ -75,6 +80,11 @@ const configuration = {
 			name: 'Blitz (5 + 3)'
 		}
 	],
+	behavior: {
+		challenges: {
+			higher_rated_player_can_decline_challenge_from_lower_rated_player: false
+		}
+	},
 	permissions: {
 		admin: ['challenge_user', 'challenge_admin', 'challenge_member', 'challenge_teacher', 'challenge_student'],
 		teacher: ['challenge_user', 'challenge_admin', 'challenge_member', 'challenge_teacher', 'challenge_student'],

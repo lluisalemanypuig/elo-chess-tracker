@@ -51,25 +51,31 @@ const db_games_Rapid_dir = path.join(db_games_dir, 'Rapid');
 const db_games_Blitz_dir = path.join(db_games_dir, 'Blitz');
 
 const configuration = {
-	domain_name: 'my_domain',
-	ssl_certificate: {
-		public_key_file: 'sadf',
-		private_key_file: 'qwer',
-		passphrase_file: 'kgj68'
+	environment: {
+		ssl_certificate: {
+			public_key_file: 'sadf',
+			private_key_file: 'qwer',
+			passphrase_file: 'kgj68'
+		},
+		favicon: 'favicon.png',
+		login_page: {
+			title: 'Login title',
+			icon: 'login.png'
+		},
+		home_page: {
+			title: 'Home title',
+			icon: 'home.png'
+		}
 	},
-	ports: {
-		http: '8080',
-		https: '8443'
+
+	server: {
+		domain_name: 'my_domain',
+		ports: {
+			http: '8080',
+			https: '8443'
+		}
 	},
-	favicon: 'favicon.png',
-	login_page: {
-		title: 'Login title',
-		icon: 'login.png'
-	},
-	home_page: {
-		title: 'Home title',
-		icon: 'home.png'
-	},
+
 	rating_system: 'Elo',
 	time_controls: [
 		{
@@ -89,6 +95,11 @@ const configuration = {
 			name: 'Blitz (5 + 3)'
 		}
 	],
+	behavior: {
+		challenges: {
+			higher_rated_player_can_decline_challenge_from_lower_rated_player: false
+		}
+	},
 	permissions: {
 		admin: ['challenge_user', 'challenge_admin', 'challenge_member', 'challenge_teacher', 'challenge_student'],
 		teacher: ['challenge_user', 'challenge_admin', 'challenge_member', 'challenge_teacher', 'challenge_student'],

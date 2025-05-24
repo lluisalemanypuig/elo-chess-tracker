@@ -48,23 +48,28 @@ const db_dir = path.join(webpage_dir, 'database');
 const db_users_dir = path.join(db_dir, 'users');
 
 const classical_rapid_blitz = {
-	ssl_certificate: {
-		public_key_file: '',
-		private_key_file: '',
-		passphrase_file: ''
+	environment: {
+		ssl_certificate: {
+			public_key_file: 'sadf',
+			private_key_file: 'qwer',
+			passphrase_file: 'kgj68'
+		},
+		favicon: 'favicon.png',
+		login_page: {
+			title: 'Login title',
+			icon: 'login.png'
+		},
+		home_page: {
+			title: 'Home title',
+			icon: 'home.png'
+		}
 	},
-	ports: {
-		http: '',
-		https: ''
-	},
-	favicon: '',
-	login_page: {
-		title: '',
-		icon: ''
-	},
-	home_page: {
-		title: '',
-		icon: ''
+	server: {
+		domain_name: '',
+		ports: {
+			http: '8080',
+			https: '8443'
+		}
 	},
 	rating_system: 'Elo',
 	time_controls: [
@@ -85,6 +90,11 @@ const classical_rapid_blitz = {
 			name: 'Blitz (5 + 3)'
 		}
 	],
+	behavior: {
+		challenges: {
+			higher_rated_player_can_decline_challenge_from_lower_rated_player: false
+		}
+	},
 	permissions: {
 		admin: [],
 		teacher: [],
@@ -94,23 +104,28 @@ const classical_rapid_blitz = {
 };
 
 const classical_rapid_blitz_bullet = {
-	ssl_certificate: {
-		public_key_file: 'sadf',
-		private_key_file: 'qwer',
-		passphrase_file: 'kgj68'
+	environment: {
+		ssl_certificate: {
+			public_key_file: 'sadf',
+			private_key_file: 'qwer',
+			passphrase_file: 'kgj68'
+		},
+		favicon: 'favicon.png',
+		login_page: {
+			title: 'Login title',
+			icon: 'login.png'
+		},
+		home_page: {
+			title: 'Home title',
+			icon: 'home.png'
+		}
 	},
-	ports: {
-		http: '8080',
-		https: '8443'
-	},
-	favicon: 'favicon.png',
-	login_page: {
-		title: 'Login title',
-		icon: 'login.png'
-	},
-	home_page: {
-		title: 'Home title',
-		icon: 'home.png'
+	server: {
+		domain_name: '',
+		ports: {
+			http: '8080',
+			https: '8443'
+		}
 	},
 	rating_system: 'Elo',
 	time_controls: [
@@ -135,6 +150,11 @@ const classical_rapid_blitz_bullet = {
 			name: 'Bullet (2 + 1)'
 		}
 	],
+	behavior: {
+		challenges: {
+			higher_rated_player_can_decline_challenge_from_lower_rated_player: false
+		}
+	},
 	permissions: {
 		admin: [],
 		teacher: [],
@@ -144,23 +164,28 @@ const classical_rapid_blitz_bullet = {
 };
 
 const classical = {
-	ssl_certificate: {
-		public_key_file: 'sadf',
-		private_key_file: 'qwer',
-		passphrase_file: 'kgj68'
+	environment: {
+		ssl_certificate: {
+			public_key_file: 'sadf',
+			private_key_file: 'qwer',
+			passphrase_file: 'kgj68'
+		},
+		favicon: 'favicon.png',
+		login_page: {
+			title: 'Login title',
+			icon: 'login.png'
+		},
+		home_page: {
+			title: 'Home title',
+			icon: 'home.png'
+		}
 	},
-	ports: {
-		http: '8080',
-		https: '8443'
-	},
-	favicon: 'favicon.png',
-	login_page: {
-		title: 'Login title',
-		icon: 'login.png'
-	},
-	home_page: {
-		title: 'Home title',
-		icon: 'home.png'
+	server: {
+		domain_name: '',
+		ports: {
+			http: '8080',
+			https: '8443'
+		}
 	},
 	rating_system: 'Elo',
 	time_controls: [
@@ -169,6 +194,11 @@ const classical = {
 			name: 'Classical (90 + 30)'
 		}
 	],
+	behavior: {
+		challenges: {
+			higher_rated_player_can_decline_challenge_from_lower_rated_player: false
+		}
+	},
 	permissions: {
 		admin: [],
 		teacher: [],

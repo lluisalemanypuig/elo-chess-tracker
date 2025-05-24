@@ -40,23 +40,28 @@ import { GraphsManager } from '../../src-server/managers/graphs_manager';
 import { Graph } from '../../src-server/models/graph/graph';
 
 const configuration = {
-	ssl_certificate: {
-		public_key_file: 'sadf',
-		private_key_file: 'qwer',
-		passphrase_file: 'kgj68'
+	environment: {
+		ssl_certificate: {
+			public_key_file: 'sadf',
+			private_key_file: 'qwer',
+			passphrase_file: 'kgj68'
+		},
+		favicon: 'favicon.png',
+		login_page: {
+			title: 'Login title',
+			icon: 'login.png'
+		},
+		home_page: {
+			title: 'Home title',
+			icon: 'home.png'
+		}
 	},
-	ports: {
-		http: '8080',
-		https: '8443'
-	},
-	favicon: 'favicon.png',
-	login_page: {
-		title: 'Login title',
-		icon: 'login.png'
-	},
-	home_page: {
-		title: 'Home title',
-		icon: 'home.png'
+	server: {
+		domain_name: '$DOMAIN_NAME',
+		ports: {
+			http: '8080',
+			https: '8443'
+		}
 	},
 	rating_system: 'Elo',
 	time_controls: [
@@ -77,6 +82,11 @@ const configuration = {
 			name: 'Blitz (5 + 3)'
 		}
 	],
+	behavior: {
+		challenges: {
+			higher_rated_player_can_decline_challenge_from_lower_rated_player: false
+		}
+	},
 	permissions: {
 		admin: [],
 		teacher: [],

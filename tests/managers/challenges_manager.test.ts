@@ -35,7 +35,7 @@ describe('Challenges Manager', () => {
 		expect(challenges.get_max_challenge_id()).toBe(0);
 		expect(challenges.num_challenges()).toBe(0);
 
-		const c = new Challenge('00001', 'a', 'b', '2025-01-07..17:49:20:000');
+		const c = new Challenge('00001', 'a', 'b', 'classical', 'Classical (90 + 30)', '2025-01-07..17:49:20:000');
 		expect(challenges.get_challenge_index(c)).toBe(-1);
 		expect(challenges.get_challenge_index_by_id('00001')).toBe(-1);
 		expect(challenges.get_challenge_index_by_id('00002')).toBe(-1);
@@ -62,15 +62,15 @@ describe('Challenges Manager', () => {
 
 		const yesterday_id = challenges.new_challenge_id();
 		expect(yesterday_id).toBe(number_to_string(1));
-		const yesterday = new Challenge(yesterday_id, 'a', 'b', 'yesterday');
+		const yesterday = new Challenge(yesterday_id, 'a', 'b', 'classical', 'Classical (90 + 30)', 'yesterday');
 
 		const today_id = challenges.new_challenge_id();
 		expect(today_id).toBe(number_to_string(2));
-		const today = new Challenge(today_id, 'a', 'b', 'today__');
+		const today = new Challenge(today_id, 'a', 'b', 'classical', 'Classical (90 + 30)', 'today__');
 
 		const tomorrow_id = challenges.new_challenge_id();
 		expect(tomorrow_id).toBe(number_to_string(3));
-		const tomorrow = new Challenge(tomorrow_id, 'a', 'b', 'tomorrow');
+		const tomorrow = new Challenge(tomorrow_id, 'a', 'b', 'classical', 'Classical (90 + 30)', 'tomorrow');
 
 		challenges.add_challenge(yesterday);
 		expect(challenges.num_challenges()).toBe(1);
@@ -101,19 +101,26 @@ describe('Challenges Manager', () => {
 
 		const yesterday_id = challenges.new_challenge_id();
 		expect(yesterday_id).toBe(number_to_string(1));
-		const yesterday = new Challenge(yesterday_id, 'a', 'b', 'yesterday');
+		const yesterday = new Challenge(yesterday_id, 'a', 'b', 'classical', 'Classical (90 + 30)', 'yesterday');
 
 		const today_id = challenges.new_challenge_id();
 		expect(today_id).toBe(number_to_string(2));
-		const today = new Challenge(today_id, 'a', 'b', 'today__');
+		const today = new Challenge(today_id, 'a', 'b', 'classical', 'Classical (90 + 30)', 'today__');
 
 		const tomorrow_id = challenges.new_challenge_id();
 		expect(tomorrow_id).toBe(number_to_string(3));
-		const tomorrow = new Challenge(tomorrow_id, 'a', 'b', 'tomorrow');
+		const tomorrow = new Challenge(tomorrow_id, 'a', 'b', 'classical', 'Classical (90 + 30)', 'tomorrow');
 
 		const day_after_tomorrow_id = challenges.new_challenge_id();
 		expect(day_after_tomorrow_id).toBe(number_to_string(4));
-		const day_after_tomorrow = new Challenge(day_after_tomorrow_id, 'a', 'b', 'day_after_tomorrow');
+		const day_after_tomorrow = new Challenge(
+			day_after_tomorrow_id,
+			'a',
+			'b',
+			'classical',
+			'Classical (90 + 30)',
+			'day_after_tomorrow'
+		);
 
 		challenges.add_challenge(yesterday);
 		challenges.add_challenge(today);
