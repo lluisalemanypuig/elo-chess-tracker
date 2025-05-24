@@ -46,6 +46,7 @@ import { game_set_from_json } from '../io/game';
 import { challenge_from_json } from '../io/challenge';
 import { user_from_json } from '../io/user';
 import { graph_from_json } from '../io/graph/graph';
+import { UsersBehavior } from './users_behavior';
 
 function init_environment_directories(base_directory: string): void {
 	let server_env = EnvironmentManager.get_instance();
@@ -137,6 +138,17 @@ function init_time_controls(time_control_array: any): void {
 			fs.mkdirSync(id_dir);
 		}
 	}
+}
+
+function init_behavior_challenges(challenges: any): void {
+	let behavior = UsersBehavior.get_instance();
+	behavior.set_higher_rated_decline_challenge_lower_rated(
+		challenges.higher_rated_player_can_decline_challenge_from_lower_rated_player
+	);
+}
+
+function init_behavior(behavior: any): void {
+	init_behavior_challenges(behavior.challenges);
 }
 
 function init_user_session_ids(): void {
@@ -281,6 +293,7 @@ export function server_init_from_data(base_directory: string, configuration_data
 	init_user_permissions(configuration_data.permissions);
 	init_rating_framework(configuration_data.rating_system);
 	init_time_controls(configuration_data.time_controls);
+	init_behavior(configuration_data.behavior);
 
 	init_user_session_ids();
 	init_users();

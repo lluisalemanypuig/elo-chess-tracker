@@ -37,7 +37,14 @@ export function challenge_from_json(json: any): Challenge {
 		return challenge_from_json(json_parse);
 	}
 
-	let c = new Challenge(json['id'], json['sent_by'], json['sent_to'], json['when_challenge_sent']);
+	let c = new Challenge(
+		json['id'],
+		json['sent_by'],
+		json['sent_to'],
+		json['time_control_id'],
+		json['time_control_name'],
+		json['when_challenge_sent']
+	);
 
 	const when_challenge_accepted = json['when_challenge_accepted'];
 	if (when_challenge_accepted != undefined) {
@@ -49,18 +56,14 @@ export function challenge_from_json(json: any): Challenge {
 	const white = json['white'];
 	const black = json['black'];
 	const result = json['result'];
-	const time_control_id = json['time_control_id'];
-	const time_control_name = json['time_control_name'];
 	if (
 		result_set_by != undefined &&
 		when_result_set != undefined &&
 		white != undefined &&
 		black != undefined &&
-		result != undefined &&
-		time_control_id != undefined &&
-		time_control_name != undefined
+		result != undefined
 	) {
-		c.set_result(result_set_by, when_result_set, white, black, result, time_control_id, time_control_name);
+		c.set_result(result_set_by, when_result_set, white, black, result);
 	}
 
 	const result_accepted_by = json['result_accepted_by'];

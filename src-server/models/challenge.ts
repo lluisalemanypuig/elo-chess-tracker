@@ -44,6 +44,10 @@ export class Challenge {
 	private readonly sent_to: string;
 	/// Date when the challenge was sent
 	private readonly when_challenge_sent: DateStringLongMillis;
+	/// Time control of the challenge
+	private readonly time_control_id: TimeControlID;
+	/// Time control of the challenge
+	private readonly time_control_name: string;
 
 	/// Date when the challenge was accepted
 	private when_challenge_accepted: DateStringLongMillis | undefined = undefined;
@@ -64,31 +68,29 @@ export class Challenge {
 	private white: string | undefined = undefined;
 	private black: string | undefined = undefined;
 	private result: GameResult | undefined = undefined;
-	private time_control_id: TimeControlID | undefined = undefined;
-	private time_control_name: string | undefined = undefined;
 
 	/**
 	 * @brief Constructor
 	 * @param id Challenge string id
 	 * @param sent_by User issuing the challenge
 	 * @param sent_to User receiving the challenge
-	 * @param when_challenge_sent Date when the challenge was sent
-	 * @param when_challenge_accepted Date when the challenge was accepted
-	 * @param result_was_set Has the result been set at some point?
-	 * @param when_result_set Date when the result of the game was set
-	 * @param result_set_by User that set the result
-	 * @param when_result_accepted Date when the result was accepted
-	 * @param result_accepted_by User that accepted the result
-	 * @param white White player
-	 * @param black Black player
-	 * @param result Result of the game
 	 * @param time_control_id Time control id of the game
 	 * @param time_control_name Time control name of the game
+	 * @param when_challenge_sent Date when the challenge was sent
 	 */
-	constructor(id: ChallengeID, sent_by: string, sent_to: string, when_challenge_sent: DateStringLongMillis) {
+	constructor(
+		id: ChallengeID,
+		sent_by: string,
+		sent_to: string,
+		time_control_id: TimeControlID,
+		time_control_name: string,
+		when_challenge_sent: DateStringLongMillis
+	) {
 		this.id = id;
 		this.sent_by = sent_by;
 		this.sent_to = sent_to;
+		this.time_control_id = time_control_id;
+		this.time_control_name = time_control_name;
 		this.when_challenge_sent = when_challenge_sent;
 	}
 
@@ -146,7 +148,7 @@ export class Challenge {
 		return this.result;
 	}
 	/// Time control id of the game
-	get_time_control_id(): TimeControlID | undefined {
+	get_time_control_id(): TimeControlID {
 		return this.time_control_id;
 	}
 	/// Time control name of the game
@@ -162,15 +164,7 @@ export class Challenge {
 	 * @brief Sets the result of the challenge
 	 * @pre 'by' is not undefined
 	 */
-	set_result(
-		by: string,
-		when: DateStringLongMillis,
-		white: string,
-		black: string,
-		result: GameResult,
-		time_control_id: TimeControlID,
-		time_control_name: string
-	): void {
+	set_result(by: string, when: DateStringLongMillis, white: string, black: string, result: GameResult): void {
 		if (!(by == white || by == black)) {
 			throw new Error(`The setter (${by}) must be either white (${white}) or black (${black}).`);
 		}
@@ -191,8 +185,6 @@ export class Challenge {
 		this.white = white;
 		this.black = black;
 		this.result = result;
-		this.time_control_id = time_control_id;
-		this.time_control_name = time_control_name;
 	}
 
 	/// Unset the previous result
@@ -203,8 +195,6 @@ export class Challenge {
 		this.white = undefined;
 		this.black = undefined;
 		this.result = undefined;
-		this.time_control_id = undefined;
-		this.time_control_name = undefined;
 	}
 
 	/// Was the result set at some point?

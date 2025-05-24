@@ -23,6 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
+import { TimeControlID } from '../models/time_control';
 import { User } from '../models/user';
 import {
 	USER_CHALLENGE_ADMIN,
@@ -62,6 +63,7 @@ import {
 	GAMES_DELETE
 } from '../models/user_action';
 import { ADMIN, MEMBER, STUDENT, TEACHER, UserRole } from '../models/user_role';
+import { UsersBehavior } from './users_behavior';
 
 /// Can a user (@e editor) edit another user (@e edited)?
 export function can_user_edit(editor: User, edited: User): boolean {
@@ -159,4 +161,13 @@ export function can_user_see_graph(u: User, other: User): boolean {
 			(other.is(STUDENT) && u.can_do(GRAPHS_SEE_STUDENT)) ||
 			(other.is(TEACHER) && u.can_do(GRAPHS_SEE_TEACHER)))
 	);
+}
+
+/// Can user 'u1' decline the challenge sent by user 'u2'?
+export function can_user_decline_challenge(u1: User, u2: User, id: TimeControlID): boolean {
+	if (u1.get_rating(id).rating > u2.get_rating(id).rating) {
+		const behavior = UsersBehavior.get_instance();
+		return behavior.can_higher_rated_decline_challenge_lower_rated();
+	}
+	return true;
 }

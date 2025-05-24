@@ -44,10 +44,10 @@ import { USER_CHALLENGE } from './models/user_action';
 import { SessionID } from './models/session_id';
 import { can_user_send_challenge } from './managers/user_relationships';
 import { ChallengesManager } from './managers/challenges_manager';
-import { TimeControlID } from './models/time_control';
 import { GameResult } from './models/game';
 import { UsersManager } from './managers/users_manager';
 import { ConfigurationManager } from './managers/configuration_manager';
+import { RatingSystemManager } from './managers/rating_system_manager';
 
 export async function get_page_challenge(req: any, res: any) {
 	debug(log_now(), 'GET /page/challenge...');
@@ -72,6 +72,8 @@ export async function post_challenge_send(req: any, res: any) {
 
 	const session = SessionID.from_cookie(req.cookies);
 	const to_random_id = req.body.to;
+	const time_control_id = req.body.time_control_id;
+	const time_control_name = req.body.time_control_name;
 
 	const r = is_user_logged_in(session);
 	if (!r[0]) {
@@ -109,8 +111,27 @@ export async function post_challenge_send(req: any, res: any) {
 		return;
 	}
 
+	const ratsys = RatingSystemManager.get_instance();
+	if (!ratsys.is_time_control_id_valid(time_control_id)) {
+		debug(log_now(), `Time control id ${time_control_id} is not valid.`);
+		res.status(500).send('The chosen time control id is not valid.');
+		return;
+	}
+	let match: boolean = false;
+	const time_controls = ratsys.get_time_controls();
+	for (let t of time_controls) {
+		if (t.id == time_control_id && t.name == time_control_name) {
+			match = true;
+		}
+	}
+	if (!match) {
+		debug(log_now(), `Time control id ${time_control_id} is not valid.`);
+		res.status(500).send('The chosen time control name does not correspond to the given time control id.');
+		return;
+	}
+
 	debug(log_now(), `Send challenge from '${sender.get_username()}' to '${receiver.get_username()}'`);
-	challenge_send_new(sender.get_username(), receiver.get_username(), log_now());
+	challenge_send_new(sender.get_username(), receiver.get_username(), time_control_id, time_control_name, log_now());
 
 	res.status(200).send();
 }
@@ -195,16 +216,12 @@ export async function post_challenge_set_result(req: any, res: any) {
 	const challenge_id: ChallengeID = req.body.challenge_id;
 	const white_username = req.body.white;
 	const black_username = req.body.black;
-	const time_control_id: TimeControlID = req.body.time_control_id;
-	const time_control_name = req.body.time_control_name;
 	const result: GameResult = req.body.result;
 
 	debug(log_now(), `User '${setter_user}' is trying to set the result of a challenge`);
 	debug(log_now(), `    Challenge id: '${challenge_id}'`);
 	debug(log_now(), `    White: '${white_username}'`);
 	debug(log_now(), `    Black: '${black_username}'`);
-	debug(log_now(), `    Time control id: '${time_control_id}'`);
-	debug(log_now(), `    Time control name: '${time_control_name}'`);
 	debug(log_now(), `    Result: '${result}'`);
 
 	if (white_username == black_username) {
@@ -256,16 +273,7 @@ export async function post_challenge_set_result(req: any, res: any) {
 		return;
 	}
 
-	challenge_set_result(
-		c,
-		setter_user,
-		log_now(),
-		white_username,
-		black_username,
-		result,
-		time_control_id,
-		time_control_name
-	);
+	challenge_set_result(c, setter_user, log_now(), white_username, black_username, result);
 
 	res.status(200).send();
 }

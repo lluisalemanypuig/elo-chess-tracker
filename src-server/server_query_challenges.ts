@@ -33,6 +33,7 @@ import { challenge_set_retrieve } from './managers/challenges';
 import { Challenge } from './models/challenge';
 import { SessionID } from './models/session_id';
 import { UsersManager } from './managers/users_manager';
+import { can_user_decline_challenge } from './managers/user_relationships';
 
 /// Query the server for challenges received sento to me by other users
 export async function get_query_challenge_received(req: any, res: any) {
@@ -58,17 +59,21 @@ export async function get_query_challenge_received(req: any, res: any) {
 	});
 
 	let manager = UsersManager.get_instance();
+	const sent_to = r[2] as User;
 
 	let all_challenges_received: any[] = [];
 	for (let i = 0; i < to_return.length; ++i) {
 		const c = to_return[i];
-		const sent_by = (manager.get_user_by_username(c.get_sent_by() as string) as User).get_full_name();
+		const sent_by = manager.get_user_by_username(c.get_sent_by() as string) as User;
+		const name = sent_by.get_full_name();
 
 		// return only basic information
 		all_challenges_received.push({
 			id: c.get_id(),
-			sent_by: sent_by,
-			sent_when: c.get_when_challenge_sent()
+			sent_by: name,
+			sent_when: c.get_when_challenge_sent(),
+			time_control_name: c.get_time_control_name(),
+			can_be_declined: can_user_decline_challenge(sent_to, sent_by, c.get_time_control_id())
 		});
 	}
 
@@ -101,16 +106,21 @@ export async function get_query_challenge_sent(req: any, res: any) {
 	});
 
 	let manager = UsersManager.get_instance();
+	const sent_by = manager.get_user_by_username(session.username) as User;
 
 	let all_challenges: any[] = [];
 	for (let i = 0; i < to_return.length; ++i) {
 		const c = to_return[i];
 
+		const sent_to = manager.get_user_by_username(c.get_sent_to() as string) as User;
+
 		// return only basic information
 		all_challenges.push({
 			id: c.get_id(),
-			sent_to: (manager.get_user_by_username(c.get_sent_to() as string) as User).get_full_name(),
-			sent_when: c.get_when_challenge_sent()
+			sent_to: sent_to.get_full_name(),
+			sent_when: c.get_when_challenge_sent(),
+			time_control_name: c.get_time_control_name(),
+			can_be_declined: can_user_decline_challenge(sent_to, sent_by, c.get_time_control_id())
 		});
 	}
 

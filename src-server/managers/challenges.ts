@@ -66,13 +66,19 @@ export function challenge_set_retrieve(
  * @param when Timestamp
  * @returns The id of the challenge
  */
-export function challenge_send_new(sender: string, receiver: string, when: DateStringLong): Challenge {
+export function challenge_send_new(
+	sender: string,
+	receiver: string,
+	time_control_id: TimeControlID,
+	time_control_name: string,
+	when: DateStringLong
+): Challenge {
 	debug(log_now(), 'Adding a new challenge...');
 
 	let mem = ChallengesManager.get_instance();
 	const new_id: string = mem.new_challenge_id();
 
-	const c = new Challenge(new_id, sender, receiver, when);
+	const c = new Challenge(new_id, sender, receiver, time_control_id, time_control_name, when);
 
 	mem.add_challenge(c);
 
@@ -130,13 +136,11 @@ export function challenge_set_result(
 	when: DateStringLong,
 	white: string,
 	black: string,
-	result: GameResult,
-	time_control_id: TimeControlID,
-	time_control_name: string
+	result: GameResult
 ): void {
 	debug(log_now(), `Set the result of the challenge '${c.get_id()}'`);
 
-	c.set_result(by, when, white, black, result, time_control_id, time_control_name);
+	c.set_result(by, when, white, black, result);
 
 	const challenge_dir = EnvironmentManager.get_instance().get_dir_challenges();
 	const challenge_file = path.join(challenge_dir, c.get_id());
