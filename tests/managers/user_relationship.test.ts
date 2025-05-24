@@ -56,7 +56,7 @@ import {
 	can_user_see_a_game,
 	can_user_send_challenge,
 	can_user_see_graph
-} from '../../src-server/models/user_relationships';
+} from '../../src-server/managers/user_relationships';
 
 describe('Edition', () => {
 	const editor_admin = new User('un', 'f', 'l', new Password('a', 'b'), [ADMIN], [], []);
