@@ -52,6 +52,18 @@ Full source code of elo-chess-tracker:
 						hx-trigger="load"
 					></datalist>
 				</div>
+				<div class="label-and-select">
+					<label class="label_basic">Time control:</label>
+					<select
+						class="select_basic"
+						id="select_time_control"
+						hx-get="/query/html/time_controls"
+						hx-trigger="load"
+						hx-swap="beforeend"
+					>
+						<option value=""></option>
+					</select>
+				</div>
 
 				<br />
 				<button class="button_submit" type="button" id="send_challenge_button">Send challenge</button>

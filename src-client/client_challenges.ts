@@ -33,16 +33,24 @@ function format_date(date: string) {
 }
 
 async function send_challenge_button_clicked(_event: any) {
-	let username_list_input = document.getElementById('username_list') as HTMLInputElement;
+	const username_list_input = document.getElementById('username_list') as HTMLInputElement;
 	const username_option = document.querySelector('option[value="' + username_list_input.value + '"]');
 
 	if (username_option != null) {
 		const random_user_id = username_option.id;
 
+		const select_time_control = document.getElementById('select_time_control') as HTMLSelectElement;
+		const time_control_id = select_time_control.options[select_time_control.selectedIndex].value;
+		const time_control_name = select_time_control.options[select_time_control.selectedIndex].text;
+
 		// "query" the server
 		const response = await fetch('/challenge/send', {
 			method: 'POST',
-			body: JSON.stringify({ to: random_user_id }),
+			body: JSON.stringify({
+				to: random_user_id,
+				time_control_id: time_control_id,
+				time_control_name: time_control_name
+			}),
 			headers: { 'Content-type': 'application/json; charset=UTF-8' }
 		});
 		if (response.status >= 400) {
@@ -96,13 +104,10 @@ async function submit_result_challenge_button_clicked(event: any) {
 	let white_select = document.getElementById('white_select_' + challenge_id) as HTMLSelectElement;
 	let black_select = document.getElementById('black_select_' + challenge_id) as HTMLSelectElement;
 	let select_result_game = document.getElementById('select_result_game_' + challenge_id) as HTMLSelectElement;
-	let select_time_control = document.getElementById('select_time_control_' + challenge_id) as HTMLSelectElement;
 
 	let white_username = white_select.options[white_select.selectedIndex].value;
 	let black_username = black_select.options[black_select.selectedIndex].value;
 	let result = select_result_game.options[select_result_game.selectedIndex].value;
-	let time_control_id = select_time_control.options[select_time_control.selectedIndex].value;
-	let time_control_name = select_time_control.options[select_time_control.selectedIndex].text;
 
 	// "query" the server
 	const response = await fetch('/challenge/set_result', {
@@ -111,9 +116,7 @@ async function submit_result_challenge_button_clicked(event: any) {
 			challenge_id: challenge_id,
 			white: white_username,
 			black: black_username,
-			result: result,
-			time_control_id: time_control_id,
-			time_control_name: time_control_name
+			result: result
 		}),
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
@@ -179,14 +182,29 @@ async function fill_challenges_received() {
 	data.forEach(function (elem: any, index: number) {
 		let challenge_div = document.createElement('div') as HTMLDivElement;
 		{
+			// ---
 			let li = document.createElement('li') as HTMLLIElement;
 			li.className = 'challenge_items_bullet';
 			li.textContent = `Challenge sent by ${elem.sent_by}.`;
 			challenge_div.appendChild(li);
-
+			// ---
+			li = document.createElement('li') as HTMLLIElement;
+			li.className = 'challenge_items_nobullet';
+			//
+			li = document.createElement('li') as HTMLLIElement;
+			li.className = 'challenge_items_nobullet';
+			li.textContent = `Of time control: ${elem.time_control_name}.`;
+			challenge_div.appendChild(li);
+			//
 			li = document.createElement('li') as HTMLLIElement;
 			li.className = 'challenge_items_nobullet';
 			li.textContent = `Sent on ${format_date(elem.sent_when)}.`;
+			challenge_div.appendChild(li);
+			//
+			let may_maynot = elem.can_be_declined ? 'can' : 'cannot';
+			li = document.createElement('li') as HTMLLIElement;
+			li.className = 'challenge_items_nobullet';
+			li.textContent = `You ${may_maynot} decline the challenge.`;
 			challenge_div.appendChild(li);
 		}
 		challenge_list.appendChild(challenge_div);
@@ -215,6 +233,9 @@ async function fill_challenges_received() {
 			decline_button.className = 'button_accept_decline_challenge';
 			decline_button.textContent = 'Decline';
 			decline_button.style.marginLeft = '5px';
+			if (!elem.can_be_declined) {
+				decline_button.disabled = true;
+			}
 			buttons_div.appendChild(decline_button);
 		}
 
@@ -246,14 +267,26 @@ async function fill_challenges_sent() {
 	challenge_list.className = 'challenge_items';
 
 	data.forEach(function (elem: any) {
+		// ----
 		let li = document.createElement('li') as HTMLLIElement;
 		li.className = 'challenge_items_bullet';
 		li.textContent = `Challenge sent to ${elem.sent_to}.`;
 		challenge_list.appendChild(li);
-
+		// ----
+		li = document.createElement('li') as HTMLLIElement;
+		li.className = 'challenge_items_nobullet';
+		li.textContent = `Of time control: ${elem.time_control_name}.`;
+		challenge_list.appendChild(li);
+		//
 		li = document.createElement('li') as HTMLLIElement;
 		li.className = 'challenge_items_nobullet';
 		li.textContent = `Sent on ${format_date(elem.sent_when)}.`;
+		challenge_list.appendChild(li);
+		//
+		let may_maynot = elem.can_be_declined ? 'can' : 'cannot';
+		li = document.createElement('li') as HTMLLIElement;
+		li.className = 'challenge_items_nobullet';
+		li.textContent = `Your opponent ${may_maynot} decline the challenge.`;
 		challenge_list.appendChild(li);
 	});
 
@@ -284,7 +317,6 @@ async function fill_challenges_pending_result() {
 	}
 
 	const challenge_data = await response_pending.json();
-	const time_control_data = await response_tc.text();
 
 	let all_challenges_list = document.getElementById('challenges_pending_result__list') as HTMLDivElement;
 	challenge_data.forEach(function (elem: any, index: number) {
@@ -381,21 +413,6 @@ async function fill_challenges_pending_result() {
 			option_3.value = 'black_wins';
 			select.appendChild(option_3);
 
-			div.appendChild(select);
-			challenge_div.appendChild(div);
-		}
-
-		// Time control of the game
-		{
-			let div = document.createElement('div') as HTMLDivElement;
-			div.className = 'label-and-select';
-
-			div.appendChild(create_label_text('Time control:'));
-
-			let select = document.createElement('select');
-			select.id = 'select_time_control_' + elem.id;
-			select.className = 'select_basic';
-			select.innerHTML = time_control_data;
 			div.appendChild(select);
 			challenge_div.appendChild(div);
 		}
