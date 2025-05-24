@@ -306,16 +306,6 @@ async function fill_challenges_pending_result() {
 		return;
 	}
 
-	const response_tc = await fetch('/query/html/time_controls', {
-		method: 'GET',
-		headers: { 'Content-type': 'application/json; charset=UTF-8' }
-	});
-	if (response_tc.status >= 400) {
-		const message = await response_tc.text();
-		alert(`${response_tc.status} -- ${response_tc.statusText}\nMessage: '${message}'`);
-		return;
-	}
-
 	const challenge_data = await response_pending.json();
 
 	let all_challenges_list = document.getElementById('challenges_pending_result__list') as HTMLDivElement;
@@ -332,6 +322,10 @@ async function fill_challenges_pending_result() {
 
 			{
 				let li = document.createElement('li') as HTMLLIElement;
+				li.className = 'challenge_items_nobullet';
+				li.textContent = `Of time control: ${elem.time_control_name}.`;
+				header.appendChild(li);
+				li = document.createElement('li') as HTMLLIElement;
 				li.className = 'challenge_items_nobullet';
 				li.textContent = `Sent on ${format_date(elem.sent_when)}.`;
 				header.appendChild(li);
