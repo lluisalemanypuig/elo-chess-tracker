@@ -563,7 +563,7 @@ describe('Session management via functions', () => {
 		{
 			const log = is_user_logged_in(session_aa_1);
 			expect(log[0]).toBe(false);
-			expect(log[1]).toBe('Forbidden access');
+			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
@@ -627,7 +627,7 @@ describe('Session management via functions', () => {
 		{
 			const log = is_user_logged_in(session_aa_1);
 			expect(log[0]).toBe(false);
-			expect(log[1]).toBe('Forbidden access');
+			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
@@ -653,7 +653,7 @@ describe('Session management via functions', () => {
 		{
 			const log = is_user_logged_in(session_ff_1);
 			expect(log[0]).toBe(false);
-			expect(log[1]).toBe('Forbidden access');
+			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
@@ -692,7 +692,7 @@ describe('Session management via functions', () => {
 		{
 			const log = is_user_logged_in(session_aa_1);
 			expect(log[0]).toBe(false);
-			expect(log[1]).toBe('Forbidden access');
+			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
@@ -713,13 +713,13 @@ describe('Session management via functions', () => {
 		{
 			const log = is_user_logged_in(session_ee_1);
 			expect(log[0]).toBe(false);
-			expect(log[1]).toBe('Forbidden access');
+			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
 			const log = is_user_logged_in(session_ff_1);
 			expect(log[0]).toBe(false);
-			expect(log[1]).toBe('Forbidden access');
+			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
@@ -762,7 +762,7 @@ describe('Session management via functions', () => {
 		{
 			const log = is_user_logged_in(session_aa_1);
 			expect(log[0]).toBe(false);
-			expect(log[1]).toBe('Forbidden access');
+			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
@@ -783,19 +783,19 @@ describe('Session management via functions', () => {
 		{
 			const log = is_user_logged_in(session_ee_1);
 			expect(log[0]).toBe(false);
-			expect(log[1]).toBe('Forbidden access');
+			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
 			const log = is_user_logged_in(session_ff_1);
 			expect(log[0]).toBe(false);
-			expect(log[1]).toBe('Forbidden access');
+			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
 			const log = is_user_logged_in(session_aa_2);
 			expect(log[0]).toBe(false);
-			expect(log[1]).toBe('Forbidden access');
+			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
@@ -829,13 +829,13 @@ describe('Session management via functions', () => {
 		{
 			const log = is_user_logged_in(session_aa_1);
 			expect(log[0]).toBe(false);
-			expect(log[1]).toBe('Forbidden access');
+			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
 			const log = is_user_logged_in(session_bb_1);
 			expect(log[0]).toBe(false);
-			expect(log[1]).toBe('Forbidden access');
+			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
@@ -851,25 +851,25 @@ describe('Session management via functions', () => {
 		{
 			const log = is_user_logged_in(session_ee_1);
 			expect(log[0]).toBe(false);
-			expect(log[1]).toBe('Forbidden access');
+			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
 			const log = is_user_logged_in(session_ff_1);
 			expect(log[0]).toBe(false);
-			expect(log[1]).toBe('Forbidden access');
+			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
 			const log = is_user_logged_in(session_aa_2);
 			expect(log[0]).toBe(false);
-			expect(log[1]).toBe('Forbidden access');
+			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
 			const log = is_user_logged_in(session_bb_2);
 			expect(log[0]).toBe(false);
-			expect(log[1]).toBe('Forbidden access');
+			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
@@ -898,19 +898,19 @@ describe('Session management via functions', () => {
 		{
 			const log = is_user_logged_in(session_aa_1);
 			expect(log[0]).toBe(false);
-			expect(log[1]).toBe('Forbidden access');
+			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
 			const log = is_user_logged_in(session_bb_1);
 			expect(log[0]).toBe(false);
-			expect(log[1]).toBe('Forbidden access');
+			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
 			const log = is_user_logged_in(session_cc_1);
 			expect(log[0]).toBe(false);
-			expect(log[1]).toBe('Forbidden access');
+			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
@@ -921,31 +921,31 @@ describe('Session management via functions', () => {
 		{
 			const log = is_user_logged_in(session_ee_1);
 			expect(log[0]).toBe(false);
-			expect(log[1]).toBe('Forbidden access');
+			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
 			const log = is_user_logged_in(session_ff_1);
 			expect(log[0]).toBe(false);
-			expect(log[1]).toBe('Forbidden access');
+			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
 			const log = is_user_logged_in(session_aa_2);
 			expect(log[0]).toBe(false);
-			expect(log[1]).toBe('Forbidden access');
+			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
 			const log = is_user_logged_in(session_bb_2);
 			expect(log[0]).toBe(false);
-			expect(log[1]).toBe('Forbidden access');
+			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
 			const log = is_user_logged_in(session_cc_2);
 			expect(log[0]).toBe(false);
-			expect(log[1]).toBe('Forbidden access');
+			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
@@ -969,19 +969,19 @@ describe('Session management via functions', () => {
 		{
 			const log = is_user_logged_in(session_aa_1);
 			expect(log[0]).toBe(false);
-			expect(log[1]).toBe('Forbidden access');
+			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
 			const log = is_user_logged_in(session_bb_1);
 			expect(log[0]).toBe(false);
-			expect(log[1]).toBe('Forbidden access');
+			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
 			const log = is_user_logged_in(session_cc_1);
 			expect(log[0]).toBe(false);
-			expect(log[1]).toBe('Forbidden access');
+			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
@@ -992,31 +992,31 @@ describe('Session management via functions', () => {
 		{
 			const log = is_user_logged_in(session_ee_1);
 			expect(log[0]).toBe(false);
-			expect(log[1]).toBe('Forbidden access');
+			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
 			const log = is_user_logged_in(session_ff_1);
 			expect(log[0]).toBe(false);
-			expect(log[1]).toBe('Forbidden access');
+			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
 			const log = is_user_logged_in(session_aa_2);
 			expect(log[0]).toBe(false);
-			expect(log[1]).toBe('Forbidden access');
+			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
 			const log = is_user_logged_in(session_bb_2);
 			expect(log[0]).toBe(false);
-			expect(log[1]).toBe('Forbidden access');
+			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
 			const log = is_user_logged_in(session_cc_2);
 			expect(log[0]).toBe(false);
-			expect(log[1]).toBe('Forbidden access');
+			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
@@ -1032,7 +1032,7 @@ describe('Session management via functions', () => {
 		{
 			const log = is_user_logged_in(session_ff_2);
 			expect(log[0]).toBe(false);
-			expect(log[1]).toBe('Forbidden access');
+			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		expect(manager.num_session_ids()).toBe(3);
@@ -1041,61 +1041,61 @@ describe('Session management via functions', () => {
 		{
 			const log = is_user_logged_in(session_aa_1);
 			expect(log[0]).toBe(false);
-			expect(log[1]).toBe('Forbidden access');
+			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
 			const log = is_user_logged_in(session_bb_1);
 			expect(log[0]).toBe(false);
-			expect(log[1]).toBe('Forbidden access');
+			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
 			const log = is_user_logged_in(session_cc_1);
 			expect(log[0]).toBe(false);
-			expect(log[1]).toBe('Forbidden access');
+			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
 			const log = is_user_logged_in(session_dd_1);
 			expect(log[0]).toBe(false);
-			expect(log[1]).toBe('Forbidden access');
+			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
 			const log = is_user_logged_in(session_ee_1);
 			expect(log[0]).toBe(false);
-			expect(log[1]).toBe('Forbidden access');
+			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
 			const log = is_user_logged_in(session_ff_1);
 			expect(log[0]).toBe(false);
-			expect(log[1]).toBe('Forbidden access');
+			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
 			const log = is_user_logged_in(session_aa_2);
 			expect(log[0]).toBe(false);
-			expect(log[1]).toBe('Forbidden access');
+			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
 			const log = is_user_logged_in(session_bb_2);
 			expect(log[0]).toBe(false);
-			expect(log[1]).toBe('Forbidden access');
+			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
 			const log = is_user_logged_in(session_cc_2);
 			expect(log[0]).toBe(false);
-			expect(log[1]).toBe('Forbidden access');
+			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
 			const log = is_user_logged_in(session_dd_2);
 			expect(log[0]).toBe(false);
-			expect(log[1]).toBe('Forbidden access');
+			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
@@ -1106,7 +1106,7 @@ describe('Session management via functions', () => {
 		{
 			const log = is_user_logged_in(session_ff_2);
 			expect(log[0]).toBe(false);
-			expect(log[1]).toBe('Forbidden access');
+			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		expect(manager.num_session_ids()).toBe(1);
@@ -1115,73 +1115,73 @@ describe('Session management via functions', () => {
 		{
 			const log = is_user_logged_in(session_aa_1);
 			expect(log[0]).toBe(false);
-			expect(log[1]).toBe('Forbidden access');
+			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
 			const log = is_user_logged_in(session_bb_1);
 			expect(log[0]).toBe(false);
-			expect(log[1]).toBe('Forbidden access');
+			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
 			const log = is_user_logged_in(session_cc_1);
 			expect(log[0]).toBe(false);
-			expect(log[1]).toBe('Forbidden access');
+			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
 			const log = is_user_logged_in(session_dd_1);
 			expect(log[0]).toBe(false);
-			expect(log[1]).toBe('Forbidden access');
+			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
 			const log = is_user_logged_in(session_ee_1);
 			expect(log[0]).toBe(false);
-			expect(log[1]).toBe('Forbidden access');
+			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
 			const log = is_user_logged_in(session_ff_1);
 			expect(log[0]).toBe(false);
-			expect(log[1]).toBe('Forbidden access');
+			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
 			const log = is_user_logged_in(session_aa_2);
 			expect(log[0]).toBe(false);
-			expect(log[1]).toBe('Forbidden access');
+			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
 			const log = is_user_logged_in(session_bb_2);
 			expect(log[0]).toBe(false);
-			expect(log[1]).toBe('Forbidden access');
+			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
 			const log = is_user_logged_in(session_cc_2);
 			expect(log[0]).toBe(false);
-			expect(log[1]).toBe('Forbidden access');
+			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
 			const log = is_user_logged_in(session_dd_2);
 			expect(log[0]).toBe(false);
-			expect(log[1]).toBe('Forbidden access');
+			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
 			const log = is_user_logged_in(session_ee_2);
 			expect(log[0]).toBe(false);
-			expect(log[1]).toBe('Forbidden access');
+			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
 			const log = is_user_logged_in(session_ff_2);
 			expect(log[0]).toBe(false);
-			expect(log[1]).toBe('Forbidden access');
+			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		expect(manager.num_session_ids()).toBe(0);
