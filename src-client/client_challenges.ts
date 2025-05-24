@@ -201,10 +201,10 @@ async function fill_challenges_received() {
 			li.textContent = `Sent on ${format_date(elem.sent_when)}.`;
 			challenge_div.appendChild(li);
 			//
-			let may_maynot = elem.can_be_declined ? 'can' : 'cannot';
+			let can_cannot = elem.can_be_declined ? 'can' : 'cannot';
 			li = document.createElement('li') as HTMLLIElement;
 			li.className = 'challenge_items_nobullet';
-			li.textContent = `You ${may_maynot} decline the challenge.`;
+			li.textContent = `You ${can_cannot} decline the challenge.`;
 			challenge_div.appendChild(li);
 		}
 		challenge_list.appendChild(challenge_div);
@@ -283,10 +283,10 @@ async function fill_challenges_sent() {
 		li.textContent = `Sent on ${format_date(elem.sent_when)}.`;
 		challenge_list.appendChild(li);
 		//
-		let may_maynot = elem.can_be_declined ? 'can' : 'cannot';
+		let can_cannot = elem.can_be_declined ? 'can' : 'cannot';
 		li = document.createElement('li') as HTMLLIElement;
 		li.className = 'challenge_items_nobullet';
-		li.textContent = `Your opponent ${may_maynot} decline the challenge.`;
+		li.textContent = `Your opponent ${can_cannot} decline the challenge.`;
 		challenge_list.appendChild(li);
 	});
 
