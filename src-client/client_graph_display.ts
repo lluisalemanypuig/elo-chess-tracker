@@ -354,6 +354,15 @@ async function load_and_display(_event: any) {
 window.onresize = resize_viewer;
 
 window.onload = async function () {
+	const menu = document.getElementById('side-menu') as HTMLDivElement;
+	let toggleBtn = document.getElementById('menu-toggle-btn') as HTMLDivElement;
+	let arrow = document.getElementById('menu-arrow') as HTMLSpanElement;
+
+	toggleBtn.addEventListener('click', function () {
+		const isHidden = menu.classList.toggle('hide');
+		arrow.innerHTML = isHidden ? '>' : '<';
+	});
+
 	resize_viewer();
 	initialize_sigma();
 
