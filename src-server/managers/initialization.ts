@@ -167,7 +167,7 @@ function init_users(): void {
 
 	const rating_system = RatingSystemManager.get_instance();
 	const users_dir = EnvironmentManager.get_instance().get_dir_users();
-	let memory = UsersManager.get_instance();
+	let user_manager = UsersManager.get_instance();
 
 	debug(log_now(), `    Reading directory '${users_dir}'`);
 	const all_user_files = fs.readdirSync(users_dir);
@@ -191,13 +191,13 @@ function init_users(): void {
 			}
 		}
 
-		memory.add_user(user);
+		user_manager.add_user(user);
 		if (update_user_file) {
 			debug(log_now(), `Overwriting file '${user_file}' of user '${user.get_username()}'`);
 			fs.writeFileSync(user_file, JSON.stringify(user, null, 4));
 		}
 	}
-	debug(log_now(), `    Found ${memory.num_users()} users.`);
+	debug(log_now(), `    Found ${user_manager.num_users()} users.`);
 }
 
 function init_challenges(): void {
