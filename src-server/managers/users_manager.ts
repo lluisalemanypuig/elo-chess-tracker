@@ -68,7 +68,11 @@ export class UsersManager {
 	add_user(u: User): void {
 		this.users.push(u);
 
-		const new_randid = Math.floor(Math.random() * 1000000);
+		// stupid and slow way of generating a unique random id
+		let new_randid = Math.floor(Math.random() * 10_000_000);
+		while (new_randid in this.random_ids) {
+			new_randid = Math.floor(Math.random() * 10_000_000);
+		}
 		this.random_ids.push(new_randid);
 	}
 	replace_user(u: User, idx: number): void {
