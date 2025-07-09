@@ -181,8 +181,14 @@ async function fill_games_list_time_control(time_control_id: string) {
 		let row = document.createElement('tr');
 
 		//row.appendChild(new_text_cell(games[i].id));
+
+		row.appendChild(new_text_cell(games[i].time_control));
+
+		const when = games[i].date.substring(0, games[i].date.length - (3 + 1 + 2 + 1));
+		row.appendChild(new_text_cell(when));
+
+		row.appendChild(new_rating_cell(games[i].white_rating, games[i].white_increment));
 		row.appendChild(new_text_cell(games[i].white));
-		row.appendChild(new_text_cell(games[i].black));
 
 		if (games[i].editable == 'y') {
 			row.appendChild(new_cell_select_result(games[i].result, games[i].id));
@@ -190,10 +196,7 @@ async function fill_games_list_time_control(time_control_id: string) {
 			row.appendChild(new_text_cell(games[i].result));
 		}
 
-		const when = games[i].date.substring(0, games[i].date.length - (3 + 1 + 2 + 1));
-		row.appendChild(new_text_cell(games[i].time_control));
-		row.appendChild(new_text_cell(when));
-		row.appendChild(new_rating_cell(games[i].white_rating, games[i].white_increment));
+		row.appendChild(new_text_cell(games[i].black));
 		row.appendChild(new_rating_cell(games[i].black_rating, games[i].black_increment));
 
 		if (games[i].deleteable == 'y') {
