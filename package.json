@@ -1,7 +1,7 @@
 {
 	"name": "chess-elo-tracker",
 	"version": "20xx.yy.00",
-  	"author": "Lluís Alemany Puig",
+	"author": "Lluís Alemany Puig",
 	"scripts": {
 		"start": "node ./js/app_main.js",
 		"devstart": "DEBUG=ELO_TRACKER:* nodemon ./js/app_main.js",
