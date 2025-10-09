@@ -55,7 +55,7 @@ router.get('/version_number', (_req: any, res: any) => {
 	if (ConfigurationManager.should_cache_data()) {
 		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
 	}
-	res.send('XX.YY');
+	res.send('25.10');
 });
 
 /* ************************************************************************** */
