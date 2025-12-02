@@ -125,6 +125,7 @@ router.get('/js/*', (req: any, res: any) => {
 	res.status(200);
 	if (ConfigurationManager.should_cache_data()) {
 		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
+		res.setHeader('Content-Type', 'text/javascript');
 	}
 	res.sendFile(filepath);
 });
