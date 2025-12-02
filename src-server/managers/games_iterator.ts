@@ -30,6 +30,7 @@ import { Game, GameID } from '../models/game';
 import { DateStringLongMillis, DateStringShort } from '../utils/time';
 import { game_set_from_json } from '../io/game';
 import { search_by_key, where_should_be_inserted_by_key } from '../utils/searching';
+import { read_directory } from '../utils/read_directory';
 
 /* TODO: add a function that iterates only through those game records
  * where a player has games in.
@@ -66,7 +67,7 @@ export class GamesIterator {
 
 	constructor(directory: string) {
 		this.directory = directory;
-		this.record_files_list = fs.readdirSync(this.directory);
+		this.record_files_list = read_directory(this.directory);
 		this.record_idx = 0;
 		if (!this.end_record_list()) {
 			this.load_current_record();

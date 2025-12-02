@@ -29,6 +29,7 @@ import path from 'path';
 import { Neighborhood } from '../../models/graph/graph';
 import { Graph } from '../../models/graph/graph';
 import { edge_set_from_json } from './edge';
+import { read_directory } from '../../utils/read_directory';
 
 /**
  * @brief Save a portion of the graph from a file.
@@ -90,7 +91,7 @@ export function graph_full_to_file(dir: string, g: Graph): void {
 export function graph_from_json(dir: string): Graph {
 	let g = new Graph();
 
-	const files = fs.readdirSync(dir);
+	const files = read_directory(dir, false);
 	for (let i = 0; i < files.length; ++i) {
 		const username = files[i] as string;
 

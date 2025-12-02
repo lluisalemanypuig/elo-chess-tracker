@@ -42,6 +42,7 @@ import { TimeControlID } from './models/time_control';
 import { game_set_from_json } from './io/game';
 import { UsersManager } from './managers/users_manager';
 import { search_by_key } from './utils/searching';
+import { read_directory } from './utils/read_directory';
 
 function increment(g: Game): any {
 	const [white_after, black_after] = RatingSystemManager.get_instance().apply_rating_function(g);
@@ -70,7 +71,8 @@ function filter_game_list(
 
 	// The files currently existing in the 'games_directory'
 	debug(log_now(), `Reading directory '${games_id_dir}'...`);
-	const game_record_file_list = fs.readdirSync(games_id_dir);
+	const game_record_file_list = read_directory(games_id_dir);
+
 	debug(log_now(), `    Directory contents: '${game_record_file_list}'`);
 
 	let manager = UsersManager.get_instance();

@@ -47,6 +47,7 @@ import { challenge_from_json } from '../io/challenge';
 import { user_from_json } from '../io/user';
 import { graph_from_json } from '../io/graph/graph';
 import { UsersBehavior } from './users_behavior';
+import { read_directory } from '../utils/read_directory';
 
 function init_environment_directories(base_directory: string): void {
 	let server_env = EnvironmentManager.get_instance();
@@ -170,7 +171,7 @@ function init_users(): void {
 	let user_manager = UsersManager.get_instance();
 
 	debug(log_now(), `    Reading directory '${users_dir}'`);
-	const all_user_files = fs.readdirSync(users_dir);
+	const all_user_files = read_directory(users_dir);
 
 	for (let i = 0; i < all_user_files.length; ++i) {
 		const user_file = path.join(users_dir, all_user_files[i]);
@@ -208,7 +209,7 @@ function init_challenges(): void {
 	let max_challenge_id: string = '0';
 
 	debug(log_now(), `    Reading directory '${challenges_dir}'`);
-	const all_challenges_files = fs.readdirSync(challenges_dir);
+	const all_challenges_files = read_directory(challenges_dir);
 
 	for (let i = 0; i < all_challenges_files.length; ++i) {
 		const challenge_file = path.join(challenges_dir, all_challenges_files[i]);
@@ -240,7 +241,7 @@ function init_games(): void {
 		const games_dir = EnvironmentManager.get_instance().get_dir_games_time_control(id);
 
 		debug(log_now(), `    Reading directory '${games_dir}'`);
-		const all_date_record_files = fs.readdirSync(games_dir);
+		const all_date_record_files = read_directory(games_dir);
 
 		for (let i = 0; i < all_date_record_files.length; ++i) {
 			const game_record_file = path.join(games_dir, all_date_record_files[i]);
