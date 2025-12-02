@@ -24,7 +24,7 @@ mkdir -p js
 cd js
 rm -rf *
 cd ..
-tsc
+bunx tsc
 
 if [ "$?" != "0" ]; then
     echo "Compilation failed"
@@ -34,8 +34,8 @@ fi
 echo "Flatten js/ directory..."
 ./build/flatten_js_source.sh
 
-echo "Fix imports..."
-./build/fix_imports.sh
+#echo "Fix imports..."
+#./build/fix_imports.sh
 
 echo "esbuild..."
 ./build/esbuild.sh
