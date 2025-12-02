@@ -38,7 +38,7 @@ import { SessionIDManager } from './session_id_manager';
 import { initialize_rating_time_controls, initialize_rating_functions } from './rating_system';
 import { RatingSystemManager } from './rating_system_manager';
 import { Game, GameID } from '../models/game';
-import { initialize_permissions } from '../models/user_role_action';
+import { initialize_permissions, UserRoleToUserAction } from '../models/user_role_action';
 import { TimeControl } from '../models/time_control';
 import { Graph } from '../models/graph/graph';
 import { GraphsManager } from './graphs_manager';
@@ -82,6 +82,7 @@ function init_environment_page_titles(environment: any): void {
 }
 
 function init_environment(base_directory: string, environment: any): void {
+	EnvironmentManager.get_instance().clear();
 	init_environment_directories(base_directory);
 	init_environment_SSL(base_directory, environment.ssl_certificate);
 	init_environment_page_titles(environment);
@@ -99,6 +100,8 @@ function init_server_ports(ports: any): void {
 
 function init_server(configuration: any): void {
 	let server_conf = ConfigurationManager.get_instance();
+	server_conf.clear();
+
 	server_conf.set_domain_name(configuration.domain_name);
 	debug(log_now(), `        Domain name: ${server_conf.get_domain_name()}`);
 
@@ -107,12 +110,15 @@ function init_server(configuration: any): void {
 
 function init_user_permissions(permission_data: any): void {
 	debug(log_now(), 'Initialize permissions...');
+	UserRoleToUserAction.get_instance().clear();
 
 	initialize_permissions(permission_data);
 }
 
 function init_rating_framework(rating_type: string): void {
 	debug(log_now(), `    Rating system: '${rating_type}'`);
+	RatingSystemManager.get_instance().clear_functions();
+
 	const res = initialize_rating_functions(rating_type);
 	if (!res) {
 		debug(log_now(), `Invalid rating system '${rating_type}'`);
@@ -121,17 +127,16 @@ function init_rating_framework(rating_type: string): void {
 
 function init_time_controls(time_control_array: any): void {
 	debug(log_now(), 'Initialize time controls...');
+	RatingSystemManager.get_instance().clear_time_controls();
+
+	debug(log_now(), `    Found '${time_control_array.length}' rating types:`);
 
 	let all_time_controls: TimeControl[] = [];
-	for (var time_control in time_control_array) {
-		const tc = time_control_array[time_control];
+	for (let tc of time_control_array) {
 		all_time_controls.push(new TimeControl(tc.id, tc.name));
-	}
 
-	debug(log_now(), `    Found '${all_time_controls.length}' rating types:`);
-	for (let i = 0; i < all_time_controls.length; ++i) {
-		debug(log_now(), `        * Id '${all_time_controls[i].id}'`);
-		debug(log_now(), `          Name '${all_time_controls[i].name}'`);
+		debug(log_now(), `        * Id '${tc.id}'`);
+		debug(log_now(), `          Name '${tc.name}'`);
 	}
 
 	initialize_rating_time_controls(all_time_controls);
@@ -154,13 +159,15 @@ function init_behavior_challenges(challenges: any): void {
 }
 
 function init_behavior(behavior: any): void {
+	debug(log_now(), 'Initialize behaviours...');
+	UsersBehavior.get_instance().clear();
+
 	init_behavior_challenges(behavior.challenges);
 }
 
 function init_user_session_ids(): void {
 	debug(log_now(), 'Initialize sessions...');
-
-	SessionIDManager.get_instance().clear_session_ids();
+	SessionIDManager.get_instance().clear();
 }
 
 function init_users(): void {
@@ -169,6 +176,7 @@ function init_users(): void {
 	const rating_system = RatingSystemManager.get_instance();
 	const users_dir = EnvironmentManager.get_instance().get_dir_users();
 	let user_manager = UsersManager.get_instance();
+	user_manager.clear();
 
 	debug(log_now(), `    Reading directory '${users_dir}'`);
 	const all_user_files = read_directory(users_dir);
@@ -206,6 +214,7 @@ function init_challenges(): void {
 
 	const challenges_dir = EnvironmentManager.get_instance().get_dir_challenges();
 	let challenges = ChallengesManager.get_instance();
+	challenges.clear();
 	let max_challenge_id: string = '0';
 
 	debug(log_now(), `    Reading directory '${challenges_dir}'`);
@@ -234,6 +243,7 @@ function init_games(): void {
 
 	const ratings = RatingSystemManager.get_instance();
 	let games = GamesManager.get_instance();
+	games.clear();
 	let num_games: number = 0;
 	let max_game_id: GameID = '0';
 
@@ -273,6 +283,7 @@ function init_graphs(): void {
 
 	const ratings = RatingSystemManager.get_instance();
 	let graph_manager = GraphsManager.get_instance();
+	graph_manager.clear();
 
 	for (const id of ratings.get_unique_time_controls_ids()) {
 		const graphs_dir = EnvironmentManager.get_instance().get_dir_graphs_time_control(id);
@@ -296,6 +307,7 @@ export function server_init_from_data(base_directory: string, configuration: any
 	init_user_permissions(configuration.permissions);
 	init_rating_framework(configuration.rating_system);
 	init_time_controls(configuration.time_controls);
+
 	init_behavior(configuration.behavior);
 
 	init_user_session_ids();

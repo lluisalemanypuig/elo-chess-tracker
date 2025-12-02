@@ -69,9 +69,6 @@ export class SessionIDManager {
 	has_session_id(session: SessionID): boolean {
 		return this.index_session_id(session) != -1;
 	}
-	clear_session_ids(): void {
-		this.session_ids = [];
-	}
 	remove_session_id(idx: number): void {
 		this.session_ids.splice(idx, 1);
 	}

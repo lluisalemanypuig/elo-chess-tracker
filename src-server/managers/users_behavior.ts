@@ -55,4 +55,10 @@ export class UsersBehavior {
 	can_higher_rated_decline_challenge_lower_rated(): boolean {
 		return this.hrp_decline_challenge_lrt;
 	}
+
+	// -------
+
+	clear() {
+		this.hrp_decline_challenge_lrt = false;
+	}
 }

@@ -66,12 +66,24 @@ export class RatingSystemManager {
 	/// All unique rating ids used in the server
 	private all_unique_time_controls: TimeControlID[] = [];
 
-	clear(): void {
-		this.rating_func = () => void {};
-		this.new_rating_func = () => void {};
-		this.rating_from_JSON_func = () => void {};
+	clear_functions(): void {
+		this.rating_func = () => {
+			throw new Error('Missing function to calculate a new rating from a game.');
+		};
+		this.new_rating_func = () => {
+			throw new Error('Missing function to create a new rating.');
+		};
+		this.rating_from_JSON_func = () => {
+			throw new Error('Missing rating from JSON conversion function.');
+		};
+	}
+	clear_time_controls(): void {
 		this.all_time_controls = [];
 		this.all_unique_time_controls = [];
+	}
+	clear(): void {
+		this.clear_functions();
+		this.clear_time_controls();
 	}
 
 	set_rating_function(func: Function): void {
