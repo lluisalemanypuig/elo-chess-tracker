@@ -3,10 +3,11 @@
 	"version": "20xx.yy.00",
 	"author": "Lluís Alemany Puig",
 	"scripts": {
-		"start": "node ./js/app_main.js",
-		"devstart": "DEBUG=ELO_TRACKER:* nodemon ./js/app_main.js",
-		"serverstart": "DEBUG=ELO_TRACKER:* npm run devstart",
-		"test": "jest --runInBand"
+		"start": "bun run ./src-server/app_main.ts",
+		"devstart": "DEBUG=ELO_TRACKER:* bun run ./src-server/app_main.ts",
+		"serverstart": "DEBUG=ELO_TRACKER:* bun run devstart",
+		"test": "jest --runInBand",
+		"build": "./build/compile.sh"
 	},
 	"devDependencies": {
 		"@types/compression": "^1.7.2",
@@ -41,7 +42,8 @@
 		"nodemon": "^3.0.1",
 		"path": "^0.12.7",
 		"prompt-sync": "^4.2.0",
-		"ts-jest": "^29.2.5"
+		"ts-jest": "^29.2.5",
+		"typescript": "^5.9.3"
 	},
 	"dependencies": {
 		"@sigma/edge-curve": "^3.1.0",
@@ -50,6 +52,7 @@
 		"@types/sigmajs": "^1.0.32",
 		"d3-interpolate": "^3.0.1",
 		"d3-scale": "^4.0.2",
+		"esbuild-wasm": "^0.27.0",
 		"graphology": "^0.26.0",
 		"graphology-layout": "^0.6.1",
 		"graphology-layout-forceatlas2": "^0.10.1",

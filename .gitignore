@@ -1,6 +1,7 @@
 system_configuration.json
 system_configuration_test.json
 package-lock.json
+bun.lock
 README.html
 
 node_modules/
