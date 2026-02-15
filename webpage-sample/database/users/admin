@@ -1,64 +1,64 @@
 {
-    "username": "admin",
-    "first_name": "Admin",
-    "last_name": "Admin",
-    "password": {
-        "encrypted": "YQXTKJ8eH07itSm/2mdDnA==",
-        "iv": "UUflzzBH2qR6jrKFJ2hIjg=="
-    },
-    "roles": [
-        "admin"
-    ],
-    "ratings": [
-        {
-            "time_control": "Classical",
-            "rating": {
-                "rating": 1500,
-                "num_games": 0,
-                "won": 0,
-                "drawn": 0,
-                "lost": 0,
-                "K": 40,
-                "surpassed_2400": false
-            }
-        },
-        {
-            "time_control": "Rapid",
-            "rating": {
-                "rating": 1500,
-                "num_games": 0,
-                "won": 0,
-                "drawn": 0,
-                "lost": 0,
-                "K": 40,
-                "surpassed_2400": false
-            }
-        },
-        {
-            "time_control": "Blitz",
-            "rating": {
-                "rating": 1500,
-                "num_games": 0,
-                "won": 0,
-                "drawn": 0,
-                "lost": 0,
-                "K": 40,
-                "surpassed_2400": false
-            }
-        }
-    ],
-    "games": [
-        {
-            "time_control": "Classical",
-            "records": []
-        },
-        {
-            "time_control": "Rapid",
-            "records": []
-        },
-        {
-            "time_control": "Blitz",
-            "records": []
-        }
-    ]
+	"username": "$USERNAME",
+	"first_name": "$FIRSTNAME",
+	"last_name": "$LASTNAME",
+	"password": {
+		"encrypted": "$PASSWORD",
+		"iv": "$IV"
+	},
+	"roles": [
+		"admin"
+	],
+	"ratings": [
+		{
+			"time_control": "Classical",
+			"rating": {
+				"rating": 1500,
+				"num_games": 0,
+				"won": 0,
+				"drawn": 0,
+				"lost": 0,
+				"K": 40,
+				"surpassed_2400": false
+			}
+		},
+		{
+			"time_control": "Rapid",
+			"rating": {
+				"rating": 1500,
+				"num_games": 0,
+				"won": 0,
+				"drawn": 0,
+				"lost": 0,
+				"K": 40,
+				"surpassed_2400": false
+			}
+		},
+		{
+			"time_control": "Blitz",
+			"rating": {
+				"rating": 1500,
+				"num_games": 0,
+				"won": 0,
+				"drawn": 0,
+				"lost": 0,
+				"K": 40,
+				"surpassed_2400": false
+			}
+		}
+	],
+	"games": [
+		{
+			"time_control": "Classical",
+			"records": []
+		},
+		{
+			"time_control": "Rapid",
+			"records": []
+		},
+		{
+			"time_control": "Blitz",
+			"records": []
+		}
+	]
 }
