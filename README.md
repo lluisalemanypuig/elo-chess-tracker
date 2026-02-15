@@ -74,11 +74,11 @@ The database generated will have the following directory structure:
 
 The directory `webpage` can be renamed with any name. The default users in the database are the following:
 
-    Username | Password | Role
-    -----------------------------
-    admin    | "admin"  | Admin
+    Username | Password    | Role
+    ------------------------------
+    admin    | "123456789" | Admin
 
-The actual passwords do not include the quote characters `"`; they are only used here as delimiters. Yes, passwords include spaces. Usernames correspond to famous chess players. Some of the passwords are quotes attributed to their corresponding chess player, other passwords are quotes attributed to different famous chess players.
+The actual passwords do not include the quote characters `"`; they are only used here as delimiters. Yes, passwords may include spaces.
 
 ### Edit the configuration file
 
@@ -138,9 +138,9 @@ These are st by default to `8080` for HTTP and to `8443` for HTTPS. Change them 
 
 Write the names of the icons and titles of the sections of your webpage:
 
--   `favicon`: this is a small icon (typically, `48x48`) that shows up in the tab of a desktop's internet browser.
--   `login_page`: this is the icon that shows up in the login page of your site. The `title` field is the title of login page as well.
--   `home_page`: this is the icon that shows up in the home page of your site. The `title` field is the title of home page as well.
+- `favicon`: this is a small icon (typically, `48x48`) that shows up in the tab of a desktop's internet browser.
+- `login_page`: this is the icon that shows up in the login page of your site. The `title` field is the title of login page as well.
+- `home_page`: this is the icon that shows up in the home page of your site. The `title` field is the title of home page as well.
 
 #### Rating system
 
@@ -174,58 +174,51 @@ _Note_: the configuration file created by the `initialize.sh` script already pro
 
 The site implements four different roles a user can have. To each role we can associate a series of actions that a user with said role can perform. All roles implemented are
 
--   _admin_
--   _member_
--   _teacher_
--   _student_
+- _admin_
+- _member_
+- _teacher_
+- _student_
 
 Available actions are
 
--   Creation of users:
+- Creation of users:
+    - _create_user_
 
-    -   _create_user_
+- Assignment of roles to another user
+    - _assign_role_admin_
+    - _assign_role_teacher_
+    - _assign_role_member_
+    - _assign_role_student_
 
--   Assignment of roles to another user
+- Edition of users: to be able to edit user's information, except for passwords and ratings.
+    - _edit_admin_
+    - _edit_teacher_
+    - _edit_member_
+    - _edit_student_
 
-    -   _assign_role_admin_
-    -   _assign_role_teacher_
-    -   _assign_role_member_
-    -   _assign_role_student_
+- Creation of games: to be able to create games between pairs of players. This is restricted to players of specific roles.
+    - _create_games_admin_
+    - _create_games_teacher_
+    - _create_games_member_
+    - _create_games_student_
 
--   Edition of users: to be able to edit user's information, except for passwords and ratings.
+- Edition of a user's game: to change the result of a game.
+    - _edit_games_admin_
+    - _edit_games_teacher_
+    - _edit_games_member_
+    - _edit_games_student_
 
-    -   _edit_admin_
-    -   _edit_teacher_
-    -   _edit_member_
-    -   _edit_student_
+- See another user's games.
+    - _see_games_admin_
+    - _see_games_teacher_
+    - _see_games_member_
+    - _see_games_student_
 
--   Creation of games: to be able to create games between pairs of players. This is restricted to players of specific roles.
-
-    -   _create_games_admin_
-    -   _create_games_teacher_
-    -   _create_games_member_
-    -   _create_games_student_
-
--   Edition of a user's game: to change the result of a game.
-
-    -   _edit_games_admin_
-    -   _edit_games_teacher_
-    -   _edit_games_member_
-    -   _edit_games_student_
-
--   See another user's games.
-
-    -   _see_games_admin_
-    -   _see_games_teacher_
-    -   _see_games_member_
-    -   _see_games_student_
-
--   Challenge other users to a game.
-
-    -   _challenge_admin_
-    -   _challenge_member_
-    -   _challenge_teacher_
-    -   _challenge_student_
+- Challenge other users to a game.
+    - _challenge_admin_
+    - _challenge_member_
+    - _challenge_teacher_
+    - _challenge_student_
 
 ## Running the website
 
