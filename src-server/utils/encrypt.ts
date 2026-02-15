@@ -26,10 +26,10 @@ Contact:
 import CryptoJS from 'crypto-js';
 import { interleave_strings } from './misc';
 
-const allowed_symbols: string =
-	'a!b·c$d%e&f/g(h)i=j?k¿l|m@n#o~p¬qr\'s[¡]t{u}v/w*x-y+zºAªB"C,D.E;F:G_HIJKLMNOPQRSTUVWXYZ0123456789 '.normalize(
-		'NFC'
-	);
+// original allowed_symbols string:
+// a!b·c$d%e&f/g(h)i=j?k¿l|m@n#o~p¬qr\'s[¡]t{u}v/w*x-y+zºAªB"C,D.E;F:G_HIJKLMNOPQRSTUVWXYZ0123456789
+
+const allowed_symbols: string = '$ALLOWED_SYMBOLS_STRING'.normalize('NFC');
 
 /// Logarithm of 'x' in base 'base'
 function log_base(x: number, base: number): number {
