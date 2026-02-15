@@ -1,6 +1,6 @@
 /*
 Elo rating for a Chess Club
-Copyright (C) 2023 - 2025  Lluís Alemany Puig
+Copyright (C) 2023 - 2026  Lluís Alemany Puig
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,20 +20,20 @@ Full source code of elo-chess-tracker:
 */
 
 .title {
-    color: rgb(17, 24, 39);
+	color: rgb(17, 24, 39);
 }
 
 .title1 {
-    font-weight: 800;
-    line-height: 1.25rem;
+	font-weight: 800;
+	line-height: 1.25rem;
 }
 
 .title2 {
-    font-weight: 650;
-    line-height: 1.25rem;
+	font-weight: 650;
+	line-height: 1.25rem;
 }
 
 .title3 {
-    font-weight: 500;
-    line-height: 1.25rem;
+	font-weight: 500;
+	line-height: 1.25rem;
 }

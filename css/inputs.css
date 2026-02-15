@@ -1,6 +1,6 @@
 /*
 Elo rating for a Chess Club
-Copyright (C) 2023 - 2025  Lluís Alemany Puig
+Copyright (C) 2023 - 2026  Lluís Alemany Puig
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -22,191 +22,191 @@ Full source code of elo-chess-tracker:
 /* input_text */
 
 .input_text {
-    background-color: rgb(255, 255, 255);
-    border: 1px solid rgb(176, 180, 185);
-    border-radius: .5rem;
-    box-sizing: border-box;
-    color: rgb(17, 24, 39);
-    font-size: 1rem;
-    font-weight: 450;
-    line-height: 1.25rem;
-    padding: .75rem 1rem;
-    text-align: center;
-    text-decoration: none rgb(209, 213, 216) solid;
-    text-decoration-thickness: auto;
-    user-select: none;
-    -webkit-user-select: none;
+	background-color: rgb(255, 255, 255);
+	border: 1px solid rgb(176, 180, 185);
+	border-radius: 0.5rem;
+	box-sizing: border-box;
+	color: rgb(17, 24, 39);
+	font-size: 1rem;
+	font-weight: 450;
+	line-height: 1.25rem;
+	padding: 0.75rem 1rem;
+	text-align: center;
+	text-decoration: none rgb(209, 213, 216) solid;
+	text-decoration-thickness: auto;
+	user-select: none;
+	-webkit-user-select: none;
 }
 
 .input_text:hover {
-    background-color: rgb(234, 237, 239);
+	background-color: rgb(234, 237, 239);
 }
 
 .input_text:focus {
-    outline: 2px solid transparent;
-    outline-offset: 2px;
+	outline: 2px solid transparent;
+	outline-offset: 2px;
 }
 
 .input_text:focus-visible {
-    box-shadow: none;
+	box-shadow: none;
 }
 
 /* input_select */
 
 .input_select {
-    background-color: rgb(255, 255, 255);
-    border: 1px solid rgb(176, 180, 185);
-    border-radius: .5rem;
-    box-sizing: border-box;
-    color: rgb(17, 24, 39);
-    font-size: 1rem;
-    font-weight: 450;
-    line-height: 1.25rem;
-    padding: .75rem 1rem;
-    text-align: center;
-    text-decoration: none rgb(209, 213, 219) solid;
-    text-decoration-thickness: auto;
-    user-select: none;
-    -webkit-user-select: none;
+	background-color: rgb(255, 255, 255);
+	border: 1px solid rgb(176, 180, 185);
+	border-radius: 0.5rem;
+	box-sizing: border-box;
+	color: rgb(17, 24, 39);
+	font-size: 1rem;
+	font-weight: 450;
+	line-height: 1.25rem;
+	padding: 0.75rem 1rem;
+	text-align: center;
+	text-decoration: none rgb(209, 213, 219) solid;
+	text-decoration-thickness: auto;
+	user-select: none;
+	-webkit-user-select: none;
 }
 
 .input_select:hover {
-    background-color: rgb(234, 237, 239);
+	background-color: rgb(234, 237, 239);
 }
 
 .input_select:focus {
-    outline: 2px solid transparent;
-    outline-offset: 2px;
+	outline: 2px solid transparent;
+	outline-offset: 2px;
 }
 
 .input_select:focus-visible {
-    box-shadow: none;
+	box-shadow: none;
 }
 
 /* input_time */
 
 .input_time {
-    background-color: rgb(255, 255, 255);
-    border: 1px solid rgb(176, 180, 185);
-    border-radius: .5rem;
-    box-sizing: border-box;
-    color: rgb(17, 24, 39);
-    font-size: 1rem;
-    font-weight: 450;
-    line-height: 1.25rem;
-    padding: .75rem 1rem;
-    text-align: center;
-    text-decoration: none rgb(209, 213, 219) solid;
-    text-decoration-thickness: auto;
-    user-select: none;
-    -webkit-user-select: none;
+	background-color: rgb(255, 255, 255);
+	border: 1px solid rgb(176, 180, 185);
+	border-radius: 0.5rem;
+	box-sizing: border-box;
+	color: rgb(17, 24, 39);
+	font-size: 1rem;
+	font-weight: 450;
+	line-height: 1.25rem;
+	padding: 0.75rem 1rem;
+	text-align: center;
+	text-decoration: none rgb(209, 213, 219) solid;
+	text-decoration-thickness: auto;
+	user-select: none;
+	-webkit-user-select: none;
 }
 
 .input_time:hover {
-    background-color: rgb(234, 237, 239);
+	background-color: rgb(234, 237, 239);
 }
 
 .input_time:focus {
-    outline: 2px solid transparent;
-    outline-offset: 2px;
+	outline: 2px solid transparent;
+	outline-offset: 2px;
 }
 
 .input_time:focus-visible {
-    box-shadow: none;
+	box-shadow: none;
 }
 
 /* input_date */
 
 .input_date {
-    background-color: rgb(255, 255, 255);
-    border: 1px solid rgb(176, 180, 185);
-    border-radius: .5rem;
-    box-sizing: border-box;
-    color: rgb(17, 24, 39);
-    font-size: 1rem;
-    font-weight: 450;
-    line-height: 1.25rem;
-    padding: .75rem 1rem;
-    text-align: center;
-    text-decoration: none rgb(209, 213, 219) solid;
-    text-decoration-thickness: auto;
-    user-select: none;
-    -webkit-user-select: none;
+	background-color: rgb(255, 255, 255);
+	border: 1px solid rgb(176, 180, 185);
+	border-radius: 0.5rem;
+	box-sizing: border-box;
+	color: rgb(17, 24, 39);
+	font-size: 1rem;
+	font-weight: 450;
+	line-height: 1.25rem;
+	padding: 0.75rem 1rem;
+	text-align: center;
+	text-decoration: none rgb(209, 213, 219) solid;
+	text-decoration-thickness: auto;
+	user-select: none;
+	-webkit-user-select: none;
 }
 
 .input_date:hover {
-    background-color: rgb(234, 237, 239);
+	background-color: rgb(234, 237, 239);
 }
 
 .input_date:focus {
-    outline: 2px solid transparent;
-    outline-offset: 2px;
+	outline: 2px solid transparent;
+	outline-offset: 2px;
 }
 
 .input_date:focus-visible {
-    box-shadow: none;
+	box-shadow: none;
 }
 
 /* input_number */
 
 .input_number {
-    background-color: rgb(255, 255, 255);
-    border: 1px solid rgb(176, 180, 185);
-    border-radius: .5rem;
-    box-sizing: border-box;
-    color: rgb(17, 24, 39);
-    font-size: 1rem;
-    font-weight: 400;
-    text-align: center;
-    width: 64px;
-    height: 30px;
-    text-decoration: none rgb(209, 213, 219) solid;
-    text-decoration-thickness: auto;
-    user-select: none;
-    -webkit-user-select: none;
+	background-color: rgb(255, 255, 255);
+	border: 1px solid rgb(176, 180, 185);
+	border-radius: 0.5rem;
+	box-sizing: border-box;
+	color: rgb(17, 24, 39);
+	font-size: 1rem;
+	font-weight: 400;
+	text-align: center;
+	width: 64px;
+	height: 30px;
+	text-decoration: none rgb(209, 213, 219) solid;
+	text-decoration-thickness: auto;
+	user-select: none;
+	-webkit-user-select: none;
 }
 
 .input_number:hover {
-    background-color: rgb(234, 237, 239);
+	background-color: rgb(234, 237, 239);
 }
 
 .input_number:focus {
-    outline: 2px solid transparent;
-    outline-offset: 2px;
+	outline: 2px solid transparent;
+	outline-offset: 2px;
 }
 
 .input_number:focus-visible {
-    box-shadow: none;
+	box-shadow: none;
 }
 
 /* input_color */
 
 .input_color {
-    background-color: rgb(255, 255, 255);
-    border: 1px solid rgb(176, 180, 185);
-    border-radius: .5rem;
-    box-sizing: border-box;
-    color: rgb(17, 24, 39);
-    font-size: 1rem;
-    font-weight: 450;
-    width: 64px;
-    height: 30px;
-    text-align: center;
-    text-decoration: none rgb(209, 213, 219) solid;
-    text-decoration-thickness: auto;
-    user-select: none;
-    -webkit-user-select: none;
+	background-color: rgb(255, 255, 255);
+	border: 1px solid rgb(176, 180, 185);
+	border-radius: 0.5rem;
+	box-sizing: border-box;
+	color: rgb(17, 24, 39);
+	font-size: 1rem;
+	font-weight: 450;
+	width: 64px;
+	height: 30px;
+	text-align: center;
+	text-decoration: none rgb(209, 213, 219) solid;
+	text-decoration-thickness: auto;
+	user-select: none;
+	-webkit-user-select: none;
 }
 
 .input_color:hover {
-    background-color: rgb(234, 237, 239);
+	background-color: rgb(234, 237, 239);
 }
 
 .input_color:focus {
-    outline: 2px solid transparent;
-    outline-offset: 2px;
+	outline: 2px solid transparent;
+	outline-offset: 2px;
 }
 
 .input_color:focus-visible {
-    box-shadow: none;
+	box-shadow: none;
 }

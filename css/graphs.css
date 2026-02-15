@@ -1,6 +1,6 @@
 /*
 Elo rating for a Chess Club
-Copyright (C) 2023 - 2025  Lluís Alemany Puig
+Copyright (C) 2023 - 2026  Lluís Alemany Puig
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,48 +20,51 @@ Full source code of elo-chess-tracker:
 */
 
 .menu_and_graph {
-    display: flex;
-    flex-direction: row;
-    height: 100vh;
-    width: 100vw;
-    overflow: hidden;
+	display: flex;
+	flex-direction: row;
+	height: 100vh;
+	width: 100vw;
+	overflow: hidden;
 }
 
 .menu {
-    width: 425px;
-    transition: width 0.2s, min-width 0.2s, margin 0.2s;
+	width: 425px;
+	transition:
+		width 0.2s,
+		min-width 0.2s,
+		margin 0.2s;
 }
 .menu.hide {
-    width: 0;
-    min-width: 0;
-    max-width: 0;
-    margin: 0;
-    overflow: hidden;
+	width: 0;
+	min-width: 0;
+	max-width: 0;
+	margin: 0;
+	overflow: hidden;
 }
 .menu-toggle {
-    width: 9px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    background: #e0e0e0;
-    user-select: none;
-    transition: background 0.2s;
-    z-index: 2;
+	width: 9px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	background: #e0e0e0;
+	user-select: none;
+	transition: background 0.2s;
+	z-index: 2;
 }
 .menu-toggle:hover {
-    background: #b0b0b0;
+	background: #b0b0b0;
 }
 
 #menu-arrow {
-    font-size: 18px;
-    transition: transform 0.2s;
+	font-size: 18px;
+	transition: transform 0.2s;
 }
 
 .graph_container {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: rgb(255, 255, 255)c0;
+	flex: 1;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background: rgb(255, 255, 255) c0;
 }
