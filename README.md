@@ -74,9 +74,9 @@ The database generated will have the following directory structure:
 
 The directory `webpage` can be renamed with any name. The default users in the database are the following:
 
-    Username | Password    | Role
-    ------------------------------
-    admin    | "123456789" | Admin
+    Username    | Password    | Role
+    ---------------------------------
+    admin.admin | "123456789" | Admin
 
 The actual passwords do not include the quote characters `"`; they are only used here as delimiters. Yes, passwords may include spaces.
 
