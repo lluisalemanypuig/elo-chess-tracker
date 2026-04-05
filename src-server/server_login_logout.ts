@@ -28,7 +28,7 @@ const debug = Debug('ELO_TRACKER:server_login_logout');
 
 import { log_now } from './utils/time';
 import { is_password_of_user_correct } from './utils/encrypt';
-import { empty_cookie, make_cookie_string } from './utils/cookies';
+import { empty_session_id_cookie, make_session_id_cookie } from './utils/cookies';
 import { session_id_add, session_id_delete } from './managers/session';
 import { SessionIDManager } from './managers/session_id_manager';
 import { SessionID } from './models/session_id';
@@ -79,8 +79,8 @@ export async function post_user_login(req: any, res: any) {
 	// send response
 	res.status(200).send({
 		cookies: [
-			make_cookie_string(SessionID.get_field_token_name(), token, 1),
-			make_cookie_string(SessionID.get_field_username_name(), username, 1)
+			make_session_id_cookie(SessionID.get_field_token_name(), token, 1),
+			make_session_id_cookie(SessionID.get_field_username_name(), username, 1)
 		]
 	});
 }
@@ -114,6 +114,6 @@ export async function post_user_logout(req: any, res: any) {
 		debug(log_now(), `        Deleted.`);
 	}
 	res.status(200).send({
-		cookies: [empty_cookie(SessionID.get_field_token_name()), empty_cookie(SessionID.get_field_username_name())]
+		cookies: [empty_session_id_cookie(SessionID.get_field_token_name()), empty_session_id_cookie(SessionID.get_field_username_name())]
 	});
 }

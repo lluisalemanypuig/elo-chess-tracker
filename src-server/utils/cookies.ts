@@ -56,13 +56,13 @@ function make_cookie(values: any): string {
 }
 
 /**
- * @brief Constructs a cookie from the given parameters.
+ * @brief Constructs a cookie for a session ID.
  * @param name Name of the cookie.
  * @param value Value of the cookie.
  * @param days Expiry date of the cookie.
  * @pre Parameter @e values must have entries: 'name' and 'values'.
  */
-export function make_cookie_string(name: string, value: string, days: number): string {
+export function make_session_id_cookie(name: string, value: string, days: number): string {
 	return make_cookie({
 		name: name,
 		value: value,
@@ -75,11 +75,11 @@ export function make_cookie_string(name: string, value: string, days: number): s
 }
 
 /**
- * @brief Constructs a cookie from a JSON object.
+ * @brief Constructs a cookie for a session ID.
  * @param name Name of the cookie.
  * @pre Parameter @e values must have entries: 'name' and 'values'.
  */
-export function empty_cookie(name: string): string {
+export function empty_session_id_cookie(name: string): string {
 	return make_cookie({
 		name: name,
 		value: '',
