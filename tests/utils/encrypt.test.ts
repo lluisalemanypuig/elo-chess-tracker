@@ -33,30 +33,30 @@ import {
 
 describe('Password normalization', () => {
 	test('1', () => {
-		expect(normalize_string('q')).toBe('qa!b');
-		expect(normalize_string('qw')).toBe('qwa!b·c$');
-		expect(normalize_string('qwt')).toBe('qwta!b·c');
-		expect(normalize_string('asdf')).toBe('asdfa!b·');
-		expect(normalize_string('AAAAA')).toBe('AAAAAa!b');
+		expect(normalize_string('q')).toBe('q$AL');
+		expect(normalize_string('qw')).toBe('qw$ALLOW');
+		expect(normalize_string('qwt')).toBe('qwt$ALLO');
+		expect(normalize_string('asdf')).toBe('asdf$ALL');
+		expect(normalize_string('AAAAA')).toBe('AAAAA$AL');
 	});
 
 	test('2', () => {
-		expect(normalize_string('12345678')).toBe('12345678a!b·c$d%');
-		expect(normalize_string('1234567890123456')).toBe('1234567890123456a!b·c$d%e&f/g(h)');
+		expect(normalize_string('12345678')).toBe('12345678$ALLOWED');
+		expect(normalize_string('1234567890123456')).toBe('1234567890123456$ALLOWED_SYMBOLS');
 		expect(normalize_string('1234567890123456789012345678901234567890123456789012345678901234')).toBe(
-			'1234567890123456789012345678901234567890123456789012345678901234a!b·c$d%e&f/g(h)i=j?k¿l|m@n#o~p¬qr\'s[¡]t{u}v/w*x-y+zºAªB"C,D.E;F'
+			'1234567890123456789012345678901234567890123456789012345678901234$ALLOWED_SYMBOLS_STRING$ALLOWED_SYMBOLS_STRING$ALLOWED_SYMBOLS_S'
 		);
 		expect(
 			normalize_string(
 				'12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678'
 			)
 		).toBe(
-			'12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678a!b·c$d%e&f/g(h)i=j?k¿l|m@n#o~p¬qr\'s[¡]t{u}v/w*x-y+zºAªB"C,D.E;F:G_HIJKLMNOPQRSTUVWXYZ0123456789 a!b·c$d%e&f/g(h)i=j?k¿l|m@n#o~p'
+			'12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678$ALLOWED_SYMBOLS_STRING$ALLOWED_SYMBOLS_STRING$ALLOWED_SYMBOLS_STRING$ALLOWED_SYMBOLS_STRING$ALLOWED_SYMBOLS_STRING$ALLOWED_SYMB'
 		);
 	});
 
 	test('3', () => {
-		expect(normalize_string('星星星星')).toBe('星星星星a!b·');
+		expect(normalize_string('星星星星')).toBe('星星星星$ALL');
 	});
 });
 
