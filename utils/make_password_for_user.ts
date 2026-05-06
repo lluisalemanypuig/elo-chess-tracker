@@ -27,14 +27,14 @@ import { encrypt_password_for_user } from '../src-server/utils/encrypt';
 
 const args = process.argv.slice(2);
 
-const admin_username = args[args.indexOf('--admin-username') + 1];
-const admin_password = args[args.indexOf('--admin-password') + 1];
+const username = args[args.indexOf('--username') + 1];
+const password = args[args.indexOf('--password') + 1];
 
-let [encrypted_admin_password, admin_iv] = encrypt_password_for_user(admin_username, admin_password);
+let [encrypted_password, iv] = encrypt_password_for_user(username, password);
 
 const result = {
-	admin_password: `${encrypted_admin_password}`,
-	admin_iv: `${admin_iv}`
+	password: `${encrypted_password}`,
+	iv: `${iv}`
 };
 
 console.log(JSON.stringify(result));
