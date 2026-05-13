@@ -116,6 +116,7 @@ function filter_game_list(
 
 			data_to_return.push({
 				id: g.get_id(),
+				title: g.get_title(),
 				white: white.get_full_name(),
 				black: black.get_full_name(),
 				result: result,
