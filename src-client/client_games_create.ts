@@ -41,6 +41,7 @@ async function initialize_window_client_games_create() {
 }
 
 async function submit_new_game(_event: any) {
+	let game_title_input = document.getElementById('input_game_title') as HTMLInputElement;
 	let white_input = document.getElementById('list_white_users') as HTMLInputElement;
 	let black_input = document.getElementById('list_black_users') as HTMLInputElement;
 	let select_result_game = document.getElementById('select_result_game') as HTMLSelectElement;
@@ -63,6 +64,7 @@ async function submit_new_game(_event: any) {
 		return;
 	}
 
+	const game_title = game_title_input.value;
 	const white = white_option != null ? white_option.id : '';
 	const black = black_option != null ? black_option.id : '';
 
@@ -71,6 +73,7 @@ async function submit_new_game(_event: any) {
 	const response = await fetch('/game/create', {
 		method: 'POST',
 		body: JSON.stringify({
+			title: game_title,
 			w: white,
 			b: black,
 			r: result,
