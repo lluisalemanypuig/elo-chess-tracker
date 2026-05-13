@@ -41,6 +41,7 @@ export function game_from_json(json: any): Game {
 	const rating_system = RatingSystemManager.get_instance();
 	return new Game(
 		json['id'],
+		json['title'],
 		json['white'],
 		rating_system.get_rating_from_json(json['white_rating']),
 		json['black'],
