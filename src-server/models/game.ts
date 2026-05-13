@@ -60,11 +60,11 @@ export class Game {
 	/// Identifier of the game
 	private readonly id: GameID;
 	/// White player username
-	private white: string;
+	private readonly white: string;
 	/// White in the state before the game
 	private white_rating: Rating;
 	/// White player username
-	private black: string;
+	private readonly black: string;
 	/// White in the state before the game
 	private black_rating: Rating;
 	/// Result of the game
