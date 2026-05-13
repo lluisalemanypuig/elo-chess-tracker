@@ -37,10 +37,10 @@ async function user_was_changed(_event: any) {
 	const username_option = document.querySelector('option[value="' + username_list_input.value + '"]');
 
 	if (username_option != null) {
-		const username = (username_option as HTMLOptionElement).id;
+		const user_id = (username_option as HTMLOptionElement).id;
 		const response = await fetch('/query/user/edit', {
 			method: 'POST',
-			body: JSON.stringify({ u: username }),
+			body: JSON.stringify({ u: user_id }),
 			headers: { 'Content-type': 'application/json; charset=UTF-8' }
 		});
 		if (response.status >= 400) {
