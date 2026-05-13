@@ -180,7 +180,7 @@ async function fill_games_list_time_control(time_control_id: string) {
 	for (let i = 0; i < games.length; i++) {
 		let row = document.createElement('tr');
 
-		//row.appendChild(new_text_cell(games[i].id));
+		row.appendChild(new_text_cell(games[i].title));
 
 		row.appendChild(new_text_cell(games[i].time_control));
 
