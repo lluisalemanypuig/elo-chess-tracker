@@ -107,12 +107,6 @@ export async function get_query_user_home(req: any, res: any) {
 	});
 }
 
-/**
- * @brief Serves the query to the server that retrieves user info for modification purposes
- * @param req
- * @param res
- * @returns
- */
 export async function post_query_user_edit(req: any, res: any) {
 	debug(log_now(), 'POST /query/user/edit...');
 

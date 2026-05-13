@@ -114,6 +114,9 @@ export async function post_user_logout(req: any, res: any) {
 		debug(log_now(), `        Deleted.`);
 	}
 	res.status(200).send({
-		cookies: [empty_session_id_cookie(SessionID.get_field_token_name()), empty_session_id_cookie(SessionID.get_field_username_name())]
+		cookies: [
+			empty_session_id_cookie(SessionID.get_field_token_name()),
+			empty_session_id_cookie(SessionID.get_field_username_name())
+		]
 	});
 }
