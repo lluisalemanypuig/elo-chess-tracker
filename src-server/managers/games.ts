@@ -89,6 +89,7 @@ function game_next_of_player(
 
 /// Creates a new game with no players using the parameters given
 function game_new(
+	title: string,
 	white: string,
 	black: string,
 	result: GameResult,
@@ -146,6 +147,7 @@ function game_new(
 
 	return new Game(
 		id_str,
+		title,
 		white,
 		white_to_assign,
 		black,
@@ -330,6 +332,7 @@ function game_insert_in_history(g: Game, record_id: DateStringShort): void {
  * @param g Game
  */
 export function game_add_new(
+	title: string,
 	white: User,
 	black: User,
 	result: GameResult,
@@ -341,7 +344,7 @@ export function game_add_new(
 	const when = game_record + '..' + hhmmss;
 	const white_username = white.get_username();
 	const black_username = black.get_username();
-	const g = game_new(white_username, black_username, result, time_control_id, time_control_name, when);
+	const g = game_new(title, white_username, black_username, result, time_control_id, time_control_name, when);
 
 	white.add_game(time_control_id, game_record);
 	black.add_game(time_control_id, game_record);

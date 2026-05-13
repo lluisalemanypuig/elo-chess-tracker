@@ -143,6 +143,7 @@ export async function post_game_create(req: any, res: any) {
 		return;
 	}
 
+	const game_title = req.body.title;
 	const white = _white as User;
 	const black = _black as User;
 	const result: GameResult = req.body.r;
@@ -171,6 +172,7 @@ export async function post_game_create(req: any, res: any) {
 		return;
 	}
 
+	debug(log_now(), `    Title: '${game_title}'`);
 	debug(log_now(), `    White: '${white.get_username()}'`);
 	debug(log_now(), `    Black: '${black.get_username()}'`);
 	debug(log_now(), `    Result: '${result}'`);
@@ -181,7 +183,7 @@ export async function post_game_create(req: any, res: any) {
 
 	debug(log_now(), `Adding the new game`);
 
-	game_add_new(white, black, result, time_control_id, time_control_name, game_date, game_time);
+	game_add_new(game_title, white, black, result, time_control_id, time_control_name, game_date, game_time);
 
 	res.status(201).send();
 }
