@@ -59,6 +59,8 @@ export type GameID = string;
 export class Game {
 	/// Identifier of the game
 	private readonly id: GameID;
+	/// Name of the game
+	private title: string;
 	/// White player username
 	private readonly white: string;
 	/// White in the state before the game
@@ -78,6 +80,7 @@ export class Game {
 
 	/**
 	 * @brief Constructor
+	 * @param title Name of the game
 	 * @param white White player
 	 * @param white_rating White rating before the game
 	 * @param black Black player
@@ -89,6 +92,7 @@ export class Game {
 	 */
 	constructor(
 		id: GameID,
+		title: string,
 		white: string,
 		white_rating: Rating,
 		black: string,
@@ -99,6 +103,7 @@ export class Game {
 		when: DateStringLongMillis
 	) {
 		this.id = id;
+		this.title = title;
 		this.white = white;
 		this.white_rating = white_rating;
 		this.black = black;
@@ -107,6 +112,11 @@ export class Game {
 		this.time_control_id = time_control_id;
 		this.time_control_name = time_control_name;
 		this.when = when;
+	}
+
+	/// Return game's title
+	get_title(): string {
+		return this.title;
 	}
 
 	/// Return white's username
