@@ -29,10 +29,10 @@ function configure_ssl_certificate {
 function generate_admin_password {
 	echo "Encrypting admin's password..."
 
-	make_password_result=$(bun utils/make_password_for_user.ts --admin-username $admin_username --admin-password $admin_password)
+	make_password_result=$(bun utils/make_password_for_user.ts --username $admin_username --password $admin_password)
 
-	encrypted_admin_password=$(echo "$make_password_result" | jq -r '.admin_password')
-	encrypted_admin_iv=$(echo "$make_password_result" | jq -r '.admin_iv')
+	encrypted_admin_password=$(echo "$make_password_result" | jq -r '.password')
+	encrypted_admin_iv=$(echo "$make_password_result" | jq -r '.iv')
 
 	# now replace the appropriate fields in the file for the admin user
 	cd webpage/database/users
