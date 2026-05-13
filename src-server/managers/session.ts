@@ -34,6 +34,8 @@ import { SessionID } from '../models/session_id';
 import { shuffle } from '../utils/shuffle_random';
 import { UsersManager } from './users_manager';
 
+/// This string is randomized by the build script which the administrator must
+/// use in order to configure the webpage in their machine.
 const character_samples =
 	"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+-*/ª!·$%&/()=?¿¡'º|@#~€¬^{},;.:_";
 
