@@ -42,9 +42,9 @@ Full source code of elo-chess-tracker:
 			<div class="main-content">
 				<h2 class="title title2">Challenge a user</h2>
 
-				<div class="label_and_input">
+				<div class="label-and-input">
 					<label>Select a user:</label>
-					<input class="input_text" list="datalist_username" id="username_list" />
+					<input class="input-text" list="datalist_username" id="username_list" />
 					<datalist
 						id="datalist_username"
 						hx-swap="innerHTML"
@@ -53,9 +53,9 @@ Full source code of elo-chess-tracker:
 					></datalist>
 				</div>
 				<div class="label-and-select">
-					<label class="label_basic">Time control:</label>
+					<label class="label-basic">Time control:</label>
 					<select
-						class="select_basic"
+						class="select-basic"
 						id="select_time_control"
 						hx-get="/query/html/time_controls"
 						hx-trigger="load"
@@ -66,31 +66,31 @@ Full source code of elo-chess-tracker:
 				</div>
 
 				<br />
-				<button class="button_submit" type="button" id="send_challenge_button">Send challenge</button>
+				<button class="button-submit" type="button" id="send_challenge_button">Send challenge</button>
 
-				<div class="challenge_list" id="challenges_received">
+				<div class="challenge-list" id="challenges_received">
 					<h2 class="title title2">Challenges received</h2>
 				</div>
 
-				<div class="challenge_list" id="challenges_sent">
+				<div class="challenge-list" id="challenges_sent">
 					<h2 class="title title2">Challenges sent to others</h2>
 				</div>
 
-				<div class="challenge_list" id="challenges_pending_result">
+				<div class="challenge-list" id="challenges_pending_result">
 					<h2 class="title title2">Set the result of a game</h2>
 					<div id="challenges_pending_result__list"></div>
 				</div>
 
-				<div class="challenge_list" id="challenges_confirm_result_other">
+				<div class="challenge-list" id="challenges_confirm_result_other">
 					<h2 class="title title2">Results to be confirmed</h2>
 				</div>
 
-				<div class="challenge_list" id="challenges_confirm_result_self">
+				<div class="challenge-list" id="challenges_confirm_result_self">
 					<h2 class="title title2">Results I have to confirm</h2>
 				</div>
 			</div>
 
-			<footer class="footer_copyright_notice">
+			<footer class="footer-copyright-notice">
 				Elo chess tracker (v<i hx-get="/version_number" hx-trigger="load"></i>). Code
 				<a href="https://github.com/lluisalemanypuig/elo-chess-tracker">online at Github</a>.
 			</footer>
