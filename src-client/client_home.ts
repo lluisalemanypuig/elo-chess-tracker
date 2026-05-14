@@ -73,7 +73,7 @@ function fill_action_links(user_actions: string[], user_roles: string[]) {
 
 	if (user_roles.includes(ADMIN)) {
 		let recalculate_ratings_link = document.createElement('u') as HTMLElement;
-		recalculate_ratings_link.id = 'recalculate_ratings_link';
+		recalculate_ratings_link.id = 'recalculate-ratings-link';
 		recalculate_ratings_link.textContent = 'Recalculate ratings';
 		recalculate_ratings_link.onclick = async function () {
 			const response = await fetch('/recalculate/ratings', {
@@ -89,7 +89,7 @@ function fill_action_links(user_actions: string[], user_roles: string[]) {
 		action_links.appendChild(recalculate_ratings_link);
 
 		let recalculate_graphs_link = document.createElement('u') as HTMLElement;
-		recalculate_graphs_link.id = 'recalculate_graphs';
+		recalculate_graphs_link.id = 'recalculate-graphs';
 		recalculate_graphs_link.textContent = 'Recalculate graphs';
 		recalculate_graphs_link.onclick = async function () {
 			const response = await fetch('/recalculate/graphs', {
@@ -124,7 +124,7 @@ async function fill_own_info() {
 	fill_action_links(data.actions, data.roles);
 
 	{
-		let label_name_and_roles = document.getElementById('user_name_and_roles') as HTMLDivElement;
+		let label_name_and_roles = document.getElementById('user-name-and-roles') as HTMLDivElement;
 		label_name_and_roles.textContent = data.fullname;
 
 		// roles of user from the cookies
@@ -160,6 +160,6 @@ window.onload = function () {
 	// display user info
 	fill_own_info();
 
-	let logout_link = document.getElementById('logout_link') as HTMLLinkElement;
+	let logout_link = document.getElementById('logout-link') as HTMLLinkElement;
 	logout_link.onclick = logout_link_clicked;
 };

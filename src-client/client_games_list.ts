@@ -104,7 +104,7 @@ function new_cell_select_result(original_result: string, game_id: string) {
 		add_result_option('0 - 1');
 	}
 
-	select.className = 'select_edit_game';
+	select.className = 'select-edit-game';
 	select.value = result_from_text_to_value(original_result);
 	select.onchange = select_result_game_on_change;
 	select.setAttribute('original_value', result_from_text_to_value(original_result));
@@ -140,7 +140,7 @@ async function button_remove_on_click(event: any) {
 function new_cell_button_delete(game_id: string) {
 	let button = document.createElement('button') as HTMLButtonElement;
 	button.textContent = 'Delete';
-	button.className = 'button_delete_game';
+	button.className = 'button-delete-game';
 	button.setAttribute('game_id', game_id);
 	button.onclick = button_remove_on_click;
 
@@ -150,7 +150,7 @@ function new_cell_button_delete(game_id: string) {
 }
 
 async function fill_games_list_time_control(time_control_id: string) {
-	let table = document.getElementById('table_games') as HTMLTableElement;
+	let table = document.getElementById('table-games') as HTMLTableElement;
 	const val = table.getAttribute('value');
 
 	const query_to_server: string = (() => {

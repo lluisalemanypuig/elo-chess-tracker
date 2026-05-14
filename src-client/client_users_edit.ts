@@ -106,8 +106,8 @@ window.onload = function () {
 	datalist_username_input.onselectionchange = user_was_changed;
 
 	// imlement behaviour of submit button
-	let button_submit = document.getElementById('button_submit') as HTMLButtonElement;
-	button_submit.onclick = submit_was_clicked;
+	let submit_changes_button = document.getElementById('submit_changes_button') as HTMLButtonElement;
+	submit_changes_button.onclick = submit_was_clicked;
 
 	// fill in role checkboxes with values
 	let add_checkbox = function (div: HTMLDivElement, show: string, value: string) {

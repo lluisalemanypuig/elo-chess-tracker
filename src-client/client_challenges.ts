@@ -178,32 +178,32 @@ async function fill_challenges_received() {
 	const data = (await response.json()) as any[];
 
 	let challenge_list = document.createElement('ul') as HTMLUListElement;
-	challenge_list.className = 'challenge_items';
+	challenge_list.className = 'challenge-items';
 	data.forEach(function (elem: any, index: number) {
 		let challenge_div = document.createElement('div') as HTMLDivElement;
 		{
 			// ---
 			let li = document.createElement('li') as HTMLLIElement;
-			li.className = 'challenge_items_bullet';
+			li.className = 'challenge-items-bullet';
 			li.textContent = `Challenge sent by ${elem.sent_by}.`;
 			challenge_div.appendChild(li);
 			// ---
 			li = document.createElement('li') as HTMLLIElement;
-			li.className = 'challenge_items_nobullet';
+			li.className = 'challenge-items-nobullet';
 			//
 			li = document.createElement('li') as HTMLLIElement;
-			li.className = 'challenge_items_nobullet';
+			li.className = 'challenge-items-nobullet';
 			li.textContent = `Of time control: ${elem.time_control_name}.`;
 			challenge_div.appendChild(li);
 			//
 			li = document.createElement('li') as HTMLLIElement;
-			li.className = 'challenge_items_nobullet';
+			li.className = 'challenge-items-nobullet';
 			li.textContent = `Sent on ${format_date(elem.sent_when)}.`;
 			challenge_div.appendChild(li);
 			//
 			let can_cannot = elem.can_be_declined ? 'can' : 'cannot';
 			li = document.createElement('li') as HTMLLIElement;
-			li.className = 'challenge_items_nobullet';
+			li.className = 'challenge-items-nobullet';
 			li.textContent = `You ${can_cannot} decline the challenge.`;
 			challenge_div.appendChild(li);
 		}
@@ -219,7 +219,7 @@ async function fill_challenges_received() {
 			let accept_button = document.createElement('button') as HTMLButtonElement;
 			accept_button.id = elem.id;
 			accept_button.onclick = accept_challenge_button_clicked;
-			accept_button.className = 'button_accept_decline_challenge';
+			accept_button.className = 'button-accept-decline-challenge';
 			accept_button.textContent = 'Accept';
 			accept_button.style.marginRight = '5px';
 			buttons_div.appendChild(accept_button);
@@ -230,7 +230,7 @@ async function fill_challenges_received() {
 			let decline_button = document.createElement('button') as HTMLButtonElement;
 			decline_button.id = elem.id;
 			decline_button.onclick = decline_challenge_tag_clicked;
-			decline_button.className = 'button_accept_decline_challenge';
+			decline_button.className = 'button-accept-decline-challenge';
 			decline_button.textContent = 'Decline';
 			decline_button.style.marginLeft = '5px';
 			if (!elem.can_be_declined) {
@@ -264,28 +264,28 @@ async function fill_challenges_sent() {
 	const data = (await response.json()) as any[];
 
 	let challenge_list = document.createElement('ul') as HTMLUListElement;
-	challenge_list.className = 'challenge_items';
+	challenge_list.className = 'challenge-items';
 
 	data.forEach(function (elem: any) {
 		// ----
 		let li = document.createElement('li') as HTMLLIElement;
-		li.className = 'challenge_items_bullet';
+		li.className = 'challenge-items-bullet';
 		li.textContent = `Challenge sent to ${elem.sent_to}.`;
 		challenge_list.appendChild(li);
 		// ----
 		li = document.createElement('li') as HTMLLIElement;
-		li.className = 'challenge_items_nobullet';
+		li.className = 'challenge-items-nobullet';
 		li.textContent = `Of time control: ${elem.time_control_name}.`;
 		challenge_list.appendChild(li);
 		//
 		li = document.createElement('li') as HTMLLIElement;
-		li.className = 'challenge_items_nobullet';
+		li.className = 'challenge-items-nobullet';
 		li.textContent = `Sent on ${format_date(elem.sent_when)}.`;
 		challenge_list.appendChild(li);
 		//
 		let can_cannot = elem.can_be_declined ? 'can' : 'cannot';
 		li = document.createElement('li') as HTMLLIElement;
-		li.className = 'challenge_items_nobullet';
+		li.className = 'challenge-items-nobullet';
 		li.textContent = `Your opponent ${can_cannot} decline the challenge.`;
 		challenge_list.appendChild(li);
 	});
@@ -312,21 +312,21 @@ async function fill_challenges_pending_result() {
 	challenge_data.forEach(function (elem: any, index: number) {
 		{
 			let header = document.createElement('ul') as HTMLUListElement;
-			header.className = 'challenge_items';
+			header.className = 'challenge-items';
 			{
 				let li = document.createElement('li') as HTMLLIElement;
-				li.className = 'challenge_items_bullet';
+				li.className = 'challenge-items-bullet';
 				li.textContent = `Challenge with ${elem.opponent}.`;
 				header.appendChild(li);
 			}
 
 			{
 				let li = document.createElement('li') as HTMLLIElement;
-				li.className = 'challenge_items_nobullet';
+				li.className = 'challenge-items-nobullet';
 				li.textContent = `Of time control: ${elem.time_control_name}.`;
 				header.appendChild(li);
 				li = document.createElement('li') as HTMLLIElement;
-				li.className = 'challenge_items_nobullet';
+				li.className = 'challenge-items-nobullet';
 				li.textContent = `Sent on ${format_date(elem.sent_when)}.`;
 				header.appendChild(li);
 			}
@@ -344,7 +344,7 @@ async function fill_challenges_pending_result() {
 
 			let select = document.createElement('select');
 			select.id = 'white_select_' + elem.id;
-			select.className = 'select_basic';
+			select.className = 'select-basic';
 
 			let option_1 = document.createElement('option') as HTMLOptionElement;
 			option_1.text = elem.sent_to_name;
@@ -368,7 +368,7 @@ async function fill_challenges_pending_result() {
 
 			let select = document.createElement('select');
 			select.id = 'black_select_' + elem.id;
-			select.className = 'select_basic';
+			select.className = 'select-basic';
 
 			let option_1 = document.createElement('option') as HTMLOptionElement;
 			option_1.text = elem.sent_by_name;
@@ -392,7 +392,7 @@ async function fill_challenges_pending_result() {
 
 			let select = document.createElement('select');
 			select.id = 'select_result_game_' + elem.id;
-			select.className = 'select_basic';
+			select.className = 'select-basic';
 
 			let option_1 = document.createElement('option') as HTMLOptionElement;
 			option_1.text = '1 - 0';
@@ -417,7 +417,7 @@ async function fill_challenges_pending_result() {
 		{
 			let submit_result_button = document.createElement('button');
 			submit_result_button.textContent = 'Submit result';
-			submit_result_button.className = 'button_submit_challenge';
+			submit_result_button.className = 'button-challenge';
 			submit_result_button.id = elem.id;
 			submit_result_button.onclick = submit_result_challenge_button_clicked;
 			submit_result_button.style.marginTop = '5px';
@@ -446,39 +446,39 @@ async function fill_challenges_confirm_result_other() {
 	const challenge_data = (await response.json()) as any[];
 
 	let challenge_list = document.createElement('ul') as HTMLUListElement;
-	challenge_list.className = 'challenge_items';
+	challenge_list.className = 'challenge-items';
 	challenge_data.forEach(function (elem: any) {
 		{
 			let li = document.createElement('li') as HTMLLIElement;
-			li.className = 'challenge_items_bullet';
+			li.className = 'challenge-items-bullet';
 			li.textContent = `On ${format_date(elem.sent_when)}.`;
 			challenge_list.appendChild(li);
 		}
 
 		{
 			let li = document.createElement('li') as HTMLLIElement;
-			li.className = 'challenge_items_nobullet';
+			li.className = 'challenge-items-nobullet';
 			li.textContent = `White: ${elem.white}.`;
 			challenge_list.appendChild(li);
 		}
 
 		{
 			let li = document.createElement('li') as HTMLLIElement;
-			li.className = 'challenge_items_nobullet';
+			li.className = 'challenge-items-nobullet';
 			li.textContent = `Black: ${elem.black}.`;
 			challenge_list.appendChild(li);
 		}
 
 		{
 			let li = document.createElement('li') as HTMLLIElement;
-			li.className = 'challenge_items_nobullet';
+			li.className = 'challenge-items-nobullet';
 			li.textContent = `Result: ${elem.result}.`;
 			challenge_list.appendChild(li);
 		}
 
 		{
 			let li = document.createElement('li') as HTMLLIElement;
-			li.className = 'challenge_items_nobullet';
+			li.className = 'challenge-items-nobullet';
 			li.textContent = `Time control: ${elem.time_control}.`;
 			challenge_list.appendChild(li);
 		}
@@ -503,40 +503,40 @@ async function fill_challenges_confirm_result_self() {
 	const challenge_data = (await response.json()) as any[];
 
 	let challenge_list = document.createElement('ul') as HTMLUListElement;
-	challenge_list.className = 'challenge_items';
+	challenge_list.className = 'challenge-items';
 	challenge_data.forEach(function (elem: any, index: number) {
 		let confirmation_div = document.createElement('div') as HTMLDivElement;
 		{
 			let li = document.createElement('li') as HTMLLIElement;
-			li.className = 'challenge_items_bullet';
+			li.className = 'challenge-items-bullet';
 			li.textContent = `On ${format_date(elem.sent_when)}.`;
 			confirmation_div.appendChild(li);
 		}
 
 		{
 			let li = document.createElement('li') as HTMLLIElement;
-			li.className = 'challenge_items_nobullet';
+			li.className = 'challenge-items-nobullet';
 			li.textContent = `White: ${elem.white}.`;
 			confirmation_div.appendChild(li);
 		}
 
 		{
 			let li = document.createElement('li') as HTMLLIElement;
-			li.className = 'challenge_items_nobullet';
+			li.className = 'challenge-items-nobullet';
 			li.textContent = `Black: ${elem.black}.`;
 			confirmation_div.appendChild(li);
 		}
 
 		{
 			let li = document.createElement('li') as HTMLLIElement;
-			li.className = 'challenge_items_nobullet';
+			li.className = 'challenge-items-nobullet';
 			li.textContent = `Result: ${elem.result}.`;
 			confirmation_div.appendChild(li);
 		}
 
 		{
 			let li = document.createElement('li') as HTMLLIElement;
-			li.className = 'challenge_items_nobullet';
+			li.className = 'challenge-items-nobullet';
 			li.textContent = `Time control: ${elem.time_control}.`;
 			confirmation_div.appendChild(li);
 		}
@@ -553,7 +553,7 @@ async function fill_challenges_confirm_result_self() {
 			let accept_button = document.createElement('button') as HTMLButtonElement;
 			accept_button.id = elem.id;
 			accept_button.onclick = agree_challenge_result_button_clicked;
-			accept_button.className = 'button_agree_disagree_challenge';
+			accept_button.className = 'button-agree-disagree-challenge';
 			accept_button.textContent = 'Agree';
 			accept_button.style.marginLeft = '5px';
 			buttons_div.appendChild(accept_button);
@@ -564,7 +564,7 @@ async function fill_challenges_confirm_result_self() {
 			let disagree_button = document.createElement('button') as HTMLButtonElement;
 			disagree_button.id = elem.id;
 			disagree_button.onclick = disagree_challenge_result_button_clicked;
-			disagree_button.className = 'button_agree_disagree_challenge';
+			disagree_button.className = 'button-agree-disagree-challenge';
 			disagree_button.textContent = 'Disagree';
 			disagree_button.style.marginLeft = '5px';
 			buttons_div.appendChild(disagree_button);
@@ -583,7 +583,7 @@ async function fill_challenges_confirm_result_self() {
 }
 
 window.onload = function () {
-	// link button 'submit_challenge' click behaviour
+	// link button 'button-challenge' click behaviour
 	let send_challenge_button = document.getElementById('send_challenge_button') as HTMLButtonElement;
 	send_challenge_button.onclick = send_challenge_button_clicked;
 
