@@ -19,9 +19,9 @@ Full source code of elo-chess-tracker:
 	https://github.com/lluisalemanypuig/elo-chess-tracker
 */
 
-/* table_ratings */
+/* table-ratings */
 
-.table_ratings {
+.table-ratings {
 	align-items: center;
 	justify-content: center;
 	height: 100%;
@@ -31,7 +31,7 @@ Full source code of elo-chess-tracker:
 	color: rgb(0, 0, 0);
 }
 
-.table_ratings,
+.table-ratings,
 th,
 td {
 	border-collapse: collapse;
@@ -41,9 +41,9 @@ td {
 	text-align: center;
 }
 
-/* table_games */
+/* table-games */
 
-.table_games {
+.table-games {
 	align-items: center;
 	justify-content: center;
 	height: 100%;
@@ -53,7 +53,7 @@ td {
 	color: rgb(0, 0, 0);
 }
 
-.table_games,
+.table-games,
 th,
 td {
 	border-collapse: collapse;
@@ -63,9 +63,9 @@ td {
 	text-align: center;
 }
 
-/* table_users */
+/* table-users */
 
-.table_users {
+.table-users {
 	align-items: center;
 	justify-content: center;
 	height: 100%;
@@ -75,7 +75,7 @@ td {
 	color: rgb(0, 0, 0);
 }
 
-.table_users,
+.table-users,
 th,
 td {
 	border-collapse: collapse;

@@ -19,9 +19,9 @@ Full source code of elo-chess-tracker:
 	https://github.com/lluisalemanypuig/elo-chess-tracker
 */
 
-/* input_text */
+/* input-text */
 
-.input_text {
+.input-text {
 	background-color: rgb(255, 255, 255);
 	border: 1px solid rgb(176, 180, 185);
 	border-radius: 0.5rem;
@@ -38,22 +38,22 @@ Full source code of elo-chess-tracker:
 	-webkit-user-select: none;
 }
 
-.input_text:hover {
+.input-text:hover {
 	background-color: rgb(234, 237, 239);
 }
 
-.input_text:focus {
+.input-text:focus {
 	outline: 2px solid transparent;
 	outline-offset: 2px;
 }
 
-.input_text:focus-visible {
+.input-text:focus-visible {
 	box-shadow: none;
 }
 
-/* input_select */
+/* input-select */
 
-.input_select {
+.input-select {
 	background-color: rgb(255, 255, 255);
 	border: 1px solid rgb(176, 180, 185);
 	border-radius: 0.5rem;
@@ -70,22 +70,22 @@ Full source code of elo-chess-tracker:
 	-webkit-user-select: none;
 }
 
-.input_select:hover {
+.input-select:hover {
 	background-color: rgb(234, 237, 239);
 }
 
-.input_select:focus {
+.input-select:focus {
 	outline: 2px solid transparent;
 	outline-offset: 2px;
 }
 
-.input_select:focus-visible {
+.input-select:focus-visible {
 	box-shadow: none;
 }
 
-/* input_time */
+/* input-time */
 
-.input_time {
+.input-time {
 	background-color: rgb(255, 255, 255);
 	border: 1px solid rgb(176, 180, 185);
 	border-radius: 0.5rem;
@@ -102,22 +102,22 @@ Full source code of elo-chess-tracker:
 	-webkit-user-select: none;
 }
 
-.input_time:hover {
+.input-time:hover {
 	background-color: rgb(234, 237, 239);
 }
 
-.input_time:focus {
+.input-time:focus {
 	outline: 2px solid transparent;
 	outline-offset: 2px;
 }
 
-.input_time:focus-visible {
+.input-time:focus-visible {
 	box-shadow: none;
 }
 
-/* input_date */
+/* input-date */
 
-.input_date {
+.input-date {
 	background-color: rgb(255, 255, 255);
 	border: 1px solid rgb(176, 180, 185);
 	border-radius: 0.5rem;
@@ -134,22 +134,22 @@ Full source code of elo-chess-tracker:
 	-webkit-user-select: none;
 }
 
-.input_date:hover {
+.input-date:hover {
 	background-color: rgb(234, 237, 239);
 }
 
-.input_date:focus {
+.input-date:focus {
 	outline: 2px solid transparent;
 	outline-offset: 2px;
 }
 
-.input_date:focus-visible {
+.input-date:focus-visible {
 	box-shadow: none;
 }
 
-/* input_number */
+/* input-number */
 
-.input_number {
+.input-number {
 	background-color: rgb(255, 255, 255);
 	border: 1px solid rgb(176, 180, 185);
 	border-radius: 0.5rem;
@@ -166,22 +166,22 @@ Full source code of elo-chess-tracker:
 	-webkit-user-select: none;
 }
 
-.input_number:hover {
+.input-number:hover {
 	background-color: rgb(234, 237, 239);
 }
 
-.input_number:focus {
+.input-number:focus {
 	outline: 2px solid transparent;
 	outline-offset: 2px;
 }
 
-.input_number:focus-visible {
+.input-number:focus-visible {
 	box-shadow: none;
 }
 
-/* input_color */
+/* input-color */
 
-.input_color {
+.input-color {
 	background-color: rgb(255, 255, 255);
 	border: 1px solid rgb(176, 180, 185);
 	border-radius: 0.5rem;
@@ -198,15 +198,15 @@ Full source code of elo-chess-tracker:
 	-webkit-user-select: none;
 }
 
-.input_color:hover {
+.input-color:hover {
 	background-color: rgb(234, 237, 239);
 }
 
-.input_color:focus {
+.input-color:focus {
 	outline: 2px solid transparent;
 	outline-offset: 2px;
 }
 
-.input_color:focus-visible {
+.input-color:focus-visible {
 	box-shadow: none;
 }

@@ -89,7 +89,7 @@ body {
 
 /* Label and input text box */
 
-.label_and_input {
+.label-and-input {
 	display: flex;
 	align-items: center;
 	justify-content: flex-start;
@@ -97,12 +97,12 @@ body {
 	margin-bottom: 10px;
 }
 
-.label_and_input label {
+.label-and-input label {
 	width: 150px;
 	text-align: center;
 }
 
-.label_and_input input {
+.label-and-input input {
 	max-height: 30px;
 	width: 175px;
 	padding: 5px;

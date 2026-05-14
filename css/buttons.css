@@ -21,9 +21,9 @@ Full source code of elo-chess-tracker:
 
 /* Based on the style of button-39 copied from: https: //getcssscan.com/css-buttons-examples */
 
-/* button_login */
+/* button-login */
 
-.button_login {
+.button-login {
 	background-color: rgb(255, 255, 255);
 	border: 1px solid rgb(176, 180, 185);
 	border-radius: 0.5rem;
@@ -43,22 +43,22 @@ Full source code of elo-chess-tracker:
 	touch-action: manipulation;
 }
 
-.button_login:hover {
+.button-login:hover {
 	background-color: rgb(220, 217, 217);
 }
 
-.button_login:focus {
+.button-login:focus {
 	outline: 2px solid transparent;
 	outline-offset: 2px;
 }
 
-.button_login:focus-visible {
+.button-login:focus-visible {
 	box-shadow: none;
 }
 
-/* button_submit */
+/* button-submit */
 
-.button_submit {
+.button-submit {
 	background-color: rgb(255, 255, 255);
 	border: 1px solid rgb(158, 160, 163);
 	border-radius: 0.5rem;
@@ -78,22 +78,22 @@ Full source code of elo-chess-tracker:
 	touch-action: manipulation;
 }
 
-.button_submit:hover {
+.button-submit:hover {
 	background-color: rgb(220, 217, 217);
 }
 
-.button_submit:focus {
+.button-submit:focus {
 	outline: 2px solid transparent;
 	outline-offset: 2px;
 }
 
-.button_submit:focus-visible {
+.button-submit:focus-visible {
 	box-shadow: none;
 }
 
-/* button_submit_challenge */
+/* button-challenge */
 
-.button_submit_challenge {
+.button-challenge {
 	background-color: rgb(255, 255, 255);
 	border: 1px solid rgb(158, 160, 163);
 	border-radius: 0.5rem;
@@ -113,22 +113,22 @@ Full source code of elo-chess-tracker:
 	touch-action: manipulation;
 }
 
-.button_submit_challenge:hover {
+.button-challenge:hover {
 	background-color: rgb(220, 217, 217);
 }
 
-.button_submit_challenge:focus {
+.button-challenge:focus {
 	outline: 2px solid transparent;
 	outline-offset: 2px;
 }
 
-.button_submit_challenge:focus-visible {
+.button-challenge:focus-visible {
 	box-shadow: none;
 }
 
-/* button_delete_game */
+/* button-delete-game */
 
-.button_delete_game {
+.button-delete-game {
 	border: 1px solid rgb(209, 213, 219);
 	border-radius: 0.5rem;
 	box-sizing: border-box;
@@ -144,34 +144,34 @@ Full source code of elo-chess-tracker:
 	touch-action: manipulation;
 }
 
-.button_delete_game:disabled {
+.button-delete-game:disabled {
 	font-weight: 350;
 	background-color: rgb(220, 220, 220);
 	cursor: hand;
 }
 
-.button_delete_game:enabled {
+.button-delete-game:enabled {
 	font-weight: 350;
 	background-color: rgb(255, 255, 255);
 	cursor: pointer;
 }
 
-.button_delete_game:hover {
+.button-delete-game:hover {
 	background-color: rgb(220, 220, 220);
 }
 
-.button_delete_game:focus {
+.button-delete-game:focus {
 	outline: 2px solid transparent;
 	outline-offset: 2px;
 }
 
-.button_delete_game:focus-visible {
+.button-delete-game:focus-visible {
 	box-shadow: none;
 }
 
-/* button_accept_decline_challenge */
+/* button-accept-decline-challenge */
 
-.button_accept_decline_challenge {
+.button-accept-decline-challenge {
 	border: 1px solid rgb(209, 213, 219);
 	border-radius: 0.5rem;
 	box-sizing: border-box;
@@ -187,34 +187,34 @@ Full source code of elo-chess-tracker:
 	touch-action: manipulation;
 }
 
-.button_accept_decline_challenge:disabled {
+.button-accept-decline-challenge:disabled {
 	font-weight: 350;
 	background-color: rgb(220, 220, 220);
 	cursor: hand;
 }
 
-.button_accept_decline_challenge:enabled {
+.button-accept-decline-challenge:enabled {
 	font-weight: 350;
 	background-color: rgb(255, 255, 255);
 	cursor: pointer;
 }
 
-.button_accept_decline_challenge:hover {
+.button-accept-decline-challenge:hover {
 	background-color: rgb(220, 220, 220);
 }
 
-.button_accept_decline_challenge:focus {
+.button-accept-decline-challenge:focus {
 	outline: 2px solid transparent;
 	outline-offset: 2px;
 }
 
-.button_accept_decline_challenge:focus-visible {
+.button-accept-decline-challenge:focus-visible {
 	box-shadow: none;
 }
 
-/* button_agree_disagree_challenge */
+/* button-agree-disagree-challenge */
 
-.button_agree_disagree_challenge {
+.button-agree-disagree-challenge {
 	border: 1px solid rgb(209, 213, 219);
 	border-radius: 0.5rem;
 	box-sizing: border-box;
@@ -230,27 +230,27 @@ Full source code of elo-chess-tracker:
 	touch-action: manipulation;
 }
 
-.button_agree_disagree_challenge:disabled {
+.button-agree-disagree-challenge:disabled {
 	font-weight: 350;
 	background-color: rgb(220, 220, 220);
 	cursor: hand;
 }
 
-.button_agree_disagree_challenge:enabled {
+.button-agree-disagree-challenge:enabled {
 	font-weight: 350;
 	background-color: rgb(255, 255, 255);
 	cursor: pointer;
 }
 
-.button_agree_disagree_challenge:hover {
+.button-agree-disagree-challenge:hover {
 	background-color: rgb(220, 220, 220);
 }
 
-.button_agree_disagree_challenge:focus {
+.button-agree-disagree-challenge:focus {
 	outline: 2px solid transparent;
 	outline-offset: 2px;
 }
 
-.button_agree_disagree_challenge:focus-visible {
+.button-agree-disagree-challenge:focus-visible {
 	box-shadow: none;
 }

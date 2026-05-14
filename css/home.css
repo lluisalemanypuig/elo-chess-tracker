@@ -19,16 +19,16 @@ Full source code of elo-chess-tracker:
 	https://github.com/lluisalemanypuig/elo-chess-tracker
 */
 
-#user_name_and_roles {
+#user-name-and-roles {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
 }
 
 a,
-#logout_link,
-#recalculate_ratings_link,
-#recalculate_graphs {
+#logout-link,
+#recalculate-ratings-link,
+#recalculate-graphs {
 	color: rgb(0, 0, 255);
 	cursor: pointer;
 }
