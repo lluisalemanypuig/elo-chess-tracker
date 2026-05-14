@@ -24,7 +24,7 @@ Full source code of elo-chess-tracker:
 // sizes
 
 @mixin size-long-width {
-	width: 175x
+	width: 175px;
 }
 
 // shapes
@@ -44,7 +44,7 @@ Full source code of elo-chess-tracker:
 // fonts and text
 
 @mixin font-clear {
-	font-size: 0.875rem;
+	font-size: 1rem;
 	color: rgb(17, 24, 39);
 	text-align: center;
 	text-decoration: none rgb(209, 213, 219) solid;
