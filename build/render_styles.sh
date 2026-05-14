@@ -1,8 +1,8 @@
 #!/bin/bash
 
-function apply() {
-    local params="--no-source-map --update"
+params="--no-source-map --update"
 
+function apply() {
     echo $1
     
     stat1=""
