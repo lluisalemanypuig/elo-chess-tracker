@@ -21,30 +21,23 @@ Full source code of elo-chess-tracker:
 
 /* Based on the style of button-39 copied from: https: //getcssscan.com/css-buttons-examples */
 
+@use "main";
+
 /* button-login */
 
 .button-login {
-	background-color: rgb(255, 255, 255);
-	border: 1px solid rgb(176, 180, 185);
-	border-radius: 0.5rem;
-	box-sizing: border-box;
-	color: rgb(17, 24, 39);
-	font-size: 1rem;
-	font-weight: 450;
-	line-height: 1.25rem;
-	padding: 0.75rem 1rem;
-	text-align: center;
-	text-decoration: none rgb(209, 213, 219) solid;
-	text-decoration-thickness: auto;
-	box-shadow: 0 4px 6px 0 rgba(55, 54, 54, 0.749);
-	cursor: pointer;
+	@include main.shape-round;
+	@include main.border-shadow;
+	@include main.font-clear;
+
+	padding: 0.5rem 1.25rem;
 	user-select: none;
 	-webkit-user-select: none;
 	touch-action: manipulation;
 }
 
 .button-login:hover {
-	background-color: rgb(220, 217, 217);
+	@include main.color-background-hover;
 }
 
 .button-login:focus {
@@ -59,27 +52,18 @@ Full source code of elo-chess-tracker:
 /* button-submit */
 
 .button-submit {
-	background-color: rgb(255, 255, 255);
-	border: 1px solid rgb(158, 160, 163);
-	border-radius: 0.5rem;
-	box-sizing: border-box;
-	color: rgb(17, 24, 39);
-	font-size: 0.875rem;
-	font-weight: 350;
-	line-height: 1.25rem;
-	padding: 0.75rem 3rem;
-	text-align: center;
-	text-decoration: none rgb(209, 213, 219) solid;
-	text-decoration-thickness: auto;
-	box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.251);
-	cursor: pointer;
+	@include main.shape-round;
+	@include main.border-shadow;
+	@include main.font-clear;
+
+	padding: 0.5rem 1.25rem;
 	user-select: none;
 	-webkit-user-select: none;
 	touch-action: manipulation;
 }
 
 .button-submit:hover {
-	background-color: rgb(220, 217, 217);
+	@include main.color-background-hover;
 }
 
 .button-submit:focus {
@@ -94,27 +78,18 @@ Full source code of elo-chess-tracker:
 /* button-challenge */
 
 .button-challenge {
-	background-color: rgb(255, 255, 255);
-	border: 1px solid rgb(158, 160, 163);
-	border-radius: 0.5rem;
-	box-sizing: border-box;
-	color: rgb(17, 24, 39);
-	font-size: 0.875rem;
-	font-weight: 350;
-	line-height: 1.25rem;
-	padding: 0.5rem 1rem;
-	text-align: center;
-	text-decoration: none rgb(209, 213, 219) solid;
-	text-decoration-thickness: auto;
-	box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.051);
-	cursor: pointer;
+	@include main.shape-round;
+	@include main.border-shadow;
+	@include main.font-clear;
+
+	padding: 0.5rem 1.25rem;
 	user-select: none;
 	-webkit-user-select: none;
 	touch-action: manipulation;
 }
 
 .button-challenge:hover {
-	background-color: rgb(220, 217, 217);
+	@include main.color-background-hover;
 }
 
 .button-challenge:focus {
@@ -129,35 +104,32 @@ Full source code of elo-chess-tracker:
 /* button-delete-game */
 
 .button-delete-game {
-	border: 1px solid rgb(209, 213, 219);
-	border-radius: 0.5rem;
-	box-sizing: border-box;
-	font-size: 0.875rem;
-	color: rgb(17, 24, 39);
+	@include main.shape-round;
+	@include main.border-shadow;
+	@include main.font-clear;
+	
 	padding: 0.5rem 1.25rem;
-	text-align: center;
-	text-decoration: none rgb(209, 213, 219) solid;
-	text-decoration-thickness: auto;
-	box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.051);
 	user-select: none;
 	-webkit-user-select: none;
 	touch-action: manipulation;
 }
 
 .button-delete-game:disabled {
+	@include main.color-background-disabled;
+
 	font-weight: 350;
-	background-color: rgb(220, 220, 220);
 	cursor: hand;
 }
 
 .button-delete-game:enabled {
+	@include main.color-background-enabled;
+
 	font-weight: 350;
-	background-color: rgb(255, 255, 255);
 	cursor: pointer;
 }
 
 .button-delete-game:hover {
-	background-color: rgb(220, 220, 220);
+	@include main.color-background-hover;
 }
 
 .button-delete-game:focus {
@@ -172,35 +144,32 @@ Full source code of elo-chess-tracker:
 /* button-accept-decline-challenge */
 
 .button-accept-decline-challenge {
-	border: 1px solid rgb(209, 213, 219);
-	border-radius: 0.5rem;
-	box-sizing: border-box;
-	font-size: 0.875rem;
-	color: rgb(17, 24, 39);
+	@include main.shape-round;
+	@include main.border-shadow;
+	@include main.font-clear;
+
 	padding: 0.5rem 1.25rem;
-	text-align: center;
-	text-decoration: none rgb(209, 213, 219) solid;
-	text-decoration-thickness: auto;
-	box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.051);
 	user-select: none;
 	-webkit-user-select: none;
 	touch-action: manipulation;
 }
 
 .button-accept-decline-challenge:disabled {
+	@include main.color-background-disabled;
+
 	font-weight: 350;
-	background-color: rgb(220, 220, 220);
 	cursor: hand;
 }
 
 .button-accept-decline-challenge:enabled {
+	@include main.color-background-enabled;
+
 	font-weight: 350;
-	background-color: rgb(255, 255, 255);
 	cursor: pointer;
 }
 
 .button-accept-decline-challenge:hover {
-	background-color: rgb(220, 220, 220);
+	@include main.color-background-hover;
 }
 
 .button-accept-decline-challenge:focus {
@@ -215,35 +184,32 @@ Full source code of elo-chess-tracker:
 /* button-agree-disagree-challenge */
 
 .button-agree-disagree-challenge {
-	border: 1px solid rgb(209, 213, 219);
-	border-radius: 0.5rem;
-	box-sizing: border-box;
-	font-size: 0.875rem;
-	color: rgb(17, 24, 39);
+	@include main.shape-round;
+	@include main.border-shadow;
+	@include main.font-clear;
+
 	padding: 0.5rem 1.25rem;
-	text-align: center;
-	text-decoration: none rgb(209, 213, 219) solid;
-	text-decoration-thickness: auto;
-	box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.051);
 	user-select: none;
 	-webkit-user-select: none;
 	touch-action: manipulation;
 }
 
 .button-agree-disagree-challenge:disabled {
+	@include main.color-background-disabled;
+
 	font-weight: 350;
-	background-color: rgb(220, 220, 220);
 	cursor: hand;
 }
 
 .button-agree-disagree-challenge:enabled {
+	@include main.color-background-enabled;
+
 	font-weight: 350;
-	background-color: rgb(255, 255, 255);
 	cursor: pointer;
 }
 
 .button-agree-disagree-challenge:hover {
-	background-color: rgb(220, 220, 220);
+	@include main.color-background-hover;
 }
 
 .button-agree-disagree-challenge:focus {

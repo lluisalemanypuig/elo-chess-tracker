@@ -1,0 +1,172 @@
+/*
+Elo rating for a Chess Club
+Copyright (C) 2023 - 2026  Lluís Alemany Puig
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program. If not, see <https://www.gnu.org/licenses/>.
+
+Full source code of elo-chess-tracker:
+	https://github.com/lluisalemanypuig/elo-chess-tracker
+*/
+
+@use "main";
+
+/* input-text */
+
+.input-text {
+	@include main.color-background-clear;
+	@include main.border-shadow;
+	@include main.shape-round;
+	@include main.font-heavy;
+
+	user-select: none;
+	-webkit-user-select: none;
+}
+
+.input-text:hover {
+	@include main.color-background-hover;
+}
+
+.input-text:focus {
+	outline: 2px solid transparent;
+	outline-offset: 2px;
+}
+
+.input-text:focus-visible {
+	box-shadow: none;
+}
+
+/* input-select */
+
+.input-select {
+	@include main.color-background-clear;
+	@include main.border-shadow;
+	@include main.shape-round;
+	@include main.font-heavy;
+
+	user-select: none;
+	-webkit-user-select: none;
+}
+
+.input-select:hover {
+	@include main.color-background-hover;
+}
+
+.input-select:focus {
+	outline: 2px solid transparent;
+	outline-offset: 2px;
+}
+
+.input-select:focus-visible {
+	box-shadow: none;
+}
+
+/* input-time */
+
+.input-time {
+	@include main.color-background-clear;
+	@include main.border-shadow;
+	@include main.shape-round;
+	@include main.font-heavy;
+
+	user-select: none;
+	-webkit-user-select: none;
+}
+
+.input-time:hover {
+	@include main.color-background-hover;
+}
+
+.input-time:focus {
+	outline: 2px solid transparent;
+	outline-offset: 2px;
+}
+
+.input-time:focus-visible {
+	box-shadow: none;
+}
+
+/* input-date */
+
+.input-date {
+	@include main.color-background-clear;
+	@include main.border-shadow;
+	@include main.shape-round;
+	@include main.font-heavy;
+
+	user-select: none;
+	-webkit-user-select: none;
+}
+
+.input-date:hover {
+	@include main.color-background-hover;
+}
+
+.input-date:focus {
+	outline: 2px solid transparent;
+	outline-offset: 2px;
+}
+
+.input-date:focus-visible {
+	box-shadow: none;
+}
+
+/* input-number */
+
+.input-number {
+	@include main.color-background-clear;
+	@include main.border-shadow;
+	@include main.shape-round;
+	@include main.font-heavy;
+
+	user-select: none;
+	-webkit-user-select: none;
+}
+
+.input-number:hover {
+	@include main.color-background-hover;
+}
+
+.input-number:focus {
+	outline: 2px solid transparent;
+	outline-offset: 2px;
+}
+
+.input-number:focus-visible {
+	box-shadow: none;
+}
+
+/* input-color */
+
+.input-color {
+	@include main.color-background-clear;
+	@include main.border-shadow;
+	@include main.shape-round;
+	@include main.font-heavy;
+
+	user-select: none;
+	-webkit-user-select: none;
+}
+
+.input-color:hover {
+	@include main.color-background-hover;
+}
+
+.input-color:focus {
+	outline: 2px solid transparent;
+	outline-offset: 2px;
+}
+
+.input-color:focus-visible {
+	box-shadow: none;
+}

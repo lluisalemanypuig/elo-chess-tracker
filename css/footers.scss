@@ -19,32 +19,21 @@ Full source code of elo-chess-tracker:
 	https://github.com/lluisalemanypuig/elo-chess-tracker
 */
 
-/* challenge-list */
+@use "main";
 
-.challenge-list > * {
-	display: flex;
-	flex-direction: column;
-	flex-grow: 1;
+/* copyright notice */
 
-	align-items: center;
+.footer-copyright-notice {
+	@include main.color-background-footer;
 
+	color: rgb(0, 0, 0);
+
+	padding: 20px;
+	left: 0;
+	bottom: 0;
 	width: 100%;
-}
+	text-align: center;
 
-/* challenge-items */
-
-.challenge-items {
-	display: inline-block;
-	text-align: left;
-	padding-left: 0;
-}
-
-.challenge-items-bullet {
-	list-style-type: disc;
-	list-style-position: inside;
-}
-
-.challenge-items-nobullet {
-	list-style-type: none;
-	padding-left: 1em;
+	position: relative;
+	margin-top: auto;
 }

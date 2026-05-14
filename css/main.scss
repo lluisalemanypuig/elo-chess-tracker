@@ -1,3 +1,4 @@
+/* MAIN_START */
 /*
 Elo rating for a Chess Club
 Copyright (C) 2023 - 2026  Lluís Alemany Puig
@@ -18,6 +19,96 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 Full source code of elo-chess-tracker:
 	https://github.com/lluisalemanypuig/elo-chess-tracker
 */
+/* Main styles */
+
+// sizes
+
+@mixin size-long-width {
+	width: 175x
+}
+
+// shapes
+
+@mixin shape-round {
+	border-radius: 0.5rem;
+}
+
+// border
+
+@mixin border-shadow {
+	border: 1px solid rgb(209, 213, 219);
+	box-sizing: border-box;
+	box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.051);
+}
+
+// fonts and text
+
+@mixin font-clear {
+	font-size: 0.875rem;
+	color: rgb(17, 24, 39);
+	text-align: center;
+	text-decoration: none rgb(209, 213, 219) solid;
+	text-decoration-thickness: auto;
+}
+
+@mixin font-fat {
+	@include font-clear;
+	font-weight: 800;
+}
+@mixin font-thick {
+	@include font-clear;
+	font-weight: 650;
+}
+@mixin font-heavy {
+	@include font-clear;
+	font-weight: 450;
+}
+@mixin font-light {
+	@include font-clear;
+	font-weight: 300;
+}
+
+// colors
+
+@mixin color-background-clear {
+	background-color: rgb(255, 255, 255);
+}
+@mixin color-background-footer {
+	background-color: blanchedalmond;
+}
+@mixin color-background-hover {
+	background-color: rgb(220, 220, 220);
+}
+@mixin color-background-enabled {
+	background-color: rgb(255, 255, 255);
+}
+@mixin color-background-disabled {
+	background-color: rgb(220, 220, 220);
+}
+
+// alignment
+
+@mixin flex-start {
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+}
+@mixin flex-center {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+@mixin flex-center-column {
+	@include flex-center;
+	flex-direction: column;
+}
+@mixin flex-start-column {
+	@include flex-start;
+	flex-direction: column;
+}
+
+/* contents */
 
 html,
 body {
@@ -90,21 +181,22 @@ body {
 /* Label and input text box */
 
 .label-and-input {
-	display: flex;
-	align-items: center;
-	justify-content: flex-start;
+	@include flex-start;
+
 	gap: 5px;
 	margin-bottom: 10px;
 }
 
 .label-and-input label {
-	width: 150px;
+	@include size-long-width;
+
 	text-align: center;
 }
 
 .label-and-input input {
+	@include size-long-width;
+
 	max-height: 30px;
-	width: 175px;
 	padding: 5px;
 	box-sizing: border-box;
 }
@@ -112,21 +204,24 @@ body {
 /* Label and dropdown select */
 
 .label-and-select {
-	display: flex;
-	align-items: center;
-	justify-content: flex-start;
+	@include flex-start;
+
 	gap: 5px;
 	margin-bottom: 15px;
 }
 
 .label-and-select label {
-	width: 150px;
+	@include size-long-width;
+
 	text-align: center;
 }
 
 .label-and-select select {
+	@include size-long-width;
+
 	max-height: 30px;
-	width: 175px;
 	padding: 5px;
 	box-sizing: border-box;
 }
+
+/* MAIN_END */
