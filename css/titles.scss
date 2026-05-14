@@ -21,18 +21,17 @@ Full source code of elo-chess-tracker:
 
 @use "main";
 
-.title {
-	@include main.font-light;
-}
-
 .title1 {
 	@include main.font-fat;
+	font-size: 1.5rem;
 }
 
 .title2 {
 	@include main.font-thick;
+	font-size: 1.25rem;
 }
 
 .title3 {
 	@include main.font-heavy;
+	font-size: 1rem;
 }
