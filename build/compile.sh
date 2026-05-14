@@ -35,4 +35,8 @@ if [ $skip_randomize_allowed_symbols -eq 0 ]; then
 	./build/randomize_allowed_symbols.sh
 fi
 
+echo "Rendering CSS styles..."
+./build/render_styles.sh
+
+echo "Compiling front end code into javascript..."
 ./build/shallow_compile.sh
