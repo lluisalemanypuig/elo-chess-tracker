@@ -30,7 +30,7 @@ function get_exp_score(Ra: number, Rb: number): number {
 	return 1.0 / (1 + 10 ** ((Rb - Ra) / 400));
 }
 
-function rating_adjustment(exp_score: number, score: number, k: number): number {
+function rating_adjustment(k: number, score: number, exp_score: number): number {
 	return k * (score - exp_score);
 }
 
@@ -90,20 +90,20 @@ export function Elo_player_vs_player(game: Game): [EloRating, EloRating] {
 
 	let exp_score_a = get_exp_score(white_rating.rating, black_rating.rating);
 	if (result == 'white_wins') {
-		white_rating.rating += rating_adjustment(exp_score_a, 1, white_rating.K);
-		black_rating.rating += rating_adjustment(1 - exp_score_a, 0, black_rating.K);
+		white_rating.rating += rating_adjustment(white_rating.K, 1, exp_score_a);
+		black_rating.rating += rating_adjustment(black_rating.K, 0, 1 - exp_score_a);
 
 		white_rating.won += 1;
 		black_rating.lost += 1;
 	} else if (result == 'black_wins') {
-		white_rating.rating += rating_adjustment(exp_score_a, 0, white_rating.K);
-		black_rating.rating += rating_adjustment(1 - exp_score_a, 1, black_rating.K);
+		white_rating.rating += rating_adjustment(white_rating.K, 0, exp_score_a);
+		black_rating.rating += rating_adjustment(black_rating.K, 1, 1 - exp_score_a);
 
 		white_rating.lost += 1;
 		black_rating.won += 1;
 	} else if (result == 'draw') {
-		white_rating.rating += rating_adjustment(exp_score_a, 0.5, white_rating.K);
-		black_rating.rating += rating_adjustment(1 - exp_score_a, 0.5, black_rating.K);
+		white_rating.rating += rating_adjustment(white_rating.K, 0.5, exp_score_a);
+		black_rating.rating += rating_adjustment(black_rating.K, 0.5, 1 - exp_score_a);
 
 		white_rating.drawn += 1;
 		black_rating.drawn += 1;
