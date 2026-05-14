@@ -1,5 +1,7 @@
 #!/bin/bash
 
+./build/render_styles.sh
+
 skip_randomize_allowed_symbols=0
 production=0
 caching=0
@@ -33,23 +35,4 @@ if [ $skip_randomize_allowed_symbols -eq 0 ]; then
 	./build/randomize_allowed_symbols.sh
 fi
 
-echo "Compiling..."
-mkdir -p js
-cd js
-rm -rf *
-cd ..
-bunx tsc
-
-if [ "$?" != "0" ]; then
-    echo "Compilation failed"
-    exit
-fi
-
-echo "Flatten js/ directory..."
-./build/flatten_js_source.sh
-
-#echo "Fix imports..."
-#./build/fix_imports.sh
-
-echo "esbuild..."
-./build/esbuild.sh
+./build/shallow_compile.sh
