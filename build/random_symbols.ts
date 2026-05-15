@@ -40,13 +40,13 @@ function shuffle(input: string): string {
 	return arr.join('');
 }
 
-const allowed_symbols: string =
+const symbols: string =
 	'a!b·c$d%e&f/g(h)i=j?k¿l|m@n#o~p¬qrs[¡]t{u}v/w*x-y+zºAªB"C,D.E;F:G_HIJKLMNOPQRSTUVWXYZ0123456789 '.normalize('NFC');
 
-const randomized = shuffle(allowed_symbols);
+const randomized = shuffle(symbols);
 
 const result = {
-	randomized_allowed_symbols: `${randomized}`
+	symbols: `${randomized}`
 };
 
 console.log(JSON.stringify(result));
