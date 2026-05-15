@@ -61,7 +61,7 @@ async function select_result_game_on_change(event: any) {
 	const response = await fetch('/game/edit_result', {
 		method: 'POST',
 		body: JSON.stringify({
-			game_id: game_id,
+			id: game_id,
 			new_result: new_result
 		}),
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
@@ -124,7 +124,7 @@ async function button_remove_on_click(event: any) {
 	const game_id = button.getAttribute('game_id');
 	const response = await fetch('/game/delete', {
 		method: 'POST',
-		body: JSON.stringify({ game_id: game_id }),
+		body: JSON.stringify({ id: game_id }),
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
 
