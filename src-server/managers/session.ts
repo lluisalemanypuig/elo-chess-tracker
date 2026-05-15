@@ -34,10 +34,12 @@ import { SessionID } from '../models/session_id';
 import { shuffle } from '../utils/shuffle_random';
 import { UsersManager } from './users_manager';
 
+// The original string was
+// "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+-*/ª!·$%&/()=?¿¡'º|@#~€¬^{},;.:_";
+
 /// This string is randomized by the build script which the administrator must
 /// use in order to configure the webpage in their machine.
-const character_samples =
-	"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+-*/ª!·$%&/()=?¿¡'º|@#~€¬^{},;.:_";
+const character_samples: string = '$ALLOWED_SYMBOLS_COOKIES';
 
 /// Makes a random session id from a starting string.
 function random_session_id(str: string): string {
