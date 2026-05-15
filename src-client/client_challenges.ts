@@ -417,7 +417,7 @@ async function fill_challenges_pending_result() {
 		{
 			let submit_result_button = document.createElement('button');
 			submit_result_button.textContent = 'Submit result';
-			submit_result_button.className = 'button-challenge';
+			submit_result_button.className = 'button-submit-challenge';
 			submit_result_button.id = elem.id;
 			submit_result_button.onclick = submit_result_challenge_button_clicked;
 			submit_result_button.style.marginTop = '5px';
@@ -583,7 +583,7 @@ async function fill_challenges_confirm_result_self() {
 }
 
 window.onload = function () {
-	// link button 'button-challenge' click behaviour
+	// link button 'button-submit-challenge' click behaviour
 	let send_challenge_button = document.getElementById('send_challenge_button') as HTMLButtonElement;
 	send_challenge_button.onclick = send_challenge_button_clicked;
 
