@@ -36,6 +36,7 @@ import {
 	game_add_new,
 	game_delete,
 	game_edit_result,
+	game_edit_title,
 	game_find_by_id,
 	recalculate_all_ratings
 } from './managers/games';
@@ -233,6 +234,55 @@ export async function post_game_edit_result(req: any, res: any) {
 
 	// actually edit the game now
 	game_edit_result(game_id, new_result);
+
+	res.status(200).send();
+}
+
+export async function post_game_edit_title(req: any, res: any) {
+	debug(log_now(), 'POST /game/edit_title...');
+
+	const session = SessionID.from_cookie(req.cookies);
+	const r = is_user_logged_in(session);
+
+	if (!r[0]) {
+		res.status(401).send(r[1]);
+		return;
+	}
+
+	const user = r[2] as User;
+	if (!user.can_do(GAMES_EDIT)) {
+		debug(log_now(), `User '${session.username}' cannot edit games.`);
+		res.status(403).send('You cannot edit games');
+		return;
+	}
+
+	const game_id: GameID = req.body.id;
+	const title = req.body.title;
+
+	debug(log_now(), `    Game ID: '${game_id}'`);
+	debug(log_now(), `    New title: '${title}'`);
+
+	const game = game_find_by_id(game_id);
+	if (game == undefined) {
+		res.status(404).send(`Game was not found.`);
+		return;
+	}
+	let manager = UsersManager.get_instance();
+
+	const is_editable = can_user_edit_a_game(
+		user,
+		manager.get_user_by_username(game.get_white()) as User,
+		manager.get_user_by_username(game.get_black()) as User
+	);
+	if (!is_editable) {
+		res.status(403).send(`You lack permissions to edit this game.`);
+		return;
+	}
+
+	debug(log_now(), `Editing game...`);
+
+	// actually edit the game now
+	game_edit_title(game_id, title);
 
 	res.status(200).send();
 }

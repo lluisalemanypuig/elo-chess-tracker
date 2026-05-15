@@ -394,7 +394,7 @@ export function game_find_by_id(game_id: GameID): Game | undefined {
 }
 
 /**
- * @brief Edit a game
+ * @brief Edit a game's result.
  * @param game_id The ID of the game to edit
  * @param new_result The (new) result of the game
  */
@@ -461,6 +461,44 @@ export function game_edit_result(game_id: GameID, new_result: GameResult): void 
 	}
 
 	user_update_from_player_data(updated_players);
+}
+
+/**
+ * @brief Edit a game's title
+ * @param game_id The ID of the game to edit
+ * @param new_result The (new) result of the game
+ */
+export function game_edit_title(game_id: GameID, new_title: string): void {
+	const __info = GamesManager.get_instance().get_game_info(game_id);
+
+	// game_id does not exist
+	if (__info == undefined) {
+		throw new Error(`Game id '${game_id}' does not exist in the Games Manager`);
+	}
+
+	const time_control_id = __info.time_control_id;
+	const game_record = __info.game_record;
+	const games_dir = EnvironmentManager.get_instance().get_dir_games_time_control(time_control_id);
+
+	let games_iter = new GamesIterator(games_dir);
+	const found = games_iter.locate_game(game_record, game_id);
+	if (!found) {
+		throw new Error(`Could not find game '${game_id}'.`);
+	}
+
+	let game = games_iter.get_current_game();
+
+	// avoid unnecessary work
+	if (game.get_title() == new_title) {
+		return;
+	}
+
+	game.set_title(new_title);
+
+	const game_record_file = path.join(games_dir, game_record);
+
+	let game_set = games_iter.get_current_game_set();
+	fs.writeFileSync(game_record_file, JSON.stringify(game_set, null, 4));
 }
 
 export function game_delete(game_id: GameID): void {

@@ -118,6 +118,9 @@ export class Game {
 	get_title(): string {
 		return this.title;
 	}
+	set_title(s: string) {
+		this.title = s;
+	}
 
 	/// Return white's username
 	get_white(): string {

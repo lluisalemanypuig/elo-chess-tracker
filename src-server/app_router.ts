@@ -206,6 +206,10 @@ router.post('/game/create', post_game_create);
 import { post_game_delete } from './server_games';
 router.post('/game/delete', post_game_delete);
 
+// edit a game's title
+import { post_game_edit_title } from './server_games';
+router.post('/game/edit_title', post_game_edit_title);
+
 // editing a game's result
 import { post_game_edit_result } from './server_games';
 router.post('/game/edit_result', post_game_edit_result);
