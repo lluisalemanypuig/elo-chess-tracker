@@ -75,9 +75,9 @@ Full source code of elo-chess-tracker:
 	box-shadow: none;
 }
 
-/* button-challenge */
+/* button-submit-challenge */
 
-.button-challenge {
+.button-submit-challenge {
 	@include main.shape-round;
 	@include main.border-shadow;
 	@include main.font-clear;
@@ -88,16 +88,16 @@ Full source code of elo-chess-tracker:
 	touch-action: manipulation;
 }
 
-.button-challenge:hover {
+.button-submit-challenge:hover {
 	@include main.color-background-hover;
 }
 
-.button-challenge:focus {
+.button-submit-challenge:focus {
 	outline: 2px solid transparent;
 	outline-offset: 2px;
 }
 
-.button-challenge:focus-visible {
+.button-submit-challenge:focus-visible {
 	box-shadow: none;
 }
 
