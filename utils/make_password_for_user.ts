@@ -27,13 +27,28 @@ import { encrypt_password_for_user } from '../src-server/utils/encrypt';
 
 const args = process.argv.slice(2);
 
-const username = args[args.indexOf('--username') + 1];
-const password = args[args.indexOf('--password') + 1];
+const username_index = args.indexOf('--username');
+if (username_index == -1) {
+	console.log("Missing --username parameter");
+	process.exit(1);
+}
+
+const password_index = args.indexOf('--password');
+if (password_index == -1) {
+	console.log("Missing --password parameter");
+	process.exit(1);
+}
+
+const username = args[username_index + 1];
+const password = args[password_index + 1];
+
+console.log(`Username: '${username}'`);
+console.log(`Psasword: '${password}'`);
 
 let [encrypted_password, iv] = encrypt_password_for_user(username, password);
 
 const result = {
-	password: `${encrypted_password}`,
+	encrypted: `${encrypted_password}`,
 	iv: `${iv}`
 };
 
