@@ -207,7 +207,7 @@ export async function post_game_edit_result(req: any, res: any) {
 		return;
 	}
 
-	const game_id: GameID = req.body.game_id;
+	const game_id: GameID = req.body.id;
 	const new_result = req.body.new_result;
 
 	debug(log_now(), `    Game ID: '${game_id}'`);
@@ -305,7 +305,7 @@ export async function post_game_delete(req: any, res: any) {
 		return;
 	}
 
-	const game_id: GameID = req.body.game_id;
+	const game_id: GameID = req.body.id;
 
 	debug(log_now(), `    Game ID: '${game_id}'`);
 
