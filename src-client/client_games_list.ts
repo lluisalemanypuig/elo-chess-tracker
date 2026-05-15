@@ -149,6 +149,60 @@ function new_cell_button_delete(game_id: string) {
 	return cell;
 }
 
+async function trigger_edit(event: Event) {
+	let input = event.target as HTMLInputElement;
+	const game_id = input.getAttribute('game_id');
+	const original_title = input.getAttribute('original_title');
+	const new_title = input.value;
+
+	if (original_title == new_title) {
+		return;
+	}
+
+	const response = await fetch('/game/edit_title', {
+		method: 'POST',
+		body: JSON.stringify({ id: game_id, title: new_title }),
+		headers: { 'Content-type': 'application/json; charset=UTF-8' }
+	});
+
+	if (response.status >= 400) {
+		const message = await response.text();
+		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
+		return;
+	}
+
+	input.setAttribute('original_title', new_title);
+}
+
+async function edit_game_title(event: Event) {
+	switch (event.type) {
+		case 'keydown':
+			const key = (event as KeyboardEvent).key;
+			if (key === 'Enter') {
+				trigger_edit(event);
+			}
+			break;
+
+		case 'blur':
+			trigger_edit(event);
+			break;
+	}
+}
+
+function new_cell_text_input(game_id: string, title: string) {
+	let input = document.createElement('input') as HTMLInputElement;
+	input.value = `${title}`;
+	input.className = 'input-text';
+	input.setAttribute('game_id', game_id);
+	input.setAttribute('original_title', title);
+	input.onkeydown = edit_game_title;
+	input.onblur = edit_game_title;
+
+	let cell = document.createElement('td');
+	cell.appendChild(input);
+	return cell;
+}
+
 async function fill_games_list_time_control(time_control_id: string) {
 	let table = document.getElementById('table-games') as HTMLTableElement;
 	const val = table.getAttribute('value');
@@ -180,7 +234,15 @@ async function fill_games_list_time_control(time_control_id: string) {
 	for (let i = 0; i < games.length; i++) {
 		let row = document.createElement('tr');
 
-		row.appendChild(new_text_cell(games[i].title));
+		if (games[i].editable == 'y') {
+			if (games[i].title == '') {
+				row.appendChild(new_text_cell(''));
+			} else {
+				row.appendChild(new_cell_text_input(games[i].id, games[i].title));
+			}
+		} else {
+			row.appendChild(new_text_cell(games[i].title));
+		}
 
 		row.appendChild(new_text_cell(games[i].time_control));
 
