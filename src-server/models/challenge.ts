@@ -38,6 +38,7 @@ export class Challenge {
 	/// Identifier of this challenge
 	private readonly id: ChallengeID;
 
+	private readonly title: string;
 	/// The Challenge sending the challenge
 	private readonly sent_by: string;
 	/// The Challenge receiving the challenge
@@ -80,6 +81,7 @@ export class Challenge {
 	 */
 	constructor(
 		id: ChallengeID,
+		title: string,
 		sent_by: string,
 		sent_to: string,
 		time_control_id: TimeControlID,
@@ -87,6 +89,7 @@ export class Challenge {
 		when_challenge_sent: DateStringLongMillis
 	) {
 		this.id = id;
+		this.title = title;
 		this.sent_by = sent_by;
 		this.sent_to = sent_to;
 		this.time_control_id = time_control_id;
@@ -97,6 +100,11 @@ export class Challenge {
 	/// Returns the id of the challenge
 	get_id(): ChallengeID {
 		return this.id;
+	}
+
+	/// Returns the title of this game
+	get_title(): string {
+		return this.title;
 	}
 
 	/// Returns the username this challenge was sent by
