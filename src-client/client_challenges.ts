@@ -42,12 +42,15 @@ async function send_challenge_button_clicked(_event: any) {
 		const select_time_control = document.getElementById('select_time_control') as HTMLSelectElement;
 		const time_control_id = select_time_control.options[select_time_control.selectedIndex].value;
 		const time_control_name = select_time_control.options[select_time_control.selectedIndex].text;
+		const game_title_text = document.getElementById('input_game_title') as HTMLSelectElement;
+		const game_title = game_title_text.textContent;
 
 		// "query" the server
 		const response = await fetch('/challenge/send', {
 			method: 'POST',
 			body: JSON.stringify({
 				to: random_user_id,
+				title: game_title,
 				time_control_id: time_control_id,
 				time_control_name: time_control_name
 			}),
