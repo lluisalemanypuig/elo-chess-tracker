@@ -39,6 +39,7 @@ export function challenge_from_json(json: any): Challenge {
 
 	let c = new Challenge(
 		json['id'],
+		json['title'],
 		json['sent_by'],
 		json['sent_to'],
 		json['time_control_id'],
