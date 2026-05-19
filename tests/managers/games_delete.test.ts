@@ -122,11 +122,11 @@ describe('Server setup', () => {
 
 describe('Sequential game creation', () => {
 	test('Add "Blitz" games', () => {
-		game_add_new(u('a'), u('b'), 'white_wins', 'Blitz', 'Blitz (5 + 3)', '2025-01-19', '17:06:00:000');
-		game_add_new(u('c'), u('d'), 'black_wins', 'Blitz', 'Blitz (5 + 3)', '2025-01-19', '17:06:10:000');
-		game_add_new(u('e'), u('f'), 'draw', 'Blitz', 'Blitz (5 + 3)', '2025-01-19', '17:06:20:000');
-		game_add_new(u('a'), u('f'), 'black_wins', 'Blitz', 'Blitz (5 + 3)', '2025-01-19', '17:06:30:000');
-		game_add_new(u('b'), u('a'), 'white_wins', 'Blitz', 'Blitz (5 + 3)', '2025-01-19', '17:06:40:000');
+		game_add_new('sample', u('a'), u('b'), 'white_wins', 'Blitz', 'Blitz (5 + 3)', '2025-01-19', '17:06:00:000');
+		game_add_new('sample', u('c'), u('d'), 'black_wins', 'Blitz', 'Blitz (5 + 3)', '2025-01-19', '17:06:10:000');
+		game_add_new('sample', u('e'), u('f'), 'draw', 'Blitz', 'Blitz (5 + 3)', '2025-01-19', '17:06:20:000');
+		game_add_new('sample', u('a'), u('f'), 'black_wins', 'Blitz', 'Blitz (5 + 3)', '2025-01-19', '17:06:30:000');
+		game_add_new('sample', u('b'), u('a'), 'white_wins', 'Blitz', 'Blitz (5 + 3)', '2025-01-19', '17:06:40:000');
 
 		expect(a.get_games('Blitz').length).toBe(1);
 		expect(b.get_games('Blitz').length).toBe(1);

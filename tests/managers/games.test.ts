@@ -135,7 +135,7 @@ describe('Sequential game creation', () => {
 	test('Add "Blitz" games', () => {
 		const blitz_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Blitz');
 
-		game_add_new(u('a'), u('b'), 'white_wins', 'Blitz', 'Blitz (5 + 3)', '2025-01-19', '17:06:00:000');
+		game_add_new('sample', u('a'), u('b'), 'white_wins', 'Blitz', 'Blitz (5 + 3)', '2025-01-19', '17:06:00:000');
 		{
 			const game_set = game_set_from_json(fs.readFileSync(path.join(blitz_dir, '2025-01-19'), 'utf8'));
 			expect(game_set.length).toBe(1);
@@ -175,7 +175,7 @@ describe('Sequential game creation', () => {
 			expect(f.get_rating('Classical').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
 		}
 
-		game_add_new(u('c'), u('d'), 'black_wins', 'Blitz', 'Blitz (5 + 3)', '2025-01-19', '17:06:10:000');
+		game_add_new('sample', u('c'), u('d'), 'black_wins', 'Blitz', 'Blitz (5 + 3)', '2025-01-19', '17:06:10:000');
 		{
 			const game_set = game_set_from_json(fs.readFileSync(path.join(blitz_dir, '2025-01-19'), 'utf8'));
 			expect(game_set.length).toBe(2);
@@ -223,7 +223,7 @@ describe('Sequential game creation', () => {
 			expect(f.get_rating('Classical').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
 		}
 
-		game_add_new(u('e'), u('f'), 'draw', 'Blitz', 'Blitz (5 + 3)', '2025-01-19', '17:06:20:000');
+		game_add_new('sample', u('e'), u('f'), 'draw', 'Blitz', 'Blitz (5 + 3)', '2025-01-19', '17:06:20:000');
 		{
 			const game_set = game_set_from_json(fs.readFileSync(path.join(blitz_dir, '2025-01-19'), 'utf8'));
 			expect(game_set.length).toBe(3);
@@ -279,7 +279,7 @@ describe('Sequential game creation', () => {
 			expect(f.get_rating('Classical').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
 		}
 
-		game_add_new(u('a'), u('f'), 'black_wins', 'Blitz', 'Blitz (5 + 3)', '2025-01-19', '17:06:30:000');
+		game_add_new('sample', u('a'), u('f'), 'black_wins', 'Blitz', 'Blitz (5 + 3)', '2025-01-19', '17:06:30:000');
 		{
 			const game_set = game_set_from_json(fs.readFileSync(path.join(blitz_dir, '2025-01-19'), 'utf8'));
 			expect(game_set.length).toBe(4);
@@ -347,7 +347,16 @@ describe('Sequential game creation', () => {
 	test('Add "Classical" games', () => {
 		const classical_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Classical');
 
-		game_add_new(u('a'), u('b'), 'white_wins', 'Classical', 'Classical (90 + 30)', '2025-01-09', '17:06:00:000');
+		game_add_new(
+			'sample',
+			u('a'),
+			u('b'),
+			'white_wins',
+			'Classical',
+			'Classical (90 + 30)',
+			'2025-01-09',
+			'17:06:00:000'
+		);
 		{
 			const game_set = game_set_from_json(fs.readFileSync(path.join(classical_dir, '2025-01-09'), 'utf8'));
 			expect(game_set.length).toBe(1);
@@ -387,7 +396,16 @@ describe('Sequential game creation', () => {
 			expect(f.get_rating('Classical').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
 		}
 
-		game_add_new(u('c'), u('d'), 'black_wins', 'Classical', 'Classical (90 + 30)', '2025-01-09', '17:06:10:000');
+		game_add_new(
+			'sample',
+			u('c'),
+			u('d'),
+			'black_wins',
+			'Classical',
+			'Classical (90 + 30)',
+			'2025-01-09',
+			'17:06:10:000'
+		);
 		{
 			const game_set = game_set_from_json(fs.readFileSync(path.join(classical_dir, '2025-01-09'), 'utf8'));
 			expect(game_set.length).toBe(2);
@@ -435,7 +453,16 @@ describe('Sequential game creation', () => {
 			expect(f.get_rating('Classical').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
 		}
 
-		game_add_new(u('e'), u('f'), 'draw', 'Classical', 'Classical (90 + 30)', '2025-01-09', '17:06:20:000');
+		game_add_new(
+			'sample',
+			u('e'),
+			u('f'),
+			'draw',
+			'Classical',
+			'Classical (90 + 30)',
+			'2025-01-09',
+			'17:06:20:000'
+		);
 		{
 			const game_set = game_set_from_json(fs.readFileSync(path.join(classical_dir, '2025-01-09'), 'utf8'));
 			expect(game_set.length).toBe(3);
@@ -491,7 +518,16 @@ describe('Sequential game creation', () => {
 			expect(f.get_rating('Classical').num_won_drawn_lost()).toEqual([1, 0, 1, 0]);
 		}
 
-		game_add_new(u('a'), u('f'), 'black_wins', 'Classical', 'Classical (90 + 30)', '2025-01-09', '17:06:30:000');
+		game_add_new(
+			'sample',
+			u('a'),
+			u('f'),
+			'black_wins',
+			'Classical',
+			'Classical (90 + 30)',
+			'2025-01-09',
+			'17:06:30:000'
+		);
 		{
 			const game_set = game_set_from_json(fs.readFileSync(path.join(classical_dir, '2025-01-09'), 'utf8'));
 			expect(game_set.length).toBe(4);
@@ -561,7 +597,7 @@ describe('Inverse game creation', () => {
 	test('Add "Blitz" games', () => {
 		const blitz_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Blitz');
 
-		game_add_new(u('a'), u('f'), 'draw', 'Blitz', 'Blitz (5 + 0)', '2025-01-20', '17:06:30:000');
+		game_add_new('sample', u('a'), u('f'), 'draw', 'Blitz', 'Blitz (5 + 0)', '2025-01-20', '17:06:30:000');
 		{
 			const game_set = game_set_from_json(fs.readFileSync(path.join(blitz_dir, '2025-01-20'), 'utf8'));
 			expect(game_set.length).toBe(1);
@@ -601,7 +637,7 @@ describe('Inverse game creation', () => {
 			expect(f.get_rating('Classical').num_won_drawn_lost()).toEqual([2, 1, 1, 0]);
 		}
 
-		game_add_new(u('e'), u('f'), 'draw', 'Blitz', 'Blitz (5 + 0)', '2025-01-20', '17:06:20:000');
+		game_add_new('sample', u('e'), u('f'), 'draw', 'Blitz', 'Blitz (5 + 0)', '2025-01-20', '17:06:20:000');
 		{
 			const game_set = game_set_from_json(fs.readFileSync(path.join(blitz_dir, '2025-01-20'), 'utf8'));
 			expect(game_set.length).toBe(2);
@@ -649,7 +685,7 @@ describe('Inverse game creation', () => {
 			expect(f.get_rating('Classical').num_won_drawn_lost()).toEqual([2, 1, 1, 0]);
 		}
 
-		game_add_new(u('c'), u('d'), 'black_wins', 'Blitz', 'Blitz (5 + 3)', '2025-01-20', '17:06:10:000');
+		game_add_new('sample', u('c'), u('d'), 'black_wins', 'Blitz', 'Blitz (5 + 3)', '2025-01-20', '17:06:10:000');
 		{
 			const game_set = game_set_from_json(fs.readFileSync(path.join(blitz_dir, '2025-01-20'), 'utf8'));
 			expect(game_set.length).toBe(3);
@@ -705,7 +741,7 @@ describe('Inverse game creation', () => {
 			expect(f.get_rating('Classical').num_won_drawn_lost()).toEqual([2, 1, 1, 0]);
 		}
 
-		game_add_new(u('a'), u('b'), 'white_wins', 'Blitz', 'Blitz (5 + 3)', '2025-01-20', '17:06:00:000');
+		game_add_new('sample', u('a'), u('b'), 'white_wins', 'Blitz', 'Blitz (5 + 3)', '2025-01-20', '17:06:00:000');
 		{
 			const game_set = game_set_from_json(fs.readFileSync(path.join(blitz_dir, '2025-01-20'), 'utf8'));
 			expect(game_set.length).toBe(4);
@@ -773,7 +809,16 @@ describe('Inverse game creation', () => {
 	test('Add "Classical" games', () => {
 		const classical_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Classical');
 
-		game_add_new(u('a'), u('f'), 'draw', 'Classical', 'Classical (90 + 30)', '2025-01-10', '17:06:30:000');
+		game_add_new(
+			'sample',
+			u('a'),
+			u('f'),
+			'draw',
+			'Classical',
+			'Classical (90 + 30)',
+			'2025-01-10',
+			'17:06:30:000'
+		);
 		{
 			const game_set = game_set_from_json(fs.readFileSync(path.join(classical_dir, '2025-01-10'), 'utf8'));
 			expect(game_set.length).toBe(1);
@@ -813,7 +858,16 @@ describe('Inverse game creation', () => {
 			expect(f.get_rating('Classical').num_won_drawn_lost()).toEqual([3, 1, 2, 0]);
 		}
 
-		game_add_new(u('e'), u('f'), 'draw', 'Classical', 'Classical (90 + 30)', '2025-01-10', '17:06:20:000');
+		game_add_new(
+			'sample',
+			u('e'),
+			u('f'),
+			'draw',
+			'Classical',
+			'Classical (90 + 30)',
+			'2025-01-10',
+			'17:06:20:000'
+		);
 		{
 			const game_set = game_set_from_json(fs.readFileSync(path.join(classical_dir, '2025-01-10'), 'utf8'));
 			expect(game_set.length).toBe(2);
@@ -861,7 +915,16 @@ describe('Inverse game creation', () => {
 			expect(f.get_rating('Classical').num_won_drawn_lost()).toEqual([4, 1, 3, 0]);
 		}
 
-		game_add_new(u('c'), u('d'), 'black_wins', 'Classical', 'Classical (90 + 30)', '2025-01-10', '17:06:10:000');
+		game_add_new(
+			'sample',
+			u('c'),
+			u('d'),
+			'black_wins',
+			'Classical',
+			'Classical (90 + 30)',
+			'2025-01-10',
+			'17:06:10:000'
+		);
 		{
 			const game_set = game_set_from_json(fs.readFileSync(path.join(classical_dir, '2025-01-10'), 'utf8'));
 			expect(game_set.length).toBe(3);
@@ -917,7 +980,16 @@ describe('Inverse game creation', () => {
 			expect(f.get_rating('Classical').num_won_drawn_lost()).toEqual([4, 1, 3, 0]);
 		}
 
-		game_add_new(u('a'), u('b'), 'white_wins', 'Classical', 'Classical (90 + 30)', '2025-01-10', '17:06:00:000');
+		game_add_new(
+			'sample',
+			u('a'),
+			u('b'),
+			'white_wins',
+			'Classical',
+			'Classical (90 + 30)',
+			'2025-01-10',
+			'17:06:00:000'
+		);
 		{
 			const game_set = game_set_from_json(fs.readFileSync(path.join(classical_dir, '2025-01-10'), 'utf8'));
 			expect(game_set.length).toBe(4);
@@ -986,7 +1058,7 @@ describe('Inverse game creation', () => {
 describe('Zig-zag game creation', () => {
 	test('Add "Blitz" games', () => {
 		const blitz_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Blitz');
-		game_add_new(u('a'), u('f'), 'draw', 'Blitz', 'Blitz (5 + 0)', '2025-01-20', '17:06:25:000');
+		game_add_new('sample', u('a'), u('f'), 'draw', 'Blitz', 'Blitz (5 + 0)', '2025-01-20', '17:06:25:000');
 		{
 			const game_set = game_set_from_json(fs.readFileSync(path.join(blitz_dir, '2025-01-20'), 'utf8'));
 			expect(game_set.length).toBe(5);
@@ -1058,7 +1130,7 @@ describe('Zig-zag game creation', () => {
 			expect(f.get_rating('Classical').num_won_drawn_lost()).toEqual([4, 1, 3, 0]);
 		}
 
-		game_add_new(u('e'), u('f'), 'draw', 'Blitz', 'Blitz (5 + 0)', '2025-01-20', '17:06:05:000');
+		game_add_new('sample', u('e'), u('f'), 'draw', 'Blitz', 'Blitz (5 + 0)', '2025-01-20', '17:06:05:000');
 		{
 			const game_set = game_set_from_json(fs.readFileSync(path.join(blitz_dir, '2025-01-20'), 'utf8'));
 			expect(game_set.length).toBe(6);
@@ -1138,7 +1210,7 @@ describe('Zig-zag game creation', () => {
 			expect(f.get_rating('Classical').num_won_drawn_lost()).toEqual([4, 1, 3, 0]);
 		}
 
-		game_add_new(u('c'), u('d'), 'white_wins', 'Blitz', 'Blitz (5 + 3)', '2025-01-20', '17:06:15:000');
+		game_add_new('sample', u('c'), u('d'), 'white_wins', 'Blitz', 'Blitz (5 + 3)', '2025-01-20', '17:06:15:000');
 		{
 			const game_set = game_set_from_json(fs.readFileSync(path.join(blitz_dir, '2025-01-20'), 'utf8'));
 			expect(game_set.length).toBe(7);
@@ -1226,7 +1298,7 @@ describe('Zig-zag game creation', () => {
 			expect(f.get_rating('Classical').num_won_drawn_lost()).toEqual([4, 1, 3, 0]);
 		}
 
-		game_add_new(u('a'), u('b'), 'black_wins', 'Blitz', 'Blitz (5 + 3)', '2025-01-20', '17:05:55:000');
+		game_add_new('sample', u('a'), u('b'), 'black_wins', 'Blitz', 'Blitz (5 + 3)', '2025-01-20', '17:05:55:000');
 		{
 			const game_set = game_set_from_json(fs.readFileSync(path.join(blitz_dir, '2025-01-20'), 'utf8'));
 			expect(game_set.length).toBe(8);
@@ -1325,7 +1397,16 @@ describe('Zig-zag game creation', () => {
 
 	test('Add "Classical" games', () => {
 		const blitz_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Classical');
-		game_add_new(u('a'), u('f'), 'draw', 'Classical', 'Classical (90 + 30)', '2025-01-10', '17:06:25:000');
+		game_add_new(
+			'sample',
+			u('a'),
+			u('f'),
+			'draw',
+			'Classical',
+			'Classical (90 + 30)',
+			'2025-01-10',
+			'17:06:25:000'
+		);
 		{
 			const game_set = game_set_from_json(fs.readFileSync(path.join(blitz_dir, '2025-01-10'), 'utf8'));
 			expect(game_set.length).toBe(5);
@@ -1397,7 +1478,16 @@ describe('Zig-zag game creation', () => {
 			expect(f.get_rating('Classical').num_won_drawn_lost()).toEqual([5, 1, 4, 0]);
 		}
 
-		game_add_new(u('e'), u('f'), 'draw', 'Classical', 'Classical (90 + 30)', '2025-01-10', '17:06:05:000');
+		game_add_new(
+			'sample',
+			u('e'),
+			u('f'),
+			'draw',
+			'Classical',
+			'Classical (90 + 30)',
+			'2025-01-10',
+			'17:06:05:000'
+		);
 		{
 			const game_set = game_set_from_json(fs.readFileSync(path.join(blitz_dir, '2025-01-10'), 'utf8'));
 			expect(game_set.length).toBe(6);
@@ -1477,7 +1567,16 @@ describe('Zig-zag game creation', () => {
 			expect(f.get_rating('Classical').num_won_drawn_lost()).toEqual([6, 1, 5, 0]);
 		}
 
-		game_add_new(u('c'), u('d'), 'white_wins', 'Classical', 'Classical (90 + 30)', '2025-01-10', '17:06:15:000');
+		game_add_new(
+			'sample',
+			u('c'),
+			u('d'),
+			'white_wins',
+			'Classical',
+			'Classical (90 + 30)',
+			'2025-01-10',
+			'17:06:15:000'
+		);
 		{
 			const game_set = game_set_from_json(fs.readFileSync(path.join(blitz_dir, '2025-01-10'), 'utf8'));
 			expect(game_set.length).toBe(7);
@@ -1565,7 +1664,16 @@ describe('Zig-zag game creation', () => {
 			expect(f.get_rating('Classical').num_won_drawn_lost()).toEqual([6, 1, 5, 0]);
 		}
 
-		game_add_new(u('a'), u('b'), 'black_wins', 'Classical', 'Classical (90 + 30)', '2025-01-10', '17:05:55:000');
+		game_add_new(
+			'sample',
+			u('a'),
+			u('b'),
+			'black_wins',
+			'Classical',
+			'Classical (90 + 30)',
+			'2025-01-10',
+			'17:05:55:000'
+		);
 		{
 			const game_set = game_set_from_json(fs.readFileSync(path.join(blitz_dir, '2025-01-10'), 'utf8'));
 			expect(game_set.length).toBe(8);
@@ -1666,7 +1774,7 @@ describe('Zig-zag game creation', () => {
 describe('Before-time inverse game creation', () => {
 	test('Add "Blitz" games', () => {
 		const blitz_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Blitz');
-		game_add_new(u('a'), u('f'), 'draw', 'Blitz', 'Blitz (5 + 0)', '2023-01-20', '17:06:50:000');
+		game_add_new('sample', u('a'), u('f'), 'draw', 'Blitz', 'Blitz (5 + 0)', '2023-01-20', '17:06:50:000');
 		{
 			const game_set = game_set_from_json(fs.readFileSync(path.join(blitz_dir, '2023-01-20'), 'utf8'));
 			expect(game_set.length).toBe(1);
@@ -1706,7 +1814,7 @@ describe('Before-time inverse game creation', () => {
 			expect(f.get_rating('Classical').num_won_drawn_lost()).toEqual([6, 1, 5, 0]);
 		}
 
-		game_add_new(u('a'), u('c'), 'draw', 'Blitz', 'Blitz (5 + 0)', '2023-01-10', '17:06:40:000');
+		game_add_new('sample', u('a'), u('c'), 'draw', 'Blitz', 'Blitz (5 + 0)', '2023-01-10', '17:06:40:000');
 		{
 			const game_set = game_set_from_json(fs.readFileSync(path.join(blitz_dir, '2023-01-10'), 'utf8'));
 			expect(game_set.length).toBe(1);

@@ -146,10 +146,31 @@ describe('Check challenge communication', () => {
 		const challenges = ChallengesManager.get_instance();
 		expect(challenges.get_max_challenge_id()).toBe(0);
 
-		const c_aa_bb = challenge_send_new('aa', 'bb', 'Classical', 'Classical (90 + 30)', '2025-01-10..20:38:12:000');
-		const c_aa_cc = challenge_send_new('aa', 'cc', 'Classical', 'Classical (90 + 30)', '2025-01-10..20:38:13:000');
-		const c_aa_dd = challenge_send_new('aa', 'dd', 'Blitz', 'Blitz (5 + 3)', '2025-01-10..20:38:14:000');
-		const c_ee_ff = challenge_send_new('ee', 'ff', 'Classical', 'Classical (90 + 30)', '2025-01-10..20:38:15:000');
+		const c_aa_bb = challenge_send_new(
+			'sample',
+			'aa',
+			'bb',
+			'Classical',
+			'Classical (90 + 30)',
+			'2025-01-10..20:38:12:000'
+		);
+		const c_aa_cc = challenge_send_new(
+			'sample',
+			'aa',
+			'cc',
+			'Classical',
+			'Classical (90 + 30)',
+			'2025-01-10..20:38:13:000'
+		);
+		const c_aa_dd = challenge_send_new('sample', 'aa', 'dd', 'Blitz', 'Blitz (5 + 3)', '2025-01-10..20:38:14:000');
+		const c_ee_ff = challenge_send_new(
+			'sample',
+			'ee',
+			'ff',
+			'Classical',
+			'Classical (90 + 30)',
+			'2025-01-10..20:38:15:000'
+		);
 
 		const c_aa_bb_id = number_to_string(1);
 		const c_aa_cc_id = number_to_string(2);
@@ -446,7 +467,7 @@ describe('Check initialization and communication', () => {
 
 describe('Fast challenge communication', () => {
 	test('New challenge (Blitz) aa -- bb', () => {
-		const c_aa_bb = challenge_send_new('aa', 'bb', 'Blitz', 'Blitz (5 + 3)', '2025-01-10..20:38:45:000');
+		const c_aa_bb = challenge_send_new('sample', 'aa', 'bb', 'Blitz', 'Blitz (5 + 3)', '2025-01-10..20:38:45:000');
 		challenge_accept(c_aa_bb);
 
 		expect(() =>
@@ -489,7 +510,14 @@ describe('Fast challenge communication', () => {
 	});
 
 	test('New challenge (Classical) cc -- bb', () => {
-		const c_bb_cc = challenge_send_new('cc', 'bb', 'Classical', 'Classical (90 + 30)', '2025-01-10..20:40:00:000');
+		const c_bb_cc = challenge_send_new(
+			'sample',
+			'cc',
+			'bb',
+			'Classical',
+			'Classical (90 + 30)',
+			'2025-01-10..20:40:00:000'
+		);
 		challenge_accept(c_bb_cc);
 
 		expect(() =>

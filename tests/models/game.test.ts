@@ -30,7 +30,18 @@ describe('Setters and Getters -- Elo', () => {
 	test('Gets', () => {
 		const rW = new EloRating(1500, 0, 0, 0, 0, 40, false);
 		const rB = new EloRating(1500, 0, 0, 0, 0, 40, false);
-		const g = new Game('1', 'W', rW, 'B', rB, 'white_wins', 'blitz', 'Blitz (5 + 3)', '2024-12-29..11:15:00');
+		const g = new Game(
+			'1',
+			'asdf',
+			'W',
+			rW,
+			'B',
+			rB,
+			'white_wins',
+			'blitz',
+			'Blitz (5 + 3)',
+			'2024-12-29..11:15:00'
+		);
 
 		expect(g.get_id()).toEqual('1');
 		expect(g.get_white()).toEqual('W');
@@ -47,7 +58,18 @@ describe('Setters and Getters -- Elo', () => {
 	test('Sets', () => {
 		let rW = new EloRating(1500, 0, 0, 0, 0, 40, false);
 		let rB = new EloRating(1500, 0, 0, 0, 0, 40, false);
-		const g = new Game('1', 'W', rW, 'B', rB, 'white_wins', 'blitz', 'Blitz (5 + 3)', '2024-12-29..11:15:00');
+		const g = new Game(
+			'1',
+			'asdf',
+			'W',
+			rW,
+			'B',
+			rB,
+			'white_wins',
+			'blitz',
+			'Blitz (5 + 3)',
+			'2024-12-29..11:15:00'
+		);
 
 		expect(g.get_result()).toEqual('white_wins');
 		g.set_result('black_wins');

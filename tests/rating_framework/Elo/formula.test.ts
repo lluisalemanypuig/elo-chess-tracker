@@ -31,7 +31,18 @@ describe('Simple games', () => {
 	test('white_wins', () => {
 		const bW = new EloRating(1500, 0, 0, 0, 0, 40, false);
 		const bB = new EloRating(1500, 0, 0, 0, 0, 40, false);
-		const game = new Game('01', 'W', bW, 'B', bB, 'white_wins', 'blitz', 'Blitz (5+3)', '2024-12-28..16:41:00');
+		const game = new Game(
+			'01',
+			'sample',
+			'W',
+			bW,
+			'B',
+			bB,
+			'white_wins',
+			'blitz',
+			'Blitz (5+3)',
+			'2024-12-28..16:41:00'
+		);
 
 		const [aW, aB] = Elo_player_vs_player(game);
 
@@ -53,7 +64,7 @@ describe('Simple games', () => {
 	test('draw', () => {
 		const bW = new EloRating(1500, 0, 0, 0, 0, 40, false);
 		const bB = new EloRating(1500, 0, 0, 0, 0, 40, false);
-		const game = new Game('01', 'W', bW, 'B', bB, 'draw', 'blitz', 'Blitz (5+3)', '2024-12-28..16:41:00');
+		const game = new Game('01', 'sample', 'W', bW, 'B', bB, 'draw', 'blitz', 'Blitz (5+3)', '2024-12-28..16:41:00');
 
 		const [aW, aB] = Elo_player_vs_player(game);
 
@@ -73,7 +84,18 @@ describe('Simple games', () => {
 	test('black_wins', () => {
 		const bW = new EloRating(1500, 0, 0, 0, 0, 40, false);
 		const bB = new EloRating(1500, 0, 0, 0, 0, 40, false);
-		const game = new Game('01', 'W', bW, 'B', bB, 'black_wins', 'blitz', 'Blitz (5+3)', '2024-12-28..16:41:00');
+		const game = new Game(
+			'01',
+			'sample',
+			'W',
+			bW,
+			'B',
+			bB,
+			'black_wins',
+			'blitz',
+			'Blitz (5+3)',
+			'2024-12-28..16:41:00'
+		);
 
 		const [aW, aB] = Elo_player_vs_player(game);
 
@@ -99,12 +121,34 @@ describe('Series of games', () => {
 		let B = new EloRating(1500, 0, 0, 0, 0, 40, false);
 
 		while (W.num_games < 29) {
-			const game = new Game('01', 'W', W, 'B', B, 'white_wins', 'blitz', 'Blitz (5+3)', '2024-12-28..16:41:00');
+			const game = new Game(
+				'01',
+				'sample',
+				'W',
+				W,
+				'B',
+				B,
+				'white_wins',
+				'blitz',
+				'Blitz (5+3)',
+				'2024-12-28..16:41:00'
+			);
 			[W, B] = Elo_player_vs_player(game);
 		}
 		expect(W.K).toBe(40);
 
-		const game = new Game('01', 'W', W, 'B', B, 'white_wins', 'blitz', 'Blitz (5+3)', '2024-12-28..16:41:00');
+		const game = new Game(
+			'01',
+			'sample',
+			'W',
+			W,
+			'B',
+			B,
+			'white_wins',
+			'blitz',
+			'Blitz (5+3)',
+			'2024-12-28..16:41:00'
+		);
 		[W, B] = Elo_player_vs_player(game);
 
 		expect(W.K).toBe(20);
@@ -115,7 +159,18 @@ describe('Series of games', () => {
 		let B = new EloRating(2000, 0, 0, 0, 0, 40, false);
 
 		while (W.num_games < 30) {
-			const game = new Game('01', 'W', W, 'B', B, 'white_wins', 'blitz', 'Blitz (5+3)', '2024-12-28..16:41:00');
+			const game = new Game(
+				'01',
+				'sample',
+				'W',
+				W,
+				'B',
+				B,
+				'white_wins',
+				'blitz',
+				'Blitz (5+3)',
+				'2024-12-28..16:41:00'
+			);
 			[W, B] = Elo_player_vs_player(game);
 			B.rating = 2000;
 		}
@@ -124,7 +179,18 @@ describe('Series of games', () => {
 		expect(W.num_games).toBeGreaterThanOrEqual(30);
 
 		while (W.rating < 2400) {
-			const game = new Game('01', 'W', W, 'B', B, 'white_wins', 'blitz', 'Blitz (5+3)', '2024-12-28..16:41:00');
+			const game = new Game(
+				'01',
+				'sample',
+				'W',
+				W,
+				'B',
+				B,
+				'white_wins',
+				'blitz',
+				'Blitz (5+3)',
+				'2024-12-28..16:41:00'
+			);
 			[W, B] = Elo_player_vs_player(game);
 			B.rating = 2000;
 		}
@@ -135,7 +201,18 @@ describe('Series of games', () => {
 		expect(W.num_games).toBeGreaterThanOrEqual(30);
 
 		while (W.rating > 2200) {
-			const game = new Game('01', 'W', W, 'B', B, 'black_wins', 'blitz', 'Blitz (5+3)', '2024-12-28..16:41:00');
+			const game = new Game(
+				'01',
+				'sample',
+				'W',
+				W,
+				'B',
+				B,
+				'black_wins',
+				'blitz',
+				'Blitz (5+3)',
+				'2024-12-28..16:41:00'
+			);
 			[W, B] = Elo_player_vs_player(game);
 			B.rating = 2000;
 		}
@@ -146,7 +223,18 @@ describe('Series of games', () => {
 		let B = new EloRating(2000, 0, 0, 0, 0, 40, false);
 
 		while (W.K != 10) {
-			const game = new Game('01', 'W', W, 'B', B, 'white_wins', 'blitz', 'Blitz (5+3)', '2024-12-28..16:41:00');
+			const game = new Game(
+				'01',
+				'sample',
+				'W',
+				W,
+				'B',
+				B,
+				'white_wins',
+				'blitz',
+				'Blitz (5+3)',
+				'2024-12-28..16:41:00'
+			);
 			[W, B] = Elo_player_vs_player(game);
 			B.rating = 2000;
 		}
@@ -155,7 +243,18 @@ describe('Series of games', () => {
 		expect(W.K).toBe(10);
 
 		while (W.rating > 2200) {
-			const game = new Game('01', 'W', W, 'B', B, 'black_wins', 'blitz', 'Blitz (5+3)', '2024-12-28..16:41:00');
+			const game = new Game(
+				'01',
+				'sample',
+				'W',
+				W,
+				'B',
+				B,
+				'black_wins',
+				'blitz',
+				'Blitz (5+3)',
+				'2024-12-28..16:41:00'
+			);
 			[W, B] = Elo_player_vs_player(game);
 			B.rating = 2000;
 		}

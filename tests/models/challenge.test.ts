@@ -27,7 +27,7 @@ import { Challenge } from '../../src-server/models/challenge';
 
 describe('Sets and gets', () => {
 	test('Constructor', () => {
-		const c = new Challenge('000x1', 'A', 'B', 'blitz', 'Blitz (5 + 3)', '2024-12-29..14:00:00');
+		const c = new Challenge('000x1', 'asdf', 'A', 'B', 'blitz', 'Blitz (5 + 3)', '2024-12-29..14:00:00');
 
 		expect(c.get_id()).toBe('000x1');
 		expect(c.get_sent_by()).toBe('A');
@@ -36,7 +36,7 @@ describe('Sets and gets', () => {
 	});
 
 	test('Set fields - 1', () => {
-		let c = new Challenge('000x1', 'A', 'B', 'blitz', 'Blitz (5 + 3)', '2024-12-29..14:00:00');
+		let c = new Challenge('000x1', 'asdf', 'A', 'B', 'blitz', 'Blitz (5 + 3)', '2024-12-29..14:00:00');
 
 		expect(c.get_id()).toBe('000x1');
 		expect(c.get_sent_by()).toBe('A');
@@ -67,7 +67,7 @@ describe('Sets and gets', () => {
 	});
 
 	test('Set fields - 2', () => {
-		let c = new Challenge('000x1', 'A', 'B', 'blitz', 'Blitz (5 + 3)', '2024-12-29..14:00:00');
+		let c = new Challenge('000x1', 'asdf', 'A', 'B', 'blitz', 'Blitz (5 + 3)', '2024-12-29..14:00:00');
 
 		expect(c.get_id()).toBe('000x1');
 		expect(c.get_sent_by()).toBe('A');
@@ -98,7 +98,7 @@ describe('Sets and gets', () => {
 	});
 
 	test('Set fields - 3', () => {
-		let c = new Challenge('000x1', 'A', 'B', 'blitz', 'Blitz (5 + 3)', '2024-12-29..14:00:00');
+		let c = new Challenge('000x1', 'asdf', 'A', 'B', 'blitz', 'Blitz (5 + 3)', '2024-12-29..14:00:00');
 
 		expect(c.get_id()).toBe('000x1');
 		expect(c.get_sent_by()).toBe('A');
@@ -128,7 +128,7 @@ describe('Sets and gets', () => {
 	});
 
 	test('Set fields - 4', () => {
-		let c = new Challenge('000x1', 'A', 'B', 'blitz', 'Blitz (5 + 3)', '2024-12-29..14:00:00');
+		let c = new Challenge('000x1', 'asdf', 'A', 'B', 'blitz', 'Blitz (5 + 3)', '2024-12-29..14:00:00');
 
 		expect(c.get_id()).toBe('000x1');
 		expect(c.get_sent_by()).toBe('A');
@@ -147,7 +147,7 @@ describe('Sets and gets', () => {
 	});
 
 	test('Set fields - 5', () => {
-		let c = new Challenge('000x1', 'A', 'B', 'blitz', 'Blitz (5 + 3)', '2024-12-29..14:00:00');
+		let c = new Challenge('000x1', 'asdf', 'A', 'B', 'blitz', 'Blitz (5 + 3)', '2024-12-29..14:00:00');
 
 		expect(c.get_id()).toBe('000x1');
 		expect(c.get_sent_by()).toBe('A');
@@ -174,7 +174,7 @@ describe('Sets and gets', () => {
 	});
 
 	test('Set fields - 6', () => {
-		let c = new Challenge('000x1', 'A', 'B', 'blitz', 'Blitz (5 + 3)', '2024-12-29..14:00:00');
+		let c = new Challenge('000x1', 'asdf', 'A', 'B', 'blitz', 'Blitz (5 + 3)', '2024-12-29..14:00:00');
 
 		expect(c.get_id()).toBe('000x1');
 		expect(c.get_sent_by()).toBe('A');
