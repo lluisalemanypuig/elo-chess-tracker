@@ -199,6 +199,13 @@ async function fill_challenges_received() {
 			li.textContent = `Of time control: ${elem.time_control_name}.`;
 			challenge_div.appendChild(li);
 			//
+			if (elem.title != '') {
+				li = document.createElement('li') as HTMLLIElement;
+				li.className = 'challenge-items-nobullet';
+				li.textContent = `Of title: ${elem.title}.`;
+				challenge_div.appendChild(li);
+			}
+			//
 			li = document.createElement('li') as HTMLLIElement;
 			li.className = 'challenge-items-nobullet';
 			li.textContent = `Sent on ${format_date(elem.sent_when)}.`;
@@ -281,6 +288,13 @@ async function fill_challenges_sent() {
 		li.textContent = `Of time control: ${elem.time_control_name}.`;
 		challenge_list.appendChild(li);
 		//
+		if (elem.title != '') {
+			li = document.createElement('li') as HTMLLIElement;
+			li.className = 'challenge-items-nobullet';
+			li.textContent = `Of title: ${elem.title}.`;
+			challenge_list.appendChild(li);
+		}
+		//
 		li = document.createElement('li') as HTMLLIElement;
 		li.className = 'challenge-items-nobullet';
 		li.textContent = `Sent on ${format_date(elem.sent_when)}.`;
@@ -328,6 +342,13 @@ async function fill_challenges_pending_result() {
 				li.className = 'challenge-items-nobullet';
 				li.textContent = `Of time control: ${elem.time_control_name}.`;
 				header.appendChild(li);
+				//
+				if (elem.title != '') {
+					li = document.createElement('li') as HTMLLIElement;
+					li.className = 'challenge-items-nobullet';
+					li.textContent = `Of title: ${elem.title}.`;
+					header.appendChild(li);
+				}
 				li = document.createElement('li') as HTMLLIElement;
 				li.className = 'challenge-items-nobullet';
 				li.textContent = `Sent on ${format_date(elem.sent_when)}.`;
@@ -456,34 +477,33 @@ async function fill_challenges_confirm_result_other() {
 			li.className = 'challenge-items-bullet';
 			li.textContent = `On ${format_date(elem.sent_when)}.`;
 			challenge_list.appendChild(li);
-		}
-
-		{
-			let li = document.createElement('li') as HTMLLIElement;
+			//
+			li = document.createElement('li') as HTMLLIElement;
 			li.className = 'challenge-items-nobullet';
 			li.textContent = `White: ${elem.white}.`;
 			challenge_list.appendChild(li);
-		}
-
-		{
-			let li = document.createElement('li') as HTMLLIElement;
+			//
+			li = document.createElement('li') as HTMLLIElement;
 			li.className = 'challenge-items-nobullet';
 			li.textContent = `Black: ${elem.black}.`;
 			challenge_list.appendChild(li);
-		}
-
-		{
-			let li = document.createElement('li') as HTMLLIElement;
+			//
+			li = document.createElement('li') as HTMLLIElement;
 			li.className = 'challenge-items-nobullet';
 			li.textContent = `Result: ${elem.result}.`;
 			challenge_list.appendChild(li);
-		}
-
-		{
-			let li = document.createElement('li') as HTMLLIElement;
+			//
+			li = document.createElement('li') as HTMLLIElement;
 			li.className = 'challenge-items-nobullet';
 			li.textContent = `Time control: ${elem.time_control}.`;
 			challenge_list.appendChild(li);
+			//
+			if (elem.title != '') {
+				li = document.createElement('li') as HTMLLIElement;
+				li.className = 'challenge-items-nobullet';
+				li.textContent = `Of title: ${elem.title}.`;
+				challenge_list.appendChild(li);
+			}
 		}
 	});
 
@@ -514,34 +534,33 @@ async function fill_challenges_confirm_result_self() {
 			li.className = 'challenge-items-bullet';
 			li.textContent = `On ${format_date(elem.sent_when)}.`;
 			confirmation_div.appendChild(li);
-		}
-
-		{
-			let li = document.createElement('li') as HTMLLIElement;
+			//
+			li = document.createElement('li') as HTMLLIElement;
 			li.className = 'challenge-items-nobullet';
 			li.textContent = `White: ${elem.white}.`;
 			confirmation_div.appendChild(li);
-		}
-
-		{
-			let li = document.createElement('li') as HTMLLIElement;
+			//
+			li = document.createElement('li') as HTMLLIElement;
 			li.className = 'challenge-items-nobullet';
 			li.textContent = `Black: ${elem.black}.`;
 			confirmation_div.appendChild(li);
-		}
-
-		{
-			let li = document.createElement('li') as HTMLLIElement;
+			//
+			li = document.createElement('li') as HTMLLIElement;
 			li.className = 'challenge-items-nobullet';
 			li.textContent = `Result: ${elem.result}.`;
 			confirmation_div.appendChild(li);
-		}
-
-		{
-			let li = document.createElement('li') as HTMLLIElement;
+			//
+			li = document.createElement('li') as HTMLLIElement;
 			li.className = 'challenge-items-nobullet';
 			li.textContent = `Time control: ${elem.time_control}.`;
 			confirmation_div.appendChild(li);
+			//
+			if (elem.title != '') {
+				li = document.createElement('li') as HTMLLIElement;
+				li.className = 'challenge-items-nobullet';
+				li.textContent = `Of title: ${elem.title}.`;
+				confirmation_div.appendChild(li);
+			}
 		}
 
 		challenge_list.appendChild(confirmation_div);
