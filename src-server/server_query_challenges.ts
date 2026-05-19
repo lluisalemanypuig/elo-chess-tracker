@@ -70,6 +70,7 @@ export async function get_query_challenge_received(req: any, res: any) {
 		// return only basic information
 		all_challenges_received.push({
 			id: c.get_id(),
+			title: c.get_title(),
 			sent_by: name,
 			sent_when: c.get_when_challenge_sent(),
 			time_control_name: c.get_time_control_name(),
@@ -117,6 +118,7 @@ export async function get_query_challenge_sent(req: any, res: any) {
 		// return only basic information
 		all_challenges.push({
 			id: c.get_id(),
+			title: c.get_title(),
 			sent_to: sent_to.get_full_name(),
 			sent_when: c.get_when_challenge_sent(),
 			time_control_name: c.get_time_control_name(),
@@ -176,6 +178,7 @@ export async function get_query_challenge_pending_result(req: any, res: any) {
 		// return only basic information
 		all_challenges.push({
 			id: c.get_id(),
+			title: c.get_title(),
 			sent_by_name: user_sent_by.get_full_name(),
 			sent_by_username: user_sent_by.get_username(),
 			sent_to_name: user_sent_to.get_full_name(),
@@ -252,6 +255,7 @@ export async function get_query_challenge_confirm_result_other(req: any, res: an
 		// return only basic information
 		all_challenges.push({
 			id: c.get_id(),
+			title: c.get_title(),
 			opponent: opponent,
 			sent_when: c.get_when_challenge_sent(),
 			white: (manager.get_user_by_username(c.get_white() as string) as User).get_full_name(),
@@ -327,6 +331,7 @@ export async function get_query_challenge_confirm_result_self(req: any, res: any
 		// return only basic information
 		all_challenges.push({
 			id: c.get_id(),
+			title: c.get_title(),
 			opponent: opponent,
 			sent_when: c.get_when_challenge_sent(),
 			white: (manager.get_user_by_username(c.get_white() as string) as User).get_full_name(),
