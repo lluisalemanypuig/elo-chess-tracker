@@ -74,6 +74,7 @@ export async function post_challenge_send(req: any, res: any) {
 	const to_random_id = req.body.to;
 	const time_control_id = req.body.time_control_id;
 	const time_control_name = req.body.time_control_name;
+	const title = req.body.title;
 
 	const r = is_user_logged_in(session);
 	if (!r[0]) {
@@ -131,7 +132,14 @@ export async function post_challenge_send(req: any, res: any) {
 	}
 
 	debug(log_now(), `Send challenge from '${sender.get_username()}' to '${receiver.get_username()}'`);
-	challenge_send_new(sender.get_username(), receiver.get_username(), time_control_id, time_control_name, log_now());
+	challenge_send_new(
+		title,
+		sender.get_username(),
+		receiver.get_username(),
+		time_control_id,
+		time_control_name,
+		log_now()
+	);
 
 	res.status(200).send();
 }
