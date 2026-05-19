@@ -28,7 +28,7 @@ import path from 'path';
 import Debug from 'debug';
 const debug = Debug('ELO_TRACKER:managers/challenges');
 
-import { DateStringLong, log_now, long_date_to_short_and_tiny_date } from '../utils/time';
+import { DateStringLong, DateStringLongMillis, log_now, long_date_to_short_and_tiny_date } from '../utils/time';
 import { ChallengesManager } from './challenges_manager';
 import { EnvironmentManager } from './environment_manager';
 import { Challenge } from '../models/challenge';
@@ -67,6 +67,7 @@ export function challenge_set_retrieve(
  * @returns The id of the challenge
  */
 export function challenge_send_new(
+	title: string,
 	sender: string,
 	receiver: string,
 	time_control_id: TimeControlID,
@@ -78,7 +79,7 @@ export function challenge_send_new(
 	let mem = ChallengesManager.get_instance();
 	const new_id: string = mem.new_challenge_id();
 
-	const c = new Challenge(new_id, sender, receiver, time_control_id, time_control_name, when);
+	const c = new Challenge(new_id, title, sender, receiver, time_control_id, time_control_name, when);
 
 	mem.add_challenge(c);
 
@@ -172,6 +173,7 @@ export function challenge_agree_result(c: Challenge): void {
 
 	const rand_milli = `${Math.floor(Math.random() * 999)}`;
 	game_add_new(
+		c.get_title(),
 		white,
 		black,
 		c.get_result() as GameResult,
