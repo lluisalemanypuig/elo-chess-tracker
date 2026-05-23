@@ -5,7 +5,7 @@ mkdir -p js
 cd js
 rm -rf *
 cd ..
-bunx tsc
+bunx tsc -p tsconfig.build.json
 
 if [ "$?" != "0" ]; then
     echo "Compilation failed"
