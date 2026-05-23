@@ -1,6 +1,6 @@
 /* Visit https://www.typescriptlang.org/tsconfig/ to read more about this file */
 {
-	"include": ["src-client"],
+	"include": ["src-client", "**/*.test.ts"],
 	"compilerOptions": {
 		/* Projects */
 
