@@ -28,7 +28,7 @@ import path from 'path';
 import Debug from 'debug';
 const debug = Debug('ELO_TRACKER:managers/challenges');
 
-import { DateStringLong, DateStringLongMillis, log_now, long_date_to_short_and_tiny_date } from '../utils/time';
+import { DateStringLong, log_now, long_date_to_short_and_tiny_date } from '../utils/time';
 import { ChallengesManager } from './challenges_manager';
 import { EnvironmentManager } from './environment_manager';
 import { Challenge } from '../models/challenge';
