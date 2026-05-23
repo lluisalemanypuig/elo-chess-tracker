@@ -23,19 +23,19 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { encrypt_password_for_user } from '../src-server/utils/encrypt';
+import { encrypt_password_for_user } from '@server/utils/encrypt';
 
 const args = process.argv.slice(2);
 
 const username_index = args.indexOf('--username');
 if (username_index == -1) {
-	console.log("Missing --username parameter");
+	console.log('Missing --username parameter');
 	process.exit(1);
 }
 
 const password_index = args.indexOf('--password');
 if (password_index == -1) {
-	console.log("Missing --password parameter");
+	console.log('Missing --password parameter');
 	process.exit(1);
 }
 
