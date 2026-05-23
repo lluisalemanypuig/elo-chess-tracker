@@ -1,8 +1,15 @@
 /* Visit https://www.typescriptlang.org/tsconfig/ to read more about this file */
 {
-	"include": ["src-client", "src-server", "**/*.test.ts"],
+	"include": ["src-client", "src-server", "**/*.test.ts", "utils"],
 	"compilerOptions": {
 		/* Projects */
+
+		/* Paths */
+		"paths": {
+			"@server/*": ["./src-server/*"],
+			"@client/*": ["./src-client/*"],
+			"@tests/*": ["./tests/*"]
+		},
 
 		/* Language and Environment */
 		"target": "es2017",
