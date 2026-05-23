@@ -21,8 +21,8 @@ Full source code of elo-chess-tracker:
 
 import 'htmx.org';
 
-import { ADMIN, user_role_to_string, UserRole } from '../src-server/models/user_role';
-import { GAMES_CREATE, CREATE_USER, USER_EDIT, GAMES_SEE, GRAPHS_SEE_USER } from '../src-server/models/user_action';
+import { ADMIN, user_role_to_string, UserRole } from '@server/models/user_role';
+import { GAMES_CREATE, CREATE_USER, USER_EDIT, GAMES_SEE, GRAPHS_SEE_USER } from '@server/models/user_action';
 
 export async function logout_link_clicked(_event: any) {
 	// "query" the server

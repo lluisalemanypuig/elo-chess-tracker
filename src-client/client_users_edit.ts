@@ -21,7 +21,7 @@ Full source code of elo-chess-tracker:
 
 import 'htmx.org';
 
-import { UserRole, all_user_roles, user_role_to_string } from '../src-server/models/user_role';
+import { UserRole, all_user_roles, user_role_to_string } from '@server/models/user_role';
 
 async function user_was_changed(_event: any) {
 	all_user_roles.forEach(function (role: string) {
