@@ -24,7 +24,7 @@ Contact:
 */
 
 import path from 'path';
-import { TimeControlID } from '../models/time_control';
+import { TimeControlID } from '@server/models/time_control';
 
 /**
  * @brief Directories and other parameters of the server's environment

@@ -25,14 +25,14 @@ Contact:
 
 import Debug from 'debug';
 
-import { log_now } from '../utils/time';
-import { User } from '../models/user';
+import { log_now } from '@server/utils/time';
+import { User } from '@server/models/user';
 const debug = Debug('ELO_TRACKER:managers/session');
 
-import { SessionIDManager } from './session_id_manager';
-import { SessionID } from '../models/session_id';
-import { shuffle } from '../utils/shuffle_random';
-import { UsersManager } from './users_manager';
+import { SessionIDManager } from '@server/managers/session_id_manager';
+import { SessionID } from '@server/models/session_id';
+import { shuffle } from '@server/utils/shuffle_random';
+import { UsersManager } from '@server/managers/users_manager';
 
 // The original string was
 // "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+-*/ª!·$%&/()=?¿¡'º|@#~€¬^{},;.:_";

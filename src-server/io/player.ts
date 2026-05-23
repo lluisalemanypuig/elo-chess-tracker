@@ -23,8 +23,8 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { Player } from '../models/player';
-import { time_control_rating_set_from_json } from './time_control_rating';
+import { Player } from '@server/models/player';
+import { time_control_rating_set_from_json } from '@server/io/time_control_rating';
 
 /**
  * @brief Parses a JSON string or object and returns a Player.

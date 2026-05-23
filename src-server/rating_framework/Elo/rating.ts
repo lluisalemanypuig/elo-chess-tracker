@@ -23,7 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { Rating } from '../rating';
+import { Rating } from '@server/rating_framework/rating';
 
 /**
  * @brief Simple class to encode a rating.

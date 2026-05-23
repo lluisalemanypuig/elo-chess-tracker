@@ -32,7 +32,7 @@ import helmet from 'helmet';
 
 import Debug from 'debug';
 const debug = Debug('ELO_TRACKER:app_build');
-import { log_now } from './utils/time';
+import { log_now } from '@server/utils/time';
 
 debug(log_now(), 'Create app object');
 
@@ -60,7 +60,7 @@ app.use(compression()); // Compress all routes
 
 debug(log_now(), '    GETs and POSTs...');
 
-import { router } from './app_router';
+import { router } from '@server/app_router';
 app.use('/', router);
 
 debug(log_now(), '    Error handlers...');

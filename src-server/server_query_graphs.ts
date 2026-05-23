@@ -26,18 +26,18 @@ Contact:
 import Debug from 'debug';
 const debug = Debug('ELO_TRACKER:server_query_graphs');
 
-import { log_now } from './utils/time';
-import { is_user_logged_in } from './managers/session';
-import { User } from './models/user';
-import { SessionID } from './models/session_id';
-import { GraphsManager } from './managers/graphs_manager';
-import { TimeControlID } from './models/time_control';
-import { Graph } from './models/graph/graph';
-import { search_linear_by_key } from './utils/searching';
-import { UsersManager } from './managers/users_manager';
-import { Edge } from './models/graph/edge';
-import { can_user_see_graph } from './managers/user_relationships';
-import { GRAPHS_SEE_USER } from './models/user_action';
+import { log_now } from '@server/utils/time';
+import { is_user_logged_in } from '@server/managers/session';
+import { User } from '@server/models/user';
+import { SessionID } from '@server/models/session_id';
+import { GraphsManager } from '@server/managers/graphs_manager';
+import { TimeControlID } from '@server/models/time_control';
+import { Graph } from '@server/models/graph/graph';
+import { search_linear_by_key } from '@server/utils/searching';
+import { UsersManager } from '@server/managers/users_manager';
+import { Edge } from '@server/models/graph/edge';
+import { can_user_see_graph } from '@server/managers/user_relationships';
+import { GRAPHS_SEE_USER } from '@server/models/user_action';
 
 class NodeWeight {
 	rating: number = 0;

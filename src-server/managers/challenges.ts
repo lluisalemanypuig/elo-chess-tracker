@@ -28,15 +28,15 @@ import path from 'path';
 import Debug from 'debug';
 const debug = Debug('ELO_TRACKER:managers/challenges');
 
-import { DateStringLong, log_now, long_date_to_short_and_tiny_date } from '../utils/time';
-import { ChallengesManager } from './challenges_manager';
-import { EnvironmentManager } from './environment_manager';
-import { Challenge } from '../models/challenge';
-import { GameResult } from '../models/game';
-import { game_add_new } from './games';
-import { TimeControlID } from '../models/time_control';
-import { UsersManager } from './users_manager';
-import { User } from '../models/user';
+import { DateStringLong, log_now, long_date_to_short_and_tiny_date } from '@server/utils/time';
+import { ChallengesManager } from '@server/managers/challenges_manager';
+import { EnvironmentManager } from '@server/managers/environment_manager';
+import { Challenge } from '@server/models/challenge';
+import { GameResult } from '@server/models/game';
+import { game_add_new } from '@server/managers/games';
+import { TimeControlID } from '@server/models/time_control';
+import { UsersManager } from '@server/managers/users_manager';
+import { User } from '@server/models/user';
 
 /**
  * @brief Filters the set of challenges that are accepted by the filter function @e by.

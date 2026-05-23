@@ -26,10 +26,10 @@ Contact:
 import Debug from 'debug';
 const debug = Debug('ELO_TRACKER:server_query_time_control');
 
-import { log_now } from './utils/time';
-import { is_user_logged_in } from './managers/session';
-import { RatingSystemManager } from './managers/rating_system_manager';
-import { SessionID } from './models/session_id';
+import { log_now } from '@server/utils/time';
+import { is_user_logged_in } from '@server/managers/session';
+import { RatingSystemManager } from '@server/managers/rating_system_manager';
+import { SessionID } from '@server/models/session_id';
 
 export async function get_query_html_time_controls(req: any, res: any) {
 	debug(log_now(), 'GET /query/html/time_controls...');

@@ -23,14 +23,14 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { EnvironmentManager } from './environment_manager';
-import { ConfigurationManager } from './configuration_manager';
-import { ChallengesManager } from './challenges_manager';
-import { GamesManager } from './games_manager';
-import { UsersManager } from './users_manager';
-import { SessionIDManager } from './session_id_manager';
-import { RatingSystemManager } from './rating_system_manager';
-import { GraphsManager } from './graphs_manager';
+import { EnvironmentManager } from '@server/managers/environment_manager';
+import { ConfigurationManager } from '@server/managers/configuration_manager';
+import { ChallengesManager } from '@server/managers/challenges_manager';
+import { GamesManager } from '@server/managers/games_manager';
+import { UsersManager } from '@server/managers/users_manager';
+import { SessionIDManager } from '@server/managers/session_id_manager';
+import { RatingSystemManager } from '@server/managers/rating_system_manager';
+import { GraphsManager } from '@server/managers/graphs_manager';
 
 /**
  * @brief Clear the memory of the server

@@ -28,14 +28,14 @@ const debug = Debug('ELO_TRACKER:server_users_password_changes');
 
 import path from 'path';
 
-import { log_now } from './utils/time';
-import { is_user_logged_in, session_user_delete_all } from './managers/session';
-import { encrypt_password_for_user, is_password_of_user_correct } from './utils/encrypt';
-import { User } from './models/user';
-import { Password } from './models/password';
-import { user_overwrite } from './managers/users';
-import { SessionID } from './models/session_id';
-import { ConfigurationManager } from './managers/configuration_manager';
+import { log_now } from '@server/utils/time';
+import { is_user_logged_in, session_user_delete_all } from '@server/managers/session';
+import { encrypt_password_for_user, is_password_of_user_correct } from '@server/utils/encrypt';
+import { User } from '@server/models/user';
+import { Password } from '@server/models/password';
+import { user_overwrite } from '@server/managers/users';
+import { SessionID } from '@server/models/session_id';
+import { ConfigurationManager } from '@server/managers/configuration_manager';
 
 export async function get_page_user_password_change(req: any, res: any) {
 	debug(log_now(), 'GET /page/user/password_change_page...');

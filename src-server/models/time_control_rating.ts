@@ -23,7 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { Rating } from '../rating_framework/rating';
+import { Rating } from '@server/rating_framework/rating';
 import { TimeControlID } from './time_control';
 
 /**

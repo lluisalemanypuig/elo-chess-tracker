@@ -23,9 +23,9 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { Rating } from '../rating_framework/rating';
-import { copyarray } from '../utils/misc';
-import { search_linear_by_key } from '../utils/searching';
+import { Rating } from '@server/rating_framework/rating';
+import { copyarray } from '@server/utils/misc';
+import { search_linear_by_key } from '@server/utils/searching';
 import { TimeControlID } from './time_control';
 import { TimeControlRating } from './time_control_rating';
 

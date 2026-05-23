@@ -23,7 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { EdgeMetadata } from '../../models/graph/edge_metadata';
+import { EdgeMetadata } from '@server/models/graph/edge_metadata';
 
 /**
  * @brief Parses a JSON string or object and returns an Edge.

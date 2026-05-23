@@ -23,7 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { Password } from '../models/password';
+import { Password } from '@server/models/password';
 
 /**
  * @brief Parses a JSON string or object and returns a Password.

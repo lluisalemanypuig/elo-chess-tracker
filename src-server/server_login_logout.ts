@@ -26,14 +26,14 @@ Contact:
 import Debug from 'debug';
 const debug = Debug('ELO_TRACKER:server_login_logout');
 
-import { log_now } from './utils/time';
-import { is_password_of_user_correct } from './utils/encrypt';
-import { empty_session_id_cookie, make_session_id_cookie } from './utils/cookies';
-import { session_id_add, session_id_delete } from './managers/session';
-import { SessionIDManager } from './managers/session_id_manager';
-import { SessionID } from './models/session_id';
-import { User } from './models/user';
-import { UsersManager } from './managers/users_manager';
+import { log_now } from '@server/utils/time';
+import { is_password_of_user_correct } from '@server/utils/encrypt';
+import { empty_session_id_cookie, make_session_id_cookie } from '@server/utils/cookies';
+import { session_id_add, session_id_delete } from '@server/managers/session';
+import { SessionIDManager } from '@server/managers/session_id_manager';
+import { SessionID } from '@server/models/session_id';
+import { User } from '@server/models/user';
+import { UsersManager } from '@server/managers/users_manager';
 
 /**
  * @brief Can a user log into the webpage? Are the username and password input correct?

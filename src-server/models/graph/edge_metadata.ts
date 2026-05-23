@@ -23,7 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { GameResult } from '../game';
+import { GameResult } from '@server/game';
 
 /**
  * @brief Metadata of an edge.

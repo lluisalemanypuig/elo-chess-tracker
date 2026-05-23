@@ -23,8 +23,8 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { Game } from '../../models/game';
-import { EloRating } from './rating';
+import { Game } from '@server/models/game';
+import { EloRating } from '@server/rating_framework/Elo/rating';
 
 function get_exp_score(Ra: number, Rb: number): number {
 	return 1.0 / (1 + 10 ** ((Rb - Ra) / 400));

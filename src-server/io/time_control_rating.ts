@@ -23,8 +23,8 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { RatingSystemManager } from '../managers/rating_system_manager';
-import { TimeControlRating } from '../models/time_control_rating';
+import { RatingSystemManager } from '@server/managers/rating_system_manager';
+import { TimeControlRating } from '@server/models/time_control_rating';
 
 /**
  * @brief Parses a JSON string or object and returns a set of TimeControlRating.

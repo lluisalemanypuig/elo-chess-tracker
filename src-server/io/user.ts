@@ -23,10 +23,10 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { GameNumber, User } from '../models/user';
-import { TimeControlGames } from '../models/user';
-import { password_from_json } from './password';
-import { time_control_rating_set_from_json } from './time_control_rating';
+import { GameNumber, User } from '@server/models/user';
+import { TimeControlGames } from '@server/models/user';
+import { password_from_json } from '@server/io/password';
+import { time_control_rating_set_from_json } from '@server/io/time_control_rating';
 
 /**
  * @brief Parses a JSON string or object and returns a GameNumber.

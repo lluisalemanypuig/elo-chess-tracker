@@ -25,8 +25,8 @@ Contact:
 
 import { EdgeMetadata } from './edge_metadata';
 import { Edge } from './edge';
-import { search_by_key, where_should_be_inserted_by_key } from '../../utils/searching';
-import { GameResult, opposite_result } from '../game';
+import { search_by_key, where_should_be_inserted_by_key } from '@server/utils/searching';
+import { GameResult, opposite_result } from '@server/models/game';
 
 export type Neighborhood = Edge[];
 

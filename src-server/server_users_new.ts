@@ -28,15 +28,15 @@ const debug = Debug('ELO_TRACKER:server_users_new');
 
 import path from 'path';
 
-import { log_now } from './utils/time';
-import { is_user_logged_in } from './managers/session';
-import { user_add_new } from './managers/users';
-import { User } from './models/user';
-import { is_role_string_correct } from './models/user_role';
-import { CREATE_USER, USER_ROLE_ASSIGN, get_role_action_name, USER_ROLE_ASSIGN_ID } from './models/user_action';
-import { SessionID } from './models/session_id';
-import { UsersManager } from './managers/users_manager';
-import { ConfigurationManager } from './managers/configuration_manager';
+import { log_now } from '@server/utils/time';
+import { is_user_logged_in } from '@server/managers/session';
+import { user_add_new } from '@server/managers/users';
+import { User } from '@server/models/user';
+import { is_role_string_correct } from '@server/models/user_role';
+import { CREATE_USER, USER_ROLE_ASSIGN, get_role_action_name, USER_ROLE_ASSIGN_ID } from '@server/models/user_action';
+import { SessionID } from '@server/models/session_id';
+import { UsersManager } from '@server/managers/users_manager';
+import { ConfigurationManager } from '@server/managers/configuration_manager';
 
 export async function get_page_user_create(req: any, res: any) {
 	debug(log_now(), 'GET /page/user/create...');

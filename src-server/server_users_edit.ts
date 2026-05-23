@@ -28,15 +28,15 @@ const debug = Debug('ELO_TRACKER:server_users_edit');
 
 import path from 'path';
 
-import { log_now } from './utils/time';
-import { is_user_logged_in } from './managers/session';
-import { user_rename_and_reassign_roles } from './managers/users';
-import { User } from './models/user';
-import { USER_ROLE_ASSIGN_ID, USER_EDIT, get_role_action_name } from './models/user_action';
-import { SessionID } from './models/session_id';
-import { can_user_edit } from './managers/user_relationships';
-import { UsersManager } from './managers/users_manager';
-import { ConfigurationManager } from './managers/configuration_manager';
+import { log_now } from '@server/utils/time';
+import { is_user_logged_in } from '@server/managers/session';
+import { user_rename_and_reassign_roles } from '@server/managers/users';
+import { User } from '@server/models/user';
+import { USER_ROLE_ASSIGN_ID, USER_EDIT, get_role_action_name } from '@server/models/user_action';
+import { SessionID } from '@server/models/session_id';
+import { can_user_edit } from '@server/managers/user_relationships';
+import { UsersManager } from '@server/managers/users_manager';
+import { ConfigurationManager } from '@server/managers/configuration_manager';
 
 export async function get_page_user_edit(req: any, res: any) {
 	debug(log_now(), 'GET /page/user/edit...');

@@ -23,9 +23,9 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { Graph } from '../models/graph/graph';
-import { TimeControlID } from '../models/time_control';
-import { search_linear_by_key } from '../utils/searching';
+import { Graph } from '@server/models/graph/graph';
+import { TimeControlID } from '@server/models/time_control';
+import { search_linear_by_key } from '@server/utils/searching';
 
 /**
  * @brief Graphs Manager singleton class

@@ -23,7 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { DateStringLongMillis } from '../utils/time';
+import { DateStringLongMillis } from '@server/utils/time';
 import { GameResult } from './game';
 import { TimeControlID } from './time_control';
 

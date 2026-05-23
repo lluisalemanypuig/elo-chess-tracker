@@ -26,13 +26,13 @@ Contact:
 import Debug from 'debug';
 const debug = Debug('ELO_TRACKER:server_query_users');
 
-import { log_now } from './utils/time';
-import { user_get_all__name_randid } from './managers/users';
-import { is_user_logged_in } from './managers/session';
-import { User } from './models/user';
-import { UsersManager } from './managers/users_manager';
-import { TimeControlRating } from './models/time_control_rating';
-import { SessionID } from './models/session_id';
+import { log_now } from '@server/utils/time';
+import { user_get_all__name_randid } from '@server/managers/users';
+import { is_user_logged_in } from '@server/managers/session';
+import { User } from '@server/models/user';
+import { UsersManager } from '@server/managers/users_manager';
+import { TimeControlRating } from '@server/models/time_control_rating';
+import { SessionID } from '@server/models/session_id';
 
 /// Returns the list of user full names and usernames sorted by name
 export async function get_query_user_list(req: any, res: any) {

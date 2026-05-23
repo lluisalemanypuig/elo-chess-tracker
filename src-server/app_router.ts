@@ -28,9 +28,9 @@ import path from 'path';
 
 import Debug from 'debug';
 const debug = Debug('ELO_TRACKER:app_router');
-import { log_now } from './utils/time';
+import { log_now } from '@server/utils/time';
 
-import { EnvironmentManager } from './managers/environment_manager';
+import { EnvironmentManager } from '@server/managers/environment_manager';
 
 let router = express.Router();
 
@@ -112,7 +112,7 @@ router.get('/title/home_page', (_req: any, res: any) => {
 /* ************************************************************************** */
 
 // route the login page and the home page
-import { get_page_home, get_page_login } from './server_home';
+import { get_page_home, get_page_login } from '@server/server_home';
 router.get('/', get_page_login);
 router.get('/home', get_page_home);
 
@@ -136,7 +136,7 @@ import {
 	get_query_user_home,
 	post_query_user_ranking,
 	get_query_html_user_list
-} from './server_query_user';
+} from '@server/server_query_user';
 router.get('/query/user/list', get_query_user_list);
 router.get('/query/html/user/list', get_query_html_user_list);
 router.get('/query/user/home', get_query_user_home);
@@ -153,98 +153,98 @@ import {
 	get_query_challenge_pending_result,
 	get_query_challenge_confirm_result_other,
 	get_query_challenge_confirm_result_self
-} from './server_query_challenges';
+} from '@server/server_query_challenges';
 router.get('/query/challenge/received', get_query_challenge_received);
 router.get('/query/challenge/sent', get_query_challenge_sent);
 router.get('/query/challenge/pending_result', get_query_challenge_pending_result);
 router.get('/query/challenge/confirm_result/other', get_query_challenge_confirm_result_other);
 router.get('/query/challenge/confirm_result/self', get_query_challenge_confirm_result_self);
 
-import { post_query_game_list_own, post_query_game_list_all } from './server_query_games';
+import { post_query_game_list_own, post_query_game_list_all } from '@server/server_query_games';
 router.post('/query/game/list/own', post_query_game_list_own);
 router.post('/query/game/list/all', post_query_game_list_all);
 
-import { post_query_graph_full, post_query_graph_own } from './server_query_graphs';
+import { post_query_graph_full, post_query_graph_own } from '@server/server_query_graphs';
 router.post('/query/graph/own', post_query_graph_own);
 router.post('/query/graph/full', post_query_graph_full);
 
 // query time controls
-import { get_query_html_time_controls, get_query_html_time_controls_unique } from './server_query_time_control';
+import { get_query_html_time_controls, get_query_html_time_controls_unique } from '@server/server_query_time_control';
 router.get('/query/html/time_controls', get_query_html_time_controls);
 router.get('/query/html/time_controls_unique', get_query_html_time_controls_unique);
 
 // user login and logout
-import { post_user_login, post_user_logout } from './server_login_logout';
+import { post_user_login, post_user_logout } from '@server/server_login_logout';
 router.post('/user/login', post_user_login);
 router.post('/user/logout', post_user_logout);
 
 // creation of a new user
-import { post_user_create, get_page_user_create } from './server_users_new';
+import { post_user_create, get_page_user_create } from '@server/server_users_new';
 router.get('/page/user/create', get_page_user_create);
 router.post('/user/create', post_user_create);
 
 // edition of an existing user
-import { post_user_edit, get_page_user_edit } from './server_users_edit';
+import { post_user_edit, get_page_user_edit } from '@server/server_users_edit';
 router.get('/page/user/edit', get_page_user_edit);
 router.post('/user/edit', post_user_edit);
 
 // change of password
-import { get_page_user_password_change, post_user_password_change } from './server_users_password_change';
+import { get_page_user_password_change, post_user_password_change } from '@server/server_users_password_change';
 router.get('/page/user/password_change', get_page_user_password_change);
 router.post('/user/password_change', post_user_password_change);
 
 // retrieve ranking of players
-import { get_page_user_ranking } from './server_users_ranking';
+import { get_page_user_ranking } from '@server/server_users_ranking';
 router.get('/page/user/ranking', get_page_user_ranking);
 
 // create a new game
-import { get_page_game_create, post_game_create } from './server_games';
+import { get_page_game_create, post_game_create } from '@server/server_games';
 router.get('/page/game/create', get_page_game_create);
 router.post('/game/create', post_game_create);
 
 // delete a game
-import { post_game_delete } from './server_games';
+import { post_game_delete } from '@server/server_games';
 router.post('/game/delete', post_game_delete);
 
 // edit a game's title
-import { post_game_edit_title } from './server_games';
+import { post_game_edit_title } from '@server/server_games';
 router.post('/game/edit_title', post_game_edit_title);
 
 // editing a game's result
-import { post_game_edit_result } from './server_games';
+import { post_game_edit_result } from '@server/server_games';
 router.post('/game/edit_result', post_game_edit_result);
 
 // retrieve list of games
-import { get_page_game_list_all, get_page_game_list_own } from './server_games';
+import { get_page_game_list_all, get_page_game_list_own } from '@server/server_games';
 router.get('/page/game/list/own', get_page_game_list_own);
 router.get('/page/game/list/all', get_page_game_list_all);
 
 // retrieve graphs of the webpage
-import { get_page_graph_own, get_page_graph_full } from './server_graphs';
+import { get_page_graph_own, get_page_graph_full } from '@server/server_graphs';
 router.get('/page/graph/own', get_page_graph_own);
 router.get('/page/graph/full', get_page_graph_full);
 
 // challenges management
-import { get_page_challenge } from './server_challenges';
+import { get_page_challenge } from '@server/server_challenges';
 router.get('/page/challenge', get_page_challenge);
-import { post_challenge_send } from './server_challenges';
+import { post_challenge_send } from '@server/server_challenges';
 router.post('/challenge/send', post_challenge_send);
-import { post_challenge_accept, post_challenge_decline } from './server_challenges';
+import { post_challenge_accept, post_challenge_decline } from '@server/server_challenges';
 router.post('/challenge/accept', post_challenge_accept);
 router.post('/challenge/decline', post_challenge_decline);
-import { post_challenge_set_result } from './server_challenges';
+import { post_challenge_set_result } from '@server/server_challenges';
 router.post('/challenge/set_result', post_challenge_set_result);
-import { post_challenge_agree, post_challenge_disagree } from './server_challenges';
+import { post_challenge_agree, post_challenge_disagree } from '@server/server_challenges';
 router.post('/challenge/agree', post_challenge_agree);
 router.post('/challenge/disagree', post_challenge_disagree);
 
 // recalculation of all Elo ratings
-import { post_recalculate_ratings } from './server_games';
+import { post_recalculate_ratings } from '@server/server_games';
 router.post('/recalculate/ratings', post_recalculate_ratings);
 
 // recalculation of all graphs
-import { post_recalculate_graphs } from './server_graphs';
-import { ConfigurationManager } from './managers/configuration_manager';
+import { post_recalculate_graphs } from '@server/server_graphs';
+import { ConfigurationManager } from '@server/managers/configuration_manager';
 router.post('/recalculate/graphs', post_recalculate_graphs);
 
 export { router };

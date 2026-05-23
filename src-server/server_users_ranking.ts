@@ -28,10 +28,10 @@ const debug = Debug('ELO_TRACKER:server_users_ranking');
 
 import path from 'path';
 
-import { log_now } from './utils/time';
-import { is_user_logged_in } from './managers/session';
-import { SessionID } from './models/session_id';
-import { ConfigurationManager } from './managers/configuration_manager';
+import { log_now } from '@server/utils/time';
+import { is_user_logged_in } from '@server/managers/session';
+import { SessionID } from '@server/models/session_id';
+import { ConfigurationManager } from '@server/managers/configuration_manager';
 
 export async function get_page_user_ranking(req: any, res: any) {
 	debug(log_now(), 'GET /user/ranking...');

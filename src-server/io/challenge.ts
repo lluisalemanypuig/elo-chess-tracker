@@ -23,7 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { Challenge } from '../models/challenge';
+import { Challenge } from '@server/models/challenge';
 
 /**
  * @brief Parses a JSON string or object and returns a Challenge.

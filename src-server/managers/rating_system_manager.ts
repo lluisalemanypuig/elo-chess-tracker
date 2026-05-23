@@ -23,9 +23,9 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { Game } from '../models/game';
-import { Rating } from '../rating_framework/rating';
-import { TimeControl, TimeControlID } from '../models/time_control';
+import { Game } from '@server/models/game';
+import { Rating } from '@server/rating_framework/rating';
+import { TimeControl, TimeControlID } from '@server/models/time_control';
 
 /**
  * @brief Rating System Manager singleton class

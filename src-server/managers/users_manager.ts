@@ -23,8 +23,8 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { User, UserRandomID } from '../models/user';
-import { search_linear_by_key } from '../utils/searching';
+import { User, UserRandomID } from '@server/models/user';
+import { search_linear_by_key } from '@server/utils/searching';
 
 /**
  * @brief Users Manager singleton class

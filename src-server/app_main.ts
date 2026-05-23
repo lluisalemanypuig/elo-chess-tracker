@@ -33,10 +33,10 @@ import Debug from 'debug';
 const debug = Debug('ELO_TRACKER:app_main');
 
 import fs from 'fs';
-import { log_now } from './utils/time';
+import { log_now } from '@server/utils/time';
 
-import { server_init_from_parameters } from './managers/initialization';
-import { ConfigurationManager } from './managers/configuration_manager';
+import { server_init_from_parameters } from '@server/managers/initialization';
+import { ConfigurationManager } from '@server/managers/configuration_manager';
 
 debug(log_now(), 'Initialize server memory...');
 
@@ -44,14 +44,14 @@ server_init_from_parameters(process.argv.slice(2));
 
 debug(log_now(), 'Import app...');
 
-import { app } from './app_build';
+import { app } from '@server/app_build';
 
 debug(log_now(), '    Imported!');
 
 import http from 'http';
 import https from 'https';
 import { AddressInfo } from 'net';
-import { EnvironmentManager } from './managers/environment_manager';
+import { EnvironmentManager } from '@server/managers/environment_manager';
 
 // Normalize a port into a number, string, or false.
 function normalizePort(val: any): any {

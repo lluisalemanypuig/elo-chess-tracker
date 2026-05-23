@@ -23,8 +23,8 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { Game } from '../models/game';
-import { RatingSystemManager } from '../managers/rating_system_manager';
+import { Game } from '@server/models/game';
+import { RatingSystemManager } from '@server/managers/rating_system_manager';
 
 /**
  * @brief Parses a JSON string or object and returns a Game.

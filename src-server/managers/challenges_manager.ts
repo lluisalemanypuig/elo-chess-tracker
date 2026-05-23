@@ -23,8 +23,8 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { Challenge, ChallengeID } from '../models/challenge';
-import { number_to_string } from '../utils/misc';
+import { Challenge, ChallengeID } from '@server/models/challenge';
+import { number_to_string } from '@server/utils/misc';
 
 /**
  * @brief Challenges Manager singleton class.

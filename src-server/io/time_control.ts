@@ -23,7 +23,7 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { TimeControl } from '../models/time_control';
+import { TimeControl } from '@server/models/time_control';
 
 /**
  * @brief Parses a JSON string or object and returns a TimeControl.

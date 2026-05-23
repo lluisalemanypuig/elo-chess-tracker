@@ -26,14 +26,14 @@ Contact:
 import Debug from 'debug';
 const debug = Debug('ELO_TRACKER:server_query_challenges');
 
-import { log_now } from './utils/time';
-import { is_user_logged_in } from './managers/session';
-import { User } from './models/user';
-import { challenge_set_retrieve } from './managers/challenges';
-import { Challenge } from './models/challenge';
-import { SessionID } from './models/session_id';
-import { UsersManager } from './managers/users_manager';
-import { can_user_decline_challenge } from './managers/user_relationships';
+import { log_now } from '@server/utils/time';
+import { is_user_logged_in } from '@server/managers/session';
+import { User } from '@server/models/user';
+import { challenge_set_retrieve } from '@server/managers/challenges';
+import { Challenge } from '@server/models/challenge';
+import { SessionID } from '@server/models/session_id';
+import { UsersManager } from '@server/managers/users_manager';
+import { can_user_decline_challenge } from '@server/managers/user_relationships';
 
 /// Query the server for challenges received sento to me by other users
 export async function get_query_challenge_received(req: any, res: any) {

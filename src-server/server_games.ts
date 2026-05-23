@@ -28,10 +28,10 @@ const debug = Debug('ELO_TRACKER:server_games');
 
 import path from 'path';
 
-import { DateStringShort, log_now } from './utils/time';
-import { is_user_logged_in } from './managers/session';
-import { GAMES_CREATE, GAMES_DELETE, GAMES_EDIT } from './models/user_action';
-import { User } from './models/user';
+import { DateStringShort, log_now } from '@server/utils/time';
+import { is_user_logged_in } from '@server/managers/session';
+import { GAMES_CREATE, GAMES_DELETE, GAMES_EDIT } from '@server/models/user_action';
+import { User } from '@server/models/user';
 import {
 	game_add_new,
 	game_delete,
@@ -39,14 +39,14 @@ import {
 	game_edit_title,
 	game_find_by_id,
 	recalculate_all_ratings
-} from './managers/games';
-import { GameID, GameResult } from './models/game';
-import { ADMIN } from './models/user_role';
-import { SessionID } from './models/session_id';
-import { TimeControlID } from './models/time_control';
-import { can_user_create_a_game, can_user_delete_a_game, can_user_edit_a_game } from './managers/user_relationships';
-import { UsersManager } from './managers/users_manager';
-import { ConfigurationManager } from './managers/configuration_manager';
+} from '@server/managers/games';
+import { GameID, GameResult } from '@server/models/game';
+import { ADMIN } from '@server/models/user_role';
+import { SessionID } from '@server/models/session_id';
+import { TimeControlID } from '@server/models/time_control';
+import { can_user_create_a_game, can_user_delete_a_game, can_user_edit_a_game } from '@server/managers/user_relationships';
+import { UsersManager } from '@server/managers/users_manager';
+import { ConfigurationManager } from '@server/managers/configuration_manager';
 
 export async function get_page_game_list_own(req: any, res: any) {
 	debug(log_now(), 'GET /page/game/list/own...');

@@ -28,16 +28,16 @@ import path from 'path';
 import Debug from 'debug';
 const debug = Debug('ELO_TRACKER:managers/users');
 
-import { Player } from '../models/player';
-import { TimeControlGames, User, UserRandomID } from '../models/user';
-import { EnvironmentManager } from './environment_manager';
-import { UsersManager } from './users_manager';
-import { UserRole } from '../models/user_role';
-import { Password } from '../models/password';
-import { encrypt_password_for_user } from '../utils/encrypt';
-import { RatingSystemManager } from './rating_system_manager';
-import { TimeControlRating } from '../models/time_control_rating';
-import { log_now } from '../utils/time';
+import { Player } from '@server/models/player';
+import { TimeControlGames, User, UserRandomID } from '@server/models/user';
+import { EnvironmentManager } from '@server/managers/environment_manager';
+import { UsersManager } from '@server/managers/users_manager';
+import { UserRole } from '@server/models/user_role';
+import { Password } from '@server/models/password';
+import { encrypt_password_for_user } from '@server/utils/encrypt';
+import { RatingSystemManager } from '@server/managers/rating_system_manager';
+import { TimeControlRating } from '@server/models/time_control_rating';
+import { log_now } from '@server/utils/time';
 
 /// Dump the data in user @e u into its corresponding file.
 export function user_overwrite(user: User): void {

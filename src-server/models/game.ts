@@ -23,9 +23,9 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { Rating } from '../rating_framework/rating';
+import { Rating } from '@server/rating_framework/rating';
 import { TimeControlID } from './time_control';
-import { DateStringLongMillis } from '../utils/time';
+import { DateStringLongMillis } from '@server/utils/time';
 
 /// Result of a game
 export type GameResult = 'white_wins' | 'black_wins' | 'draw';

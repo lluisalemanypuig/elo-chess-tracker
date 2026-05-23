@@ -26,10 +26,9 @@ Contact:
 import fs from 'fs';
 import path from 'path';
 
-import { Neighborhood } from '../../models/graph/graph';
-import { Graph } from '../../models/graph/graph';
-import { edge_set_from_json } from './edge';
-import { read_directory } from '../../utils/read_directory';
+import { Neighborhood, Graph } from '@server/models/graph/graph';
+import { edge_set_from_json } from '@server/io/graph/edge';
+import { read_directory } from '@server/utils/read_directory';
 
 /**
  * @brief Save a portion of the graph from a file.

@@ -28,8 +28,8 @@ const debug = Debug('ELO_TRACKER:server_challenges');
 
 import path from 'path';
 
-import { log_now } from './utils/time';
-import { is_user_logged_in } from './managers/session';
+import { log_now } from '@server/utils/time';
+import { is_user_logged_in } from '@server/managers/session';
 import {
 	challenge_accept,
 	challenge_decline,
@@ -37,17 +37,17 @@ import {
 	challenge_set_result,
 	challenge_unset_result,
 	challenge_agree_result
-} from './managers/challenges';
-import { Challenge, ChallengeID } from './models/challenge';
-import { User } from './models/user';
-import { USER_CHALLENGE } from './models/user_action';
-import { SessionID } from './models/session_id';
-import { can_user_send_challenge } from './managers/user_relationships';
-import { ChallengesManager } from './managers/challenges_manager';
-import { GameResult } from './models/game';
-import { UsersManager } from './managers/users_manager';
-import { ConfigurationManager } from './managers/configuration_manager';
-import { RatingSystemManager } from './managers/rating_system_manager';
+} from '@server/managers/challenges';
+import { Challenge, ChallengeID } from '@server/models/challenge';
+import { User } from '@server/models/user';
+import { USER_CHALLENGE } from '@server/models/user_action';
+import { SessionID } from '@server/models/session_id';
+import { can_user_send_challenge } from '@server/managers/user_relationships';
+import { ChallengesManager } from '@server/managers/challenges_manager';
+import { GameResult } from '@server/models/game';
+import { UsersManager } from '@server/managers/users_manager';
+import { ConfigurationManager } from '@server/managers/configuration_manager';
+import { RatingSystemManager } from '@server/managers/rating_system_manager';
 
 export async function get_page_challenge(req: any, res: any) {
 	debug(log_now(), 'GET /page/challenge...');

@@ -23,14 +23,14 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { graph_full_to_file, graph_to_file } from '../io/graph/graph';
-import { GameResult } from '../models/game';
-import { Graph } from '../models/graph/graph';
-import { TimeControlID } from '../models/time_control';
-import { EnvironmentManager } from './environment_manager';
-import { GamesIterator } from './games_iterator';
-import { GraphsManager } from './graphs_manager';
-import { RatingSystemManager } from './rating_system_manager';
+import { graph_full_to_file, graph_to_file } from '@server/io/graph/graph';
+import { GameResult } from '@server/models/game';
+import { Graph } from '@server/models/graph/graph';
+import { TimeControlID } from '@server/models/time_control';
+import { EnvironmentManager } from '@server/managers/environment_manager';
+import { GamesIterator } from '@server/managers/games_iterator';
+import { GraphsManager } from '@server/managers/graphs_manager';
+import { RatingSystemManager } from '@server/managers/rating_system_manager';
 
 export function graph_update(w: string, b: string, result: GameResult, id: TimeControlID): void {
 	let manager = GraphsManager.get_instance();

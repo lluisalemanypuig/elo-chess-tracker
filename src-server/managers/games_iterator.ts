@@ -26,11 +26,11 @@ Contact:
 import path from 'path';
 import fs from 'fs';
 
-import { Game, GameID } from '../models/game';
-import { DateStringLongMillis, DateStringShort } from '../utils/time';
-import { game_set_from_json } from '../io/game';
-import { search_by_key, where_should_be_inserted_by_key } from '../utils/searching';
-import { read_directory } from '../utils/read_directory';
+import { Game, GameID } from '@server/models/game';
+import { DateStringLongMillis, DateStringShort } from '@server/utils/time';
+import { game_set_from_json } from '@server/io/game';
+import { search_by_key, where_should_be_inserted_by_key } from '@server/utils/searching';
+import { read_directory } from '@server/utils/read_directory';
 
 /* TODO: add a function that iterates only through those game records
  * where a player has games in.

@@ -27,10 +27,10 @@ import path from 'path';
 import Debug from 'debug';
 const debug = Debug('ELO_TRACKER:server_home');
 
-import { log_now } from './utils/time';
-import { SessionID } from './models/session_id';
-import { is_user_logged_in } from './managers/session';
-import { ConfigurationManager } from './managers/configuration_manager';
+import { log_now } from '@server/utils/time';
+import { SessionID } from '@server/models/session_id';
+import { is_user_logged_in } from '@server/managers/session';
+import { ConfigurationManager } from '@server/managers/configuration_manager';
 
 export async function get_page_login(req: any, res: any) {
 	let send_home: boolean;

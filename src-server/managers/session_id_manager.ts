@@ -23,8 +23,8 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { SessionID } from '../models/session_id';
-import { search_linear_by_key } from '../utils/searching';
+import { SessionID } from '@server/models/session_id';
+import { search_linear_by_key } from '@server/utils/searching';
 
 /**
  * @brief Session ID Manager singleton class

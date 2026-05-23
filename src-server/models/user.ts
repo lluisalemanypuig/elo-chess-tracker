@@ -30,9 +30,9 @@ import { UserAction } from './user_action';
 import { UserRoleToUserAction } from './user_role_action';
 import { TimeControlRating } from './time_control_rating';
 import { TimeControlID } from './time_control';
-import { copyarray } from '../utils/misc';
-import { search_by_key, search_linear_by_key, where_should_be_inserted_by_key } from '../utils/searching';
-import { DateStringShort } from '../utils/time';
+import { copyarray } from '@server/utils/misc';
+import { search_by_key, search_linear_by_key, where_should_be_inserted_by_key } from '@server/utils/searching';
+import { DateStringShort } from '@server/utils/time';
 
 export type UserRandomID = number;
 

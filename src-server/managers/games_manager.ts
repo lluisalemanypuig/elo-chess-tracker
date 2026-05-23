@@ -23,10 +23,10 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { GameID } from '../models/game';
-import { TimeControlID } from '../models/time_control';
-import { DateStringShort } from '../utils/time';
-import { number_to_string } from '../utils/misc';
+import { GameID } from '@server/models/game';
+import { TimeControlID } from '@server/models/time_control';
+import { DateStringShort } from '@server/utils/time';
+import { number_to_string } from '@server/utils/misc';
 
 /**
  * @brief The minimal summary of a game.
