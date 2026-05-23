@@ -25,6 +25,7 @@ Contact:
 
 import CryptoJS from 'crypto-js';
 import { interleave_strings } from './misc';
+import { log_now } from './time';
 
 // original allowed_symbols string:
 // a!b·c$d%e&f/g(h)i=j?k¿l|m@n#o~p¬qr\'s[¡]t{u}v/w*x-y+zºAªB"C,D.E;F:G_HIJKLMNOPQRSTUVWXYZ0123456789
@@ -113,22 +114,20 @@ export function encrypt_password_for_user(username: string, password: string): [
 
 /**
  * @brief Decrypts @e encrypted_msg using @e password and @e iv.
- * @param encrypted_msg Encrypted message.
+ * @param encrypted_password Encrypted message.
  * @param password Password of user (this may not be the string you think it is!).
  * @param iv Initialization vector of AES.
  * @returns A string resulting of decrypting @e encrypted_msg.
  */
-export function decrypt_password_for_user(encrypted_msg: string, password: string, iv: string): string {
+export function decrypt_password_for_user(password: string, encrypted_password: string, iv: string): string {
 	const normalized_password = normalize_string(password);
 	const key_used_to_decrypt = CryptoJS.SHA256(normalized_password);
 
-	const decrypted = CryptoJS.AES.decrypt(encrypted_msg, key_used_to_decrypt, {
+	return CryptoJS.AES.decrypt(encrypted_password, key_used_to_decrypt, {
 		iv: CryptoJS.enc.Base64.parse(iv),
 		mode: CryptoJS.mode.CBC,
 		padding: CryptoJS.pad.Pkcs7
-	});
-
-	return decrypted.toString(CryptoJS.enc.Utf8);
+	}).toString(CryptoJS.enc.Utf8);
 }
 
 /**
@@ -136,19 +135,19 @@ export function decrypt_password_for_user(encrypted_msg: string, password: strin
  *
  * Decrypts @e encrypted_msg with @e password and @e iv and checks
  * that the result is correct.
- * @param encrypted_msg Encrypted message
+ * @param encrypted_password Encrypted message
  * @param username Username of user
  * @param password Password of user
  * @param iv Initialization vector of AES
  * @returns True or false whether @e password is the actual password or not.
  */
 export function is_password_of_user_correct(
-	encrypted_msg: string,
 	username: string,
 	password: string,
+	encrypted_password: string,
 	iv: string
 ): boolean {
-	const decrypted = decrypt_password_for_user(encrypted_msg, password, iv);
+	const decrypted = decrypt_password_for_user(password, encrypted_password, iv);
 	const interleave = interleave_strings(username, password);
 	return decrypted == interleave;
 }

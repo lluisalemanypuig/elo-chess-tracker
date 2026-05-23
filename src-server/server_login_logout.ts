@@ -62,8 +62,10 @@ export async function post_user_login(req: any, res: any) {
 	// user exists
 	const pwd = (_user_data as User).get_password();
 
+	debug(log_now(), `    asdf'`);
 	// check if password is correct
-	const is_password_correct = is_password_of_user_correct(pwd.encrypted, username, password_plain_text, pwd.iv);
+	const is_password_correct = is_password_of_user_correct(username, password_plain_text, pwd.encrypted, pwd.iv);
+	debug(log_now(), `    qwer'`);
 
 	// correct password
 	if (!is_password_correct) {
