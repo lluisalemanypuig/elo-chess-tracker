@@ -123,11 +123,15 @@ export function decrypt_password_for_user(password: string, encrypted_password: 
 	const normalized_password = normalize_string(password);
 	const key_used_to_decrypt = CryptoJS.SHA256(normalized_password);
 
-	return CryptoJS.AES.decrypt(encrypted_password, key_used_to_decrypt, {
-		iv: CryptoJS.enc.Base64.parse(iv),
-		mode: CryptoJS.mode.CBC,
-		padding: CryptoJS.pad.Pkcs7
-	}).toString(CryptoJS.enc.Utf8);
+	try {
+		return CryptoJS.AES.decrypt(encrypted_password, key_used_to_decrypt, {
+			iv: CryptoJS.enc.Base64.parse(iv),
+			mode: CryptoJS.mode.CBC,
+			padding: CryptoJS.pad.Pkcs7
+		}).toString(CryptoJS.enc.Utf8);
+	} catch (e) {
+		return '';
+	}
 }
 
 /**
