@@ -26,18 +26,18 @@ Contact:
 import fs from 'fs';
 import path from 'path';
 
-import { game_add_new, game_delete } from '../../src-server/managers/games';
-import { server_init_from_data } from '../../src-server/managers/initialization';
-import { user_add_new } from '../../src-server/managers/users';
-import { ADMIN } from '../../src-server/models/user_role';
+import { game_add_new, game_delete } from '@server/managers/games';
+import { server_init_from_data } from '@server/managers/initialization';
+import { user_add_new } from '@server/managers/users';
+import { ADMIN } from '@server/models/user_role';
 import { run_command } from './exec_utils';
-import { User } from '../../src-server/models/user';
-import { UsersManager } from '../../src-server/managers/users_manager';
-import { GamesManager } from '../../src-server/managers/games_manager';
-import { EnvironmentManager } from '../../src-server/managers/environment_manager';
-import { EdgeMetadata } from '../../src-server/models/graph/edge_metadata';
-import { GraphsManager } from '../../src-server/managers/graphs_manager';
-import { Graph } from '../../src-server/models/graph/graph';
+import { User } from '@server/models/user';
+import { UsersManager } from '@server/managers/users_manager';
+import { GamesManager } from '@server/managers/games_manager';
+import { EnvironmentManager } from '@server/managers/environment_manager';
+import { EdgeMetadata } from '@server/models/graph/edge_metadata';
+import { GraphsManager } from '@server/managers/graphs_manager';
+import { Graph } from '@server/models/graph/graph';
 
 const configuration = {
 	environment: {

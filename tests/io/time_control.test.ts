@@ -23,9 +23,9 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { TimeControl } from '../../src-server/models/time_control';
+import { TimeControl } from '@server/models/time_control';
 
-import { time_control_from_json, time_control_set_from_json } from '../../src-server/io/time_control';
+import { time_control_from_json, time_control_set_from_json } from '@server/io/time_control';
 
 describe('JSON conversion', () => {
 	test('From JSON to TimeControl', () => {

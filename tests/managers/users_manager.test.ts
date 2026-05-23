@@ -23,9 +23,9 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { UsersManager } from '../../src-server/managers/users_manager';
-import { Password } from '../../src-server/models/password';
-import { User } from '../../src-server/models/user';
+import { UsersManager } from '@server/managers/users_manager';
+import { Password } from '@server/models/password';
+import { User } from '@server/models/user';
 
 describe('Users Manager', () => {
 	test('Empty manager', () => {

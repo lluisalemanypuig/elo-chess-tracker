@@ -23,8 +23,8 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { Password } from '../../src-server/models/password';
-import { User } from '../../src-server/models/user';
+import { Password } from '@server/models/password';
+import { User } from '@server/models/user';
 import {
 	USER_EDIT_STUDENT,
 	USER_EDIT_TEACHER,
@@ -45,10 +45,10 @@ import {
 	GRAPHS_SEE_ADMIN,
 	GRAPHS_SEE_STUDENT,
 	GRAPHS_SEE_MEMBER
-} from '../../src-server/models/user_action';
-import { ADMIN, MEMBER, STUDENT, TEACHER } from '../../src-server/models/user_role';
-import { UserRoleToUserAction } from '../../src-server/models/user_role_action';
-import { initialize_permissions } from '../../src-server/models/user_role_action';
+} from '@server/models/user_action';
+import { ADMIN, MEMBER, STUDENT, TEACHER } from '@server/models/user_role';
+import { UserRoleToUserAction } from '@server/models/user_role_action';
+import { initialize_permissions } from '@server/models/user_role_action';
 import {
 	can_user_edit,
 	can_user_edit_a_game,
@@ -56,7 +56,7 @@ import {
 	can_user_see_a_game,
 	can_user_send_challenge,
 	can_user_see_graph
-} from '../../src-server/managers/user_relationships';
+} from '@server/managers/user_relationships';
 
 describe('Edition', () => {
 	const editor_admin = new User('un', 'f', 'l', new Password('a', 'b'), [ADMIN], [], []);

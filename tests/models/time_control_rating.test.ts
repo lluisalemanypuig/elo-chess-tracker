@@ -23,8 +23,8 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { TimeControlRating } from '../../src-server/models/time_control_rating';
-import { EloRating } from '../../src-server/rating_framework/Elo/rating';
+import { TimeControlRating } from '@server/models/time_control_rating';
+import { EloRating } from '@server/rating_framework/Elo/rating';
 
 describe('clone', () => {
 	test('', () => {

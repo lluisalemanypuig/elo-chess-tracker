@@ -23,12 +23,9 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import {
-	time_control_rating_from_json,
-	time_control_rating_set_from_json
-} from '../../src-server/io/time_control_rating';
-import { EloRating } from '../../src-server/rating_framework/Elo/rating';
-import { initialize_rating_functions } from '../../src-server/managers/rating_system';
+import { time_control_rating_from_json, time_control_rating_set_from_json } from '@server/io/time_control_rating';
+import { EloRating } from '@server/rating_framework/Elo/rating';
+import { initialize_rating_functions } from '@server/managers/rating_system';
 
 describe('From JSON -- Elo', () => {
 	initialize_rating_functions('Elo');

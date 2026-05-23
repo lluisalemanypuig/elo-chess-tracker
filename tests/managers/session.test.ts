@@ -23,18 +23,18 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { clear_server } from '../../src-server/managers/clear';
-import { server_init_from_data } from '../../src-server/managers/initialization';
+import { clear_server } from '@server/managers/clear';
+import { server_init_from_data } from '@server/managers/initialization';
 import {
 	is_user_logged_in,
 	session_id_add,
 	session_id_delete,
 	session_user_delete_all
-} from '../../src-server/managers/session';
-import { SessionIDManager } from '../../src-server/managers/session_id_manager';
-import { user_add_new } from '../../src-server/managers/users';
-import { SessionID } from '../../src-server/models/session_id';
-import { ADMIN, MEMBER, STUDENT } from '../../src-server/models/user_role';
+} from '@server/managers/session';
+import { SessionIDManager } from '@server/managers/session_id_manager';
+import { user_add_new } from '@server/managers/users';
+import { SessionID } from '@server/models/session_id';
+import { ADMIN, MEMBER, STUDENT } from '@server/models/user_role';
 import { run_command } from './exec_utils';
 
 const configuration = {

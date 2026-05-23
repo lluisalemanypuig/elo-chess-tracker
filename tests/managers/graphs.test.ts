@@ -25,12 +25,12 @@ Contact:
 
 import { run_command } from './exec_utils';
 
-import { EdgeMetadata } from '../../src-server/models/graph/edge_metadata';
-import { graph_modify_edge, graph_update } from '../../src-server/managers/graphs';
-import { server_init_from_data } from '../../src-server/managers/initialization';
-import { clear_server } from '../../src-server/managers/clear';
-import { graph_from_json } from '../../src-server/io/graph/graph';
-import { EnvironmentManager } from '../../src-server/managers/environment_manager';
+import { EdgeMetadata } from '@server/models/graph/edge_metadata';
+import { graph_modify_edge, graph_update } from '@server/managers/graphs';
+import { server_init_from_data } from '@server/managers/initialization';
+import { clear_server } from '@server/managers/clear';
+import { graph_from_json } from '@server/io/graph/graph';
+import { EnvironmentManager } from '@server/managers/environment_manager';
 
 const configuration = {
 	environment: {

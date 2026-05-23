@@ -51,9 +51,9 @@ import {
 	GAMES_SEE_STUDENT,
 	GAMES_SEE_TEACHER,
 	GAMES_SEE
-} from '../../src-server/models/user_action';
-import { ADMIN, MEMBER, STUDENT, TEACHER } from '../../src-server/models/user_role';
-import { initialize_permissions, UserRoleToUserAction } from '../../src-server/models/user_role_action';
+} from '@server/models/user_action';
+import { ADMIN, MEMBER, STUDENT, TEACHER } from '@server/models/user_role';
+import { initialize_permissions, UserRoleToUserAction } from '@server/models/user_role_action';
 
 describe('Actions allowed per user (single role)', () => {
 	test('Admin', () => {

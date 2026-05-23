@@ -23,7 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { Password } from '../../src-server/models/password';
+import { Password } from '@server/models/password';
 
 describe('clone', () => {
 	test('1', () => {

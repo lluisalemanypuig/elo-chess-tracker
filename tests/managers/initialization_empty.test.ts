@@ -26,18 +26,18 @@ Contact:
 import fs from 'fs';
 import path from 'path';
 
-import { server_init_from_data } from '../../src-server/managers/initialization';
-import { clear_server } from '../../src-server/managers/clear';
-import { RatingSystemManager } from '../../src-server/managers/rating_system_manager';
-import { EnvironmentManager } from '../../src-server/managers/environment_manager';
-import { ConfigurationManager } from '../../src-server/managers/configuration_manager';
-import { ChallengesManager } from '../../src-server/managers/challenges_manager';
-import { GamesManager } from '../../src-server/managers/games_manager';
-import { SessionIDManager } from '../../src-server/managers/session_id_manager';
-import { UsersManager } from '../../src-server/managers/users_manager';
+import { server_init_from_data } from '@server/managers/initialization';
+import { clear_server } from '@server/managers/clear';
+import { RatingSystemManager } from '@server/managers/rating_system_manager';
+import { EnvironmentManager } from '@server/managers/environment_manager';
+import { ConfigurationManager } from '@server/managers/configuration_manager';
+import { ChallengesManager } from '@server/managers/challenges_manager';
+import { GamesManager } from '@server/managers/games_manager';
+import { SessionIDManager } from '@server/managers/session_id_manager';
+import { UsersManager } from '@server/managers/users_manager';
 import { run_command } from './exec_utils';
-import { GraphsManager } from '../../src-server/managers/graphs_manager';
-import { Graph } from '../../src-server/models/graph/graph';
+import { GraphsManager } from '@server/managers/graphs_manager';
+import { Graph } from '@server/models/graph/graph';
 
 const webpage_dir = 'tests/webpage';
 const icons_dir = path.join(webpage_dir, 'icons');

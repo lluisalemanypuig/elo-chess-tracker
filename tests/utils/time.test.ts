@@ -23,12 +23,8 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { number_to_string } from '../../src-server/utils/misc';
-import {
-	long_date_to_short_and_tiny_date,
-	long_date_to_short_date,
-	long_date_to_tiny_date
-} from '../../src-server/utils/time';
+import { number_to_string } from '@server/utils/misc';
+import { long_date_to_short_and_tiny_date, long_date_to_short_date, long_date_to_tiny_date } from '@server/utils/time';
 
 describe('Number to string', () => {
 	test('1 digit', () => {

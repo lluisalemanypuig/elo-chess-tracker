@@ -26,29 +26,24 @@ Contact:
 import fs from 'fs';
 import path from 'path';
 
-import {
-	game_add_new,
-	game_edit_result,
-	game_find_by_id,
-	recalculate_all_ratings
-} from '../../src-server/managers/games';
-import { server_init_from_data } from '../../src-server/managers/initialization';
-import { user_add_new } from '../../src-server/managers/users';
-import { ADMIN } from '../../src-server/models/user_role';
+import { game_add_new, game_edit_result, game_find_by_id, recalculate_all_ratings } from '@server/managers/games';
+import { server_init_from_data } from '@server/managers/initialization';
+import { user_add_new } from '@server/managers/users';
+import { ADMIN } from '@server/models/user_role';
 import { run_command } from './exec_utils';
-import { EnvironmentManager } from '../../src-server/managers/environment_manager';
-import { Game } from '../../src-server/models/game';
-import { User } from '../../src-server/models/user';
-import { UsersManager } from '../../src-server/managers/users_manager';
-import { game_set_from_json } from '../../src-server/io/game';
-import { GamesIterator } from '../../src-server/managers/games_iterator';
-import { long_date_to_short_date } from '../../src-server/utils/time';
-import { clear_server } from '../../src-server/managers/clear';
-import { GraphsManager } from '../../src-server/managers/graphs_manager';
-import { Graph } from '../../src-server/models/graph/graph';
-import { EdgeMetadata } from '../../src-server/models/graph/edge_metadata';
-import { graph_from_json } from '../../src-server/io/graph/graph';
-import { recalculate_all_graphs } from '../../src-server/managers/graphs';
+import { EnvironmentManager } from '@server/managers/environment_manager';
+import { Game } from '@server/models/game';
+import { User } from '@server/models/user';
+import { UsersManager } from '@server/managers/users_manager';
+import { game_set_from_json } from '@server/io/game';
+import { GamesIterator } from '@server/managers/games_iterator';
+import { long_date_to_short_date } from '@server/utils/time';
+import { clear_server } from '@server/managers/clear';
+import { GraphsManager } from '@server/managers/graphs_manager';
+import { Graph } from '@server/models/graph/graph';
+import { EdgeMetadata } from '@server/models/graph/edge_metadata';
+import { graph_from_json } from '@server/io/graph/graph';
+import { recalculate_all_graphs } from '@server/managers/graphs';
 
 const configuration = {
 	environment: {

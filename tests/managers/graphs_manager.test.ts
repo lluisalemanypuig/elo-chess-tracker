@@ -23,8 +23,8 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { GraphsManager } from '../../src-server/managers/graphs_manager';
-import { Graph } from '../../src-server/models/graph/graph';
+import { GraphsManager } from '@server/managers/graphs_manager';
+import { Graph } from '@server/models/graph/graph';
 
 describe('Graph manager', () => {
 	let man = GraphsManager.get_instance();

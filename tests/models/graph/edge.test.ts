@@ -23,8 +23,8 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { EdgeMetadata } from '../../../src-server/models/graph/edge_metadata';
-import { Edge } from '../../../src-server/models/graph/edge';
+import { EdgeMetadata } from '@server/models/graph/edge_metadata';
+import { Edge } from '@server/models/graph/edge';
 
 describe('Merge edges', () => {
 	test('1', () => {

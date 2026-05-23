@@ -23,8 +23,8 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { SessionIDManager } from '../../src-server/managers/session_id_manager';
-import { SessionID } from '../../src-server/models/session_id';
+import { SessionIDManager } from '@server/managers/session_id_manager';
+import { SessionID } from '@server/models/session_id';
 
 describe('Session ID Manager', () => {
 	test('Add single sessions', () => {

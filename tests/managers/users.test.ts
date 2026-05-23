@@ -26,22 +26,22 @@ Contact:
 import path from 'path';
 import fs from 'fs';
 
-import { server_init_from_data } from '../../src-server/managers/initialization';
+import { server_init_from_data } from '@server/managers/initialization';
 import {
 	user_add_new,
 	user_get_all__name_randid,
 	user_rename_and_reassign_roles,
 	user_update_from_player_data
-} from '../../src-server/managers/users';
-import { User } from '../../src-server/models/user';
-import { ADMIN, MEMBER, STUDENT, TEACHER } from '../../src-server/models/user_role';
-import { clear_server } from '../../src-server/managers/clear';
+} from '@server/managers/users';
+import { User } from '@server/models/user';
+import { ADMIN, MEMBER, STUDENT, TEACHER } from '@server/models/user_role';
+import { clear_server } from '@server/managers/clear';
 import { run_command } from './exec_utils';
-import { Player } from '../../src-server/models/player';
-import { TimeControlRating } from '../../src-server/models/time_control_rating';
-import { EloRating } from '../../src-server/rating_framework/Elo/rating';
-import { user_from_json } from '../../src-server/io/user';
-import { UsersManager } from '../../src-server/managers/users_manager';
+import { Player } from '@server/models/player';
+import { TimeControlRating } from '@server/models/time_control_rating';
+import { EloRating } from '@server/rating_framework/Elo/rating';
+import { user_from_json } from '@server/io/user';
+import { UsersManager } from '@server/managers/users_manager';
 
 const webpage_dir = 'tests/webpage';
 const db_dir = path.join(webpage_dir, 'database');

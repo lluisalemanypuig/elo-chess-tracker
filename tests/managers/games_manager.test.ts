@@ -23,7 +23,7 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { GamesManager } from '../../src-server/managers/games_manager';
+import { GamesManager } from '@server/managers/games_manager';
 
 describe('Games Manager', () => {
 	test('Get some new game ids', () => {

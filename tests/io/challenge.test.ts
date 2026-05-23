@@ -23,7 +23,7 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { challenge_from_json } from '../../src-server/io/challenge';
+import { challenge_from_json } from '@server/io/challenge';
 
 describe('From JSON', () => {
 	test('string', () => {

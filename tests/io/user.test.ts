@@ -23,10 +23,10 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { Password } from '../../src-server/models/password';
-import { ADMIN, STUDENT } from '../../src-server/models/user_role';
-import { initialize_rating_functions } from '../../src-server/managers/rating_system';
-import { user_from_json } from '../../src-server/io/user';
+import { Password } from '@server/models/password';
+import { ADMIN, STUDENT } from '@server/models/user_role';
+import { initialize_rating_functions } from '@server/managers/rating_system';
+import { user_from_json } from '@server/io/user';
 
 describe('From JSON (Elo)', () => {
 	initialize_rating_functions('Elo');

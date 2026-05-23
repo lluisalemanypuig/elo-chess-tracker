@@ -23,9 +23,9 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { EloRating } from '../../src-server/rating_framework/Elo/rating';
-import { initialize_rating_functions } from '../../src-server/managers/rating_system';
-import { game_from_json } from '../../src-server/io/game';
+import { EloRating } from '@server/rating_framework/Elo/rating';
+import { initialize_rating_functions } from '@server/managers/rating_system';
+import { game_from_json } from '@server/io/game';
 
 describe('From JSON -- Elo', () => {
 	initialize_rating_functions('Elo');
