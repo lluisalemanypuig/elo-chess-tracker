@@ -26,8 +26,6 @@ Contact:
 import Debug from 'debug';
 const debug = Debug('ELO_TRACKER:server_users_password_changes');
 
-import path from 'path';
-
 import { log_now } from '@server/utils/time';
 import { is_user_logged_in, session_user_delete_all } from '@server/managers/session';
 import { encrypt_password_for_user, is_password_of_user_correct } from '@server/utils/encrypt';
@@ -36,6 +34,7 @@ import { Password } from '@server/models/password';
 import { user_overwrite } from '@server/managers/users';
 import { SessionID } from '@server/models/session_id';
 import { ConfigurationManager } from '@server/managers/configuration_manager';
+import { get_execution_directory } from './managers/environment_manager';
 
 export async function get_page_user_password_change(req: any, res: any) {
 	debug(log_now(), 'GET /page/user/password_change_page...');
@@ -52,7 +51,7 @@ export async function get_page_user_password_change(req: any, res: any) {
 	if (ConfigurationManager.should_cache_data()) {
 		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
 	}
-	res.sendFile(path.join(__dirname, '../html/user/password_change.html'));
+	res.sendFile(`${get_execution_directory()}/html/user/password_change.html`);
 }
 
 export async function post_user_password_change(req: any, res: any) {

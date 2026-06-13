@@ -26,8 +26,6 @@ Contact:
 import Debug from 'debug';
 const debug = Debug('ELO_TRACKER:server_games');
 
-import path from 'path';
-
 import { DateStringShort, log_now } from '@server/utils/time';
 import { is_user_logged_in } from '@server/managers/session';
 import { GAMES_CREATE, GAMES_DELETE, GAMES_EDIT } from '@server/models/user_action';
@@ -44,9 +42,14 @@ import { GameID, GameResult } from '@server/models/game';
 import { ADMIN } from '@server/models/user_role';
 import { SessionID } from '@server/models/session_id';
 import { TimeControlID } from '@server/models/time_control';
-import { can_user_create_a_game, can_user_delete_a_game, can_user_edit_a_game } from '@server/managers/user_relationships';
+import {
+	can_user_create_a_game,
+	can_user_delete_a_game,
+	can_user_edit_a_game
+} from '@server/managers/user_relationships';
 import { UsersManager } from '@server/managers/users_manager';
 import { ConfigurationManager } from '@server/managers/configuration_manager';
+import { get_execution_directory } from './managers/environment_manager';
 
 export async function get_page_game_list_own(req: any, res: any) {
 	debug(log_now(), 'GET /page/game/list/own...');
@@ -63,7 +66,7 @@ export async function get_page_game_list_own(req: any, res: any) {
 	if (ConfigurationManager.should_cache_data()) {
 		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
 	}
-	res.sendFile(path.join(__dirname, '../html/game/list/own.html'));
+	res.sendFile(`${get_execution_directory()}/html/game/list/own.html`);
 }
 
 export async function get_page_game_list_all(req: any, res: any) {
@@ -81,7 +84,7 @@ export async function get_page_game_list_all(req: any, res: any) {
 	if (ConfigurationManager.should_cache_data()) {
 		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
 	}
-	res.sendFile(path.join(__dirname, '../html/game/list/all.html'));
+	res.sendFile(`${get_execution_directory()}/html/game/list/all.html`);
 }
 
 export async function get_page_game_create(req: any, res: any) {
@@ -105,7 +108,7 @@ export async function get_page_game_create(req: any, res: any) {
 	if (ConfigurationManager.should_cache_data()) {
 		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
 	}
-	res.sendFile(path.join(__dirname, '../html/game/create.html'));
+	res.sendFile(`${get_execution_directory()}/html/game/create.html`);
 }
 
 export async function post_game_create(req: any, res: any) {

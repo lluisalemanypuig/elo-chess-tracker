@@ -49,7 +49,7 @@ import { graph_from_json } from '@server/io/graph/graph';
 import { UsersBehavior } from '@server/managers/users_behavior';
 import { read_directory } from '@server/utils/read_directory';
 
-function init_environment_directories(base_directory: string): void {
+function init_environment_directories(base_directory: string, execution_directory: string): void {
 	let server_env = EnvironmentManager.get_instance();
 	server_env.set_database_base_directory(path.join(base_directory, '/database'));
 	debug(log_now(), `    Database directory: '${server_env.get_dir_database()}'`);
@@ -57,6 +57,8 @@ function init_environment_directories(base_directory: string): void {
 	debug(log_now(), `        Users directory: '${server_env.get_dir_users()}'`);
 	debug(log_now(), `        Challenges directory: '${server_env.get_dir_challenges()}'`);
 	debug(log_now(), `        Graphs directory: '${server_env.get_dir_graphs()}'`);
+
+	server_env.set_execution_environment(execution_directory);
 }
 
 function init_environment_SSL(base_directory: string, ssl: any): void {
@@ -83,7 +85,8 @@ function init_environment_page_titles(environment: any): void {
 
 function init_environment(base_directory: string, environment: any): void {
 	EnvironmentManager.get_instance().clear();
-	init_environment_directories(base_directory);
+	const execution_directory = process.cwd();
+	init_environment_directories(base_directory, execution_directory);
 	init_environment_SSL(base_directory, environment.ssl_certificate);
 	init_environment_page_titles(environment);
 	init_environment_icon_file_paths(base_directory, environment);
@@ -300,7 +303,7 @@ function init_graphs(): void {
 }
 
 export function server_init_from_data(base_directory: string, configuration: any): void {
-	debug(log_now(), `    Base directory: '${base_directory}'`);
+	debug(log_now(), `    Webpage base directory: '${base_directory}'`);
 
 	init_environment(base_directory, configuration.environment);
 	init_server(configuration.server);

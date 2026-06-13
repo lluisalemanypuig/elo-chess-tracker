@@ -26,8 +26,6 @@ Contact:
 import Debug from 'debug';
 const debug = Debug('ELO_TRACKER:server_users_edit');
 
-import path from 'path';
-
 import { log_now } from '@server/utils/time';
 import { is_user_logged_in } from '@server/managers/session';
 import { user_rename_and_reassign_roles } from '@server/managers/users';
@@ -37,6 +35,7 @@ import { SessionID } from '@server/models/session_id';
 import { can_user_edit } from '@server/managers/user_relationships';
 import { UsersManager } from '@server/managers/users_manager';
 import { ConfigurationManager } from '@server/managers/configuration_manager';
+import { get_execution_directory } from './managers/environment_manager';
 
 export async function get_page_user_edit(req: any, res: any) {
 	debug(log_now(), 'GET /page/user/edit...');
@@ -60,7 +59,7 @@ export async function get_page_user_edit(req: any, res: any) {
 	if (ConfigurationManager.should_cache_data()) {
 		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
 	}
-	res.sendFile(path.join(__dirname, '../html/user/edit.html'));
+	res.sendFile(`${get_execution_directory()}/html/user/edit.html`);
 }
 
 export async function post_user_edit(req: any, res: any) {

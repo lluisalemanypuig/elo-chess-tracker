@@ -49,6 +49,17 @@ export class EnvironmentManager {
 		return EnvironmentManager.instance;
 	}
 
+	// execution directory (TS code)
+	private directory_execution: string = '';
+
+	set_execution_environment(base_dir: string): void {
+		this.directory_execution = base_dir;
+	}
+
+	get_execution_directory(): string {
+		return this.directory_execution;
+	}
+
 	// database directory
 	private directory_database: string = '';
 	private directory_database_games: string = '';
@@ -199,4 +210,8 @@ export class EnvironmentManager {
 		this.clear_icons();
 		this.clear_titles();
 	}
+}
+
+export function get_execution_directory(): string {
+	return EnvironmentManager.get_instance().get_execution_directory();
 }

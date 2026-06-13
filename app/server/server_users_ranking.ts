@@ -26,12 +26,11 @@ Contact:
 import Debug from 'debug';
 const debug = Debug('ELO_TRACKER:server_users_ranking');
 
-import path from 'path';
-
 import { log_now } from '@server/utils/time';
 import { is_user_logged_in } from '@server/managers/session';
 import { SessionID } from '@server/models/session_id';
 import { ConfigurationManager } from '@server/managers/configuration_manager';
+import { get_execution_directory } from './managers/environment_manager';
 
 export async function get_page_user_ranking(req: any, res: any) {
 	debug(log_now(), 'GET /user/ranking...');
@@ -48,5 +47,5 @@ export async function get_page_user_ranking(req: any, res: any) {
 	if (ConfigurationManager.should_cache_data()) {
 		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
 	}
-	res.sendFile(path.join(__dirname, '../html/user/ranking.html'));
+	res.sendFile(`${get_execution_directory()}/html/user/ranking.html`);
 }

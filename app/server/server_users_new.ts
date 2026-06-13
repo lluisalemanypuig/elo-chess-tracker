@@ -26,8 +26,6 @@ Contact:
 import Debug from 'debug';
 const debug = Debug('ELO_TRACKER:server_users_new');
 
-import path from 'path';
-
 import { log_now } from '@server/utils/time';
 import { is_user_logged_in } from '@server/managers/session';
 import { user_add_new } from '@server/managers/users';
@@ -37,6 +35,7 @@ import { CREATE_USER, USER_ROLE_ASSIGN, get_role_action_name, USER_ROLE_ASSIGN_I
 import { SessionID } from '@server/models/session_id';
 import { UsersManager } from '@server/managers/users_manager';
 import { ConfigurationManager } from '@server/managers/configuration_manager';
+import { get_execution_directory } from './managers/environment_manager';
 
 export async function get_page_user_create(req: any, res: any) {
 	debug(log_now(), 'GET /page/user/create...');
@@ -65,7 +64,7 @@ export async function get_page_user_create(req: any, res: any) {
 	if (ConfigurationManager.should_cache_data()) {
 		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
 	}
-	res.sendFile(path.join(__dirname, '../html/user/new.html'));
+	res.sendFile(`${get_execution_directory()}/html/user/new.html`);
 }
 
 export async function post_user_create(req: any, res: any) {

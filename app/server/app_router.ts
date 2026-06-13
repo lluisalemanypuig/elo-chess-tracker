@@ -24,13 +24,12 @@ Contact:
 */
 
 import express from 'express';
-import path from 'path';
 
 import Debug from 'debug';
 const debug = Debug('ELO_TRACKER:app_router');
 import { log_now } from '@server/utils/time';
 
-import { EnvironmentManager } from '@server/managers/environment_manager';
+import { EnvironmentManager, get_execution_directory } from '@server/managers/environment_manager';
 
 let router = express.Router();
 
@@ -38,7 +37,7 @@ let router = express.Router();
 router.get('/css/*.css', (req: any, res: any) => {
 	debug(log_now(), 'GET css file...');
 	debug(log_now(), `    request: ${req.url}`);
-	const filepath = path.join(__dirname, '..', req.url);
+	const filepath = `${get_execution_directory()}/${req.url}`;
 	debug(log_now(), `    file to send: ${filepath}`);
 	res.status(200);
 	if (ConfigurationManager.should_cache_data()) {
@@ -120,7 +119,7 @@ router.get('/home', get_page_home);
 router.get('/js/*', (req: any, res: any) => {
 	debug(log_now(), 'GET a file in js/');
 	debug(log_now(), `    request: ${req.url}`);
-	const filepath = path.join(__dirname, '..', req.url);
+	const filepath = `${get_execution_directory()}/${req.url}`;
 	debug(log_now(), `    file to send: ${filepath}`);
 	res.status(200);
 	if (ConfigurationManager.should_cache_data()) {

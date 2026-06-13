@@ -23,7 +23,6 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import path from 'path';
 import Debug from 'debug';
 const debug = Debug('ELO_TRACKER:server_home');
 
@@ -31,9 +30,11 @@ import { log_now } from '@server/utils/time';
 import { SessionID } from '@server/models/session_id';
 import { is_user_logged_in } from '@server/managers/session';
 import { ConfigurationManager } from '@server/managers/configuration_manager';
+import { get_execution_directory } from './managers/environment_manager';
 
 export async function get_page_login(req: any, res: any) {
 	let send_home: boolean;
+	console.log('GET page_login');
 
 	if (SessionID.get_field_username_name() in req.cookies) {
 		debug(log_now(), 'There is a username key in the cookies received.');
@@ -56,9 +57,11 @@ export async function get_page_login(req: any, res: any) {
 		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
 	}
 	if (send_home) {
-		res.sendFile(path.join(__dirname, '../html/home.html'));
+		console.log('send /home since the user is logged in');
+		res.sendFile(`${get_execution_directory()}/html/home.html`);
 	} else {
-		res.sendFile(path.join(__dirname, '../html/login_screen.html'));
+		console.log('send /login_screen since the user is not logged in');
+		res.sendFile(`${get_execution_directory()}/html/login_screen.html`);
 	}
 }
 
@@ -78,5 +81,5 @@ export async function get_page_home(req: any, res: any) {
 	if (ConfigurationManager.should_cache_data()) {
 		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
 	}
-	res.sendFile(path.join(__dirname, '../html/home.html'));
+	res.sendFile(`${get_execution_directory()}/html/home.html`);
 }
