@@ -136,7 +136,7 @@ describe('Encryption and decryption with a (wrong) plain password', () => {
 
 function check_encrypt_user_password(user: string, pass: string) {
 	const [encrypted, iv] = encrypt_password_for_user(user, pass);
-	expect(is_password_of_user_correct(encrypted, user, pass, iv)).toBe(true);
+	expect(is_password_of_user_correct(user, pass, encrypted, iv)).toBe(true);
 }
 
 describe('Encrypt password for users', () => {
