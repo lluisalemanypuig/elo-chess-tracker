@@ -24,7 +24,6 @@ Contact:
 */
 
 import { UsersManager } from '@server/managers/users_manager';
-import { Password } from '@server/models/password';
 import { User } from '@server/models/user';
 
 describe('Users Manager', () => {
@@ -39,9 +38,9 @@ describe('Users Manager', () => {
 		let users = UsersManager.get_instance();
 		users.clear();
 
-		const a = new User('a', 'AA', 'aa', new Password('p', 'w'), [], [], []);
-		const b = new User('b', 'BB', 'bb', new Password('p', 'w'), [], [], []);
-		const c = new User('c', 'CC', 'cc', new Password('p', 'w'), [], [], []);
+		const a = new User('a', 'AA', 'aa', { encrypted: 'p', iv: 'w' }, [], [], []);
+		const b = new User('b', 'BB', 'bb', { encrypted: 'p', iv: 'w' }, [], [], []);
+		const c = new User('c', 'CC', 'cc', { encrypted: 'p', iv: 'w' }, [], [], []);
 
 		users.add_user(a);
 		expect(users.num_users()).toBe(1);
@@ -70,15 +69,15 @@ describe('Users Manager', () => {
 		let users = UsersManager.get_instance();
 		users.clear();
 
-		const a = new User('a', 'AA', 'aa', new Password('p', 'w'), [], [], []);
-		const b = new User('b', 'BB', 'bb', new Password('p', 'w'), [], [], []);
-		const c = new User('c', 'CC', 'cc', new Password('p', 'w'), [], [], []);
+		const a = new User('a', 'AA', 'aa', { encrypted: 'p', iv: 'w' }, [], [], []);
+		const b = new User('b', 'BB', 'bb', { encrypted: 'p', iv: 'w' }, [], [], []);
+		const c = new User('c', 'CC', 'cc', { encrypted: 'p', iv: 'w' }, [], [], []);
 
 		users.add_user(a);
 		users.add_user(b);
 		users.add_user(c);
 
-		const d = new User('d', 'DD', 'dd', new Password('p', 'w'), [], [], []);
+		const d = new User('d', 'DD', 'dd', { encrypted: 'p', iv: 'w' }, [], [], []);
 
 		users.replace_user(d, users.get_user_index(b) as number);
 

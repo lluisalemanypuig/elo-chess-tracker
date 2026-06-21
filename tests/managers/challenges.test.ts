@@ -45,8 +45,9 @@ import {
 import { number_to_string } from '@server/utils/misc';
 import { Challenge } from '@server/models/challenge';
 import { User } from '@server/models/user';
-import { challenge_from_json } from '@server/io/challenge';
+import { challenge_from_string } from '@server/io/challenge';
 import { UsersManager } from '@server/managers/users_manager';
+import { Configuration } from '@server/models/configuration/configuration';
 
 const webpage_dir = 'tests/webpage';
 const db_dir = path.join(webpage_dir, 'database');
@@ -54,7 +55,7 @@ const db_dir = path.join(webpage_dir, 'database');
 const db_challenges_dir = path.join(db_dir, 'challenges');
 const db_games_dir = path.join(db_dir, 'games');
 
-const classical_rapid_blitz = {
+const classical_rapid_blitz: Configuration = {
 	environment: {
 		ssl_certificate: {
 			public_key_file: '',
@@ -177,43 +178,43 @@ describe('Check challenge communication', () => {
 		const c_aa_dd_id = number_to_string(3);
 		const c_ee_ff_id = number_to_string(4);
 
-		expect(c_aa_bb.get_id()).toEqual(c_aa_bb_id);
-		expect(c_aa_bb.get_sent_by()).toEqual('aa');
-		expect(c_aa_bb.get_sent_to()).toEqual('bb');
+		expect(c_aa_bb.id).toEqual(c_aa_bb_id);
+		expect(c_aa_bb.sent_by).toEqual('aa');
+		expect(c_aa_bb.sent_to).toEqual('bb');
 		{
 			const challenge_file_aa_bb = path.join(db_challenges_dir, c_aa_bb_id);
 			expect(fs.existsSync(challenge_file_aa_bb)).toBe(true);
-			const c_aa_bb_ = challenge_from_json(fs.readFileSync(challenge_file_aa_bb, 'utf8'));
+			const c_aa_bb_ = challenge_from_string(fs.readFileSync(challenge_file_aa_bb, 'utf8'));
 			expect(c_aa_bb).toEqual(c_aa_bb_);
 		}
 
-		expect(c_aa_cc.get_id()).toEqual(c_aa_cc_id);
-		expect(c_aa_cc.get_sent_by()).toEqual('aa');
-		expect(c_aa_cc.get_sent_to()).toEqual('cc');
+		expect(c_aa_cc.id).toEqual(c_aa_cc_id);
+		expect(c_aa_cc.sent_by).toEqual('aa');
+		expect(c_aa_cc.sent_to).toEqual('cc');
 		{
 			const challenge_file_aa_cc = path.join(db_challenges_dir, c_aa_cc_id);
 			expect(fs.existsSync(challenge_file_aa_cc)).toBe(true);
-			const c_aa_cc_ = challenge_from_json(fs.readFileSync(challenge_file_aa_cc, 'utf8'));
+			const c_aa_cc_ = challenge_from_string(fs.readFileSync(challenge_file_aa_cc, 'utf8'));
 			expect(c_aa_cc).toEqual(c_aa_cc_);
 		}
 
-		expect(c_aa_dd.get_id()).toEqual(c_aa_dd_id);
-		expect(c_aa_dd.get_sent_by()).toEqual('aa');
-		expect(c_aa_dd.get_sent_to()).toEqual('dd');
+		expect(c_aa_dd.id).toEqual(c_aa_dd_id);
+		expect(c_aa_dd.sent_by).toEqual('aa');
+		expect(c_aa_dd.sent_to).toEqual('dd');
 		{
 			const challenge_file_aa_dd = path.join(db_challenges_dir, c_aa_dd_id);
 			expect(fs.existsSync(challenge_file_aa_dd)).toBe(true);
-			const c_aa_dd_ = challenge_from_json(fs.readFileSync(challenge_file_aa_dd, 'utf8'));
+			const c_aa_dd_ = challenge_from_string(fs.readFileSync(challenge_file_aa_dd, 'utf8'));
 			expect(c_aa_dd).toEqual(c_aa_dd_);
 		}
 
-		expect(c_ee_ff.get_id()).toEqual(c_ee_ff_id);
-		expect(c_ee_ff.get_sent_by()).toEqual('ee');
-		expect(c_ee_ff.get_sent_to()).toEqual('ff');
+		expect(c_ee_ff.id).toEqual(c_ee_ff_id);
+		expect(c_ee_ff.sent_by).toEqual('ee');
+		expect(c_ee_ff.sent_to).toEqual('ff');
 		{
 			const challenge_file_ee_ff = path.join(db_challenges_dir, c_ee_ff_id);
 			expect(fs.existsSync(challenge_file_ee_ff)).toBe(true);
-			const c_ee_ff_ = challenge_from_json(fs.readFileSync(challenge_file_ee_ff, 'utf8'));
+			const c_ee_ff_ = challenge_from_string(fs.readFileSync(challenge_file_ee_ff, 'utf8'));
 			expect(c_ee_ff).toEqual(c_ee_ff_);
 		}
 
@@ -238,11 +239,11 @@ describe('Check challenge communication', () => {
 
 			let c = challenges.get_challenge_by_id(id) as Challenge;
 			challenge_accept(c);
-			expect(c.get_when_challenge_accepted()).not.toBe(undefined);
+			expect(c.when_challenge_accepted).not.toBe(undefined);
 
 			const challenge_file = path.join(db_challenges_dir, id);
 			expect(fs.existsSync(challenge_file)).toBe(true);
-			expect(challenge_from_json(fs.readFileSync(challenge_file, 'utf8'))).toEqual(c);
+			expect(challenge_from_string(fs.readFileSync(challenge_file, 'utf8'))).toEqual(c);
 			expect(challenges.get_challenge_by_id(id)).toEqual(c);
 		}
 	});
@@ -255,7 +256,7 @@ describe('Check challenge communication', () => {
 
 			let c = challenges.get_challenge_by_id(id) as Challenge;
 			challenge_decline(c);
-			expect(c.get_when_challenge_accepted()).toBe(undefined);
+			expect(c.when_challenge_accepted).toBe(undefined);
 
 			const challenge_file = path.join(db_challenges_dir, id);
 			expect(fs.existsSync(challenge_file)).toBe(false);
@@ -274,16 +275,16 @@ describe('Check challenge communication', () => {
 		let c = challenges.get_challenge_by_id(id) as Challenge;
 		challenge_set_result(c, 'aa', '2025-01-10..20:32:11:000', 'aa', 'dd', 'white_wins');
 
-		expect(c.get_result_set_by()).toEqual('aa');
-		expect(c.get_white()).toEqual('aa');
-		expect(c.get_black()).toEqual('dd');
-		expect(c.get_result()).toEqual('white_wins');
-		expect(c.get_time_control_id()).toEqual('Blitz');
-		expect(c.get_time_control_name()).toEqual('Blitz (5 + 3)');
+		expect(c.result_set_by).toEqual('aa');
+		expect(c.white).toEqual('aa');
+		expect(c.black).toEqual('dd');
+		expect(c.result).toEqual('white_wins');
+		expect(c.time_control_id).toEqual('Blitz');
+		expect(c.time_control_name).toEqual('Blitz (5 + 3)');
 
 		const challenge_file = path.join(db_challenges_dir, id);
 		expect(fs.existsSync(challenge_file)).toBe(true);
-		expect(challenge_from_json(fs.readFileSync(challenge_file, 'utf8'))).toEqual(c);
+		expect(challenge_from_string(fs.readFileSync(challenge_file, 'utf8'))).toEqual(c);
 		expect(challenges.get_challenge_by_id(id)).toEqual(c);
 
 		expect(challenges.num_challenges()).toBe(2);
@@ -297,16 +298,16 @@ describe('Check challenge communication', () => {
 		let c = challenges.get_challenge_by_id(id) as Challenge;
 		challenge_set_result(c, 'ff', '2025-01-10..20:37:35:000', 'ee', 'ff', 'black_wins');
 
-		expect(c.get_result_set_by()).toEqual('ff');
-		expect(c.get_white()).toEqual('ee');
-		expect(c.get_black()).toEqual('ff');
-		expect(c.get_result()).toEqual('black_wins');
-		expect(c.get_time_control_id()).toEqual('Classical');
-		expect(c.get_time_control_name()).toEqual('Classical (90 + 30)');
+		expect(c.result_set_by).toEqual('ff');
+		expect(c.white).toEqual('ee');
+		expect(c.black).toEqual('ff');
+		expect(c.result).toEqual('black_wins');
+		expect(c.time_control_id).toEqual('Classical');
+		expect(c.time_control_name).toEqual('Classical (90 + 30)');
 
 		const challenge_file = path.join(db_challenges_dir, id);
 		expect(fs.existsSync(challenge_file)).toBe(true);
-		expect(challenge_from_json(fs.readFileSync(challenge_file, 'utf8'))).toEqual(c);
+		expect(challenge_from_string(fs.readFileSync(challenge_file, 'utf8'))).toEqual(c);
 		expect(challenges.get_challenge_by_id(id)).toEqual(c);
 
 		expect(challenges.num_challenges()).toBe(2);
@@ -317,8 +318,8 @@ describe('Check challenge communication', () => {
 
 		const id = number_to_string(4);
 		let c = challenges.get_challenge_by_id(id) as Challenge;
-		expect(c.get_white()).toEqual('ee');
-		expect(c.get_black()).toEqual('ff');
+		expect(c.white).toEqual('ee');
+		expect(c.black).toEqual('ff');
 
 		challenge_agree_result(c);
 
@@ -368,16 +369,16 @@ describe('Check challenge communication', () => {
 		let c = challenges.get_challenge_by_id(id) as Challenge;
 		challenge_unset_result(c);
 
-		expect(c.get_result_set_by()).toEqual(undefined);
-		expect(c.get_white()).toEqual(undefined);
-		expect(c.get_black()).toEqual(undefined);
-		expect(c.get_result()).toEqual(undefined);
-		expect(c.get_time_control_id()).toEqual('Blitz');
-		expect(c.get_time_control_name()).toEqual('Blitz (5 + 3)');
+		expect(c.result_set_by).toEqual(undefined);
+		expect(c.white).toEqual(undefined);
+		expect(c.black).toEqual(undefined);
+		expect(c.result).toEqual(undefined);
+		expect(c.time_control_id).toEqual('Blitz');
+		expect(c.time_control_name).toEqual('Blitz (5 + 3)');
 
 		const challenge_file = path.join(db_challenges_dir, id);
 		expect(fs.existsSync(challenge_file)).toBe(true);
-		expect(challenge_from_json(fs.readFileSync(challenge_file, 'utf8'))).toEqual(c);
+		expect(challenge_from_string(fs.readFileSync(challenge_file, 'utf8'))).toEqual(c);
 		expect(challenges.get_challenge_by_id(id)).toEqual(c);
 
 		expect(challenges.num_challenges()).toBe(1);
@@ -391,16 +392,16 @@ describe('Check challenge communication', () => {
 		let c = challenges.get_challenge_by_id(id) as Challenge;
 		challenge_set_result(c, 'aa', '2025-01-10..20:38:45:000', 'dd', 'aa', 'black_wins');
 
-		expect(c.get_result_set_by()).toEqual('aa');
-		expect(c.get_white()).toEqual('dd');
-		expect(c.get_black()).toEqual('aa');
-		expect(c.get_result()).toEqual('black_wins');
-		expect(c.get_time_control_id()).toEqual('Blitz');
-		expect(c.get_time_control_name()).toEqual('Blitz (5 + 3)');
+		expect(c.result_set_by).toEqual('aa');
+		expect(c.white).toEqual('dd');
+		expect(c.black).toEqual('aa');
+		expect(c.result).toEqual('black_wins');
+		expect(c.time_control_id).toEqual('Blitz');
+		expect(c.time_control_name).toEqual('Blitz (5 + 3)');
 
 		const challenge_file = path.join(db_challenges_dir, id);
 		expect(fs.existsSync(challenge_file)).toBe(true);
-		expect(challenge_from_json(fs.readFileSync(challenge_file, 'utf8'))).toEqual(c);
+		expect(challenge_from_string(fs.readFileSync(challenge_file, 'utf8'))).toEqual(c);
 		expect(challenges.get_challenge_by_id(id)).toEqual(c);
 
 		expect(challenges.num_challenges()).toBe(1);
@@ -421,8 +422,8 @@ describe('Check initialization and communication', () => {
 
 		const id = number_to_string(3);
 		let c = challenges.get_challenge_by_id(id) as Challenge;
-		expect(c.get_white()).toEqual('dd');
-		expect(c.get_black()).toEqual('aa');
+		expect(c.white).toEqual('dd');
+		expect(c.black).toEqual('aa');
 
 		challenge_agree_result(c);
 

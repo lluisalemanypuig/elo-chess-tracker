@@ -24,18 +24,38 @@ Contact:
 */
 
 import { EdgeMetadata } from '@server/models/graph/edge_metadata';
-import { edge_metadata_from_json } from '@server/io/graph/edge_metadata';
+import { edge_metadata_from_string } from '@server/io/graph/edge_metadata';
 
-describe('From JSON', () => {
+describe('IO conversion', () => {
 	test('string', () => {
-		expect(edge_metadata_from_json('{"num_games_won": 1, "num_games_drawn": 0, "num_games_lost": 300}')).toEqual(
-			new EdgeMetadata(1, 0, 300)
-		);
-	});
+		expect(
+			edge_metadata_from_string(
+				'{\
+					"num_games_won": 1,\
+					"num_games_drawn": 0,\
+					"num_games_lost": 5\
+				}'
+			)
+		).toEqual(new EdgeMetadata(1, 0, 5));
 
-	test('JSON', () => {
-		expect(edge_metadata_from_json({ num_games_won: 1, num_games_drawn: 0, num_games_lost: 300 })).toEqual(
-			new EdgeMetadata(1, 0, 300)
-		);
+		expect(
+			edge_metadata_from_string(
+				'{\
+					"num_games_won": 1,\
+					"num_games_drawn": 0,\
+					"num_games_lost": 66,\
+					"other": 1234\
+				}'
+			)
+		).toBeNull();
+
+		expect(
+			edge_metadata_from_string(
+				'{\
+					"num_games_won": 1,\
+					"num_games_drawn": 0\
+				}'
+			)
+		).toBeNull();
 	});
 });

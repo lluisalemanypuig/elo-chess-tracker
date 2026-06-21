@@ -23,10 +23,12 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
+import { clear_server } from '@server/managers/clear';
 import { GraphsManager } from '@server/managers/graphs_manager';
 import { Graph } from '@server/models/graph/graph';
 
 describe('Graph manager', () => {
+	clear_server();
 	let man = GraphsManager.get_instance();
 
 	test('Add empty graphs', () => {

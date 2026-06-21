@@ -23,15 +23,10 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { Password } from '@server/models/password';
-import { password_from_json } from '@server/io/password';
+import { password_from_string } from '@server/io/password';
 
-describe('From JSON', () => {
-	test('string', () => {
-		expect(password_from_json('{"encrypted": "1234", "iv": "asdf"}')).toEqual(new Password('1234', 'asdf'));
-	});
-
-	test('JSON', () => {
-		expect(password_from_json({ encrypted: '1234', iv: 'asdf' })).toEqual(new Password('1234', 'asdf'));
+describe('From string', () => {
+	test('creates a Password from a string', () => {
+		expect(password_from_string('{"encrypted": "1234", "iv": "asdf"}')).toEqual({ encrypted: '1234', iv: 'asdf' });
 	});
 });

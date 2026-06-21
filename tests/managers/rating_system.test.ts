@@ -25,10 +25,10 @@ Contact:
 
 import { RatingSystemManager } from '@server/managers/rating_system_manager';
 import { initialize_rating_functions, initialize_rating_time_controls } from '@server/managers/rating_system';
-import { TimeControl } from '@server/models/time_control';
 
 import { Elo_player_vs_player } from '@server/rating_framework/Elo/formula';
-import { Elo_rating_from_json, Elo_new_rating } from '@server/rating_framework/Elo/rating';
+import { new_rating_Elo } from '@server/rating_framework/Elo/rating';
+import { rating_from_string_Elo } from '@server/io/ratings/Elo/rating';
 
 describe('Rating System Manager', () => {
 	test('Initialization of functions (Elo)', () => {
@@ -38,8 +38,8 @@ describe('Rating System Manager', () => {
 		initialize_rating_functions('Elo');
 
 		expect(rating.get_rating_function()).toBe(Elo_player_vs_player);
-		expect(rating.get_rating_from_JSON_function()).toBe(Elo_rating_from_json);
-		expect(rating.get_new_rating_function()).toBe(Elo_new_rating);
+		expect(rating.get_rating_from_string_function()).toBe(rating_from_string_Elo);
+		expect(rating.get_new_rating_function()).toBe(new_rating_Elo);
 	});
 
 	test('Initialization of time controls', () => {
@@ -47,13 +47,13 @@ describe('Rating System Manager', () => {
 		rating.clear();
 
 		initialize_rating_time_controls([
-			new TimeControl('classical', 'Classical (90 + 30)'),
-			new TimeControl('rapid', 'Rapid (15 + 10)'),
-			new TimeControl('rapid', 'Rapid (12 + 5)'),
-			new TimeControl('rapid', 'Rapid (12 + 0)'),
-			new TimeControl('blitz', 'Blitz (5 + 3)'),
-			new TimeControl('blitz', 'Blitz (5 + 0)'),
-			new TimeControl('blitz', 'Blitz (3 + 2)')
+			{ id: 'classical', name: 'Classical (90 + 30)' },
+			{ id: 'rapid', name: 'Rapid (15 + 10)' },
+			{ id: 'rapid', name: 'Rapid (12 + 5)' },
+			{ id: 'rapid', name: 'Rapid (12 + 0)' },
+			{ id: 'blitz', name: 'Blitz (5 + 3)' },
+			{ id: 'blitz', name: 'Blitz (5 + 0)' },
+			{ id: 'blitz', name: 'Blitz (3 + 2)' }
 		]);
 
 		expect(rating.get_time_controls().length).toBe(7);

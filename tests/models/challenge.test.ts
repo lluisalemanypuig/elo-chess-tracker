@@ -23,189 +23,203 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { Challenge } from '@server/models/challenge';
+import { new_challenge, set_result, unset_result, set_result_accepted } from '@server/models/challenge';
 
 describe('Sets and gets', () => {
 	test('Constructor', () => {
-		const c = new Challenge('000x1', 'asdf', 'A', 'B', 'blitz', 'Blitz (5 + 3)', '2024-12-29..14:00:00');
+		const c = new_challenge('000x1', 'asdf', 'A', 'B', 'blitz', 'Blitz (5 + 3)', '2024-12-29..14:00:00');
 
-		expect(c.get_id()).toBe('000x1');
-		expect(c.get_sent_by()).toBe('A');
-		expect(c.get_sent_to()).toBe('B');
-		expect(c.get_when_challenge_sent()).toBe('2024-12-29..14:00:00');
+		expect(c.id).toBe('000x1');
+		expect(c.sent_by).toBe('A');
+		expect(c.sent_to).toBe('B');
+		expect(c.when_challenge_sent).toBe('2024-12-29..14:00:00');
 	});
 
 	test('Set fields - 1', () => {
-		let c = new Challenge('000x1', 'asdf', 'A', 'B', 'blitz', 'Blitz (5 + 3)', '2024-12-29..14:00:00');
+		let c = new_challenge('000x1', 'asdf', 'A', 'B', 'blitz', 'Blitz (5 + 3)', '2024-12-29..14:00:00');
 
-		expect(c.get_id()).toBe('000x1');
-		expect(c.get_sent_by()).toBe('A');
-		expect(c.get_sent_to()).toBe('B');
-		expect(c.get_when_challenge_sent()).toBe('2024-12-29..14:00:00');
+		expect(c.id).toBe('000x1');
+		expect(c.sent_by).toBe('A');
+		expect(c.sent_to).toBe('B');
+		expect(c.when_challenge_sent).toBe('2024-12-29..14:00:00');
 
-		c.set_challenge_accepted('2024-12-29..14:00:01');
+		c.when_challenge_accepted = '2024-12-29..14:00:01';
 
-		expect(c.get_when_challenge_accepted()).toBe('2024-12-29..14:00:01');
-		expect(c.was_result_set()).toBe(false);
+		expect(c.when_challenge_accepted).toBe('2024-12-29..14:00:01');
+		expect(c.result_was_set).toBe(false);
 
-		expect(() => c.set_result('A', '2024-12-29..14:00:02', 'A', 'B', 'black_wins')).not.toThrow();
+		expect(() =>
+			set_result(c, { by: 'A', when: '2024-12-29..14:00:02', white: 'A', black: 'B', result: 'black_wins' })
+		).not.toThrow();
 
-		expect(c.was_result_set()).toBe(true);
-		expect(c.get_result_set_by()).toBe('A');
-		expect(c.get_when_result_set()).toBe('2024-12-29..14:00:02');
-		expect(c.get_white()).toBe('A');
-		expect(c.get_black()).toBe('B');
-		expect(c.get_result()).toBe('black_wins');
-		expect(c.get_time_control_id()).toBe('blitz');
-		expect(c.get_time_control_name()).toBe('Blitz (5 + 3)');
+		expect(c.result_was_set).toBe(true);
+		expect(c.result_set_by).toBe('A');
+		expect(c.when_result_set).toBe('2024-12-29..14:00:02');
+		expect(c.white).toBe('A');
+		expect(c.black).toBe('B');
+		expect(c.result).toBe('black_wins');
+		expect(c.time_control_id).toBe('blitz');
+		expect(c.time_control_name).toBe('Blitz (5 + 3)');
 
-		expect(() => c.set_result_accepted('B', '2024-12-29..14:00:03')).not.toThrow();
+		expect(() => set_result_accepted(c, 'B', '2024-12-29..14:00:03')).not.toThrow();
 
-		expect(c.get_when_result_accepted()).toBe('2024-12-29..14:00:03');
-		expect(c.get_result_accepted_by()).toBe('B');
-		expect(c.get_result_accepted_by()).not.toBe('A');
+		expect(c.when_result_accepted).toBe('2024-12-29..14:00:03');
+		expect(c.result_accepted_by).toBe('B');
+		expect(c.result_accepted_by).not.toBe('A');
 	});
 
 	test('Set fields - 2', () => {
-		let c = new Challenge('000x1', 'asdf', 'A', 'B', 'blitz', 'Blitz (5 + 3)', '2024-12-29..14:00:00');
+		let c = new_challenge('000x1', 'asdf', 'A', 'B', 'blitz', 'Blitz (5 + 3)', '2024-12-29..14:00:00');
 
-		expect(c.get_id()).toBe('000x1');
-		expect(c.get_sent_by()).toBe('A');
-		expect(c.get_sent_to()).toBe('B');
-		expect(c.get_when_challenge_sent()).toBe('2024-12-29..14:00:00');
+		expect(c.id).toBe('000x1');
+		expect(c.sent_by).toBe('A');
+		expect(c.sent_to).toBe('B');
+		expect(c.when_challenge_sent).toBe('2024-12-29..14:00:00');
 
-		c.set_challenge_accepted('2024-12-29..14:00:01');
+		c.when_challenge_accepted = '2024-12-29..14:00:01';
 
-		expect(c.get_when_challenge_accepted()).toBe('2024-12-29..14:00:01');
-		expect(c.was_result_set()).toBe(false);
+		expect(c.when_challenge_accepted).toBe('2024-12-29..14:00:01');
+		expect(c.result_was_set).toBe(false);
 
-		expect(() => c.set_result('A', '2024-12-29..14:00:02', 'B', 'A', 'draw')).not.toThrow();
+		expect(() =>
+			set_result(c, { by: 'A', when: '2024-12-29..14:00:02', white: 'B', black: 'A', result: 'draw' })
+		).not.toThrow();
 
-		expect(c.was_result_set()).toBe(true);
-		expect(c.get_result_set_by()).toBe('A');
-		expect(c.get_when_result_set()).toBe('2024-12-29..14:00:02');
-		expect(c.get_white()).toBe('B');
-		expect(c.get_black()).toBe('A');
-		expect(c.get_result()).toBe('draw');
-		expect(c.get_time_control_id()).toBe('blitz');
-		expect(c.get_time_control_name()).toBe('Blitz (5 + 3)');
+		expect(c.result_was_set).toBe(true);
+		expect(c.result_set_by).toBe('A');
+		expect(c.when_result_set).toBe('2024-12-29..14:00:02');
+		expect(c.white).toBe('B');
+		expect(c.black).toBe('A');
+		expect(c.result).toBe('draw');
+		expect(c.time_control_id).toBe('blitz');
+		expect(c.time_control_name).toBe('Blitz (5 + 3)');
 
-		expect(() => c.set_result_accepted('B', '2024-12-29..14:00:03')).not.toThrow();
+		expect(() => set_result_accepted(c, 'B', '2024-12-29..14:00:03')).not.toThrow();
 
-		expect(c.get_when_result_accepted()).toBe('2024-12-29..14:00:03');
-		expect(c.get_result_accepted_by()).toBe('B');
-		expect(c.get_result_accepted_by()).not.toBe('A');
+		expect(c.when_result_accepted).toBe('2024-12-29..14:00:03');
+		expect(c.result_accepted_by).toBe('B');
+		expect(c.result_accepted_by).not.toBe('A');
 	});
 
 	test('Set fields - 3', () => {
-		let c = new Challenge('000x1', 'asdf', 'A', 'B', 'blitz', 'Blitz (5 + 3)', '2024-12-29..14:00:00');
+		let c = new_challenge('000x1', 'asdf', 'A', 'B', 'blitz', 'Blitz (5 + 3)', '2024-12-29..14:00:00');
 
-		expect(c.get_id()).toBe('000x1');
-		expect(c.get_sent_by()).toBe('A');
-		expect(c.get_sent_to()).toBe('B');
-		expect(c.get_when_challenge_sent()).toBe('2024-12-29..14:00:00');
+		expect(c.id).toBe('000x1');
+		expect(c.sent_by).toBe('A');
+		expect(c.sent_to).toBe('B');
+		expect(c.when_challenge_sent).toBe('2024-12-29..14:00:00');
 
-		c.set_challenge_accepted('2024-12-29..14:00:01');
+		c.when_challenge_accepted = '2024-12-29..14:00:01';
 
-		expect(c.get_when_challenge_accepted()).toBe('2024-12-29..14:00:01');
-		expect(c.was_result_set()).toBe(false);
+		expect(c.when_challenge_accepted).toBe('2024-12-29..14:00:01');
+		expect(c.result_was_set).toBe(false);
 
-		expect(() => c.set_result('A', '2024-12-29..14:00:02', 'B', 'A', 'draw')).not.toThrow();
+		expect(() =>
+			set_result(c, { by: 'A', when: '2024-12-29..14:00:02', white: 'B', black: 'A', result: 'draw' })
+		).not.toThrow();
 
-		expect(c.was_result_set()).toBe(true);
-		expect(c.get_result_set_by()).toBe('A');
-		expect(c.get_when_result_set()).toBe('2024-12-29..14:00:02');
-		expect(c.get_white()).toBe('B');
-		expect(c.get_black()).toBe('A');
-		expect(c.get_result()).toBe('draw');
-		expect(c.get_time_control_id()).toBe('blitz');
-		expect(c.get_time_control_name()).toBe('Blitz (5 + 3)');
+		expect(c.result_was_set).toBe(true);
+		expect(c.result_set_by).toBe('A');
+		expect(c.when_result_set).toBe('2024-12-29..14:00:02');
+		expect(c.white).toBe('B');
+		expect(c.black).toBe('A');
+		expect(c.result).toBe('draw');
+		expect(c.time_control_id).toBe('blitz');
+		expect(c.time_control_name).toBe('Blitz (5 + 3)');
 
-		expect(() => c.set_result_accepted('A', '2024-12-29..14:00:03')).toThrow();
+		expect(() => set_result_accepted(c, 'A', '2024-12-29..14:00:03')).toThrow();
 
-		expect(c.get_when_result_accepted()).toBe(undefined);
-		expect(c.get_result_accepted_by()).toBe(undefined);
+		expect(c.when_result_accepted).toBe(undefined);
+		expect(c.result_accepted_by).toBe(undefined);
 	});
 
 	test('Set fields - 4', () => {
-		let c = new Challenge('000x1', 'asdf', 'A', 'B', 'blitz', 'Blitz (5 + 3)', '2024-12-29..14:00:00');
+		let c = new_challenge('000x1', 'asdf', 'A', 'B', 'blitz', 'Blitz (5 + 3)', '2024-12-29..14:00:00');
 
-		expect(c.get_id()).toBe('000x1');
-		expect(c.get_sent_by()).toBe('A');
-		expect(c.get_sent_to()).toBe('B');
-		expect(c.get_when_challenge_sent()).toBe('2024-12-29..14:00:00');
+		expect(c.id).toBe('000x1');
+		expect(c.sent_by).toBe('A');
+		expect(c.sent_to).toBe('B');
+		expect(c.when_challenge_sent).toBe('2024-12-29..14:00:00');
 
-		c.set_challenge_accepted('2024-12-29..14:00:01');
+		c.when_challenge_accepted = '2024-12-29..14:00:01';
 
-		expect(c.get_when_challenge_accepted()).toBe('2024-12-29..14:00:01');
-		expect(c.was_result_set()).toBe(false);
+		expect(c.when_challenge_accepted).toBe('2024-12-29..14:00:01');
+		expect(c.result_was_set).toBe(false);
 
-		expect(() => c.set_result_accepted('A', '2024-12-29..14:00:03')).toThrow();
+		expect(() => set_result_accepted(c, 'A', '2024-12-29..14:00:03')).toThrow();
 
-		expect(c.get_when_result_accepted()).toBe(undefined);
-		expect(c.get_result_accepted_by()).toBe(undefined);
+		expect(c.when_result_accepted).toBe(undefined);
+		expect(c.result_accepted_by).toBe(undefined);
 	});
 
 	test('Set fields - 5', () => {
-		let c = new Challenge('000x1', 'asdf', 'A', 'B', 'blitz', 'Blitz (5 + 3)', '2024-12-29..14:00:00');
+		let c = new_challenge('000x1', 'asdf', 'A', 'B', 'blitz', 'Blitz (5 + 3)', '2024-12-29..14:00:00');
 
-		expect(c.get_id()).toBe('000x1');
-		expect(c.get_sent_by()).toBe('A');
-		expect(c.get_sent_to()).toBe('B');
-		expect(c.get_when_challenge_sent()).toBe('2024-12-29..14:00:00');
+		expect(c.id).toBe('000x1');
+		expect(c.sent_by).toBe('A');
+		expect(c.sent_to).toBe('B');
+		expect(c.when_challenge_sent).toBe('2024-12-29..14:00:00');
 
-		c.set_challenge_accepted('2024-12-29..14:00:01');
+		c.when_challenge_accepted = '2024-12-29..14:00:01';
 
-		expect(c.get_when_challenge_accepted()).toBe('2024-12-29..14:00:01');
-		expect(c.was_result_set()).toBe(false);
+		expect(c.when_challenge_accepted).toBe('2024-12-29..14:00:01');
+		expect(c.result_was_set).toBe(false);
 
-		expect(() => c.set_result('a', '2024-12-29..14:00:02', 'A', 'B', 'black_wins')).toThrow();
-		expect(() => c.set_result('A', '2024-12-29..14:00:02', 'a', 'B', 'black_wins')).toThrow();
-		expect(() => c.set_result('A', '2024-12-29..14:00:02', 'A', 'b', 'black_wins')).toThrow();
+		expect(() =>
+			set_result(c, { by: 'a', when: '2024-12-29..14:00:02', white: 'A', black: 'B', result: 'black_wins' })
+		).toThrow();
+		expect(() =>
+			set_result(c, { by: 'A', when: '2024-12-29..14:00:02', white: 'a', black: 'B', result: 'black_wins' })
+		).toThrow();
+		expect(() =>
+			set_result(c, { by: 'A', when: '2024-12-29..14:00:02', white: 'A', black: 'b', result: 'black_wins' })
+		).toThrow();
 
-		expect(c.was_result_set()).toBe(false);
-		expect(c.get_result_set_by()).toBe(undefined);
-		expect(c.get_when_result_set()).toBe(undefined);
-		expect(c.get_white()).toBe(undefined);
-		expect(c.get_black()).toBe(undefined);
-		expect(c.get_result()).toBe(undefined);
-		expect(c.get_time_control_id()).toBe('blitz');
-		expect(c.get_time_control_name()).toBe('Blitz (5 + 3)');
+		expect(c.result_was_set).toBe(false);
+		expect(c.result_set_by).toBe(undefined);
+		expect(c.when_result_set).toBe(undefined);
+		expect(c.white).toBe(undefined);
+		expect(c.black).toBe(undefined);
+		expect(c.result).toBe(undefined);
+		expect(c.time_control_id).toBe('blitz');
+		expect(c.time_control_name).toBe('Blitz (5 + 3)');
 	});
 
 	test('Set fields - 6', () => {
-		let c = new Challenge('000x1', 'asdf', 'A', 'B', 'blitz', 'Blitz (5 + 3)', '2024-12-29..14:00:00');
+		let c = new_challenge('000x1', 'asdf', 'A', 'B', 'blitz', 'Blitz (5 + 3)', '2024-12-29..14:00:00');
 
-		expect(c.get_id()).toBe('000x1');
-		expect(c.get_sent_by()).toBe('A');
-		expect(c.get_sent_to()).toBe('B');
-		expect(c.get_when_challenge_sent()).toBe('2024-12-29..14:00:00');
+		expect(c.id).toBe('000x1');
+		expect(c.sent_by).toBe('A');
+		expect(c.sent_to).toBe('B');
+		expect(c.when_challenge_sent).toBe('2024-12-29..14:00:00');
 
-		c.set_challenge_accepted('2024-12-29..14:00:01');
+		c.when_challenge_accepted = '2024-12-29..14:00:01';
 
-		expect(c.get_when_challenge_accepted()).toBe('2024-12-29..14:00:01');
-		expect(c.was_result_set()).toBe(false);
+		expect(c.when_challenge_accepted).toBe('2024-12-29..14:00:01');
+		expect(c.result_was_set).toBe(false);
 
-		expect(() => c.set_result('A', '2024-12-29..14:00:02', 'A', 'B', 'black_wins')).not.toThrow();
+		expect(() =>
+			set_result(c, { by: 'A', when: '2024-12-29..14:00:02', white: 'A', black: 'B', result: 'black_wins' })
+		).not.toThrow();
 
-		expect(c.was_result_set()).toBe(true);
-		expect(c.get_result_set_by()).toBe('A');
-		expect(c.get_when_result_set()).toBe('2024-12-29..14:00:02');
-		expect(c.get_white()).toBe('A');
-		expect(c.get_black()).toBe('B');
-		expect(c.get_result()).toBe('black_wins');
-		expect(c.get_time_control_id()).toBe('blitz');
-		expect(c.get_time_control_name()).toBe('Blitz (5 + 3)');
+		expect(c.result_was_set).toBe(true);
+		expect(c.result_set_by).toBe('A');
+		expect(c.when_result_set).toBe('2024-12-29..14:00:02');
+		expect(c.white).toBe('A');
+		expect(c.black).toBe('B');
+		expect(c.result).toBe('black_wins');
+		expect(c.time_control_id).toBe('blitz');
+		expect(c.time_control_name).toBe('Blitz (5 + 3)');
 
-		c.unset_result();
+		unset_result(c);
 
-		expect(c.was_result_set()).toBe(false);
-		expect(c.get_result_set_by()).toBe(undefined);
-		expect(c.get_when_result_set()).toBe(undefined);
-		expect(c.get_white()).toBe(undefined);
-		expect(c.get_black()).toBe(undefined);
-		expect(c.get_result()).toBe(undefined);
-		expect(c.get_time_control_id()).toBe('blitz');
-		expect(c.get_time_control_name()).toBe('Blitz (5 + 3)');
+		expect(c.result_was_set).toBe(false);
+		expect(c.result_set_by).toBe(undefined);
+		expect(c.when_result_set).toBe(undefined);
+		expect(c.white).toBe(undefined);
+		expect(c.black).toBe(undefined);
+		expect(c.result).toBe(undefined);
+		expect(c.time_control_id).toBe('blitz');
+		expect(c.time_control_name).toBe('Blitz (5 + 3)');
 	});
 });

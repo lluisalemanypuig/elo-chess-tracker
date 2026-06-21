@@ -28,7 +28,7 @@ import fs from 'fs';
 import { EdgeMetadata } from '@server/models/graph/edge_metadata';
 import { Graph } from '@server/models/graph/graph';
 
-import { graph_from_json, graph_full_to_file } from '@server/io/graph/graph';
+import { graph_from_string, graph_full_to_file } from '@server/io/graph/graph';
 
 describe('Write to and read from disk', () => {
 	test('2 users -- write', () => {
@@ -48,8 +48,10 @@ describe('Write to and read from disk', () => {
 
 	test('2 users -- read', () => {
 		expect(fs.readdirSync('graph_test').length).toBe(2);
+		expect(fs.existsSync('graph_test/A')).toBe(true);
+		expect(fs.existsSync('graph_test/B')).toBe(true);
 
-		const g = graph_from_json('graph_test/');
+		const g = graph_from_string('graph_test/');
 
 		expect(g.get_data_as_white('A', 'B')).toEqual(new EdgeMetadata(1, 1, 0));
 		expect(g.get_data_as_black('A', 'B')).toEqual(new EdgeMetadata(0, 1, 1));
@@ -84,7 +86,11 @@ describe('Write to and read from disk', () => {
 
 	test('3 users -- read', () => {
 		expect(fs.readdirSync('graph_test').length).toBe(3);
-		const g = graph_from_json('graph_test/');
+		expect(fs.existsSync('graph_test/A')).toBe(true);
+		expect(fs.existsSync('graph_test/B')).toBe(true);
+		expect(fs.existsSync('graph_test/C')).toBe(true);
+
+		const g = graph_from_string('graph_test/');
 
 		expect(g.get_data_as_white('A', 'B')).toEqual(new EdgeMetadata(1, 0, 0));
 		expect(g.get_data_as_black('A', 'B')).toEqual(undefined);

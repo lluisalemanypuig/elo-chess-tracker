@@ -26,7 +26,7 @@ Contact:
 import { SessionID } from '@server/models/session_id';
 
 test('Fields contents are correct', () => {
-	const sid = new SessionID('asdf', 'qwer');
+	const sid: SessionID = { token: 'asdf', username: 'qwer' };
 	expect(sid.token).toEqual('asdf');
 	expect(sid.username).toEqual('qwer');
 });

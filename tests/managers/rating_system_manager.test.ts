@@ -24,7 +24,6 @@ Contact:
 */
 
 import { RatingSystemManager } from '@server/managers/rating_system_manager';
-import { TimeControl } from '@server/models/time_control';
 
 describe('Rating System Manager', () => {
 	test('Basic tests', () => {
@@ -33,13 +32,13 @@ describe('Rating System Manager', () => {
 		expect(rating.get_unique_time_controls_ids().length).toBe(0);
 
 		rating.set_time_controls([
-			new TimeControl('classical', 'Classical (90 + 30)'),
-			new TimeControl('rapid', 'Rapid (15 + 10)'),
-			new TimeControl('rapid', 'Rapid (12 + 5)'),
-			new TimeControl('rapid', 'Rapid (12 + 0)'),
-			new TimeControl('blitz', 'Blitz (5 + 3)'),
-			new TimeControl('blitz', 'Blitz (5 + 0)'),
-			new TimeControl('blitz', 'Blitz (3 + 2)')
+			{ id: 'classical', name: 'Classical (90 + 30)' },
+			{ id: 'rapid', name: 'Rapid (15 + 10)' },
+			{ id: 'rapid', name: 'Rapid (12 + 5)' },
+			{ id: 'rapid', name: 'Rapid (12 + 0)' },
+			{ id: 'blitz', name: 'Blitz (5 + 3)' },
+			{ id: 'blitz', name: 'Blitz (5 + 0)' },
+			{ id: 'blitz', name: 'Blitz (3 + 2)' }
 		]);
 
 		expect(rating.get_time_controls().length).toBe(7);

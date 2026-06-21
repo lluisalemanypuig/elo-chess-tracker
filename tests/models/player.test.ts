@@ -44,7 +44,7 @@ describe('construct', () => {
 			new TimeControlRating('classical', classical)
 		]);
 
-		expect(p.get_username()).toEqual('user.name');
+		expect(p.username).toEqual('user.name');
 		expect(p.has_rating('blitz')).toBe(true);
 		expect(p.has_rating('blitzy')).toBe(false);
 		expect(p.has_rating('rapid')).toBe(true);
@@ -52,13 +52,13 @@ describe('construct', () => {
 		expect(p.has_rating('classical')).toBe(true);
 		expect(p.has_rating('classico')).toBe(false);
 
-		expect(p.get_all_ratings().length).toBe(3);
+		expect(p.ratings.length).toBe(3);
 
 		expect(p.has_rating('bullet')).toBe(false);
 		p.add_rating('bullet', bullet);
 		expect(p.has_rating('bullet')).toBe(true);
 
-		expect(p.get_all_ratings().length).toBe(4);
+		expect(p.ratings.length).toBe(4);
 
 		expect(p.index_time_control_id('blitz')).toBe(0);
 		expect(p.index_time_control_id('rapid')).toBe(1);
@@ -108,6 +108,7 @@ describe('construct', () => {
 		expect(pc.get_rating('classical')).not.toBe(classical);
 
 		p.set_rating('blitz', blitz_higher);
+		expect(pc.get_rating('blitz')).not.toBe(blitz_higher);
 		expect(pc.get_rating('blitz')).not.toEqual(blitz_higher);
 
 		p.set_rating('blitz', blitz_equal);

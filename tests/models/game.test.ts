@@ -43,13 +43,13 @@ describe('Setters and Getters -- Elo', () => {
 			'2024-12-29..11:15:00'
 		);
 
-		expect(g.get_id()).toEqual('1');
-		expect(g.get_white()).toEqual('W');
-		expect(g.get_black()).toEqual('B');
-		expect(g.get_result()).toEqual('white_wins');
-		expect(g.get_time_control_id()).toEqual('blitz');
-		expect(g.get_time_control_name()).toEqual('Blitz (5 + 3)');
-		expect(g.get_date()).toEqual('2024-12-29..11:15:00');
+		expect(g.id).toEqual('1');
+		expect(g.white).toEqual('W');
+		expect(g.black).toEqual('B');
+		expect(g.result).toEqual('white_wins');
+		expect(g.time_control_id).toEqual('blitz');
+		expect(g.time_control_name).toEqual('Blitz (5 + 3)');
+		expect(g.when).toEqual('2024-12-29..11:15:00');
 		expect(g.is_user_involved('W')).toBe(true);
 		expect(g.is_user_involved('B')).toBe(true);
 		expect(g.is_user_involved('q')).toBe(false);
@@ -58,31 +58,31 @@ describe('Setters and Getters -- Elo', () => {
 	test('Sets', () => {
 		let rW = new EloRating(1500, 0, 0, 0, 0, 40, false);
 		let rB = new EloRating(1500, 0, 0, 0, 0, 40, false);
-		const g = new Game(
-			'1',
-			'asdf',
-			'W',
-			rW,
-			'B',
-			rB,
-			'white_wins',
-			'blitz',
-			'Blitz (5 + 3)',
-			'2024-12-29..11:15:00'
-		);
+		const g = {
+			id: '1',
+			title: 'asdf',
+			white: 'W',
+			white_rating: rW,
+			black: 'B',
+			black_rating: rB,
+			result: 'white_wins',
+			time_control_id: 'blitz',
+			time_control_name: 'Blitz (5 + 3)',
+			when: '2024-12-29..11:15:00'
+		};
 
-		expect(g.get_result()).toEqual('white_wins');
-		g.set_result('black_wins');
-		expect(g.get_result()).toEqual('black_wins');
+		expect(g.result).toEqual('white_wins');
+		g.result = 'black_wins';
+		expect(g.result).toEqual('black_wins');
 
-		expect(g.get_white_rating()).toEqual(rW);
+		expect(g.white_rating).toEqual(rW);
 		rW.rating = 2000;
-		g.set_white_rating(rW);
-		expect(g.get_white_rating()).toEqual(rW);
+		g.white_rating = rW;
+		expect(g.white_rating).toEqual(rW);
 
-		expect(g.get_black_rating()).toEqual(rB);
+		expect(g.black_rating).toEqual(rB);
 		rB.rating = 1900;
-		g.set_black_rating(rB);
-		expect(g.get_black_rating()).toEqual(rB);
+		g.black_rating = rB;
+		expect(g.black_rating).toEqual(rB);
 	});
 });

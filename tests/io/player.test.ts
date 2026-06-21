@@ -24,62 +24,54 @@ Contact:
 */
 
 import { initialize_rating_functions } from '@server/managers/rating_system';
-import { EloRating } from '@server/rating_framework/Elo/rating';
-import { player_from_json } from '@server/io/player';
+import { player_from_string } from '@server/io/player';
+import { isDefined } from '@common/utils';
 
-describe('From JSON -- Elo', () => {
+describe('IO conversion -- Elo', () => {
 	initialize_rating_functions('Elo');
-	const blitz = new EloRating(1500, 0, 0, 0, 0, 40, false);
-	const classical = new EloRating(1700, 0, 0, 0, 0, 40, false);
+	const classical = { rating: 1700, num_games: 0, won: 0, drawn: 0, lost: 0, K: 40, surpassed_2400: false };
 
 	test('string', () => {
-		const p = player_from_json(
-			'{ "username": "user.name", "ratings": [ { "time_control": "blitz", "rating": { "rating": 1500, "num_games": 0, "won": 0, "drawn": 0, "lost": 0, "K": 40, "surpassed_2400": false } }, { "time_control": "classical", "rating": { "rating": 1700, "num_games": 0, "won": 0, "drawn": 0, "lost": 0, "K": 40, "surpassed_2400": false } } ]}'
+		const p = player_from_string(
+			'{\
+				"username": "user.name",\
+				"ratings": [\
+					{\
+						"time_control": "blitz",\
+						"rating": {\
+							"rating": 1500,\
+							"num_games": 0,\
+							"won": 0,\
+							"drawn": 0,\
+							"lost": 0,\
+							"K": 40,\
+							"surpassed_2400": false\
+						}\
+					},\
+					{\
+						"time_control": "classical",\
+						"rating": {\
+							"rating": 1700,\
+							"num_games": 0,\
+							"won": 0,\
+							"drawn": 0,\
+							"lost": 0,\
+							"K": 40,\
+							"surpassed_2400": false\
+						}\
+					}\
+				]\
+			}'
 		);
 
-		expect(p.get_username()).toEqual('user.name');
-		expect(p.get_all_ratings().length).toEqual(2);
+		expect(p).not.toBeNull();
+		if (!isDefined(p)) {
+			return;
+		}
+		expect(p.username).toEqual('user.name');
+		expect(p.ratings.length).toEqual(2);
 		expect(p.has_rating('blitz')).toEqual(true);
 		expect(p.has_rating('classical')).toEqual(true);
-		expect(p.get_rating('classical')).toEqual(classical);
-	});
-
-	test('JSON', () => {
-		const p = player_from_json({
-			username: 'user.name',
-			ratings: [
-				{
-					time_control: 'blitz',
-					rating: {
-						rating: 1500,
-						num_games: 0,
-						won: 0,
-						drawn: 0,
-						lost: 0,
-						K: 40,
-						surpassed_2400: false
-					}
-				},
-				{
-					time_control: 'classical',
-					rating: {
-						rating: 1700,
-						num_games: 0,
-						won: 0,
-						drawn: 0,
-						lost: 0,
-						K: 40,
-						surpassed_2400: false
-					}
-				}
-			]
-		});
-
-		expect(p.get_username()).toEqual('user.name');
-		expect(p.get_all_ratings().length).toEqual(2);
-		expect(p.has_rating('blitz')).toEqual(true);
-		expect(p.has_rating('classical')).toEqual(true);
-		expect(p.get_rating('blitz')).toEqual(blitz);
 		expect(p.get_rating('classical')).toEqual(classical);
 	});
 });

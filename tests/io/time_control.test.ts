@@ -23,34 +23,20 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { TimeControl } from '@server/models/time_control';
+import { time_control_from_string, time_control_array_from_string } from '@server/io/time_control';
 
-import { time_control_from_json, time_control_set_from_json } from '@server/io/time_control';
-
-describe('JSON conversion', () => {
-	test('From JSON to TimeControl', () => {
-		expect(time_control_from_json({ id: 'A', name: 'B' })).toEqual(new TimeControl('A', 'B'));
-		expect(time_control_from_json({ id: '', name: '' })).toEqual(new TimeControl('', ''));
-
-		expect(time_control_from_json('{ "id": "A", "name": "B" }')).toEqual(new TimeControl('A', 'B'));
-		expect(time_control_from_json('{ "id": "", "name": "" }')).toEqual(new TimeControl('', ''));
+describe('IO conversion', () => {
+	test('string to TimeControl', () => {
+		expect(time_control_from_string('{ "id": "A", "name": "B" }')).toEqual({ id: 'A', name: 'B' });
+		expect(time_control_from_string('{ "id": "", "name": "" }')).toEqual({ id: '', name: '' });
 	});
 
-	test('From JSON to TimeControl set', () => {
-		expect(time_control_set_from_json([{ id: 'A', name: 'B' }])).toEqual([new TimeControl('A', 'B')]);
-		expect(time_control_set_from_json([{ id: '', name: '' }])).toEqual([new TimeControl('', '')]);
-		expect(
-			time_control_set_from_json([
-				{ id: 'A', name: 'B' },
-				{ id: '', name: '' }
-			])
-		).toEqual([new TimeControl('A', 'B'), new TimeControl('', '')]);
-
-		expect(time_control_set_from_json('[{ "id": "A", "name": "B" }]')).toEqual([new TimeControl('A', 'B')]);
-		expect(time_control_set_from_json('[{ "id": "", "name": "" }]')).toEqual([new TimeControl('', '')]);
-		expect(time_control_set_from_json('[{ "id": "A", "name": "B" }, { "id": "", "name": "" }]')).toEqual([
-			new TimeControl('A', 'B'),
-			new TimeControl('', '')
+	test('string to TimeControl[]', () => {
+		expect(time_control_array_from_string('[{ "id": "A", "name": "B" }]')).toEqual([{ id: 'A', name: 'B' }]);
+		expect(time_control_array_from_string('[{ "id": "", "name": "" }]')).toEqual([{ id: '', name: '' }]);
+		expect(time_control_array_from_string('[{ "id": "A", "name": "B" }, { "id": "", "name": "" }]')).toEqual([
+			{ id: 'A', name: 'B' },
+			{ id: '', name: '' }
 		]);
 	});
 });

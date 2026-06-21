@@ -36,8 +36,9 @@ import { user_add_new } from '@server/managers/users';
 import { SessionID } from '@server/models/session_id';
 import { ADMIN, MEMBER, STUDENT } from '@server/models/user_role';
 import { run_command } from './exec_utils';
+import { Configuration } from '@server/models/configuration/configuration';
 
-const configuration = {
+const configuration: Configuration = {
 	environment: {
 		ssl_certificate: {
 			public_key_file: 'sadf',
@@ -124,131 +125,131 @@ describe('Session management via functions', () => {
 		const manager = SessionIDManager.get_instance();
 
 		const token_aa = session_id_add('aa');
-		session_aa_1 = new SessionID(token_aa, 'aa');
+		session_aa_1 = { token: token_aa, username: 'aa' };
 		{
 			const log = is_user_logged_in(session_aa_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('aa');
+			expect(log[2]?.username).toBe('aa');
 		}
 		expect(manager.num_session_ids()).toBe(1);
 
 		const token_bb = session_id_add('bb');
-		session_bb_1 = new SessionID(token_bb, 'bb');
+		session_bb_1 = { token: token_bb, username: 'bb' };
 		{
 			const log = is_user_logged_in(session_aa_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('aa');
+			expect(log[2]?.username).toBe('aa');
 		}
 		{
 			const log = is_user_logged_in(session_bb_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('bb');
+			expect(log[2]?.username).toBe('bb');
 		}
 		expect(manager.num_session_ids()).toBe(2);
 
 		const token_cc = session_id_add('cc');
-		session_cc_1 = new SessionID(token_cc, 'cc');
+		session_cc_1 = { token: token_cc, username: 'cc' };
 		{
 			const log = is_user_logged_in(session_aa_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('aa');
+			expect(log[2]?.username).toBe('aa');
 		}
 		{
 			const log = is_user_logged_in(session_bb_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('bb');
+			expect(log[2]?.username).toBe('bb');
 		}
 		{
 			const log = is_user_logged_in(session_cc_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('cc');
+			expect(log[2]?.username).toBe('cc');
 		}
 		expect(manager.num_session_ids()).toBe(3);
 
 		const token_dd = session_id_add('dd');
-		session_dd_1 = new SessionID(token_dd, 'dd');
+		session_dd_1 = { token: token_dd, username: 'dd' };
 		{
 			const log = is_user_logged_in(session_aa_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('aa');
+			expect(log[2]?.username).toBe('aa');
 		}
 		{
 			const log = is_user_logged_in(session_bb_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('bb');
+			expect(log[2]?.username).toBe('bb');
 		}
 		{
 			const log = is_user_logged_in(session_cc_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('cc');
+			expect(log[2]?.username).toBe('cc');
 		}
 		{
 			const log = is_user_logged_in(session_dd_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('dd');
+			expect(log[2]?.username).toBe('dd');
 		}
 		expect(manager.num_session_ids()).toBe(4);
 
 		const token_ee = session_id_add('ee');
-		session_ee_1 = new SessionID(token_ee, 'ee');
+		session_ee_1 = { token: token_ee, username: 'ee' };
 		{
 			const log = is_user_logged_in(session_aa_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('aa');
+			expect(log[2]?.username).toBe('aa');
 		}
 		{
 			const log = is_user_logged_in(session_bb_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('bb');
+			expect(log[2]?.username).toBe('bb');
 		}
 		{
 			const log = is_user_logged_in(session_cc_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('cc');
+			expect(log[2]?.username).toBe('cc');
 		}
 		{
 			const log = is_user_logged_in(session_dd_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('dd');
+			expect(log[2]?.username).toBe('dd');
 		}
 		{
 			const log = is_user_logged_in(session_ee_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('ee');
+			expect(log[2]?.username).toBe('ee');
 		}
 		expect(manager.num_session_ids()).toBe(5);
 
 		const token_ff = session_id_add('ff');
-		session_ff_1 = new SessionID(token_ff, 'ff');
+		session_ff_1 = { token: token_ff, username: 'ff' };
 		{
 			const log = is_user_logged_in(session_aa_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('aa');
+			expect(log[2]?.username).toBe('aa');
 		}
 		{
 			const log = is_user_logged_in(session_bb_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('bb');
+			expect(log[2]?.username).toBe('bb');
 		}
 		{
 			const log = is_user_logged_in(session_cc_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('cc');
+			expect(log[2]?.username).toBe('cc');
 		}
 		{
 			const log = is_user_logged_in(session_dd_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('dd');
+			expect(log[2]?.username).toBe('dd');
 		}
 		{
 			const log = is_user_logged_in(session_ee_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('ee');
+			expect(log[2]?.username).toBe('ee');
 		}
 		{
 			const log = is_user_logged_in(session_ff_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('ff');
+			expect(log[2]?.username).toBe('ff');
 		}
 		expect(manager.num_session_ids()).toBe(6);
 	});
@@ -257,311 +258,311 @@ describe('Session management via functions', () => {
 		const manager = SessionIDManager.get_instance();
 
 		const token_aa = session_id_add('aa');
-		session_aa_2 = new SessionID(token_aa, 'aa');
+		session_aa_2 = { token: token_aa, username: 'aa' };
 		{
 			const log = is_user_logged_in(session_aa_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('aa');
+			expect(log[2]?.username).toBe('aa');
 		}
 		{
 			const log = is_user_logged_in(session_bb_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('bb');
+			expect(log[2]?.username).toBe('bb');
 		}
 		{
 			const log = is_user_logged_in(session_cc_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('cc');
+			expect(log[2]?.username).toBe('cc');
 		}
 		{
 			const log = is_user_logged_in(session_dd_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('dd');
+			expect(log[2]?.username).toBe('dd');
 		}
 		{
 			const log = is_user_logged_in(session_ee_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('ee');
+			expect(log[2]?.username).toBe('ee');
 		}
 		{
 			const log = is_user_logged_in(session_ff_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('ff');
+			expect(log[2]?.username).toBe('ff');
 		}
 		{
 			const log = is_user_logged_in(session_aa_2);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('aa');
+			expect(log[2]?.username).toBe('aa');
 		}
 		expect(manager.num_session_ids()).toBe(7);
 
 		const token_bb = session_id_add('bb');
-		session_bb_2 = new SessionID(token_bb, 'bb');
+		session_bb_2 = { token: token_bb, username: 'bb' };
 		{
 			const log = is_user_logged_in(session_aa_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('aa');
+			expect(log[2]?.username).toBe('aa');
 		}
 		{
 			const log = is_user_logged_in(session_bb_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('bb');
+			expect(log[2]?.username).toBe('bb');
 		}
 		{
 			const log = is_user_logged_in(session_cc_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('cc');
+			expect(log[2]?.username).toBe('cc');
 		}
 		{
 			const log = is_user_logged_in(session_dd_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('dd');
+			expect(log[2]?.username).toBe('dd');
 		}
 		{
 			const log = is_user_logged_in(session_ee_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('ee');
+			expect(log[2]?.username).toBe('ee');
 		}
 		{
 			const log = is_user_logged_in(session_ff_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('ff');
+			expect(log[2]?.username).toBe('ff');
 		}
 		{
 			const log = is_user_logged_in(session_aa_2);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('aa');
+			expect(log[2]?.username).toBe('aa');
 		}
 		{
 			const log = is_user_logged_in(session_bb_2);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('bb');
+			expect(log[2]?.username).toBe('bb');
 		}
 		expect(manager.num_session_ids()).toBe(8);
 
 		const token_cc = session_id_add('cc');
-		session_cc_2 = new SessionID(token_cc, 'cc');
+		session_cc_2 = { token: token_cc, username: 'cc' };
 		{
 			const log = is_user_logged_in(session_aa_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('aa');
+			expect(log[2]?.username).toBe('aa');
 		}
 		{
 			const log = is_user_logged_in(session_bb_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('bb');
+			expect(log[2]?.username).toBe('bb');
 		}
 		{
 			const log = is_user_logged_in(session_cc_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('cc');
+			expect(log[2]?.username).toBe('cc');
 		}
 		{
 			const log = is_user_logged_in(session_dd_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('dd');
+			expect(log[2]?.username).toBe('dd');
 		}
 		{
 			const log = is_user_logged_in(session_ee_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('ee');
+			expect(log[2]?.username).toBe('ee');
 		}
 		{
 			const log = is_user_logged_in(session_ff_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('ff');
+			expect(log[2]?.username).toBe('ff');
 		}
 		{
 			const log = is_user_logged_in(session_aa_2);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('aa');
+			expect(log[2]?.username).toBe('aa');
 		}
 		{
 			const log = is_user_logged_in(session_bb_2);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('bb');
+			expect(log[2]?.username).toBe('bb');
 		}
 		{
 			const log = is_user_logged_in(session_cc_2);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('cc');
+			expect(log[2]?.username).toBe('cc');
 		}
 		expect(manager.num_session_ids()).toBe(9);
 
 		const token_dd = session_id_add('dd');
-		session_dd_2 = new SessionID(token_dd, 'dd');
+		session_dd_2 = { token: token_dd, username: 'dd' };
 		{
 			const log = is_user_logged_in(session_aa_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('aa');
+			expect(log[2]?.username).toBe('aa');
 		}
 		{
 			const log = is_user_logged_in(session_bb_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('bb');
+			expect(log[2]?.username).toBe('bb');
 		}
 		{
 			const log = is_user_logged_in(session_cc_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('cc');
+			expect(log[2]?.username).toBe('cc');
 		}
 		{
 			const log = is_user_logged_in(session_dd_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('dd');
+			expect(log[2]?.username).toBe('dd');
 		}
 		{
 			const log = is_user_logged_in(session_ee_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('ee');
+			expect(log[2]?.username).toBe('ee');
 		}
 		{
 			const log = is_user_logged_in(session_ff_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('ff');
+			expect(log[2]?.username).toBe('ff');
 		}
 		{
 			const log = is_user_logged_in(session_aa_2);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('aa');
+			expect(log[2]?.username).toBe('aa');
 		}
 		{
 			const log = is_user_logged_in(session_bb_2);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('bb');
+			expect(log[2]?.username).toBe('bb');
 		}
 		{
 			const log = is_user_logged_in(session_cc_2);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('cc');
+			expect(log[2]?.username).toBe('cc');
 		}
 		{
 			const log = is_user_logged_in(session_dd_2);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('dd');
+			expect(log[2]?.username).toBe('dd');
 		}
 		expect(manager.num_session_ids()).toBe(10);
 
 		const token_ee = session_id_add('ee');
-		session_ee_2 = new SessionID(token_ee, 'ee');
+		session_ee_2 = { token: token_ee, username: 'ee' };
 		{
 			const log = is_user_logged_in(session_aa_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('aa');
+			expect(log[2]?.username).toBe('aa');
 		}
 		{
 			const log = is_user_logged_in(session_bb_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('bb');
+			expect(log[2]?.username).toBe('bb');
 		}
 		{
 			const log = is_user_logged_in(session_cc_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('cc');
+			expect(log[2]?.username).toBe('cc');
 		}
 		{
 			const log = is_user_logged_in(session_dd_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('dd');
+			expect(log[2]?.username).toBe('dd');
 		}
 		{
 			const log = is_user_logged_in(session_ee_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('ee');
+			expect(log[2]?.username).toBe('ee');
 		}
 		{
 			const log = is_user_logged_in(session_ff_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('ff');
+			expect(log[2]?.username).toBe('ff');
 		}
 		{
 			const log = is_user_logged_in(session_aa_2);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('aa');
+			expect(log[2]?.username).toBe('aa');
 		}
 		{
 			const log = is_user_logged_in(session_bb_2);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('bb');
+			expect(log[2]?.username).toBe('bb');
 		}
 		{
 			const log = is_user_logged_in(session_cc_2);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('cc');
+			expect(log[2]?.username).toBe('cc');
 		}
 		{
 			const log = is_user_logged_in(session_dd_2);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('dd');
+			expect(log[2]?.username).toBe('dd');
 		}
 		{
 			const log = is_user_logged_in(session_ee_2);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('ee');
+			expect(log[2]?.username).toBe('ee');
 		}
 		expect(manager.num_session_ids()).toBe(11);
 
 		const token_ff = session_id_add('ff');
-		session_ff_2 = new SessionID(token_ff, 'ff');
+		session_ff_2 = { token: token_ff, username: 'ff' };
 		{
 			const log = is_user_logged_in(session_aa_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('aa');
+			expect(log[2]?.username).toBe('aa');
 		}
 		{
 			const log = is_user_logged_in(session_bb_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('bb');
+			expect(log[2]?.username).toBe('bb');
 		}
 		{
 			const log = is_user_logged_in(session_cc_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('cc');
+			expect(log[2]?.username).toBe('cc');
 		}
 		{
 			const log = is_user_logged_in(session_dd_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('dd');
+			expect(log[2]?.username).toBe('dd');
 		}
 		{
 			const log = is_user_logged_in(session_ee_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('ee');
+			expect(log[2]?.username).toBe('ee');
 		}
 		{
 			const log = is_user_logged_in(session_ff_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('ff');
+			expect(log[2]?.username).toBe('ff');
 		}
 		{
 			const log = is_user_logged_in(session_aa_2);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('aa');
+			expect(log[2]?.username).toBe('aa');
 		}
 		{
 			const log = is_user_logged_in(session_bb_2);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('bb');
+			expect(log[2]?.username).toBe('bb');
 		}
 		{
 			const log = is_user_logged_in(session_cc_2);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('cc');
+			expect(log[2]?.username).toBe('cc');
 		}
 		{
 			const log = is_user_logged_in(session_dd_2);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('dd');
+			expect(log[2]?.username).toBe('dd');
 		}
 		{
 			const log = is_user_logged_in(session_ee_2);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('ee');
+			expect(log[2]?.username).toBe('ee');
 		}
 		{
 			const log = is_user_logged_in(session_ff_2);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('ff');
+			expect(log[2]?.username).toBe('ff');
 		}
 		expect(manager.num_session_ids()).toBe(12);
 	});
@@ -579,57 +580,57 @@ describe('Session management via functions', () => {
 		{
 			const log = is_user_logged_in(session_bb_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('bb');
+			expect(log[2]?.username).toBe('bb');
 		}
 		{
 			const log = is_user_logged_in(session_cc_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('cc');
+			expect(log[2]?.username).toBe('cc');
 		}
 		{
 			const log = is_user_logged_in(session_dd_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('dd');
+			expect(log[2]?.username).toBe('dd');
 		}
 		{
 			const log = is_user_logged_in(session_ee_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('ee');
+			expect(log[2]?.username).toBe('ee');
 		}
 		{
 			const log = is_user_logged_in(session_ff_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('ff');
+			expect(log[2]?.username).toBe('ff');
 		}
 		{
 			const log = is_user_logged_in(session_aa_2);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('aa');
+			expect(log[2]?.username).toBe('aa');
 		}
 		{
 			const log = is_user_logged_in(session_bb_2);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('bb');
+			expect(log[2]?.username).toBe('bb');
 		}
 		{
 			const log = is_user_logged_in(session_cc_2);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('cc');
+			expect(log[2]?.username).toBe('cc');
 		}
 		{
 			const log = is_user_logged_in(session_dd_2);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('dd');
+			expect(log[2]?.username).toBe('dd');
 		}
 		{
 			const log = is_user_logged_in(session_ee_2);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('ee');
+			expect(log[2]?.username).toBe('ee');
 		}
 		{
 			const log = is_user_logged_in(session_ff_2);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('ff');
+			expect(log[2]?.username).toBe('ff');
 		}
 		expect(manager.num_session_ids()).toBe(11);
 
@@ -643,22 +644,22 @@ describe('Session management via functions', () => {
 		{
 			const log = is_user_logged_in(session_bb_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('bb');
+			expect(log[2]?.username).toBe('bb');
 		}
 		{
 			const log = is_user_logged_in(session_cc_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('cc');
+			expect(log[2]?.username).toBe('cc');
 		}
 		{
 			const log = is_user_logged_in(session_dd_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('dd');
+			expect(log[2]?.username).toBe('dd');
 		}
 		{
 			const log = is_user_logged_in(session_ee_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('ee');
+			expect(log[2]?.username).toBe('ee');
 		}
 		{
 			const log = is_user_logged_in(session_ff_1);
@@ -669,32 +670,32 @@ describe('Session management via functions', () => {
 		{
 			const log = is_user_logged_in(session_aa_2);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('aa');
+			expect(log[2]?.username).toBe('aa');
 		}
 		{
 			const log = is_user_logged_in(session_bb_2);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('bb');
+			expect(log[2]?.username).toBe('bb');
 		}
 		{
 			const log = is_user_logged_in(session_cc_2);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('cc');
+			expect(log[2]?.username).toBe('cc');
 		}
 		{
 			const log = is_user_logged_in(session_dd_2);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('dd');
+			expect(log[2]?.username).toBe('dd');
 		}
 		{
 			const log = is_user_logged_in(session_ee_2);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('ee');
+			expect(log[2]?.username).toBe('ee');
 		}
 		{
 			const log = is_user_logged_in(session_ff_2);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('ff');
+			expect(log[2]?.username).toBe('ff');
 		}
 		expect(manager.num_session_ids()).toBe(10);
 
@@ -708,17 +709,17 @@ describe('Session management via functions', () => {
 		{
 			const log = is_user_logged_in(session_bb_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('bb');
+			expect(log[2]?.username).toBe('bb');
 		}
 		{
 			const log = is_user_logged_in(session_cc_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('cc');
+			expect(log[2]?.username).toBe('cc');
 		}
 		{
 			const log = is_user_logged_in(session_dd_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('dd');
+			expect(log[2]?.username).toBe('dd');
 		}
 		{
 			const log = is_user_logged_in(session_ee_1);
@@ -735,32 +736,32 @@ describe('Session management via functions', () => {
 		{
 			const log = is_user_logged_in(session_aa_2);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('aa');
+			expect(log[2]?.username).toBe('aa');
 		}
 		{
 			const log = is_user_logged_in(session_bb_2);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('bb');
+			expect(log[2]?.username).toBe('bb');
 		}
 		{
 			const log = is_user_logged_in(session_cc_2);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('cc');
+			expect(log[2]?.username).toBe('cc');
 		}
 		{
 			const log = is_user_logged_in(session_dd_2);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('dd');
+			expect(log[2]?.username).toBe('dd');
 		}
 		{
 			const log = is_user_logged_in(session_ee_2);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('ee');
+			expect(log[2]?.username).toBe('ee');
 		}
 		{
 			const log = is_user_logged_in(session_ff_2);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('ff');
+			expect(log[2]?.username).toBe('ff');
 		}
 		expect(manager.num_session_ids()).toBe(9);
 	});
@@ -778,17 +779,17 @@ describe('Session management via functions', () => {
 		{
 			const log = is_user_logged_in(session_bb_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('bb');
+			expect(log[2]?.username).toBe('bb');
 		}
 		{
 			const log = is_user_logged_in(session_cc_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('cc');
+			expect(log[2]?.username).toBe('cc');
 		}
 		{
 			const log = is_user_logged_in(session_dd_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('dd');
+			expect(log[2]?.username).toBe('dd');
 		}
 		{
 			const log = is_user_logged_in(session_ee_1);
@@ -811,27 +812,27 @@ describe('Session management via functions', () => {
 		{
 			const log = is_user_logged_in(session_bb_2);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('bb');
+			expect(log[2]?.username).toBe('bb');
 		}
 		{
 			const log = is_user_logged_in(session_cc_2);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('cc');
+			expect(log[2]?.username).toBe('cc');
 		}
 		{
 			const log = is_user_logged_in(session_dd_2);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('dd');
+			expect(log[2]?.username).toBe('dd');
 		}
 		{
 			const log = is_user_logged_in(session_ee_2);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('ee');
+			expect(log[2]?.username).toBe('ee');
 		}
 		{
 			const log = is_user_logged_in(session_ff_2);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('ff');
+			expect(log[2]?.username).toBe('ff');
 		}
 		expect(manager.num_session_ids()).toBe(8);
 
@@ -851,12 +852,12 @@ describe('Session management via functions', () => {
 		{
 			const log = is_user_logged_in(session_cc_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('cc');
+			expect(log[2]?.username).toBe('cc');
 		}
 		{
 			const log = is_user_logged_in(session_dd_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('dd');
+			expect(log[2]?.username).toBe('dd');
 		}
 		{
 			const log = is_user_logged_in(session_ee_1);
@@ -885,22 +886,22 @@ describe('Session management via functions', () => {
 		{
 			const log = is_user_logged_in(session_cc_2);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('cc');
+			expect(log[2]?.username).toBe('cc');
 		}
 		{
 			const log = is_user_logged_in(session_dd_2);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('dd');
+			expect(log[2]?.username).toBe('dd');
 		}
 		{
 			const log = is_user_logged_in(session_ee_2);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('ee');
+			expect(log[2]?.username).toBe('ee');
 		}
 		{
 			const log = is_user_logged_in(session_ff_2);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('ff');
+			expect(log[2]?.username).toBe('ff');
 		}
 		expect(manager.num_session_ids()).toBe(6);
 
@@ -926,7 +927,7 @@ describe('Session management via functions', () => {
 		{
 			const log = is_user_logged_in(session_dd_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('dd');
+			expect(log[2]?.username).toBe('dd');
 		}
 		{
 			const log = is_user_logged_in(session_ee_1);
@@ -961,17 +962,17 @@ describe('Session management via functions', () => {
 		{
 			const log = is_user_logged_in(session_dd_2);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('dd');
+			expect(log[2]?.username).toBe('dd');
 		}
 		{
 			const log = is_user_logged_in(session_ee_2);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('ee');
+			expect(log[2]?.username).toBe('ee');
 		}
 		{
 			const log = is_user_logged_in(session_ff_2);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('ff');
+			expect(log[2]?.username).toBe('ff');
 		}
 		expect(manager.num_session_ids()).toBe(4);
 
@@ -997,7 +998,7 @@ describe('Session management via functions', () => {
 		{
 			const log = is_user_logged_in(session_dd_1);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('dd');
+			expect(log[2]?.username).toBe('dd');
 		}
 		{
 			const log = is_user_logged_in(session_ee_1);
@@ -1032,12 +1033,12 @@ describe('Session management via functions', () => {
 		{
 			const log = is_user_logged_in(session_dd_2);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('dd');
+			expect(log[2]?.username).toBe('dd');
 		}
 		{
 			const log = is_user_logged_in(session_ee_2);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('ee');
+			expect(log[2]?.username).toBe('ee');
 		}
 		{
 			const log = is_user_logged_in(session_ff_2);
@@ -1111,7 +1112,7 @@ describe('Session management via functions', () => {
 		{
 			const log = is_user_logged_in(session_ee_2);
 			expect(log[0]).toBe(true);
-			expect(log[2]?.get_username()).toBe('ee');
+			expect(log[2]?.username).toBe('ee');
 		}
 		{
 			const log = is_user_logged_in(session_ff_2);

@@ -24,14 +24,13 @@ Contact:
 */
 
 import { SessionIDManager } from '@server/managers/session_id_manager';
-import { SessionID } from '@server/models/session_id';
 
 describe('Session ID Manager', () => {
 	test('Add single sessions', () => {
-		const s1 = new SessionID('1', 'user.1');
-		const s2 = new SessionID('2', 'user.2');
-		const s3 = new SessionID('3', 'user.3');
-		const s4 = new SessionID('4', 'user.4');
+		const s1 = { token: '1', username: 'user.1' };
+		const s2 = { token: '2', username: 'user.2' };
+		const s3 = { token: '3', username: 'user.3' };
+		const s4 = { token: '4', username: 'user.4' };
 
 		let sessions = SessionIDManager.get_instance();
 
@@ -57,38 +56,38 @@ describe('Session ID Manager', () => {
 		expect(sessions.index_session_id(s3)).toBe(2);
 		expect(sessions.index_session_id(s4)).toBe(3);
 
-		expect(sessions.has_session_id(new SessionID('1', 'user.2'))).toBe(false);
-		expect(sessions.has_session_id(new SessionID('1', 'user.3'))).toBe(false);
-		expect(sessions.has_session_id(new SessionID('1', 'user.4'))).toBe(false);
-		expect(sessions.has_session_id(new SessionID('2', 'user.1'))).toBe(false);
-		expect(sessions.has_session_id(new SessionID('2', 'user.3'))).toBe(false);
-		expect(sessions.has_session_id(new SessionID('2', 'user.4'))).toBe(false);
-		expect(sessions.has_session_id(new SessionID('3', 'user.1'))).toBe(false);
-		expect(sessions.has_session_id(new SessionID('3', 'user.2'))).toBe(false);
-		expect(sessions.has_session_id(new SessionID('3', 'user.4'))).toBe(false);
-		expect(sessions.has_session_id(new SessionID('4', 'user.1'))).toBe(false);
-		expect(sessions.has_session_id(new SessionID('4', 'user.2'))).toBe(false);
-		expect(sessions.has_session_id(new SessionID('4', 'user.3'))).toBe(false);
+		expect(sessions.has_session_id({ token: '1', username: 'user.2' })).toBe(false);
+		expect(sessions.has_session_id({ token: '1', username: 'user.3' })).toBe(false);
+		expect(sessions.has_session_id({ token: '1', username: 'user.4' })).toBe(false);
+		expect(sessions.has_session_id({ token: '2', username: 'user.1' })).toBe(false);
+		expect(sessions.has_session_id({ token: '2', username: 'user.3' })).toBe(false);
+		expect(sessions.has_session_id({ token: '2', username: 'user.4' })).toBe(false);
+		expect(sessions.has_session_id({ token: '3', username: 'user.1' })).toBe(false);
+		expect(sessions.has_session_id({ token: '3', username: 'user.2' })).toBe(false);
+		expect(sessions.has_session_id({ token: '3', username: 'user.4' })).toBe(false);
+		expect(sessions.has_session_id({ token: '4', username: 'user.1' })).toBe(false);
+		expect(sessions.has_session_id({ token: '4', username: 'user.2' })).toBe(false);
+		expect(sessions.has_session_id({ token: '4', username: 'user.3' })).toBe(false);
 
-		expect(sessions.index_session_id(new SessionID('1', 'user.2'))).toBe(-1);
-		expect(sessions.index_session_id(new SessionID('1', 'user.3'))).toBe(-1);
-		expect(sessions.index_session_id(new SessionID('1', 'user.4'))).toBe(-1);
-		expect(sessions.index_session_id(new SessionID('2', 'user.1'))).toBe(-1);
-		expect(sessions.index_session_id(new SessionID('2', 'user.3'))).toBe(-1);
-		expect(sessions.index_session_id(new SessionID('2', 'user.4'))).toBe(-1);
-		expect(sessions.index_session_id(new SessionID('3', 'user.1'))).toBe(-1);
-		expect(sessions.index_session_id(new SessionID('3', 'user.2'))).toBe(-1);
-		expect(sessions.index_session_id(new SessionID('3', 'user.4'))).toBe(-1);
-		expect(sessions.index_session_id(new SessionID('4', 'user.1'))).toBe(-1);
-		expect(sessions.index_session_id(new SessionID('4', 'user.2'))).toBe(-1);
-		expect(sessions.index_session_id(new SessionID('4', 'user.3'))).toBe(-1);
+		expect(sessions.index_session_id({ token: '1', username: 'user.2' })).toBe(-1);
+		expect(sessions.index_session_id({ token: '1', username: 'user.3' })).toBe(-1);
+		expect(sessions.index_session_id({ token: '1', username: 'user.4' })).toBe(-1);
+		expect(sessions.index_session_id({ token: '2', username: 'user.1' })).toBe(-1);
+		expect(sessions.index_session_id({ token: '2', username: 'user.3' })).toBe(-1);
+		expect(sessions.index_session_id({ token: '2', username: 'user.4' })).toBe(-1);
+		expect(sessions.index_session_id({ token: '3', username: 'user.1' })).toBe(-1);
+		expect(sessions.index_session_id({ token: '3', username: 'user.2' })).toBe(-1);
+		expect(sessions.index_session_id({ token: '3', username: 'user.4' })).toBe(-1);
+		expect(sessions.index_session_id({ token: '4', username: 'user.1' })).toBe(-1);
+		expect(sessions.index_session_id({ token: '4', username: 'user.2' })).toBe(-1);
+		expect(sessions.index_session_id({ token: '4', username: 'user.3' })).toBe(-1);
 	});
 
 	test('Remove sessions', () => {
-		const s1 = new SessionID('1', 'user.1');
-		const s2 = new SessionID('2', 'user.2');
-		const s3 = new SessionID('3', 'user.3');
-		const s4 = new SessionID('4', 'user.4');
+		const s1 = { token: '1', username: 'user.1' };
+		const s2 = { token: '2', username: 'user.2' };
+		const s3 = { token: '3', username: 'user.3' };
+		const s4 = { token: '4', username: 'user.4' };
 
 		let sessions = SessionIDManager.get_instance();
 
@@ -105,31 +104,31 @@ describe('Session ID Manager', () => {
 		expect(sessions.index_session_id(s3)).toBe(-1);
 		expect(sessions.index_session_id(s4)).toBe(2);
 
-		expect(sessions.has_session_id(new SessionID('1', 'user.2'))).toBe(false);
-		expect(sessions.has_session_id(new SessionID('1', 'user.3'))).toBe(false);
-		expect(sessions.has_session_id(new SessionID('1', 'user.4'))).toBe(false);
-		expect(sessions.has_session_id(new SessionID('2', 'user.1'))).toBe(false);
-		expect(sessions.has_session_id(new SessionID('2', 'user.3'))).toBe(false);
-		expect(sessions.has_session_id(new SessionID('2', 'user.4'))).toBe(false);
-		expect(sessions.has_session_id(new SessionID('3', 'user.1'))).toBe(false);
-		expect(sessions.has_session_id(new SessionID('3', 'user.2'))).toBe(false);
-		expect(sessions.has_session_id(new SessionID('3', 'user.4'))).toBe(false);
-		expect(sessions.has_session_id(new SessionID('4', 'user.1'))).toBe(false);
-		expect(sessions.has_session_id(new SessionID('4', 'user.2'))).toBe(false);
-		expect(sessions.has_session_id(new SessionID('4', 'user.3'))).toBe(false);
+		expect(sessions.has_session_id({ token: '1', username: 'user.2' })).toBe(false);
+		expect(sessions.has_session_id({ token: '1', username: 'user.3' })).toBe(false);
+		expect(sessions.has_session_id({ token: '1', username: 'user.4' })).toBe(false);
+		expect(sessions.has_session_id({ token: '2', username: 'user.1' })).toBe(false);
+		expect(sessions.has_session_id({ token: '2', username: 'user.3' })).toBe(false);
+		expect(sessions.has_session_id({ token: '2', username: 'user.4' })).toBe(false);
+		expect(sessions.has_session_id({ token: '3', username: 'user.1' })).toBe(false);
+		expect(sessions.has_session_id({ token: '3', username: 'user.2' })).toBe(false);
+		expect(sessions.has_session_id({ token: '3', username: 'user.4' })).toBe(false);
+		expect(sessions.has_session_id({ token: '4', username: 'user.1' })).toBe(false);
+		expect(sessions.has_session_id({ token: '4', username: 'user.2' })).toBe(false);
+		expect(sessions.has_session_id({ token: '4', username: 'user.3' })).toBe(false);
 
-		expect(sessions.index_session_id(new SessionID('1', 'user.2'))).toBe(-1);
-		expect(sessions.index_session_id(new SessionID('1', 'user.3'))).toBe(-1);
-		expect(sessions.index_session_id(new SessionID('1', 'user.4'))).toBe(-1);
-		expect(sessions.index_session_id(new SessionID('2', 'user.1'))).toBe(-1);
-		expect(sessions.index_session_id(new SessionID('2', 'user.3'))).toBe(-1);
-		expect(sessions.index_session_id(new SessionID('2', 'user.4'))).toBe(-1);
-		expect(sessions.index_session_id(new SessionID('3', 'user.1'))).toBe(-1);
-		expect(sessions.index_session_id(new SessionID('3', 'user.2'))).toBe(-1);
-		expect(sessions.index_session_id(new SessionID('3', 'user.4'))).toBe(-1);
-		expect(sessions.index_session_id(new SessionID('4', 'user.1'))).toBe(-1);
-		expect(sessions.index_session_id(new SessionID('4', 'user.2'))).toBe(-1);
-		expect(sessions.index_session_id(new SessionID('4', 'user.3'))).toBe(-1);
+		expect(sessions.index_session_id({ token: '1', username: 'user.2' })).toBe(-1);
+		expect(sessions.index_session_id({ token: '1', username: 'user.3' })).toBe(-1);
+		expect(sessions.index_session_id({ token: '1', username: 'user.4' })).toBe(-1);
+		expect(sessions.index_session_id({ token: '2', username: 'user.1' })).toBe(-1);
+		expect(sessions.index_session_id({ token: '2', username: 'user.3' })).toBe(-1);
+		expect(sessions.index_session_id({ token: '2', username: 'user.4' })).toBe(-1);
+		expect(sessions.index_session_id({ token: '3', username: 'user.1' })).toBe(-1);
+		expect(sessions.index_session_id({ token: '3', username: 'user.2' })).toBe(-1);
+		expect(sessions.index_session_id({ token: '3', username: 'user.4' })).toBe(-1);
+		expect(sessions.index_session_id({ token: '4', username: 'user.1' })).toBe(-1);
+		expect(sessions.index_session_id({ token: '4', username: 'user.2' })).toBe(-1);
+		expect(sessions.index_session_id({ token: '4', username: 'user.3' })).toBe(-1);
 
 		sessions.remove_session_id(sessions.index_session_id(s1));
 		expect(sessions.num_session_ids()).toBe(2);
@@ -144,31 +143,31 @@ describe('Session ID Manager', () => {
 		expect(sessions.index_session_id(s3)).toBe(-1);
 		expect(sessions.index_session_id(s4)).toBe(1);
 
-		expect(sessions.has_session_id(new SessionID('1', 'user.2'))).toBe(false);
-		expect(sessions.has_session_id(new SessionID('1', 'user.3'))).toBe(false);
-		expect(sessions.has_session_id(new SessionID('1', 'user.4'))).toBe(false);
-		expect(sessions.has_session_id(new SessionID('2', 'user.1'))).toBe(false);
-		expect(sessions.has_session_id(new SessionID('2', 'user.3'))).toBe(false);
-		expect(sessions.has_session_id(new SessionID('2', 'user.4'))).toBe(false);
-		expect(sessions.has_session_id(new SessionID('3', 'user.1'))).toBe(false);
-		expect(sessions.has_session_id(new SessionID('3', 'user.2'))).toBe(false);
-		expect(sessions.has_session_id(new SessionID('3', 'user.4'))).toBe(false);
-		expect(sessions.has_session_id(new SessionID('4', 'user.1'))).toBe(false);
-		expect(sessions.has_session_id(new SessionID('4', 'user.2'))).toBe(false);
-		expect(sessions.has_session_id(new SessionID('4', 'user.3'))).toBe(false);
+		expect(sessions.has_session_id({ token: '1', username: 'user.2' })).toBe(false);
+		expect(sessions.has_session_id({ token: '1', username: 'user.3' })).toBe(false);
+		expect(sessions.has_session_id({ token: '1', username: 'user.4' })).toBe(false);
+		expect(sessions.has_session_id({ token: '2', username: 'user.1' })).toBe(false);
+		expect(sessions.has_session_id({ token: '2', username: 'user.3' })).toBe(false);
+		expect(sessions.has_session_id({ token: '2', username: 'user.4' })).toBe(false);
+		expect(sessions.has_session_id({ token: '3', username: 'user.1' })).toBe(false);
+		expect(sessions.has_session_id({ token: '3', username: 'user.2' })).toBe(false);
+		expect(sessions.has_session_id({ token: '3', username: 'user.4' })).toBe(false);
+		expect(sessions.has_session_id({ token: '4', username: 'user.1' })).toBe(false);
+		expect(sessions.has_session_id({ token: '4', username: 'user.2' })).toBe(false);
+		expect(sessions.has_session_id({ token: '4', username: 'user.3' })).toBe(false);
 
-		expect(sessions.index_session_id(new SessionID('1', 'user.2'))).toBe(-1);
-		expect(sessions.index_session_id(new SessionID('1', 'user.3'))).toBe(-1);
-		expect(sessions.index_session_id(new SessionID('1', 'user.4'))).toBe(-1);
-		expect(sessions.index_session_id(new SessionID('2', 'user.1'))).toBe(-1);
-		expect(sessions.index_session_id(new SessionID('2', 'user.3'))).toBe(-1);
-		expect(sessions.index_session_id(new SessionID('2', 'user.4'))).toBe(-1);
-		expect(sessions.index_session_id(new SessionID('3', 'user.1'))).toBe(-1);
-		expect(sessions.index_session_id(new SessionID('3', 'user.2'))).toBe(-1);
-		expect(sessions.index_session_id(new SessionID('3', 'user.4'))).toBe(-1);
-		expect(sessions.index_session_id(new SessionID('4', 'user.1'))).toBe(-1);
-		expect(sessions.index_session_id(new SessionID('4', 'user.2'))).toBe(-1);
-		expect(sessions.index_session_id(new SessionID('4', 'user.3'))).toBe(-1);
+		expect(sessions.index_session_id({ token: '1', username: 'user.2' })).toBe(-1);
+		expect(sessions.index_session_id({ token: '1', username: 'user.3' })).toBe(-1);
+		expect(sessions.index_session_id({ token: '1', username: 'user.4' })).toBe(-1);
+		expect(sessions.index_session_id({ token: '2', username: 'user.1' })).toBe(-1);
+		expect(sessions.index_session_id({ token: '2', username: 'user.3' })).toBe(-1);
+		expect(sessions.index_session_id({ token: '2', username: 'user.4' })).toBe(-1);
+		expect(sessions.index_session_id({ token: '3', username: 'user.1' })).toBe(-1);
+		expect(sessions.index_session_id({ token: '3', username: 'user.2' })).toBe(-1);
+		expect(sessions.index_session_id({ token: '3', username: 'user.4' })).toBe(-1);
+		expect(sessions.index_session_id({ token: '4', username: 'user.1' })).toBe(-1);
+		expect(sessions.index_session_id({ token: '4', username: 'user.2' })).toBe(-1);
+		expect(sessions.index_session_id({ token: '4', username: 'user.3' })).toBe(-1);
 	});
 
 	test('Clear sessions', () => {
@@ -178,22 +177,22 @@ describe('Session ID Manager', () => {
 	});
 
 	test('Add multiple sessions (sequential)', () => {
-		const s11 = new SessionID('1', 'user.1');
-		const s12 = new SessionID('2', 'user.1');
-		const s13 = new SessionID('3', 'user.1');
-		const s14 = new SessionID('4', 'user.1');
-		const s21 = new SessionID('1', 'user.2');
-		const s22 = new SessionID('2', 'user.2');
-		const s23 = new SessionID('3', 'user.2');
-		const s24 = new SessionID('4', 'user.2');
-		const s31 = new SessionID('1', 'user.3');
-		const s32 = new SessionID('2', 'user.3');
-		const s33 = new SessionID('3', 'user.3');
-		const s34 = new SessionID('4', 'user.3');
-		const s41 = new SessionID('1', 'user.4');
-		const s42 = new SessionID('2', 'user.4');
-		const s43 = new SessionID('3', 'user.4');
-		const s44 = new SessionID('4', 'user.4');
+		const s11 = { token: '1', username: 'user.1' };
+		const s12 = { token: '2', username: 'user.1' };
+		const s13 = { token: '3', username: 'user.1' };
+		const s14 = { token: '4', username: 'user.1' };
+		const s21 = { token: '1', username: 'user.2' };
+		const s22 = { token: '2', username: 'user.2' };
+		const s23 = { token: '3', username: 'user.2' };
+		const s24 = { token: '4', username: 'user.2' };
+		const s31 = { token: '1', username: 'user.3' };
+		const s32 = { token: '2', username: 'user.3' };
+		const s33 = { token: '3', username: 'user.3' };
+		const s34 = { token: '4', username: 'user.3' };
+		const s41 = { token: '1', username: 'user.4' };
+		const s42 = { token: '2', username: 'user.4' };
+		const s43 = { token: '3', username: 'user.4' };
+		const s44 = { token: '4', username: 'user.4' };
 
 		let sessions = SessionIDManager.get_instance();
 		sessions.add_session_id(s11);
@@ -313,22 +312,22 @@ describe('Session ID Manager', () => {
 	});
 
 	test('Add multiple sessions (randomized)', () => {
-		const s11 = new SessionID('1', 'user.1');
-		const s12 = new SessionID('2', 'user.1');
-		const s13 = new SessionID('3', 'user.1');
-		const s14 = new SessionID('4', 'user.1');
-		const s21 = new SessionID('1', 'user.2');
-		const s22 = new SessionID('2', 'user.2');
-		const s23 = new SessionID('3', 'user.2');
-		const s24 = new SessionID('4', 'user.2');
-		const s31 = new SessionID('1', 'user.3');
-		const s32 = new SessionID('2', 'user.3');
-		const s33 = new SessionID('3', 'user.3');
-		const s34 = new SessionID('4', 'user.3');
-		const s41 = new SessionID('1', 'user.4');
-		const s42 = new SessionID('2', 'user.4');
-		const s43 = new SessionID('3', 'user.4');
-		const s44 = new SessionID('4', 'user.4');
+		const s11 = { token: '1', username: 'user.1' };
+		const s12 = { token: '2', username: 'user.1' };
+		const s13 = { token: '3', username: 'user.1' };
+		const s14 = { token: '4', username: 'user.1' };
+		const s21 = { token: '1', username: 'user.2' };
+		const s22 = { token: '2', username: 'user.2' };
+		const s23 = { token: '3', username: 'user.2' };
+		const s24 = { token: '4', username: 'user.2' };
+		const s31 = { token: '1', username: 'user.3' };
+		const s32 = { token: '2', username: 'user.3' };
+		const s33 = { token: '3', username: 'user.3' };
+		const s34 = { token: '4', username: 'user.3' };
+		const s41 = { token: '1', username: 'user.4' };
+		const s42 = { token: '2', username: 'user.4' };
+		const s43 = { token: '3', username: 'user.4' };
+		const s44 = { token: '4', username: 'user.4' };
 
 		let sessions = SessionIDManager.get_instance();
 		sessions.add_session_id(s11);

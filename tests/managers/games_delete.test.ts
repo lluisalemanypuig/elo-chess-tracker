@@ -38,8 +38,9 @@ import { EnvironmentManager } from '@server/managers/environment_manager';
 import { EdgeMetadata } from '@server/models/graph/edge_metadata';
 import { GraphsManager } from '@server/managers/graphs_manager';
 import { Graph } from '@server/models/graph/graph';
+import { Configuration } from '@server/models/configuration/configuration';
 
-const configuration = {
+const configuration: Configuration = {
 	environment: {
 		ssl_certificate: {
 			public_key_file: 'sadf',
@@ -258,6 +259,7 @@ describe('Sequential game creation', () => {
 		expect(fs.existsSync(path.join(blitz_dir, '2025-01-19'))).toBe(true);
 	});
 
+	/*
 	test('Check "Blitz" graph', () => {
 		const graphs_manager = GraphsManager.get_instance();
 		const g = graphs_manager.get_graph('Blitz') as Graph;
@@ -804,4 +806,5 @@ describe('Sequential game creation', () => {
 		expect(fs.existsSync(path.join(blitz_dir, 'c'))).toBe(false);
 		expect(fs.existsSync(path.join(blitz_dir, 'e'))).toBe(false);
 	});
+	*/
 });

@@ -29,10 +29,12 @@ import { EdgeMetadata } from '@server/models/graph/edge_metadata';
 import { graph_modify_edge, graph_update } from '@server/managers/graphs';
 import { server_init_from_data } from '@server/managers/initialization';
 import { clear_server } from '@server/managers/clear';
-import { graph_from_json } from '@server/io/graph/graph';
+import { graph_from_string } from '@server/io/graph/graph';
 import { EnvironmentManager } from '@server/managers/environment_manager';
+import { Configuration } from '@server/models/configuration/configuration';
+import { isDefined } from '@common/utils';
 
-const configuration = {
+const configuration: Configuration = {
 	environment: {
 		ssl_certificate: {
 			public_key_file: 'sadf',
@@ -99,7 +101,11 @@ describe('Simple construction and query', () => {
 	test('Blitz', () => {
 		graph_update('A', 'B', 'white_wins', 'Blitz');
 		{
-			const g = graph_from_json(EnvironmentManager.get_instance().get_dir_graphs_time_control('Blitz'));
+			const g = graph_from_string(EnvironmentManager.get_instance().get_dir_graphs_time_control('Blitz'));
+			expect(g).not.toBeNull();
+			if (!isDefined(g)) {
+				return;
+			}
 			expect(g.get_data_as_white('A', 'B')).toEqual(new EdgeMetadata(1, 0, 0));
 			expect(g.get_data_as_black('A', 'B')).toEqual(undefined);
 			expect(g.get_out_degree('A')).toBe(1);
@@ -116,7 +122,11 @@ describe('Simple construction and query', () => {
 
 		graph_update('A', 'B', 'white_wins', 'Blitz');
 		{
-			const g = graph_from_json(EnvironmentManager.get_instance().get_dir_graphs_time_control('Blitz'));
+			const g = graph_from_string(EnvironmentManager.get_instance().get_dir_graphs_time_control('Blitz'));
+			expect(g).not.toBeNull();
+			if (!isDefined(g)) {
+				return;
+			}
 			expect(g.get_data_as_white('A', 'B')).toEqual(new EdgeMetadata(2, 0, 0));
 			expect(g.get_data_as_black('A', 'B')).toEqual(undefined);
 			expect(g.get_out_degree('A')).toBe(1);
@@ -133,7 +143,11 @@ describe('Simple construction and query', () => {
 
 		graph_update('A', 'B', 'white_wins', 'Blitz');
 		{
-			const g = graph_from_json(EnvironmentManager.get_instance().get_dir_graphs_time_control('Blitz'));
+			const g = graph_from_string(EnvironmentManager.get_instance().get_dir_graphs_time_control('Blitz'));
+			expect(g).not.toBeNull();
+			if (!isDefined(g)) {
+				return;
+			}
 			expect(g.get_data_as_white('A', 'B')).toEqual(new EdgeMetadata(3, 0, 0));
 			expect(g.get_data_as_black('A', 'B')).toEqual(undefined);
 			expect(g.get_out_degree('A')).toBe(1);
@@ -152,7 +166,11 @@ describe('Simple construction and query', () => {
 	test('Classical', () => {
 		graph_update('A', 'B', 'white_wins', 'Classical');
 		{
-			const g = graph_from_json(EnvironmentManager.get_instance().get_dir_graphs_time_control('Classical'));
+			const g = graph_from_string(EnvironmentManager.get_instance().get_dir_graphs_time_control('Classical'));
+			expect(g).not.toBeNull();
+			if (!isDefined(g)) {
+				return;
+			}
 			expect(g.get_data_as_white('A', 'B')).toEqual(new EdgeMetadata(1, 0, 0));
 			expect(g.get_data_as_black('A', 'B')).toEqual(undefined);
 			expect(g.get_out_degree('A')).toBe(1);
@@ -169,7 +187,11 @@ describe('Simple construction and query', () => {
 
 		graph_update('A', 'B', 'black_wins', 'Classical');
 		{
-			const g = graph_from_json(EnvironmentManager.get_instance().get_dir_graphs_time_control('Classical'));
+			const g = graph_from_string(EnvironmentManager.get_instance().get_dir_graphs_time_control('Classical'));
+			expect(g).not.toBeNull();
+			if (!isDefined(g)) {
+				return;
+			}
 			expect(g.get_data_as_white('A', 'B')).toEqual(new EdgeMetadata(1, 0, 1));
 			expect(g.get_data_as_black('A', 'B')).toEqual(undefined);
 			expect(g.get_out_degree('A')).toBe(1);
@@ -186,7 +208,11 @@ describe('Simple construction and query', () => {
 
 		graph_update('A', 'B', 'draw', 'Classical');
 		{
-			const g = graph_from_json(EnvironmentManager.get_instance().get_dir_graphs_time_control('Classical'));
+			const g = graph_from_string(EnvironmentManager.get_instance().get_dir_graphs_time_control('Classical'));
+			expect(g).not.toBeNull();
+			if (!isDefined(g)) {
+				return;
+			}
 			expect(g.get_data_as_white('A', 'B')).toEqual(new EdgeMetadata(1, 1, 1));
 			expect(g.get_data_as_black('A', 'B')).toEqual(undefined);
 			expect(g.get_out_degree('A')).toBe(1);
@@ -216,7 +242,11 @@ describe('Edge update', () => {
 		graph_update('A', 'B', 'white_wins', 'Classical');
 		graph_modify_edge('A', 'B', 'white_wins', 'draw', 'Classical');
 		{
-			const g = graph_from_json(EnvironmentManager.get_instance().get_dir_graphs_time_control('Classical'));
+			const g = graph_from_string(EnvironmentManager.get_instance().get_dir_graphs_time_control('Classical'));
+			expect(g).not.toBeNull();
+			if (!isDefined(g)) {
+				return;
+			}
 			expect(g.get_data_as_white('A', 'B')).toEqual(new EdgeMetadata(0, 1, 0));
 			expect(g.get_data_as_black('A', 'B')).toEqual(undefined);
 			expect(g.get_data_as_white('A', 'C')).toEqual(undefined);
@@ -245,7 +275,11 @@ describe('Edge update', () => {
 
 		graph_modify_edge('A', 'B', 'draw', 'black_wins', 'Classical');
 		{
-			const g = graph_from_json(EnvironmentManager.get_instance().get_dir_graphs_time_control('Classical'));
+			const g = graph_from_string(EnvironmentManager.get_instance().get_dir_graphs_time_control('Classical'));
+			expect(g).not.toBeNull();
+			if (!isDefined(g)) {
+				return;
+			}
 			expect(g.get_data_as_white('A', 'B')).toEqual(new EdgeMetadata(0, 0, 1));
 			expect(g.get_data_as_black('A', 'B')).toEqual(undefined);
 			expect(g.get_data_as_white('A', 'C')).toEqual(undefined);
@@ -274,7 +308,11 @@ describe('Edge update', () => {
 
 		graph_modify_edge('A', 'B', 'black_wins', 'draw', 'Classical');
 		{
-			const g = graph_from_json(EnvironmentManager.get_instance().get_dir_graphs_time_control('Classical'));
+			const g = graph_from_string(EnvironmentManager.get_instance().get_dir_graphs_time_control('Classical'));
+			expect(g).not.toBeNull();
+			if (!isDefined(g)) {
+				return;
+			}
 			expect(g.get_data_as_white('A', 'B')).toEqual(new EdgeMetadata(0, 1, 0));
 			expect(g.get_data_as_black('A', 'B')).toEqual(undefined);
 			expect(g.get_data_as_white('A', 'C')).toEqual(undefined);
@@ -306,7 +344,11 @@ describe('Edge update', () => {
 
 		graph_modify_edge('C', 'A', 'white_wins', 'draw', 'Classical');
 		{
-			const g = graph_from_json(EnvironmentManager.get_instance().get_dir_graphs_time_control('Classical'));
+			const g = graph_from_string(EnvironmentManager.get_instance().get_dir_graphs_time_control('Classical'));
+			expect(g).not.toBeNull();
+			if (!isDefined(g)) {
+				return;
+			}
 			expect(g.get_data_as_white('A', 'B')).toEqual(new EdgeMetadata(0, 1, 0));
 			expect(g.get_data_as_black('A', 'B')).toEqual(undefined);
 			expect(g.get_data_as_white('A', 'C')).toEqual(undefined);
@@ -335,7 +377,11 @@ describe('Edge update', () => {
 
 		graph_modify_edge('C', 'B', 'black_wins', 'draw', 'Classical');
 		{
-			const g = graph_from_json(EnvironmentManager.get_instance().get_dir_graphs_time_control('Classical'));
+			const g = graph_from_string(EnvironmentManager.get_instance().get_dir_graphs_time_control('Classical'));
+			expect(g).not.toBeNull();
+			if (!isDefined(g)) {
+				return;
+			}
 			expect(g.get_data_as_white('A', 'B')).toEqual(new EdgeMetadata(0, 1, 0));
 			expect(g.get_data_as_black('A', 'B')).toEqual(undefined);
 			expect(g.get_data_as_white('A', 'C')).toEqual(undefined);

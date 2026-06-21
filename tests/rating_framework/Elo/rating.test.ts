@@ -23,18 +23,15 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { Elo_rating_from_json, Elo_new_rating, EloRating } from '@server/rating_framework/Elo/rating';
+import { new_rating_Elo } from '@server/rating_framework/Elo/rating';
+import { rating_from_string_Elo } from '@server/io/ratings/Elo/rating';
 
 describe('JSON conversion', () => {
 	test('from string to rating', () => {
-		const elo = Elo_rating_from_json(
+		const elo = rating_from_string_Elo(
 			'{"rating": 1500.43, "num_games": 100, "won": 50, "drawn": 20, "lost": 30, "K": 40, "surpassed_2400": true}'
 		);
-		expect(elo).toEqual(new EloRating(1500.43, 100, 50, 20, 30, 40, true));
-	});
-
-	test('from JSON to rating', () => {
-		const elo = Elo_rating_from_json({
+		expect(elo).toEqual({
 			rating: 1500.43,
 			num_games: 100,
 			won: 50,
@@ -43,13 +40,12 @@ describe('JSON conversion', () => {
 			K: 40,
 			surpassed_2400: true
 		});
-		expect(elo).toEqual(new EloRating(1500.43, 100, 50, 20, 30, 40, true));
 	});
 });
 
 describe('Initial rating', () => {
 	test('1', () => {
-		const elo = Elo_new_rating();
+		const elo = new_rating_Elo();
 		expect(elo.rating).toBe(1500);
 		expect(elo.num_games).toBe(0);
 		expect(elo.won).toBe(0);
@@ -62,8 +58,16 @@ describe('Initial rating', () => {
 
 describe('Clone', () => {
 	test('1', () => {
-		const r = new EloRating(1500.0, 100, 50, 30, 20, 40, false);
-		const rc = r.clone();
+		const r = {
+			rating: 1500.43,
+			num_games: 100,
+			won: 50,
+			drawn: 20,
+			lost: 30,
+			K: 40,
+			surpassed_2400: true
+		};
+		const rc = { ...r };
 
 		expect(rc.rating).toBe(r.rating);
 		expect(rc.num_games).toBe(r.num_games);

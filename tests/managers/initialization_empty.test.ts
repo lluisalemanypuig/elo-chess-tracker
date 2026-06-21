@@ -38,6 +38,7 @@ import { UsersManager } from '@server/managers/users_manager';
 import { run_command } from './exec_utils';
 import { GraphsManager } from '@server/managers/graphs_manager';
 import { Graph } from '@server/models/graph/graph';
+import { Configuration } from '@server/models/configuration/configuration';
 
 const webpage_dir = 'tests/webpage';
 const icons_dir = path.join(webpage_dir, 'icons');
@@ -50,7 +51,7 @@ const db_games_Classical_dir = path.join(db_games_dir, 'Classical');
 const db_games_Rapid_dir = path.join(db_games_dir, 'Rapid');
 const db_games_Blitz_dir = path.join(db_games_dir, 'Blitz');
 
-const configuration = {
+const configuration: Configuration = {
 	environment: {
 		ssl_certificate: {
 			public_key_file: 'sadf',

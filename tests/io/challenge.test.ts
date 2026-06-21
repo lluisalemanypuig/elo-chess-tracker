@@ -23,57 +23,51 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { challenge_from_json } from '@server/io/challenge';
+import { isDefined } from '@common/utils';
+import { challenge_from_string } from '@server/io/challenge';
 
-describe('From JSON', () => {
+describe('IO conversion', () => {
 	test('string', () => {
-		const c = challenge_from_json(
-			'{ "id": "000x1", "sent_by": "A", "sent_to": "B", "when_challenge_sent": "2024-12-29..17:10:00", "when_challenge_accepted": "2024-12-29..17:10:01", "result_set_by": "A", "when_result_set": "2024-12-29..17:10:02", "white": "A", "black": "B", "result": "draw", "time_control_id": "blitz", "time_control_name": "Blitz (5 + 3)" }'
+		const c = challenge_from_string(
+			'{\
+				"id": "000x1",\
+				"title": "asdf",\
+				"sent_by": "A",\
+				"sent_to": "B",\
+				"time_control_id": "blitz",\
+				"time_control_name": "Blitz (5 + 3)",\
+				"when_challenge_sent": "2024-12-29..17:10:00",\
+				"when_challenge_accepted": "2024-12-29..17:10:01",\
+				"result_was_set": true,\
+				"when_result_set": "2024-12-29..17:10:02",\
+				"result_set_by": "A",\
+				"when_result_accepted": "2024-12-30..17:10:02",\
+				"result_accepted_by": "B",\
+				"white": "A",\
+				"black": "B",\
+				"result": "draw"\
+			}'
 		);
 
-		expect(c.get_id()).toBe('000x1');
-		expect(c.get_sent_by()).toBe('A');
-		expect(c.get_sent_to()).toBe('B');
-		expect(c.get_when_challenge_sent()).toBe('2024-12-29..17:10:00');
-		expect(c.get_when_challenge_accepted()).toBe('2024-12-29..17:10:01');
-		expect(c.was_result_set()).toBe(true);
-		expect(c.get_result_set_by()).toBe('A');
-		expect(c.get_when_result_set()).toBe('2024-12-29..17:10:02');
-		expect(c.get_white()).toBe('A');
-		expect(c.get_black()).toBe('B');
-		expect(c.get_result()).toBe('draw');
-		expect(c.get_time_control_id()).toBe('blitz');
-		expect(c.get_time_control_name()).toBe('Blitz (5 + 3)');
-	});
-
-	test('JSON', () => {
-		const c = challenge_from_json({
-			id: '000x1',
-			sent_by: 'A',
-			sent_to: 'B',
-			when_challenge_sent: '2024-12-29..17:10:00',
-			when_challenge_accepted: '2024-12-29..17:10:01',
-			result_set_by: 'A',
-			when_result_set: '2024-12-29..17:10:02',
-			white: 'A',
-			black: 'B',
-			result: 'draw',
-			time_control_id: 'blitz',
-			time_control_name: 'Blitz (5 + 3)'
-		});
-
-		expect(c.get_id()).toBe('000x1');
-		expect(c.get_sent_by()).toBe('A');
-		expect(c.get_sent_to()).toBe('B');
-		expect(c.get_when_challenge_sent()).toBe('2024-12-29..17:10:00');
-		expect(c.get_when_challenge_accepted()).toBe('2024-12-29..17:10:01');
-		expect(c.was_result_set()).toBe(true);
-		expect(c.get_result_set_by()).toBe('A');
-		expect(c.get_when_result_set()).toBe('2024-12-29..17:10:02');
-		expect(c.get_white()).toBe('A');
-		expect(c.get_black()).toBe('B');
-		expect(c.get_result()).toBe('draw');
-		expect(c.get_time_control_id()).toBe('blitz');
-		expect(c.get_time_control_name()).toBe('Blitz (5 + 3)');
+		expect(c).not.toBeNull();
+		if (!isDefined(c)) {
+			return;
+		}
+		expect(c.id).toBe('000x1');
+		expect(c.title).toBe('asdf');
+		expect(c.sent_by).toBe('A');
+		expect(c.sent_to).toBe('B');
+		expect(c.time_control_id).toBe('blitz');
+		expect(c.time_control_name).toBe('Blitz (5 + 3)');
+		expect(c.when_challenge_sent).toBe('2024-12-29..17:10:00');
+		expect(c.when_challenge_accepted).toBe('2024-12-29..17:10:01');
+		expect(c.result_was_set).toBe(true);
+		expect(c.when_result_set).toBe('2024-12-29..17:10:02');
+		expect(c.result_set_by).toBe('A');
+		expect(c.when_result_accepted).toBe('2024-12-30..17:10:02');
+		expect(c.result_accepted_by).toBe('B');
+		expect(c.white).toBe('A');
+		expect(c.black).toBe('B');
+		expect(c.result).toBe('draw');
 	});
 });

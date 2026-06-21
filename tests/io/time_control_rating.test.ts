@@ -23,62 +23,50 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { time_control_rating_from_json, time_control_rating_set_from_json } from '@server/io/time_control_rating';
-import { EloRating } from '@server/rating_framework/Elo/rating';
+import { isDefined } from '@common/utils';
+import { time_control_rating_array_from_string, time_control_rating_from_string } from '@server/io/time_control_rating';
 import { initialize_rating_functions } from '@server/managers/rating_system';
 
-describe('From JSON -- Elo', () => {
+describe('IO conversion -- Elo', () => {
 	initialize_rating_functions('Elo');
 
 	test('string', () => {
-		const tcr = time_control_rating_from_json(
+		const tcr = time_control_rating_from_string(
 			'{ "time_control": "blitz", "rating": { "rating": 1500.43, "num_games": 100, "won": 50, "drawn": 20, "lost": 30, "K": 40, "surpassed_2400": true } }'
 		);
-		expect(tcr.rating).toEqual(new EloRating(1500.43, 100, 50, 20, 30, 40, true));
+		expect(tcr).not.toBeNull();
+		if (!isDefined(tcr)) {
+			return;
+		}
+		expect(tcr.rating).toEqual({
+			rating: 1500.43,
+			num_games: 100,
+			won: 50,
+			drawn: 20,
+			lost: 30,
+			K: 40,
+			surpassed_2400: true
+		});
 		expect(tcr.time_control).toEqual('blitz');
 	});
 
 	test('string -- set', () => {
-		const tcr = time_control_rating_set_from_json(
+		const tcr = time_control_rating_array_from_string(
 			'[{ "time_control": "blitz", "rating": { "rating": 1500.43, "num_games": 100, "won": 50, "drawn": 20, "lost": 30, "K": 40, "surpassed_2400": true } }]'
 		);
-		expect(tcr[0].rating).toEqual(new EloRating(1500.43, 100, 50, 20, 30, 40, true));
-		expect(tcr[0].time_control).toEqual('blitz');
-	});
-
-	test('JSON', () => {
-		const tcr = time_control_rating_from_json({
-			time_control: 'blitz',
-			rating: {
-				rating: 1500.43,
-				num_games: 100,
-				won: 50,
-				drawn: 20,
-				lost: 30,
-				K: 40,
-				surpassed_2400: true
-			}
+		expect(tcr).not.toBeNull();
+		if (!isDefined(tcr)) {
+			return;
+		}
+		expect(tcr[0].rating).toEqual({
+			rating: 1500.43,
+			num_games: 100,
+			won: 50,
+			drawn: 20,
+			lost: 30,
+			K: 40,
+			surpassed_2400: true
 		});
-		expect(tcr.rating).toEqual(new EloRating(1500.43, 100, 50, 20, 30, 40, true));
-		expect(tcr.time_control).toEqual('blitz');
-	});
-
-	test('JSON -- set', () => {
-		const tcr = time_control_rating_set_from_json([
-			{
-				time_control: 'blitz',
-				rating: {
-					rating: 1500.43,
-					num_games: 100,
-					won: 50,
-					drawn: 20,
-					lost: 30,
-					K: 40,
-					surpassed_2400: true
-				}
-			}
-		]);
-		expect(tcr[0].rating).toEqual(new EloRating(1500.43, 100, 50, 20, 30, 40, true));
 		expect(tcr[0].time_control).toEqual('blitz');
 	});
 });

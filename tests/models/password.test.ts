@@ -23,12 +23,10 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { Password } from '@server/models/password';
-
 describe('clone', () => {
 	test('1', () => {
-		let pass = new Password('1234', 'asdf');
-		let pass2 = pass.clone();
+		let pass = { encrypted: '1234', iv: 'asdf' };
+		let pass2 = { ...pass };
 		expect(pass).not.toBe(pass2);
 		expect(pass).toEqual(pass2);
 	});
