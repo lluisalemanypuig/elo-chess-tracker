@@ -4,7 +4,7 @@
 	"author": "Lluís Alemany Puig",
 	"scripts": {
 		"start": "bun run ./app/server/app_main.ts",
-		"devstart": "DEBUG=ELO_TRACKER:* bun run ./app/server/app_main.ts",
+		"devstart": "DEBUG=ELO_CHESS_TRACKER:* bun run ./app/server/app_main.ts",
 		"serverstart": "bun run devstart",
 		"test": "jest --runInBand",
 		"build": "./build/compile.sh"
@@ -60,6 +60,7 @@
 		"graphology-types": "^0.24.8",
 		"htmx.org": "^2.0.10",
 		"jtest": "^0.0.1",
-		"sigma": "^3.0.3"
+		"sigma": "^3.0.3",
+		"zod": "^4.4.3"
 	}
 }
