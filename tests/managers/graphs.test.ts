@@ -27,8 +27,8 @@ import { run_command } from '@tests/exec_utils';
 
 import { EdgeMetadata } from '@common/models/graph/edge_metadata';
 import { graph_modify_edge, graph_update } from '@server/managers/graphs';
-import { server_init_from_data } from '@server/managers/initialization';
-import { clear_server } from '@server/managers/clear';
+import { server_init_from_data } from '@server/managers/memory/initialization';
+import { clear_server } from '@server/managers/memory/clear';
 import { graph_from_string } from '@common/io/graph/graph';
 import { EnvironmentManager } from '@server/managers/environment_manager';
 import { Configuration } from '@common/models/configuration/configuration';

@@ -23,7 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { clear_server } from '@server/managers/clear';
+import { clear_server } from '@server/managers/memory/clear';
 import { GraphsManager } from '@server/managers/graphs_manager';
 import { Graph } from '@common/models/graph/graph';
 

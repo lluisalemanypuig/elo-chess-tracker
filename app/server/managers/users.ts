@@ -134,14 +134,14 @@ export function user_update_from_player_data(players: Player[]): void {
 	let mem = UsersManager.get_instance();
 
 	debug(log_now(), 'Updating users...');
-	for (let i = 0; i < players.length; ++i) {
-		const username = players[i].username;
+	for (const player of players) {
+		const username = player.username;
 
 		let u: User = manager.get_user_by_username(username) as User;
 
-		const ratings_player = players[i].ratings;
-		for (let j = 0; j < ratings_player.length; ++j) {
-			u.set_rating(ratings_player[j].time_control, ratings_player[j].rating);
+		const ratings_player = player.ratings;
+		for (const rating of ratings_player) {
+			u.set_rating(rating.time_control, rating.rating);
 		}
 
 		const user_filename = path.join(users_directory, username);

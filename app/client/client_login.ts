@@ -59,8 +59,8 @@ async function log_into_webpage(_event: any) {
 
 	// put identity cookies
 	const cookies = data['cookies'];
-	for (let i = 0; i < cookies.length; ++i) {
-		document.cookie = cookies[i];
+	for (const c of cookies) {
+		document.cookie = c;
 	}
 	window.location.href = '/home';
 }

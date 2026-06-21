@@ -65,10 +65,8 @@ import { all_user_roles, UserRole } from '@common/models/user_role';
 
 describe('Role concatenation', () => {
 	test('Check non-throwing functions', () => {
-		for (let i = 0; i < all_action_ids.length; ++i) {
-			const action_id = all_action_ids[i];
-			for (let j = 0; j < all_user_roles.length; ++j) {
-				const role = all_user_roles[j];
+		for (const action_id of all_action_ids) {
+			for (const role of all_user_roles) {
 				expect(() => get_role_action_name(action_id as UserActionID, role as UserRole)).not.toThrow();
 			}
 		}

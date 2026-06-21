@@ -137,8 +137,8 @@ async function load_graph() {
 		max_edge_weight = edge_w > max_edge_weight ? edge_w : max_edge_weight;
 	}
 
-	for (let u of server_graph.nodeEntries()) {
-		for (let v of server_graph.outNeighborEntries(u.node)) {
+	for (const u of server_graph.nodeEntries()) {
+		for (const v of server_graph.outNeighborEntries(u.node)) {
 			const found = server_graph.hasDirectedEdge(v.neighbor, u.node);
 			if (found) {
 				server_graph.setEdgeAttribute(u.node, v.neighbor, 'type', 'curvedArrow');

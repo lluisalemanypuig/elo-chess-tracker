@@ -27,7 +27,7 @@ import fs from 'fs';
 import path from 'path';
 
 import { game_add_new, game_edit_result, game_find_by_id, recalculate_all_ratings } from '@server/managers/games';
-import { server_init_from_data } from '@server/managers/initialization';
+import { server_init_from_data } from '@server/managers/memory/initialization';
 import { user_add_new } from '@server/managers/users';
 import { ADMIN } from '@common/models/user_role';
 import { run_command } from '@tests/exec_utils';
@@ -38,7 +38,7 @@ import { UsersManager } from '@server/managers/users_manager';
 import { game_array_from_string } from '@common/io/game';
 import { GamesIterator } from '@server/managers/games_iterator';
 import { long_date_to_short_date } from '@server/utils/time';
-import { clear_server } from '@server/managers/clear';
+import { clear_server } from '@server/managers/memory/clear';
 import { GraphsManager } from '@server/managers/graphs_manager';
 import { Graph } from '@common/models/graph/graph';
 import { EdgeMetadata } from '@common/models/graph/edge_metadata';
@@ -714,17 +714,14 @@ describe('Inverse game creation', () => {
 			expect(d.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
 			expect(e.get_rating('Blitz').num_won_drawn_lost()).toEqual([2, 0, 2, 0]);
 			expect(f.get_rating('Blitz').num_won_drawn_lost()).toEqual([4, 1, 3, 0]);
-			/*
 			expect(a.get_rating('Classical').num_won_drawn_lost()).toEqual([2, 1, 0, 1]);
 			expect(b.get_rating('Classical').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
 			expect(c.get_rating('Classical').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
 			expect(d.get_rating('Classical').num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
 			expect(e.get_rating('Classical').num_won_drawn_lost()).toEqual([1, 0, 1, 0]);
 			expect(f.get_rating('Classical').num_won_drawn_lost()).toEqual([2, 1, 1, 0]);
-			*/
 		}
 
-		/*
 		game_add_new('sample', u('c'), u('d'), 'black_wins', 'Blitz', 'Blitz (5 + 3)', '2025-01-20', '17:06:10:000');
 		{
 			const game_array = game_array_from_string(fs.readFileSync(path.join(blitz_dir, '2025-01-20'), 'utf8'));
@@ -852,10 +849,8 @@ describe('Inverse game creation', () => {
 			expect(e.get_rating('Classical').num_won_drawn_lost()).toEqual([1, 0, 1, 0]);
 			expect(f.get_rating('Classical').num_won_drawn_lost()).toEqual([2, 1, 1, 0]);
 		}
-		*/
 	});
 
-	/*
 	test('Add "Classical" games', () => {
 		const classical_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Classical');
 
@@ -1119,10 +1114,8 @@ describe('Inverse game creation', () => {
 			expect(f.get_rating('Classical').num_won_drawn_lost()).toEqual([4, 1, 3, 0]);
 		}
 	});
-	*/
 });
 
-/*
 describe('Zig-zag game creation', () => {
 	test('Add "Blitz" games', () => {
 		const blitz_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Blitz');
@@ -2704,4 +2697,3 @@ for (let i = 0; i < N; ++i) {
 		});
 	}
 }
-*/

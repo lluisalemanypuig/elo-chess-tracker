@@ -44,8 +44,8 @@ export async function get_query_html_time_controls(req: any, res: any) {
 
 	let html: string = '';
 	const tcs = RatingSystemManager.get_instance().get_time_controls();
-	for (let i = 0; i < tcs.length; ++i) {
-		html += `<option value="${tcs[i].id}">${tcs[i].name}</option>`;
+	for (const tc of tcs) {
+		html += `<option value="${tc.id}">${tc.name}</option>`;
 	}
 	res.status(200).send(html);
 }
@@ -63,8 +63,8 @@ export async function get_query_html_time_controls_unique(req: any, res: any) {
 
 	let html: string = '';
 	const tcs = RatingSystemManager.get_instance().get_unique_time_controls_ids();
-	for (let i = 0; i < tcs.length; ++i) {
-		html += `<option value="${tcs[i]}">${tcs[i]}</option>`;
+	for (const tc of tcs) {
+		html += `<option value="${tc}">${tc}</option>`;
 	}
 	res.status(200).send(html);
 }

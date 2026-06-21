@@ -110,9 +110,7 @@ export function graph_from_string(dir: string): Graph | null {
 		return null;
 	}
 
-	for (let i = 0; i < files.length; ++i) {
-		const username = files[i];
-
+	for (const username of files) {
 		const filename = path.join(dir, username);
 
 		if (!fs.existsSync(filename)) {
@@ -126,8 +124,8 @@ export function graph_from_string(dir: string): Graph | null {
 			return null;
 		}
 
-		for (let i = 0; i < edge_set.length; ++i) {
-			g.add_edge_raw(username, edge_set[i].neighbor, edge_set[i]);
+		for (const edge of edge_set) {
+			g.add_edge_raw(username, edge.neighbor, edge);
 		}
 	}
 

@@ -23,8 +23,8 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { clear_server } from '@server/managers/clear';
-import { server_init_from_data } from '@server/managers/initialization';
+import { clear_server } from '@server/managers/memory/clear';
+import { server_init_from_data } from '@server/managers/memory/initialization';
 import {
 	is_user_logged_in,
 	session_id_add,

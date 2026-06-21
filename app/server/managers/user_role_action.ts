@@ -124,26 +124,26 @@ export function initialize_permissions(permissions: UserPermissions): void {
 	let actions = UserRoleToUserAction.get_instance();
 
 	// ADMIN
-	for (let i = 0; i < permissions.admin.length; ++i) {
-		actions.add_to_role(ADMIN, permissions.admin[i]);
+	for (const permission of permissions.admin) {
+		actions.add_to_role(ADMIN, permission);
 	}
 	actions.add_missing_generic_actions(ADMIN);
 
 	// TEACHER
-	for (let i = 0; i < permissions.teacher.length; ++i) {
-		actions.add_to_role(TEACHER, permissions.teacher[i]);
+	for (const permission of permissions.teacher) {
+		actions.add_to_role(TEACHER, permission);
 	}
 	actions.add_missing_generic_actions(TEACHER);
 
 	// MEMBER
-	for (let i = 0; i < permissions.member.length; ++i) {
-		actions.add_to_role(MEMBER, permissions.member[i]);
+	for (const permission of permissions.member) {
+		actions.add_to_role(MEMBER, permission);
 	}
 	actions.add_missing_generic_actions(MEMBER);
 
 	// STUDENT
-	for (let i = 0; i < permissions.student.length; ++i) {
-		actions.add_to_role(STUDENT, permissions.student[i]);
+	for (const permission of permissions.student) {
+		actions.add_to_role(STUDENT, permission);
 	}
 	actions.add_missing_generic_actions(STUDENT);
 }

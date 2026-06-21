@@ -189,12 +189,10 @@ export class User extends Player {
 		const roles = this.roles;
 
 		let actions: UserAction[] = [];
-		for (let i = 0; i < roles.length; ++i) {
-			const r = roles[i];
+		for (const r of roles) {
 			const actions_from_role = role_to_action.get_actions_role(r);
 
-			for (let j = 0; j < actions_from_role.length; ++j) {
-				const action = actions_from_role[j];
+			for (const action of actions_from_role) {
 				if (actions.indexOf(action) == -1) {
 					actions.push(action);
 				}
@@ -208,8 +206,8 @@ export class User extends Player {
 	can_do(a: UserAction): boolean {
 		const user_role_to_action = UserRoleToUserAction.get_instance();
 
-		for (let i = 0; i < this.roles.length; ++i) {
-			if (user_role_to_action.role_includes_action(this.roles[i], a)) {
+		for (const role of this.roles) {
+			if (user_role_to_action.role_includes_action(role, a)) {
 				return true;
 			}
 		}

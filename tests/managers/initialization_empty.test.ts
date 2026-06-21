@@ -26,8 +26,8 @@ Contact:
 import fs from 'fs';
 import path from 'path';
 
-import { server_init_from_data } from '@server/managers/initialization';
-import { clear_server } from '@server/managers/clear';
+import { server_init_from_data } from '@server/managers/memory/initialization';
+import { clear_server } from '@server/managers/memory/clear';
 import { RatingSystemManager } from '@server/managers/rating_system_manager';
 import { EnvironmentManager } from '@server/managers/environment_manager';
 import { ConfigurationManager } from '@server/managers/configuration_manager';

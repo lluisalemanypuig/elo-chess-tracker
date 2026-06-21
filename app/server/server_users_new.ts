@@ -107,8 +107,7 @@ export async function post_user_create(req: any, res: any) {
 		return;
 	}
 
-	for (let i = 0; i < roles.length; ++i) {
-		const r = roles[i];
+	for (const r of roles) {
 		if (!is_role_string_correct(r)) {
 			res.status(500).send(`Role string '${r}' is not correct.`);
 			return;

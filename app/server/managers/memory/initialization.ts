@@ -37,7 +37,6 @@ import { UsersManager } from '@server/managers/users_manager';
 import { initialize_rating_time_controls, initialize_rating_functions } from '@server/managers/rating_system';
 import { RatingSystemManager } from '@server/managers/rating_system_manager';
 import { Game, GameID } from '@common/models/game';
-import { initialize_permissions } from '@server/managers/user_role_action';
 import { TimeControl, TimeControlArray } from '@common/models/time_control';
 import { Graph } from '@common/models/graph/graph';
 import { GraphsManager } from '@server/managers/graphs_manager';
@@ -56,6 +55,7 @@ import { Environment, SSLCertificate } from '@common/models/configuration/enviro
 import { Ports, ServerConfiguration } from '@common/models/configuration/server';
 import { UserPermissions } from '@common/models/configuration/permissions';
 import { clear_server } from '@server/managers/memory/clear';
+import { initialize_permissions } from '@server/managers/user_role_action';
 
 function init_environment_directories(base_directory: string, execution_directory: string): void {
 	let server_env = EnvironmentManager.get_instance();

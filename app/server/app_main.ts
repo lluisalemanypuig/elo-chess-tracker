@@ -35,7 +35,7 @@ const debug = Debug('ELO_CHESS_TRACKER:app_main');
 import fs from 'fs';
 import { log_now } from '@server/utils/time';
 
-import { server_init_from_parameters } from '@server/managers/initialization';
+import { server_init_from_parameters } from '@server/managers/memory/initialization';
 import { ConfigurationManager } from '@server/managers/configuration_manager';
 
 debug(log_now(), 'Initialize server memory...');

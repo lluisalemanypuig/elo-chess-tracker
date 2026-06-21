@@ -27,8 +27,8 @@ import path from 'path';
 import fs from 'fs';
 
 import { run_command } from '@tests/exec_utils';
-import { clear_server } from '@server/managers/clear';
-import { server_init_from_data } from '@server/managers/initialization';
+import { clear_server } from '@server/managers/memory/clear';
+import { server_init_from_data } from '@server/managers/memory/initialization';
 import { ADMIN, MEMBER, STUDENT } from '@common/models/user_role';
 import { user_add_new } from '@server/managers/users';
 import { ChallengesManager } from '@server/managers/challenges_manager';

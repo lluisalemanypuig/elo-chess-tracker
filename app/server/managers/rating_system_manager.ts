@@ -138,8 +138,8 @@ export class RatingSystemManager {
 	}
 
 	is_time_control_id_valid(id: TimeControlID): boolean {
-		for (let i = 0; i < this.all_time_controls.length; ++i) {
-			if (this.all_time_controls[i].id == id) {
+		for (const tc of this.all_time_controls) {
+			if (tc.id == id) {
 				return true;
 			}
 		}

@@ -49,8 +49,8 @@ export function copyarray<T>(array: T[], clone: (t: T) => T): T[] {
  * Returns false if otherwise.
  */
 export function any<T>(arr: T[], F: (e1: T) => boolean): boolean {
-	for (let i = 0; i < arr.length; ++i) {
-		if (F(arr[i])) {
+	for (const element of arr) {
+		if (F(element)) {
 			return true;
 		}
 	}

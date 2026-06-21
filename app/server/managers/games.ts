@@ -604,16 +604,15 @@ export function recalculate_all_ratings() {
 		const username = (mem.get_user_at(i) as User).username;
 
 		let p = new Player(username, []);
-		for (let k = 0; k < all_time_controls.length; ++k) {
-			p.add_rating(all_time_controls[k], rating_system.get_new_rating());
+		for (const tc of all_time_controls) {
+			p.add_rating(tc, rating_system.get_new_rating());
 		}
 
 		updated_players.push(p);
 		player_to_index.set(username, i);
 	}
 
-	for (let k = 0; k < all_time_controls.length; ++k) {
-		const time_control = all_time_controls[k];
+	for (const time_control of all_time_controls) {
 		const games_dir = EnvironmentManager.get_instance().get_dir_games_time_control(time_control);
 
 		let games_iter = new GamesIterator(games_dir);

@@ -27,7 +27,7 @@ import fs from 'fs';
 import path from 'path';
 
 import { game_add_new, game_delete } from '@server/managers/games';
-import { server_init_from_data } from '@server/managers/initialization';
+import { server_init_from_data } from '@server/managers/memory/initialization';
 import { user_add_new } from '@server/managers/users';
 import { ADMIN } from '@common/models/user_role';
 import { run_command } from '@tests/exec_utils';

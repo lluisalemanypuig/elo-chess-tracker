@@ -62,8 +62,7 @@ export async function get_query_challenge_received(req: any, res: any) {
 	const sent_to = r[2] as User;
 
 	let all_challenges_received: any[] = [];
-	for (let i = 0; i < to_return.length; ++i) {
-		const c = to_return[i];
+	for (const c of to_return) {
 		const sent_by = manager.get_user_by_username(c.sent_by as string) as User;
 		const name = sent_by.get_full_name();
 
@@ -110,9 +109,7 @@ export async function get_query_challenge_sent(req: any, res: any) {
 	const sent_by = manager.get_user_by_username(session.username) as User;
 
 	let all_challenges: any[] = [];
-	for (let i = 0; i < to_return.length; ++i) {
-		const c = to_return[i];
-
+	for (const c of to_return) {
 		const sent_to = manager.get_user_by_username(c.sent_to as string) as User;
 
 		// return only basic information
@@ -163,8 +160,7 @@ export async function get_query_challenge_pending_result(req: any, res: any) {
 	let manager = UsersManager.get_instance();
 
 	let all_challenges: any[] = [];
-	for (let i = 0; i < to_return.length; ++i) {
-		const c = to_return[i];
+	for (const c of to_return) {
 		const user_sent_to = manager.get_user_by_username(c.sent_to) as User;
 		const user_sent_by = manager.get_user_by_username(c.sent_by) as User;
 
@@ -230,8 +226,7 @@ export async function get_query_challenge_confirm_result_other(req: any, res: an
 	let manager = UsersManager.get_instance();
 
 	let all_challenges: any[] = [];
-	for (let i = 0; i < to_return.length; ++i) {
-		const c = to_return[i];
+	for (const c of to_return) {
 		const user_sent_to = manager.get_user_by_username(c.sent_to) as User;
 		const user_sent_by = manager.get_user_by_username(c.sent_by) as User;
 
@@ -306,8 +301,7 @@ export async function get_query_challenge_confirm_result_self(req: any, res: any
 	let manager = UsersManager.get_instance();
 
 	let all_challenges: any[] = [];
-	for (let i = 0; i < to_return.length; ++i) {
-		const c = to_return[i];
+	for (const c of to_return) {
 		const user_sent_to = manager.get_user_by_username(c.sent_to) as User;
 		const user_sent_by = manager.get_user_by_username(c.sent_by) as User;
 

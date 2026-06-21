@@ -26,7 +26,7 @@ Contact:
 import path from 'path';
 import fs from 'fs';
 
-import { server_init_from_data } from '@server/managers/initialization';
+import { server_init_from_data } from '@server/managers/memory/initialization';
 import {
 	user_add_new,
 	user_get_all_name_randid,
@@ -35,7 +35,7 @@ import {
 } from '@server/managers/users';
 import { User } from '@common/models/user';
 import { ADMIN, MEMBER, STUDENT, TEACHER } from '@common/models/user_role';
-import { clear_server } from '@server/managers/clear';
+import { clear_server } from '@server/managers/memory/clear';
 import { run_command } from '@tests/exec_utils';
 import { Player } from '@common/models/player';
 import { EloRating } from '@common/models/rating_framework/Elo/rating';

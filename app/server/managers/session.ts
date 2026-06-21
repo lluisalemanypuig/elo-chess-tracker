@@ -45,8 +45,8 @@ const character_samples: string = '$ALLOWED_SYMBOLS_COOKIES';
 function random_session_id(str: string): string {
 	// convert string to an array
 	let string_array: string[] = [];
-	for (let i = 0; i < str.length; ++i) {
-		string_array.push(str.charAt(i));
+	for (const char of str) {
+		string_array.push(char);
 	}
 	// put more characters until the array is at least 128 characters
 	while (string_array.length < 128) {

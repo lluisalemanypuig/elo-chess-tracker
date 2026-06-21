@@ -231,38 +231,38 @@ async function fill_games_list_time_control(time_control_id: string) {
 	const games = (await response.json()) as any[];
 
 	let new_tbody = document.createElement('tbody');
-	for (let i = 0; i < games.length; i++) {
+	for (const g of games) {
 		let row = document.createElement('tr');
 
-		if (games[i].editable == 'y') {
-			if (games[i].title == '') {
+		if (g.editable == 'y') {
+			if (g.title == '') {
 				row.appendChild(new_text_cell(''));
 			} else {
-				row.appendChild(new_cell_text_input(games[i].id, games[i].title));
+				row.appendChild(new_cell_text_input(g.id, g.title));
 			}
 		} else {
-			row.appendChild(new_text_cell(games[i].title));
+			row.appendChild(new_text_cell(g.title));
 		}
 
-		row.appendChild(new_text_cell(games[i].time_control));
+		row.appendChild(new_text_cell(g.time_control));
 
-		const when = games[i].date.substring(0, games[i].date.length - (3 + 1 + 2 + 1));
+		const when = g.date.substring(0, g.date.length - (3 + 1 + 2 + 1));
 		row.appendChild(new_text_cell(when));
 
-		row.appendChild(new_rating_cell(games[i].white_rating, games[i].white_increment));
-		row.appendChild(new_text_cell(games[i].white));
+		row.appendChild(new_rating_cell(g.white_rating, g.white_increment));
+		row.appendChild(new_text_cell(g.white));
 
-		if (games[i].editable == 'y') {
-			row.appendChild(new_cell_select_result(games[i].result, games[i].id));
+		if (g.editable == 'y') {
+			row.appendChild(new_cell_select_result(g.result, g.id));
 		} else {
-			row.appendChild(new_text_cell(games[i].result));
+			row.appendChild(new_text_cell(g.result));
 		}
 
-		row.appendChild(new_text_cell(games[i].black));
-		row.appendChild(new_rating_cell(games[i].black_rating, games[i].black_increment));
+		row.appendChild(new_text_cell(g.black));
+		row.appendChild(new_rating_cell(g.black_rating, g.black_increment));
 
-		if (games[i].deleteable == 'y') {
-			row.appendChild(new_cell_button_delete(games[i].id));
+		if (g.deleteable == 'y') {
+			row.appendChild(new_cell_button_delete(g.id));
 		}
 
 		new_tbody.appendChild(row);

@@ -30,8 +30,8 @@ export async function logout_link_clicked(_event: any) {
 
 	const data = await response.json();
 	const cookies = data['cookies'];
-	for (let i = 0; i < cookies.length; ++i) {
-		document.cookie = cookies[i];
+	for (const c of cookies) {
+		document.cookie = c;
 	}
 
 	window.location.href = '/';
@@ -141,8 +141,8 @@ async function fill_own_info() {
 		let table = document.getElementById('user_ratings_table') as HTMLTableElement;
 
 		const ratings = data.ratings as any[];
-		for (let i = 0; i < ratings.length; ++i) {
-			const data_i = ratings[i];
+		for (const r of ratings) {
+			const data_i = r;
 
 			let row = table.insertRow(-1);
 
