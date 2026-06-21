@@ -24,7 +24,7 @@ Contact:
 */
 
 import Debug from 'debug';
-const debug = Debug('ELO_TRACKER:server_users_new');
+const debug = Debug('ELO_CHESS_TRACKER:server_users_new');
 
 import { log_now } from '@server/utils/time';
 import { is_user_logged_in } from '@server/managers/session';
@@ -40,7 +40,7 @@ import { get_execution_directory } from './managers/environment_manager';
 export async function get_page_user_create(req: any, res: any) {
 	debug(log_now(), 'GET /page/user/create...');
 
-	const session = SessionID.from_cookie(req.cookies);
+	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -70,7 +70,7 @@ export async function get_page_user_create(req: any, res: any) {
 export async function post_user_create(req: any, res: any) {
 	debug(log_now(), 'POST /user/create');
 
-	const session = SessionID.from_cookie(req.cookies);
+	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {

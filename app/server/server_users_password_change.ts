@@ -24,13 +24,12 @@ Contact:
 */
 
 import Debug from 'debug';
-const debug = Debug('ELO_TRACKER:server_users_password_changes');
+const debug = Debug('ELO_CHESS_TRACKER:server_users_password_changes');
 
 import { log_now } from '@server/utils/time';
 import { is_user_logged_in, session_user_delete_all } from '@server/managers/session';
 import { encrypt_password_for_user, is_password_of_user_correct } from '@server/utils/encrypt';
 import { User } from '@server/models/user';
-import { Password } from '@server/models/password';
 import { user_overwrite } from '@server/managers/users';
 import { SessionID } from '@server/models/session_id';
 import { ConfigurationManager } from '@server/managers/configuration_manager';
@@ -39,7 +38,7 @@ import { get_execution_directory } from './managers/environment_manager';
 export async function get_page_user_password_change(req: any, res: any) {
 	debug(log_now(), 'GET /page/user/password_change_page...');
 
-	const session = SessionID.from_cookie(req.cookies);
+	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
 
 	const r = is_user_logged_in(session);
 	if (!r[0]) {
@@ -57,7 +56,7 @@ export async function get_page_user_password_change(req: any, res: any) {
 export async function post_user_password_change(req: any, res: any) {
 	debug(log_now(), 'POST /user/password_change...');
 
-	const session = SessionID.from_cookie(req.cookies);
+	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
 	const old_password = req.body.old;
 	const new_password = req.body.new;
 
@@ -69,7 +68,7 @@ export async function post_user_password_change(req: any, res: any) {
 	let user = r[2] as User;
 
 	// check if password is correct
-	const old_pwd = user.get_password();
+	const old_pwd = user.password;
 	const is_password_correct = is_password_of_user_correct(
 		old_pwd.encrypted,
 		session.username,
@@ -88,8 +87,8 @@ export async function post_user_password_change(req: any, res: any) {
 	session_user_delete_all(session.username);
 
 	// make new password
-	const _pass = encrypt_password_for_user(session.username, new_password);
-	user.set_password(new Password(_pass[0], _pass[1]));
+	const pass = encrypt_password_for_user(session.username, new_password);
+	user.password = { encrypted: pass[0], iv: pass[1] };
 
 	// overwrite user data
 	user_overwrite(user);

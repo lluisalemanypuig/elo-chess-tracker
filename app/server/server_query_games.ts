@@ -24,7 +24,7 @@ Contact:
 */
 
 import Debug from 'debug';
-const debug = Debug('ELO_TRACKER:server_query_games');
+const debug = Debug('ELO_CHESS_TRACKER:server_query_games');
 
 import path from 'path';
 import fs from 'fs';
@@ -39,16 +39,17 @@ import { GAMES_SEE } from '@server/models/user_action';
 import { SessionID } from '@server/models/session_id';
 import { can_user_delete_a_game, can_user_edit_a_game, can_user_see_a_game } from '@server/managers/user_relationships';
 import { TimeControlID } from '@server/models/time_control';
-import { game_set_from_json } from '@server/io/game';
+import { game_array_from_string } from '@server/io/game';
 import { UsersManager } from '@server/managers/users_manager';
 import { search_by_key } from '@server/utils/searching';
 import { read_directory } from '@server/utils/read_directory';
+import { isDefined } from '@common/utils';
 
 function increment(g: Game): any {
 	const [white_after, black_after] = RatingSystemManager.get_instance().apply_rating_function(g);
 	return {
-		white_increment: Math.round(white_after.rating - g.get_white_rating().rating),
-		black_increment: Math.round(black_after.rating - g.get_black_rating().rating)
+		white_increment: Math.round(white_after.rating - g.white_rating.rating),
+		black_increment: Math.round(black_after.rating - g.black_rating.rating)
 	};
 }
 
@@ -88,7 +89,11 @@ function filter_game_list(
 		debug(log_now(), `    Reading game record '${game_record_file}'...`);
 		const data = fs.readFileSync(game_record_file, 'utf8');
 		debug(log_now(), `        Game record '${game_record_file}' read.`);
-		const game_set = game_set_from_json(data);
+		const game_set = game_array_from_string(data);
+		if (!isDefined(game_set)) {
+			debug(log_now(), `        Game record '${game_record_file}' could not be parsed.`);
+			continue;
+		}
 
 		for (let j = game_set.length - 1; j >= 0; --j) {
 			const g = game_set[j];
@@ -100,30 +105,30 @@ function filter_game_list(
 			const inc = increment(g);
 
 			const result = ((): string => {
-				if (g.get_result() == 'white_wins') {
+				if (g.result == 'white_wins') {
 					return '1 - 0';
 				}
-				if (g.get_result() == 'black_wins') {
+				if (g.result == 'black_wins') {
 					return '0 - 1';
 				}
 				return '1/2 - 1/2';
 			})();
 
-			const white = manager.get_user_by_username(g.get_white()) as User;
-			const black = manager.get_user_by_username(g.get_black()) as User;
+			const white = manager.get_user_by_username(g.white) as User;
+			const black = manager.get_user_by_username(g.black) as User;
 			const is_editable: boolean = can_user_edit_a_game(user, white, black);
 			const is_deleteable: boolean = can_user_delete_a_game(user, white, black);
 
 			data_to_return.push({
-				id: g.get_id(),
-				title: g.get_title(),
+				id: g.id,
+				title: g.title,
 				white: white.get_full_name(),
 				black: black.get_full_name(),
 				result: result,
-				time_control: g.get_time_control_name(),
-				date: g.get_date().replace('..', ' '),
-				white_rating: Math.round(g.get_white_rating().rating),
-				black_rating: Math.round(g.get_black_rating().rating),
+				time_control: g.time_control_name,
+				date: g.when.replace('..', ' '),
+				white_rating: Math.round(g.white_rating.rating),
+				black_rating: Math.round(g.black_rating.rating),
 				white_increment: inc.white_increment < 0 ? inc.white_increment : '+' + inc.white_increment,
 				black_increment: inc.black_increment < 0 ? inc.black_increment : '+' + inc.black_increment,
 				editable: is_editable ? 'y' : 'n',
@@ -138,7 +143,7 @@ function filter_game_list(
 export async function post_query_game_list_own(req: any, res: any) {
 	debug(log_now(), 'POST /query/game/list/own...');
 
-	const session = SessionID.from_cookie(req.cookies);
+	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -226,7 +231,7 @@ function merge_by_date(v1: any[], v2: any[]): any[] {
 export async function post_query_game_list_all(req: any, res: any) {
 	debug(log_now(), 'POST /query/game/list/all...');
 
-	const session = SessionID.from_cookie(req.cookies);
+	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -252,8 +257,8 @@ export async function post_query_game_list_all(req: any, res: any) {
 				return true;
 			},
 			(g: Game): boolean => {
-				const white = manager.get_user_by_username(g.get_white()) as User;
-				const black = manager.get_user_by_username(g.get_black()) as User;
+				const white = manager.get_user_by_username(g.white) as User;
+				const black = manager.get_user_by_username(g.black) as User;
 				return can_user_see_a_game(user, white, black);
 			}
 		);
@@ -267,8 +272,8 @@ export async function post_query_game_list_all(req: any, res: any) {
 					return true;
 				},
 				(g: Game): boolean => {
-					const white = manager.get_user_by_username(g.get_white()) as User;
-					const black = manager.get_user_by_username(g.get_black()) as User;
+					const white = manager.get_user_by_username(g.white) as User;
+					const black = manager.get_user_by_username(g.black) as User;
 					return can_user_see_a_game(user, white, black);
 				}
 			);

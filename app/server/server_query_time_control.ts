@@ -24,7 +24,7 @@ Contact:
 */
 
 import Debug from 'debug';
-const debug = Debug('ELO_TRACKER:server_query_time_control');
+const debug = Debug('ELO_CHESS_TRACKER:server_query_time_control');
 
 import { log_now } from '@server/utils/time';
 import { is_user_logged_in } from '@server/managers/session';
@@ -34,7 +34,7 @@ import { SessionID } from '@server/models/session_id';
 export async function get_query_html_time_controls(req: any, res: any) {
 	debug(log_now(), 'GET /query/html/time_controls...');
 
-	const session = SessionID.from_cookie(req.cookies);
+	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -53,7 +53,7 @@ export async function get_query_html_time_controls(req: any, res: any) {
 export async function get_query_html_time_controls_unique(req: any, res: any) {
 	debug(log_now(), 'GET /query/html/time_controls_unique...');
 
-	const session = SessionID.from_cookie(req.cookies);
+	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {

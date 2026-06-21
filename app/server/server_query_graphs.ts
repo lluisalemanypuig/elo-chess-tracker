@@ -24,7 +24,7 @@ Contact:
 */
 
 import Debug from 'debug';
-const debug = Debug('ELO_TRACKER:server_query_graphs');
+const debug = Debug('ELO_CHESS_TRACKER:server_query_graphs');
 
 import { log_now } from '@server/utils/time';
 import { is_user_logged_in } from '@server/managers/session';
@@ -148,7 +148,7 @@ function retrieve_graph_full(querier: User, time_control_id: TimeControlID): [No
 			continue;
 		}
 
-		const username = this_user.get_username();
+		const username = this_user.username;
 		const this_user_rand_id = users.get_user_random_ID_at(idx) as number;
 
 		let out_degree = 0;
@@ -189,7 +189,7 @@ function retrieve_graph_full(querier: User, time_control_id: TimeControlID): [No
 export async function post_query_graph_own(req: any, res: any) {
 	debug(log_now(), 'POST /query/graph/own...');
 
-	const session = SessionID.from_cookie(req.cookies);
+	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -210,7 +210,7 @@ export async function post_query_graph_own(req: any, res: any) {
 export async function post_query_graph_full(req: any, res: any) {
 	debug(log_now(), 'POST /query/graph/full...');
 
-	const session = SessionID.from_cookie(req.cookies);
+	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {

@@ -31,7 +31,7 @@ import compression from 'compression';
 import helmet from 'helmet';
 
 import Debug from 'debug';
-const debug = Debug('ELO_TRACKER:app_build');
+const debug = Debug('ELO_CHESS_TRACKER:app_build');
 import { log_now } from '@server/utils/time';
 
 debug(log_now(), 'Create app object');

@@ -24,7 +24,7 @@ Contact:
 */
 
 import Debug from 'debug';
-const debug = Debug('ELO_TRACKER:server_challenges');
+const debug = Debug('ELO_CHESS_TRACKER:server_challenges');
 
 import { log_now } from '@server/utils/time';
 import { is_user_logged_in } from '@server/managers/session';
@@ -51,7 +51,7 @@ import { get_execution_directory } from './managers/environment_manager';
 export async function get_page_challenge(req: any, res: any) {
 	debug(log_now(), 'GET /page/challenge...');
 
-	const session = SessionID.from_cookie(req.cookies);
+	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
 
 	const r = is_user_logged_in(session);
 	if (!r[0]) {
@@ -69,7 +69,7 @@ export async function get_page_challenge(req: any, res: any) {
 export async function post_challenge_send(req: any, res: any) {
 	debug(log_now(), 'POST /challenge/send...');
 
-	const session = SessionID.from_cookie(req.cookies);
+	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
 	const to_random_id = req.body.to;
 	const time_control_id = req.body.time_control_id;
 	const time_control_name = req.body.time_control_name;
@@ -99,14 +99,14 @@ export async function post_challenge_send(req: any, res: any) {
 	}
 
 	const receiver = _receiver as User;
-	if (receiver.get_username() == sender.get_username()) {
+	if (receiver.username == sender.username) {
 		debug(log_now(), `A challenge cannot be sent to oneself.`);
 		res.status(403).send('You cannot challenge yourself.');
 		return;
 	}
 
 	if (!can_user_send_challenge(sender, receiver)) {
-		debug(log_now(), `Sender '${sender.get_username()}' cannot challenge user '${receiver.get_username()}'.`);
+		debug(log_now(), `Sender '${sender.username}' cannot challenge user '${receiver.username}'.`);
 		res.status(403).send('You cannot challenge this user.');
 		return;
 	}
@@ -130,15 +130,8 @@ export async function post_challenge_send(req: any, res: any) {
 		return;
 	}
 
-	debug(log_now(), `Send challenge from '${sender.get_username()}' to '${receiver.get_username()}'`);
-	challenge_send_new(
-		title,
-		sender.get_username(),
-		receiver.get_username(),
-		time_control_id,
-		time_control_name,
-		log_now()
-	);
+	debug(log_now(), `Send challenge from '${sender.username}' to '${receiver.username}'`);
+	challenge_send_new(title, sender.username, receiver.username, time_control_id, time_control_name, log_now());
 
 	res.status(200).send();
 }
@@ -146,7 +139,7 @@ export async function post_challenge_send(req: any, res: any) {
 export async function post_challenge_accept(req: any, res: any) {
 	debug(log_now(), 'POST /challenge/accept...');
 
-	const session = SessionID.from_cookie(req.cookies);
+	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
 
 	const r = is_user_logged_in(session);
 	if (!r[0]) {
@@ -165,9 +158,9 @@ export async function post_challenge_accept(req: any, res: any) {
 	}
 	const c = _c as Challenge;
 
-	debug(log_now(), `Challenge '${challenge_id}' involves players '${c.get_sent_by()}' and '${c.get_sent_to()}'`);
+	debug(log_now(), `Challenge '${challenge_id}' involves players '${c.sent_by}' and '${c.sent_to}'`);
 
-	if (session.username != c.get_sent_to()) {
+	if (session.username != c.sent_to) {
 		res.status(403).send('You cannot accept this challenge');
 		return;
 	}
@@ -179,7 +172,7 @@ export async function post_challenge_accept(req: any, res: any) {
 export async function post_challenge_decline(req: any, res: any) {
 	debug(log_now(), 'POST /challenge/decline...');
 
-	const session = SessionID.from_cookie(req.cookies);
+	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
 
 	const r = is_user_logged_in(session);
 	if (!r[0]) {
@@ -198,9 +191,9 @@ export async function post_challenge_decline(req: any, res: any) {
 	}
 	const c = _c as Challenge;
 
-	debug(log_now(), `Challenge '${challenge_id}' involves players '${c.get_sent_by()}' and '${c.get_sent_to()}'`);
+	debug(log_now(), `Challenge '${challenge_id}' involves players '${c.sent_by}' and '${c.sent_to}'`);
 
-	if (session.username != c.get_sent_to()) {
+	if (session.username != c.sent_to) {
 		res.status(403).send('You cannot decline this challenge');
 		return;
 	}
@@ -212,7 +205,7 @@ export async function post_challenge_decline(req: any, res: any) {
 export async function post_challenge_set_result(req: any, res: any) {
 	debug(log_now(), 'POST /challenge/set_result...');
 
-	const session = SessionID.from_cookie(req.cookies);
+	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
 	const r = is_user_logged_in(session);
 	if (!r[0]) {
 		res.status(401).send(r[1]);
@@ -254,13 +247,13 @@ export async function post_challenge_set_result(req: any, res: any) {
 	let c = _c as Challenge;
 
 	{
-		const original_setter = c.get_result_set_by();
+		const original_setter = c.result_set_by;
 		if (original_setter != undefined && original_setter != setter_user) {
 			debug(
 				log_now(),
 				`User '${setter_user}' is trying to override the result of
 			challenge '${challenge_id}' which was set by '${original_setter}'
-			on '${c.get_when_result_set()}'`
+			on '${c.when_result_set}'`
 			);
 			res.status(403).send(
 				'The result of this challenge has to be set by the original setter, which you are not.'
@@ -269,12 +262,12 @@ export async function post_challenge_set_result(req: any, res: any) {
 		}
 	}
 
-	if (white_username != c.get_sent_by() && white_username != c.get_sent_to()) {
+	if (white_username != c.sent_by && white_username != c.sent_to) {
 		debug(log_now(), `White '${white_username}' is not part of challenge '${challenge_id}'.`);
 		res.status(403).send(`White user sent is not part of this challenge.`);
 		return;
 	}
-	if (black_username != c.get_sent_by() && black_username != c.get_sent_to()) {
+	if (black_username != c.sent_by && black_username != c.sent_to) {
 		debug(log_now(), `Black '${black_username}' is not part of challenge '${challenge_id}'.`);
 		res.status(403).send(`Black user sent is not part of this challenge.`);
 		return;
@@ -288,7 +281,7 @@ export async function post_challenge_set_result(req: any, res: any) {
 export async function post_challenge_agree(req: any, res: any) {
 	debug(log_now(), 'POST /challenge/agree...');
 
-	const session = SessionID.from_cookie(req.cookies);
+	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -310,7 +303,7 @@ export async function post_challenge_agree(req: any, res: any) {
 export async function post_challenge_disagree(req: any, res: any) {
 	debug(log_now(), 'POST /challenge/disagree...');
 
-	const session = SessionID.from_cookie(req.cookies);
+	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {

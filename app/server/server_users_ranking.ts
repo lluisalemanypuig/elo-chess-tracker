@@ -24,7 +24,7 @@ Contact:
 */
 
 import Debug from 'debug';
-const debug = Debug('ELO_TRACKER:server_users_ranking');
+const debug = Debug('ELO_CHESS_TRACKER:server_users_ranking');
 
 import { log_now } from '@server/utils/time';
 import { is_user_logged_in } from '@server/managers/session';
@@ -35,7 +35,7 @@ import { get_execution_directory } from './managers/environment_manager';
 export async function get_page_user_ranking(req: any, res: any) {
 	debug(log_now(), 'GET /user/ranking...');
 
-	const session = SessionID.from_cookie(req.cookies);
+	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {

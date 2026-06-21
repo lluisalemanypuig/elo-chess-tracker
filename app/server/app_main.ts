@@ -30,7 +30,7 @@ Contact:
  */
 
 import Debug from 'debug';
-const debug = Debug('ELO_TRACKER:app_main');
+const debug = Debug('ELO_CHESS_TRACKER:app_main');
 
 import fs from 'fs';
 import { log_now } from '@server/utils/time';

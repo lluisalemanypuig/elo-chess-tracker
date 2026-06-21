@@ -24,14 +24,14 @@ Contact:
 */
 
 import Debug from 'debug';
-const debug = Debug('ELO_TRACKER:server_login_logout');
+const debug = Debug('ELO_CHESS_TRACKER:server_login_logout');
 
 import { log_now } from '@server/utils/time';
 import { is_password_of_user_correct } from '@server/utils/encrypt';
 import { empty_session_id_cookie, make_session_id_cookie } from '@server/utils/cookies';
 import { session_id_add, session_id_delete } from '@server/managers/session';
 import { SessionIDManager } from '@server/managers/session_id_manager';
-import { SessionID } from '@server/models/session_id';
+import { SessionID, SessionIDTokenFieldName, SessionIDUsernameFieldName } from '@server/models/session_id';
 import { User } from '@server/models/user';
 import { UsersManager } from '@server/managers/users_manager';
 
@@ -60,12 +60,10 @@ export async function post_user_login(req: any, res: any) {
 	}
 
 	// user exists
-	const pwd = (_user_data as User).get_password();
+	const pwd = (_user_data as User).password;
 
-	debug(log_now(), `    asdf'`);
 	// check if password is correct
 	const is_password_correct = is_password_of_user_correct(username, password_plain_text, pwd.encrypted, pwd.iv);
-	debug(log_now(), `    qwer'`);
 
 	// correct password
 	if (!is_password_correct) {
@@ -81,8 +79,8 @@ export async function post_user_login(req: any, res: any) {
 	// send response
 	res.status(200).send({
 		cookies: [
-			make_session_id_cookie(SessionID.get_field_token_name(), token, 1),
-			make_session_id_cookie(SessionID.get_field_username_name(), username, 1)
+			make_session_id_cookie(SessionIDTokenFieldName, token, 1),
+			make_session_id_cookie(SessionIDUsernameFieldName, username, 1)
 		]
 	});
 }
@@ -96,7 +94,7 @@ export async function post_user_login(req: any, res: any) {
 export async function post_user_logout(req: any, res: any) {
 	debug(log_now(), `POST /user/logout`);
 
-	const session = SessionID.from_cookie(req.cookies);
+	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
 
 	debug(log_now(), `    Cookie:`);
 	debug(log_now(), `        Username:   '${session.username}'`);
@@ -116,9 +114,6 @@ export async function post_user_logout(req: any, res: any) {
 		debug(log_now(), `        Deleted.`);
 	}
 	res.status(200).send({
-		cookies: [
-			empty_session_id_cookie(SessionID.get_field_token_name()),
-			empty_session_id_cookie(SessionID.get_field_username_name())
-		]
+		cookies: [empty_session_id_cookie(SessionIDTokenFieldName), empty_session_id_cookie(SessionIDUsernameFieldName)]
 	});
 }

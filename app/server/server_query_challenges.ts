@@ -24,7 +24,7 @@ Contact:
 */
 
 import Debug from 'debug';
-const debug = Debug('ELO_TRACKER:server_query_challenges');
+const debug = Debug('ELO_CHESS_TRACKER:server_query_challenges');
 
 import { log_now } from '@server/utils/time';
 import { is_user_logged_in } from '@server/managers/session';
@@ -39,7 +39,7 @@ import { can_user_decline_challenge } from '@server/managers/user_relationships'
 export async function get_query_challenge_received(req: any, res: any) {
 	debug(log_now(), 'GET /query/challenge/received...');
 
-	const session = SessionID.from_cookie(req.cookies);
+	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -49,10 +49,10 @@ export async function get_query_challenge_received(req: any, res: any) {
 
 	// challenges to be returned
 	const to_return = challenge_set_retrieve((c: Challenge): boolean => {
-		if (c.get_sent_to() != session.username) {
+		if (c.sent_to != session.username) {
 			return false;
 		}
-		if (c.get_when_challenge_accepted() != undefined) {
+		if (c.when_challenge_accepted != undefined) {
 			return false;
 		}
 		return true;
@@ -64,17 +64,17 @@ export async function get_query_challenge_received(req: any, res: any) {
 	let all_challenges_received: any[] = [];
 	for (let i = 0; i < to_return.length; ++i) {
 		const c = to_return[i];
-		const sent_by = manager.get_user_by_username(c.get_sent_by() as string) as User;
+		const sent_by = manager.get_user_by_username(c.sent_by as string) as User;
 		const name = sent_by.get_full_name();
 
 		// return only basic information
 		all_challenges_received.push({
-			id: c.get_id(),
-			title: c.get_title(),
+			id: c.id,
+			title: c.title,
 			sent_by: name,
-			sent_when: c.get_when_challenge_sent(),
-			time_control_name: c.get_time_control_name(),
-			can_be_declined: can_user_decline_challenge(sent_to, sent_by, c.get_time_control_id())
+			sent_when: c.when_challenge_sent,
+			time_control_name: c.time_control_name,
+			can_be_declined: can_user_decline_challenge(sent_to, sent_by, c.time_control_id)
 		});
 	}
 
@@ -87,7 +87,7 @@ export async function get_query_challenge_received(req: any, res: any) {
 export async function get_query_challenge_sent(req: any, res: any) {
 	debug(log_now(), 'GET /query/challenge/sent...');
 
-	const session = SessionID.from_cookie(req.cookies);
+	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -97,10 +97,10 @@ export async function get_query_challenge_sent(req: any, res: any) {
 
 	// challenges to be returned
 	const to_return = challenge_set_retrieve((c: Challenge): boolean => {
-		if (c.get_sent_by() != session.username) {
+		if (c.sent_by != session.username) {
 			return false;
 		}
-		if (c.get_when_challenge_accepted() != undefined) {
+		if (c.when_challenge_accepted != undefined) {
 			return false;
 		}
 		return true;
@@ -113,16 +113,16 @@ export async function get_query_challenge_sent(req: any, res: any) {
 	for (let i = 0; i < to_return.length; ++i) {
 		const c = to_return[i];
 
-		const sent_to = manager.get_user_by_username(c.get_sent_to() as string) as User;
+		const sent_to = manager.get_user_by_username(c.sent_to as string) as User;
 
 		// return only basic information
 		all_challenges.push({
-			id: c.get_id(),
-			title: c.get_title(),
+			id: c.id,
+			title: c.title,
 			sent_to: sent_to.get_full_name(),
-			sent_when: c.get_when_challenge_sent(),
-			time_control_name: c.get_time_control_name(),
-			can_be_declined: can_user_decline_challenge(sent_to, sent_by, c.get_time_control_id())
+			sent_when: c.when_challenge_sent,
+			time_control_name: c.time_control_name,
+			can_be_declined: can_user_decline_challenge(sent_to, sent_by, c.time_control_id)
 		});
 	}
 
@@ -135,7 +135,7 @@ export async function get_query_challenge_sent(req: any, res: any) {
 export async function get_query_challenge_pending_result(req: any, res: any) {
 	debug(log_now(), 'GET /query/challenge/pending_result...');
 
-	const session = SessionID.from_cookie(req.cookies);
+	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -146,15 +146,15 @@ export async function get_query_challenge_pending_result(req: any, res: any) {
 	// challenges to be returned
 	const to_return = challenge_set_retrieve((c: Challenge): boolean => {
 		// this user must be involved in the challenge
-		if (c.get_sent_by() != session.username && c.get_sent_to() != session.username) {
+		if (c.sent_by != session.username && c.sent_to != session.username) {
 			return false;
 		}
 		// must have been accepted
-		if (c.get_when_challenge_accepted() == undefined) {
+		if (c.when_challenge_accepted == undefined) {
 			return false;
 		}
 		// result can't have been set
-		if (c.get_result_set_by() != undefined) {
+		if (c.result_set_by != undefined) {
 			return false;
 		}
 		return true;
@@ -165,11 +165,11 @@ export async function get_query_challenge_pending_result(req: any, res: any) {
 	let all_challenges: any[] = [];
 	for (let i = 0; i < to_return.length; ++i) {
 		const c = to_return[i];
-		const user_sent_to = manager.get_user_by_username(c.get_sent_to()) as User;
-		const user_sent_by = manager.get_user_by_username(c.get_sent_by()) as User;
+		const user_sent_to = manager.get_user_by_username(c.sent_to) as User;
+		const user_sent_by = manager.get_user_by_username(c.sent_by) as User;
 
 		const opponent: string = ((): string => {
-			if (user_sent_by.get_username() == session.username) {
+			if (user_sent_by.username == session.username) {
 				return user_sent_to.get_full_name();
 			}
 			return user_sent_by.get_full_name();
@@ -177,15 +177,15 @@ export async function get_query_challenge_pending_result(req: any, res: any) {
 
 		// return only basic information
 		all_challenges.push({
-			id: c.get_id(),
-			title: c.get_title(),
+			id: c.id,
+			title: c.title,
 			sent_by_name: user_sent_by.get_full_name(),
-			sent_by_username: user_sent_by.get_username(),
+			sent_by_username: user_sent_by.username,
 			sent_to_name: user_sent_to.get_full_name(),
-			sent_to_username: user_sent_to.get_username(),
+			sent_to_username: user_sent_to.username,
 			opponent: opponent,
-			sent_when: c.get_when_challenge_sent(),
-			time_control_name: c.get_time_control_name()
+			sent_when: c.when_challenge_sent,
+			time_control_name: c.time_control_name
 		});
 	}
 
@@ -198,7 +198,7 @@ export async function get_query_challenge_pending_result(req: any, res: any) {
 export async function get_query_challenge_confirm_result_other(req: any, res: any) {
 	debug(log_now(), 'GET /query/challenge/confirm_result/other...');
 
-	const session = SessionID.from_cookie(req.cookies);
+	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -209,19 +209,19 @@ export async function get_query_challenge_confirm_result_other(req: any, res: an
 	// challenges to be returned
 	const to_return = challenge_set_retrieve((c: Challenge): boolean => {
 		// this user must be involved in the challenge
-		if (c.get_sent_by() != session.username && c.get_sent_to() != session.username) {
+		if (c.sent_by != session.username && c.sent_to != session.username) {
 			return false;
 		}
 		// must have been accepted
-		if (c.get_when_challenge_accepted() == undefined) {
+		if (c.when_challenge_accepted == undefined) {
 			return false;
 		}
 		// result already set
-		if (c.get_result_set_by() == undefined) {
+		if (c.result_set_by == undefined) {
 			return false;
 		}
 		// result should have been set by this user
-		if (c.get_result_set_by() != session.username) {
+		if (c.result_set_by != session.username) {
 			return false;
 		}
 		return true;
@@ -232,21 +232,21 @@ export async function get_query_challenge_confirm_result_other(req: any, res: an
 	let all_challenges: any[] = [];
 	for (let i = 0; i < to_return.length; ++i) {
 		const c = to_return[i];
-		const user_sent_to = manager.get_user_by_username(c.get_sent_to()) as User;
-		const user_sent_by = manager.get_user_by_username(c.get_sent_by()) as User;
+		const user_sent_to = manager.get_user_by_username(c.sent_to) as User;
+		const user_sent_by = manager.get_user_by_username(c.sent_by) as User;
 
 		const opponent: string = ((): string => {
-			if (user_sent_by.get_username() == session.username) {
+			if (user_sent_by.username == session.username) {
 				return user_sent_to.get_full_name();
 			}
 			return user_sent_by.get_full_name();
 		})();
 
 		const nice_result: string = ((): string => {
-			if (c.get_result() == 'white_wins') {
+			if (c.result == 'white_wins') {
 				return 'White wins';
 			}
-			if (c.get_result() == 'black_wins') {
+			if (c.result == 'black_wins') {
 				return 'Black wins';
 			}
 			return 'Draw';
@@ -254,14 +254,14 @@ export async function get_query_challenge_confirm_result_other(req: any, res: an
 
 		// return only basic information
 		all_challenges.push({
-			id: c.get_id(),
-			title: c.get_title(),
+			id: c.id,
+			title: c.title,
 			opponent: opponent,
-			sent_when: c.get_when_challenge_sent(),
-			white: (manager.get_user_by_username(c.get_white() as string) as User).get_full_name(),
-			black: (manager.get_user_by_username(c.get_black() as string) as User).get_full_name(),
+			sent_when: c.when_challenge_sent,
+			white: (manager.get_user_by_username(c.white as string) as User).get_full_name(),
+			black: (manager.get_user_by_username(c.black as string) as User).get_full_name(),
 			result: nice_result,
-			time_control: c.get_time_control_name()
+			time_control: c.time_control_name
 		});
 	}
 
@@ -274,7 +274,7 @@ export async function get_query_challenge_confirm_result_other(req: any, res: an
 export async function get_query_challenge_confirm_result_self(req: any, res: any) {
 	debug(log_now(), 'GET /query/challenge/confirm_result/self...');
 
-	const session = SessionID.from_cookie(req.cookies);
+	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -285,19 +285,19 @@ export async function get_query_challenge_confirm_result_self(req: any, res: any
 	// challenges to be returned
 	const to_return = challenge_set_retrieve((c: Challenge): boolean => {
 		// this user must be involved in the challenge
-		if (c.get_sent_by() != session.username && c.get_sent_to() != session.username) {
+		if (c.sent_by != session.username && c.sent_to != session.username) {
 			return false;
 		}
 		// must have been accepted
-		if (c.get_when_challenge_accepted() == undefined) {
+		if (c.when_challenge_accepted == undefined) {
 			return false;
 		}
 		// result already set by somebody
-		if (c.get_result_set_by() == undefined) {
+		if (c.result_set_by == undefined) {
 			return false;
 		}
 		// result should NOT have been set by this user
-		if (c.get_result_set_by() == session.username) {
+		if (c.result_set_by == session.username) {
 			return false;
 		}
 		return true;
@@ -308,21 +308,21 @@ export async function get_query_challenge_confirm_result_self(req: any, res: any
 	let all_challenges: any[] = [];
 	for (let i = 0; i < to_return.length; ++i) {
 		const c = to_return[i];
-		const user_sent_to = manager.get_user_by_username(c.get_sent_to()) as User;
-		const user_sent_by = manager.get_user_by_username(c.get_sent_by()) as User;
+		const user_sent_to = manager.get_user_by_username(c.sent_to) as User;
+		const user_sent_by = manager.get_user_by_username(c.sent_by) as User;
 
 		const opponent: string = ((): string => {
-			if (user_sent_by.get_username() == session.username) {
+			if (user_sent_by.username == session.username) {
 				return user_sent_to.get_full_name();
 			}
 			return user_sent_by.get_full_name();
 		})();
 
 		const nice_result: string = ((): string => {
-			if (c.get_result() == 'white_wins') {
+			if (c.result == 'white_wins') {
 				return 'White wins';
 			}
-			if (c.get_result() == 'black_wins') {
+			if (c.result == 'black_wins') {
 				return 'Black wins';
 			}
 			return 'Draw';
@@ -330,14 +330,14 @@ export async function get_query_challenge_confirm_result_self(req: any, res: any
 
 		// return only basic information
 		all_challenges.push({
-			id: c.get_id(),
-			title: c.get_title(),
+			id: c.id,
+			title: c.title,
 			opponent: opponent,
-			sent_when: c.get_when_challenge_sent(),
-			white: (manager.get_user_by_username(c.get_white() as string) as User).get_full_name(),
-			black: (manager.get_user_by_username(c.get_black() as string) as User).get_full_name(),
+			sent_when: c.when_challenge_sent,
+			white: (manager.get_user_by_username(c.white as string) as User).get_full_name(),
+			black: (manager.get_user_by_username(c.black as string) as User).get_full_name(),
 			result: nice_result,
-			time_control: c.get_time_control_name()
+			time_control: c.time_control_name
 		});
 	}
 

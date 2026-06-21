@@ -24,7 +24,7 @@ Contact:
 */
 
 import Debug from 'debug';
-const debug = Debug('ELO_TRACKER:server_games');
+const debug = Debug('ELO_CHESS_TRACKER:server_games');
 
 import { DateStringShort, log_now } from '@server/utils/time';
 import { is_user_logged_in } from '@server/managers/session';
@@ -54,7 +54,7 @@ import { get_execution_directory } from './managers/environment_manager';
 export async function get_page_game_list_own(req: any, res: any) {
 	debug(log_now(), 'GET /page/game/list/own...');
 
-	const session = SessionID.from_cookie(req.cookies);
+	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -72,7 +72,7 @@ export async function get_page_game_list_own(req: any, res: any) {
 export async function get_page_game_list_all(req: any, res: any) {
 	debug(log_now(), 'GET /game/list/all...');
 
-	const session = SessionID.from_cookie(req.cookies);
+	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -90,7 +90,7 @@ export async function get_page_game_list_all(req: any, res: any) {
 export async function get_page_game_create(req: any, res: any) {
 	debug(log_now(), 'GET /page/game/create...');
 
-	const session = SessionID.from_cookie(req.cookies);
+	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -114,7 +114,7 @@ export async function get_page_game_create(req: any, res: any) {
 export async function post_game_create(req: any, res: any) {
 	debug(log_now(), 'POST /game/create...');
 
-	const session = SessionID.from_cookie(req.cookies);
+	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -156,7 +156,7 @@ export async function post_game_create(req: any, res: any) {
 	const game_date: DateStringShort = req.body.d;
 	const game_time: string = req.body.t; // HH:mm:ss:SSS
 
-	if (white.get_username() == black.get_username()) {
+	if (white.username == black.username) {
 		res.status(500).send('The players cannot be the same.');
 		return;
 	}
@@ -177,8 +177,8 @@ export async function post_game_create(req: any, res: any) {
 	}
 
 	debug(log_now(), `    Title: '${game_title}'`);
-	debug(log_now(), `    White: '${white.get_username()}'`);
-	debug(log_now(), `    Black: '${black.get_username()}'`);
+	debug(log_now(), `    White: '${white.username}'`);
+	debug(log_now(), `    Black: '${black.username}'`);
 	debug(log_now(), `    Result: '${result}'`);
 	debug(log_now(), `    Time control id: '${time_control_id}'`);
 	debug(log_now(), `    Time control name: '${time_control_name}'`);
@@ -195,7 +195,7 @@ export async function post_game_create(req: any, res: any) {
 export async function post_game_edit_result(req: any, res: any) {
 	debug(log_now(), 'POST /game/edit_result...');
 
-	const session = SessionID.from_cookie(req.cookies);
+	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -225,8 +225,8 @@ export async function post_game_edit_result(req: any, res: any) {
 
 	const is_editable = can_user_edit_a_game(
 		user,
-		manager.get_user_by_username(game.get_white()) as User,
-		manager.get_user_by_username(game.get_black()) as User
+		manager.get_user_by_username(game.white) as User,
+		manager.get_user_by_username(game.black) as User
 	);
 	if (!is_editable) {
 		res.status(403).send(`You lack permissions to edit this game.`);
@@ -244,7 +244,7 @@ export async function post_game_edit_result(req: any, res: any) {
 export async function post_game_edit_title(req: any, res: any) {
 	debug(log_now(), 'POST /game/edit_title...');
 
-	const session = SessionID.from_cookie(req.cookies);
+	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -274,8 +274,8 @@ export async function post_game_edit_title(req: any, res: any) {
 
 	const is_editable = can_user_edit_a_game(
 		user,
-		manager.get_user_by_username(game.get_white()) as User,
-		manager.get_user_by_username(game.get_black()) as User
+		manager.get_user_by_username(game.white) as User,
+		manager.get_user_by_username(game.black) as User
 	);
 	if (!is_editable) {
 		res.status(403).send(`You lack permissions to edit this game.`);
@@ -293,7 +293,7 @@ export async function post_game_edit_title(req: any, res: any) {
 export async function post_game_delete(req: any, res: any) {
 	debug(log_now(), 'POST /game/delete...');
 
-	const session = SessionID.from_cookie(req.cookies);
+	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -321,8 +321,8 @@ export async function post_game_delete(req: any, res: any) {
 
 	const is_deleteable = can_user_delete_a_game(
 		user,
-		manager.get_user_by_username(game.get_white()) as User,
-		manager.get_user_by_username(game.get_black()) as User
+		manager.get_user_by_username(game.white) as User,
+		manager.get_user_by_username(game.black) as User
 	);
 	if (!is_deleteable) {
 		res.status(403).send(`You lack permissions to delete this game.`);
@@ -339,7 +339,7 @@ export async function post_game_delete(req: any, res: any) {
 export async function post_recalculate_ratings(req: any, res: any) {
 	debug(log_now(), 'POST /recalculate/ratings...');
 
-	const session = SessionID.from_cookie(req.cookies);
+	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {

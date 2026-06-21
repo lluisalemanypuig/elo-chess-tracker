@@ -24,10 +24,10 @@ Contact:
 */
 
 import Debug from 'debug';
-const debug = Debug('ELO_TRACKER:server_query_users');
+const debug = Debug('ELO_CHESS_TRACKER:server_query_users');
 
 import { log_now } from '@server/utils/time';
-import { user_get_all__name_randid } from '@server/managers/users';
+import { user_get_all_name_randid } from '@server/managers/users';
 import { is_user_logged_in } from '@server/managers/session';
 import { User } from '@server/models/user';
 import { UsersManager } from '@server/managers/users_manager';
@@ -38,7 +38,7 @@ import { SessionID } from '@server/models/session_id';
 export async function get_query_user_list(req: any, res: any) {
 	debug(log_now(), 'GET /query/user/list...');
 
-	const session = SessionID.from_cookie(req.cookies);
+	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -46,7 +46,7 @@ export async function get_query_user_list(req: any, res: any) {
 		return;
 	}
 
-	let list = user_get_all__name_randid();
+	let list = user_get_all_name_randid();
 	list.sort(function (a: [string, number], b: [string, number]): number {
 		return a[0].localeCompare(b[0]);
 	});
@@ -57,7 +57,7 @@ export async function get_query_user_list(req: any, res: any) {
 export async function get_query_html_user_list(req: any, res: any) {
 	debug(log_now(), 'GET /query/html/user/list...');
 
-	const session = SessionID.from_cookie(req.cookies);
+	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -65,7 +65,7 @@ export async function get_query_html_user_list(req: any, res: any) {
 		return;
 	}
 
-	let list = user_get_all__name_randid();
+	let list = user_get_all_name_randid();
 	list.sort(function (a: [string, number], b: [string, number]): number {
 		return a[0].localeCompare(b[0]);
 	});
@@ -80,7 +80,7 @@ export async function get_query_html_user_list(req: any, res: any) {
 export async function get_query_user_home(req: any, res: any) {
 	debug(log_now(), 'GET /query/user/home...');
 
-	const session = SessionID.from_cookie(req.cookies);
+	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -90,18 +90,15 @@ export async function get_query_user_home(req: any, res: any) {
 
 	const user = r[2] as User;
 
-	let ratings_user: any[] = [];
-	const all_ratings = user.get_all_ratings();
-
-	all_ratings.forEach((value: TimeControlRating) => {
+	const ratings_user = user.ratings.map((value: TimeControlRating) => {
 		let R = value.rating.clone();
 		R.rating = Math.round(R.rating);
-		ratings_user.push({ id: value.time_control, v: R });
+		return { id: value.time_control, v: R };
 	});
 
 	res.status(200).send({
 		fullname: user.get_full_name(),
-		roles: user.get_roles(),
+		roles: user.roles,
 		actions: user.get_actions(),
 		ratings: ratings_user
 	});
@@ -110,7 +107,7 @@ export async function get_query_user_home(req: any, res: any) {
 export async function post_query_user_edit(req: any, res: any) {
 	debug(log_now(), 'POST /query/user/edit...');
 
-	const session = SessionID.from_cookie(req.cookies);
+	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -130,16 +127,16 @@ export async function post_query_user_edit(req: any, res: any) {
 
 	const to_edit = _to_edit as User;
 	res.status(200).send({
-		first_name: to_edit.get_first_name(),
-		last_name: to_edit.get_last_name(),
-		roles: to_edit.get_roles()
+		first_name: to_edit.first_name,
+		last_name: to_edit.last_name,
+		roles: to_edit.roles
 	});
 }
 
 export async function post_query_user_ranking(req: any, res: any) {
 	debug(log_now(), 'POST /query/user/ranking...');
 
-	const session = SessionID.from_cookie(req.cookies);
+	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {

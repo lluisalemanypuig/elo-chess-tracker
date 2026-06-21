@@ -24,7 +24,7 @@ Contact:
 */
 
 import Debug from 'debug';
-const debug = Debug('ELO_TRACKER:server_graphs');
+const debug = Debug('ELO_CHESS_TRACKER:server_graphs');
 
 import { log_now } from '@server/utils/time';
 import { is_user_logged_in } from '@server/managers/session';
@@ -39,7 +39,7 @@ import { get_execution_directory } from './managers/environment_manager';
 export async function get_page_graph_own(req: any, res: any) {
 	debug(log_now(), 'GET /graph/own...');
 
-	const session = SessionID.from_cookie(req.cookies);
+	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -57,7 +57,7 @@ export async function get_page_graph_own(req: any, res: any) {
 export async function get_page_graph_full(req: any, res: any) {
 	debug(log_now(), 'GET /graph/full...');
 
-	const session = SessionID.from_cookie(req.cookies);
+	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -81,7 +81,7 @@ export async function get_page_graph_full(req: any, res: any) {
 export async function post_recalculate_graphs(req: any, res: any) {
 	debug(log_now(), 'POST /recalculate/graphs...');
 
-	const session = SessionID.from_cookie(req.cookies);
+	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {

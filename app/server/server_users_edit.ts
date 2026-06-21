@@ -24,7 +24,7 @@ Contact:
 */
 
 import Debug from 'debug';
-const debug = Debug('ELO_TRACKER:server_users_edit');
+const debug = Debug('ELO_CHESS_TRACKER:server_users_edit');
 
 import { log_now } from '@server/utils/time';
 import { is_user_logged_in } from '@server/managers/session';
@@ -40,7 +40,7 @@ import { get_execution_directory } from './managers/environment_manager';
 export async function get_page_user_edit(req: any, res: any) {
 	debug(log_now(), 'GET /page/user/edit...');
 
-	const session = SessionID.from_cookie(req.cookies);
+	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -65,7 +65,7 @@ export async function get_page_user_edit(req: any, res: any) {
 export async function post_user_edit(req: any, res: any) {
 	debug(log_now(), 'POST /user/edit...');
 
-	const session = SessionID.from_cookie(req.cookies);
+	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -86,7 +86,7 @@ export async function post_user_edit(req: any, res: any) {
 
 	const edited = _edited as User;
 
-	debug(log_now(), `User '${editor.get_username()}' is trying to modify user '${edited.get_username()}'`);
+	debug(log_now(), `User '${editor.username}' is trying to modify user '${edited.username}'`);
 
 	if (!can_user_edit(editor, edited)) {
 		res.status(403).send('You do not have enough permissions to edit this user.');
@@ -111,7 +111,7 @@ export async function post_user_edit(req: any, res: any) {
 		}
 	}
 
-	user_rename_and_reassign_roles(edited.get_username(), first_name, last_name, roles);
+	user_rename_and_reassign_roles(edited.username, first_name, last_name, roles);
 
 	res.status(200).send();
 }
