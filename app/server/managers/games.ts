@@ -29,21 +29,21 @@ import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:managers/games');
 
 import { DateStringLongMillis, DateStringShort, log_now, long_date_to_short_date } from '@server/utils/time';
-import { Player } from '@server/models/player';
-import { Game, GameID, GameResult } from '@server/models/game';
-import { User } from '@server/models/user';
+import { Player } from '@common/models/player';
+import { Game, GameID, GameResult } from '@common/models/game';
+import { User } from '@common/models/user';
 import { where_should_be_inserted_by_key } from '@server/utils/searching';
 import { GamesManager } from '@server/managers/games_manager';
 import { UsersManager } from '@server/managers/users_manager';
 import { RatingSystemManager } from '@server/managers/rating_system_manager';
 import { EnvironmentManager } from '@server/managers/environment_manager';
 import { user_update_from_player_data } from '@server/managers/users';
-import { Rating } from '@server/rating_framework/rating';
-import { TimeControlID } from '@server/models/time_control';
+import { Rating } from '@common/models/rating_framework/rating';
+import { TimeControlID } from '@common/models/time_control';
 import { graph_delete_edge, graph_modify_edge, graph_update } from '@server/managers/graphs';
 import { GamesIterator } from '@server/managers/games_iterator';
-import { TimeControlRating } from '@server/models/time_control_rating';
-import { isDefined } from '@common/utils';
+import { TimeControlRating } from '@common/models/time_control_rating';
+import { isDefined } from '@common/utils/is_defined';
 
 /// Returns g1 < g2 using dates
 function game_compare_dates(g: Game): Function {

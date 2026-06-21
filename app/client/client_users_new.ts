@@ -21,12 +21,13 @@ Full source code of elo-chess-tracker:
 
 import 'htmx.org';
 
-import { UserRole, all_user_roles, user_role_to_string } from '@server/models/user_role';
+import { isDefined } from '@common/utils/is_defined';
+import { UserRole, all_user_roles, user_role_to_string } from '@common/models/user_role';
 
 async function submit_new_user_clicked(_event: any) {
 	// username box
 	const _username_box = document.getElementById('username_box');
-	if (_username_box == null) {
+	if (!isDefined(_username_box)) {
 		console.log("Element 'username_box' does not exist.");
 		return;
 	}
@@ -34,7 +35,7 @@ async function submit_new_user_clicked(_event: any) {
 
 	// first_name box
 	const _box_first_name = document.getElementById('box_first_name');
-	if (_box_first_name == null) {
+	if (!isDefined(_box_first_name)) {
 		console.log("Element 'box_first_name' does not exist.");
 		return;
 	}
@@ -42,7 +43,7 @@ async function submit_new_user_clicked(_event: any) {
 
 	// last_name box
 	const _box_last_name = document.getElementById('box_last_name');
-	if (_box_last_name == null) {
+	if (!isDefined(_box_last_name)) {
 		console.log("Element 'box_last_name' does not exist.");
 		return;
 	}
@@ -50,7 +51,7 @@ async function submit_new_user_clicked(_event: any) {
 
 	// password box
 	const _password_box = document.getElementById('password_box');
-	if (_password_box == null) {
+	if (!isDefined(_password_box)) {
 		console.log("Element 'password_box' does not exist.");
 		return;
 	}

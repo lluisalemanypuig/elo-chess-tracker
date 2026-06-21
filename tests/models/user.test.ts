@@ -23,9 +23,9 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { Password } from '@server/models/password';
-import { TimeControlRating } from '@server/models/time_control_rating';
-import { GameNumber, TimeControlGame, User } from '@server/models/user';
+import { Password } from '@common/models/password';
+import { TimeControlRating } from '@common/models/time_control_rating';
+import { GameNumber, TimeControlGame, User } from '@common/models/user';
 import {
 	USER_ROLE_ASSIGN_ADMIN,
 	USER_ROLE_ASSIGN_MEMBER,
@@ -54,10 +54,10 @@ import {
 	GAMES_SEE_STUDENT,
 	GAMES_SEE_TEACHER,
 	GAMES_SEE
-} from '@server/models/user_action';
-import { ADMIN, MEMBER, STUDENT, TEACHER } from '@server/models/user_role';
-import { initialize_permissions, UserRoleToUserAction } from '@server/models/user_role_action';
-import { EloRating } from '@server/rating_framework/Elo/rating';
+} from '@common/models/user_action';
+import { ADMIN, MEMBER, STUDENT, TEACHER } from '@common/models/user_role';
+import { initialize_permissions, UserRoleToUserAction } from '@server/managers/user_role_action';
+import { EloRating } from '@common/models/rating_framework/Elo/rating';
 
 describe('Elo', () => {
 	//const bullet = new EloRating(1400, 0, 0, 0, 0, 40, false);

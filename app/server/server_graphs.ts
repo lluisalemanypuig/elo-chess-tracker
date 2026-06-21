@@ -28,10 +28,10 @@ const debug = Debug('ELO_CHESS_TRACKER:server_graphs');
 
 import { log_now } from '@server/utils/time';
 import { is_user_logged_in } from '@server/managers/session';
-import { GRAPHS_SEE_USER } from '@server/models/user_action';
-import { User } from '@server/models/user';
-import { SessionID } from '@server/models/session_id';
-import { ADMIN } from '@server/models/user_role';
+import { GRAPHS_SEE_USER } from '@common/models/user_action';
+import { User } from '@common/models/user';
+import { SessionID } from '@common/models/session_id';
+import { ADMIN } from '@common/models/user_role';
 import { recalculate_all_graphs } from '@server/managers/graphs';
 import { ConfigurationManager } from '@server/managers/configuration_manager';
 import { get_execution_directory } from './managers/environment_manager';

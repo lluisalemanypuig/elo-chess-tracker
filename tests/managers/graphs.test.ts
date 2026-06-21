@@ -23,16 +23,16 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { run_command } from './exec_utils';
+import { run_command } from '@tests/exec_utils';
 
-import { EdgeMetadata } from '@server/models/graph/edge_metadata';
+import { EdgeMetadata } from '@common/models/graph/edge_metadata';
 import { graph_modify_edge, graph_update } from '@server/managers/graphs';
 import { server_init_from_data } from '@server/managers/initialization';
 import { clear_server } from '@server/managers/clear';
-import { graph_from_string } from '@server/io/graph/graph';
+import { graph_from_string } from '@common/io/graph/graph';
 import { EnvironmentManager } from '@server/managers/environment_manager';
-import { Configuration } from '@server/models/configuration/configuration';
-import { isDefined } from '@common/utils';
+import { Configuration } from '@common/models/configuration/configuration';
+import { isDefined } from '@common/utils/is_defined';
 
 const configuration: Configuration = {
 	environment: {

@@ -24,7 +24,7 @@ Contact:
 */
 
 import { UsersManager } from '@server/managers/users_manager';
-import { User } from '@server/models/user';
+import { User } from '@common/models/user';
 
 describe('Users Manager', () => {
 	test('Empty manager', () => {

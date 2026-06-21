@@ -23,7 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { SessionID } from '@server/models/session_id';
+import { SessionID } from '@common/models/session_id';
 
 test('Fields contents are correct', () => {
 	const sid: SessionID = { token: 'asdf', username: 'qwer' };

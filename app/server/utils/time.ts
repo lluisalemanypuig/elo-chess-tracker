@@ -23,6 +23,8 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
+import moment from 'moment';
+
 /// YYYY-MM-DD..HH:mm:ss:SSS
 export type DateStringLongMillis = string;
 
@@ -34,8 +36,6 @@ export type DateStringShort = string;
 
 /// HH:mm:ss:SSS
 export type DateStringTiny = string;
-
-import moment from 'moment';
 
 /**
  * @brief Formats a date into a string YYYY-MM-DD..HH:mm:ss:SSS

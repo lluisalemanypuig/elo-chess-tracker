@@ -23,9 +23,9 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { Player } from '@server/models/player';
-import { TimeControlRating } from '@server/models/time_control_rating';
-import { EloRating } from '@server/rating_framework/Elo/rating';
+import { Player } from '@common/models/player';
+import { TimeControlRating } from '@common/models/time_control_rating';
+import { EloRating } from '@common/models/rating_framework/Elo/rating';
 
 describe('construct', () => {
 	const bullet = new EloRating(1400, 0, 0, 0, 0, 40, false);

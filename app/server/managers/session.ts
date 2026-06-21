@@ -26,11 +26,11 @@ Contact:
 import Debug from 'debug';
 
 import { log_now } from '@server/utils/time';
-import { User } from '@server/models/user';
+import { User } from '@common/models/user';
 const debug = Debug('ELO_CHESS_TRACKER:managers/session');
 
 import { SessionIDManager } from '@server/managers/session_id_manager';
-import { SessionID } from '@server/models/session_id';
+import { SessionID } from '@common/models/session_id';
 import { shuffle } from '@server/utils/shuffle_random';
 import { UsersManager } from '@server/managers/users_manager';
 

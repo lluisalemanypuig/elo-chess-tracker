@@ -29,9 +29,9 @@ const debug = Debug('ELO_CHESS_TRACKER:server_users_password_changes');
 import { log_now } from '@server/utils/time';
 import { is_user_logged_in, session_user_delete_all } from '@server/managers/session';
 import { encrypt_password_for_user, is_password_of_user_correct } from '@server/utils/encrypt';
-import { User } from '@server/models/user';
+import { User } from '@common/models/user';
 import { user_overwrite } from '@server/managers/users';
-import { SessionID } from '@server/models/session_id';
+import { SessionID } from '@common/models/session_id';
 import { ConfigurationManager } from '@server/managers/configuration_manager';
 import { get_execution_directory } from './managers/environment_manager';
 

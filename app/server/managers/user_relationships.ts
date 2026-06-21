@@ -23,8 +23,8 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { TimeControlID } from '@server/models/time_control';
-import { User } from '@server/models/user';
+import { TimeControlID } from '@common/models/time_control';
+import { User } from '@common/models/user';
 import {
 	USER_CHALLENGE_ADMIN,
 	USER_CHALLENGE_MEMBER,
@@ -61,8 +61,8 @@ import {
 	GAMES_DELETE_STUDENT,
 	GAMES_DELETE_TEACHER,
 	GAMES_DELETE
-} from '@server/models/user_action';
-import { ADMIN, MEMBER, STUDENT, TEACHER, UserRole } from '@server/models/user_role';
+} from '@common/models/user_action';
+import { ADMIN, MEMBER, STUDENT, TEACHER, UserRole } from '@common/models/user_role';
 import { UsersBehavior } from '@server/managers/users_behavior';
 
 /// Can a user (@e editor) edit another user (@e edited)?

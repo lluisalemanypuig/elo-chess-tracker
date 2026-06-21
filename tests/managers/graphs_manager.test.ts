@@ -25,7 +25,7 @@ Contact:
 
 import { clear_server } from '@server/managers/clear';
 import { GraphsManager } from '@server/managers/graphs_manager';
-import { Graph } from '@server/models/graph/graph';
+import { Graph } from '@common/models/graph/graph';
 
 describe('Graph manager', () => {
 	clear_server();

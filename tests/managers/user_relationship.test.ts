@@ -23,8 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { Password } from '@server/models/password';
-import { User } from '@server/models/user';
+import { User } from '@common/models/user';
 import {
 	USER_EDIT_STUDENT,
 	USER_EDIT_TEACHER,
@@ -45,10 +44,10 @@ import {
 	GRAPHS_SEE_ADMIN,
 	GRAPHS_SEE_STUDENT,
 	GRAPHS_SEE_MEMBER
-} from '@server/models/user_action';
-import { ADMIN, MEMBER, STUDENT, TEACHER } from '@server/models/user_role';
-import { UserRoleToUserAction } from '@server/models/user_role_action';
-import { initialize_permissions } from '@server/models/user_role_action';
+} from '@common/models/user_action';
+import { ADMIN, MEMBER, STUDENT, TEACHER } from '@common/models/user_role';
+import { UserRoleToUserAction } from '@server/managers/user_role_action';
+import { initialize_permissions } from '@server/managers/user_role_action';
 import {
 	can_user_edit,
 	can_user_edit_a_game,

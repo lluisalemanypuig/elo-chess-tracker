@@ -28,16 +28,16 @@ const debug = Debug('ELO_CHESS_TRACKER:server_query_graphs');
 
 import { log_now } from '@server/utils/time';
 import { is_user_logged_in } from '@server/managers/session';
-import { User } from '@server/models/user';
-import { SessionID } from '@server/models/session_id';
+import { User } from '@common/models/user';
+import { SessionID } from '@common/models/session_id';
 import { GraphsManager } from '@server/managers/graphs_manager';
-import { TimeControlID } from '@server/models/time_control';
-import { Graph } from '@server/models/graph/graph';
+import { TimeControlID } from '@common/models/time_control';
+import { Graph } from '@common/models/graph/graph';
 import { search_linear_by_key } from '@server/utils/searching';
 import { UsersManager } from '@server/managers/users_manager';
-import { Edge } from '@server/models/graph/edge';
+import { Edge } from '@common/models/graph/edge';
 import { can_user_see_graph } from '@server/managers/user_relationships';
-import { GRAPHS_SEE_USER } from '@server/models/user_action';
+import { GRAPHS_SEE_USER } from '@common/models/user_action';
 
 class NodeWeight {
 	rating: number = 0;

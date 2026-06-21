@@ -35,10 +35,10 @@ import { ChallengesManager } from '@server/managers/challenges_manager';
 import { GamesManager } from '@server/managers/games_manager';
 import { SessionIDManager } from '@server/managers/session_id_manager';
 import { UsersManager } from '@server/managers/users_manager';
-import { run_command } from './exec_utils';
+import { run_command } from '@tests/exec_utils';
 import { GraphsManager } from '@server/managers/graphs_manager';
-import { Graph } from '@server/models/graph/graph';
-import { Configuration } from '@server/models/configuration/configuration';
+import { Graph } from '@common/models/graph/graph';
+import { Configuration } from '@common/models/configuration/configuration';
 
 const webpage_dir = 'tests/webpage';
 const icons_dir = path.join(webpage_dir, 'icons');

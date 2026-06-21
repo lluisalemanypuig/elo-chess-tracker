@@ -60,8 +60,8 @@ import {
 	GAMES_DELETE_TEACHER,
 	GAMES_DELETE_MEMBER,
 	GAMES_DELETE_STUDENT
-} from '@server/models/user_action';
-import { all_user_roles, UserRole } from '@server/models/user_role';
+} from '@common/models/user_action';
+import { all_user_roles, UserRole } from '@common/models/user_role';
 
 describe('Role concatenation', () => {
 	test('Check non-throwing functions', () => {

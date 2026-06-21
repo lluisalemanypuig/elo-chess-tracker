@@ -29,16 +29,16 @@ import path from 'path';
 import { game_add_new, game_delete } from '@server/managers/games';
 import { server_init_from_data } from '@server/managers/initialization';
 import { user_add_new } from '@server/managers/users';
-import { ADMIN } from '@server/models/user_role';
-import { run_command } from './exec_utils';
-import { User } from '@server/models/user';
+import { ADMIN } from '@common/models/user_role';
+import { run_command } from '@tests/exec_utils';
+import { User } from '@common/models/user';
 import { UsersManager } from '@server/managers/users_manager';
 import { GamesManager } from '@server/managers/games_manager';
 import { EnvironmentManager } from '@server/managers/environment_manager';
-import { EdgeMetadata } from '@server/models/graph/edge_metadata';
+import { EdgeMetadata } from '@common/models/graph/edge_metadata';
 import { GraphsManager } from '@server/managers/graphs_manager';
-import { Graph } from '@server/models/graph/graph';
-import { Configuration } from '@server/models/configuration/configuration';
+import { Graph } from '@common/models/graph/graph';
+import { Configuration } from '@common/models/configuration/configuration';
 
 const configuration: Configuration = {
 	environment: {

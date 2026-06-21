@@ -28,7 +28,7 @@ const debug = Debug('ELO_CHESS_TRACKER:server_users_ranking');
 
 import { log_now } from '@server/utils/time';
 import { is_user_logged_in } from '@server/managers/session';
-import { SessionID } from '@server/models/session_id';
+import { SessionID } from '@common/models/session_id';
 import { ConfigurationManager } from '@server/managers/configuration_manager';
 import { get_execution_directory } from './managers/environment_manager';
 

@@ -23,7 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { new_challenge, set_result, unset_result, set_result_accepted } from '@server/models/challenge';
+import { new_challenge, set_result, unset_result, set_result_accepted } from '@common/models/challenge';
 
 describe('Sets and gets', () => {
 	test('Constructor', () => {

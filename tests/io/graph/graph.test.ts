@@ -25,10 +25,10 @@ Contact:
 
 import fs from 'fs';
 
-import { EdgeMetadata } from '@server/models/graph/edge_metadata';
-import { Graph } from '@server/models/graph/graph';
+import { EdgeMetadata } from '@common/models/graph/edge_metadata';
+import { Graph } from '@common/models/graph/graph';
 
-import { graph_from_string, graph_full_to_file } from '@server/io/graph/graph';
+import { graph_from_string, graph_full_to_file } from '@common/io/graph/graph';
 
 describe('Write to and read from disk', () => {
 	test('2 users -- write', () => {

@@ -28,8 +28,8 @@ const debug = Debug('ELO_CHESS_TRACKER:server_games');
 
 import { DateStringShort, log_now } from '@server/utils/time';
 import { is_user_logged_in } from '@server/managers/session';
-import { GAMES_CREATE, GAMES_DELETE, GAMES_EDIT } from '@server/models/user_action';
-import { User } from '@server/models/user';
+import { GAMES_CREATE, GAMES_DELETE, GAMES_EDIT } from '@common/models/user_action';
+import { User } from '@common/models/user';
 import {
 	game_add_new,
 	game_delete,
@@ -38,10 +38,10 @@ import {
 	game_find_by_id,
 	recalculate_all_ratings
 } from '@server/managers/games';
-import { GameID, GameResult } from '@server/models/game';
-import { ADMIN } from '@server/models/user_role';
-import { SessionID } from '@server/models/session_id';
-import { TimeControlID } from '@server/models/time_control';
+import { GameID, GameResult } from '@common/models/game';
+import { ADMIN } from '@common/models/user_role';
+import { SessionID } from '@common/models/session_id';
+import { TimeControlID } from '@common/models/time_control';
 import {
 	can_user_create_a_game,
 	can_user_delete_a_game,

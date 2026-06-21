@@ -23,8 +23,8 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { isDefined } from '@common/utils';
-import { challenge_from_string } from '@server/io/challenge';
+import { isDefined } from '@common/utils/is_defined';
+import { challenge_from_string } from '@common/io/challenge';
 
 describe('IO conversion', () => {
 	test('string', () => {

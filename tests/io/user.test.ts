@@ -23,10 +23,10 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { ADMIN, STUDENT } from '@server/models/user_role';
+import { ADMIN, STUDENT } from '@common/models/user_role';
 import { initialize_rating_functions } from '@server/managers/rating_system';
-import { user_from_string } from '@server/io/user';
-import { isDefined } from '@common/utils';
+import { user_from_string } from '@common/io/user';
+import { isDefined } from '@common/utils/is_defined';
 
 describe('IO conversion (Elo)', () => {
 	initialize_rating_functions('Elo');

@@ -31,7 +31,7 @@ import {
 	STUDENT,
 	TEACHER,
 	user_role_to_string
-} from '@server/models/user_role';
+} from '@common/models/user_role';
 
 test('Array of all roles', () => {
 	expect(all_user_roles.length).toBe(4);

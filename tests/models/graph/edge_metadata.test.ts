@@ -23,7 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { EdgeMetadata } from '@server/models/graph/edge_metadata';
+import { EdgeMetadata } from '@common/models/graph/edge_metadata';
 
 describe('Static initialization', () => {
 	test('Empty', () => {

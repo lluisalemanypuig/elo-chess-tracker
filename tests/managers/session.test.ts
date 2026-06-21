@@ -33,10 +33,10 @@ import {
 } from '@server/managers/session';
 import { SessionIDManager } from '@server/managers/session_id_manager';
 import { user_add_new } from '@server/managers/users';
-import { SessionID } from '@server/models/session_id';
-import { ADMIN, MEMBER, STUDENT } from '@server/models/user_role';
-import { run_command } from './exec_utils';
-import { Configuration } from '@server/models/configuration/configuration';
+import { SessionID } from '@common/models/session_id';
+import { ADMIN, MEMBER, STUDENT } from '@common/models/user_role';
+import { run_command } from '@tests/exec_utils';
+import { Configuration } from '@common/models/configuration/configuration';
 
 const configuration: Configuration = {
 	environment: {

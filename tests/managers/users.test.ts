@@ -33,17 +33,17 @@ import {
 	user_rename_and_reassign_roles,
 	user_update_from_player_data
 } from '@server/managers/users';
-import { User } from '@server/models/user';
-import { ADMIN, MEMBER, STUDENT, TEACHER } from '@server/models/user_role';
+import { User } from '@common/models/user';
+import { ADMIN, MEMBER, STUDENT, TEACHER } from '@common/models/user_role';
 import { clear_server } from '@server/managers/clear';
-import { run_command } from './exec_utils';
-import { Player } from '@server/models/player';
-import { EloRating } from '@server/rating_framework/Elo/rating';
-import { user_from_string } from '@server/io/user';
+import { run_command } from '@tests/exec_utils';
+import { Player } from '@common/models/player';
+import { EloRating } from '@common/models/rating_framework/Elo/rating';
+import { user_from_string } from '@common/io/user';
 import { UsersManager } from '@server/managers/users_manager';
-import { isDefined } from '@common/utils';
-import { Configuration } from '@server/models/configuration/configuration';
-import { TimeControlRating } from '@server/models/time_control_rating';
+import { isDefined } from '@common/utils/is_defined';
+import { Configuration } from '@common/models/configuration/configuration';
+import { TimeControlRating } from '@common/models/time_control_rating';
 
 const webpage_dir = 'tests/webpage';
 const db_dir = path.join(webpage_dir, 'database');

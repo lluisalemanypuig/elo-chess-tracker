@@ -31,8 +31,8 @@ import { is_password_of_user_correct } from '@server/utils/encrypt';
 import { empty_session_id_cookie, make_session_id_cookie } from '@server/utils/cookies';
 import { session_id_add, session_id_delete } from '@server/managers/session';
 import { SessionIDManager } from '@server/managers/session_id_manager';
-import { SessionID, SessionIDTokenFieldName, SessionIDUsernameFieldName } from '@server/models/session_id';
-import { User } from '@server/models/user';
+import { SessionID, SessionIDTokenFieldName, SessionIDUsernameFieldName } from '@common/models/session_id';
+import { User } from '@common/models/user';
 import { UsersManager } from '@server/managers/users_manager';
 
 /**

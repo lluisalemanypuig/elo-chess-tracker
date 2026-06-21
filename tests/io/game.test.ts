@@ -24,8 +24,8 @@ Contact:
 */
 
 import { initialize_rating_functions } from '@server/managers/rating_system';
-import { game_from_string } from '@server/io/game';
-import { isDefined } from '@common/utils';
+import { game_from_string } from '@common/io/game';
+import { isDefined } from '@common/utils/is_defined';
 
 describe('IO conversion -- Elo', () => {
 	initialize_rating_functions('Elo');

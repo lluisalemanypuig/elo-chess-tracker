@@ -26,10 +26,10 @@ Contact:
 import path from 'path';
 import fs from 'fs';
 
-import { run_command } from './exec_utils';
+import { run_command } from '@tests/exec_utils';
 import { clear_server } from '@server/managers/clear';
 import { server_init_from_data } from '@server/managers/initialization';
-import { ADMIN, MEMBER, STUDENT } from '@server/models/user_role';
+import { ADMIN, MEMBER, STUDENT } from '@common/models/user_role';
 import { user_add_new } from '@server/managers/users';
 import { ChallengesManager } from '@server/managers/challenges_manager';
 import { GamesManager } from '@server/managers/games_manager';
@@ -43,11 +43,11 @@ import {
 	challenge_unset_result
 } from '@server/managers/challenges';
 import { number_to_string } from '@server/utils/misc';
-import { Challenge } from '@server/models/challenge';
-import { User } from '@server/models/user';
-import { challenge_from_string } from '@server/io/challenge';
+import { Challenge } from '@common/models/challenge';
+import { User } from '@common/models/user';
+import { challenge_from_string } from '@common/io/challenge';
 import { UsersManager } from '@server/managers/users_manager';
-import { Configuration } from '@server/models/configuration/configuration';
+import { Configuration } from '@common/models/configuration/configuration';
 
 const webpage_dir = 'tests/webpage';
 const db_dir = path.join(webpage_dir, 'database');

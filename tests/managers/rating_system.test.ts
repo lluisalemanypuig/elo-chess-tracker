@@ -27,8 +27,8 @@ import { RatingSystemManager } from '@server/managers/rating_system_manager';
 import { initialize_rating_functions, initialize_rating_time_controls } from '@server/managers/rating_system';
 
 import { Elo_player_vs_player } from '@server/rating_framework/Elo/formula';
-import { new_rating_Elo } from '@server/rating_framework/Elo/rating';
-import { rating_from_string_Elo } from '@server/io/ratings/Elo/rating';
+import { new_rating_Elo } from '@common/models/rating_framework/Elo/rating';
+import { rating_from_string_Elo } from '@common/io/ratings/Elo/rating';
 
 describe('Rating System Manager', () => {
 	test('Initialization of functions (Elo)', () => {

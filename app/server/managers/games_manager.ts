@@ -23,8 +23,8 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { GameID } from '@server/models/game';
-import { TimeControlID } from '@server/models/time_control';
+import { GameID } from '@common/models/game';
+import { TimeControlID } from '@common/models/time_control';
 import { DateStringShort } from '@server/utils/time';
 import { number_to_string } from '@server/utils/misc';
 

@@ -23,7 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { Challenge, ChallengeID } from '@server/models/challenge';
+import { Challenge, ChallengeID } from '@common/models/challenge';
 import { number_to_string } from '@server/utils/misc';
 
 /**

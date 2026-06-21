@@ -23,10 +23,10 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { graph_full_to_file, graph_to_file } from '@server/io/graph/graph';
-import { GameResult } from '@server/models/game';
-import { Graph } from '@server/models/graph/graph';
-import { TimeControlID } from '@server/models/time_control';
+import { graph_full_to_file, graph_to_file } from '@common/io/graph/graph';
+import { GameResult } from '@common/models/game';
+import { Graph } from '@common/models/graph/graph';
+import { TimeControlID } from '@common/models/time_control';
 import { EnvironmentManager } from '@server/managers/environment_manager';
 import { GamesIterator } from '@server/managers/games_iterator';
 import { GraphsManager } from '@server/managers/graphs_manager';

@@ -27,7 +27,7 @@ import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:server_home');
 
 import { log_now } from '@server/utils/time';
-import { SessionID, SessionIDUsernameFieldName } from '@server/models/session_id';
+import { SessionID, SessionIDUsernameFieldName } from '@common/models/session_id';
 import { is_user_logged_in } from '@server/managers/session';
 import { ConfigurationManager } from '@server/managers/configuration_manager';
 import { get_execution_directory } from './managers/environment_manager';

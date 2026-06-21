@@ -24,7 +24,7 @@ Contact:
 */
 
 import { ChallengesManager } from '@server/managers/challenges_manager';
-import { Challenge, new_challenge } from '@server/models/challenge';
+import { Challenge, new_challenge } from '@common/models/challenge';
 import { number_to_string } from '@server/utils/misc';
 
 describe('Challenges Manager', () => {

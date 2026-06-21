@@ -23,12 +23,12 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { TimeControl } from '@server/models/time_control';
+import { TimeControl } from '@common/models/time_control';
 import { Elo_player_vs_player } from '@server/rating_framework/Elo/formula';
-import { new_rating_Elo } from '@server/rating_framework/Elo/rating';
+import { new_rating_Elo } from '@common/models/rating_framework/Elo/rating';
 import { RatingSystemManager } from '@server/managers/rating_system_manager';
-import { rating_from_string_Elo, rating_from_json_Elo } from '@server/io/ratings/Elo/rating';
-import { RatingFrameworkType } from '@server/rating_framework/rating_framework_type';
+import { rating_from_string_Elo, rating_from_json_Elo } from '@common/io/ratings/Elo/rating';
+import { RatingFrameworkType } from '@common/models/rating_framework/rating_framework_type';
 
 /**
  * @brief Initializes the class @ref RatingSystem based on the system in @e name.

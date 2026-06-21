@@ -29,23 +29,23 @@ import path from 'path';
 import { game_add_new, game_edit_result, game_find_by_id, recalculate_all_ratings } from '@server/managers/games';
 import { server_init_from_data } from '@server/managers/initialization';
 import { user_add_new } from '@server/managers/users';
-import { ADMIN } from '@server/models/user_role';
-import { run_command } from './exec_utils';
+import { ADMIN } from '@common/models/user_role';
+import { run_command } from '@tests/exec_utils';
 import { EnvironmentManager } from '@server/managers/environment_manager';
-import { Game } from '@server/models/game';
-import { User } from '@server/models/user';
+import { Game } from '@common/models/game';
+import { User } from '@common/models/user';
 import { UsersManager } from '@server/managers/users_manager';
-import { game_array_from_string } from '@server/io/game';
+import { game_array_from_string } from '@common/io/game';
 import { GamesIterator } from '@server/managers/games_iterator';
 import { long_date_to_short_date } from '@server/utils/time';
 import { clear_server } from '@server/managers/clear';
 import { GraphsManager } from '@server/managers/graphs_manager';
-import { Graph } from '@server/models/graph/graph';
-import { EdgeMetadata } from '@server/models/graph/edge_metadata';
-import { graph_from_string } from '@server/io/graph/graph';
+import { Graph } from '@common/models/graph/graph';
+import { EdgeMetadata } from '@common/models/graph/edge_metadata';
+import { graph_from_string } from '@common/io/graph/graph';
 import { recalculate_all_graphs } from '@server/managers/graphs';
-import { Configuration } from '@server/models/configuration/configuration';
-import { isDefined } from '@common/utils';
+import { Configuration } from '@common/models/configuration/configuration';
+import { isDefined } from '@common/utils/is_defined';
 
 const configuration: Configuration = {
 	environment: {

@@ -23,8 +23,8 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { isDefined } from '@common/utils';
-import { User, UserRandomID } from '@server/models/user';
+import { isDefined } from '@common/utils/is_defined';
+import { User, UserRandomID } from '@common/models/user';
 import { search_linear_by_key } from '@server/utils/searching';
 
 /**

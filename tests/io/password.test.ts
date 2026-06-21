@@ -23,7 +23,7 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { password_from_string } from '@server/io/password';
+import { password_from_string } from '@common/io/password';
 
 describe('From string', () => {
 	test('creates a Password from a string', () => {

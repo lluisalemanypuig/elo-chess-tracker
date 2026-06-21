@@ -23,8 +23,8 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { Game } from '@server/models/game';
-import { EloRating } from '@server/rating_framework/Elo/rating';
+import { Game } from '@common/models/game';
+import { EloRating } from '@common/models/rating_framework/Elo/rating';
 
 describe('Setters and Getters -- Elo', () => {
 	test('Gets', () => {

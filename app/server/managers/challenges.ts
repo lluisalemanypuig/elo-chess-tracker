@@ -31,13 +31,13 @@ const debug = Debug('ELO_CHESS_TRACKER:managers/challenges');
 import { DateStringLong, log_now, long_date_to_short_and_tiny_date } from '@server/utils/time';
 import { ChallengesManager } from '@server/managers/challenges_manager';
 import { EnvironmentManager } from '@server/managers/environment_manager';
-import { Challenge, new_challenge, set_result, unset_result } from '@server/models/challenge';
-import { GameResult } from '@server/models/game';
+import { Challenge, new_challenge, set_result, unset_result } from '@common/models/challenge';
+import { GameResult } from '@common/models/game';
 import { game_add_new } from '@server/managers/games';
-import { TimeControlID } from '@server/models/time_control';
+import { TimeControlID } from '@common/models/time_control';
 import { UsersManager } from '@server/managers/users_manager';
-import { User } from '@server/models/user';
-import { isDefined } from '@common/utils';
+import { User } from '@common/models/user';
+import { isDefined } from '@common/utils/is_defined';
 
 /**
  * @brief Filters the set of challenges that are accepted by the filter function @e by.

@@ -23,7 +23,7 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { SessionID } from '@server/models/session_id';
+import { SessionID } from '@common/models/session_id';
 import { search_linear_by_key } from '@server/utils/searching';
 
 /**

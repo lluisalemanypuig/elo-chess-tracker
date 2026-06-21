@@ -29,12 +29,12 @@ const debug = Debug('ELO_CHESS_TRACKER:managers/challenges');
 import path from 'path';
 import fs from 'fs';
 
-import { Game, GameID } from '@server/models/game';
+import { Game, GameID } from '@common/models/game';
 import { DateStringLongMillis, DateStringShort, log_now } from '@server/utils/time';
-import { game_array_from_string } from '@server/io/game';
+import { game_array_from_string } from '@common/io/game';
 import { search_by_key, where_should_be_inserted_by_key } from '@server/utils/searching';
 import { read_directory } from '@server/utils/read_directory';
-import { isDefined } from '@common/utils';
+import { isDefined } from '@common/utils/is_defined';
 
 /* TODO: add a function that iterates only through those game records
  * where a player has games in.

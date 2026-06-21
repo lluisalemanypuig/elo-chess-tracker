@@ -24,8 +24,8 @@ Contact:
 */
 
 import path from 'path';
-import { TimeControlID } from '@server/models/time_control';
-import { Environment, SSLCertificate } from '@server/models/configuration/environment';
+import { TimeControlID } from '@common/models/time_control';
+import { Environment, SSLCertificate } from '@common/models/configuration/environment';
 
 /**
  * @brief Directories and other parameters of the server's environment

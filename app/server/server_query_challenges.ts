@@ -28,10 +28,10 @@ const debug = Debug('ELO_CHESS_TRACKER:server_query_challenges');
 
 import { log_now } from '@server/utils/time';
 import { is_user_logged_in } from '@server/managers/session';
-import { User } from '@server/models/user';
+import { User } from '@common/models/user';
 import { challenge_set_retrieve } from '@server/managers/challenges';
-import { Challenge } from '@server/models/challenge';
-import { SessionID } from '@server/models/session_id';
+import { Challenge } from '@common/models/challenge';
+import { SessionID } from '@common/models/session_id';
 import { UsersManager } from '@server/managers/users_manager';
 import { can_user_decline_challenge } from '@server/managers/user_relationships';
 

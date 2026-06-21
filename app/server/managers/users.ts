@@ -28,14 +28,14 @@ import path from 'path';
 import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:managers/users');
 
-import { Player } from '@server/models/player';
-import { TimeControlGame, User, UserRandomID } from '@server/models/user';
+import { Player } from '@common/models/player';
+import { TimeControlGame, User, UserRandomID } from '@common/models/user';
 import { EnvironmentManager } from '@server/managers/environment_manager';
 import { UsersManager } from '@server/managers/users_manager';
-import { UserRole } from '@server/models/user_role';
+import { UserRole } from '@common/models/user_role';
 import { encrypt_password_for_user } from '@server/utils/encrypt';
 import { RatingSystemManager } from '@server/managers/rating_system_manager';
-import { TimeControlRating } from '@server/models/time_control_rating';
+import { TimeControlRating } from '@common/models/time_control_rating';
 import { log_now } from '@server/utils/time';
 
 /// Dump the data in user @e u into its corresponding file.

@@ -23,8 +23,8 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { new_rating_Elo } from '@server/rating_framework/Elo/rating';
-import { rating_from_string_Elo } from '@server/io/ratings/Elo/rating';
+import { new_rating_Elo } from '@common/models/rating_framework/Elo/rating';
+import { rating_from_string_Elo } from '@common/io/ratings/Elo/rating';
 
 describe('JSON conversion', () => {
 	test('from string to rating', () => {

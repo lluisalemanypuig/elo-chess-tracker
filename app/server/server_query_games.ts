@@ -31,19 +31,19 @@ import fs from 'fs';
 
 import { DateStringShort, log_now } from '@server/utils/time';
 import { is_user_logged_in } from '@server/managers/session';
-import { GameNumber, User } from '@server/models/user';
-import { Game } from '@server/models/game';
+import { GameNumber, User } from '@common/models/user';
+import { Game } from '@common/models/game';
 import { RatingSystemManager } from '@server/managers/rating_system_manager';
 import { EnvironmentManager } from '@server/managers/environment_manager';
-import { GAMES_SEE } from '@server/models/user_action';
-import { SessionID } from '@server/models/session_id';
+import { GAMES_SEE } from '@common/models/user_action';
+import { SessionID } from '@common/models/session_id';
 import { can_user_delete_a_game, can_user_edit_a_game, can_user_see_a_game } from '@server/managers/user_relationships';
-import { TimeControlID } from '@server/models/time_control';
-import { game_array_from_string } from '@server/io/game';
+import { TimeControlID } from '@common/models/time_control';
+import { game_array_from_string } from '@common/io/game';
 import { UsersManager } from '@server/managers/users_manager';
 import { search_by_key } from '@server/utils/searching';
 import { read_directory } from '@server/utils/read_directory';
-import { isDefined } from '@common/utils';
+import { isDefined } from '@common/utils/is_defined';
 
 function increment(g: Game): any {
 	const [white_after, black_after] = RatingSystemManager.get_instance().apply_rating_function(g);

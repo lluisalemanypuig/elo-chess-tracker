@@ -23,8 +23,8 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { Graph } from '@server/models/graph/graph';
-import { TimeControlID } from '@server/models/time_control';
+import { Graph } from '@common/models/graph/graph';
+import { TimeControlID } from '@common/models/time_control';
 import { search_linear_by_key } from '@server/utils/searching';
 
 /**

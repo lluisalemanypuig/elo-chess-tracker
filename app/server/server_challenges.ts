@@ -36,13 +36,13 @@ import {
 	challenge_unset_result,
 	challenge_agree_result
 } from '@server/managers/challenges';
-import { Challenge, ChallengeID } from '@server/models/challenge';
-import { User } from '@server/models/user';
-import { USER_CHALLENGE } from '@server/models/user_action';
-import { SessionID } from '@server/models/session_id';
+import { Challenge, ChallengeID } from '@common/models/challenge';
+import { User } from '@common/models/user';
+import { USER_CHALLENGE } from '@common/models/user_action';
+import { SessionID } from '@common/models/session_id';
 import { can_user_send_challenge } from '@server/managers/user_relationships';
 import { ChallengesManager } from '@server/managers/challenges_manager';
-import { GameResult } from '@server/models/game';
+import { GameResult } from '@common/models/game';
 import { UsersManager } from '@server/managers/users_manager';
 import { ConfigurationManager } from '@server/managers/configuration_manager';
 import { RatingSystemManager } from '@server/managers/rating_system_manager';

@@ -29,10 +29,10 @@ const debug = Debug('ELO_CHESS_TRACKER:server_query_users');
 import { log_now } from '@server/utils/time';
 import { user_get_all_name_randid } from '@server/managers/users';
 import { is_user_logged_in } from '@server/managers/session';
-import { User } from '@server/models/user';
+import { User } from '@common/models/user';
 import { UsersManager } from '@server/managers/users_manager';
-import { TimeControlRating } from '@server/models/time_control_rating';
-import { SessionID } from '@server/models/session_id';
+import { TimeControlRating } from '@common/models/time_control_rating';
+import { SessionID } from '@common/models/session_id';
 
 /// Returns the list of user full names and usernames sorted by name
 export async function get_query_user_list(req: any, res: any) {
