@@ -29,6 +29,7 @@ import { EdgeMetadata } from '@common/models/graph/edge_metadata';
 import { Graph } from '@common/models/graph/graph';
 
 import { graph_from_string, graph_full_to_file } from '@common/io/graph/graph';
+import { isDefined } from '@common/utils/is_defined';
 
 describe('Write to and read from disk', () => {
 	test('2 users -- write', () => {
@@ -52,7 +53,10 @@ describe('Write to and read from disk', () => {
 		expect(fs.existsSync('graph_test/B')).toBe(true);
 
 		const g = graph_from_string('graph_test/');
-
+		expect(g).not.toBeNull();
+		if (!isDefined(g)) {
+			return;
+		}
 		expect(g.get_data_as_white('A', 'B')).toEqual(new EdgeMetadata(1, 1, 0));
 		expect(g.get_data_as_black('A', 'B')).toEqual(new EdgeMetadata(0, 1, 1));
 		expect(g.get_out_degree('A')).toBe(1);
@@ -91,7 +95,10 @@ describe('Write to and read from disk', () => {
 		expect(fs.existsSync('graph_test/C')).toBe(true);
 
 		const g = graph_from_string('graph_test/');
-
+		expect(g).not.toBeNull();
+		if (!isDefined(g)) {
+			return;
+		}
 		expect(g.get_data_as_white('A', 'B')).toEqual(new EdgeMetadata(1, 0, 0));
 		expect(g.get_data_as_black('A', 'B')).toEqual(undefined);
 		expect(g.get_data_as_white('A', 'C')).toEqual(new EdgeMetadata(0, 0, 1));

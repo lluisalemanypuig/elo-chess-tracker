@@ -23,9 +23,8 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { Password } from '@common/models/password';
 import { TimeControlRating } from '@common/models/time_control_rating';
-import { GameNumber, TimeControlGame, User } from '@common/models/user';
+import { User } from '@common/models/user';
 import {
 	USER_ROLE_ASSIGN_ADMIN,
 	USER_ROLE_ASSIGN_MEMBER,
