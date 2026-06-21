@@ -23,38 +23,42 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { Player } from '@server/models/player';
-import { time_control_rating_set_from_json } from '@server/io/time_control_rating';
+import { Player, PlayerKeys } from '@server/models/player';
+import { read_json_array_string, read_json_object_string } from '@server/io/generic';
+import { RatingSystemManager } from '@server/managers/rating_system_manager';
+import { TimeControlRating } from '@server/models/time_control_rating';
 
 /**
- * @brief Parses a JSON string or object and returns a Player.
- * @param json A JSON string or object with data of a Player.
+ * @brief Creates a Player object from a plain json object.
+ * @param json A plain JSON object.
  * @returns A new Player object.
- * @pre If @e json is a string then it cannot start with '['.
  */
 export function player_from_json(json: any): Player {
-	if (typeof json === 'string') {
-		const json_parse = JSON.parse(json);
-		return player_from_json(json_parse);
+	const manager = RatingSystemManager.get_instance();
+	let ratings: TimeControlRating[] = [];
+	for (const r of json.ratings) {
+		const rating = new TimeControlRating(r.time_control, manager.get_rating_from_json(r.rating));
+		ratings.push(rating);
 	}
 
-	return new Player(json['username'], time_control_rating_set_from_json(json['ratings']));
+	return new Player(json.username, ratings);
 }
 
 /**
- * @brief Parses a JSON string or object and returns a set of Player.
- * @param json A JSON string or object with data of several Player.
+ * @brief Parses a JSON string and returns a Player.
+ * @param str A JSON string with data of a Player.
+ * @returns A new Player object.
+ * @pre The value @e str cannot start with '['.
+ */
+export function player_from_string(str: string): Player | null {
+	return read_json_object_string(str, PlayerKeys, player_from_json);
+}
+
+/**
+ * @brief Parses a JSON string and returns an array of Player.
+ * @param str A JSON string with data of several Player.
  * @returns An array of Player objects.
  */
-export function player_set_from_json(json: any): Player[] {
-	if (typeof json === 'string') {
-		const json_parse = JSON.parse(json);
-		return player_set_from_json(json_parse);
-	}
-
-	let player_set: Player[] = [];
-	for (var player in json) {
-		player_set.push(player_from_json(json[player]));
-	}
-	return player_set;
+export function player_array_from_json(str: string): Player[] | null {
+	return read_json_array_string(str, PlayerKeys, player_from_json);
 }

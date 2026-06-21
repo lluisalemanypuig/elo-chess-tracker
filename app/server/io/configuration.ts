@@ -23,23 +23,14 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { TimeControl, TimeControlArraySchema, TimeControlSchema } from '@server/models/time_control';
 import { read_schema } from '@server/io/generic';
+import { Configuration, ConfigurationSchema } from '@server/models/configuration/configuration';
 
 /**
- * @brief Parses a JSON string and returns a TimeControl.
- * @param str A string with data of a TimeControl.
- * @returns A new TimeControl object.
+ * @brief Parses a JSON string and returns a Configuration.
+ * @param str A string with data of a Configuration.
+ * @returns A new Configuration object.
  */
-export function time_control_from_string(str: string): TimeControl | null {
-	return read_schema(TimeControlSchema, str);
-}
-
-/**
- * @brief Parses a JSON string and returns an array of TimeControl.
- * @param str A string with data of several TimeControl.
- * @returns An array of TimeControl objects.
- */
-export function time_control_array_from_string(str: string): TimeControl[] | null {
-	return read_schema(TimeControlArraySchema, str);
+export function configuration_from_string(str: string): Configuration | null {
+	return read_schema(ConfigurationSchema, str);
 }

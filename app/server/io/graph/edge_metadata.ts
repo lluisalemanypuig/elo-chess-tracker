@@ -23,19 +23,19 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { EdgeMetadata } from '@server/models/graph/edge_metadata';
+import { EdgeMetadata, EdgeMetadataSchema } from '@server/models/graph/edge_metadata';
+import { read_schema } from '@server/io/generic';
+import { isDefined } from '@common/utils';
 
 /**
- * @brief Parses a JSON string or object and returns an Edge.
- * @param json A string with data of an Edge.
- * @returns A new Edge object.
- * @pre If @e json is a string, then it cannot start with '['.
+ * @brief Parses a JSON string and returns an EdgeMetadata.
+ * @param str A string with data of an EdgeMetadata.
+ * @returns A new EdgeMetadata object.
  */
-export function edge_metadata_from_json(json: any): EdgeMetadata {
-	if (typeof json === 'string') {
-		const json_parse = JSON.parse(json);
-		return edge_metadata_from_json(json_parse);
+export function edge_metadata_from_string(str: string): EdgeMetadata | null {
+	const data = read_schema(EdgeMetadataSchema, str);
+	if (!isDefined(data)) {
+		return null;
 	}
-
-	return new EdgeMetadata(json.num_games_won, json.num_games_drawn, json.num_games_lost);
+	return new EdgeMetadata(data.num_games_won, data.num_games_drawn, data.num_games_lost);
 }

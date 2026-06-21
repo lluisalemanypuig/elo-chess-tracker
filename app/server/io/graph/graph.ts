@@ -23,12 +23,17 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
+import Debug from 'debug';
+const debug = Debug('ELO_CHESS_TRACKER:io');
+
 import fs from 'fs';
 import path from 'path';
 
 import { Neighborhood, Graph } from '@server/models/graph/graph';
-import { edge_set_from_json } from '@server/io/graph/edge';
+import { edge_array_from_string } from '@server/io/graph/edge';
 import { read_directory } from '@server/utils/read_directory';
+import { isDefined } from '@common/utils';
+import { log_now } from '@server/utils/time';
 
 /**
  * @brief Save a portion of the graph from a file.
@@ -59,7 +64,12 @@ export function neighborhood_to_file(dir: string, username: string, edges: Neigh
 export function graph_to_file(dir: string, changes: string[], g: Graph): void {
 	for (const username of changes) {
 		if (g.get_out_degree(username) > 0) {
-			neighborhood_to_file(dir, username, g.get_outgoing_edges(username) as Neighborhood);
+			const out = g.get_outgoing_edges(username);
+			if (!isDefined(out)) {
+				debug(log_now(), `Could not get niehgbors of user '${username}'`);
+				continue;
+			}
+			neighborhood_to_file(dir, username, out);
 		} else {
 			const filename = path.join(dir, username);
 			fs.rmSync(filename);
@@ -77,25 +87,44 @@ export function graph_to_file(dir: string, changes: string[], g: Graph): void {
  */
 export function graph_full_to_file(dir: string, g: Graph): void {
 	for (const username of g.get_out_entries()) {
-		neighborhood_to_file(dir, username, g.get_outgoing_edges(username) as Neighborhood);
+		const out = g.get_outgoing_edges(username);
+		if (!isDefined(out)) {
+			debug(log_now(), `Could not get niehgbors of user '${username}'`);
+			continue;
+		}
+		neighborhood_to_file(dir, username, out);
 	}
 }
 
 /**
- * @brief Parses a JSON string or object and returns a Graph.
+ * @brief Parses the files in the given directory and returns a Graph.
  * @param dir The directory where to read the graph from.
  * @returns A new Graph object.
- * @pre If @e json is a string, then it cannot start with '['.
  */
-export function graph_from_json(dir: string): Graph {
+export function graph_from_string(dir: string): Graph | null {
 	let g = new Graph();
 
 	const files = read_directory(dir, false);
+	if (!fs.existsSync(dir)) {
+		debug(log_now(), `Path '${dir}' does not exist.`);
+		return null;
+	}
+
 	for (let i = 0; i < files.length; ++i) {
-		const username = files[i] as string;
+		const username = files[i];
 
 		const filename = path.join(dir, username);
-		const edge_set = edge_set_from_json(fs.readFileSync(filename, 'utf8'));
+
+		if (!fs.existsSync(filename)) {
+			debug(log_now(), `Path '${filename}' does not exist.`);
+			return null;
+		}
+		const edge_array = fs.readFileSync(filename, 'utf8');
+		const edge_set = edge_array_from_string(edge_array);
+		if (!isDefined(edge_set)) {
+			debug(log_now(), `Could not read edge set at file '${filename}'.`);
+			return null;
+		}
 
 		for (let i = 0; i < edge_set.length; ++i) {
 			g.add_edge_raw(username, edge_set[i].neighbor, edge_set[i]);

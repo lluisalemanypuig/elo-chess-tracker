@@ -23,38 +23,50 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { Edge } from '@server/models/graph/edge';
-import { edge_metadata_from_json } from '@server/io/graph/edge_metadata';
+import { Edge, EdgeArraySchema, EdgeSchema } from '@server/models/graph/edge';
+import { read_schema } from '@server/io/generic';
+import { isDefined } from '@common/utils';
+import { EdgeMetadata } from '@server/models/graph/edge_metadata';
 
 /**
- * @brief Parses a JSON string or object and returns an Edge.
- * @param json A string with data of an Edge.
+ * @brief Parses a JSON string and returns an Edge.
+ * @param str A string with data of an Edge.
  * @returns A new Edge object.
- * @pre If @e json is a string, then it cannot start with '['.
  */
-export function edge_from_json(json: any): Edge {
-	if (typeof json === 'string') {
-		const json_parse = JSON.parse(json);
-		return edge_from_json(json_parse);
+export function edge_from_string(str: string): Edge | null {
+	const data = read_schema(EdgeSchema, str);
+	if (!isDefined(data)) {
+		return null;
 	}
-
-	return new Edge(json.neighbor, edge_metadata_from_json(json.metadata));
+	return new Edge(
+		data.neighbor,
+		new EdgeMetadata(data.metadata.num_games_won, data.metadata.num_games_drawn, data.metadata.num_games_lost)
+	);
 }
 
 /**
- * @brief Parses a JSON string or object and returns an Edge.
- * @param json A string with data of an Edge.
+ * @brief Parses a JSON string and returns an Edge.
+ * @param str A string with data of an Edge.
  * @returns A new Edge object.
- * @pre If @e json is a string, then it cannot start with '['.
  */
-export function edge_set_from_json(json: any): Edge[] {
-	if (typeof json === 'string') {
-		const json_parse = JSON.parse(json);
-		return edge_set_from_json(json_parse);
+export function edge_array_from_string(str: string): Edge[] | null {
+	const data = read_schema(EdgeArraySchema, str);
+	if (!isDefined(data)) {
+		return null;
 	}
-	let edge_set: Edge[] = [];
-	for (var edge in json) {
-		edge_set.push(edge_from_json(json[edge]));
+
+	let edges: Edge[] = [];
+	for (const edge of data) {
+		edges.push(
+			new Edge(
+				edge.neighbor,
+				new EdgeMetadata(
+					edge.metadata.num_games_won,
+					edge.metadata.num_games_drawn,
+					edge.metadata.num_games_lost
+				)
+			)
+		);
 	}
-	return edge_set;
+	return edges;
 }

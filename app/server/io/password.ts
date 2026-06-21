@@ -23,36 +23,23 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { Password } from '@server/models/password';
+import { Password, PasswordSchema, PasswordArraySchema } from '@server/models/password';
+import { read_schema } from '@server/io/generic';
 
 /**
- * @brief Parses a JSON string or object and returns a Password.
- * @param json A JSON string or object with data of a Password.
+ * @brief Parses a JSON string and returns a Password.
+ * @param str A string with data of a Password.
  * @returns A new Password object.
- * @pre If @e json is a string then it cannot start with '['.
  */
-export function password_from_json(json: any): Password {
-	if (typeof json === 'string') {
-		const json_parse = JSON.parse(json);
-		return password_from_json(json_parse);
-	}
-	return new Password(json['encrypted'], json['iv']);
+export function password_from_string(str: string): Password | null {
+	return read_schema(PasswordSchema, str);
 }
 
 /**
- * @brief Parses a JSON string or object and returns a set of Password.
- * @param json A JSON string or object with data of several Password.
+ * @brief Parses a JSON string and returns an array of Password.
+ * @param str A string with data of several Password.
  * @returns An array of Password objects.
  */
-export function password_set_from_json(json: any): Password[] {
-	if (typeof json === 'string') {
-		const json_parse = JSON.parse(json);
-		return password_set_from_json(json_parse);
-	}
-
-	let player_set: Password[] = [];
-	for (var player in json) {
-		player_set.push(password_from_json(json[player]));
-	}
-	return player_set;
+export function password_array_from_string(str: string): Password[] | null {
+	return read_schema(PasswordArraySchema, str);
 }

@@ -23,34 +23,33 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { RatingSystemManager } from '@server/managers/rating_system_manager';
-import { TimeControlRating, TimeControlRatingKeys } from '@server/models/time_control_rating';
 import { read_json_array_string, read_json_object_string } from '@server/io/generic';
+import { EloRating, EloRatingKeys } from '@server/rating_framework/Elo/rating';
 
 /**
  * @brief Parses a JSON string and returns a TimeControlRating object.
  * @param str A JSON string with data of a TimeControlRating object.
  * @returns A TimeControlRating object.
  */
-function time_control_rating_from_json(json: any) {
-	const rating = RatingSystemManager.get_instance().get_rating_from_json(json.rating);
-	return new TimeControlRating(json.time_control, rating);
+export function rating_from_json_Elo(json: any): EloRating {
+	return new EloRating(json.rating, json.num_games, json.won, json.drawn, json.lost, json.K, json.surpassed_2400);
 }
 
 /**
- * @brief Parses a JSON string and returns a TimeControlRating object.
- * @param str A JSON string with data of a TimeControlRating object.
- * @returns A TimeControlRating object.
+ * @brief Parses a JSON string and returns a Player.
+ * @param str A JSON string with data of a Player.
+ * @returns A new Player object.
+ * @pre Value @str cannot start with '['.
  */
-export function time_control_rating_from_string(str: string): TimeControlRating | null {
-	return read_json_object_string(str, TimeControlRatingKeys, time_control_rating_from_json);
+export function rating_from_string_Elo(str: string): EloRating | null {
+	return read_json_object_string(str, EloRatingKeys, rating_from_json_Elo);
 }
 
 /**
- * @brief Parses a JSON string and returns an array of TimeControlRating.
- * @param str A JSON string with data of several TimeControlRating.
- * @returns An array of TimeControlRating objects.
+ * @brief Parses a JSON string and returns an array of Player.
+ * @param str A JSON string with data of several Player.
+ * @returns An array of Player objects.
  */
-export function time_control_rating_array_from_string(str: string): TimeControlRating[] | null {
-	return read_json_array_string(str, TimeControlRatingKeys, time_control_rating_from_json);
+export function rating_array_from_string_Elo(str: string): EloRating[] | null {
+	return read_json_array_string(str, EloRatingKeys, rating_from_json_Elo);
 }
