@@ -23,7 +23,16 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { GameResult } from '@server/game';
+import { z } from 'zod';
+import { GameResult } from '@server/models/game';
+
+export const EdgeMetadataSchema = z
+	.object({
+		num_games_won: z.number().gte(0),
+		num_games_drawn: z.number().gte(0),
+		num_games_lost: z.number().gte(0)
+	})
+	.strict();
 
 /**
  * @brief Metadata of an edge.

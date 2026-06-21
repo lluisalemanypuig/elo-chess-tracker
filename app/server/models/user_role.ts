@@ -23,6 +23,8 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
+import { z } from 'zod';
+
 /// Administrator
 export const ADMIN = 'admin';
 /// Teacher
@@ -41,6 +43,10 @@ export const all_user_roles = [ADMIN, TEACHER, MEMBER, STUDENT] as const;
 
 /// All roles as type
 export type UserRole = (typeof all_user_roles)[number];
+
+export const UserRoleSchema = z.enum(all_user_roles);
+
+export const UserRoleArraySchema = z.array(UserRoleSchema);
 
 /// Relate each user role to a readable string
 export const user_role_to_string: { [key in UserRole]: string } = {

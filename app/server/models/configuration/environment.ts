@@ -16,29 +16,46 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 Full source code of elo-chess-tracker:
-	https://github.com/lluisalemanypuig/elo-chess-tracker
+    https://github.com/lluisalemanypuig/elo-chess-tracker
 
 Contact:
-	Lluís Alemany Puig
-	https://github.com/lluisalemanypuig
+    Lluís Alemany Puig
+    https://github.com/lluisalemanypuig
 */
 
 import { z } from 'zod';
 
-export const PasswordSchema = z
+const SSLCertificateSchema = z
 	.object({
-		encrypted: z.string(),
-		iv: z.string()
+		public_key_file: z.string(),
+		private_key_file: z.string(),
+		passphrase_file: z.string()
 	})
-	.strict()
-	.readonly();
+	.strict();
 
-/**
- * @brief A password.
- *
- * It consists of a pair of strings: the actual encrypted password
- * and the initialization vector 'iv'.
- */
-export type Password = z.infer<typeof PasswordSchema>;
+export type SSLCertificate = z.infer<typeof SSLCertificateSchema>;
 
-export const PasswordArraySchema = z.array(PasswordSchema);
+const LoginPageSchema = z
+	.object({
+		title: z.string(),
+		icon: z.string()
+	})
+	.strict();
+
+const HomePageSchema = z
+	.object({
+		title: z.string(),
+		icon: z.string()
+	})
+	.strict();
+
+export const EnvironmentSchema = z
+	.object({
+		ssl_certificate: SSLCertificateSchema,
+		favicon: z.string(),
+		login_page: LoginPageSchema,
+		home_page: HomePageSchema
+	})
+	.strict();
+
+export type Environment = z.infer<typeof EnvironmentSchema>;

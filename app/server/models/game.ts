@@ -23,12 +23,14 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
+import { z } from 'zod';
 import { Rating } from '@server/rating_framework/rating';
 import { TimeControlID } from './time_control';
 import { DateStringLongMillis } from '@server/utils/time';
 
 /// Result of a game
-export type GameResult = 'white_wins' | 'black_wins' | 'draw';
+export const GameResultSchema = z.enum(['white_wins', 'black_wins', 'draw']);
+export type GameResult = z.infer<typeof GameResultSchema>;
 
 export function opposite_result(res: GameResult): GameResult {
 	if (res == 'draw') {
@@ -44,6 +46,19 @@ export function opposite_result(res: GameResult): GameResult {
 /// A type for game IDs.
 export type GameID = string;
 
+export const GameKeys = [
+	'id',
+	'title',
+	'white',
+	'white_rating',
+	'black',
+	'black_rating',
+	'result',
+	'time_control_id',
+	'time_control_name',
+	'when'
+];
+
 /**
  * @brief Class to encode a chess game.
  *
@@ -58,25 +73,25 @@ export type GameID = string;
  */
 export class Game {
 	/// Identifier of the game
-	private readonly id: GameID;
+	public readonly id: GameID;
 	/// Name of the game
-	private title: string;
+	public title: string;
 	/// White player username
-	private readonly white: string;
+	public readonly white: string;
 	/// White in the state before the game
-	private white_rating: Rating;
+	public white_rating: Rating;
 	/// White player username
-	private readonly black: string;
+	public readonly black: string;
 	/// White in the state before the game
-	private black_rating: Rating;
+	public black_rating: Rating;
 	/// Result of the game
-	private result: GameResult;
+	public result: GameResult;
 	/// Time control id
-	private time_control_id: TimeControlID;
+	public time_control_id: TimeControlID;
 	/// Time control name (Classical (90 + 30), Blitz (5 + 3), ...)
-	private time_control_name: string;
+	public time_control_name: string;
 	/// Date when the game took place
-	private when: DateStringLongMillis;
+	public when: DateStringLongMillis;
 
 	/**
 	 * @brief Constructor
@@ -114,70 +129,8 @@ export class Game {
 		this.when = when;
 	}
 
-	/// Return game's title
-	get_title(): string {
-		return this.title;
-	}
-	set_title(s: string) {
-		this.title = s;
-	}
-
-	/// Return white's username
-	get_white(): string {
-		return this.white;
-	}
-	/// Return white's rating
-	get_white_rating(): Rating {
-		return this.white_rating;
-	}
-	/// Set white's rating
-	set_white_rating(r: Rating) {
-		this.white_rating = r;
-	}
-
-	/// Return black's username
-	get_black(): string {
-		return this.black;
-	}
-	/// Return black's rating
-	get_black_rating(): Rating {
-		return this.black_rating;
-	}
-	/// Set black's rating
-	set_black_rating(r: Rating) {
-		this.black_rating = r;
-	}
-
-	/// Return this game's time control id.
-	get_time_control_id(): TimeControlID {
-		return this.time_control_id;
-	}
-	/// Return this game's time control name.
-	get_time_control_name(): string {
-		return this.time_control_name;
-	}
-
-	/// Sets the game's result
-	set_result(result: GameResult): void {
-		this.result = result;
-	}
-	/// Returns game's result
-	get_result(): GameResult {
-		return this.result;
-	}
-
-	/// Return game's date
-	get_date(): DateStringLongMillis {
-		return this.when;
-	}
-
 	/// Is user 'username' in this game?
 	is_user_involved(username: string): boolean {
 		return this.white == username || this.black == username;
-	}
-
-	/// Returns the game's ID
-	get_id(): GameID {
-		return this.id;
 	}
 }

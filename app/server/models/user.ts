@@ -23,6 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
+import { z } from 'zod';
 import { Player } from './player';
 import { Password } from './password';
 import { UserRole } from './user_role';
@@ -36,27 +37,33 @@ import { DateStringShort } from '@server/utils/time';
 
 export type UserRandomID = number;
 
-export class GameNumber {
-	public record: DateStringShort;
-	public amount: number;
-	constructor(r: DateStringShort, n: number) {
-		this.record = r;
-		this.amount = n;
-	}
-}
+export const GameNumberSchema = z
+	.object({
+		record: z.string() as z.ZodType<DateStringShort>,
+		amount: z.number()
+	})
+	.strict();
 
-export class TimeControlGames {
-	public time_control: TimeControlID = '';
-	public records: GameNumber[] = [];
+export type GameNumber = z.infer<typeof GameNumberSchema>;
 
-	constructor(id: TimeControlID, record_number: GameNumber[]) {
-		this.time_control = id;
-		this.records = record_number;
-	}
-	clone(): TimeControlGames {
-		return new TimeControlGames(this.time_control, this.records);
-	}
-}
+export const GameNumberArraySchema = z.array(GameNumberSchema);
+
+export type GameNumberArray = z.infer<typeof GameNumberArraySchema>;
+
+export const TimeControlGameSchema = z
+	.object({
+		time_control: z.string() as z.ZodType<TimeControlID>,
+		records: z.array(GameNumberSchema)
+	})
+	.strict();
+
+export type TimeControlGame = z.infer<typeof TimeControlGameSchema>;
+
+export const TimeControlGameArraySchema = z.array(TimeControlGameSchema);
+
+export type TimeControlGameArray = z.infer<typeof TimeControlGameArraySchema>;
+
+export const UserKeys = ['username', 'first_name', 'last_name', 'password', 'roles', 'games', 'ratings'];
 
 /**
  * @brief Simple class to encode a User
@@ -66,20 +73,20 @@ export class TimeControlGames {
  */
 export class User extends Player {
 	/// First name
-	private first_name: string;
+	public first_name: string;
 	/// Last name
-	private last_name: string;
+	public last_name: string;
 	/// Password
-	private password: Password;
+	public password: Password;
 	/// Roles of this user
-	private roles: UserRole[];
+	public roles: UserRole[];
 	/**
 	 * @brief The set of games this user has played
 	 *
 	 * For each time rating id, there is an array of strings that simply point
 	 * to the game records.
 	 */
-	private games: TimeControlGames[];
+	public games: TimeControlGame[];
 
 	/**
 	 * @brief Constructor
@@ -97,7 +104,7 @@ export class User extends Player {
 		last_name: string,
 		password: Password,
 		roles: UserRole[],
-		games: TimeControlGames[],
+		games: TimeControlGame[],
 		ratings: TimeControlRating[]
 	) {
 		super(username, ratings);
@@ -108,43 +115,9 @@ export class User extends Player {
 		this.roles = roles;
 	}
 
-	/// Set first name of the user
-	set_first_name(f: string): void {
-		this.first_name = f;
-	}
-	/// Set last name of the user
-	set_last_name(l: string): void {
-		this.last_name = l;
-	}
-	/// Set roles to the user
-	set_roles(rs: UserRole[]): void {
-		this.roles = rs;
-	}
-
-	/// Return last name of the user
-	get_first_name(): string {
-		return this.first_name;
-	}
-	/// Return last name of the user
-	get_last_name(): string {
-		return this.last_name;
-	}
 	/// Returns the full name of this user
 	get_full_name(): string {
 		return `${this.first_name} ${this.last_name}`;
-	}
-
-	set_password(pwd: Password) {
-		this.password = pwd;
-	}
-	/// Returns the password of this user
-	get_password(): Password {
-		return this.password;
-	}
-
-	/// Returns the role of this user.
-	get_roles(): UserRole[] {
-		return this.roles;
 	}
 
 	/**
@@ -153,7 +126,7 @@ export class User extends Player {
 	 * @returns A list of strings pointing to game records.
 	 */
 	get_games(id: TimeControlID): GameNumber[] {
-		const idx = search_linear_by_key(this.games, (v: TimeControlGames): boolean => {
+		const idx = search_linear_by_key(this.games, (v: TimeControlGame): boolean => {
 			return v.time_control == id;
 		});
 		if (idx == -1) {
@@ -170,7 +143,7 @@ export class User extends Player {
 	 * @param game_record New game record string.
 	 */
 	add_game(id: TimeControlID, game_record: DateStringShort): void {
-		const idx = search_linear_by_key(this.games, (p: TimeControlGames): boolean => {
+		const idx = search_linear_by_key(this.games, (p: TimeControlGame): boolean => {
 			return p.time_control == id;
 		});
 		if (idx == -1) {
@@ -181,14 +154,14 @@ export class User extends Player {
 			return game_record.localeCompare(s.record);
 		});
 		if (!exists) {
-			this.games[idx].records.splice(index, 0, new GameNumber(game_record, 1));
+			this.games[idx].records.splice(index, 0, { record: game_record, amount: 1 });
 		} else {
 			this.games[idx].records[index].amount += 1;
 		}
 	}
 
 	delete_game(id: TimeControlID, game_record: DateStringShort): void {
-		const idx = search_linear_by_key(this.games, (p: TimeControlGames): boolean => {
+		const idx = search_linear_by_key(this.games, (p: TimeControlGame): boolean => {
 			return p.time_control == id;
 		});
 		if (idx == -1) {
@@ -213,7 +186,7 @@ export class User extends Player {
 	/// Returns all actions this user
 	get_actions(): UserAction[] {
 		const role_to_action = UserRoleToUserAction.get_instance();
-		const roles = this.get_roles();
+		const roles = this.roles;
 
 		let actions: UserAction[] = [];
 		for (let i = 0; i < roles.length; ++i) {
@@ -253,12 +226,12 @@ export class User extends Player {
 	 * @pre Usernames are equal
 	 */
 	copy_player_data(p: Player): void {
-		if (this.username != p.get_username()) {
-			throw new Error(`Trying to dump data of user ${p.get_username()} into a different player ${this.username}`);
+		if (this.username != p.username) {
+			throw new Error(`Trying to dump data of user ${p.username} into a different player ${this.username}`);
 		}
 
 		// copy all ratings
-		this.ratings = p.get_all_ratings();
+		this.ratings = p.ratings;
 	}
 
 	/// Creates a copy of this user
@@ -267,12 +240,12 @@ export class User extends Player {
 			this.username,
 			this.first_name,
 			this.last_name,
-			this.password.clone(),
+			{ ...this.password },
 			copyarray(this.roles, (s: UserRole): UserRole => {
 				return s;
 			}),
-			copyarray(this.games, (value: TimeControlGames): TimeControlGames => {
-				return value.clone();
+			copyarray(this.games, (value: TimeControlGame): TimeControlGame => {
+				return { ...value };
 			}),
 			copyarray(this.ratings, (r: TimeControlRating): TimeControlRating => {
 				return r.clone();

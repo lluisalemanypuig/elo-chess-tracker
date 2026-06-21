@@ -29,15 +29,17 @@ import { search_linear_by_key } from '@server/utils/searching';
 import { TimeControlID } from './time_control';
 import { TimeControlRating } from './time_control_rating';
 
+export const PlayerKeys = ['username', 'ratings'];
+
 /**
  * @brief Simple class to encode a Player
  */
 export class Player {
 	/// The user name of the the player
-	protected readonly username: string;
+	public readonly username: string;
 
 	/// Rating info of the player per time control id
-	protected ratings: TimeControlRating[];
+	public ratings: TimeControlRating[];
 
 	/**
 	 * @brief Constructor
@@ -47,11 +49,6 @@ export class Player {
 	constructor(username: string, ratings: TimeControlRating[]) {
 		this.username = username;
 		this.ratings = ratings;
-	}
-
-	/// Returns the username of this player
-	get_username(): string {
-		return this.username;
 	}
 
 	/// Returns whether the rating under the given time control id exists
@@ -78,18 +75,13 @@ export class Player {
 		return this.ratings[index].rating;
 	}
 
-	/// Sets the classical rating of the player
+	/// Sets the rating of the player
 	set_rating(id: TimeControlID, rating: Rating): void {
 		const index = this.index_time_control_id(id);
 		if (index == -1) {
 			throw new Error(`Rating with id '${id}' does not exist!`);
 		}
 		this.ratings[index].rating = rating;
-	}
-
-	/// Returns all ratings
-	get_all_ratings(): TimeControlRating[] {
-		return this.ratings;
 	}
 
 	/// Creates a copy of this player.
@@ -108,3 +100,5 @@ export class Player {
 		});
 	}
 }
+
+export type PlayerArray = Player[];

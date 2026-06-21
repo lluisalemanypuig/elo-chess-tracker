@@ -31,6 +31,7 @@ import {
 	UserAction,
 	UserActionID
 } from './user_action';
+import { UserPermissions } from './configuration/permissions';
 
 /// Relate each user role to a readable string
 export class UserRoleToUserAction {
@@ -110,7 +111,7 @@ export class UserRoleToUserAction {
 
 /**
  * @brief Initialize the permissions of every type of user.
- * @param permission_data A JSON object with the following structure:
+ * @param permissions A JSON object with the following structure:
 	{
 		admin : [...],
 		teacher : [...],
@@ -119,30 +120,30 @@ export class UserRoleToUserAction {
 	}
  * where each "[...]" is a vector of UserAction.
  */
-export function initialize_permissions(permission_data: any): void {
+export function initialize_permissions(permissions: UserPermissions): void {
 	let actions = UserRoleToUserAction.get_instance();
 
 	// ADMIN
-	for (let i = 0; i < permission_data.admin.length; ++i) {
-		actions.add_to_role(ADMIN, permission_data.admin[i]);
+	for (let i = 0; i < permissions.admin.length; ++i) {
+		actions.add_to_role(ADMIN, permissions.admin[i]);
 	}
 	actions.add_missing_generic_actions(ADMIN);
 
 	// TEACHER
-	for (let i = 0; i < permission_data.teacher.length; ++i) {
-		actions.add_to_role(TEACHER, permission_data.teacher[i]);
+	for (let i = 0; i < permissions.teacher.length; ++i) {
+		actions.add_to_role(TEACHER, permissions.teacher[i]);
 	}
 	actions.add_missing_generic_actions(TEACHER);
 
 	// MEMBER
-	for (let i = 0; i < permission_data.member.length; ++i) {
-		actions.add_to_role(MEMBER, permission_data.member[i]);
+	for (let i = 0; i < permissions.member.length; ++i) {
+		actions.add_to_role(MEMBER, permissions.member[i]);
 	}
 	actions.add_missing_generic_actions(MEMBER);
 
 	// STUDENT
-	for (let i = 0; i < permission_data.student.length; ++i) {
-		actions.add_to_role(STUDENT, permission_data.student[i]);
+	for (let i = 0; i < permissions.student.length; ++i) {
+		actions.add_to_role(STUDENT, permissions.student[i]);
 	}
 	actions.add_missing_generic_actions(STUDENT);
 }

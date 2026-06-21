@@ -16,31 +16,29 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 Full source code of elo-chess-tracker:
-	https://github.com/lluisalemanypuig/elo-chess-tracker
+    https://github.com/lluisalemanypuig/elo-chess-tracker
 
 Contact:
-	Lluís Alemany Puig
-	https://github.com/lluisalemanypuig
+    Lluís Alemany Puig
+    https://github.com/lluisalemanypuig
 */
 
-import { Rating } from '@server/rating_framework/rating';
-import { TimeControlID } from './time_control';
+import { z } from 'zod';
 
-/**
- * @brief A pair of time control id and rating
- */
-export class TimeControlRating {
-	public readonly time_control: TimeControlID;
-	public rating: Rating;
+const PortsSchema = z
+	.object({
+		http: z.string(),
+		https: z.string()
+	})
+	.strict();
 
-	constructor(id: TimeControlID, data: Rating) {
-		this.time_control = id;
-		this.rating = data;
-	}
+export type Ports = z.infer<typeof PortsSchema>;
 
-	clone(): TimeControlRating {
-		return new TimeControlRating(this.time_control, this.rating.clone());
-	}
-}
+export const ServerConfigurationSchema = z
+	.object({
+		domain_name: z.string(),
+		ports: PortsSchema
+	})
+	.strict();
 
-export const TimeControlRatingKeys = ['time_control', 'rating'];
+export type ServerConfiguration = z.infer<typeof ServerConfigurationSchema>;

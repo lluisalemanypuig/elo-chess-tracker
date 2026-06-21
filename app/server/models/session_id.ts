@@ -23,27 +23,22 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
+import { z } from 'zod';
+
+export const SessionIDSchema = z
+	.object({
+		token: z.string(),
+		username: z.string()
+	})
+	.strict()
+	.readonly();
+
 /**
  * @brief A structure that encodes a session.
  *
  * It consists of an identifier string and a username
  */
-export class SessionID {
-	public readonly token: string;
-	public readonly username: string;
-	constructor(token: string, username: string) {
-		this.token = token;
-		this.username = username;
-	}
+export type SessionID = z.infer<typeof SessionIDSchema>;
 
-	static get_field_token_name(): string {
-		return 'token';
-	}
-	static get_field_username_name(): string {
-		return 'username';
-	}
-
-	static from_cookie(cookie: any): SessionID {
-		return new SessionID(cookie.token, cookie.username);
-	}
-}
+export const SessionIDTokenFieldName = 'token';
+export const SessionIDUsernameFieldName = 'username';

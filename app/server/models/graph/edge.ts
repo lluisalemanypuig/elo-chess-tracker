@@ -23,7 +23,15 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { EdgeMetadata } from './edge_metadata';
+import { z } from 'zod';
+import { EdgeMetadataSchema, EdgeMetadata } from './edge_metadata';
+
+export const EdgeSchema = z
+	.object({
+		neighbor: z.string(),
+		metadata: EdgeMetadataSchema
+	})
+	.strict();
 
 /**
  * @brief A (directed) edge from user A to user B.
@@ -65,3 +73,7 @@ export class Edge {
 		);
 	}
 }
+
+export const EdgeArraySchema = z.array(EdgeSchema);
+
+export type EdgeArray = Edge[];

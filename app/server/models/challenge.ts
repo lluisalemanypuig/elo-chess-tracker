@@ -23,203 +23,137 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
+import { z } from 'zod';
 import { DateStringLongMillis } from '@server/utils/time';
-import { GameResult } from './game';
+import { GameResult, GameResultSchema } from './game';
 import { TimeControlID } from './time_control';
 
 export type ChallengeID = string;
 
+export const ChallengeSchema = z
+	.object({
+		id: z.string() as z.ZodType<ChallengeID>,
+		/// Name of the game that will result from this challenge
+		title: z.string(),
+		/// The user sending the challenge
+		sent_by: z.string(),
+		/// The user receiving the challenge
+		sent_to: z.string(),
+		/// Time control of the challenge
+		time_control_id: z.string() as z.ZodType<TimeControlID>,
+		/// Time control of the challenge
+		time_control_name: z.string(),
+		/// Date when the challenge was sent
+		when_challenge_sent: z.string() as z.ZodType<DateStringLongMillis>,
+		/// Date when the challenge was accepted
+		when_challenge_accepted: z.string().optional() as z.ZodType<DateStringLongMillis | undefined>,
+
+		/// Has the result been set at some point?
+		result_was_set: z.boolean().default(false),
+		/// Date when the result of the game was last modified
+		when_result_set: z.string().optional() as z.ZodType<DateStringLongMillis | undefined>,
+		/// Player who set the result
+		result_set_by: z.string().optional(),
+
+		/// Date when the result of the game was accepted.
+		when_result_accepted: z.string().optional() as z.ZodType<DateStringLongMillis | undefined>,
+		/// User that accepted the result
+		result_accepted_by: z.string().optional(),
+
+		/// The resulting game of the challenge
+		white: z.string().optional(),
+		black: z.string().optional(),
+		result: GameResultSchema.optional()
+	})
+	.strict();
+
 /**
  * @brief Class enconding a challenge
  *
- * A Challenge (from_Challenge) can challenge another Challenge (to_Challenge).
+ * A user can challenge another user.
  */
-export class Challenge {
-	/// Identifier of this challenge
-	private readonly id: ChallengeID;
+export type Challenge = z.infer<typeof ChallengeSchema>;
 
-	private readonly title: string;
-	/// The Challenge sending the challenge
-	private readonly sent_by: string;
-	/// The Challenge receiving the challenge
-	private readonly sent_to: string;
-	/// Date when the challenge was sent
-	private readonly when_challenge_sent: DateStringLongMillis;
-	/// Time control of the challenge
-	private readonly time_control_id: TimeControlID;
-	/// Time control of the challenge
-	private readonly time_control_name: string;
+export const ChallengeArraySchema = z.array(ChallengeSchema);
 
-	/// Date when the challenge was accepted
-	private when_challenge_accepted: DateStringLongMillis | undefined = undefined;
+export type ChallengeArray = z.infer<typeof ChallengeArraySchema>;
 
-	/// Has the result been set at some point?
-	private result_was_set: boolean = false;
-	/// Date when the result of the game was last modified
-	private when_result_set: DateStringLongMillis | undefined = undefined;
-	/// Player who set the result
-	private result_set_by: string | undefined = undefined;
+export function new_challenge(
+	id: string,
+	title: string,
+	sent_by: string,
+	sent_to: string,
+	time_control_id: TimeControlID,
+	time_control_name: string,
+	when_challenge_sent: DateStringLongMillis
+): Challenge {
+	return {
+		id: id,
+		title: title,
+		sent_by: sent_by,
+		sent_to: sent_to,
+		time_control_id: time_control_id,
+		time_control_name: time_control_name,
+		when_challenge_sent: when_challenge_sent,
+		when_challenge_accepted: undefined,
+		result_was_set: false,
+		when_result_set: undefined,
+		result_set_by: undefined,
+		when_result_accepted: undefined,
+		result_accepted_by: undefined,
+		white: undefined,
+		black: undefined,
+		result: undefined
+	};
+}
 
-	/// Date when the result of the game was accepted.
-	private when_result_accepted: DateStringLongMillis | undefined = undefined;
-	/// User that accepted the result
-	private result_accepted_by: string | undefined = undefined;
+interface Result {
+	by: string;
+	when: DateStringLongMillis;
+	white: string;
+	black: string;
+	result: GameResult;
+}
 
-	/// The resulting game of the challenge
-	private white: string | undefined = undefined;
-	private black: string | undefined = undefined;
-	private result: GameResult | undefined = undefined;
-
-	/**
-	 * @brief Constructor
-	 * @param id Challenge string id
-	 * @param sent_by User issuing the challenge
-	 * @param sent_to User receiving the challenge
-	 * @param time_control_id Time control id of the game
-	 * @param time_control_name Time control name of the game
-	 * @param when_challenge_sent Date when the challenge was sent
-	 */
-	constructor(
-		id: ChallengeID,
-		title: string,
-		sent_by: string,
-		sent_to: string,
-		time_control_id: TimeControlID,
-		time_control_name: string,
-		when_challenge_sent: DateStringLongMillis
-	) {
-		this.id = id;
-		this.title = title;
-		this.sent_by = sent_by;
-		this.sent_to = sent_to;
-		this.time_control_id = time_control_id;
-		this.time_control_name = time_control_name;
-		this.when_challenge_sent = when_challenge_sent;
+/// Set the result of a challenge. Checks integrity of input parameters.s
+export function set_result(c: Challenge, { by, when, white, black, result }: Result): void {
+	if (!(by === white || by === black)) {
+		throw new Error(`The setter (${by}) must be either white (${white}) or black (${black}).`);
+	}
+	if (!(white === c.sent_by || white === c.sent_to)) {
+		throw new Error(`White (${white}) must be either the sender (${c.sent_by}) or the receiver (${c.sent_to}).`);
+	}
+	if (!(black === c.sent_by || black === c.sent_to)) {
+		throw new Error(`Black (${black}) must be either the sender (${c.sent_by}) or the receiver (${c.sent_to}).`);
 	}
 
-	/// Returns the id of the challenge
-	get_id(): ChallengeID {
-		return this.id;
+	c.result_was_set = true;
+	c.result_set_by = by;
+	c.when_result_set = when;
+	c.white = white;
+	c.black = black;
+	c.result = result;
+}
+
+/// Unset the previous result
+export function unset_result(c: Challenge): void {
+	c.result_was_set = false;
+	c.result_set_by = undefined;
+	c.when_result_set = undefined;
+	c.white = undefined;
+	c.black = undefined;
+	c.result = undefined;
+}
+
+/// Accepts the result
+export function set_result_accepted(c: Challenge, by: string, d: string) {
+	if (!c.result_was_set) {
+		throw new Error('Result must have been set previously');
+	}
+	if (by != undefined && by == c.result_set_by) {
+		throw new Error('The accepter of the result cannot be the same person who set the result');
 	}
 
-	/// Returns the title of this game
-	get_title(): string {
-		return this.title;
-	}
-
-	/// Returns the username this challenge was sent by
-	get_sent_by(): string {
-		return this.sent_by;
-	}
-	/// Returns the username this challenge was sent to
-	get_sent_to(): string {
-		return this.sent_to;
-	}
-
-	/// Return the time when the challenge was sent
-	get_when_challenge_sent(): string {
-		return this.when_challenge_sent;
-	}
-	/// Return the time when the challenge was accepted
-	get_when_challenge_accepted(): string | undefined {
-		return this.when_challenge_accepted;
-	}
-
-	/// Return the time when the challenge was sent
-	get_when_result_set(): DateStringLongMillis | undefined {
-		return this.when_result_set;
-	}
-	/// Returns the username of the player who set the result
-	get_result_set_by(): string | undefined {
-		return this.result_set_by;
-	}
-
-	/// Return the time when the challenge was accepted
-	get_when_result_accepted(): DateStringLongMillis | undefined {
-		return this.when_result_accepted;
-	}
-	/// Returns the username of the player who set the result
-	get_result_accepted_by(): string | undefined {
-		return this.result_accepted_by;
-	}
-
-	/// White player
-	get_white(): string | undefined {
-		return this.white;
-	}
-	/// Black player
-	get_black(): string | undefined {
-		return this.black;
-	}
-	/// Result of the game
-	get_result(): GameResult | undefined {
-		return this.result;
-	}
-	/// Time control id of the game
-	get_time_control_id(): TimeControlID {
-		return this.time_control_id;
-	}
-	/// Time control name of the game
-	get_time_control_name(): string | undefined {
-		return this.time_control_name;
-	}
-	/// Sets the date when the challenge was accepted
-	set_challenge_accepted(d: string): void {
-		this.when_challenge_accepted = d;
-	}
-
-	/**
-	 * @brief Sets the result of the challenge
-	 * @pre 'by' is not undefined
-	 */
-	set_result(by: string, when: DateStringLongMillis, white: string, black: string, result: GameResult): void {
-		if (!(by == white || by == black)) {
-			throw new Error(`The setter (${by}) must be either white (${white}) or black (${black}).`);
-		}
-		if (!(white == this.sent_by || white == this.sent_to)) {
-			throw new Error(
-				`White (${white}) must be either the sender (${this.sent_by}) or the receiver (${this.sent_to}).`
-			);
-		}
-		if (!(black == this.sent_by || black == this.sent_to)) {
-			throw new Error(
-				`Black (${black}) must be either the sender (${this.sent_by}) or the receiver (${this.sent_to}).`
-			);
-		}
-
-		this.result_was_set = true;
-		this.result_set_by = by;
-		this.when_result_set = when;
-		this.white = white;
-		this.black = black;
-		this.result = result;
-	}
-
-	/// Unset the previous result
-	unset_result(): void {
-		this.result_was_set = false;
-		this.result_set_by = undefined;
-		this.when_result_set = undefined;
-		this.white = undefined;
-		this.black = undefined;
-		this.result = undefined;
-	}
-
-	/// Was the result set at some point?
-	was_result_set(): boolean {
-		return this.result_was_set;
-	}
-
-	/// Accepts the result
-	set_result_accepted(by: string, d: string) {
-		if (!this.was_result_set()) {
-			throw new Error('Result must have been set previously');
-		}
-		if (by != undefined && by == this.result_set_by) {
-			throw new Error('The accepter of the result cannot be the same person who set the result');
-		}
-
-		this.result_accepted_by = by;
-		this.when_result_accepted = d;
-	}
+	c.result_accepted_by = by;
+	c.when_result_accepted = d;
 }

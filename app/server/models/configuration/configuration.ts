@@ -23,24 +23,23 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { Rating } from '@server/rating_framework/rating';
-import { TimeControlID } from './time_control';
+import { z } from 'zod';
+import { EnvironmentSchema } from './environment';
+import { ServerConfigurationSchema } from './server';
+import { TimeControlArraySchema } from './time_controls';
+import { BehaviorSchema } from './behavior';
+import { UserPermissionsSchema } from './permissions';
+import { RatingFrameworkTypeSchema } from '@server/rating_framework/rating_framework_type';
 
-/**
- * @brief A pair of time control id and rating
- */
-export class TimeControlRating {
-	public readonly time_control: TimeControlID;
-	public rating: Rating;
+export const ConfigurationSchema = z
+	.object({
+		environment: EnvironmentSchema,
+		server: ServerConfigurationSchema,
+		rating_system: RatingFrameworkTypeSchema,
+		time_controls: TimeControlArraySchema,
+		behavior: BehaviorSchema,
+		permissions: UserPermissionsSchema
+	})
+	.strict();
 
-	constructor(id: TimeControlID, data: Rating) {
-		this.time_control = id;
-		this.rating = data;
-	}
-
-	clone(): TimeControlRating {
-		return new TimeControlRating(this.time_control, this.rating.clone());
-	}
-}
-
-export const TimeControlRatingKeys = ['time_control', 'rating'];
+export type Configuration = z.infer<typeof ConfigurationSchema>;

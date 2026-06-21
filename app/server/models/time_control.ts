@@ -23,6 +23,8 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
+import { z } from 'zod';
+
 /**
  * @brief A time control ID.
  *
@@ -31,6 +33,13 @@ Contact:
  * controls 5+3, 5+0, 3+2.
  */
 export type TimeControlID = string;
+
+export const TimeControlSchema = z
+	.object({
+		id: z.string(),
+		name: z.string()
+	})
+	.strict();
 
 /**
  * @brief Time control as a tuple.
@@ -43,12 +52,8 @@ export type TimeControlID = string;
  * - id: "blitz", name: "Blitz (5 + 3)"
  * - id: "blitz", name: "Blitz (5 + 0)"
  */
-export class TimeControl {
-	public id: TimeControlID;
-	public name: string;
+export type TimeControl = z.infer<typeof TimeControlSchema>;
 
-	constructor(id: TimeControlID, name: string) {
-		this.id = id;
-		this.name = name;
-	}
-}
+export const TimeControlArraySchema = z.array(TimeControlSchema);
+
+export type TimeControlArray = z.infer<typeof TimeControlArraySchema>;

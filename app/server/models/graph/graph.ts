@@ -23,10 +23,20 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
+import { z } from 'zod';
 import { EdgeMetadata } from './edge_metadata';
-import { Edge } from './edge';
+import { EdgeSchema, Edge } from './edge';
 import { search_by_key, where_should_be_inserted_by_key } from '@server/utils/searching';
 import { GameResult, opposite_result } from '@server/models/game';
+
+export const NeighborhoodSchema = z.array(EdgeSchema);
+
+export const GraphSchema = z
+	.object({
+		adjacency_list: z.map(z.string(), NeighborhoodSchema),
+		in_adjacency_list: z.map(z.string(), NeighborhoodSchema)
+	})
+	.strict();
 
 export type Neighborhood = Edge[];
 

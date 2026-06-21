@@ -23,6 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
+import { z } from 'zod';
 import { ADMIN, MEMBER, STUDENT, TEACHER, UserRole } from './user_role';
 
 /// Can create users
@@ -172,6 +173,8 @@ export const all_actions = [
 /// All actions as type
 export type UserAction = (typeof all_actions)[number];
 
+export const UserActionSchema = z.enum(all_actions);
+
 // -----------------------------------------------------------------------------
 
 export const GAMES_CREATE_ID = 'create_games';
@@ -197,6 +200,8 @@ export const all_action_ids = [
 
 /// All actions as type
 export type UserActionID = (typeof all_action_ids)[number];
+
+export const UserActionIDSchema = z.enum(all_action_ids);
 
 export function get_generic_role_action_name(id: UserActionID): UserAction {
 	switch (id) {
