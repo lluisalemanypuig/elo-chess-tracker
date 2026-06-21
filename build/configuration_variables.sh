@@ -18,7 +18,7 @@ function do_replace {
     fi
 }
 
-configuration_manager="src-server/managers/configuration_manager.ts"
+configuration_manager="app/server/managers/configuration_manager.ts"
 
 cache_data__old_str="private static readonly cache_data: boolean = false;"
 cache_data__new_str="private static readonly cache_data: boolean = true;"

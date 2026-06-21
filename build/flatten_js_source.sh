@@ -2,8 +2,8 @@
 
 cd js
 
-mv src-client/* .
-mv src-server/* .
-rmdir src-server src-client
+mv client/* .
+rmdir client
+rm -rf common
 
 cd ..

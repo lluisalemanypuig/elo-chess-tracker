@@ -9,8 +9,8 @@ function escape_string {
 
 raw_symbols_encrypt=$(bun build/random_symbols.ts)
 symbols_encrypt=$(echo "$raw_symbols_encrypt" | jq -r '.symbols')
-sed -i "s/\$ALLOWED_SYMBOLS_ENCRYPT/$(escape_string "$symbols_encrypt")/g" src-server/utils/encrypt.ts
+sed -i "s/\$ALLOWED_SYMBOLS_ENCRYPT/$(escape_string "$symbols_encrypt")/g" app/server/utils/encrypt.ts
 
 raw_symbols_cookies=$(bun build/random_symbols.ts)
 symbols_cookies=$(echo "$raw_symbols_cookies" | jq -r '.symbols')
-sed -i "s/\$ALLOWED_SYMBOLS_COOKIES/$(escape_string "$symbols_cookies")/g" src-server/managers/session.ts
+sed -i "s/\$ALLOWED_SYMBOLS_COOKIES/$(escape_string "$symbols_cookies")/g" app/server/managers/session.ts
