@@ -3,8 +3,8 @@
 	"version": "20xx.yy.00",
 	"author": "Lluís Alemany Puig",
 	"scripts": {
-		"start": "bun run ./app/server/app_main.ts",
-		"devstart": "DEBUG=ELO_CHESS_TRACKER:* bun run ./app/server/app_main.ts",
+		"start": "bun run ./app/main.ts",
+		"devstart": "DEBUG=ELO_CHESS_TRACKER:* bun run ./app/main.ts",
 		"serverstart": "bun run devstart",
 		"test": "jest --runInBand",
 		"build": "./build/compile.sh"

@@ -1,8 +1,18 @@
 /* Visit https://www.typescriptlang.org/tsconfig/ to read more about this file */
 {
-	"include": ["src-client"],
+	"include": ["app/client"],
 	"compilerOptions": {
 		/* Projects */
+
+		/* Paths */
+		"paths": {
+			"@server/*": ["./app/server/*"],
+			"@client/*": ["./app/client/*"],
+			"@common/*": ["./app/common/*"],
+			"@schemas/*": ["./app/common/schemas/*"],
+			"@models/*": ["./app/common/models/*"],
+			"@tests/*": ["./tests/*"]
+		},
 
 		/* Language and Environment */
 		"target": "es2017",
