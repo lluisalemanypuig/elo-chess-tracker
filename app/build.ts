@@ -60,7 +60,7 @@ app.use(compression()); // Compress all routes
 
 debug(log_now(), '    GETs and POSTs...');
 
-import { router } from '@server/app_router';
+import { router } from '@app/router';
 app.use('/', router);
 
 debug(log_now(), '    Error handlers...');

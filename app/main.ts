@@ -44,7 +44,7 @@ server_init_from_parameters(process.argv.slice(2));
 
 debug(log_now(), 'Import app...');
 
-import { app } from '@server/app_build';
+import { app } from '@app/build';
 
 debug(log_now(), '    Imported!');
 

@@ -1,6 +1,7 @@
 /* Visit https://www.typescriptlang.org/tsconfig/ to read more about this file */
 {
 	"include": [
+		"app",
 		"app/client",
 		"app/server",
 		"app/common",
@@ -14,6 +15,7 @@
 
 		/* Paths */
 		"paths": {
+			"@app/*": ["./app/*"],
 			"@server/*": ["./app/server/*"],
 			"@client/*": ["./app/client/*"],
 			"@common/*": ["./app/common/*"],
