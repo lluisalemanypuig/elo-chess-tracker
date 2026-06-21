@@ -23,6 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
+import { isDefined } from '@common/utils';
 import { User, UserRandomID } from '@server/models/user';
 import { search_linear_by_key } from '@server/utils/searching';
 
@@ -62,7 +63,7 @@ export class UsersManager {
 	}
 
 	exists(username: string): boolean {
-		return this.get_user_by_username(username) != undefined;
+		return isDefined(this.get_user_by_username(username));
 	}
 
 	add_user(u: User): void {
@@ -85,7 +86,7 @@ export class UsersManager {
 
 	get_user_by_username(username: string): User | undefined {
 		const idx = search_linear_by_key(this.users, (u: User): boolean => {
-			return u.get_username() == username;
+			return u.username == username;
 		});
 		return idx != -1 ? this.get_user_at(idx) : undefined;
 	}
@@ -104,11 +105,11 @@ export class UsersManager {
 	}
 
 	get_user_index(u: User): number | undefined {
-		return this.get_user_index_by_username(u.get_username());
+		return this.get_user_index_by_username(u.username);
 	}
 	get_user_index_by_username(username: string): number | undefined {
 		const idx = search_linear_by_key(this.users, (u: User): boolean => {
-			return u.get_username() == username;
+			return u.username == username;
 		});
 		return idx != -1 ? idx : undefined;
 	}

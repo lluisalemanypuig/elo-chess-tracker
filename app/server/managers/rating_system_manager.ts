@@ -55,26 +55,69 @@ export class RatingSystemManager {
 	}
 
 	/// Function to evaluate a game
-	private rating_func: Function = () => void {};
+	private rating_formula_func: Function = () => void {};
+
+	get_rating_function(): Function {
+		return this.rating_formula_func;
+	}
+	apply_rating_function(game: Game): [Rating, Rating] {
+		return this.rating_formula_func(game);
+	}
+
 	/// Function to create a new rating
 	private new_rating_func: Function = () => void {};
-	/// Function to read a single rating JSON object
-	private rating_from_JSON_func: Function = () => void {};
+
+	get_new_rating_function(): Function {
+		return this.new_rating_func;
+	}
+	get_new_rating(): Rating {
+		return this.new_rating_func();
+	}
+
+	/// Function to read a single rating JSON string
+	private rating_from_string_func: Function = () => void {};
+
+	get_rating_from_string_function(): Function {
+		return this.rating_from_string_func;
+	}
+	get_rating_from_string(str: string) {
+		return this.rating_from_string_func(str);
+	}
+
+	/// Function to read a single rating JSON string
+	private rating_from_json_func: Function = () => void {};
+
+	get_rating_from_json_function(): Function {
+		return this.rating_from_json_func;
+	}
+	get_rating_from_json(json: any) {
+		return this.rating_from_json_func(json);
+	}
 
 	/// All ratings used in the server
 	private all_time_controls: TimeControl[] = [];
 	/// All unique rating ids used in the server
 	private all_unique_time_controls: TimeControlID[] = [];
 
+	set_functions(formula: Function, new_rating: Function, from_string: Function, from_json: Function): void {
+		this.rating_formula_func = formula;
+		this.new_rating_func = new_rating;
+		this.rating_from_string_func = from_string;
+		this.rating_from_json_func = from_json;
+	}
+
 	clear_functions(): void {
-		this.rating_func = () => {
-			throw new Error('Missing function to calculate a new rating from a game.');
+		this.rating_formula_func = () => {
+			throw new Error('Missing formula function for this rating system.');
 		};
 		this.new_rating_func = () => {
 			throw new Error('Missing function to create a new rating.');
 		};
-		this.rating_from_JSON_func = () => {
-			throw new Error('Missing rating from JSON conversion function.');
+		this.rating_from_string_func = () => {
+			throw new Error('Missing JSON string conversion function.');
+		};
+		this.rating_from_json_func = () => {
+			throw new Error('Missing JSON object conversion function.');
 		};
 	}
 	clear_time_controls(): void {
@@ -84,35 +127,6 @@ export class RatingSystemManager {
 	clear(): void {
 		this.clear_functions();
 		this.clear_time_controls();
-	}
-
-	set_rating_function(func: Function): void {
-		this.rating_func = func;
-	}
-	get_rating_function(): Function {
-		return this.rating_func;
-	}
-	set_rating_from_JSON_function(func: Function): void {
-		this.rating_from_JSON_func = func;
-	}
-	get_rating_from_JSON_function(): Function {
-		return this.rating_from_JSON_func;
-	}
-	set_new_rating_function(func: Function): void {
-		this.new_rating_func = func;
-	}
-	get_new_rating_function(): Function {
-		return this.new_rating_func;
-	}
-
-	apply_rating_function(game: Game): [Rating, Rating] {
-		return this.rating_func(game);
-	}
-	get_new_rating(): Rating {
-		return this.new_rating_func();
-	}
-	get_rating_from_json(json: any): Rating {
-		return this.rating_from_JSON_func(json);
 	}
 
 	set_time_controls(all_ratings: TimeControl[]): void {

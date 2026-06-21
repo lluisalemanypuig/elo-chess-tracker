@@ -26,22 +26,23 @@ Contact:
 import fs from 'fs';
 import path from 'path';
 import Debug from 'debug';
-const debug = Debug('ELO_TRACKER:managers/challenges');
+const debug = Debug('ELO_CHESS_TRACKER:managers/challenges');
 
 import { DateStringLong, log_now, long_date_to_short_and_tiny_date } from '@server/utils/time';
 import { ChallengesManager } from '@server/managers/challenges_manager';
 import { EnvironmentManager } from '@server/managers/environment_manager';
-import { Challenge } from '@server/models/challenge';
+import { Challenge, new_challenge, set_result, unset_result } from '@server/models/challenge';
 import { GameResult } from '@server/models/game';
 import { game_add_new } from '@server/managers/games';
 import { TimeControlID } from '@server/models/time_control';
 import { UsersManager } from '@server/managers/users_manager';
 import { User } from '@server/models/user';
+import { isDefined } from '@common/utils';
 
 /**
  * @brief Filters the set of challenges that are accepted by the filter function @e by.
  * @param by Function to filter. Returns true if a challenge is to be returned.
- * @returns A set of challenges according to function @e by.
+ * @returns an array of challenges according to function @e by.
  */
 export function challenge_set_retrieve(
 	by: Function = (_c: Challenge): boolean => {
@@ -79,7 +80,7 @@ export function challenge_send_new(
 	let mem = ChallengesManager.get_instance();
 	const new_id: string = mem.new_challenge_id();
 
-	const c = new Challenge(new_id, title, sender, receiver, time_control_id, time_control_name, when);
+	const c = new_challenge(new_id, title, sender, receiver, time_control_id, time_control_name, when);
 
 	mem.add_challenge(c);
 
@@ -98,12 +99,12 @@ export function challenge_send_new(
  * of the challenge.
  */
 export function challenge_accept(c: Challenge): void {
-	debug(log_now(), `Accepting challenge '${c.get_id()}'`);
+	debug(log_now(), `Accepting challenge '${c.id}'`);
 
-	c.set_challenge_accepted(log_now());
+	c.when_challenge_accepted = log_now();
 
 	const challenge_dir = EnvironmentManager.get_instance().get_dir_challenges();
-	const challenge_file = path.join(challenge_dir, c.get_id());
+	const challenge_file = path.join(challenge_dir, c.id);
 	debug(log_now(), `    Writing challenge into file '${challenge_file}'`);
 	fs.writeFileSync(challenge_file, JSON.stringify(c, null, 4));
 }
@@ -115,12 +116,12 @@ export function challenge_accept(c: Challenge): void {
  * of the challenge.
  */
 export function challenge_decline(c: Challenge): void {
-	debug(log_now(), `Declining challenge '${c.get_id()}'`);
+	debug(log_now(), `Declining challenge '${c.id}'`);
 
 	ChallengesManager.get_instance().remove_challenge(c);
 
 	const challenge_dir = EnvironmentManager.get_instance().get_dir_challenges();
-	const challenge_file = path.join(challenge_dir, c.get_id());
+	const challenge_file = path.join(challenge_dir, c.id);
 	debug(log_now(), `    Deleting file '${challenge_file}'`);
 	fs.unlinkSync(challenge_file);
 }
@@ -139,12 +140,12 @@ export function challenge_set_result(
 	black: string,
 	result: GameResult
 ): void {
-	debug(log_now(), `Set the result of the challenge '${c.get_id()}'`);
+	debug(log_now(), `Set the result of the challenge '${c.id}'`);
 
-	c.set_result(by, when, white, black, result);
+	set_result(c, { by, when, white, black, result });
 
 	const challenge_dir = EnvironmentManager.get_instance().get_dir_challenges();
-	const challenge_file = path.join(challenge_dir, c.get_id());
+	const challenge_file = path.join(challenge_dir, c.id);
 	debug(log_now(), `    Writing challenge into file '${challenge_file}'`);
 	fs.writeFileSync(challenge_file, JSON.stringify(c, null, 4));
 }
@@ -155,30 +156,49 @@ export function challenge_set_result(
  * @pre The accepter must be the receiver of the challenge.
  */
 export function challenge_agree_result(c: Challenge): void {
-	debug(log_now(), `Agree to result of challenge '${c.get_id()}'...`);
+	debug(log_now(), `Agree to result of challenge '${c.id}'...`);
+
+	if (!isDefined(c.when_result_set)) {
+		debug(log_now(), `Date 'when_result_set' is not defined`);
+		return;
+	}
+	if (!isDefined(c.white) || !isDefined(c.black)) {
+		debug(log_now(), `Player 'white' or 'black' is not defined.`);
+		debug(log_now(), `    White: '${c.white}'.`);
+		debug(log_now(), `    Black: '${c.black}'.`);
+		return;
+	}
+	if (!isDefined(c.result) || !c.result_was_set) {
+		debug(log_now(), `Result is not set.`);
+		return;
+	}
+	if (!isDefined(c.result) || !c.result_was_set) {
+		debug(log_now(), `Result is not set.`);
+		return;
+	}
 
 	{
 		const challenge_dir = EnvironmentManager.get_instance().get_dir_challenges();
-		const challenge_file = path.join(challenge_dir, c.get_id());
+		const challenge_file = path.join(challenge_dir, c.id);
 		debug(log_now(), `    Removing challenge file '${challenge_file}'`);
 		fs.unlinkSync(challenge_file);
 	}
 
 	debug(log_now(), `Adding game...`);
-	const split = long_date_to_short_and_tiny_date(c.get_when_result_set() as string);
+	const split = long_date_to_short_and_tiny_date(c.when_result_set);
 
 	const mem = UsersManager.get_instance();
-	const white = mem.get_user_by_username(c.get_white() as string) as User;
-	const black = mem.get_user_by_username(c.get_black() as string) as User;
+	const white = mem.get_user_by_username(c.white) as User;
+	const black = mem.get_user_by_username(c.black) as User;
 
 	const rand_milli = `${Math.floor(Math.random() * 999)}`;
 	game_add_new(
-		c.get_title(),
+		c.title,
 		white,
 		black,
-		c.get_result() as GameResult,
-		c.get_time_control_id() as TimeControlID,
-		c.get_time_control_name() as string,
+		c.result,
+		c.time_control_id,
+		c.time_control_name,
 		split[0],
 		split[1] + ':' + (rand_milli.length == 1 ? '00' : rand_milli.length == 2 ? '0' : '') + rand_milli
 	);
@@ -196,12 +216,12 @@ export function challenge_agree_result(c: Challenge): void {
  * contain their rating as specified in the system at the conclusion of the game.
  */
 export function challenge_unset_result(c: Challenge): void {
-	debug(log_now(), `Disagree to the result of the challenge '${c.get_id()}'`);
+	debug(log_now(), `Disagree to the result of the challenge '${c.id}'`);
 
-	c.unset_result();
+	unset_result(c);
 
 	const challenge_dir = EnvironmentManager.get_instance().get_dir_challenges();
-	const challenge_file = path.join(challenge_dir, c.get_id());
+	const challenge_file = path.join(challenge_dir, c.id);
 	debug(log_now(), `    Writing challenge into file '${challenge_file}'`);
 	fs.writeFileSync(challenge_file, JSON.stringify(c, null, 4));
 }

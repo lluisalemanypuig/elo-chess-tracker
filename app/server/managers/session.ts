@@ -27,7 +27,7 @@ import Debug from 'debug';
 
 import { log_now } from '@server/utils/time';
 import { User } from '@server/models/user';
-const debug = Debug('ELO_TRACKER:managers/session');
+const debug = Debug('ELO_CHESS_TRACKER:managers/session');
 
 import { SessionIDManager } from '@server/managers/session_id_manager';
 import { SessionID } from '@server/models/session_id';
@@ -65,7 +65,7 @@ function random_session_id(str: string): string {
  */
 export function session_id_add(username: string): string {
 	const token = random_session_id(username);
-	const session_id = new SessionID(token, username);
+	const session_id: SessionID = { token: token, username: username };
 	SessionIDManager.get_instance().add_session_id(session_id);
 	return token;
 }

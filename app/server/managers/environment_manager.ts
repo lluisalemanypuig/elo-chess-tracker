@@ -25,6 +25,7 @@ Contact:
 
 import path from 'path';
 import { TimeControlID } from '@server/models/time_control';
+import { Environment, SSLCertificate } from '@server/models/configuration/environment';
 
 /**
  * @brief Directories and other parameters of the server's environment
@@ -131,16 +132,16 @@ export class EnvironmentManager {
 		return this.ssl_passphrase_file;
 	}
 
-	set_SSL_info(base_dir: string, public_key_file: string, private_key_file: string, passphrase_file: string): void {
+	set_SSL_info(base_dir: string, ssl: SSLCertificate): void {
 		this.directory_ssl = base_dir;
-		if (public_key_file != '') {
-			this.ssl_public_key_file = path.join(this.directory_ssl, public_key_file);
+		if (ssl.public_key_file != '') {
+			this.ssl_public_key_file = path.join(this.directory_ssl, ssl.public_key_file);
 		}
-		if (private_key_file != '') {
-			this.ssl_private_key_file = path.join(this.directory_ssl, private_key_file);
+		if (ssl.private_key_file != '') {
+			this.ssl_private_key_file = path.join(this.directory_ssl, ssl.private_key_file);
 		}
-		if (passphrase_file != '') {
-			this.ssl_passphrase_file = path.join(this.directory_ssl, passphrase_file);
+		if (ssl.passphrase_file != '') {
+			this.ssl_passphrase_file = path.join(this.directory_ssl, ssl.passphrase_file);
 		}
 	}
 
@@ -174,11 +175,11 @@ export class EnvironmentManager {
 		return this.icon_home_page;
 	}
 
-	set_icons_info(base_dir: string, favicon: string, login_page: string, home_page: string) {
+	set_icons_info(base_dir: string, env: Environment) {
 		this.directory_icon = base_dir;
-		this.icon_favicon = path.join(base_dir, favicon);
-		this.icon_login_page = path.join(base_dir, login_page);
-		this.icon_home_page = path.join(base_dir, home_page);
+		this.icon_favicon = path.join(base_dir, env.favicon);
+		this.icon_login_page = path.join(base_dir, env.login_page.icon);
+		this.icon_home_page = path.join(base_dir, env.home_page.icon);
 	}
 
 	// titles

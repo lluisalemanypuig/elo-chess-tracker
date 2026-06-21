@@ -88,7 +88,7 @@ export function recalculate_all_graphs() {
 		let iter = new GamesIterator(games_dir);
 		while (!iter.end_record_list()) {
 			const game = iter.get_current_game();
-			g.add_edge(game.get_white(), game.get_black(), game.get_result());
+			g.add_edge(game.white, game.black, game.result);
 			iter.next_game();
 		}
 		manager.add_graph(time_control_id, g);

@@ -31,6 +31,8 @@ import { UsersManager } from '@server/managers/users_manager';
 import { SessionIDManager } from '@server/managers/session_id_manager';
 import { RatingSystemManager } from '@server/managers/rating_system_manager';
 import { GraphsManager } from '@server/managers/graphs_manager';
+import { UserRoleToUserAction } from '@server/models/user_role_action';
+import { UsersBehavior } from './users_behavior';
 
 /**
  * @brief Clear the memory of the server
@@ -38,12 +40,14 @@ import { GraphsManager } from '@server/managers/graphs_manager';
  * That is, the RAM memory, not the disk memory.
  */
 export function clear_server(): void {
-	RatingSystemManager.get_instance().clear();
 	UsersManager.get_instance().clear();
+	UsersBehavior.get_instance().clear();
+	EnvironmentManager.get_instance().clear();
+	ConfigurationManager.get_instance().clear();
+	UserRoleToUserAction.get_instance().clear();
+	RatingSystemManager.get_instance().clear();
+	SessionIDManager.get_instance().clear();
 	ChallengesManager.get_instance().clear();
 	GamesManager.get_instance().clear();
 	GraphsManager.get_instance().clear();
-	ConfigurationManager.get_instance().clear();
-	EnvironmentManager.get_instance().clear();
-	SessionIDManager.get_instance().clear();
 }

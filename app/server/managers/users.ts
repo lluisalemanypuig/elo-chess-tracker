@@ -26,14 +26,13 @@ Contact:
 import fs from 'fs';
 import path from 'path';
 import Debug from 'debug';
-const debug = Debug('ELO_TRACKER:managers/users');
+const debug = Debug('ELO_CHESS_TRACKER:managers/users');
 
 import { Player } from '@server/models/player';
-import { TimeControlGames, User, UserRandomID } from '@server/models/user';
+import { TimeControlGame, User, UserRandomID } from '@server/models/user';
 import { EnvironmentManager } from '@server/managers/environment_manager';
 import { UsersManager } from '@server/managers/users_manager';
 import { UserRole } from '@server/models/user_role';
-import { Password } from '@server/models/password';
 import { encrypt_password_for_user } from '@server/utils/encrypt';
 import { RatingSystemManager } from '@server/managers/rating_system_manager';
 import { TimeControlRating } from '@server/models/time_control_rating';
@@ -42,7 +41,7 @@ import { log_now } from '@server/utils/time';
 /// Dump the data in user @e u into its corresponding file.
 export function user_overwrite(user: User): void {
 	const user_dir = EnvironmentManager.get_instance().get_dir_users();
-	const user_file = path.join(user_dir, user.get_username());
+	const user_file = path.join(user_dir, user.username);
 	fs.writeFileSync(user_file, JSON.stringify(user, null, 4));
 }
 
@@ -54,9 +53,9 @@ export function user_rename_and_reassign_roles(
 	roles: UserRole[]
 ): User {
 	let user = UsersManager.get_instance().get_user_by_username(username) as User;
-	user.set_first_name(first_name);
-	user.set_last_name(last_name);
-	user.set_roles(roles);
+	user.first_name = first_name;
+	user.last_name = last_name;
+	user.roles = roles;
 	user_overwrite(user);
 	return user;
 }
@@ -82,11 +81,11 @@ export function user_add_new(
 ): User {
 	const rating_system = RatingSystemManager.get_instance();
 
-	let game_list: TimeControlGames[] = [];
+	let games: TimeControlGame[] = [];
 	let ratings: TimeControlRating[] = [];
 	rating_system.get_unique_time_controls_ids().forEach((id: string) => {
 		ratings.push(new TimeControlRating(id, rating_system.get_new_rating()));
-		game_list.push(new TimeControlGames(id, []));
+		games.push({ time_control: id, records: [] });
 	});
 
 	const password = encrypt_password_for_user(username, pass);
@@ -95,14 +94,14 @@ export function user_add_new(
 		username,
 		firstname,
 		lastname,
-		new Password(password[0], password[1]),
+		{ encrypted: password[0], iv: password[1] },
 		roles,
-		game_list,
+		games,
 		ratings
 	);
 
 	const user_dir = EnvironmentManager.get_instance().get_dir_users();
-	const user_file = path.join(user_dir, user.get_username());
+	const user_file = path.join(user_dir, user.username);
 
 	fs.writeFileSync(user_file, JSON.stringify(user, null, 4));
 
@@ -112,7 +111,7 @@ export function user_add_new(
 }
 
 /// Returns the list of all (full) names and usernames
-export function user_get_all__name_randid(): [string, number][] {
+export function user_get_all_name_randid(): [string, number][] {
 	let res: [string, number][] = [];
 
 	const mem = UsersManager.get_instance();
@@ -136,11 +135,11 @@ export function user_update_from_player_data(players: Player[]): void {
 
 	debug(log_now(), 'Updating users...');
 	for (let i = 0; i < players.length; ++i) {
-		const username = players[i].get_username();
+		const username = players[i].username;
 
 		let u: User = manager.get_user_by_username(username) as User;
 
-		const ratings_player = players[i].get_all_ratings();
+		const ratings_player = players[i].ratings;
 		for (let j = 0; j < ratings_player.length; ++j) {
 			u.set_rating(ratings_player[j].time_control, ratings_player[j].rating);
 		}
@@ -154,7 +153,7 @@ export function user_update_from_player_data(players: Player[]): void {
 
 		debug(log_now(), '    Server memory...');
 		const u_idx = mem.get_user_index(u) as number;
-		debug(log_now(), `        User '${u.get_username()}' is at index '${u_idx}'`);
+		debug(log_now(), `        User '${u.username}' is at index '${u_idx}'`);
 		mem.replace_user(u, u_idx);
 	}
 }

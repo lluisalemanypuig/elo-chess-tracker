@@ -23,14 +23,18 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
+import Debug from 'debug';
+const debug = Debug('ELO_CHESS_TRACKER:managers/challenges');
+
 import path from 'path';
 import fs from 'fs';
 
 import { Game, GameID } from '@server/models/game';
-import { DateStringLongMillis, DateStringShort } from '@server/utils/time';
-import { game_set_from_json } from '@server/io/game';
+import { DateStringLongMillis, DateStringShort, log_now } from '@server/utils/time';
+import { game_array_from_string } from '@server/io/game';
 import { search_by_key, where_should_be_inserted_by_key } from '@server/utils/searching';
 import { read_directory } from '@server/utils/read_directory';
+import { isDefined } from '@common/utils';
 
 /* TODO: add a function that iterates only through those game records
  * where a player has games in.
@@ -54,7 +58,12 @@ export class GamesIterator {
 
 	private load_current_record(): void {
 		const filename = path.join(this.directory, this.record_files_list[this.record_idx]);
-		this.game_set = game_set_from_json(fs.readFileSync(filename, 'utf8'));
+		const array = game_array_from_string(fs.readFileSync(filename, 'utf8'));
+		if (!isDefined(array)) {
+			debug(log_now(), `File '${filename}' does not contain a valid game array.`);
+			return;
+		}
+		this.game_set = array;
 		this.game_idx = 0;
 	}
 
@@ -87,7 +96,7 @@ export class GamesIterator {
 		return this.record_idx;
 	}
 	/// Returns a reference to the whole game set in current record.
-	get_current_game_set(): Game[] {
+	get_current_game_array(): Game[] {
 		return this.game_set;
 	}
 	/// Returns a reference to the current game in the iteration.
@@ -211,7 +220,7 @@ export class GamesIterator {
 		this.load_current_record();
 		let found: boolean = false;
 		while (!found && !this.end_record_single()) {
-			if (this.get_current_game().get_date() > when) {
+			if (this.get_current_game().when > when) {
 				found = true;
 			} else {
 				this.next_game();
@@ -240,7 +249,7 @@ export class GamesIterator {
 		this.load_current_record();
 		let found: boolean = false;
 		while (!found && !this.end_record_single()) {
-			if (this.get_current_game().get_id() == id) {
+			if (this.get_current_game().id == id) {
 				found = true;
 			} else {
 				this.next_game();

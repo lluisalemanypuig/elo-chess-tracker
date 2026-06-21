@@ -85,11 +85,11 @@ export class ChallengesManager {
 	}
 
 	get_challenge_index(c: Challenge): number {
-		return this.get_challenge_index_by_id(c.get_id());
+		return this.get_challenge_index_by_id(c.id);
 	}
 	get_challenge_index_by_id(id: ChallengeID): number {
 		for (let i = 0; i < this.challenges.length; ++i) {
-			if (this.challenges[i].get_id() == id) {
+			if (this.challenges[i].id == id) {
 				return i;
 			}
 		}
