@@ -25,6 +25,8 @@ Contact:
 
 import { Rating } from '@server/rating_framework/rating';
 
+export const EloRatingKeys = ['rating', 'num_games', 'won', 'drawn', 'lost', 'K', 'surpassed_2400'];
+
 /**
  * @brief Simple class to encode a rating.
  */
@@ -54,7 +56,6 @@ export class EloRating extends Rating {
 		surpassed_2400: boolean
 	) {
 		super(rating, num_games, won, drawn, lost);
-
 		this.K = K;
 		this.surpassed_2400 = surpassed_2400;
 	}
@@ -65,29 +66,6 @@ export class EloRating extends Rating {
 	}
 }
 
-export function Elo_new_rating(): EloRating {
+export function new_rating_Elo(): EloRating {
 	return new EloRating(1500, 0, 0, 0, 0, 40, false);
-}
-
-/**
- * @brief Parses a JSON string or object and returns a Player.
- * @param json A JSON string or object with data of a Player.
- * @returns A new Player object.
- * @pre If @e json is a string then it cannot start with '['.
- */
-export function Elo_rating_from_json(json: any): EloRating {
-	if (typeof json === 'string') {
-		const json_parse = JSON.parse(json);
-		return Elo_rating_from_json(json_parse);
-	}
-
-	return new EloRating(
-		json['rating'],
-		json['num_games'],
-		json['won'],
-		json['drawn'],
-		json['lost'],
-		json['K'],
-		json['surpassed_2400']
-	);
 }

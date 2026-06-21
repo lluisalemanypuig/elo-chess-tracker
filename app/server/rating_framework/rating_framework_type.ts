@@ -23,5 +23,11 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
+import { z } from 'zod';
+
+const all_framework_types = ['Elo'] as const;
+
 /// Result of a game
-export type RatingFrameworkType = '' | 'Elo';
+export type RatingFrameworkType = (typeof all_framework_types)[number];
+
+export const RatingFrameworkTypeSchema = z.enum(all_framework_types);
