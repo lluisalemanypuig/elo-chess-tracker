@@ -46,7 +46,7 @@ import { GameResult } from '@common/models/game';
 import { UsersManager } from '@server/managers/users_manager';
 import { ConfigurationManager } from '@server/managers/configuration_manager';
 import { RatingSystemManager } from '@server/managers/rating_system_manager';
-import { get_execution_directory } from './managers/environment_manager';
+import { get_execution_directory } from '@server/managers/environment_manager';
 
 export async function get_page_challenge(req: any, res: any) {
 	debug(log_now(), 'GET /page/challenge...');

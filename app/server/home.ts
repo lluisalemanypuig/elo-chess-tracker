@@ -30,7 +30,7 @@ import { log_now } from '@server/utils/time';
 import { SessionID, SessionIDUsernameFieldName } from '@common/models/session_id';
 import { is_user_logged_in } from '@server/managers/session';
 import { ConfigurationManager } from '@server/managers/configuration_manager';
-import { get_execution_directory } from './managers/environment_manager';
+import { get_execution_directory } from '@server/managers/environment_manager';
 
 export async function get_page_login(req: any, res: any) {
 	let send_home: boolean;

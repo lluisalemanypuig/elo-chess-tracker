@@ -33,7 +33,7 @@ import { User } from '@common/models/user';
 import { user_overwrite } from '@server/managers/users';
 import { SessionID } from '@common/models/session_id';
 import { ConfigurationManager } from '@server/managers/configuration_manager';
-import { get_execution_directory } from './managers/environment_manager';
+import { get_execution_directory } from '@server/managers/environment_manager';
 
 export async function get_page_user_password_change(req: any, res: any) {
 	debug(log_now(), 'GET /page/user/password_change_page...');

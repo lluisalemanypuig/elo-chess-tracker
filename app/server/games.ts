@@ -49,7 +49,7 @@ import {
 } from '@server/managers/user_relationships';
 import { UsersManager } from '@server/managers/users_manager';
 import { ConfigurationManager } from '@server/managers/configuration_manager';
-import { get_execution_directory } from './managers/environment_manager';
+import { get_execution_directory } from '@server/managers/environment_manager';
 
 export async function get_page_game_list_own(req: any, res: any) {
 	debug(log_now(), 'GET /page/game/list/own...');

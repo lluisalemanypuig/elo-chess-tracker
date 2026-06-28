@@ -35,7 +35,7 @@ import { CREATE_USER, USER_ROLE_ASSIGN, get_role_action_name, USER_ROLE_ASSIGN_I
 import { SessionID } from '@common/models/session_id';
 import { UsersManager } from '@server/managers/users_manager';
 import { ConfigurationManager } from '@server/managers/configuration_manager';
-import { get_execution_directory } from './managers/environment_manager';
+import { get_execution_directory } from '@server/managers/environment_manager';
 
 export async function get_page_user_create(req: any, res: any) {
 	debug(log_now(), 'GET /page/user/create...');

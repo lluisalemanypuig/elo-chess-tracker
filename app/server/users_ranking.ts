@@ -30,7 +30,7 @@ import { log_now } from '@server/utils/time';
 import { is_user_logged_in } from '@server/managers/session';
 import { SessionID } from '@common/models/session_id';
 import { ConfigurationManager } from '@server/managers/configuration_manager';
-import { get_execution_directory } from './managers/environment_manager';
+import { get_execution_directory } from '@server/managers/environment_manager';
 
 export async function get_page_user_ranking(req: any, res: any) {
 	debug(log_now(), 'GET /user/ranking...');
