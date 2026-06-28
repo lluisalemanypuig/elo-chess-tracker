@@ -25,22 +25,32 @@ Contact:
 
 import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:server_home');
+import { Request, Response } from 'express';
 
 import { log_now } from '@server/utils/time';
-import { SessionID, SessionIDUsernameFieldName } from '@common/models/session_id';
 import { is_user_logged_in } from '@server/managers/session';
 import { ConfigurationManager } from '@server/managers/configuration_manager';
 import { get_execution_directory } from '@server/managers/environment_manager';
+import { AuthenticationSchema } from '@common/schemas/authentication';
+import { isDefined } from '@common/utils/is_defined';
 
-export async function get_page_login(req: any, res: any) {
+export async function get_page_login(req: Request, res: Response) {
 	let send_home: boolean;
 	console.log('GET page_login');
 
-	if (SessionIDUsernameFieldName in req.cookies) {
-		debug(log_now(), 'There is a username key in the cookies received.');
-		debug(log_now(), `    Value: ${req.cookies.username}`);
+	const sessionParse = AuthenticationSchema.safeParse(req.cookies);
+	if (!sessionParse.success) {
+		debug(log_now(), 'Failed to parse AuthenticationSchema');
+		debug(log_now(), `Error: '${sessionParse.error}'`);
+		res.status(401).send('Internal error');
+		return;
+	}
+	const session = sessionParse.data;
 
-		const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
+	if (isDefined(session)) {
+		debug(log_now(), 'There is a username key in the cookies received.');
+		debug(log_now(), `    Value: ${session.username}`);
+
 		const r = is_user_logged_in(session);
 		send_home = r[0];
 
@@ -65,10 +75,17 @@ export async function get_page_login(req: any, res: any) {
 	}
 }
 
-export async function get_page_home(req: any, res: any) {
+export async function get_page_home(req: Request, res: Response) {
 	debug(log_now(), 'GET /home');
 
-	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
+	const sessionParse = AuthenticationSchema.safeParse(req.cookies);
+	if (!sessionParse.success) {
+		debug(log_now(), 'Failed to parse AuthenticationSchema');
+		debug(log_now(), `Error: '${sessionParse.error}'`);
+		res.status(401).send('Internal error');
+		return;
+	}
+	const session = sessionParse.data;
 	const r = is_user_logged_in(session);
 	if (!r[0]) {
 		debug(log_now(), `    User ${session.username} is not logged in.`);

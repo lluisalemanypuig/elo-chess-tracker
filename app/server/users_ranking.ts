@@ -25,17 +25,26 @@ Contact:
 
 import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:server_users_ranking');
+import { Request, Response } from 'express';
 
 import { log_now } from '@server/utils/time';
 import { is_user_logged_in } from '@server/managers/session';
-import { SessionID } from '@common/models/session_id';
 import { ConfigurationManager } from '@server/managers/configuration_manager';
 import { get_execution_directory } from '@server/managers/environment_manager';
+import { AuthenticationSchema } from '@common/schemas/authentication';
 
-export async function get_page_user_ranking(req: any, res: any) {
+export async function get_page_user_ranking(req: Request, res: Response) {
 	debug(log_now(), 'GET /user/ranking...');
 
-	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
+	const sessionParse = AuthenticationSchema.safeParse(req.cookies);
+	if (!sessionParse.success) {
+		debug(log_now(), 'Failed to parse AuthenticationSchema');
+		debug(log_now(), `Error: '${sessionParse.error}'`);
+		res.status(401).send('Internal error');
+		return;
+	}
+	const session = sessionParse.data;
+
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {

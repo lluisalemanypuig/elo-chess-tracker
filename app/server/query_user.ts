@@ -25,6 +25,7 @@ Contact:
 
 import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:server_query_users');
+import { Request, Response } from 'express';
 
 import { log_now } from '@server/utils/time';
 import { user_get_all_name_randid } from '@server/managers/users';
@@ -32,13 +33,20 @@ import { is_user_logged_in } from '@server/managers/session';
 import { User } from '@common/models/user';
 import { UsersManager } from '@server/managers/users_manager';
 import { TimeControlRating } from '@common/models/time_control_rating';
-import { SessionID } from '@common/models/session_id';
+import { AuthenticationSchema } from '@common/schemas/authentication';
 
 /// Returns the list of user full names and usernames sorted by name
-export async function get_query_user_list(req: any, res: any) {
+export async function get_query_user_list(req: Request, res: Response) {
 	debug(log_now(), 'GET /query/user/list...');
 
-	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
+	const sessionParse = AuthenticationSchema.safeParse(req.cookies);
+	if (!sessionParse.success) {
+		debug(log_now(), 'Failed to parse AuthenticationSchema');
+		debug(log_now(), `Error: '${sessionParse.error}'`);
+		res.status(401).send('Internal error');
+		return;
+	}
+	const session = sessionParse.data;
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -54,10 +62,17 @@ export async function get_query_user_list(req: any, res: any) {
 	res.status(200).send(list);
 }
 
-export async function get_query_html_user_list(req: any, res: any) {
+export async function get_query_html_user_list(req: Request, res: Response) {
 	debug(log_now(), 'GET /query/html/user/list...');
 
-	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
+	const sessionParse = AuthenticationSchema.safeParse(req.cookies);
+	if (!sessionParse.success) {
+		debug(log_now(), 'Failed to parse AuthenticationSchema');
+		debug(log_now(), `Error: '${sessionParse.error}'`);
+		res.status(401).send('Internal error');
+		return;
+	}
+	const session = sessionParse.data;
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -77,10 +92,17 @@ export async function get_query_html_user_list(req: any, res: any) {
 	res.status(200).send(data);
 }
 
-export async function get_query_user_home(req: any, res: any) {
+export async function get_query_user_home(req: Request, res: Response) {
 	debug(log_now(), 'GET /query/user/home...');
 
-	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
+	const sessionParse = AuthenticationSchema.safeParse(req.cookies);
+	if (!sessionParse.success) {
+		debug(log_now(), 'Failed to parse AuthenticationSchema');
+		debug(log_now(), `Error: '${sessionParse.error}'`);
+		res.status(401).send('Internal error');
+		return;
+	}
+	const session = sessionParse.data;
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -104,10 +126,17 @@ export async function get_query_user_home(req: any, res: any) {
 	});
 }
 
-export async function post_query_user_edit(req: any, res: any) {
+export async function post_query_user_edit(req: Request, res: Response) {
 	debug(log_now(), 'POST /query/user/edit...');
 
-	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
+	const sessionParse = AuthenticationSchema.safeParse(req.cookies);
+	if (!sessionParse.success) {
+		debug(log_now(), 'Failed to parse AuthenticationSchema');
+		debug(log_now(), `Error: '${sessionParse.error}'`);
+		res.status(401).send('Internal error');
+		return;
+	}
+	const session = sessionParse.data;
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -133,10 +162,17 @@ export async function post_query_user_edit(req: any, res: any) {
 	});
 }
 
-export async function post_query_user_ranking(req: any, res: any) {
+export async function post_query_user_ranking(req: Request, res: Response) {
 	debug(log_now(), 'POST /query/user/ranking...');
 
-	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
+	const sessionParse = AuthenticationSchema.safeParse(req.cookies);
+	if (!sessionParse.success) {
+		debug(log_now(), 'Failed to parse AuthenticationSchema');
+		debug(log_now(), `Error: '${sessionParse.error}'`);
+		res.status(401).send('Internal error');
+		return;
+	}
+	const session = sessionParse.data;
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {

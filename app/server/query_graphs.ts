@@ -25,11 +25,11 @@ Contact:
 
 import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:server_query_graphs');
+import { Request, Response } from 'express';
 
 import { log_now } from '@server/utils/time';
 import { is_user_logged_in } from '@server/managers/session';
 import { User } from '@common/models/user';
-import { SessionID } from '@common/models/session_id';
 import { GraphsManager } from '@server/managers/graphs_manager';
 import { TimeControlID } from '@common/models/time_control';
 import { Graph } from '@common/models/graph/graph';
@@ -38,6 +38,7 @@ import { UsersManager } from '@server/managers/users_manager';
 import { Edge } from '@common/models/graph/edge';
 import { can_user_see_graph } from '@server/managers/user_relationships';
 import { GRAPHS_SEE_USER } from '@common/models/user_action';
+import { AuthenticationSchema } from '@common/schemas/authentication';
 
 class NodeWeight {
 	rating: number = 0;
@@ -186,10 +187,17 @@ function retrieve_graph_full(querier: User, time_control_id: TimeControlID): [No
 	return [list_nodes, list_edges];
 }
 
-export async function post_query_graph_own(req: any, res: any) {
+export async function post_query_graph_own(req: Request, res: Response) {
 	debug(log_now(), 'POST /query/graph/own...');
 
-	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
+	const sessionParse = AuthenticationSchema.safeParse(req.cookies);
+	if (!sessionParse.success) {
+		debug(log_now(), 'Failed to parse AuthenticationSchema');
+		debug(log_now(), `Error: '${sessionParse.error}'`);
+		res.status(401).send('Internal error');
+		return;
+	}
+	const session = sessionParse.data;
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -207,10 +215,17 @@ export async function post_query_graph_own(req: any, res: any) {
 	});
 }
 
-export async function post_query_graph_full(req: any, res: any) {
+export async function post_query_graph_full(req: Request, res: Response) {
 	debug(log_now(), 'POST /query/graph/full...');
 
-	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
+	const sessionParse = AuthenticationSchema.safeParse(req.cookies);
+	if (!sessionParse.success) {
+		debug(log_now(), 'Failed to parse AuthenticationSchema');
+		debug(log_now(), `Error: '${sessionParse.error}'`);
+		res.status(401).send('Internal error');
+		return;
+	}
+	const session = sessionParse.data;
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {

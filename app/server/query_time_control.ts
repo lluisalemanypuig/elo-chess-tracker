@@ -25,20 +25,28 @@ Contact:
 
 import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:server_query_time_control');
+import { Request, Response } from 'express';
 
 import { log_now } from '@server/utils/time';
 import { is_user_logged_in } from '@server/managers/session';
 import { RatingSystemManager } from '@server/managers/rating_system_manager';
-import { SessionID } from '@common/models/session_id';
+import { AuthenticationSchema } from '@common/schemas/authentication';
 
-export async function get_query_html_time_controls(req: any, res: any) {
+export async function get_query_html_time_controls(req: Request, res: Response) {
 	debug(log_now(), 'GET /query/html/time_controls...');
 
-	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
+	const sessionParse = AuthenticationSchema.safeParse(req.cookies);
+	if (!sessionParse.success) {
+		debug(log_now(), 'Failed to parse AuthenticationSchema');
+		debug(log_now(), `Error: '${sessionParse.error}'`);
+		res.status(401).send('Internal error');
+		return;
+	}
+	const session = sessionParse.data;
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
-		res.satus(401).send(r[1]);
+		res.status(401).send(r[1]);
 		return;
 	}
 
@@ -50,14 +58,21 @@ export async function get_query_html_time_controls(req: any, res: any) {
 	res.status(200).send(html);
 }
 
-export async function get_query_html_time_controls_unique(req: any, res: any) {
+export async function get_query_html_time_controls_unique(req: Request, res: Response) {
 	debug(log_now(), 'GET /query/html/time_controls_unique...');
 
-	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
+	const sessionParse = AuthenticationSchema.safeParse(req.cookies);
+	if (!sessionParse.success) {
+		debug(log_now(), 'Failed to parse AuthenticationSchema');
+		debug(log_now(), `Error: '${sessionParse.error}'`);
+		res.status(401).send('Internal error');
+		return;
+	}
+	const session = sessionParse.data;
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
-		res.satus(401).send(r[1]);
+		res.status(401).send(r[1]);
 		return;
 	}
 

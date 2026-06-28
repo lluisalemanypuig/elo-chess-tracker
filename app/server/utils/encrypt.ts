@@ -29,7 +29,7 @@ import { interleave_strings } from '@server/utils/misc';
 // original allowed_symbols string:
 // a!b·c$d%e&f/g(h)i=j?k¿l|m@n#o~p¬qr\'s[¡]t{u}v/w*x-y+zºAªB"C,D.E;F:G_HIJKLMNOPQRSTUVWXYZ0123456789
 
-const allowed_symbols: string = '$ALLOWED_SYMBOLS_ENCRYPT'.normalize('NFC');
+const allowed_symbols: string = 'E40u¬tIWJ&1D%26[zKyVQ/¡X{.5=C$Sjr8eU*|cNOwºq@vFiRb, ;)¿:lo+Yn(Hhm9M7fª~k-3aT}LZ·Agx]p?B"G/#s!_dP'.normalize('NFC');
 
 /// Logarithm of 'x' in base 'base'
 function log_base(x: number, base: number): number {

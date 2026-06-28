@@ -25,21 +25,29 @@ Contact:
 
 import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:server_query_challenges');
+import { Request, Response } from 'express';
 
 import { log_now } from '@server/utils/time';
 import { is_user_logged_in } from '@server/managers/session';
 import { User } from '@common/models/user';
 import { challenge_set_retrieve } from '@server/managers/challenges';
 import { Challenge } from '@common/models/challenge';
-import { SessionID } from '@common/models/session_id';
 import { UsersManager } from '@server/managers/users_manager';
 import { can_user_decline_challenge } from '@server/managers/user_relationships';
+import { AuthenticationSchema } from '@common/schemas/authentication';
 
 /// Query the server for challenges received sento to me by other users
-export async function get_query_challenge_received(req: any, res: any) {
+export async function get_query_challenge_received(req: Request, res: Response) {
 	debug(log_now(), 'GET /query/challenge/received...');
 
-	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
+	const sessionParse = AuthenticationSchema.safeParse(req.cookies);
+	if (!sessionParse.success) {
+		debug(log_now(), 'Failed to parse AuthenticationSchema');
+		debug(log_now(), `Error: '${sessionParse.error}'`);
+		res.status(401).send('Internal error');
+		return;
+	}
+	const session = sessionParse.data;
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -83,10 +91,17 @@ export async function get_query_challenge_received(req: any, res: any) {
 }
 
 /// Query the server for challenges sent to other users by me
-export async function get_query_challenge_sent(req: any, res: any) {
+export async function get_query_challenge_sent(req: Request, res: Response) {
 	debug(log_now(), 'GET /query/challenge/sent...');
 
-	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
+	const sessionParse = AuthenticationSchema.safeParse(req.cookies);
+	if (!sessionParse.success) {
+		debug(log_now(), 'Failed to parse AuthenticationSchema');
+		debug(log_now(), `Error: '${sessionParse.error}'`);
+		res.status(401).send('Internal error');
+		return;
+	}
+	const session = sessionParse.data;
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -129,10 +144,17 @@ export async function get_query_challenge_sent(req: any, res: any) {
 }
 
 /// Query the server for accepted challenges whose result has not been set yet.
-export async function get_query_challenge_pending_result(req: any, res: any) {
+export async function get_query_challenge_pending_result(req: Request, res: Response) {
 	debug(log_now(), 'GET /query/challenge/pending_result...');
 
-	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
+	const sessionParse = AuthenticationSchema.safeParse(req.cookies);
+	if (!sessionParse.success) {
+		debug(log_now(), 'Failed to parse AuthenticationSchema');
+		debug(log_now(), `Error: '${sessionParse.error}'`);
+		res.status(401).send('Internal error');
+		return;
+	}
+	const session = sessionParse.data;
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -191,10 +213,17 @@ export async function get_query_challenge_pending_result(req: any, res: any) {
 }
 
 /// Query the server for accepted challenges whose result has been set by me
-export async function get_query_challenge_confirm_result_other(req: any, res: any) {
+export async function get_query_challenge_confirm_result_other(req: Request, res: Response) {
 	debug(log_now(), 'GET /query/challenge/confirm_result/other...');
 
-	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
+	const sessionParse = AuthenticationSchema.safeParse(req.cookies);
+	if (!sessionParse.success) {
+		debug(log_now(), 'Failed to parse AuthenticationSchema');
+		debug(log_now(), `Error: '${sessionParse.error}'`);
+		res.status(401).send('Internal error');
+		return;
+	}
+	const session = sessionParse.data;
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -266,10 +295,17 @@ export async function get_query_challenge_confirm_result_other(req: any, res: an
 }
 
 /// Query the server for accepted challenges whose result has been set by my opponent
-export async function get_query_challenge_confirm_result_self(req: any, res: any) {
+export async function get_query_challenge_confirm_result_self(req: Request, res: Response) {
 	debug(log_now(), 'GET /query/challenge/confirm_result/self...');
 
-	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
+	const sessionParse = AuthenticationSchema.safeParse(req.cookies);
+	if (!sessionParse.success) {
+		debug(log_now(), 'Failed to parse AuthenticationSchema');
+		debug(log_now(), `Error: '${sessionParse.error}'`);
+		res.status(401).send('Internal error');
+		return;
+	}
+	const session = sessionParse.data;
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {

@@ -25,6 +25,7 @@ Contact:
 
 import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:server_users_new');
+import { Request, Response } from 'express';
 
 import { log_now } from '@server/utils/time';
 import { is_user_logged_in } from '@server/managers/session';
@@ -32,15 +33,22 @@ import { user_add_new } from '@server/managers/users';
 import { User } from '@common/models/user';
 import { is_role_string_correct } from '@common/models/user_role';
 import { CREATE_USER, USER_ROLE_ASSIGN, get_role_action_name, USER_ROLE_ASSIGN_ID } from '@common/models/user_action';
-import { SessionID } from '@common/models/session_id';
 import { UsersManager } from '@server/managers/users_manager';
 import { ConfigurationManager } from '@server/managers/configuration_manager';
 import { get_execution_directory } from '@server/managers/environment_manager';
+import { AuthenticationSchema } from '@common/schemas/authentication';
 
-export async function get_page_user_create(req: any, res: any) {
+export async function get_page_user_create(req: Request, res: Response) {
 	debug(log_now(), 'GET /page/user/create...');
 
-	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
+	const sessionParse = AuthenticationSchema.safeParse(req.cookies);
+	if (!sessionParse.success) {
+		debug(log_now(), 'Failed to parse AuthenticationSchema');
+		debug(log_now(), `Error: '${sessionParse.error}'`);
+		res.status(401).send('Internal error');
+		return;
+	}
+	const session = sessionParse.data;
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -67,10 +75,17 @@ export async function get_page_user_create(req: any, res: any) {
 	res.sendFile(`${get_execution_directory()}/html/user/new.html`);
 }
 
-export async function post_user_create(req: any, res: any) {
+export async function post_user_create(req: Request, res: Response) {
 	debug(log_now(), 'POST /user/create');
 
-	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
+	const sessionParse = AuthenticationSchema.safeParse(req.cookies);
+	if (!sessionParse.success) {
+		debug(log_now(), 'Failed to parse AuthenticationSchema');
+		debug(log_now(), `Error: '${sessionParse.error}'`);
+		res.status(401).send('Internal error');
+		return;
+	}
+	const session = sessionParse.data;
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -96,7 +111,7 @@ export async function post_user_create(req: any, res: any) {
 	const password = req.body.p;
 	const roles = req.body.r;
 
-	debug(log_now(), `User '${req.cookies.user}' is trying to create a new user:`);
+	debug(log_now(), `User '${session.username}' is trying to create a new user:`);
 	debug(log_now(), `    Username: '${username}'`);
 	debug(log_now(), `    First name: '${firstname}'`);
 	debug(log_now(), `    Last name: '${lastname}'`);

@@ -25,6 +25,7 @@ Contact:
 
 import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:server_games');
+import { Request, Response } from 'express';
 
 import { DateStringShort, log_now } from '@server/utils/time';
 import { is_user_logged_in } from '@server/managers/session';
@@ -40,7 +41,6 @@ import {
 } from '@server/managers/games';
 import { GameID, GameResult } from '@common/models/game';
 import { ADMIN } from '@common/models/user_role';
-import { SessionID } from '@common/models/session_id';
 import { TimeControlID } from '@common/models/time_control';
 import {
 	can_user_create_a_game,
@@ -50,11 +50,19 @@ import {
 import { UsersManager } from '@server/managers/users_manager';
 import { ConfigurationManager } from '@server/managers/configuration_manager';
 import { get_execution_directory } from '@server/managers/environment_manager';
+import { AuthenticationSchema } from '@common/schemas/authentication';
 
-export async function get_page_game_list_own(req: any, res: any) {
+export async function get_page_game_list_own(req: Request, res: Response) {
 	debug(log_now(), 'GET /page/game/list/own...');
 
-	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
+	const sessionParse = AuthenticationSchema.safeParse(req.cookies);
+	if (!sessionParse.success) {
+		debug(log_now(), 'Failed to parse AuthenticationSchema');
+		debug(log_now(), `Error: '${sessionParse.error}'`);
+		res.status(401).send('Internal error');
+		return;
+	}
+	const session = sessionParse.data;
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -69,10 +77,17 @@ export async function get_page_game_list_own(req: any, res: any) {
 	res.sendFile(`${get_execution_directory()}/html/game/list/own.html`);
 }
 
-export async function get_page_game_list_all(req: any, res: any) {
+export async function get_page_game_list_all(req: Request, res: Response) {
 	debug(log_now(), 'GET /game/list/all...');
 
-	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
+	const sessionParse = AuthenticationSchema.safeParse(req.cookies);
+	if (!sessionParse.success) {
+		debug(log_now(), 'Failed to parse AuthenticationSchema');
+		debug(log_now(), `Error: '${sessionParse.error}'`);
+		res.status(401).send('Internal error');
+		return;
+	}
+	const session = sessionParse.data;
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -87,10 +102,17 @@ export async function get_page_game_list_all(req: any, res: any) {
 	res.sendFile(`${get_execution_directory()}/html/game/list/all.html`);
 }
 
-export async function get_page_game_create(req: any, res: any) {
+export async function get_page_game_create(req: Request, res: Response) {
 	debug(log_now(), 'GET /page/game/create...');
 
-	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
+	const sessionParse = AuthenticationSchema.safeParse(req.cookies);
+	if (!sessionParse.success) {
+		debug(log_now(), 'Failed to parse AuthenticationSchema');
+		debug(log_now(), `Error: '${sessionParse.error}'`);
+		res.status(401).send('Internal error');
+		return;
+	}
+	const session = sessionParse.data;
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -111,10 +133,17 @@ export async function get_page_game_create(req: any, res: any) {
 	res.sendFile(`${get_execution_directory()}/html/game/create.html`);
 }
 
-export async function post_game_create(req: any, res: any) {
+export async function post_game_create(req: Request, res: Response) {
 	debug(log_now(), 'POST /game/create...');
 
-	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
+	const sessionParse = AuthenticationSchema.safeParse(req.cookies);
+	if (!sessionParse.success) {
+		debug(log_now(), 'Failed to parse AuthenticationSchema');
+		debug(log_now(), `Error: '${sessionParse.error}'`);
+		res.status(401).send('Internal error');
+		return;
+	}
+	const session = sessionParse.data;
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -192,10 +221,17 @@ export async function post_game_create(req: any, res: any) {
 	res.status(201).send();
 }
 
-export async function post_game_edit_result(req: any, res: any) {
+export async function post_game_edit_result(req: Request, res: Response) {
 	debug(log_now(), 'POST /game/edit_result...');
 
-	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
+	const sessionParse = AuthenticationSchema.safeParse(req.cookies);
+	if (!sessionParse.success) {
+		debug(log_now(), 'Failed to parse AuthenticationSchema');
+		debug(log_now(), `Error: '${sessionParse.error}'`);
+		res.status(401).send('Internal error');
+		return;
+	}
+	const session = sessionParse.data;
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -241,10 +277,17 @@ export async function post_game_edit_result(req: any, res: any) {
 	res.status(200).send();
 }
 
-export async function post_game_edit_title(req: any, res: any) {
+export async function post_game_edit_title(req: Request, res: Response) {
 	debug(log_now(), 'POST /game/edit_title...');
 
-	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
+	const sessionParse = AuthenticationSchema.safeParse(req.cookies);
+	if (!sessionParse.success) {
+		debug(log_now(), 'Failed to parse AuthenticationSchema');
+		debug(log_now(), `Error: '${sessionParse.error}'`);
+		res.status(401).send('Internal error');
+		return;
+	}
+	const session = sessionParse.data;
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -290,10 +333,17 @@ export async function post_game_edit_title(req: any, res: any) {
 	res.status(200).send();
 }
 
-export async function post_game_delete(req: any, res: any) {
+export async function post_game_delete(req: Request, res: Response) {
 	debug(log_now(), 'POST /game/delete...');
 
-	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
+	const sessionParse = AuthenticationSchema.safeParse(req.cookies);
+	if (!sessionParse.success) {
+		debug(log_now(), 'Failed to parse AuthenticationSchema');
+		debug(log_now(), `Error: '${sessionParse.error}'`);
+		res.status(401).send('Internal error');
+		return;
+	}
+	const session = sessionParse.data;
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -336,10 +386,17 @@ export async function post_game_delete(req: any, res: any) {
 	res.status(200).send();
 }
 
-export async function post_recalculate_ratings(req: any, res: any) {
+export async function post_recalculate_ratings(req: Request, res: Response) {
 	debug(log_now(), 'POST /recalculate/ratings...');
 
-	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
+	const sessionParse = AuthenticationSchema.safeParse(req.cookies);
+	if (!sessionParse.success) {
+		debug(log_now(), 'Failed to parse AuthenticationSchema');
+		debug(log_now(), `Error: '${sessionParse.error}'`);
+		res.status(401).send('Internal error');
+		return;
+	}
+	const session = sessionParse.data;
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {

@@ -29,6 +29,7 @@ import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import compression from 'compression';
 import helmet from 'helmet';
+import { Request, Response } from 'express';
 
 import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:app_build');
@@ -70,17 +71,11 @@ app.use(function (_req: any, _res: any, next: Function) {
 	next(createError(404));
 });
 // error handler
-app.use(function (err: any, req: any, res: any, _next: Function) {
+app.use(function (err: any, req: Request, res: Response, _next: Function) {
 	debug(log_now(), 'The request could not be served');
-	let R = req as Request;
-	debug(log_now(), `    method: ${R.method}`);
-	debug(log_now(), `    text: ${R.text}`);
-	debug(log_now(), `    referrer: ${R.referrer}`);
-	debug(log_now(), `    url: ${R.url}`);
-
-	// set locals, only providing error in development
-	res.locals.message = err.message;
-	res.locals.error = req.app.get('env') === 'development' ? err : {};
+	debug(log_now(), `    method: ${req.method}`);
+	debug(log_now(), `    body: ${JSON.stringify(req.body, null, '    ')}`);
+	debug(log_now(), `    url: ${req.url}`);
 
 	// render the error page
 	res.status(err.status || 500);

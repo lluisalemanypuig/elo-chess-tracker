@@ -25,15 +25,17 @@ Contact:
 
 import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:server_login_logout');
+import { Request, Response } from 'express';
 
 import { log_now } from '@server/utils/time';
 import { is_password_of_user_correct } from '@server/utils/encrypt';
 import { empty_session_id_cookie, make_session_id_cookie } from '@server/utils/cookies';
 import { session_id_add, session_id_delete } from '@server/managers/session';
 import { SessionIDManager } from '@server/managers/session_id_manager';
-import { SessionID, SessionIDTokenFieldName, SessionIDUsernameFieldName } from '@common/models/session_id';
+import { SessionIDTokenFieldName, SessionIDUsernameFieldName } from '@common/models/session_id';
 import { User } from '@common/models/user';
 import { UsersManager } from '@server/managers/users_manager';
+import { AuthenticationSchema } from '@common/schemas/authentication';
 
 /**
  * @brief Can a user log into the webpage? Are the username and password input correct?
@@ -42,7 +44,7 @@ import { UsersManager } from '@server/managers/users_manager';
  * @returns Data
  * @post Creates a new session id for the user.
  */
-export async function post_user_login(req: any, res: any) {
+export async function post_user_login(req: Request, res: Response) {
 	debug(log_now(), `POST /user/login`);
 
 	const username = req.body.u;
@@ -91,10 +93,17 @@ export async function post_user_login(req: any, res: any) {
  * @param res
  * @post Deletes the user's session id.
  */
-export async function post_user_logout(req: any, res: any) {
+export async function post_user_logout(req: Request, res: Response) {
 	debug(log_now(), `POST /user/logout`);
 
-	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
+	const sessionParse = AuthenticationSchema.safeParse(req.cookies);
+	if (!sessionParse.success) {
+		debug(log_now(), 'Failed to parse AuthenticationSchema');
+		debug(log_now(), `Error: '${sessionParse.error}'`);
+		res.status(401).send('Internal error');
+		return;
+	}
+	const session = sessionParse.data;
 
 	debug(log_now(), `    Cookie:`);
 	debug(log_now(), `        Username:   '${session.username}'`);

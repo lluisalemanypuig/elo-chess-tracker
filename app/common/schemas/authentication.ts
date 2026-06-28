@@ -23,21 +23,6 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { z } from 'zod';
+import { SessionIDLenientSchema } from '../models/session_id';
 
-export const SessionIDLenientSchema = z.object({
-	token: z.string(),
-	username: z.string()
-});
-
-export const SessionIDSchema = SessionIDLenientSchema.strict().readonly();
-
-/**
- * @brief A structure that encodes a session.
- *
- * It consists of an identifier string and a username
- */
-export type SessionID = z.infer<typeof SessionIDSchema>;
-
-export const SessionIDTokenFieldName = 'token';
-export const SessionIDUsernameFieldName = 'username';
+export const AuthenticationSchema = SessionIDLenientSchema;

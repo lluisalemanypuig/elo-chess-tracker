@@ -24,6 +24,7 @@ Contact:
 */
 
 import express from 'express';
+import { Request, Response } from 'express';
 
 import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:app_router');
@@ -34,7 +35,7 @@ import { EnvironmentManager, get_execution_directory } from '@server/managers/en
 let router = express.Router();
 
 // serve all *.css files
-router.get('/css/*.css', (req: any, res: any) => {
+router.get('/css/*.css', (req: Request, res: Response) => {
 	debug(log_now(), 'GET css file...');
 	debug(log_now(), `    request: ${req.url}`);
 	const filepath = `${get_execution_directory()}/${req.url}`;
@@ -48,7 +49,7 @@ router.get('/css/*.css', (req: any, res: any) => {
 
 /* ************************************************************************** */
 /* Version number */
-router.get('/version_number', (_req: any, res: any) => {
+router.get('/version_number', (_req: Request, res: Response) => {
 	debug(log_now(), 'GET version_number...');
 	res.status(200);
 	if (ConfigurationManager.should_cache_data()) {
@@ -59,7 +60,7 @@ router.get('/version_number', (_req: any, res: any) => {
 
 /* ************************************************************************** */
 /* ICONS */
-router.get('/favicon.ico', (_req: any, res: any) => {
+router.get('/favicon.ico', (_req: Request, res: Response) => {
 	debug(log_now(), 'GET favicon.ico...');
 	const filepath = EnvironmentManager.get_instance().get_icon_favicon();
 	debug(log_now(), `    file to send: ${filepath}`);
@@ -69,7 +70,7 @@ router.get('/favicon.ico', (_req: any, res: any) => {
 	}
 	res.sendFile(filepath);
 });
-router.get('/icon/login_page', (_req: any, res: any) => {
+router.get('/icon/login_page', (_req: Request, res: Response) => {
 	debug(log_now(), 'GET /icon/login_page...');
 	const filepath = EnvironmentManager.get_instance().get_icon_login_page();
 	debug(log_now(), `    file to send: ${filepath}`);
@@ -79,7 +80,7 @@ router.get('/icon/login_page', (_req: any, res: any) => {
 	}
 	res.sendFile(filepath);
 });
-router.get('/icon/home_page', (_req: any, res: any) => {
+router.get('/icon/home_page', (_req: Request, res: Response) => {
 	debug(log_now(), 'GET /icon/home_page...');
 	const filepath = EnvironmentManager.get_instance().get_icon_home_page();
 	debug(log_now(), `    file to send: ${filepath}`);
@@ -91,7 +92,7 @@ router.get('/icon/home_page', (_req: any, res: any) => {
 });
 
 /* PAGE TITLES */
-router.get('/title/login_page', (_req: any, res: any) => {
+router.get('/title/login_page', (_req: Request, res: Response) => {
 	debug(log_now(), 'GET /title/login_page...');
 	res.status(200);
 	if (ConfigurationManager.should_cache_data()) {
@@ -99,7 +100,7 @@ router.get('/title/login_page', (_req: any, res: any) => {
 	}
 	res.send(EnvironmentManager.get_instance().get_title_login_page());
 });
-router.get('/title/home_page', (_req: any, res: any) => {
+router.get('/title/home_page', (_req: Request, res: Response) => {
 	debug(log_now(), 'GET /title/home_page...');
 	res.status(200);
 	if (ConfigurationManager.should_cache_data()) {
@@ -116,7 +117,7 @@ router.get('/', get_page_login);
 router.get('/home', get_page_home);
 
 // serve all javascript files!
-router.get('/js/*', (req: any, res: any) => {
+router.get('/js/*', (req: Request, res: Response) => {
 	debug(log_now(), 'GET a file in js/');
 	debug(log_now(), `    request: ${req.url}`);
 	const filepath = `${get_execution_directory()}/${req.url}`;

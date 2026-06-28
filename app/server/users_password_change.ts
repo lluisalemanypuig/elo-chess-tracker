@@ -25,20 +25,28 @@ Contact:
 
 import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:server_users_password_changes');
+import { Request, Response } from 'express';
 
 import { log_now } from '@server/utils/time';
 import { is_user_logged_in, session_user_delete_all } from '@server/managers/session';
 import { encrypt_password_for_user, is_password_of_user_correct } from '@server/utils/encrypt';
 import { User } from '@common/models/user';
 import { user_overwrite } from '@server/managers/users';
-import { SessionID } from '@common/models/session_id';
 import { ConfigurationManager } from '@server/managers/configuration_manager';
 import { get_execution_directory } from '@server/managers/environment_manager';
+import { AuthenticationSchema } from '@common/schemas/authentication';
 
-export async function get_page_user_password_change(req: any, res: any) {
+export async function get_page_user_password_change(req: Request, res: Response) {
 	debug(log_now(), 'GET /page/user/password_change_page...');
 
-	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
+	const sessionParse = AuthenticationSchema.safeParse(req.cookies);
+	if (!sessionParse.success) {
+		debug(log_now(), 'Failed to parse AuthenticationSchema');
+		debug(log_now(), `Error: '${sessionParse.error}'`);
+		res.status(401).send('Internal error');
+		return;
+	}
+	const session = sessionParse.data;
 
 	const r = is_user_logged_in(session);
 	if (!r[0]) {
@@ -53,10 +61,17 @@ export async function get_page_user_password_change(req: any, res: any) {
 	res.sendFile(`${get_execution_directory()}/html/user/password_change.html`);
 }
 
-export async function post_user_password_change(req: any, res: any) {
+export async function post_user_password_change(req: Request, res: Response) {
 	debug(log_now(), 'POST /user/password_change...');
 
-	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
+	const sessionParse = AuthenticationSchema.safeParse(req.cookies);
+	if (!sessionParse.success) {
+		debug(log_now(), 'Failed to parse AuthenticationSchema');
+		debug(log_now(), `Error: '${sessionParse.error}'`);
+		res.status(401).send('Internal error');
+		return;
+	}
+	const session = sessionParse.data;
 	const old_password = req.body.old;
 	const new_password = req.body.new;
 

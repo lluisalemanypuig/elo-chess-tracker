@@ -25,6 +25,7 @@ Contact:
 
 import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:server_query_games');
+import { Request, Response } from 'express';
 
 import path from 'path';
 import fs from 'fs';
@@ -36,7 +37,6 @@ import { Game } from '@common/models/game';
 import { RatingSystemManager } from '@server/managers/rating_system_manager';
 import { EnvironmentManager } from '@server/managers/environment_manager';
 import { GAMES_SEE } from '@common/models/user_action';
-import { SessionID } from '@common/models/session_id';
 import { can_user_delete_a_game, can_user_edit_a_game, can_user_see_a_game } from '@server/managers/user_relationships';
 import { TimeControlID } from '@common/models/time_control';
 import { game_array_from_string } from '@common/io/game';
@@ -44,6 +44,7 @@ import { UsersManager } from '@server/managers/users_manager';
 import { search_by_key } from '@server/utils/searching';
 import { read_directory } from '@server/utils/read_directory';
 import { isDefined } from '@common/utils/is_defined';
+import { AuthenticationSchema } from '@common/schemas/authentication';
 
 function increment(g: Game): any {
 	const [white_after, black_after] = RatingSystemManager.get_instance().apply_rating_function(g);
@@ -140,10 +141,17 @@ function filter_game_list(
 	return data_to_return;
 }
 
-export async function post_query_game_list_own(req: any, res: any) {
+export async function post_query_game_list_own(req: Request, res: Response) {
 	debug(log_now(), 'POST /query/game/list/own...');
 
-	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
+	const sessionParse = AuthenticationSchema.safeParse(req.cookies);
+	if (!sessionParse.success) {
+		debug(log_now(), 'Failed to parse AuthenticationSchema');
+		debug(log_now(), `Error: '${sessionParse.error}'`);
+		res.status(401).send('Internal error');
+		return;
+	}
+	const session = sessionParse.data;
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -228,10 +236,17 @@ function merge_by_date(v1: any[], v2: any[]): any[] {
 	return v3;
 }
 
-export async function post_query_game_list_all(req: any, res: any) {
+export async function post_query_game_list_all(req: Request, res: Response) {
 	debug(log_now(), 'POST /query/game/list/all...');
 
-	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
+	const sessionParse = AuthenticationSchema.safeParse(req.cookies);
+	if (!sessionParse.success) {
+		debug(log_now(), 'Failed to parse AuthenticationSchema');
+		debug(log_now(), `Error: '${sessionParse.error}'`);
+		res.status(401).send('Internal error');
+		return;
+	}
+	const session = sessionParse.data;
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {

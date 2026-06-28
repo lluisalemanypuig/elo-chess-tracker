@@ -25,21 +25,29 @@ Contact:
 
 import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:server_graphs');
+import { Request, Response } from 'express';
 
 import { log_now } from '@server/utils/time';
 import { is_user_logged_in } from '@server/managers/session';
 import { GRAPHS_SEE_USER } from '@common/models/user_action';
 import { User } from '@common/models/user';
-import { SessionID } from '@common/models/session_id';
 import { ADMIN } from '@common/models/user_role';
 import { recalculate_all_graphs } from '@server/managers/graphs';
 import { ConfigurationManager } from '@server/managers/configuration_manager';
 import { get_execution_directory } from '@server/managers/environment_manager';
+import { AuthenticationSchema } from '@common/schemas/authentication';
 
-export async function get_page_graph_own(req: any, res: any) {
+export async function get_page_graph_own(req: Request, res: Response) {
 	debug(log_now(), 'GET /graph/own...');
 
-	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
+	const sessionParse = AuthenticationSchema.safeParse(req.cookies);
+	if (!sessionParse.success) {
+		debug(log_now(), 'Failed to parse AuthenticationSchema');
+		debug(log_now(), `Error: '${sessionParse.error}'`);
+		res.status(401).send('Internal error');
+		return;
+	}
+	const session = sessionParse.data;
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -54,10 +62,17 @@ export async function get_page_graph_own(req: any, res: any) {
 	res.sendFile(`${get_execution_directory()}/html/graph/own.html`);
 }
 
-export async function get_page_graph_full(req: any, res: any) {
+export async function get_page_graph_full(req: Request, res: Response) {
 	debug(log_now(), 'GET /graph/full...');
 
-	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
+	const sessionParse = AuthenticationSchema.safeParse(req.cookies);
+	if (!sessionParse.success) {
+		debug(log_now(), 'Failed to parse AuthenticationSchema');
+		debug(log_now(), `Error: '${sessionParse.error}'`);
+		res.status(401).send('Internal error');
+		return;
+	}
+	const session = sessionParse.data;
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -78,10 +93,17 @@ export async function get_page_graph_full(req: any, res: any) {
 	res.sendFile(`${get_execution_directory()}/html/graph/full.html`);
 }
 
-export async function post_recalculate_graphs(req: any, res: any) {
+export async function post_recalculate_graphs(req: Request, res: Response) {
 	debug(log_now(), 'POST /recalculate/graphs...');
 
-	const session: SessionID = { token: req.cookies.token, username: req.cookies.username };
+	const sessionParse = AuthenticationSchema.safeParse(req.cookies);
+	if (!sessionParse.success) {
+		debug(log_now(), 'Failed to parse AuthenticationSchema');
+		debug(log_now(), `Error: '${sessionParse.error}'`);
+		res.status(401).send('Internal error');
+		return;
+	}
+	const session = sessionParse.data;
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
