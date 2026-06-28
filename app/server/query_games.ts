@@ -45,7 +45,7 @@ import { search_by_key } from '@server/utils/searching';
 import { read_directory } from '@server/utils/read_directory';
 import { isDefined } from '@common/utils/is_defined';
 import { AuthenticationSchema } from '@common/schemas/authentication';
-import { GameQueryList } from '@app/common/schemas/games';
+import { GameQueryList } from '@app/common/schemas/query_games';
 
 function increment(g: Game): any {
 	const [white_after, black_after] = RatingSystemManager.get_instance().apply_rating_function(g);

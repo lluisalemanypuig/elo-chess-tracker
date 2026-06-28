@@ -37,6 +37,7 @@ import { ConfigurationManager } from '@server/managers/configuration_manager';
 import { get_execution_directory } from '@server/managers/environment_manager';
 import { AuthenticationSchema } from '@common/schemas/authentication';
 import { isDefined } from '@common/utils/is_defined';
+import { UserCreateSchema } from '@app/common/schemas/user';
 
 export async function get_page_user_create(req: Request, res: Response) {
 	debug(log_now(), 'GET /page/user/create...');
@@ -105,11 +106,19 @@ export async function post_user_create(req: Request, res: Response) {
 		return;
 	}
 
-	const username = req.body.u;
-	const firstname = req.body.fn;
-	const lastname = req.body.ln;
-	const password = req.body.p;
-	const roles = req.body.r;
+	const user_parse = UserCreateSchema.safeParse(req.cookies);
+	if (!user_parse.success) {
+		debug(log_now(), 'Failed to parse schema');
+		debug(log_now(), `Error: '${user_parse.error}'`);
+		res.status(401).send('Internal error');
+		return;
+	}
+
+	const username = user_parse.data.u;
+	const firstname = user_parse.data.fn;
+	const lastname = user_parse.data.ln;
+	const password = user_parse.data.p;
+	const roles = user_parse.data.r;
 
 	debug(log_now(), `User '${session.username}' is trying to create a new user:`);
 	debug(log_now(), `    Username: '${username}'`);

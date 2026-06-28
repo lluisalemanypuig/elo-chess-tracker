@@ -35,7 +35,7 @@ import { UsersManager } from '@server/managers/users_manager';
 import { TimeControlRating } from '@common/models/time_control_rating';
 import { AuthenticationSchema } from '@common/schemas/authentication';
 import { isDefined } from '@common/utils/is_defined';
-import { UserQueryEditSchema } from '@app/common/schemas/user';
+import { UserQueryEditSchema } from '@app/common/schemas/query_user';
 
 /// Returns the list of user full names and usernames sorted by name
 export async function get_query_user_list(req: Request, res: Response) {

@@ -24,24 +24,8 @@ Contact:
 */
 
 import { z } from 'zod';
-import { UserRoleArraySchema } from '../models/user_role';
 
-export const UserCreateSchema = z.object({
+export const UserLoginSchema = z.object({
 	u: z.string(),
-	fn: z.string(),
-	ln: z.string(),
-	p: z.string(),
-	r: UserRoleArraySchema
-});
-
-export const UserEditSchema = z.object({
-	u: z.number().gte(0),
-	f: z.string(),
-	l: z.string(),
-	r: UserRoleArraySchema
-});
-
-export const UserPasswordChangeSchema = z.object({
-	old: z.string(),
-	new: z.string()
+	p: z.string()
 });

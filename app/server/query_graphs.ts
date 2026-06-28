@@ -39,7 +39,7 @@ import { can_user_see_graph } from '@server/managers/user_relationships';
 import { GRAPHS_SEE_USER } from '@common/models/user_action';
 import { AuthenticationSchema } from '@common/schemas/authentication';
 import { isDefined } from '@common/utils/is_defined';
-import { GraphQuerySchema } from '@app/common/schemas/graphs';
+import { GraphQuerySchema } from '@app/common/schemas/query_graphs';
 
 class NodeWeight {
 	rating: number = 0;

@@ -37,12 +37,21 @@ import { User } from '@common/models/user';
 import { UsersManager } from '@server/managers/users_manager';
 import { AuthenticationSchema } from '@common/schemas/authentication';
 import { isDefined } from '@common/utils/is_defined';
+import { UserLoginSchema } from '@app/common/schemas/login_logout';
 
 export async function post_user_login(req: Request, res: Response) {
 	debug(log_now(), `POST /user/login`);
 
-	const username = req.body.u;
-	const password_plain_text = req.body.p;
+	const login_parse = UserLoginSchema.safeParse(req.body);
+	if (!login_parse.success) {
+		debug(log_now(), 'Failed to parse schema');
+		debug(log_now(), `Error: '${login_parse.error}'`);
+		res.status(401).send('Internal error');
+		return;
+	}
+
+	const username = login_parse.data.u;
+	const password_plain_text = login_parse.data.p;
 
 	debug(log_now(), `    Username '${username}'`);
 

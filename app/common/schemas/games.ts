@@ -50,7 +50,3 @@ export const GameEditTitleSchema = z.object({
 export const GameDeleteSchema = z.object({
 	id: z.string()
 });
-
-export const GameQueryList = z.object({
-	tc_i: z.string()
-});

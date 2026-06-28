@@ -37,6 +37,7 @@ import { ConfigurationManager } from '@server/managers/configuration_manager';
 import { get_execution_directory } from '@server/managers/environment_manager';
 import { AuthenticationSchema } from '@common/schemas/authentication';
 import { isDefined } from '@common/utils/is_defined';
+import { UserEditSchema } from '@app/common/schemas/user';
 
 export async function get_page_user_edit(req: Request, res: Response) {
 	debug(log_now(), 'GET /page/user/edit...');
@@ -89,9 +90,21 @@ export async function post_user_edit(req: Request, res: Response) {
 		return;
 	}
 
+	const user_parse = UserEditSchema.safeParse(req.cookies);
+	if (!user_parse.success) {
+		debug(log_now(), 'Failed to parse schema');
+		debug(log_now(), `Error: '${user_parse.error}'`);
+		res.status(401).send('Internal error');
+		return;
+	}
+
+	const edited_rid = user_parse.data.u;
+	const first_name = user_parse.data.f;
+	const last_name = user_parse.data.l;
+	const roles = user_parse.data.r;
+
 	const mem = UsersManager.get_instance();
 
-	const edited_rid = req.body.u;
 	const edited = mem.get_user_by_random_id(edited_rid);
 	if (!isDefined(edited)) {
 		debug(log_now(), `Random id '${edited_rid}' for user is not valid.`);
@@ -105,10 +118,6 @@ export async function post_user_edit(req: Request, res: Response) {
 		res.status(403).send('You do not have enough permissions to edit this user.');
 		return;
 	}
-
-	const first_name = req.body.f;
-	const last_name = req.body.l;
-	const roles = req.body.r;
 
 	debug(log_now(), `    First name: '${first_name}'`);
 	debug(log_now(), `    Last name: '${last_name}'`);

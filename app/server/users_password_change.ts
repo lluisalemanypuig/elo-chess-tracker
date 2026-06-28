@@ -35,6 +35,7 @@ import { ConfigurationManager } from '@server/managers/configuration_manager';
 import { get_execution_directory } from '@server/managers/environment_manager';
 import { AuthenticationSchema } from '@common/schemas/authentication';
 import { isDefined } from '@common/utils/is_defined';
+import { UserPasswordChangeSchema } from '@app/common/schemas/user';
 
 export async function get_page_user_password_change(req: Request, res: Response) {
 	debug(log_now(), 'GET /page/user/password_change_page...');
@@ -72,8 +73,17 @@ export async function post_user_password_change(req: Request, res: Response) {
 		return;
 	}
 	const session = session_parse.data;
-	const old_password = req.body.old;
-	const new_password = req.body.new;
+
+	const password_parse = UserPasswordChangeSchema.safeParse(req.body);
+	if (!password_parse.success) {
+		debug(log_now(), 'Failed to parse schema');
+		debug(log_now(), `Error: '${password_parse.error}'`);
+		res.status(401).send('Internal error');
+		return;
+	}
+
+	const old_password = password_parse.data.old;
+	const new_password = password_parse.data.new;
 
 	const r = is_user_logged_in(session);
 	const user = r[2];
