@@ -24,34 +24,7 @@ Contact:
 */
 
 import { z } from 'zod';
-import { GameResultSchema } from '../models/game';
 
-export const ChallengeSendSchema = z.object({
-	to: z.number().gte(0),
-	time_control_id: z.string(),
-	time_control_name: z.string(),
-	title: z.string()
-});
-
-export const ChallengeAcceptSchema = z.object({
-	challenge_id: z.string()
-});
-
-export const ChallengeDeclineSchema = z.object({
-	challenge_id: z.string()
-});
-
-export const ChallengeSetResultSchema = z.object({
-	challenge_id: z.string(),
-	white: z.string(),
-	black: z.string(),
-	result: GameResultSchema
-});
-
-export const ChallengeAgreeSchema = z.object({
-	challenge_id: z.string()
-});
-
-export const ChallengeDisagreeSchema = z.object({
-	challenge_id: z.string()
+export const UserQueryEditSchema = z.object({
+	u: z.number().gte(0)
 });

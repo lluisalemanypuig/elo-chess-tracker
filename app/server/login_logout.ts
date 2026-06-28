@@ -86,7 +86,7 @@ export async function post_user_logout(req: Request, res: Response) {
 
 	const session_parse = AuthenticationSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
-		debug(log_now(), 'Failed to parse AuthenticationSchema');
+		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${session_parse.error}'`);
 		res.status(401).send('Internal error');
 		return;

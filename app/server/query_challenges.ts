@@ -43,7 +43,7 @@ export async function get_query_challenge_received(req: Request, res: Response) 
 
 	const session_parse = AuthenticationSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
-		debug(log_now(), 'Failed to parse AuthenticationSchema');
+		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${session_parse.error}'`);
 		res.status(401).send('Internal error');
 		return;
@@ -102,7 +102,7 @@ export async function get_query_challenge_sent(req: Request, res: Response) {
 
 	const session_parse = AuthenticationSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
-		debug(log_now(), 'Failed to parse AuthenticationSchema');
+		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${session_parse.error}'`);
 		res.status(401).send('Internal error');
 		return;
@@ -165,7 +165,7 @@ export async function get_query_challenge_pending_result(req: Request, res: Resp
 
 	const session_parse = AuthenticationSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
-		debug(log_now(), 'Failed to parse AuthenticationSchema');
+		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${session_parse.error}'`);
 		res.status(401).send('Internal error');
 		return;
@@ -245,7 +245,7 @@ export async function get_query_challenge_confirm_result_other(req: Request, res
 
 	const session_parse = AuthenticationSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
-		debug(log_now(), 'Failed to parse AuthenticationSchema');
+		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${session_parse.error}'`);
 		res.status(401).send('Internal error');
 		return;
@@ -338,7 +338,7 @@ export async function get_query_challenge_confirm_result_self(req: Request, res:
 
 	const session_parse = AuthenticationSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
-		debug(log_now(), 'Failed to parse AuthenticationSchema');
+		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${session_parse.error}'`);
 		res.status(401).send('Internal error');
 		return;

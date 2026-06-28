@@ -35,6 +35,7 @@ import { UsersManager } from '@server/managers/users_manager';
 import { TimeControlRating } from '@common/models/time_control_rating';
 import { AuthenticationSchema } from '@common/schemas/authentication';
 import { isDefined } from '@common/utils/is_defined';
+import { UserQueryEditSchema } from '@app/common/schemas/user';
 
 /// Returns the list of user full names and usernames sorted by name
 export async function get_query_user_list(req: Request, res: Response) {
@@ -42,7 +43,7 @@ export async function get_query_user_list(req: Request, res: Response) {
 
 	const session_parse = AuthenticationSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
-		debug(log_now(), 'Failed to parse AuthenticationSchema');
+		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${session_parse.error}'`);
 		res.status(401).send('Internal error');
 		return;
@@ -68,7 +69,7 @@ export async function get_query_html_user_list(req: Request, res: Response) {
 
 	const session_parse = AuthenticationSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
-		debug(log_now(), 'Failed to parse AuthenticationSchema');
+		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${session_parse.error}'`);
 		res.status(401).send('Internal error');
 		return;
@@ -98,7 +99,7 @@ export async function get_query_user_home(req: Request, res: Response) {
 
 	const session_parse = AuthenticationSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
-		debug(log_now(), 'Failed to parse AuthenticationSchema');
+		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${session_parse.error}'`);
 		res.status(401).send('Internal error');
 		return;
@@ -131,7 +132,7 @@ export async function post_query_user_edit(req: Request, res: Response) {
 
 	const session_parse = AuthenticationSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
-		debug(log_now(), 'Failed to parse AuthenticationSchema');
+		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${session_parse.error}'`);
 		res.status(401).send('Internal error');
 		return;
@@ -144,9 +145,18 @@ export async function post_query_user_edit(req: Request, res: Response) {
 		return;
 	}
 
+	const user_query = UserQueryEditSchema.safeParse(req.body);
+	if (!user_query.success) {
+		debug(log_now(), 'Failed to parse schema');
+		debug(log_now(), `Error: '${user_query.error}'`);
+		res.status(401).send('Internal error');
+		return;
+	}
+
+	const to_edit_rid = user_query.data.u;
+
 	const mem = UsersManager.get_instance();
 
-	const to_edit_rid = req.body.u;
 	const to_edit = mem.get_user_by_random_id(to_edit_rid);
 	if (!isDefined(to_edit)) {
 		debug(log_now(), `Random id '${to_edit_rid}' for edited user is not valid.`);
@@ -166,7 +176,7 @@ export async function post_query_user_ranking(req: Request, res: Response) {
 
 	const session_parse = AuthenticationSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
-		debug(log_now(), 'Failed to parse AuthenticationSchema');
+		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${session_parse.error}'`);
 		res.status(401).send('Internal error');
 		return;

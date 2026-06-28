@@ -47,7 +47,14 @@ import { ConfigurationManager } from '@server/managers/configuration_manager';
 import { RatingSystemManager } from '@server/managers/rating_system_manager';
 import { get_execution_directory } from '@server/managers/environment_manager';
 import { AuthenticationSchema } from '@common/schemas/authentication';
-import { ChallengeSendSchema, ChallengeSendIdSchema, ChallengeSetResultSchema } from '@common/schemas/challenges';
+import {
+	ChallengeSendSchema,
+	ChallengeAcceptSchema,
+	ChallengeSetResultSchema,
+	ChallengeDeclineSchema,
+	ChallengeAgreeSchema,
+	ChallengeDisagreeSchema
+} from '@common/schemas/challenges';
 import { isDefined } from '@common/utils/is_defined';
 
 export async function get_page_challenge(req: Request, res: Response) {
@@ -55,7 +62,7 @@ export async function get_page_challenge(req: Request, res: Response) {
 
 	const session_parse = AuthenticationSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
-		debug(log_now(), 'Failed to parse AuthenticationSchema');
+		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${session_parse.error}'`);
 		res.status(401).send('Internal error');
 		return;
@@ -80,7 +87,7 @@ export async function post_challenge_send(req: Request, res: Response) {
 
 	const session_parse = AuthenticationSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
-		debug(log_now(), 'Failed to parse AuthenticationSchema');
+		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${session_parse.error}'`);
 		res.status(401).send('Internal error');
 		return;
@@ -89,7 +96,7 @@ export async function post_challenge_send(req: Request, res: Response) {
 
 	const challenge_parse = ChallengeSendSchema.safeParse(req.body);
 	if (!challenge_parse.success) {
-		debug(log_now(), 'Failed to parse ChallengeSendSchema');
+		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${challenge_parse.error}'`);
 		res.status(401).send('Internal error');
 		return;
@@ -164,7 +171,7 @@ export async function post_challenge_accept(req: Request, res: Response) {
 
 	const session_parse = AuthenticationSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
-		debug(log_now(), 'Failed to parse AuthenticationSchema');
+		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${session_parse.error}'`);
 		res.status(401).send('Internal error');
 		return;
@@ -177,9 +184,9 @@ export async function post_challenge_accept(req: Request, res: Response) {
 		return;
 	}
 
-	const challenge_parse = ChallengeSendIdSchema.safeParse(req.body);
+	const challenge_parse = ChallengeAcceptSchema.safeParse(req.body);
 	if (!challenge_parse.success) {
-		debug(log_now(), 'Failed to parse challengeIdParse');
+		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${challenge_parse.error}'`);
 		res.status(401).send('Internal error');
 		return;
@@ -210,7 +217,7 @@ export async function post_challenge_decline(req: Request, res: Response) {
 
 	const session_parse = AuthenticationSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
-		debug(log_now(), 'Failed to parse AuthenticationSchema');
+		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${session_parse.error}'`);
 		res.status(401).send('Internal error');
 		return;
@@ -223,9 +230,9 @@ export async function post_challenge_decline(req: Request, res: Response) {
 		return;
 	}
 
-	const challenge_parse = ChallengeSendIdSchema.safeParse(req.body);
+	const challenge_parse = ChallengeDeclineSchema.safeParse(req.body);
 	if (!challenge_parse.success) {
-		debug(log_now(), 'Failed to parse challengeIdParse');
+		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${challenge_parse.error}'`);
 		res.status(401).send('Internal error');
 		return;
@@ -256,7 +263,7 @@ export async function post_challenge_set_result(req: Request, res: Response) {
 
 	const session_parse = AuthenticationSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
-		debug(log_now(), 'Failed to parse AuthenticationSchema');
+		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${session_parse.error}'`);
 		res.status(401).send('Internal error');
 		return;
@@ -271,7 +278,7 @@ export async function post_challenge_set_result(req: Request, res: Response) {
 	const setter_user = session.username;
 	const challenge_parse = ChallengeSetResultSchema.safeParse(req.body);
 	if (!challenge_parse.success) {
-		debug(log_now(), 'Failed to parse challengeIdParse');
+		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${challenge_parse.error}'`);
 		res.status(401).send('Internal error');
 		return;
@@ -346,7 +353,7 @@ export async function post_challenge_agree(req: Request, res: Response) {
 
 	const session_parse = AuthenticationSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
-		debug(log_now(), 'Failed to parse AuthenticationSchema');
+		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${session_parse.error}'`);
 		res.status(401).send('Internal error');
 		return;
@@ -359,9 +366,9 @@ export async function post_challenge_agree(req: Request, res: Response) {
 		return;
 	}
 
-	const challenge_parse = ChallengeSendIdSchema.safeParse(req.body);
+	const challenge_parse = ChallengeAgreeSchema.safeParse(req.body);
 	if (!challenge_parse.success) {
-		debug(log_now(), 'Failed to parse challengeIdParse');
+		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${challenge_parse.error}'`);
 		res.status(401).send('Internal error');
 		return;
@@ -383,7 +390,7 @@ export async function post_challenge_disagree(req: Request, res: Response) {
 
 	const session_parse = AuthenticationSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
-		debug(log_now(), 'Failed to parse AuthenticationSchema');
+		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${session_parse.error}'`);
 		res.status(401).send('Internal error');
 		return;
@@ -396,9 +403,9 @@ export async function post_challenge_disagree(req: Request, res: Response) {
 		return;
 	}
 
-	const challenge_parse = ChallengeSendIdSchema.safeParse(req.body);
+	const challenge_parse = ChallengeDisagreeSchema.safeParse(req.body);
 	if (!challenge_parse.success) {
-		debug(log_now(), 'Failed to parse challengeIdParse');
+		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${challenge_parse.error}'`);
 		res.status(401).send('Internal error');
 		return;

@@ -32,7 +32,6 @@ import { is_user_logged_in } from '@server/managers/session';
 import { User } from '@common/models/user';
 import { GraphsManager } from '@server/managers/graphs_manager';
 import { TimeControlID } from '@common/models/time_control';
-import { Graph } from '@common/models/graph/graph';
 import { search_linear_by_key } from '@server/utils/searching';
 import { UsersManager } from '@server/managers/users_manager';
 import { Edge } from '@common/models/graph/edge';
@@ -40,6 +39,7 @@ import { can_user_see_graph } from '@server/managers/user_relationships';
 import { GRAPHS_SEE_USER } from '@common/models/user_action';
 import { AuthenticationSchema } from '@common/schemas/authentication';
 import { isDefined } from '@common/utils/is_defined';
+import { GraphQuerySchema } from '@app/common/schemas/graphs';
 
 class NodeWeight {
 	rating: number = 0;
@@ -224,7 +224,7 @@ export async function post_query_graph_own(req: Request, res: Response) {
 
 	const session_parse = AuthenticationSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
-		debug(log_now(), 'Failed to parse AuthenticationSchema');
+		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${session_parse.error}'`);
 		res.status(401).send('Internal error');
 		return;
@@ -237,7 +237,15 @@ export async function post_query_graph_own(req: Request, res: Response) {
 		return;
 	}
 
-	const time_control_id = req.body.tc_i as TimeControlID;
+	const graph_parse = GraphQuerySchema.safeParse(req.body);
+	if (!graph_parse.success) {
+		debug(log_now(), 'Failed to parse schema');
+		debug(log_now(), `Error: '${graph_parse.error}'`);
+		res.status(401).send('Internal error');
+		return;
+	}
+	const time_control_id = graph_parse.data.tc_i;
+
 	debug(log_now(), `User ${session.username} is querying their own graph of time control ${time_control_id}.`);
 
 	const [list_nodes, list_edges] = retrieve_graph_user(session.username, time_control_id);
@@ -252,7 +260,7 @@ export async function post_query_graph_full(req: Request, res: Response) {
 
 	const session_parse = AuthenticationSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
-		debug(log_now(), 'Failed to parse AuthenticationSchema');
+		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${session_parse.error}'`);
 		res.status(401).send('Internal error');
 		return;
@@ -271,7 +279,15 @@ export async function post_query_graph_full(req: Request, res: Response) {
 		return;
 	}
 
-	const time_control_id = req.body.tc_i as TimeControlID;
+	const graph_parse = GraphQuerySchema.safeParse(req.body);
+	if (!graph_parse.success) {
+		debug(log_now(), 'Failed to parse schema');
+		debug(log_now(), `Error: '${graph_parse.error}'`);
+		res.status(401).send('Internal error');
+		return;
+	}
+	const time_control_id = graph_parse.data.tc_i;
+
 	debug(
 		log_now(),
 		`User ${session.username} is querying the graph of the entire server of time control ${time_control_id}.`

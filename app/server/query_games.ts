@@ -45,6 +45,7 @@ import { search_by_key } from '@server/utils/searching';
 import { read_directory } from '@server/utils/read_directory';
 import { isDefined } from '@common/utils/is_defined';
 import { AuthenticationSchema } from '@common/schemas/authentication';
+import { GameQueryList } from '@app/common/schemas/games';
 
 function increment(g: Game): any {
 	const [white_after, black_after] = RatingSystemManager.get_instance().apply_rating_function(g);
@@ -115,8 +116,17 @@ function filter_game_list(
 				return '1/2 - 1/2';
 			})();
 
-			const white = manager.get_user_by_username(g.white) as User;
-			const black = manager.get_user_by_username(g.black) as User;
+			const white = manager.get_user_by_username(g.white);
+			if (!isDefined(white)) {
+				debug(log_now(), `User with username '${g.white}' could not be found.`);
+				return [];
+			}
+			const black = manager.get_user_by_username(g.black);
+			if (!isDefined(black)) {
+				debug(log_now(), `User with username '${g.black}' could not be found.`);
+				return [];
+			}
+
 			const is_editable: boolean = can_user_edit_a_game(user, white, black);
 			const is_deleteable: boolean = can_user_delete_a_game(user, white, black);
 
@@ -146,7 +156,7 @@ export async function post_query_game_list_own(req: Request, res: Response) {
 
 	const session_parse = AuthenticationSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
-		debug(log_now(), 'Failed to parse AuthenticationSchema');
+		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${session_parse.error}'`);
 		res.status(401).send('Internal error');
 		return;
@@ -160,7 +170,14 @@ export async function post_query_game_list_own(req: Request, res: Response) {
 		return;
 	}
 
-	const time_control_id = req.body.tc_i;
+	const game_parse = GameQueryList.safeParse(req.body);
+	if (!game_parse.success) {
+		debug(log_now(), 'Failed to parse schema');
+		debug(log_now(), `Error: '${game_parse.error}'`);
+		res.status(401).send('Internal error');
+		return;
+	}
+	const time_control_id = game_parse.data.tc_i;
 
 	const filter_game_function = (g: Game): boolean => {
 		return g.is_user_involved(session.username);
@@ -241,7 +258,7 @@ export async function post_query_game_list_all(req: Request, res: Response) {
 
 	const session_parse = AuthenticationSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
-		debug(log_now(), 'Failed to parse AuthenticationSchema');
+		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${session_parse.error}'`);
 		res.status(401).send('Internal error');
 		return;
@@ -260,9 +277,16 @@ export async function post_query_game_list_all(req: Request, res: Response) {
 		return;
 	}
 
-	let manager = UsersManager.get_instance();
-	const time_control_id = req.body.tc_i;
+	const game_parse = GameQueryList.safeParse(req.body);
+	if (!game_parse.success) {
+		debug(log_now(), 'Failed to parse schema');
+		debug(log_now(), `Error: '${game_parse.error}'`);
+		res.status(401).send('Internal error');
+		return;
+	}
+	const time_control_id = game_parse.data.tc_i;
 
+	let manager = UsersManager.get_instance();
 	let data_to_return: any[] = [];
 	if (time_control_id != '') {
 		data_to_return = filter_game_list(
@@ -272,8 +296,18 @@ export async function post_query_game_list_all(req: Request, res: Response) {
 				return true;
 			},
 			(g: Game): boolean => {
-				const white = manager.get_user_by_username(g.white) as User;
-				const black = manager.get_user_by_username(g.black) as User;
+				const white = manager.get_user_by_username(g.white);
+				if (!isDefined(white)) {
+					debug(log_now(), `User with username '${g.white}' could not be found.`);
+					res.status(500).send('Invalid white user sent to the server.');
+					return false;
+				}
+				const black = manager.get_user_by_username(g.black);
+				if (!isDefined(black)) {
+					debug(log_now(), `User with username '${g.black}' could not be found.`);
+					res.status(500).send('Invalid black user sent to the server.');
+					return false;
+				}
 				return can_user_see_a_game(user, white, black);
 			}
 		);
@@ -287,8 +321,16 @@ export async function post_query_game_list_all(req: Request, res: Response) {
 					return true;
 				},
 				(g: Game): boolean => {
-					const white = manager.get_user_by_username(g.white) as User;
-					const black = manager.get_user_by_username(g.black) as User;
+					const white = manager.get_user_by_username(g.white);
+					if (!isDefined(white)) {
+						debug(log_now(), `User with username '${g.white}' could not be found.`);
+						return false;
+					}
+					const black = manager.get_user_by_username(g.black);
+					if (!isDefined(black)) {
+						debug(log_now(), `User with username '${g.black}' could not be found.`);
+						return false;
+					}
 					return can_user_see_a_game(user, white, black);
 				}
 			);

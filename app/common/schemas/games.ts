@@ -41,3 +41,16 @@ export const GameEditResultSchema = z.object({
 	id: z.string(),
 	new_result: GameResultSchema
 });
+
+export const GameEditTitleSchema = z.object({
+	id: z.string(),
+	title: z.string()
+});
+
+export const GameDeleteSchema = z.object({
+	id: z.string()
+});
+
+export const GameQueryList = z.object({
+	tc_i: z.string()
+});

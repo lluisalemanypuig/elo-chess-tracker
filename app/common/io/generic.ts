@@ -33,12 +33,12 @@ import { isDefined } from '@common/utils/is_defined';
 export function read_schema<T extends z.ZodTypeAny>(schema: T, str: string): z.output<T> | null {
 	const parse = JSON.parse(str);
 	if (!isDefined) {
-		debug(log_now(), `JSON failed to parse string.`);
+		debug(log_now(), `JSON Failed to parse schema.`);
 		return null;
 	}
 	const res = schema.safeParse(parse);
 	if (!res.success) {
-		debug(log_now(), `safeParse failed to parse JSON schema.`);
+		debug(log_now(), `safeParse Failed to parse schema schema.`);
 		debug(log_now(), `    errors: ${res.error}.`);
 		return null;
 	}
