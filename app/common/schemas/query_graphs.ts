@@ -25,6 +25,8 @@ Contact:
 
 import { z } from 'zod';
 
-export const GraphQuerySchema = z.object({
+export const QueryGraphSchema = z.object({
 	tc_i: z.string()
 });
+
+export type QueryGraph = z.infer<typeof QueryGraphSchema>;

@@ -33,13 +33,19 @@ export const ChallengeSendSchema = z.object({
 	title: z.string()
 });
 
+export type ChallengeSend = z.infer<typeof ChallengeSendSchema>;
+
 export const ChallengeAcceptSchema = z.object({
 	challenge_id: z.string()
 });
 
+export type ChallengeAccept = z.infer<typeof ChallengeAcceptSchema>;
+
 export const ChallengeDeclineSchema = z.object({
 	challenge_id: z.string()
 });
+
+export type ChallengeDecline = z.infer<typeof ChallengeDeclineSchema>;
 
 export const ChallengeSetResultSchema = z.object({
 	challenge_id: z.string(),
@@ -48,10 +54,16 @@ export const ChallengeSetResultSchema = z.object({
 	result: GameResultSchema
 });
 
-export const ChallengeAgreeSchema = z.object({
+export type ChallengeSetResult = z.infer<typeof ChallengeSetResultSchema>;
+
+export const ChallengeAgreeResultSchema = z.object({
 	challenge_id: z.string()
 });
 
-export const ChallengeDisagreeSchema = z.object({
+export type ChallengeAgreeResult = z.infer<typeof ChallengeAgreeResultSchema>;
+
+export const ChallengeDisagreeResultSchema = z.object({
 	challenge_id: z.string()
 });
+
+export type ChallengeDisagreeResult = z.infer<typeof ChallengeDisagreeResultSchema>;

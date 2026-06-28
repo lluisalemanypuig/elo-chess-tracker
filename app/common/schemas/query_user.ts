@@ -25,6 +25,14 @@ Contact:
 
 import { z } from 'zod';
 
-export const UserQueryEditSchema = z.object({
+export const QueryUserEditSchema = z.object({
 	u: z.number().gte(0)
 });
+
+export type QueryUserEdit = z.infer<typeof QueryUserEditSchema>;
+
+export const QueryUserRankingSchema = z.object({
+	tc_i: z.string()
+});
+
+export type QueryUserRanking = z.infer<typeof QueryUserRankingSchema>;

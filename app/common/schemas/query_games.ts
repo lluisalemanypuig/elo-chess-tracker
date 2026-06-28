@@ -25,6 +25,14 @@ Contact:
 
 import { z } from 'zod';
 
-export const GameQueryList = z.object({
+export const QueryGamesListOwnSchema = z.object({
 	tc_i: z.string()
 });
+
+export type QueryGamesListOwn = z.infer<typeof QueryGamesListOwnSchema>;
+
+export const QueryGamesListAllSchema = z.object({
+	tc_i: z.string()
+});
+
+export type QueryGamesListAll = z.infer<typeof QueryGamesListAllSchema>;

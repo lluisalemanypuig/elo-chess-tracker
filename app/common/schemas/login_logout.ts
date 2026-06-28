@@ -29,3 +29,5 @@ export const UserLoginSchema = z.object({
 	u: z.string(),
 	p: z.string()
 });
+
+export type UserLogin = z.infer<typeof UserLoginSchema>;

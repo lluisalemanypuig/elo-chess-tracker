@@ -34,6 +34,8 @@ export const UserCreateSchema = z.object({
 	r: UserRoleArraySchema
 });
 
+export type UserCreate = z.infer<typeof UserCreateSchema>;
+
 export const UserEditSchema = z.object({
 	u: z.number().gte(0),
 	f: z.string(),
@@ -41,7 +43,11 @@ export const UserEditSchema = z.object({
 	r: UserRoleArraySchema
 });
 
+export type UserEdit = z.infer<typeof UserEditSchema>;
+
 export const UserPasswordChangeSchema = z.object({
 	old: z.string(),
 	new: z.string()
 });
+
+export type UserPasswordChange = z.infer<typeof UserPasswordChangeSchema>;

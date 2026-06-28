@@ -37,16 +37,24 @@ export const GameCreateSchema = z.object({
 	t: z.string()
 });
 
+export type GameCreate = z.infer<typeof GameCreateSchema>;
+
 export const GameEditResultSchema = z.object({
 	id: z.string(),
 	new_result: GameResultSchema
 });
+
+export type GameEditResult = z.infer<typeof GameEditResultSchema>;
 
 export const GameEditTitleSchema = z.object({
 	id: z.string(),
 	title: z.string()
 });
 
+export type GameEditTitle = z.infer<typeof GameEditTitleSchema>;
+
 export const GameDeleteSchema = z.object({
 	id: z.string()
 });
+
+export type GameDelete = z.infer<typeof GameDeleteSchema>;

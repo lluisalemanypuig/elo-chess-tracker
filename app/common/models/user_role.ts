@@ -24,6 +24,7 @@ Contact:
 */
 
 import { z } from 'zod';
+import { isDefined } from '../utils/is_defined';
 
 /// Administrator
 export const ADMIN = 'admin';
@@ -59,4 +60,32 @@ export const user_role_to_string: { [key in UserRole]: string } = {
 /// Does the string parameter encode a valid user role?
 export function is_role_string_correct(r: string): boolean {
 	return all_user_roles.includes(r as UserRole);
+}
+
+export function string_to_role(r: string): UserRole | undefined {
+	if (r == ADMIN) {
+		return ADMIN;
+	}
+	if (r == TEACHER) {
+		return TEACHER;
+	}
+	if (r == MEMBER) {
+		return MEMBER;
+	}
+	if (r == STUDENT) {
+		return STUDENT;
+	}
+	return undefined;
+}
+
+export function array_string_to_roles(roles: string[]): UserRole[] | undefined {
+	let actual_roles: UserRole[] = [];
+	for (const role_str of roles) {
+		const res = string_to_role(role_str);
+		if (!isDefined(res)) {
+			return undefined;
+		}
+		actual_roles.push(res);
+	}
+	return actual_roles;
 }

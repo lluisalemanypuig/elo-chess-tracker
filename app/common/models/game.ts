@@ -43,6 +43,19 @@ export function opposite_result(res: GameResult): GameResult {
 	return 'white_wins';
 }
 
+export function result_from_text_to_value(text: string): GameResult | undefined {
+	if (text == '1 - 0') {
+		return 'white_wins';
+	}
+	if (text == '1/2 - 1/2') {
+		return 'draw';
+	}
+	if (text == '0 - 1') {
+		return 'black_wins';
+	}
+	return undefined;
+}
+
 /// A type for game IDs.
 export type GameID = string;
 
