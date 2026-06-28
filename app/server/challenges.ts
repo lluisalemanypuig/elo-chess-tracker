@@ -48,18 +48,20 @@ import { ConfigurationManager } from '@server/managers/configuration_manager';
 import { RatingSystemManager } from '@server/managers/rating_system_manager';
 import { get_execution_directory } from '@server/managers/environment_manager';
 import { AuthenticationSchema } from '@common/schemas/authentication';
+import { ChallengeSendSchema, ChallengeSendIdSchema, ChallengeSetResultSchema } from '@app/common/schemas/challenges';
+import { isDefined } from '@app/common/utils/is_defined';
 
 export async function get_page_challenge(req: Request, res: Response) {
 	debug(log_now(), 'GET /page/challenge...');
 
-	const sessionParse = AuthenticationSchema.safeParse(req.cookies);
-	if (!sessionParse.success) {
+	const session_parse = AuthenticationSchema.safeParse(req.cookies);
+	if (!session_parse.success) {
 		debug(log_now(), 'Failed to parse AuthenticationSchema');
-		debug(log_now(), `Error: '${sessionParse.error}'`);
+		debug(log_now(), `Error: '${session_parse.error}'`);
 		res.status(401).send('Internal error');
 		return;
 	}
-	const session = sessionParse.data;
+	const session = session_parse.data;
 
 	const r = is_user_logged_in(session);
 	if (!r[0]) {
@@ -77,18 +79,26 @@ export async function get_page_challenge(req: Request, res: Response) {
 export async function post_challenge_send(req: Request, res: Response) {
 	debug(log_now(), 'POST /challenge/send...');
 
-	const sessionParse = AuthenticationSchema.safeParse(req.cookies);
-	if (!sessionParse.success) {
+	const session_parse = AuthenticationSchema.safeParse(req.cookies);
+	if (!session_parse.success) {
 		debug(log_now(), 'Failed to parse AuthenticationSchema');
-		debug(log_now(), `Error: '${sessionParse.error}'`);
+		debug(log_now(), `Error: '${session_parse.error}'`);
 		res.status(401).send('Internal error');
 		return;
 	}
-	const session = sessionParse.data;
-	const to_random_id = req.body.to;
-	const time_control_id = req.body.time_control_id;
-	const time_control_name = req.body.time_control_name;
-	const title = req.body.title;
+	const session = session_parse.data;
+
+	const challenge_parse = ChallengeSendSchema.safeParse(req.body);
+	if (!challenge_parse.success) {
+		debug(log_now(), 'Failed to parse ChallengeSendSchema');
+		debug(log_now(), `Error: '${challenge_parse.error}'`);
+		res.status(401).send('Internal error');
+		return;
+	}
+	const to_random_id = challenge_parse.data.to;
+	const time_control_id = challenge_parse.data.time_control_id;
+	const time_control_name = challenge_parse.data.time_control_name;
+	const title = challenge_parse.data.title;
 
 	const r = is_user_logged_in(session);
 	if (!r[0]) {
@@ -105,15 +115,14 @@ export async function post_challenge_send(req: Request, res: Response) {
 
 	debug(log_now(), `Trying to send challenge from '${session.username}' to '${to_random_id}'.`);
 
-	const _receiver = UsersManager.get_instance().get_user_by_random_id(to_random_id);
+	const receiver = UsersManager.get_instance().get_user_by_random_id(to_random_id);
 
-	if (_receiver == undefined) {
+	if (!isDefined(receiver)) {
 		debug(log_now(), `User receiver of the challenge '${to_random_id}' does not exist.`);
 		res.status(404).send('User receiver of the challenge does not exist');
 		return;
 	}
 
-	const receiver = _receiver as User;
 	if (receiver.username == sender.username) {
 		debug(log_now(), `A challenge cannot be sent to oneself.`);
 		res.status(403).send('You cannot challenge yourself.');
@@ -154,14 +163,14 @@ export async function post_challenge_send(req: Request, res: Response) {
 export async function post_challenge_accept(req: Request, res: Response) {
 	debug(log_now(), 'POST /challenge/accept...');
 
-	const sessionParse = AuthenticationSchema.safeParse(req.cookies);
-	if (!sessionParse.success) {
+	const session_parse = AuthenticationSchema.safeParse(req.cookies);
+	if (!session_parse.success) {
 		debug(log_now(), 'Failed to parse AuthenticationSchema');
-		debug(log_now(), `Error: '${sessionParse.error}'`);
+		debug(log_now(), `Error: '${session_parse.error}'`);
 		res.status(401).send('Internal error');
 		return;
 	}
-	const session = sessionParse.data;
+	const session = session_parse.data;
 
 	const r = is_user_logged_in(session);
 	if (!r[0]) {
@@ -169,16 +178,22 @@ export async function post_challenge_accept(req: Request, res: Response) {
 		return;
 	}
 
-	const challenge_id: ChallengeID = req.body.challenge_id;
+	const challenge_parse = ChallengeSendIdSchema.safeParse(req.body);
+	if (!challenge_parse.success) {
+		debug(log_now(), 'Failed to parse challengeIdParse');
+		debug(log_now(), `Error: '${challenge_parse.error}'`);
+		res.status(401).send('Internal error');
+		return;
+	}
+	const challenge_id = challenge_parse.data.challenge_id;
 
-	debug(log_now(), `User '${session.username}' wants to accept challenge '${challenge_id}'`);
+	debug(log_now(), `User '${session.username}' wants to accept challenge '${challenge_parse}'`);
 
-	const _c = ChallengesManager.get_instance().get_challenge_by_id(challenge_id);
-	if (_c == undefined) {
+	const c = ChallengesManager.get_instance().get_challenge_by_id(challenge_id);
+	if (!isDefined(c)) {
 		res.status(404).send('Challenge does not exist');
 		return;
 	}
-	const c = _c as Challenge;
 
 	debug(log_now(), `Challenge '${challenge_id}' involves players '${c.sent_by}' and '${c.sent_to}'`);
 
@@ -194,14 +209,14 @@ export async function post_challenge_accept(req: Request, res: Response) {
 export async function post_challenge_decline(req: Request, res: Response) {
 	debug(log_now(), 'POST /challenge/decline...');
 
-	const sessionParse = AuthenticationSchema.safeParse(req.cookies);
-	if (!sessionParse.success) {
+	const session_parse = AuthenticationSchema.safeParse(req.cookies);
+	if (!session_parse.success) {
 		debug(log_now(), 'Failed to parse AuthenticationSchema');
-		debug(log_now(), `Error: '${sessionParse.error}'`);
+		debug(log_now(), `Error: '${session_parse.error}'`);
 		res.status(401).send('Internal error');
 		return;
 	}
-	const session = sessionParse.data;
+	const session = session_parse.data;
 
 	const r = is_user_logged_in(session);
 	if (!r[0]) {
@@ -209,16 +224,22 @@ export async function post_challenge_decline(req: Request, res: Response) {
 		return;
 	}
 
-	const challenge_id: ChallengeID = req.body.challenge_id;
+	const challenge_parse = ChallengeSendIdSchema.safeParse(req.body);
+	if (!challenge_parse.success) {
+		debug(log_now(), 'Failed to parse challengeIdParse');
+		debug(log_now(), `Error: '${challenge_parse.error}'`);
+		res.status(401).send('Internal error');
+		return;
+	}
+	const challenge_id = challenge_parse.data.challenge_id;
 
 	debug(log_now(), `User '${session.username}' wants to decline challenge '${challenge_id}'`);
 
-	const _c = ChallengesManager.get_instance().get_challenge_by_id(challenge_id);
-	if (_c == undefined) {
+	const c = ChallengesManager.get_instance().get_challenge_by_id(challenge_id);
+	if (!isDefined(c)) {
 		res.status(404).send('Challenge does not exist');
 		return;
 	}
-	const c = _c as Challenge;
 
 	debug(log_now(), `Challenge '${challenge_id}' involves players '${c.sent_by}' and '${c.sent_to}'`);
 
@@ -234,14 +255,14 @@ export async function post_challenge_decline(req: Request, res: Response) {
 export async function post_challenge_set_result(req: Request, res: Response) {
 	debug(log_now(), 'POST /challenge/set_result...');
 
-	const sessionParse = AuthenticationSchema.safeParse(req.cookies);
-	if (!sessionParse.success) {
+	const session_parse = AuthenticationSchema.safeParse(req.cookies);
+	if (!session_parse.success) {
 		debug(log_now(), 'Failed to parse AuthenticationSchema');
-		debug(log_now(), `Error: '${sessionParse.error}'`);
+		debug(log_now(), `Error: '${session_parse.error}'`);
 		res.status(401).send('Internal error');
 		return;
 	}
-	const session = sessionParse.data;
+	const session = session_parse.data;
 	const r = is_user_logged_in(session);
 	if (!r[0]) {
 		res.status(401).send(r[1]);
@@ -249,10 +270,18 @@ export async function post_challenge_set_result(req: Request, res: Response) {
 	}
 
 	const setter_user = session.username;
-	const challenge_id: ChallengeID = req.body.challenge_id;
-	const white_username = req.body.white;
-	const black_username = req.body.black;
-	const result: GameResult = req.body.result;
+	const challenge_parse = ChallengeSetResultSchema.safeParse(req.body);
+	if (!challenge_parse.success) {
+		debug(log_now(), 'Failed to parse challengeIdParse');
+		debug(log_now(), `Error: '${challenge_parse.error}'`);
+		res.status(401).send('Internal error');
+		return;
+	}
+
+	const challenge_id: ChallengeID = challenge_parse.data.challenge_id;
+	const white_username = challenge_parse.data.white;
+	const black_username = challenge_parse.data.black;
+	const result: GameResult = challenge_parse.data.result;
 
 	debug(log_now(), `User '${setter_user}' is trying to set the result of a challenge`);
 	debug(log_now(), `    Challenge id: '${challenge_id}'`);
@@ -275,12 +304,11 @@ export async function post_challenge_set_result(req: Request, res: Response) {
 		return;
 	}
 
-	let _c = ChallengesManager.get_instance().get_challenge_by_id(challenge_id);
-	if (_c == undefined) {
+	let c = ChallengesManager.get_instance().get_challenge_by_id(challenge_id);
+	if (!isDefined(c)) {
 		res.status(404).send(`Challenge does not exist.`);
 		return;
 	}
-	let c = _c as Challenge;
 
 	{
 		const original_setter = c.result_set_by;
@@ -317,14 +345,14 @@ export async function post_challenge_set_result(req: Request, res: Response) {
 export async function post_challenge_agree(req: Request, res: Response) {
 	debug(log_now(), 'POST /challenge/agree...');
 
-	const sessionParse = AuthenticationSchema.safeParse(req.cookies);
-	if (!sessionParse.success) {
+	const session_parse = AuthenticationSchema.safeParse(req.cookies);
+	if (!session_parse.success) {
 		debug(log_now(), 'Failed to parse AuthenticationSchema');
-		debug(log_now(), `Error: '${sessionParse.error}'`);
+		debug(log_now(), `Error: '${session_parse.error}'`);
 		res.status(401).send('Internal error');
 		return;
 	}
-	const session = sessionParse.data;
+	const session = session_parse.data;
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -332,28 +360,36 @@ export async function post_challenge_agree(req: Request, res: Response) {
 		return;
 	}
 
-	const challenge_id: ChallengeID = req.body.challenge_id;
-	let _c = ChallengesManager.get_instance().get_challenge_by_id(challenge_id);
-	if (_c == undefined) {
+	const challenge_parse = ChallengeSendIdSchema.safeParse(req.body);
+	if (!challenge_parse.success) {
+		debug(log_now(), 'Failed to parse challengeIdParse');
+		debug(log_now(), `Error: '${challenge_parse.error}'`);
+		res.status(401).send('Internal error');
+		return;
+	}
+	const challenge_id = challenge_parse.data.challenge_id;
+
+	let c = ChallengesManager.get_instance().get_challenge_by_id(challenge_id);
+	if (!isDefined(c)) {
 		res.status(404).send('Challenge does not exist');
 		return;
 	}
 
-	challenge_agree_result(_c as Challenge);
+	challenge_agree_result(c);
 	res.status(200).send();
 }
 
 export async function post_challenge_disagree(req: Request, res: Response) {
 	debug(log_now(), 'POST /challenge/disagree...');
 
-	const sessionParse = AuthenticationSchema.safeParse(req.cookies);
-	if (!sessionParse.success) {
+	const session_parse = AuthenticationSchema.safeParse(req.cookies);
+	if (!session_parse.success) {
 		debug(log_now(), 'Failed to parse AuthenticationSchema');
-		debug(log_now(), `Error: '${sessionParse.error}'`);
+		debug(log_now(), `Error: '${session_parse.error}'`);
 		res.status(401).send('Internal error');
 		return;
 	}
-	const session = sessionParse.data;
+	const session = session_parse.data;
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -361,13 +397,21 @@ export async function post_challenge_disagree(req: Request, res: Response) {
 		return;
 	}
 
-	const challenge_id: ChallengeID = req.body.challenge_id;
-	let _c = ChallengesManager.get_instance().get_challenge_by_id(challenge_id);
-	if (_c == undefined) {
+	const challenge_parse = ChallengeSendIdSchema.safeParse(req.body);
+	if (!challenge_parse.success) {
+		debug(log_now(), 'Failed to parse challengeIdParse');
+		debug(log_now(), `Error: '${challenge_parse.error}'`);
+		res.status(401).send('Internal error');
+		return;
+	}
+	const challenge_id = challenge_parse.data.challenge_id;
+
+	let c = ChallengesManager.get_instance().get_challenge_by_id(challenge_id);
+	if (!isDefined(c)) {
 		res.status(404).send('Challenge does not exist');
 		return;
 	}
 
-	challenge_unset_result(_c as Challenge);
+	challenge_unset_result(c);
 	res.status(200).send();
 }
