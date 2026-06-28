@@ -39,6 +39,7 @@ import { Edge } from '@common/models/graph/edge';
 import { can_user_see_graph } from '@server/managers/user_relationships';
 import { GRAPHS_SEE_USER } from '@common/models/user_action';
 import { AuthenticationSchema } from '@common/schemas/authentication';
+import { isDefined } from '@common/utils/is_defined';
 
 class NodeWeight {
 	rating: number = 0;
@@ -67,11 +68,26 @@ function retrieve_graph_user(username: string, time_control_id: TimeControlID): 
 	const users = UsersManager.get_instance();
 	const graphs = GraphsManager.get_instance();
 
-	const this_user_idx = users.get_user_index_by_username(username) as number;
-	const this_user_rand_id = users.get_user_random_ID_at(this_user_idx) as number;
-	const this_user = users.get_user_at(this_user_idx) as User;
-
-	const G = graphs.get_graph(time_control_id) as Graph;
+	const this_user_idx = users.get_user_index_by_username(username);
+	if (!isDefined(this_user_idx)) {
+		debug(log_now(), `Index for user '${username}' could not be found.`);
+		return [[], []];
+	}
+	const this_user_rand_id = users.get_user_random_ID_at(this_user_idx);
+	if (!isDefined(this_user_rand_id)) {
+		debug(log_now(), `Random id for user '${username}' could not be found.`);
+		return [[], []];
+	}
+	const this_user = users.get_user_at(this_user_idx);
+	if (!isDefined(this_user)) {
+		debug(log_now(), `User '${username}' could not be found.`);
+		return [[], []];
+	}
+	const G = graphs.get_graph(time_control_id);
+	if (!isDefined(G)) {
+		debug(log_now(), `Graph for '${time_control_id}' could not be found.`);
+		return [[], []];
+	}
 
 	let list_nodes: NodeInfo[];
 	{
@@ -138,13 +154,21 @@ function retrieve_graph_full(querier: User, time_control_id: TimeControlID): [No
 	const users = UsersManager.get_instance();
 	const graphs = GraphsManager.get_instance();
 
-	const G = graphs.get_graph(time_control_id) as Graph;
+	const G = graphs.get_graph(time_control_id);
+	if (!isDefined(G)) {
+		debug(log_now(), `Graph for '${time_control_id}' could not be found.`);
+		return [[], []];
+	}
 
 	let list_nodes: NodeInfo[] = [];
 	let list_edges: EdgeInfo[] = [];
 
 	for (let idx = 0; idx < users.num_users(); ++idx) {
-		const this_user = users.get_user_at(idx) as User;
+		const this_user = users.get_user_at(idx);
+		if (!isDefined(this_user)) {
+			debug(log_now(), `User at index '${idx}' could not be found.`);
+			return [[], []];
+		}
 		if (!can_user_see_graph(querier, this_user)) {
 			continue;
 		}
@@ -154,8 +178,16 @@ function retrieve_graph_full(querier: User, time_control_id: TimeControlID): [No
 
 		let out_degree = 0;
 		G.get_outgoing_edges(username)?.forEach((e: Edge) => {
-			const edge_user_idx = users.get_user_index_by_username(e.neighbor) as number;
-			const edge_user = users.get_user_at(edge_user_idx) as User;
+			const edge_user_idx = users.get_user_index_by_username(e.neighbor);
+			if (!isDefined(edge_user_idx)) {
+				debug(log_now(), `Index of user '${e.neighbor}' does not exist`);
+				return;
+			}
+			const edge_user = users.get_user_at(edge_user_idx);
+			if (!isDefined(edge_user)) {
+				debug(log_now(), `User at index '${edge_user_idx}' does not exist`);
+				return;
+			}
 			if (!can_user_see_graph(querier, edge_user)) {
 				return;
 			}
@@ -200,7 +232,7 @@ export async function post_query_graph_own(req: Request, res: Response) {
 	const session = session_parse.data;
 	const r = is_user_logged_in(session);
 
-	if (!r[0]) {
+	if (!isDefined(r[2])) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -228,12 +260,12 @@ export async function post_query_graph_full(req: Request, res: Response) {
 	const session = session_parse.data;
 	const r = is_user_logged_in(session);
 
-	if (!r[0]) {
+	const user = r[2];
+	if (!isDefined(user)) {
 		res.status(401).send(r[1]);
 		return;
 	}
 
-	const user = r[2] as User;
 	if (!user.can_do(GRAPHS_SEE_USER)) {
 		res.status(403).send('You do not have enough permissions.');
 		return;

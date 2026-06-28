@@ -38,7 +38,6 @@ import {
 	challenge_agree_result
 } from '@server/managers/challenges';
 import { ChallengeID } from '@common/models/challenge';
-import { User } from '@common/models/user';
 import { USER_CHALLENGE } from '@common/models/user_action';
 import { can_user_send_challenge } from '@server/managers/user_relationships';
 import { ChallengesManager } from '@server/managers/challenges_manager';
@@ -48,8 +47,8 @@ import { ConfigurationManager } from '@server/managers/configuration_manager';
 import { RatingSystemManager } from '@server/managers/rating_system_manager';
 import { get_execution_directory } from '@server/managers/environment_manager';
 import { AuthenticationSchema } from '@common/schemas/authentication';
-import { ChallengeSendSchema, ChallengeSendIdSchema, ChallengeSetResultSchema } from '@app/common/schemas/challenges';
-import { isDefined } from '@app/common/utils/is_defined';
+import { ChallengeSendSchema, ChallengeSendIdSchema, ChallengeSetResultSchema } from '@common/schemas/challenges';
+import { isDefined } from '@common/utils/is_defined';
 
 export async function get_page_challenge(req: Request, res: Response) {
 	debug(log_now(), 'GET /page/challenge...');
@@ -64,7 +63,7 @@ export async function get_page_challenge(req: Request, res: Response) {
 	const session = session_parse.data;
 
 	const r = is_user_logged_in(session);
-	if (!r[0]) {
+	if (!isDefined(r[2])) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -101,12 +100,12 @@ export async function post_challenge_send(req: Request, res: Response) {
 	const title = challenge_parse.data.title;
 
 	const r = is_user_logged_in(session);
-	if (!r[0]) {
+	const sender = r[2];
+	if (!isDefined(sender)) {
 		res.status(401).send(r[1]);
 		return;
 	}
 
-	const sender = r[2] as User;
 	if (!sender.can_do(USER_CHALLENGE)) {
 		debug(log_now(), `User '${session.username}' cannot challenge other users.`);
 		res.status(403).send('You cannot challenge other users');
@@ -173,7 +172,7 @@ export async function post_challenge_accept(req: Request, res: Response) {
 	const session = session_parse.data;
 
 	const r = is_user_logged_in(session);
-	if (!r[0]) {
+	if (!isDefined(r[2])) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -219,7 +218,7 @@ export async function post_challenge_decline(req: Request, res: Response) {
 	const session = session_parse.data;
 
 	const r = is_user_logged_in(session);
-	if (!r[0]) {
+	if (!isDefined(r[2])) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -264,7 +263,7 @@ export async function post_challenge_set_result(req: Request, res: Response) {
 	}
 	const session = session_parse.data;
 	const r = is_user_logged_in(session);
-	if (!r[0]) {
+	if (!isDefined(r[2])) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -355,7 +354,7 @@ export async function post_challenge_agree(req: Request, res: Response) {
 	const session = session_parse.data;
 	const r = is_user_logged_in(session);
 
-	if (!r[0]) {
+	if (!isDefined(r[2])) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -392,7 +391,7 @@ export async function post_challenge_disagree(req: Request, res: Response) {
 	const session = session_parse.data;
 	const r = is_user_logged_in(session);
 
-	if (!r[0]) {
+	if (!isDefined(r[2])) {
 		res.status(401).send(r[1]);
 		return;
 	}

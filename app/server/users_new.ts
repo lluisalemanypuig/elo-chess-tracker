@@ -30,13 +30,13 @@ import { Request, Response } from 'express';
 import { log_now } from '@server/utils/time';
 import { is_user_logged_in } from '@server/managers/session';
 import { user_add_new } from '@server/managers/users';
-import { User } from '@common/models/user';
 import { is_role_string_correct } from '@common/models/user_role';
 import { CREATE_USER, USER_ROLE_ASSIGN, get_role_action_name, USER_ROLE_ASSIGN_ID } from '@common/models/user_action';
 import { UsersManager } from '@server/managers/users_manager';
 import { ConfigurationManager } from '@server/managers/configuration_manager';
 import { get_execution_directory } from '@server/managers/environment_manager';
 import { AuthenticationSchema } from '@common/schemas/authentication';
+import { isDefined } from '@common/utils/is_defined';
 
 export async function get_page_user_create(req: Request, res: Response) {
 	debug(log_now(), 'GET /page/user/create...');
@@ -51,12 +51,12 @@ export async function get_page_user_create(req: Request, res: Response) {
 	const session = session_parse.data;
 	const r = is_user_logged_in(session);
 
-	if (!r[0]) {
+	const user = r[2];
+	if (!isDefined(user)) {
 		res.status(401).send(r[1]);
 		return;
 	}
 
-	const user = r[2] as User;
 	if (!user.can_do(CREATE_USER)) {
 		debug(log_now(), `User '${session.username}' cannot create users.`);
 		res.status(403).send('You cannot create users.');
@@ -88,12 +88,12 @@ export async function post_user_create(req: Request, res: Response) {
 	const session = session_parse.data;
 	const r = is_user_logged_in(session);
 
-	if (!r[0]) {
+	const registerer = r[2];
+	if (!isDefined(registerer)) {
 		res.status(401).send(r[1]);
 		return;
 	}
 
-	const registerer = r[2] as User;
 	if (!registerer.can_do(CREATE_USER)) {
 		debug(log_now(), `User '${session.username}' cannot create users.`);
 		res.status(403).send('You cannot create users.');

@@ -35,6 +35,7 @@ import { Challenge } from '@common/models/challenge';
 import { UsersManager } from '@server/managers/users_manager';
 import { can_user_decline_challenge } from '@server/managers/user_relationships';
 import { AuthenticationSchema } from '@common/schemas/authentication';
+import { isDefined } from '@common/utils/is_defined';
 
 /// Query the server for challenges received sento to me by other users
 export async function get_query_challenge_received(req: Request, res: Response) {
@@ -50,7 +51,8 @@ export async function get_query_challenge_received(req: Request, res: Response) 
 	const session = session_parse.data;
 	const r = is_user_logged_in(session);
 
-	if (!r[0]) {
+	const sent_to = r[2];
+	if (!isDefined(sent_to)) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -67,11 +69,15 @@ export async function get_query_challenge_received(req: Request, res: Response) 
 	});
 
 	let manager = UsersManager.get_instance();
-	const sent_to = r[2] as User;
 
 	let all_challenges_received: any[] = [];
 	for (const c of to_return) {
-		const sent_by = manager.get_user_by_username(c.sent_by as string) as User;
+		const sent_by = manager.get_user_by_username(c.sent_by);
+		if (!isDefined(sent_by)) {
+			debug(log_now(), `User '${c.sent_by}' does not exist.`);
+			res.status(500).send();
+			return;
+		}
 		const name = sent_by.get_full_name();
 
 		// return only basic information
@@ -104,7 +110,7 @@ export async function get_query_challenge_sent(req: Request, res: Response) {
 	const session = session_parse.data;
 	const r = is_user_logged_in(session);
 
-	if (!r[0]) {
+	if (!isDefined(r[2])) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -121,11 +127,21 @@ export async function get_query_challenge_sent(req: Request, res: Response) {
 	});
 
 	let manager = UsersManager.get_instance();
-	const sent_by = manager.get_user_by_username(session.username) as User;
+	const sent_by = manager.get_user_by_username(session.username);
+	if (!isDefined(sent_by)) {
+		debug(log_now(), `User '${session.username}' does not exist.`);
+		res.status(500).send();
+		return;
+	}
 
 	let all_challenges: any[] = [];
 	for (const c of to_return) {
-		const sent_to = manager.get_user_by_username(c.sent_to as string) as User;
+		const sent_to = manager.get_user_by_username(c.sent_to);
+		if (!isDefined(sent_to)) {
+			debug(log_now(), `User '${c.sent_to}' does not exist.`);
+			res.status(500).send();
+			return;
+		}
 
 		// return only basic information
 		all_challenges.push({
@@ -157,7 +173,7 @@ export async function get_query_challenge_pending_result(req: Request, res: Resp
 	const session = session_parse.data;
 	const r = is_user_logged_in(session);
 
-	if (!r[0]) {
+	if (!isDefined(r[2])) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -183,8 +199,19 @@ export async function get_query_challenge_pending_result(req: Request, res: Resp
 
 	let all_challenges: any[] = [];
 	for (const c of to_return) {
-		const user_sent_to = manager.get_user_by_username(c.sent_to) as User;
-		const user_sent_by = manager.get_user_by_username(c.sent_by) as User;
+		const user_sent_to = manager.get_user_by_username(c.sent_to);
+		if (!isDefined(user_sent_to)) {
+			debug(log_now(), `User '${c.sent_to}' does not exist.`);
+			res.status(500).send();
+			return;
+		}
+
+		const user_sent_by = manager.get_user_by_username(c.sent_by);
+		if (!isDefined(user_sent_by)) {
+			debug(log_now(), `User '${c.sent_by}' does not exist.`);
+			res.status(500).send();
+			return;
+		}
 
 		const opponent: string = ((): string => {
 			if (user_sent_by.username == session.username) {
@@ -226,7 +253,7 @@ export async function get_query_challenge_confirm_result_other(req: Request, res
 	const session = session_parse.data;
 	const r = is_user_logged_in(session);
 
-	if (!r[0]) {
+	if (!isDefined(r[2])) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -256,8 +283,19 @@ export async function get_query_challenge_confirm_result_other(req: Request, res
 
 	let all_challenges: any[] = [];
 	for (const c of to_return) {
-		const user_sent_to = manager.get_user_by_username(c.sent_to) as User;
-		const user_sent_by = manager.get_user_by_username(c.sent_by) as User;
+		const user_sent_to = manager.get_user_by_username(c.sent_to);
+		if (!isDefined(user_sent_to)) {
+			debug(log_now(), `User '${c.sent_to}' does not exist.`);
+			res.status(500).send();
+			return;
+		}
+
+		const user_sent_by = manager.get_user_by_username(c.sent_by);
+		if (!isDefined(user_sent_by)) {
+			debug(log_now(), `User '${c.sent_by}' does not exist.`);
+			res.status(500).send();
+			return;
+		}
 
 		const opponent: string = ((): string => {
 			if (user_sent_by.username == session.username) {
@@ -308,7 +346,7 @@ export async function get_query_challenge_confirm_result_self(req: Request, res:
 	const session = session_parse.data;
 	const r = is_user_logged_in(session);
 
-	if (!r[0]) {
+	if (!isDefined(r[2])) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -338,8 +376,19 @@ export async function get_query_challenge_confirm_result_self(req: Request, res:
 
 	let all_challenges: any[] = [];
 	for (const c of to_return) {
-		const user_sent_to = manager.get_user_by_username(c.sent_to) as User;
-		const user_sent_by = manager.get_user_by_username(c.sent_by) as User;
+		const user_sent_to = manager.get_user_by_username(c.sent_to);
+		if (!isDefined(user_sent_to)) {
+			debug(log_now(), `User '${c.sent_to}' does not exist.`);
+			res.status(500).send();
+			return;
+		}
+
+		const user_sent_by = manager.get_user_by_username(c.sent_by);
+		if (!isDefined(user_sent_by)) {
+			debug(log_now(), `User '${c.sent_by}' does not exist.`);
+			res.status(500).send();
+			return;
+		}
 
 		const opponent: string = ((): string => {
 			if (user_sent_by.username == session.username) {

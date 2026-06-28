@@ -154,12 +154,12 @@ export async function post_query_game_list_own(req: Request, res: Response) {
 	const session = session_parse.data;
 	const r = is_user_logged_in(session);
 
-	if (!r[0]) {
+	const user = r[2];
+	if (!isDefined(user)) {
 		res.status(401).send(r[1]);
 		return;
 	}
 
-	const user = r[2] as User;
 	const time_control_id = req.body.tc_i;
 
 	const filter_game_function = (g: Game): boolean => {
@@ -249,12 +249,12 @@ export async function post_query_game_list_all(req: Request, res: Response) {
 	const session = session_parse.data;
 	const r = is_user_logged_in(session);
 
-	if (!r[0]) {
+	const user = r[2];
+	if (!isDefined(user)) {
 		res.status(401).send(r[1]);
 		return;
 	}
 
-	const user = r[2] as User;
 	if (!user.can_do(GAMES_SEE)) {
 		res.status(403).send('You cannot see the entire list of games in the web.');
 		return;

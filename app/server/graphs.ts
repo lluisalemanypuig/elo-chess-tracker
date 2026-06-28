@@ -30,12 +30,12 @@ import { Request, Response } from 'express';
 import { log_now } from '@server/utils/time';
 import { is_user_logged_in } from '@server/managers/session';
 import { GRAPHS_SEE_USER } from '@common/models/user_action';
-import { User } from '@common/models/user';
 import { ADMIN } from '@common/models/user_role';
 import { recalculate_all_graphs } from '@server/managers/graphs';
 import { ConfigurationManager } from '@server/managers/configuration_manager';
 import { get_execution_directory } from '@server/managers/environment_manager';
 import { AuthenticationSchema } from '@common/schemas/authentication';
+import { isDefined } from '@common/utils/is_defined';
 
 export async function get_page_graph_own(req: Request, res: Response) {
 	debug(log_now(), 'GET /graph/own...');
@@ -50,7 +50,7 @@ export async function get_page_graph_own(req: Request, res: Response) {
 	const session = session_parse.data;
 	const r = is_user_logged_in(session);
 
-	if (!r[0]) {
+	if (!isDefined(r[2])) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -75,12 +75,13 @@ export async function get_page_graph_full(req: Request, res: Response) {
 	const session = session_parse.data;
 	const r = is_user_logged_in(session);
 
-	if (!r[0]) {
+	const user = r[2];
+	if (!isDefined(user)) {
 		res.status(401).send(r[1]);
 		return;
 	}
 
-	if (!(r[2] as User).can_do(GRAPHS_SEE_USER)) {
+	if (!user.can_do(GRAPHS_SEE_USER)) {
 		debug(log_now(), `User '${session.username}' cannot see the whole graph.`);
 		res.status(403).send('You cannot see the whole graph.');
 		return;
@@ -106,12 +107,13 @@ export async function post_recalculate_graphs(req: Request, res: Response) {
 	const session = session_parse.data;
 	const r = is_user_logged_in(session);
 
-	if (!r[0]) {
+	const user = r[2];
+	if (!isDefined(user)) {
 		res.status(401).send(r[1]);
 		return;
 	}
 
-	if (!(r[2] as User).is(ADMIN)) {
+	if (!user.is(ADMIN)) {
 		debug(log_now(), `User '${session.username}' cannot recalculate graphs.`);
 		res.status(403).send('You cannot recalculate the graphs.');
 		return;

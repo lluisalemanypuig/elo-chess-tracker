@@ -31,6 +31,7 @@ import { log_now } from '@server/utils/time';
 import { is_user_logged_in } from '@server/managers/session';
 import { RatingSystemManager } from '@server/managers/rating_system_manager';
 import { AuthenticationSchema } from '@common/schemas/authentication';
+import { isDefined } from '@common/utils/is_defined';
 
 export async function get_query_html_time_controls(req: Request, res: Response) {
 	debug(log_now(), 'GET /query/html/time_controls...');
@@ -45,7 +46,7 @@ export async function get_query_html_time_controls(req: Request, res: Response) 
 	const session = session_parse.data;
 	const r = is_user_logged_in(session);
 
-	if (!r[0]) {
+	if (!isDefined(r[2])) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -71,7 +72,7 @@ export async function get_query_html_time_controls_unique(req: Request, res: Res
 	const session = session_parse.data;
 	const r = is_user_logged_in(session);
 
-	if (!r[0]) {
+	if (!isDefined(r[2])) {
 		res.status(401).send(r[1]);
 		return;
 	}

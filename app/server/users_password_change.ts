@@ -30,11 +30,11 @@ import { Request, Response } from 'express';
 import { log_now } from '@server/utils/time';
 import { is_user_logged_in, session_user_delete_all } from '@server/managers/session';
 import { encrypt_password_for_user, is_password_of_user_correct } from '@server/utils/encrypt';
-import { User } from '@common/models/user';
 import { user_overwrite } from '@server/managers/users';
 import { ConfigurationManager } from '@server/managers/configuration_manager';
 import { get_execution_directory } from '@server/managers/environment_manager';
 import { AuthenticationSchema } from '@common/schemas/authentication';
+import { isDefined } from '@common/utils/is_defined';
 
 export async function get_page_user_password_change(req: Request, res: Response) {
 	debug(log_now(), 'GET /page/user/password_change_page...');
@@ -49,7 +49,7 @@ export async function get_page_user_password_change(req: Request, res: Response)
 	const session = session_parse.data;
 
 	const r = is_user_logged_in(session);
-	if (!r[0]) {
+	if (!isDefined(r[2])) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -76,11 +76,12 @@ export async function post_user_password_change(req: Request, res: Response) {
 	const new_password = req.body.new;
 
 	const r = is_user_logged_in(session);
-	if (!r[0]) {
+	const user = r[2];
+
+	if (!isDefined(user)) {
 		res.status(200).send(r[1]);
 		return;
 	}
-	let user = r[2] as User;
 
 	// check if password is correct
 	const old_pwd = user.password;

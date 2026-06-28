@@ -50,8 +50,8 @@ import { UsersManager } from '@server/managers/users_manager';
 import { ConfigurationManager } from '@server/managers/configuration_manager';
 import { get_execution_directory } from '@server/managers/environment_manager';
 import { AuthenticationSchema } from '@common/schemas/authentication';
-import { isDefined } from '@app/common/utils/is_defined';
-import { GameCreateSchema, GameEditResultSchema } from '@app/common/schemas/games';
+import { isDefined } from '@common/utils/is_defined';
+import { GameCreateSchema, GameEditResultSchema } from '@common/schemas/games';
 
 export async function get_page_game_list_own(req: Request, res: Response) {
 	debug(log_now(), 'GET /page/game/list/own...');
@@ -180,15 +180,15 @@ export async function post_game_create(req: Request, res: Response) {
 	const game_time: string = game_parse.data.t; // HH:mm:ss:SSS
 
 	const mem = UsersManager.get_instance();
-	const white = mem.get_user_by_random_id(white_rid);
-	const black = mem.get_user_by_random_id(black_rid);
 
+	const white = mem.get_user_by_random_id(white_rid);
 	if (!isDefined(white)) {
 		debug(log_now(), `Random id '${white_rid}' for White is not valid.`);
 		res.status(500).send('Invalid white user sent to the server.');
 		return;
 	}
 
+	const black = mem.get_user_by_random_id(black_rid);
 	if (!isDefined(black)) {
 		debug(log_now(), `Random id '${black_rid}' for Black is not valid.`);
 		res.status(500).send('Invalid black user sent to the server.');
@@ -277,15 +277,15 @@ export async function post_game_edit_result(req: Request, res: Response) {
 	}
 
 	const manager = UsersManager.get_instance();
-	const white = manager.get_user_by_username(game.white);
-	const black = manager.get_user_by_username(game.black);
 
+	const white = manager.get_user_by_username(game.white);
 	if (!isDefined(white)) {
 		debug(log_now(), `Random id '${white}' for White is not valid.`);
 		res.status(500).send('Invalid white user sent to the server.');
 		return;
 	}
 
+	const black = manager.get_user_by_username(game.black);
 	if (!isDefined(black)) {
 		debug(log_now(), `Random id '${black}' for Black is not valid.`);
 		res.status(500).send('Invalid black user sent to the server.');
@@ -344,15 +344,15 @@ export async function post_game_edit_title(req: Request, res: Response) {
 	}
 
 	const manager = UsersManager.get_instance();
-	const white = manager.get_user_by_username(game.white);
-	const black = manager.get_user_by_username(game.black);
 
+	const white = manager.get_user_by_username(game.white);
 	if (!isDefined(white)) {
 		debug(log_now(), `Random id '${white}' for White is not valid.`);
 		res.status(500).send('Invalid white user sent to the server.');
 		return;
 	}
 
+	const black = manager.get_user_by_username(game.black);
 	if (!isDefined(black)) {
 		debug(log_now(), `Random id '${black}' for Black is not valid.`);
 		res.status(500).send('Invalid black user sent to the server.');
@@ -409,15 +409,15 @@ export async function post_game_delete(req: Request, res: Response) {
 	}
 
 	const manager = UsersManager.get_instance();
-	const white = manager.get_user_by_username(game.white);
-	const black = manager.get_user_by_username(game.black);
 
+	const white = manager.get_user_by_username(game.white);
 	if (!isDefined(white)) {
 		debug(log_now(), `Random id '${white}' for White is not valid.`);
 		res.status(500).send('Invalid white user sent to the server.');
 		return;
 	}
 
+	const black = manager.get_user_by_username(game.black);
 	if (!isDefined(black)) {
 		debug(log_now(), `Random id '${black}' for Black is not valid.`);
 		res.status(500).send('Invalid black user sent to the server.');

@@ -32,6 +32,7 @@ import { is_user_logged_in } from '@server/managers/session';
 import { ConfigurationManager } from '@server/managers/configuration_manager';
 import { get_execution_directory } from '@server/managers/environment_manager';
 import { AuthenticationSchema } from '@common/schemas/authentication';
+import { isDefined } from '@common/utils/is_defined';
 
 export async function get_page_user_ranking(req: Request, res: Response) {
 	debug(log_now(), 'GET /user/ranking...');
@@ -47,7 +48,7 @@ export async function get_page_user_ranking(req: Request, res: Response) {
 
 	const r = is_user_logged_in(session);
 
-	if (!r[0]) {
+	if (!isDefined(r[2])) {
 		res.status(401).send(r[1]);
 		return;
 	}

@@ -87,7 +87,7 @@ export async function get_page_home(req: Request, res: Response) {
 	}
 	const session = session_parse.data;
 	const r = is_user_logged_in(session);
-	if (!r[0]) {
+	if (!isDefined(r[2])) {
 		debug(log_now(), `    User ${session.username} is not logged in.`);
 		res.status(401).send(r[1]);
 		return;

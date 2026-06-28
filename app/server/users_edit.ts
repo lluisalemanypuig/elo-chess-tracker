@@ -30,13 +30,13 @@ import { Request, Response } from 'express';
 import { log_now } from '@server/utils/time';
 import { is_user_logged_in } from '@server/managers/session';
 import { user_rename_and_reassign_roles } from '@server/managers/users';
-import { User } from '@common/models/user';
 import { USER_ROLE_ASSIGN_ID, USER_EDIT, get_role_action_name } from '@common/models/user_action';
 import { can_user_edit } from '@server/managers/user_relationships';
 import { UsersManager } from '@server/managers/users_manager';
 import { ConfigurationManager } from '@server/managers/configuration_manager';
 import { get_execution_directory } from '@server/managers/environment_manager';
 import { AuthenticationSchema } from '@common/schemas/authentication';
+import { isDefined } from '@common/utils/is_defined';
 
 export async function get_page_user_edit(req: Request, res: Response) {
 	debug(log_now(), 'GET /page/user/edit...');
@@ -51,12 +51,12 @@ export async function get_page_user_edit(req: Request, res: Response) {
 	const session = session_parse.data;
 	const r = is_user_logged_in(session);
 
-	if (!r[0]) {
+	const user = r[2];
+	if (!isDefined(user)) {
 		res.status(401).send(r[1]);
 		return;
 	}
 
-	const user = r[2] as User;
 	if (!user.can_do(USER_EDIT)) {
 		debug(log_now(), `    User '${session.username}' does not have sufficient permissions.`);
 		res.status(403).send('You cannot edit users');
@@ -83,23 +83,21 @@ export async function post_user_edit(req: Request, res: Response) {
 	const session = session_parse.data;
 	const r = is_user_logged_in(session);
 
-	if (!r[0]) {
+	const editor = r[2];
+	if (!isDefined(editor)) {
 		res.status(401).send(r[1]);
 		return;
 	}
-	const editor = r[2] as User;
 
 	const mem = UsersManager.get_instance();
 
 	const edited_rid = req.body.u;
-	const _edited = mem.get_user_by_random_id(edited_rid);
-	if (_edited == undefined) {
+	const edited = mem.get_user_by_random_id(edited_rid);
+	if (!isDefined(edited)) {
 		debug(log_now(), `Random id '${edited_rid}' for user is not valid.`);
 		res.status(404).send('Invalid user');
 		return;
 	}
-
-	const edited = _edited as User;
 
 	debug(log_now(), `User '${editor.username}' is trying to modify user '${edited.username}'`);
 

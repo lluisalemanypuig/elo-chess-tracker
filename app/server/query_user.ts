@@ -34,6 +34,7 @@ import { User } from '@common/models/user';
 import { UsersManager } from '@server/managers/users_manager';
 import { TimeControlRating } from '@common/models/time_control_rating';
 import { AuthenticationSchema } from '@common/schemas/authentication';
+import { isDefined } from '@common/utils/is_defined';
 
 /// Returns the list of user full names and usernames sorted by name
 export async function get_query_user_list(req: Request, res: Response) {
@@ -49,7 +50,7 @@ export async function get_query_user_list(req: Request, res: Response) {
 	const session = session_parse.data;
 	const r = is_user_logged_in(session);
 
-	if (!r[0]) {
+	if (!isDefined(r[2])) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -75,7 +76,7 @@ export async function get_query_html_user_list(req: Request, res: Response) {
 	const session = session_parse.data;
 	const r = is_user_logged_in(session);
 
-	if (!r[0]) {
+	if (!isDefined(r[2])) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -105,12 +106,11 @@ export async function get_query_user_home(req: Request, res: Response) {
 	const session = session_parse.data;
 	const r = is_user_logged_in(session);
 
-	if (!r[0]) {
+	const user = r[2];
+	if (!isDefined(user)) {
 		res.status(401).send(r[1]);
 		return;
 	}
-
-	const user = r[2] as User;
 
 	const ratings_user = user.ratings.map((value: TimeControlRating) => {
 		let R = value.rating.clone();
@@ -139,7 +139,7 @@ export async function post_query_user_edit(req: Request, res: Response) {
 	const session = session_parse.data;
 	const r = is_user_logged_in(session);
 
-	if (!r[0]) {
+	if (!isDefined(r[2])) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -147,14 +147,13 @@ export async function post_query_user_edit(req: Request, res: Response) {
 	const mem = UsersManager.get_instance();
 
 	const to_edit_rid = req.body.u;
-	const _to_edit = mem.get_user_by_random_id(to_edit_rid);
-	if (_to_edit == undefined) {
+	const to_edit = mem.get_user_by_random_id(to_edit_rid);
+	if (!isDefined(to_edit)) {
 		debug(log_now(), `Random id '${to_edit_rid}' for edited user is not valid.`);
 		res.status(404).send('Invalid user');
 		return;
 	}
 
-	const to_edit = _to_edit as User;
 	res.status(200).send({
 		first_name: to_edit.first_name,
 		last_name: to_edit.last_name,
@@ -175,7 +174,7 @@ export async function post_query_user_ranking(req: Request, res: Response) {
 	const session = session_parse.data;
 	const r = is_user_logged_in(session);
 
-	if (!r[0]) {
+	if (!isDefined(r[2])) {
 		res.status(401).send(r[1]);
 		return;
 	}
