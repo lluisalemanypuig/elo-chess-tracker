@@ -37,7 +37,7 @@ import {
 	challenge_unset_result,
 	challenge_agree_result
 } from '@server/managers/challenges';
-import { Challenge, ChallengeID } from '@common/models/challenge';
+import { ChallengeID } from '@common/models/challenge';
 import { User } from '@common/models/user';
 import { USER_CHALLENGE } from '@common/models/user_action';
 import { can_user_send_challenge } from '@server/managers/user_relationships';
