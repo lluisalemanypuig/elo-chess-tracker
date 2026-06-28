@@ -30,7 +30,6 @@ import { Request, Response } from 'express';
 import { DateStringShort, log_now } from '@server/utils/time';
 import { is_user_logged_in } from '@server/managers/session';
 import { GAMES_CREATE, GAMES_DELETE, GAMES_EDIT } from '@common/models/user_action';
-import { User } from '@common/models/user';
 import {
 	game_add_new,
 	game_delete,
@@ -51,6 +50,8 @@ import { UsersManager } from '@server/managers/users_manager';
 import { ConfigurationManager } from '@server/managers/configuration_manager';
 import { get_execution_directory } from '@server/managers/environment_manager';
 import { AuthenticationSchema } from '@common/schemas/authentication';
+import { isDefined } from '@app/common/utils/is_defined';
+import { GameCreateSchema, GameEditResultSchema } from '@app/common/schemas/games';
 
 export async function get_page_game_list_own(req: Request, res: Response) {
 	debug(log_now(), 'GET /page/game/list/own...');
@@ -65,7 +66,8 @@ export async function get_page_game_list_own(req: Request, res: Response) {
 	const session = session_parse.data;
 	const r = is_user_logged_in(session);
 
-	if (!r[0]) {
+	const user = r[2];
+	if (!isDefined(user)) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -90,7 +92,8 @@ export async function get_page_game_list_all(req: Request, res: Response) {
 	const session = session_parse.data;
 	const r = is_user_logged_in(session);
 
-	if (!r[0]) {
+	const user = r[2];
+	if (!isDefined(user)) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -115,12 +118,13 @@ export async function get_page_game_create(req: Request, res: Response) {
 	const session = session_parse.data;
 	const r = is_user_logged_in(session);
 
-	if (!r[0]) {
+	const user = r[2];
+	if (!isDefined(user)) {
 		res.status(401).send(r[1]);
 		return;
 	}
 
-	if (!(r[2] as User).can_do(GAMES_CREATE)) {
+	if (!user.can_do(GAMES_CREATE)) {
 		debug(log_now(), `User '${session.username}' cannot create games.`);
 		res.status(403).send('You cannot create games.');
 		return;
@@ -146,44 +150,50 @@ export async function post_game_create(req: Request, res: Response) {
 	const session = session_parse.data;
 	const r = is_user_logged_in(session);
 
-	if (!r[0]) {
+	const creator = r[2];
+	if (!isDefined(creator)) {
 		res.status(401).send(r[1]);
 		return;
 	}
 
-	const creator = r[2] as User;
 	if (!creator.can_do(GAMES_CREATE)) {
 		debug(log_now(), `User '${session.username}' cannot create users.`);
 		res.status(403).send('You cannot create games');
 		return;
 	}
 
-	const mem = UsersManager.get_instance();
+	const game_parse = GameCreateSchema.safeParse(req.body);
+	if (!game_parse.success) {
+		debug(log_now(), 'Failed to parse ChallengeSendSchema');
+		debug(log_now(), `Error: '${game_parse.error}'`);
+		res.status(401).send('Internal error');
+		return;
+	}
 
-	const white_rid = req.body.w;
-	const _white = mem.get_user_by_random_id(white_rid);
-	if (_white == undefined) {
+	const white_rid = game_parse.data.w;
+	const black_rid = game_parse.data.b;
+	const game_title = game_parse.data.title;
+	const result: GameResult = game_parse.data.r;
+	const time_control_id: TimeControlID = game_parse.data.tc_i;
+	const time_control_name = game_parse.data.tc_n;
+	const game_date: DateStringShort = game_parse.data.d;
+	const game_time: string = game_parse.data.t; // HH:mm:ss:SSS
+
+	const mem = UsersManager.get_instance();
+	const white = mem.get_user_by_random_id(white_rid);
+	const black = mem.get_user_by_random_id(black_rid);
+
+	if (!isDefined(white)) {
 		debug(log_now(), `Random id '${white_rid}' for White is not valid.`);
 		res.status(500).send('Invalid white user sent to the server.');
 		return;
 	}
 
-	const black_rid = req.body.b;
-	const _black = mem.get_user_by_random_id(black_rid);
-	if (_black == undefined) {
+	if (!isDefined(black)) {
 		debug(log_now(), `Random id '${black_rid}' for Black is not valid.`);
 		res.status(500).send('Invalid black user sent to the server.');
 		return;
 	}
-
-	const game_title = req.body.title;
-	const white = _white as User;
-	const black = _black as User;
-	const result: GameResult = req.body.r;
-	const time_control_id: TimeControlID = req.body.tc_i;
-	const time_control_name = req.body.tc_n;
-	const game_date: DateStringShort = req.body.d;
-	const game_time: string = req.body.t; // HH:mm:ss:SSS
 
 	if (white.username == black.username) {
 		res.status(500).send('The players cannot be the same.');
@@ -234,20 +244,28 @@ export async function post_game_edit_result(req: Request, res: Response) {
 	const session = session_parse.data;
 	const r = is_user_logged_in(session);
 
-	if (!r[0]) {
+	const user = r[2];
+	if (!isDefined(user)) {
 		res.status(401).send(r[1]);
 		return;
 	}
 
-	const user = r[2] as User;
 	if (!user.can_do(GAMES_EDIT)) {
 		debug(log_now(), `User '${session.username}' cannot edit games.`);
 		res.status(403).send('You cannot edit games');
 		return;
 	}
 
-	const game_id: GameID = req.body.id;
-	const new_result = req.body.new_result;
+	const game_parse = GameEditResultSchema.safeParse(req.body);
+	if (!game_parse.success) {
+		debug(log_now(), 'Failed to parse ChallengeSendSchema');
+		debug(log_now(), `Error: '${game_parse.error}'`);
+		res.status(401).send('Internal error');
+		return;
+	}
+
+	const game_id = game_parse.data.id;
+	const new_result = game_parse.data.new_result;
 
 	debug(log_now(), `    Game ID: '${game_id}'`);
 	debug(log_now(), `    New result: '${new_result}'`);
@@ -257,13 +275,24 @@ export async function post_game_edit_result(req: Request, res: Response) {
 		res.status(404).send(`Game was not found.`);
 		return;
 	}
-	let manager = UsersManager.get_instance();
 
-	const is_editable = can_user_edit_a_game(
-		user,
-		manager.get_user_by_username(game.white) as User,
-		manager.get_user_by_username(game.black) as User
-	);
+	const manager = UsersManager.get_instance();
+	const white = manager.get_user_by_username(game.white);
+	const black = manager.get_user_by_username(game.black);
+
+	if (!isDefined(white)) {
+		debug(log_now(), `Random id '${white}' for White is not valid.`);
+		res.status(500).send('Invalid white user sent to the server.');
+		return;
+	}
+
+	if (!isDefined(black)) {
+		debug(log_now(), `Random id '${black}' for Black is not valid.`);
+		res.status(500).send('Invalid black user sent to the server.');
+		return;
+	}
+
+	const is_editable = can_user_edit_a_game(user, white, black);
 	if (!is_editable) {
 		res.status(403).send(`You lack permissions to edit this game.`);
 		return;
@@ -290,12 +319,12 @@ export async function post_game_edit_title(req: Request, res: Response) {
 	const session = session_parse.data;
 	const r = is_user_logged_in(session);
 
-	if (!r[0]) {
+	const user = r[2];
+	if (!isDefined(user)) {
 		res.status(401).send(r[1]);
 		return;
 	}
 
-	const user = r[2] as User;
 	if (!user.can_do(GAMES_EDIT)) {
 		debug(log_now(), `User '${session.username}' cannot edit games.`);
 		res.status(403).send('You cannot edit games');
@@ -309,17 +338,28 @@ export async function post_game_edit_title(req: Request, res: Response) {
 	debug(log_now(), `    New title: '${title}'`);
 
 	const game = game_find_by_id(game_id);
-	if (game == undefined) {
+	if (!isDefined(game)) {
 		res.status(404).send(`Game was not found.`);
 		return;
 	}
-	let manager = UsersManager.get_instance();
 
-	const is_editable = can_user_edit_a_game(
-		user,
-		manager.get_user_by_username(game.white) as User,
-		manager.get_user_by_username(game.black) as User
-	);
+	const manager = UsersManager.get_instance();
+	const white = manager.get_user_by_username(game.white);
+	const black = manager.get_user_by_username(game.black);
+
+	if (!isDefined(white)) {
+		debug(log_now(), `Random id '${white}' for White is not valid.`);
+		res.status(500).send('Invalid white user sent to the server.');
+		return;
+	}
+
+	if (!isDefined(black)) {
+		debug(log_now(), `Random id '${black}' for Black is not valid.`);
+		res.status(500).send('Invalid black user sent to the server.');
+		return;
+	}
+
+	const is_editable = can_user_edit_a_game(user, white, black);
 	if (!is_editable) {
 		res.status(403).send(`You lack permissions to edit this game.`);
 		return;
@@ -346,12 +386,12 @@ export async function post_game_delete(req: Request, res: Response) {
 	const session = session_parse.data;
 	const r = is_user_logged_in(session);
 
-	if (!r[0]) {
+	const user = r[2];
+	if (!isDefined(user)) {
 		res.status(401).send(r[1]);
 		return;
 	}
 
-	const user = r[2] as User;
 	if (!user.can_do(GAMES_DELETE)) {
 		debug(log_now(), `User '${session.username}' cannot delete games.`);
 		res.status(403).send('You cannot delete games');
@@ -363,17 +403,28 @@ export async function post_game_delete(req: Request, res: Response) {
 	debug(log_now(), `    Game ID: '${game_id}'`);
 
 	const game = game_find_by_id(game_id);
-	if (game == undefined) {
+	if (!isDefined(game)) {
 		res.status(404).send(`Game was not found.`);
 		return;
 	}
-	let manager = UsersManager.get_instance();
 
-	const is_deleteable = can_user_delete_a_game(
-		user,
-		manager.get_user_by_username(game.white) as User,
-		manager.get_user_by_username(game.black) as User
-	);
+	const manager = UsersManager.get_instance();
+	const white = manager.get_user_by_username(game.white);
+	const black = manager.get_user_by_username(game.black);
+
+	if (!isDefined(white)) {
+		debug(log_now(), `Random id '${white}' for White is not valid.`);
+		res.status(500).send('Invalid white user sent to the server.');
+		return;
+	}
+
+	if (!isDefined(black)) {
+		debug(log_now(), `Random id '${black}' for Black is not valid.`);
+		res.status(500).send('Invalid black user sent to the server.');
+		return;
+	}
+
+	const is_deleteable = can_user_delete_a_game(user, white, black);
 	if (!is_deleteable) {
 		res.status(403).send(`You lack permissions to delete this game.`);
 		return;
@@ -399,12 +450,13 @@ export async function post_recalculate_ratings(req: Request, res: Response) {
 	const session = session_parse.data;
 	const r = is_user_logged_in(session);
 
-	if (!r[0]) {
+	const user = r[2];
+	if (!isDefined(user)) {
 		res.status(401).send(r[1]);
 		return;
 	}
 
-	if (!(r[2] as User).is(ADMIN)) {
+	if (!user.is(ADMIN)) {
 		debug(log_now(), `User '${session.username}' cannot recalculate ratings.`);
 		res.status(403).send('You cannot recalculate ratings.');
 		return;
