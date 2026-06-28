@@ -28,6 +28,7 @@ import { EdgeMetadata } from '@common/models/graph/edge_metadata';
 import { EdgeSchema, Edge } from '@common/models/graph/edge';
 import { search_by_key, where_should_be_inserted_by_key } from '@server/utils/searching';
 import { GameResult, opposite_result } from '@common/models/game';
+import { isDefined } from '@common/utils/is_defined';
 
 export const NeighborhoodSchema = z.array(EdgeSchema);
 
@@ -80,22 +81,22 @@ export class Graph {
 	 */
 	add_edge(w: string, b: string, result: GameResult): void {
 		// insert into w's outgoing edges list
-		let _w_out_list = this.adjacency_list.get(w);
-		if (_w_out_list == undefined) {
+		let w_out_list = this.adjacency_list.get(w);
+		if (!isDefined(w_out_list)) {
 			this.adjacency_list.set(w, []);
-			_w_out_list = this.adjacency_list.get(w);
+			w_out_list = this.adjacency_list.get(w);
 		}
 		const w_edge = new Edge(b, EdgeMetadata.from_result(result));
-		Graph.insert_into_list(w, b, w_edge, _w_out_list as Neighborhood);
+		Graph.insert_into_list(w, b, w_edge, w_out_list as Neighborhood);
 
 		// insert into b's ingoing edges list
-		let _b_in_list = this.in_adjacency_list.get(b);
-		if (_b_in_list == undefined) {
+		let b_in_list = this.in_adjacency_list.get(b);
+		if (!isDefined(b_in_list)) {
 			this.in_adjacency_list.set(b, []);
-			_b_in_list = this.in_adjacency_list.get(b);
+			b_in_list = this.in_adjacency_list.get(b);
 		}
 		const b_edge = new Edge(w, EdgeMetadata.from_result(opposite_result(result)));
-		Graph.insert_into_list(b, w, b_edge, _b_in_list as Neighborhood);
+		Graph.insert_into_list(b, w, b_edge, b_in_list as Neighborhood);
 	}
 	/**
 	 * @brief Add an edge between White @e w and Black @e b, with result.
@@ -105,23 +106,23 @@ export class Graph {
 	 */
 	add_edge_raw(w: string, b: string, w_edge: Edge): void {
 		// insert into w's outgoing edges list
-		let _w_out_list = this.adjacency_list.get(w);
-		if (_w_out_list == undefined) {
+		let w_out_list = this.adjacency_list.get(w);
+		if (!isDefined(w_out_list)) {
 			this.adjacency_list.set(w, []);
-			_w_out_list = this.adjacency_list.get(w);
+			w_out_list = this.adjacency_list.get(w);
 		}
-		Graph.insert_into_list(w, b, w_edge, _w_out_list as Neighborhood);
+		Graph.insert_into_list(w, b, w_edge, w_out_list as Neighborhood);
 
 		// insert into b's ingoing edges list
-		let _b_in_list = this.in_adjacency_list.get(b);
-		if (_b_in_list == undefined) {
+		let b_in_list = this.in_adjacency_list.get(b);
+		if (!isDefined(b_in_list)) {
 			this.in_adjacency_list.set(b, []);
-			_b_in_list = this.in_adjacency_list.get(b);
+			b_in_list = this.in_adjacency_list.get(b);
 		}
 
 		const em = w_edge.metadata.clone().reverse();
 		const b_edge = new Edge(w, em);
-		Graph.insert_into_list(b, w, b_edge, _b_in_list as Neighborhood);
+		Graph.insert_into_list(b, w, b_edge, b_in_list as Neighborhood);
 	}
 
 	private static delete_from_list(_u: string, v: string, result: GameResult, N_u: Neighborhood): void {
@@ -144,22 +145,20 @@ export class Graph {
 	 */
 	delete_edge(w: string, b: string, result: GameResult): void {
 		// delete from w's outgoing edges list
-		let _w_out_list = this.adjacency_list.get(w);
-		if (_w_out_list == undefined) {
+		let w_out_list = this.adjacency_list.get(w);
+		if (!isDefined(w_out_list)) {
 			throw new Error(`Player '${w}' does not have any outgoing edge, and so no edge to '${b}'.`);
 		}
-		let w_out_list = _w_out_list as Neighborhood;
 		Graph.delete_from_list(w, b, result, w_out_list);
 		if (w_out_list.length == 0) {
 			this.adjacency_list.delete(w);
 		}
 
 		// delete from b's ingoing edges list
-		let _b_in_list = this.in_adjacency_list.get(b);
-		if (_b_in_list == undefined) {
+		let b_in_list = this.in_adjacency_list.get(b);
+		if (!isDefined(b_in_list)) {
 			throw new Error(`Player '${b}' does not have any ingoing edge, and so no edge from '${w}'.`);
 		}
-		let b_in_list = _b_in_list as Neighborhood;
 		Graph.delete_from_list(b, w, opposite_result(result), b_in_list);
 		if (b_in_list.length == 0) {
 			this.in_adjacency_list.delete(b);
@@ -174,12 +173,11 @@ export class Graph {
 	 * as white.
 	 */
 	get_data_as_white(u: string, v: string): EdgeMetadata | undefined {
-		const _w_list = this.adjacency_list.get(u);
-		if (_w_list == undefined) {
+		const w_list = this.adjacency_list.get(u);
+		if (!isDefined(w_list)) {
 			return undefined;
 		}
 
-		const w_list = _w_list as Neighborhood;
 		const b_idx = search_by_key(w_list, function (e: Edge): number {
 			return v.localeCompare(e.neighbor);
 		});
@@ -193,12 +191,11 @@ export class Graph {
 	 * as black.
 	 */
 	get_data_as_black(u: string, v: string): EdgeMetadata | undefined {
-		const _u_list = this.in_adjacency_list.get(u);
-		if (_u_list == undefined) {
+		const u_list = this.in_adjacency_list.get(u);
+		if (!isDefined(u_list)) {
 			return undefined;
 		}
 
-		const u_list = _u_list as Neighborhood;
 		const v_idx = search_by_key(u_list, function (e: Edge): number {
 			return v.localeCompare(e.neighbor);
 		});
@@ -247,15 +244,13 @@ export class Graph {
 	 * @pre @e old_res != @e new_result.
 	 */
 	change_game_result(w: string, b: string, old_res: GameResult, new_res: GameResult): void {
-		const _w_list = this.adjacency_list.get(w);
-		if (_w_list != undefined) {
-			let w_list = _w_list as Neighborhood;
+		const w_list = this.adjacency_list.get(w);
+		if (isDefined(w_list)) {
 			this.change_game_result_list(w, b, old_res, new_res, w_list);
 		}
 
-		const _b_list = this.in_adjacency_list.get(b);
-		if (_b_list != undefined) {
-			let b_list = _b_list as Neighborhood;
+		const b_list = this.in_adjacency_list.get(b);
+		if (isDefined(b_list)) {
 			this.change_game_result_list(b, w, opposite_result(old_res), opposite_result(new_res), b_list);
 		}
 	}
@@ -267,11 +262,11 @@ export class Graph {
 	 * White.
 	 */
 	get_out_degree(u: string): number {
-		const _u_list = this.adjacency_list.get(u);
-		if (_u_list == undefined) {
+		const u_list = this.adjacency_list.get(u);
+		if (!isDefined(u_list)) {
 			return 0;
 		}
-		return (_u_list as Neighborhood).length;
+		return u_list.length;
 	}
 	/// Returns the list of opponents and the metadata of @e u.
 	get_outgoing_edges(u: string): Neighborhood | undefined {
@@ -285,11 +280,11 @@ export class Graph {
 	 * White.
 	 */
 	get_in_degree(u: string): number {
-		const _u_list = this.in_adjacency_list.get(u);
-		if (_u_list == undefined) {
+		const u_list = this.in_adjacency_list.get(u);
+		if (!isDefined(u_list)) {
 			return 0;
 		}
-		return (_u_list as Neighborhood).length;
+		return (u_list as Neighborhood).length;
 	}
 	/// Returns the list of opponents and the metadata of @e u.
 	get_incoming_edges(u: string): Neighborhood | undefined {
@@ -298,11 +293,10 @@ export class Graph {
 
 	/// Returns the list of Black opponents of @e u.
 	get_black_opponents(u: string): string[] {
-		const _u_list = this.adjacency_list.get(u);
-		if (_u_list == undefined) {
+		const u_list = this.adjacency_list.get(u);
+		if (!isDefined(u_list)) {
 			return [];
 		}
-		const u_list = _u_list as Neighborhood;
 		return u_list.map((e: Edge): string => {
 			return e.neighbor;
 		});
@@ -310,11 +304,10 @@ export class Graph {
 
 	/// Returns the list of White opponents of @e u.
 	get_white_opponents(u: string): string[] {
-		const _u_list = this.in_adjacency_list.get(u);
-		if (_u_list == undefined) {
+		const u_list = this.in_adjacency_list.get(u);
+		if (!isDefined(u_list)) {
 			return [];
 		}
-		const u_list = _u_list as Neighborhood;
 		return u_list.map((e: Edge): string => {
 			return e.neighbor;
 		});

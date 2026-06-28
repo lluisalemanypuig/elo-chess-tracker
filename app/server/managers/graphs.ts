@@ -23,6 +23,7 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
+import { isDefined } from '@common/utils/is_defined';
 import { graph_full_to_file, graph_to_file } from '@common/io/graph/graph';
 import { GameResult } from '@common/models/game';
 import { Graph } from '@common/models/graph/graph';
@@ -34,11 +35,10 @@ import { RatingSystemManager } from '@server/managers/rating_system_manager';
 
 export function graph_update(w: string, b: string, result: GameResult, id: TimeControlID): void {
 	let manager = GraphsManager.get_instance();
-	let _g = manager.get_graph(id);
-	if (_g == undefined) {
+	let g = manager.get_graph(id);
+	if (!isDefined(g)) {
 		throw new Error(`Graph of time control id '${id}' does not exist.`);
 	}
-	let g = _g as Graph;
 	g.add_edge(w, b, result);
 
 	const graphs_dir = EnvironmentManager.get_instance().get_dir_graphs_time_control(id);
@@ -53,11 +53,10 @@ export function graph_modify_edge(
 	id: TimeControlID
 ): void {
 	let manager = GraphsManager.get_instance();
-	let _g = manager.get_graph(id);
-	if (_g == undefined) {
+	let g = manager.get_graph(id);
+	if (!isDefined(g)) {
 		throw new Error(`Graph of time control id '${id}' does not exist.`);
 	}
-	let g = _g as Graph;
 	g.change_game_result(w, b, old_res, new_res);
 
 	const graphs_dir = EnvironmentManager.get_instance().get_dir_graphs_time_control(id);
@@ -66,11 +65,10 @@ export function graph_modify_edge(
 
 export function graph_delete_edge(w: string, b: string, result: GameResult, id: TimeControlID): void {
 	let manager = GraphsManager.get_instance();
-	let _g = manager.get_graph(id);
-	if (_g == undefined) {
+	let g = manager.get_graph(id);
+	if (!isDefined(g)) {
 		throw new Error(`Graph of time control id '${id}' does not exist.`);
 	}
-	let g = _g as Graph;
 	g.delete_edge(w, b, result);
 
 	const graphs_dir = EnvironmentManager.get_instance().get_dir_graphs_time_control(id);

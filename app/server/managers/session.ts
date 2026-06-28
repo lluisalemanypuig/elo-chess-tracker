@@ -33,13 +33,15 @@ import { SessionIDManager } from '@server/managers/session_id_manager';
 import { SessionID } from '@common/models/session_id';
 import { shuffle } from '@server/utils/shuffle_random';
 import { UsersManager } from '@server/managers/users_manager';
+import { isDefined } from '@common/utils/is_defined';
 
 // The original string was
 // "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+-*/ª!·$%&/()=?¿¡'º|@#~€¬^{},;.:_";
 
 /// This string is randomized by the build script which the administrator must
 /// use in order to configure the webpage in their machine.
-const character_samples: string = '@a6XKzQdcW·¬Rg"+¡vD*;Fj}G,_NJSxTZ&ª=k/VAOuiw.C?4Eq-r1m57)B~$:º2/YU[]I!P|n8betsyH%( 9#{l0fhoL3pM¿';
+const character_samples: string =
+	'@a6XKzQdcW·¬Rg"+¡vD*;Fj}G,_NJSxTZ&ª=k/VAOuiw.C?4Eq-r1m57)B~$:º2/YU[]I!P|n8betsyH%( 9#{l0fhoL3pM¿';
 
 /// Makes a random session id from a starting string.
 function random_session_id(str: string): string {
@@ -104,7 +106,7 @@ export function session_user_delete_all(username: string): void {
  */
 export function is_user_logged_in(session: SessionID): [boolean, string, User | undefined] {
 	const user = UsersManager.get_instance().get_user_by_username(session.username);
-	if (user == undefined) {
+	if (!isDefined(user)) {
 		debug(log_now(), `User '${session.username}' does not exist.`);
 		return [false, 'Forbidden access. <a href="/">Go home</a>.', undefined];
 	}

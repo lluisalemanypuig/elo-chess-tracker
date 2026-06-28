@@ -271,7 +271,7 @@ export async function post_game_edit_result(req: Request, res: Response) {
 	debug(log_now(), `    New result: '${new_result}'`);
 
 	const game = game_find_by_id(game_id);
-	if (game == undefined) {
+	if (!isDefined(game)) {
 		res.status(404).send(`Game was not found.`);
 		return;
 	}

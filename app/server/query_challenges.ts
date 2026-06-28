@@ -62,7 +62,7 @@ export async function get_query_challenge_received(req: Request, res: Response) 
 		if (c.sent_to != session.username) {
 			return false;
 		}
-		if (c.when_challenge_accepted != undefined) {
+		if (isDefined(c.when_challenge_accepted)) {
 			return false;
 		}
 		return true;
@@ -120,7 +120,7 @@ export async function get_query_challenge_sent(req: Request, res: Response) {
 		if (c.sent_by != session.username) {
 			return false;
 		}
-		if (c.when_challenge_accepted != undefined) {
+		if (isDefined(c.when_challenge_accepted)) {
 			return false;
 		}
 		return true;
@@ -185,11 +185,11 @@ export async function get_query_challenge_pending_result(req: Request, res: Resp
 			return false;
 		}
 		// must have been accepted
-		if (c.when_challenge_accepted == undefined) {
+		if (!isDefined(c.when_challenge_accepted)) {
 			return false;
 		}
 		// result can't have been set
-		if (c.result_set_by != undefined) {
+		if (isDefined(c.result_set_by)) {
 			return false;
 		}
 		return true;
@@ -265,11 +265,11 @@ export async function get_query_challenge_confirm_result_other(req: Request, res
 			return false;
 		}
 		// must have been accepted
-		if (c.when_challenge_accepted == undefined) {
+		if (!isDefined(c.when_challenge_accepted)) {
 			return false;
 		}
 		// result already set
-		if (c.result_set_by == undefined) {
+		if (!isDefined(c.result_set_by)) {
 			return false;
 		}
 		// result should have been set by this user
@@ -358,11 +358,11 @@ export async function get_query_challenge_confirm_result_self(req: Request, res:
 			return false;
 		}
 		// must have been accepted
-		if (c.when_challenge_accepted == undefined) {
+		if (!isDefined(c.when_challenge_accepted)) {
 			return false;
 		}
 		// result already set by somebody
-		if (c.result_set_by == undefined) {
+		if (!isDefined(c.result_set_by)) {
 			return false;
 		}
 		// result should NOT have been set by this user

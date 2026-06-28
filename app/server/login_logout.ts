@@ -36,14 +36,8 @@ import { SessionIDTokenFieldName, SessionIDUsernameFieldName } from '@common/mod
 import { User } from '@common/models/user';
 import { UsersManager } from '@server/managers/users_manager';
 import { AuthenticationSchema } from '@common/schemas/authentication';
+import { isDefined } from '@common/utils/is_defined';
 
-/**
- * @brief Can a user log into the webpage? Are the username and password input correct?
- * @param req Request
- * @param res Result
- * @returns Data
- * @post Creates a new session id for the user.
- */
 export async function post_user_login(req: Request, res: Response) {
 	debug(log_now(), `POST /user/login`);
 
@@ -52,17 +46,17 @@ export async function post_user_login(req: Request, res: Response) {
 
 	debug(log_now(), `    Username '${username}'`);
 
-	const _user_data = UsersManager.get_instance().get_user_by_username(username);
+	const user_data = UsersManager.get_instance().get_user_by_username(username);
 
 	// nonexistent user
-	if (_user_data == undefined) {
+	if (!isDefined(user_data)) {
 		debug(log_now(), `    User ${username} does not exist`);
 		res.status(404).send('Incorrect user or password.');
 		return;
 	}
 
 	// user exists
-	const pwd = (_user_data as User).password;
+	const pwd = (user_data as User).password;
 
 	// check if password is correct
 	const is_password_correct = is_password_of_user_correct(username, password_plain_text, pwd.encrypted, pwd.iv);
@@ -87,12 +81,6 @@ export async function post_user_login(req: Request, res: Response) {
 	});
 }
 
-/**
- * @brief Logs a user out of the website.
- * @param req
- * @param res
- * @post Deletes the user's session id.
- */
 export async function post_user_logout(req: Request, res: Response) {
 	debug(log_now(), `POST /user/logout`);
 
