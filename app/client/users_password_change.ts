@@ -19,6 +19,7 @@ Full source code of elo-chess-tracker:
 	https://github.com/lluisalemanypuig/elo-chess-tracker
 */
 
+import { UserPasswordChange } from '@common/schemas/user';
 import 'htmx.org';
 
 async function button_submit_clicked() {
@@ -36,7 +37,7 @@ async function button_submit_clicked() {
 		body: JSON.stringify({
 			old: box_old_password.value,
 			new: box_new_password.value
-		}),
+		} satisfies UserPasswordChange),
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
 	if (response.status >= 400) {

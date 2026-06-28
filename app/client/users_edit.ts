@@ -21,7 +21,10 @@ Full source code of elo-chess-tracker:
 
 import 'htmx.org';
 
-import { UserRole, all_user_roles, user_role_to_string } from '@common/models/user_role';
+import { UserRole, all_user_roles, user_role_to_string, array_string_to_roles } from '@common/models/user_role';
+import { QueryUserEdit } from '@common/schemas/query_user';
+import { UserEdit } from '@common/schemas/user';
+import { isDefined } from '@common/utils/is_defined';
 
 async function user_was_changed(_event: any) {
 	all_user_roles.forEach(function (role: string) {
@@ -40,7 +43,7 @@ async function user_was_changed(_event: any) {
 		const user_id = (username_option as HTMLOptionElement).id;
 		const response = await fetch('/query/user/edit', {
 			method: 'POST',
-			body: JSON.stringify({ u: user_id }),
+			body: JSON.stringify({ u: Number(user_id) } satisfies QueryUserEdit),
 			headers: { 'Content-type': 'application/json; charset=UTF-8' }
 		});
 		if (response.status >= 400) {
@@ -65,7 +68,7 @@ async function user_was_changed(_event: any) {
 async function submit_was_clicked(_event: any) {
 	// username
 	let username_list_input = document.getElementById('username_list') as HTMLInputElement;
-	const username = (document.querySelector('option[value="' + username_list_input.value + '"]') as HTMLOptionElement)
+	const user_rid = (document.querySelector('option[value="' + username_list_input.value + '"]') as HTMLOptionElement)
 		.id;
 
 	// first and last name
@@ -73,22 +76,26 @@ async function submit_was_clicked(_event: any) {
 	const last_name = (document.getElementById('box_last_name') as HTMLInputElement).value;
 
 	// retrieve selected role
-	let selected_roles: string[] = [];
+	let selected_roles_str: string[] = [];
 	all_user_roles.forEach(function (role: string) {
 		let checkbox_role = document.getElementById('checkbox_' + role) as HTMLInputElement;
 		if (checkbox_role.checked) {
-			selected_roles.push(role);
+			selected_roles_str.push(role);
 		}
 	});
+	const selected_roles = array_string_to_roles(selected_roles_str);
+	if (!isDefined(selected_roles)) {
+		return;
+	}
 
 	const response = await fetch('/user/edit', {
 		method: 'POST',
 		body: JSON.stringify({
-			u: username,
+			u: Number(user_rid),
 			f: first_name,
 			l: last_name,
 			r: selected_roles
-		}),
+		} satisfies UserEdit),
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
 	if (response.status >= 400) {

@@ -21,6 +21,16 @@ Full source code of elo-chess-tracker:
 
 import 'htmx.org';
 
+import {
+	ChallengeAccept,
+	ChallengeAgreeResult,
+	ChallengeDecline,
+	ChallengeDisagreeResult,
+	ChallengeSend,
+	ChallengeSetResult
+} from '@common/schemas/challenges';
+import { GameResult } from '@common/models/game';
+
 function create_label_text(text: string): HTMLLabelElement {
 	let label = document.createElement('label') as HTMLLabelElement;
 	label.textContent = text;
@@ -37,7 +47,7 @@ async function send_challenge_button_clicked(_event: any) {
 	const username_option = document.querySelector('option[value="' + username_list_input.value + '"]');
 
 	if (username_option != null) {
-		const random_user_id = username_option.id;
+		const random_user_id = Number(username_option.id);
 
 		const select_time_control = document.getElementById('select_time_control') as HTMLSelectElement;
 		const time_control_id = select_time_control.options[select_time_control.selectedIndex].value;
@@ -53,7 +63,7 @@ async function send_challenge_button_clicked(_event: any) {
 				title: game_title,
 				time_control_id: time_control_id,
 				time_control_name: time_control_name
-			}),
+			} satisfies ChallengeSend),
 			headers: { 'Content-type': 'application/json; charset=UTF-8' }
 		});
 		if (response.status >= 400) {
@@ -72,7 +82,7 @@ async function accept_challenge_button_clicked(event: any) {
 
 	const response = await fetch('/challenge/accept', {
 		method: 'POST',
-		body: JSON.stringify({ challenge_id: challenge_id }),
+		body: JSON.stringify({ challenge_id: challenge_id } satisfies ChallengeAccept),
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
 	if (response.status >= 400) {
@@ -89,7 +99,7 @@ async function decline_challenge_tag_clicked(event: any) {
 
 	const response = await fetch('/challenge/decline', {
 		method: 'POST',
-		body: JSON.stringify({ challenge_id: challenge_id }),
+		body: JSON.stringify({ challenge_id: challenge_id } satisfies ChallengeDecline),
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
 	if (response.status >= 400) {
@@ -104,13 +114,24 @@ async function submit_result_challenge_button_clicked(event: any) {
 	let button_clicked = event.target;
 	let challenge_id = button_clicked.id;
 
-	let white_select = document.getElementById('white_select_' + challenge_id) as HTMLSelectElement;
-	let black_select = document.getElementById('black_select_' + challenge_id) as HTMLSelectElement;
-	let select_result_game = document.getElementById('select_result_game_' + challenge_id) as HTMLSelectElement;
+	const white_select = document.getElementById('white_select_' + challenge_id) as HTMLSelectElement;
+	const black_select = document.getElementById('black_select_' + challenge_id) as HTMLSelectElement;
+	const select_result_game = document.getElementById('select_result_game_' + challenge_id) as HTMLSelectElement;
 
-	let white_username = white_select.options[white_select.selectedIndex].value;
-	let black_username = black_select.options[black_select.selectedIndex].value;
-	let result = select_result_game.options[select_result_game.selectedIndex].value;
+	const white_username = white_select.options[white_select.selectedIndex].value;
+	const black_username = black_select.options[black_select.selectedIndex].value;
+	const result_str = select_result_game.options[select_result_game.selectedIndex].value;
+	let result: GameResult;
+	if (result_str == 'white_wins') {
+		result = 'white_wins';
+	} else if (result_str == 'black_wins') {
+		result = 'black_wins';
+	} else if (result_str == 'draw') {
+		result = 'draw';
+	} else {
+		console.log(`Wrong result for the game '${result_str}'.`);
+		return;
+	}
 
 	// "query" the server
 	const response = await fetch('/challenge/set_result', {
@@ -120,7 +141,7 @@ async function submit_result_challenge_button_clicked(event: any) {
 			white: white_username,
 			black: black_username,
 			result: result
-		}),
+		} satisfies ChallengeSetResult),
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
 	if (response.status >= 400) {
@@ -138,7 +159,7 @@ async function agree_challenge_result_button_clicked(event: any) {
 
 	const response = await fetch('/challenge/agree', {
 		method: 'POST',
-		body: JSON.stringify({ challenge_id: challenge_id }),
+		body: JSON.stringify({ challenge_id: challenge_id } satisfies ChallengeAgreeResult),
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
 	if (response.status >= 400) {
@@ -156,7 +177,7 @@ async function disagree_challenge_result_button_clicked(event: any) {
 
 	const response = await fetch('/challenge/disagree', {
 		method: 'POST',
-		body: JSON.stringify({ challenge_id: challenge_id }),
+		body: JSON.stringify({ challenge_id: challenge_id } satisfies ChallengeDisagreeResult),
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
 	if (response.status >= 400) {

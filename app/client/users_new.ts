@@ -22,7 +22,8 @@ Full source code of elo-chess-tracker:
 import 'htmx.org';
 
 import { isDefined } from '@common/utils/is_defined';
-import { UserRole, all_user_roles, user_role_to_string } from '@common/models/user_role';
+import { UserRole, all_user_roles, array_string_to_roles, user_role_to_string } from '@common/models/user_role';
+import { UserCreate } from '@common/schemas/user';
 
 async function submit_new_user_clicked(_event: any) {
 	// username box
@@ -61,13 +62,17 @@ async function submit_new_user_clicked(_event: any) {
 	const firstname = box_first_name.value;
 	const lastname = box_last_name.value;
 
-	let roles: string[] = [];
-	all_user_roles.forEach(function (str: string) {
-		let checkbox_role = document.getElementById(str) as HTMLInputElement;
+	let selected_roles_str: string[] = [];
+	all_user_roles.forEach(function (role: string) {
+		let checkbox_role = document.getElementById(role) as HTMLInputElement;
 		if (checkbox_role.checked) {
-			roles.push(str);
+			selected_roles_str.push(role);
 		}
 	});
+	const selected_roles = array_string_to_roles(selected_roles_str);
+	if (!isDefined(selected_roles)) {
+		return;
+	}
 
 	const password = password_box.value;
 
@@ -83,12 +88,17 @@ async function submit_new_user_clicked(_event: any) {
 		alert('Missing last name');
 		return;
 	}
-	if (roles.length == 0) {
+	if (selected_roles.length == 0) {
 		alert('Missing roles');
 		return;
 	}
 	if (password == '') {
 		alert('Missing password');
+		return;
+	}
+
+	if (!isDefined(username)) {
+		alert('username was not given');
 		return;
 	}
 
@@ -98,9 +108,9 @@ async function submit_new_user_clicked(_event: any) {
 			u: username,
 			fn: firstname,
 			ln: lastname,
-			r: roles,
+			r: selected_roles,
 			p: password
-		}),
+		} satisfies UserCreate),
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
 	if (response.status >= 400) {

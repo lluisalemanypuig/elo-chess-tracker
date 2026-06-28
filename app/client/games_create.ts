@@ -19,6 +19,9 @@ Full source code of elo-chess-tracker:
 	https://github.com/lluisalemanypuig/elo-chess-tracker
 */
 
+import { result_from_text_to_value } from '@common/models/game';
+import { GameCreate } from '@common/schemas/games';
+import { isDefined } from '@common/utils/is_defined';
 import 'htmx.org';
 
 async function initialize_window_client_games_create() {
@@ -51,9 +54,15 @@ async function submit_new_game(_event: any) {
 
 	const white_option = document.querySelector('option[value="' + white_input.value + '"]');
 	const black_option = document.querySelector('option[value="' + black_input.value + '"]');
-	const result = select_result_game.options[select_result_game.selectedIndex].value;
+	const result_str = select_result_game.options[select_result_game.selectedIndex].value;
 	const time_control_id = select_time_control.options[select_time_control.selectedIndex].value;
 	const time_control_name = select_time_control.options[select_time_control.selectedIndex].text;
+
+	const result = result_from_text_to_value(result_str);
+	if (!isDefined(result)) {
+		console.log(`Wrong result for the game '${result_str}'.`);
+		return;
+	}
 
 	if (input_game_date.value == '') {
 		alert('Invalid date');
@@ -65,8 +74,16 @@ async function submit_new_game(_event: any) {
 	}
 
 	const game_title = game_title_input.value;
-	const white = white_option != null ? white_option.id : '';
-	const black = black_option != null ? black_option.id : '';
+	if (!isDefined(white_option)) {
+		console.log('Could not find white option');
+		return;
+	}
+	if (!isDefined(black_option)) {
+		console.log('Could not find black option');
+		return;
+	}
+	const white = white_option.id;
+	const black = black_option.id;
 
 	const rand_sec = `${Math.floor(Math.random() * 59)}`;
 	const rand_milli = `${Math.floor(Math.random() * 999)}`;
@@ -74,8 +91,8 @@ async function submit_new_game(_event: any) {
 		method: 'POST',
 		body: JSON.stringify({
 			title: game_title,
-			w: white,
-			b: black,
+			w: Number(white),
+			b: Number(black),
 			r: result,
 			tc_i: time_control_id,
 			tc_n: time_control_name,
@@ -88,7 +105,7 @@ async function submit_new_game(_event: any) {
 				':' +
 				(rand_milli.length == 1 ? '00' : rand_milli.length == 2 ? '0' : '') +
 				rand_milli
-		}),
+		} satisfies GameCreate),
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
 	if (response.status >= 400) {

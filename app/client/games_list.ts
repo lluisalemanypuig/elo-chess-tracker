@@ -19,7 +19,11 @@ Full source code of elo-chess-tracker:
 	https://github.com/lluisalemanypuig/elo-chess-tracker
 */
 
+import { isDefined } from '@common/utils/is_defined';
+import { GameDelete, GameEditResult, GameEditTitle } from '@common/schemas/games';
+import { QueryGamesListAll, QueryGamesListOwn } from '@common/schemas/query_games';
 import 'htmx.org';
+import { result_from_text_to_value } from '@common/models/game';
 
 function new_text_cell(text: string) {
 	let cell = document.createElement('td');
@@ -63,7 +67,7 @@ async function select_result_game_on_change(event: any) {
 		body: JSON.stringify({
 			id: game_id,
 			new_result: new_result
-		}),
+		} satisfies GameEditResult),
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
 
@@ -79,24 +83,11 @@ async function select_result_game_on_change(event: any) {
 function new_cell_select_result(original_result: string, game_id: string) {
 	let select = document.createElement('select') as HTMLSelectElement;
 
-	const result_from_text_to_value = function (text: string) {
-		if (text == '1 - 0') {
-			return 'white_wins';
-		}
-		if (text == '1/2 - 1/2') {
-			return 'draw';
-		}
-		if (text == '0 - 1') {
-			return 'black_wins';
-		}
-		return '????';
-	};
-
 	{
 		const add_result_option = function (text: string) {
 			let option_result = document.createElement('option') as HTMLOptionElement;
 			option_result.text = text;
-			option_result.value = result_from_text_to_value(text);
+			option_result.value = result_from_text_to_value(text) ?? '????';
 			select.appendChild(option_result);
 		};
 		add_result_option('1 - 0');
@@ -105,9 +96,9 @@ function new_cell_select_result(original_result: string, game_id: string) {
 	}
 
 	select.className = 'select-edit-game';
-	select.value = result_from_text_to_value(original_result);
+	select.value = result_from_text_to_value(original_result) ?? '???';
 	select.onchange = select_result_game_on_change;
-	select.setAttribute('original_value', result_from_text_to_value(original_result));
+	select.setAttribute('original_value', result_from_text_to_value(original_result) ?? '???');
 	select.setAttribute('game_id', game_id);
 
 	let cell = document.createElement('td');
@@ -115,7 +106,7 @@ function new_cell_select_result(original_result: string, game_id: string) {
 	return cell;
 }
 
-async function button_remove_on_click(event: any) {
+async function button_delete_game_on_click(event: any) {
 	const button = event.target;
 
 	let select_time_control = document.getElementById('select_time_control') as HTMLSelectElement;
@@ -124,7 +115,7 @@ async function button_remove_on_click(event: any) {
 	const game_id = button.getAttribute('game_id');
 	const response = await fetch('/game/delete', {
 		method: 'POST',
-		body: JSON.stringify({ id: game_id }),
+		body: JSON.stringify({ id: game_id } satisfies GameDelete),
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
 
@@ -137,31 +128,35 @@ async function button_remove_on_click(event: any) {
 	fill_games_list_time_control(previous_time_control_id);
 }
 
-function new_cell_button_delete(game_id: string) {
+function new_cell_button_delete_game(game_id: string) {
 	let button = document.createElement('button') as HTMLButtonElement;
 	button.textContent = 'Delete';
 	button.className = 'button-delete-game';
 	button.setAttribute('game_id', game_id);
-	button.onclick = button_remove_on_click;
+	button.onclick = button_delete_game_on_click;
 
 	let cell = document.createElement('td');
 	cell.appendChild(button);
 	return cell;
 }
 
-async function trigger_edit(event: Event) {
+async function trigger_edit_game_title(event: Event) {
 	let input = event.target as HTMLInputElement;
 	const game_id = input.getAttribute('game_id');
 	const original_title = input.getAttribute('original_title');
 	const new_title = input.value;
 
+	if (!isDefined(game_id)) {
+		console.log('Game id could not be retrieved');
+		return;
+	}
 	if (original_title == new_title) {
 		return;
 	}
 
 	const response = await fetch('/game/edit_title', {
 		method: 'POST',
-		body: JSON.stringify({ id: game_id, title: new_title }),
+		body: JSON.stringify({ id: game_id, title: new_title } satisfies GameEditTitle),
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
 
@@ -179,12 +174,12 @@ async function edit_game_title(event: Event) {
 		case 'keydown':
 			const key = (event as KeyboardEvent).key;
 			if (key === 'Enter') {
-				trigger_edit(event);
+				trigger_edit_game_title(event);
 			}
 			break;
 
 		case 'blur':
-			trigger_edit(event);
+			trigger_edit_game_title(event);
 			break;
 	}
 }
@@ -207,21 +202,24 @@ async function fill_games_list_time_control(time_control_id: string) {
 	let table = document.getElementById('table-games') as HTMLTableElement;
 	const val = table.getAttribute('value');
 
-	const query_to_server: string = (() => {
-		if (val == 'all') {
-			return '/query/game/list/all';
-		}
-		if (val == 'own') {
-			return '/query/game/list/own';
-		}
-		return '?';
-	})();
+	let response;
+	if (val == 'all') {
+		response = await fetch('/query/game/list/all', {
+			method: 'POST',
+			body: JSON.stringify({ tc_i: time_control_id } satisfies QueryGamesListAll),
+			headers: { 'Content-type': 'application/json; charset=UTF-8' }
+		});
+	} else if (val == 'own') {
+		response = await fetch('/query/game/list/own', {
+			method: 'POST',
+			body: JSON.stringify({ tc_i: time_control_id } satisfies QueryGamesListOwn),
+			headers: { 'Content-type': 'application/json; charset=UTF-8' }
+		});
+	} else {
+		console.log(`Wrong value for list '${val}'.`);
+		return;
+	}
 
-	const response = await fetch(query_to_server, {
-		method: 'POST',
-		body: JSON.stringify({ tc_i: time_control_id }),
-		headers: { 'Content-type': 'application/json; charset=UTF-8' }
-	});
 	if (response.status >= 400) {
 		const message = await response.text();
 		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
@@ -262,7 +260,7 @@ async function fill_games_list_time_control(time_control_id: string) {
 		row.appendChild(new_rating_cell(g.black_rating, g.black_increment));
 
 		if (g.deleteable == 'y') {
-			row.appendChild(new_cell_button_delete(g.id));
+			row.appendChild(new_cell_button_delete_game(g.id));
 		}
 
 		new_tbody.appendChild(row);
