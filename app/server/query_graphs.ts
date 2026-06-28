@@ -39,7 +39,7 @@ import { can_user_see_graph } from '@server/managers/user_relationships';
 import { GRAPHS_SEE_USER } from '@common/models/user_action';
 import { AuthenticationSchema } from '@common/schemas/authentication';
 import { isDefined } from '@common/utils/is_defined';
-import { GraphQuerySchema } from '@app/common/schemas/query_graphs';
+import { QueryGraphSchema } from '@common/schemas/query_graphs';
 
 class NodeWeight {
 	rating: number = 0;
@@ -237,7 +237,7 @@ export async function post_query_graph_own(req: Request, res: Response) {
 		return;
 	}
 
-	const graph_parse = GraphQuerySchema.safeParse(req.body);
+	const graph_parse = QueryGraphSchema.safeParse(req.body);
 	if (!graph_parse.success) {
 		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${graph_parse.error}'`);
@@ -279,7 +279,7 @@ export async function post_query_graph_full(req: Request, res: Response) {
 		return;
 	}
 
-	const graph_parse = GraphQuerySchema.safeParse(req.body);
+	const graph_parse = QueryGraphSchema.safeParse(req.body);
 	if (!graph_parse.success) {
 		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${graph_parse.error}'`);

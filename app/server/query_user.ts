@@ -35,7 +35,7 @@ import { UsersManager } from '@server/managers/users_manager';
 import { TimeControlRating } from '@common/models/time_control_rating';
 import { AuthenticationSchema } from '@common/schemas/authentication';
 import { isDefined } from '@common/utils/is_defined';
-import { UserQueryEditSchema } from '@app/common/schemas/query_user';
+import { QueryUserEditSchema, QueryUserRankingSchema } from '@common/schemas/query_user';
 
 /// Returns the list of user full names and usernames sorted by name
 export async function get_query_user_list(req: Request, res: Response) {
@@ -145,7 +145,7 @@ export async function post_query_user_edit(req: Request, res: Response) {
 		return;
 	}
 
-	const user_query = UserQueryEditSchema.safeParse(req.body);
+	const user_query = QueryUserEditSchema.safeParse(req.body);
 	if (!user_query.success) {
 		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${user_query.error}'`);
@@ -189,7 +189,15 @@ export async function post_query_user_ranking(req: Request, res: Response) {
 		return;
 	}
 
-	const time_control_id = req.body.tc_i;
+	const user_query = QueryUserRankingSchema.safeParse(req.body);
+	if (!user_query.success) {
+		debug(log_now(), 'Failed to parse schema');
+		debug(log_now(), `Error: '${user_query.error}'`);
+		res.status(401).send('Internal error');
+		return;
+	}
+
+	const time_control_id = user_query.data.tc_i;
 
 	let users_without_games: any[] = [];
 	let users_with_games: any[] = [];

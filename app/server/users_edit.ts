@@ -37,7 +37,7 @@ import { ConfigurationManager } from '@server/managers/configuration_manager';
 import { get_execution_directory } from '@server/managers/environment_manager';
 import { AuthenticationSchema } from '@common/schemas/authentication';
 import { isDefined } from '@common/utils/is_defined';
-import { UserEditSchema } from '@app/common/schemas/user';
+import { UserEditSchema } from '@common/schemas/user';
 
 export async function get_page_user_edit(req: Request, res: Response) {
 	debug(log_now(), 'GET /page/user/edit...');
@@ -90,7 +90,7 @@ export async function post_user_edit(req: Request, res: Response) {
 		return;
 	}
 
-	const user_parse = UserEditSchema.safeParse(req.cookies);
+	const user_parse = UserEditSchema.safeParse(req.body);
 	if (!user_parse.success) {
 		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${user_parse.error}'`);

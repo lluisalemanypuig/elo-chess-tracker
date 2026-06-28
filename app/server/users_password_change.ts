@@ -35,7 +35,7 @@ import { ConfigurationManager } from '@server/managers/configuration_manager';
 import { get_execution_directory } from '@server/managers/environment_manager';
 import { AuthenticationSchema } from '@common/schemas/authentication';
 import { isDefined } from '@common/utils/is_defined';
-import { UserPasswordChangeSchema } from '@app/common/schemas/user';
+import { UserPasswordChangeSchema } from '@common/schemas/user';
 
 export async function get_page_user_password_change(req: Request, res: Response) {
 	debug(log_now(), 'GET /page/user/password_change_page...');

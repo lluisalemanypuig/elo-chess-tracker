@@ -52,8 +52,8 @@ import {
 	ChallengeAcceptSchema,
 	ChallengeSetResultSchema,
 	ChallengeDeclineSchema,
-	ChallengeAgreeSchema,
-	ChallengeDisagreeSchema
+	ChallengeAgreeResultSchema,
+	ChallengeDisagreeResultSchema
 } from '@common/schemas/challenges';
 import { isDefined } from '@common/utils/is_defined';
 
@@ -366,7 +366,7 @@ export async function post_challenge_agree(req: Request, res: Response) {
 		return;
 	}
 
-	const challenge_parse = ChallengeAgreeSchema.safeParse(req.body);
+	const challenge_parse = ChallengeAgreeResultSchema.safeParse(req.body);
 	if (!challenge_parse.success) {
 		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${challenge_parse.error}'`);
@@ -403,7 +403,7 @@ export async function post_challenge_disagree(req: Request, res: Response) {
 		return;
 	}
 
-	const challenge_parse = ChallengeDisagreeSchema.safeParse(req.body);
+	const challenge_parse = ChallengeDisagreeResultSchema.safeParse(req.body);
 	if (!challenge_parse.success) {
 		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${challenge_parse.error}'`);

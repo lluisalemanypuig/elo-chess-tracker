@@ -37,7 +37,7 @@ import { User } from '@common/models/user';
 import { UsersManager } from '@server/managers/users_manager';
 import { AuthenticationSchema } from '@common/schemas/authentication';
 import { isDefined } from '@common/utils/is_defined';
-import { UserLoginSchema } from '@app/common/schemas/login_logout';
+import { UserLoginSchema } from '@common/schemas/login_logout';
 
 export async function post_user_login(req: Request, res: Response) {
 	debug(log_now(), `POST /user/login`);
