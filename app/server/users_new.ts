@@ -41,14 +41,14 @@ import { AuthenticationSchema } from '@common/schemas/authentication';
 export async function get_page_user_create(req: Request, res: Response) {
 	debug(log_now(), 'GET /page/user/create...');
 
-	const sessionParse = AuthenticationSchema.safeParse(req.cookies);
-	if (!sessionParse.success) {
+	const session_parse = AuthenticationSchema.safeParse(req.cookies);
+	if (!session_parse.success) {
 		debug(log_now(), 'Failed to parse AuthenticationSchema');
-		debug(log_now(), `Error: '${sessionParse.error}'`);
+		debug(log_now(), `Error: '${session_parse.error}'`);
 		res.status(401).send('Internal error');
 		return;
 	}
-	const session = sessionParse.data;
+	const session = session_parse.data;
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -78,14 +78,14 @@ export async function get_page_user_create(req: Request, res: Response) {
 export async function post_user_create(req: Request, res: Response) {
 	debug(log_now(), 'POST /user/create');
 
-	const sessionParse = AuthenticationSchema.safeParse(req.cookies);
-	if (!sessionParse.success) {
+	const session_parse = AuthenticationSchema.safeParse(req.cookies);
+	if (!session_parse.success) {
 		debug(log_now(), 'Failed to parse AuthenticationSchema');
-		debug(log_now(), `Error: '${sessionParse.error}'`);
+		debug(log_now(), `Error: '${session_parse.error}'`);
 		res.status(401).send('Internal error');
 		return;
 	}
-	const session = sessionParse.data;
+	const session = session_parse.data;
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {

@@ -96,14 +96,14 @@ export async function post_user_login(req: Request, res: Response) {
 export async function post_user_logout(req: Request, res: Response) {
 	debug(log_now(), `POST /user/logout`);
 
-	const sessionParse = AuthenticationSchema.safeParse(req.cookies);
-	if (!sessionParse.success) {
+	const session_parse = AuthenticationSchema.safeParse(req.cookies);
+	if (!session_parse.success) {
 		debug(log_now(), 'Failed to parse AuthenticationSchema');
-		debug(log_now(), `Error: '${sessionParse.error}'`);
+		debug(log_now(), `Error: '${session_parse.error}'`);
 		res.status(401).send('Internal error');
 		return;
 	}
-	const session = sessionParse.data;
+	const session = session_parse.data;
 
 	debug(log_now(), `    Cookie:`);
 	debug(log_now(), `        Username:   '${session.username}'`);

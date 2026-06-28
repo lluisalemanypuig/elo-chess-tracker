@@ -38,14 +38,14 @@ export async function get_page_login(req: Request, res: Response) {
 	let send_home: boolean;
 	console.log('GET page_login');
 
-	const sessionParse = AuthenticationSchema.safeParse(req.cookies);
-	if (!sessionParse.success) {
+	const session_parse = AuthenticationSchema.safeParse(req.cookies);
+	if (!session_parse.success) {
 		debug(log_now(), 'Failed to parse AuthenticationSchema');
-		debug(log_now(), `Error: '${sessionParse.error}'`);
+		debug(log_now(), `Error: '${session_parse.error}'`);
 		res.status(401).send('Internal error');
 		return;
 	}
-	const session = sessionParse.data;
+	const session = session_parse.data;
 
 	if (isDefined(session)) {
 		debug(log_now(), 'There is a username key in the cookies received.');
@@ -78,14 +78,14 @@ export async function get_page_login(req: Request, res: Response) {
 export async function get_page_home(req: Request, res: Response) {
 	debug(log_now(), 'GET /home');
 
-	const sessionParse = AuthenticationSchema.safeParse(req.cookies);
-	if (!sessionParse.success) {
+	const session_parse = AuthenticationSchema.safeParse(req.cookies);
+	if (!session_parse.success) {
 		debug(log_now(), 'Failed to parse AuthenticationSchema');
-		debug(log_now(), `Error: '${sessionParse.error}'`);
+		debug(log_now(), `Error: '${session_parse.error}'`);
 		res.status(401).send('Internal error');
 		return;
 	}
-	const session = sessionParse.data;
+	const session = session_parse.data;
 	const r = is_user_logged_in(session);
 	if (!r[0]) {
 		debug(log_now(), `    User ${session.username} is not logged in.`);

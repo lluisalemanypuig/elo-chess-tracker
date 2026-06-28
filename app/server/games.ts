@@ -55,14 +55,14 @@ import { AuthenticationSchema } from '@common/schemas/authentication';
 export async function get_page_game_list_own(req: Request, res: Response) {
 	debug(log_now(), 'GET /page/game/list/own...');
 
-	const sessionParse = AuthenticationSchema.safeParse(req.cookies);
-	if (!sessionParse.success) {
+	const session_parse = AuthenticationSchema.safeParse(req.cookies);
+	if (!session_parse.success) {
 		debug(log_now(), 'Failed to parse AuthenticationSchema');
-		debug(log_now(), `Error: '${sessionParse.error}'`);
+		debug(log_now(), `Error: '${session_parse.error}'`);
 		res.status(401).send('Internal error');
 		return;
 	}
-	const session = sessionParse.data;
+	const session = session_parse.data;
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -80,14 +80,14 @@ export async function get_page_game_list_own(req: Request, res: Response) {
 export async function get_page_game_list_all(req: Request, res: Response) {
 	debug(log_now(), 'GET /game/list/all...');
 
-	const sessionParse = AuthenticationSchema.safeParse(req.cookies);
-	if (!sessionParse.success) {
+	const session_parse = AuthenticationSchema.safeParse(req.cookies);
+	if (!session_parse.success) {
 		debug(log_now(), 'Failed to parse AuthenticationSchema');
-		debug(log_now(), `Error: '${sessionParse.error}'`);
+		debug(log_now(), `Error: '${session_parse.error}'`);
 		res.status(401).send('Internal error');
 		return;
 	}
-	const session = sessionParse.data;
+	const session = session_parse.data;
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -105,14 +105,14 @@ export async function get_page_game_list_all(req: Request, res: Response) {
 export async function get_page_game_create(req: Request, res: Response) {
 	debug(log_now(), 'GET /page/game/create...');
 
-	const sessionParse = AuthenticationSchema.safeParse(req.cookies);
-	if (!sessionParse.success) {
+	const session_parse = AuthenticationSchema.safeParse(req.cookies);
+	if (!session_parse.success) {
 		debug(log_now(), 'Failed to parse AuthenticationSchema');
-		debug(log_now(), `Error: '${sessionParse.error}'`);
+		debug(log_now(), `Error: '${session_parse.error}'`);
 		res.status(401).send('Internal error');
 		return;
 	}
-	const session = sessionParse.data;
+	const session = session_parse.data;
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -136,14 +136,14 @@ export async function get_page_game_create(req: Request, res: Response) {
 export async function post_game_create(req: Request, res: Response) {
 	debug(log_now(), 'POST /game/create...');
 
-	const sessionParse = AuthenticationSchema.safeParse(req.cookies);
-	if (!sessionParse.success) {
+	const session_parse = AuthenticationSchema.safeParse(req.cookies);
+	if (!session_parse.success) {
 		debug(log_now(), 'Failed to parse AuthenticationSchema');
-		debug(log_now(), `Error: '${sessionParse.error}'`);
+		debug(log_now(), `Error: '${session_parse.error}'`);
 		res.status(401).send('Internal error');
 		return;
 	}
-	const session = sessionParse.data;
+	const session = session_parse.data;
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -224,14 +224,14 @@ export async function post_game_create(req: Request, res: Response) {
 export async function post_game_edit_result(req: Request, res: Response) {
 	debug(log_now(), 'POST /game/edit_result...');
 
-	const sessionParse = AuthenticationSchema.safeParse(req.cookies);
-	if (!sessionParse.success) {
+	const session_parse = AuthenticationSchema.safeParse(req.cookies);
+	if (!session_parse.success) {
 		debug(log_now(), 'Failed to parse AuthenticationSchema');
-		debug(log_now(), `Error: '${sessionParse.error}'`);
+		debug(log_now(), `Error: '${session_parse.error}'`);
 		res.status(401).send('Internal error');
 		return;
 	}
-	const session = sessionParse.data;
+	const session = session_parse.data;
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -280,14 +280,14 @@ export async function post_game_edit_result(req: Request, res: Response) {
 export async function post_game_edit_title(req: Request, res: Response) {
 	debug(log_now(), 'POST /game/edit_title...');
 
-	const sessionParse = AuthenticationSchema.safeParse(req.cookies);
-	if (!sessionParse.success) {
+	const session_parse = AuthenticationSchema.safeParse(req.cookies);
+	if (!session_parse.success) {
 		debug(log_now(), 'Failed to parse AuthenticationSchema');
-		debug(log_now(), `Error: '${sessionParse.error}'`);
+		debug(log_now(), `Error: '${session_parse.error}'`);
 		res.status(401).send('Internal error');
 		return;
 	}
-	const session = sessionParse.data;
+	const session = session_parse.data;
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -336,14 +336,14 @@ export async function post_game_edit_title(req: Request, res: Response) {
 export async function post_game_delete(req: Request, res: Response) {
 	debug(log_now(), 'POST /game/delete...');
 
-	const sessionParse = AuthenticationSchema.safeParse(req.cookies);
-	if (!sessionParse.success) {
+	const session_parse = AuthenticationSchema.safeParse(req.cookies);
+	if (!session_parse.success) {
 		debug(log_now(), 'Failed to parse AuthenticationSchema');
-		debug(log_now(), `Error: '${sessionParse.error}'`);
+		debug(log_now(), `Error: '${session_parse.error}'`);
 		res.status(401).send('Internal error');
 		return;
 	}
-	const session = sessionParse.data;
+	const session = session_parse.data;
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
@@ -389,14 +389,14 @@ export async function post_game_delete(req: Request, res: Response) {
 export async function post_recalculate_ratings(req: Request, res: Response) {
 	debug(log_now(), 'POST /recalculate/ratings...');
 
-	const sessionParse = AuthenticationSchema.safeParse(req.cookies);
-	if (!sessionParse.success) {
+	const session_parse = AuthenticationSchema.safeParse(req.cookies);
+	if (!session_parse.success) {
 		debug(log_now(), 'Failed to parse AuthenticationSchema');
-		debug(log_now(), `Error: '${sessionParse.error}'`);
+		debug(log_now(), `Error: '${session_parse.error}'`);
 		res.status(401).send('Internal error');
 		return;
 	}
-	const session = sessionParse.data;
+	const session = session_parse.data;
 	const r = is_user_logged_in(session);
 
 	if (!r[0]) {
