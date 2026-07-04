@@ -26,7 +26,7 @@ Contact:
 import { z } from 'zod';
 import { GameResultSchema } from '../models/game';
 
-export const GameCreateSchema = z.object({
+export const GameCreateInputSchema = z.object({
 	w: z.number().gte(0),
 	b: z.number().gte(0),
 	title: z.string(),
@@ -37,24 +37,24 @@ export const GameCreateSchema = z.object({
 	t: z.string()
 });
 
-export type GameCreate = z.infer<typeof GameCreateSchema>;
+export type GameCreateInput = z.infer<typeof GameCreateInputSchema>;
 
-export const GameEditResultSchema = z.object({
+export const GameEditResultInputSchema = z.object({
 	id: z.string(),
 	new_result: GameResultSchema
 });
 
-export type GameEditResult = z.infer<typeof GameEditResultSchema>;
+export type GameEditResultInput = z.infer<typeof GameEditResultInputSchema>;
 
-export const GameEditTitleSchema = z.object({
+export const GameEditTitleInputSchema = z.object({
 	id: z.string(),
 	title: z.string()
 });
 
-export type GameEditTitle = z.infer<typeof GameEditTitleSchema>;
+export type GameEditTitleInput = z.infer<typeof GameEditTitleInputSchema>;
 
-export const GameDeleteSchema = z.object({
+export const GameDeleteInputSchema = z.object({
 	id: z.string()
 });
 
-export type GameDelete = z.infer<typeof GameDeleteSchema>;
+export type GameDeleteInput = z.infer<typeof GameDeleteInputSchema>;

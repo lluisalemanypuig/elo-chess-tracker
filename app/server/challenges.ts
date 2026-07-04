@@ -46,21 +46,21 @@ import { UsersManager } from '@server/managers/users_manager';
 import { ConfigurationManager } from '@server/managers/configuration_manager';
 import { RatingSystemManager } from '@server/managers/rating_system_manager';
 import { get_execution_directory } from '@server/managers/environment_manager';
-import { AuthenticationSchema } from '@common/schemas/authentication';
+import { AuthenticationInputSchema } from '@common/schemas/authentication';
 import {
-	ChallengeSendSchema,
-	ChallengeAcceptSchema,
-	ChallengeSetResultSchema,
-	ChallengeDeclineSchema,
-	ChallengeAgreeResultSchema,
-	ChallengeDisagreeResultSchema
+	ChallengeSendInputSchema,
+	ChallengeAcceptInputSchema,
+	ChallengeSetResultInputSchema,
+	ChallengeDeclineInputSchema,
+	ChallengeAgreeResultInputSchema,
+	ChallengeDisagreeResultInputSchema
 } from '@common/schemas/challenges';
 import { isDefined } from '@common/utils/is_defined';
 
 export async function get_page_challenge(req: Request, res: Response) {
 	debug(log_now(), 'GET /page/challenge...');
 
-	const session_parse = AuthenticationSchema.safeParse(req.cookies);
+	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
 		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${session_parse.error}'`);
@@ -85,7 +85,7 @@ export async function get_page_challenge(req: Request, res: Response) {
 export async function post_challenge_send(req: Request, res: Response) {
 	debug(log_now(), 'POST /challenge/send...');
 
-	const session_parse = AuthenticationSchema.safeParse(req.cookies);
+	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
 		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${session_parse.error}'`);
@@ -94,7 +94,7 @@ export async function post_challenge_send(req: Request, res: Response) {
 	}
 	const session = session_parse.data;
 
-	const challenge_parse = ChallengeSendSchema.safeParse(req.body);
+	const challenge_parse = ChallengeSendInputSchema.safeParse(req.body);
 	if (!challenge_parse.success) {
 		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${challenge_parse.error}'`);
@@ -169,7 +169,7 @@ export async function post_challenge_send(req: Request, res: Response) {
 export async function post_challenge_accept(req: Request, res: Response) {
 	debug(log_now(), 'POST /challenge/accept...');
 
-	const session_parse = AuthenticationSchema.safeParse(req.cookies);
+	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
 		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${session_parse.error}'`);
@@ -184,7 +184,7 @@ export async function post_challenge_accept(req: Request, res: Response) {
 		return;
 	}
 
-	const challenge_parse = ChallengeAcceptSchema.safeParse(req.body);
+	const challenge_parse = ChallengeAcceptInputSchema.safeParse(req.body);
 	if (!challenge_parse.success) {
 		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${challenge_parse.error}'`);
@@ -215,7 +215,7 @@ export async function post_challenge_accept(req: Request, res: Response) {
 export async function post_challenge_decline(req: Request, res: Response) {
 	debug(log_now(), 'POST /challenge/decline...');
 
-	const session_parse = AuthenticationSchema.safeParse(req.cookies);
+	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
 		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${session_parse.error}'`);
@@ -230,7 +230,7 @@ export async function post_challenge_decline(req: Request, res: Response) {
 		return;
 	}
 
-	const challenge_parse = ChallengeDeclineSchema.safeParse(req.body);
+	const challenge_parse = ChallengeDeclineInputSchema.safeParse(req.body);
 	if (!challenge_parse.success) {
 		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${challenge_parse.error}'`);
@@ -261,7 +261,7 @@ export async function post_challenge_decline(req: Request, res: Response) {
 export async function post_challenge_set_result(req: Request, res: Response) {
 	debug(log_now(), 'POST /challenge/set_result...');
 
-	const session_parse = AuthenticationSchema.safeParse(req.cookies);
+	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
 		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${session_parse.error}'`);
@@ -276,7 +276,7 @@ export async function post_challenge_set_result(req: Request, res: Response) {
 	}
 
 	const setter_user = session.username;
-	const challenge_parse = ChallengeSetResultSchema.safeParse(req.body);
+	const challenge_parse = ChallengeSetResultInputSchema.safeParse(req.body);
 	if (!challenge_parse.success) {
 		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${challenge_parse.error}'`);
@@ -351,7 +351,7 @@ export async function post_challenge_set_result(req: Request, res: Response) {
 export async function post_challenge_agree(req: Request, res: Response) {
 	debug(log_now(), 'POST /challenge/agree...');
 
-	const session_parse = AuthenticationSchema.safeParse(req.cookies);
+	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
 		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${session_parse.error}'`);
@@ -366,7 +366,7 @@ export async function post_challenge_agree(req: Request, res: Response) {
 		return;
 	}
 
-	const challenge_parse = ChallengeAgreeResultSchema.safeParse(req.body);
+	const challenge_parse = ChallengeAgreeResultInputSchema.safeParse(req.body);
 	if (!challenge_parse.success) {
 		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${challenge_parse.error}'`);
@@ -388,7 +388,7 @@ export async function post_challenge_agree(req: Request, res: Response) {
 export async function post_challenge_disagree(req: Request, res: Response) {
 	debug(log_now(), 'POST /challenge/disagree...');
 
-	const session_parse = AuthenticationSchema.safeParse(req.cookies);
+	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
 		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${session_parse.error}'`);
@@ -403,7 +403,7 @@ export async function post_challenge_disagree(req: Request, res: Response) {
 		return;
 	}
 
-	const challenge_parse = ChallengeDisagreeResultSchema.safeParse(req.body);
+	const challenge_parse = ChallengeDisagreeResultInputSchema.safeParse(req.body);
 	if (!challenge_parse.success) {
 		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${challenge_parse.error}'`);

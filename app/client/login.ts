@@ -19,7 +19,7 @@ Full source code of elo-chess-tracker:
 	https://github.com/lluisalemanypuig/elo-chess-tracker
 */
 
-import { UserLogin } from '@common/schemas/login_logout';
+import { UserLoginInput } from '@common/schemas/login_logout';
 import 'htmx.org';
 
 async function log_into_webpage(_event: any) {
@@ -47,7 +47,7 @@ async function log_into_webpage(_event: any) {
 	// "query" the server
 	const response = await fetch('/user/login', {
 		method: 'POST',
-		body: JSON.stringify({ u: username, p: password } satisfies UserLogin),
+		body: JSON.stringify({ u: username, p: password } satisfies UserLoginInput),
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
 	if (response.status >= 400) {

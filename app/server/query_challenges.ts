@@ -34,14 +34,14 @@ import { challenge_set_retrieve } from '@server/managers/challenges';
 import { Challenge } from '@common/models/challenge';
 import { UsersManager } from '@server/managers/users_manager';
 import { can_user_decline_challenge } from '@server/managers/user_relationships';
-import { AuthenticationSchema } from '@common/schemas/authentication';
+import { AuthenticationInputSchema } from '@common/schemas/authentication';
 import { isDefined } from '@common/utils/is_defined';
 
 /// Query the server for challenges received sento to me by other users
 export async function get_query_challenge_received(req: Request, res: Response) {
 	debug(log_now(), 'GET /query/challenge/received...');
 
-	const session_parse = AuthenticationSchema.safeParse(req.cookies);
+	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
 		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${session_parse.error}'`);
@@ -100,7 +100,7 @@ export async function get_query_challenge_received(req: Request, res: Response) 
 export async function get_query_challenge_sent(req: Request, res: Response) {
 	debug(log_now(), 'GET /query/challenge/sent...');
 
-	const session_parse = AuthenticationSchema.safeParse(req.cookies);
+	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
 		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${session_parse.error}'`);
@@ -163,7 +163,7 @@ export async function get_query_challenge_sent(req: Request, res: Response) {
 export async function get_query_challenge_pending_result(req: Request, res: Response) {
 	debug(log_now(), 'GET /query/challenge/pending_result...');
 
-	const session_parse = AuthenticationSchema.safeParse(req.cookies);
+	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
 		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${session_parse.error}'`);
@@ -243,7 +243,7 @@ export async function get_query_challenge_pending_result(req: Request, res: Resp
 export async function get_query_challenge_confirm_result_other(req: Request, res: Response) {
 	debug(log_now(), 'GET /query/challenge/confirm_result/other...');
 
-	const session_parse = AuthenticationSchema.safeParse(req.cookies);
+	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
 		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${session_parse.error}'`);
@@ -336,7 +336,7 @@ export async function get_query_challenge_confirm_result_other(req: Request, res
 export async function get_query_challenge_confirm_result_self(req: Request, res: Response) {
 	debug(log_now(), 'GET /query/challenge/confirm_result/self...');
 
-	const session_parse = AuthenticationSchema.safeParse(req.cookies);
+	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
 		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${session_parse.error}'`);

@@ -35,14 +35,14 @@ import { SessionIDManager } from '@server/managers/session_id_manager';
 import { SessionIDTokenFieldName, SessionIDUsernameFieldName } from '@common/models/session_id';
 import { User } from '@common/models/user';
 import { UsersManager } from '@server/managers/users_manager';
-import { AuthenticationSchema } from '@common/schemas/authentication';
+import { AuthenticationInputSchema } from '@common/schemas/authentication';
 import { isDefined } from '@common/utils/is_defined';
-import { UserLoginSchema } from '@common/schemas/login_logout';
+import { UserLoginInputSchema } from '@common/schemas/login_logout';
 
 export async function post_user_login(req: Request, res: Response) {
 	debug(log_now(), `POST /user/login`);
 
-	const login_parse = UserLoginSchema.safeParse(req.body);
+	const login_parse = UserLoginInputSchema.safeParse(req.body);
 	if (!login_parse.success) {
 		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${login_parse.error}'`);
@@ -93,7 +93,7 @@ export async function post_user_login(req: Request, res: Response) {
 export async function post_user_logout(req: Request, res: Response) {
 	debug(log_now(), `POST /user/logout`);
 
-	const session_parse = AuthenticationSchema.safeParse(req.cookies);
+	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
 		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${session_parse.error}'`);

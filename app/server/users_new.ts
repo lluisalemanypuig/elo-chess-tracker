@@ -35,14 +35,14 @@ import { CREATE_USER, USER_ROLE_ASSIGN, get_role_action_name, USER_ROLE_ASSIGN_I
 import { UsersManager } from '@server/managers/users_manager';
 import { ConfigurationManager } from '@server/managers/configuration_manager';
 import { get_execution_directory } from '@server/managers/environment_manager';
-import { AuthenticationSchema } from '@common/schemas/authentication';
+import { AuthenticationInputSchema } from '@common/schemas/authentication';
 import { isDefined } from '@common/utils/is_defined';
-import { UserCreateSchema } from '@common/schemas/user';
+import { UserCreateInputSchema } from '@common/schemas/user';
 
 export async function get_page_user_create(req: Request, res: Response) {
 	debug(log_now(), 'GET /page/user/create...');
 
-	const session_parse = AuthenticationSchema.safeParse(req.cookies);
+	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
 		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${session_parse.error}'`);
@@ -79,7 +79,7 @@ export async function get_page_user_create(req: Request, res: Response) {
 export async function post_user_create(req: Request, res: Response) {
 	debug(log_now(), 'POST /user/create');
 
-	const session_parse = AuthenticationSchema.safeParse(req.cookies);
+	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
 		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${session_parse.error}'`);
@@ -106,7 +106,7 @@ export async function post_user_create(req: Request, res: Response) {
 		return;
 	}
 
-	const user_parse = UserCreateSchema.safeParse(req.body);
+	const user_parse = UserCreateInputSchema.safeParse(req.body);
 	if (!user_parse.success) {
 		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${user_parse.error}'`);

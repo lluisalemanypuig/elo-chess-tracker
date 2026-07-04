@@ -26,7 +26,7 @@ Contact:
 import { z } from 'zod';
 import { UserRoleArraySchema } from '../models/user_role';
 
-export const UserCreateSchema = z.object({
+export const UserCreateInputSchema = z.object({
 	u: z.string(),
 	fn: z.string(),
 	ln: z.string(),
@@ -34,20 +34,20 @@ export const UserCreateSchema = z.object({
 	r: UserRoleArraySchema
 });
 
-export type UserCreate = z.infer<typeof UserCreateSchema>;
+export type UserCreateInput = z.infer<typeof UserCreateInputSchema>;
 
-export const UserEditSchema = z.object({
+export const UserEditInputSchema = z.object({
 	u: z.number().gte(0),
 	f: z.string(),
 	l: z.string(),
 	r: UserRoleArraySchema
 });
 
-export type UserEdit = z.infer<typeof UserEditSchema>;
+export type UserEditInput = z.infer<typeof UserEditInputSchema>;
 
-export const UserPasswordChangeSchema = z.object({
+export const UserPasswordChangeInputSchema = z.object({
 	old: z.string(),
 	new: z.string()
 });
 
-export type UserPasswordChange = z.infer<typeof UserPasswordChangeSchema>;
+export type UserPasswordChangeInput = z.infer<typeof UserPasswordChangeInputSchema>;

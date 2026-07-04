@@ -33,14 +33,14 @@ import { encrypt_password_for_user, is_password_of_user_correct } from '@server/
 import { user_overwrite } from '@server/managers/users';
 import { ConfigurationManager } from '@server/managers/configuration_manager';
 import { get_execution_directory } from '@server/managers/environment_manager';
-import { AuthenticationSchema } from '@common/schemas/authentication';
+import { AuthenticationInputSchema } from '@common/schemas/authentication';
 import { isDefined } from '@common/utils/is_defined';
-import { UserPasswordChangeSchema } from '@common/schemas/user';
+import { UserPasswordChangeInputSchema } from '@common/schemas/user';
 
 export async function get_page_user_password_change(req: Request, res: Response) {
 	debug(log_now(), 'GET /page/user/password_change_page...');
 
-	const session_parse = AuthenticationSchema.safeParse(req.cookies);
+	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
 		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${session_parse.error}'`);
@@ -65,7 +65,7 @@ export async function get_page_user_password_change(req: Request, res: Response)
 export async function post_user_password_change(req: Request, res: Response) {
 	debug(log_now(), 'POST /user/password_change...');
 
-	const session_parse = AuthenticationSchema.safeParse(req.cookies);
+	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
 		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${session_parse.error}'`);
@@ -74,7 +74,7 @@ export async function post_user_password_change(req: Request, res: Response) {
 	}
 	const session = session_parse.data;
 
-	const password_parse = UserPasswordChangeSchema.safeParse(req.body);
+	const password_parse = UserPasswordChangeInputSchema.safeParse(req.body);
 	if (!password_parse.success) {
 		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${password_parse.error}'`);

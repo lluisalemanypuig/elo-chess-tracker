@@ -20,8 +20,8 @@ Full source code of elo-chess-tracker:
 */
 
 import { isDefined } from '@common/utils/is_defined';
-import { GameDelete, GameEditResult, GameEditTitle } from '@common/schemas/games';
-import { QueryGamesListAll, QueryGamesListOwn } from '@common/schemas/query_games';
+import { GameDeleteInput, GameEditResultInput, GameEditTitleInput } from '@common/schemas/games';
+import { QueryGamesListAllInput, QueryGamesListOwnInput } from '@common/schemas/query_games';
 import 'htmx.org';
 import { result_from_text_to_value } from '@common/models/game';
 
@@ -67,7 +67,7 @@ async function select_result_game_on_change(event: any) {
 		body: JSON.stringify({
 			id: game_id,
 			new_result: new_result
-		} satisfies GameEditResult),
+		} satisfies GameEditResultInput),
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
 
@@ -115,7 +115,7 @@ async function button_delete_game_on_click(event: any) {
 	const game_id = button.getAttribute('game_id');
 	const response = await fetch('/game/delete', {
 		method: 'POST',
-		body: JSON.stringify({ id: game_id } satisfies GameDelete),
+		body: JSON.stringify({ id: game_id } satisfies GameDeleteInput),
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
 
@@ -156,7 +156,7 @@ async function trigger_edit_game_title(event: Event) {
 
 	const response = await fetch('/game/edit_title', {
 		method: 'POST',
-		body: JSON.stringify({ id: game_id, title: new_title } satisfies GameEditTitle),
+		body: JSON.stringify({ id: game_id, title: new_title } satisfies GameEditTitleInput),
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
 
@@ -206,13 +206,13 @@ async function fill_games_list_time_control(time_control_id: string) {
 	if (val == 'all') {
 		response = await fetch('/query/game/list/all', {
 			method: 'POST',
-			body: JSON.stringify({ tc_i: time_control_id } satisfies QueryGamesListAll),
+			body: JSON.stringify({ tc_i: time_control_id } satisfies QueryGamesListAllInput),
 			headers: { 'Content-type': 'application/json; charset=UTF-8' }
 		});
 	} else if (val == 'own') {
 		response = await fetch('/query/game/list/own', {
 			method: 'POST',
-			body: JSON.stringify({ tc_i: time_control_id } satisfies QueryGamesListOwn),
+			body: JSON.stringify({ tc_i: time_control_id } satisfies QueryGamesListOwnInput),
 			headers: { 'Content-type': 'application/json; charset=UTF-8' }
 		});
 	} else {

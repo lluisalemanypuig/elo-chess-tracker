@@ -26,44 +26,44 @@ Contact:
 import { z } from 'zod';
 import { GameResultSchema } from '../models/game';
 
-export const ChallengeSendSchema = z.object({
+export const ChallengeSendInputSchema = z.object({
 	to: z.number().gte(0),
 	time_control_id: z.string(),
 	time_control_name: z.string(),
 	title: z.string()
 });
 
-export type ChallengeSend = z.infer<typeof ChallengeSendSchema>;
+export type ChallengeSendInput = z.infer<typeof ChallengeSendInputSchema>;
 
-export const ChallengeAcceptSchema = z.object({
+export const ChallengeAcceptInputSchema = z.object({
 	challenge_id: z.string()
 });
 
-export type ChallengeAccept = z.infer<typeof ChallengeAcceptSchema>;
+export type ChallengeInputAccept = z.infer<typeof ChallengeAcceptInputSchema>;
 
-export const ChallengeDeclineSchema = z.object({
+export const ChallengeDeclineInputSchema = z.object({
 	challenge_id: z.string()
 });
 
-export type ChallengeDecline = z.infer<typeof ChallengeDeclineSchema>;
+export type ChallengeDeclineInput = z.infer<typeof ChallengeDeclineInputSchema>;
 
-export const ChallengeSetResultSchema = z.object({
+export const ChallengeSetResultInputSchema = z.object({
 	challenge_id: z.string(),
 	white: z.string(),
 	black: z.string(),
 	result: GameResultSchema
 });
 
-export type ChallengeSetResult = z.infer<typeof ChallengeSetResultSchema>;
+export type ChallengeSetResultInput = z.infer<typeof ChallengeSetResultInputSchema>;
 
-export const ChallengeAgreeResultSchema = z.object({
+export const ChallengeAgreeResultInputSchema = z.object({
 	challenge_id: z.string()
 });
 
-export type ChallengeAgreeResult = z.infer<typeof ChallengeAgreeResultSchema>;
+export type ChallengeAgreeResultInput = z.infer<typeof ChallengeAgreeResultInputSchema>;
 
-export const ChallengeDisagreeResultSchema = z.object({
+export const ChallengeDisagreeResultInputSchema = z.object({
 	challenge_id: z.string()
 });
 
-export type ChallengeDisagreeResult = z.infer<typeof ChallengeDisagreeResultSchema>;
+export type ChallengeDisagreeResultInput = z.infer<typeof ChallengeDisagreeResultInputSchema>;

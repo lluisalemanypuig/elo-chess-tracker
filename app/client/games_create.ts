@@ -20,7 +20,7 @@ Full source code of elo-chess-tracker:
 */
 
 import { result_from_text_to_value } from '@common/models/game';
-import { GameCreate } from '@common/schemas/games';
+import { GameCreateInput } from '@common/schemas/games';
 import { isDefined } from '@common/utils/is_defined';
 import 'htmx.org';
 
@@ -105,7 +105,7 @@ async function submit_new_game(_event: any) {
 				':' +
 				(rand_milli.length == 1 ? '00' : rand_milli.length == 2 ? '0' : '') +
 				rand_milli
-		} satisfies GameCreate),
+		} satisfies GameCreateInput),
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
 	if (response.status >= 400) {

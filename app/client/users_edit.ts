@@ -22,8 +22,8 @@ Full source code of elo-chess-tracker:
 import 'htmx.org';
 
 import { UserRole, all_user_roles, user_role_to_string, array_string_to_roles } from '@common/models/user_role';
-import { QueryUserEdit } from '@common/schemas/query_user';
-import { UserEdit } from '@common/schemas/user';
+import { QueryUserEditInput } from '@common/schemas/query_user';
+import { UserEditInput } from '@common/schemas/user';
 import { isDefined } from '@common/utils/is_defined';
 
 async function user_was_changed(_event: any) {
@@ -43,7 +43,7 @@ async function user_was_changed(_event: any) {
 		const user_id = (username_option as HTMLOptionElement).id;
 		const response = await fetch('/query/user/edit', {
 			method: 'POST',
-			body: JSON.stringify({ u: Number(user_id) } satisfies QueryUserEdit),
+			body: JSON.stringify({ u: Number(user_id) } satisfies QueryUserEditInput),
 			headers: { 'Content-type': 'application/json; charset=UTF-8' }
 		});
 		if (response.status >= 400) {
@@ -95,7 +95,7 @@ async function submit_was_clicked(_event: any) {
 			f: first_name,
 			l: last_name,
 			r: selected_roles
-		} satisfies UserEdit),
+		} satisfies UserEditInput),
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
 	if (response.status >= 400) {

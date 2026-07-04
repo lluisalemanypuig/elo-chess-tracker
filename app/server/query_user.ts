@@ -33,15 +33,15 @@ import { is_user_logged_in } from '@server/managers/session';
 import { User } from '@common/models/user';
 import { UsersManager } from '@server/managers/users_manager';
 import { TimeControlRating } from '@common/models/time_control_rating';
-import { AuthenticationSchema } from '@common/schemas/authentication';
+import { AuthenticationInputSchema } from '@common/schemas/authentication';
 import { isDefined } from '@common/utils/is_defined';
-import { QueryUserEditSchema, QueryUserRankingSchema } from '@common/schemas/query_user';
+import { QueryUserEditInputSchema, QueryUserRankingInputSchema } from '@common/schemas/query_user';
 
 /// Returns the list of user full names and usernames sorted by name
 export async function get_query_user_list(req: Request, res: Response) {
 	debug(log_now(), 'GET /query/user/list...');
 
-	const session_parse = AuthenticationSchema.safeParse(req.cookies);
+	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
 		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${session_parse.error}'`);
@@ -67,7 +67,7 @@ export async function get_query_user_list(req: Request, res: Response) {
 export async function get_query_html_user_list(req: Request, res: Response) {
 	debug(log_now(), 'GET /query/html/user/list...');
 
-	const session_parse = AuthenticationSchema.safeParse(req.cookies);
+	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
 		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${session_parse.error}'`);
@@ -97,7 +97,7 @@ export async function get_query_html_user_list(req: Request, res: Response) {
 export async function get_query_user_home(req: Request, res: Response) {
 	debug(log_now(), 'GET /query/user/home...');
 
-	const session_parse = AuthenticationSchema.safeParse(req.cookies);
+	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
 		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${session_parse.error}'`);
@@ -130,7 +130,7 @@ export async function get_query_user_home(req: Request, res: Response) {
 export async function post_query_user_edit(req: Request, res: Response) {
 	debug(log_now(), 'POST /query/user/edit...');
 
-	const session_parse = AuthenticationSchema.safeParse(req.cookies);
+	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
 		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${session_parse.error}'`);
@@ -145,7 +145,7 @@ export async function post_query_user_edit(req: Request, res: Response) {
 		return;
 	}
 
-	const user_query = QueryUserEditSchema.safeParse(req.body);
+	const user_query = QueryUserEditInputSchema.safeParse(req.body);
 	if (!user_query.success) {
 		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${user_query.error}'`);
@@ -174,7 +174,7 @@ export async function post_query_user_edit(req: Request, res: Response) {
 export async function post_query_user_ranking(req: Request, res: Response) {
 	debug(log_now(), 'POST /query/user/ranking...');
 
-	const session_parse = AuthenticationSchema.safeParse(req.cookies);
+	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
 		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${session_parse.error}'`);
@@ -189,7 +189,7 @@ export async function post_query_user_ranking(req: Request, res: Response) {
 		return;
 	}
 
-	const user_query = QueryUserRankingSchema.safeParse(req.body);
+	const user_query = QueryUserRankingInputSchema.safeParse(req.body);
 	if (!user_query.success) {
 		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${user_query.error}'`);

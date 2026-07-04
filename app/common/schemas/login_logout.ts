@@ -25,9 +25,9 @@ Contact:
 
 import { z } from 'zod';
 
-export const UserLoginSchema = z.object({
+export const UserLoginInputSchema = z.object({
 	u: z.string(),
 	p: z.string()
 });
 
-export type UserLogin = z.infer<typeof UserLoginSchema>;
+export type UserLoginInput = z.infer<typeof UserLoginInputSchema>;

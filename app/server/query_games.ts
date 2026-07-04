@@ -44,8 +44,8 @@ import { UsersManager } from '@server/managers/users_manager';
 import { search_by_key } from '@server/utils/searching';
 import { read_directory } from '@server/utils/read_directory';
 import { isDefined } from '@common/utils/is_defined';
-import { AuthenticationSchema } from '@common/schemas/authentication';
-import { QueryGamesListAll, QueryGamesListOwn } from '@common/schemas/query_games';
+import { AuthenticationInputSchema } from '@common/schemas/authentication';
+import { QueryGamesListAllInput, QueryGamesListOwnInput } from '@common/schemas/query_games';
 
 function increment(g: Game): any {
 	const [white_after, black_after] = RatingSystemManager.get_instance().apply_rating_function(g);
@@ -154,7 +154,7 @@ function filter_game_list(
 export async function post_query_game_list_own(req: Request, res: Response) {
 	debug(log_now(), 'POST /query/game/list/own...');
 
-	const session_parse = AuthenticationSchema.safeParse(req.cookies);
+	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
 		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${session_parse.error}'`);
@@ -256,7 +256,7 @@ function merge_by_date(v1: any[], v2: any[]): any[] {
 export async function post_query_game_list_all(req: Request, res: Response) {
 	debug(log_now(), 'POST /query/game/list/all...');
 
-	const session_parse = AuthenticationSchema.safeParse(req.cookies);
+	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
 		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${session_parse.error}'`);

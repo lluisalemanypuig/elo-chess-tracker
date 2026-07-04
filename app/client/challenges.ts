@@ -22,12 +22,12 @@ Full source code of elo-chess-tracker:
 import 'htmx.org';
 
 import {
-	ChallengeAccept,
-	ChallengeAgreeResult,
-	ChallengeDecline,
-	ChallengeDisagreeResult,
-	ChallengeSend,
-	ChallengeSetResult
+	ChallengeInputAccept,
+	ChallengeAgreeResultInput,
+	ChallengeDeclineInput,
+	ChallengeDisagreeResultInput,
+	ChallengeSendInput,
+	ChallengeSetResultInput
 } from '@common/schemas/challenges';
 import { GameResult } from '@common/models/game';
 
@@ -63,7 +63,7 @@ async function send_challenge_button_clicked(_event: any) {
 				title: game_title,
 				time_control_id: time_control_id,
 				time_control_name: time_control_name
-			} satisfies ChallengeSend),
+			} satisfies ChallengeSendInput),
 			headers: { 'Content-type': 'application/json; charset=UTF-8' }
 		});
 		if (response.status >= 400) {
@@ -82,7 +82,7 @@ async function accept_challenge_button_clicked(event: any) {
 
 	const response = await fetch('/challenge/accept', {
 		method: 'POST',
-		body: JSON.stringify({ challenge_id: challenge_id } satisfies ChallengeAccept),
+		body: JSON.stringify({ challenge_id: challenge_id } satisfies ChallengeInputAccept),
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
 	if (response.status >= 400) {
@@ -99,7 +99,7 @@ async function decline_challenge_tag_clicked(event: any) {
 
 	const response = await fetch('/challenge/decline', {
 		method: 'POST',
-		body: JSON.stringify({ challenge_id: challenge_id } satisfies ChallengeDecline),
+		body: JSON.stringify({ challenge_id: challenge_id } satisfies ChallengeDeclineInput),
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
 	if (response.status >= 400) {
@@ -141,7 +141,7 @@ async function submit_result_challenge_button_clicked(event: any) {
 			white: white_username,
 			black: black_username,
 			result: result
-		} satisfies ChallengeSetResult),
+		} satisfies ChallengeSetResultInput),
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
 	if (response.status >= 400) {
@@ -159,7 +159,7 @@ async function agree_challenge_result_button_clicked(event: any) {
 
 	const response = await fetch('/challenge/agree', {
 		method: 'POST',
-		body: JSON.stringify({ challenge_id: challenge_id } satisfies ChallengeAgreeResult),
+		body: JSON.stringify({ challenge_id: challenge_id } satisfies ChallengeAgreeResultInput),
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
 	if (response.status >= 400) {
@@ -177,7 +177,7 @@ async function disagree_challenge_result_button_clicked(event: any) {
 
 	const response = await fetch('/challenge/disagree', {
 		method: 'POST',
-		body: JSON.stringify({ challenge_id: challenge_id } satisfies ChallengeDisagreeResult),
+		body: JSON.stringify({ challenge_id: challenge_id } satisfies ChallengeDisagreeResultInput),
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
 	if (response.status >= 400) {

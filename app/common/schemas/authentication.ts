@@ -25,4 +25,4 @@ Contact:
 
 import { SessionIDLenientSchema } from '../models/session_id';
 
-export const AuthenticationSchema = SessionIDLenientSchema;
+export const AuthenticationInputSchema = SessionIDLenientSchema;
