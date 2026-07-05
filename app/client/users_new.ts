@@ -21,9 +21,11 @@ Full source code of elo-chess-tracker:
 
 import 'htmx.org';
 
+import { server_call } from '@client/action';
 import { isDefined } from '@common/utils/is_defined';
 import { UserRole, all_user_roles, array_string_to_roles, user_role_to_string } from '@common/models/user_role';
 import { UserCreateInput } from '@common/schemas/user';
+import { USER_CREATE, HOME } from '@common/routes';
 
 async function submit_new_user_clicked(_event: any) {
 	// username box
@@ -102,24 +104,24 @@ async function submit_new_user_clicked(_event: any) {
 		return;
 	}
 
-	const response = await fetch('/user/create', {
-		method: 'POST',
-		body: JSON.stringify({
+	const response = await server_call(
+		USER_CREATE,
+		'POST',
+		JSON.stringify({
 			u: username,
 			fn: firstname,
 			ln: lastname,
 			r: selected_roles,
 			p: password
-		} satisfies UserCreateInput),
-		headers: { 'Content-type': 'application/json; charset=UTF-8' }
-	});
+		} satisfies UserCreateInput)
+	);
 	if (response.status >= 400) {
 		const message = await response.text();
 		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
 		return;
 	}
 
-	window.location.href = '/home';
+	window.location.href = HOME;
 }
 
 window.onload = function () {

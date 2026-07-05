@@ -21,6 +21,8 @@ Full source code of elo-chess-tracker:
 
 import 'htmx.org';
 
+import { server_call } from '@client/action';
+import { QUERY_GRAPH_FULL, QUERY_GRAPH_OWN } from '@common/routes';
 import { EdgeCurvedArrowProgram } from '@sigma/edge-curve';
 import Graph from 'graphology';
 import Sigma from 'sigma';
@@ -84,20 +86,16 @@ async function load_graph() {
 	const val = document.getElementById('graph-viewer')?.getAttribute('value');
 	const query_to_server: string = (() => {
 		if (val == 'full') {
-			return '/query/graph/full';
+			return QUERY_GRAPH_FULL;
 		}
 		if (val == 'own') {
-			return '/query/graph/own';
+			return QUERY_GRAPH_OWN;
 		}
 		return '?';
 	})();
 
 	// "query" the server
-	const response = await fetch(query_to_server, {
-		method: 'POST',
-		body: JSON.stringify({ tc_i: time_control_id }),
-		headers: { 'Content-type': 'application/json; charset=UTF-8' }
-	});
+	const response = await server_call(query_to_server, 'POST', JSON.stringify({ tc_i: time_control_id }));
 	if (response.status >= 400) {
 		const message = await response.text();
 		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);

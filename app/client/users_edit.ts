@@ -21,10 +21,12 @@ Full source code of elo-chess-tracker:
 
 import 'htmx.org';
 
+import { server_call } from '@client/action';
 import { UserRole, all_user_roles, user_role_to_string, array_string_to_roles } from '@common/models/user_role';
 import { QueryUserEditInput } from '@common/schemas/query_user';
 import { UserEditInput } from '@common/schemas/user';
 import { isDefined } from '@common/utils/is_defined';
+import { QUERY_USER_EDIT, USER_EDIT, HOME } from '@common/routes';
 
 async function user_was_changed(_event: any) {
 	all_user_roles.forEach(function (role: string) {
@@ -41,11 +43,11 @@ async function user_was_changed(_event: any) {
 
 	if (username_option != null) {
 		const user_id = (username_option as HTMLOptionElement).id;
-		const response = await fetch('/query/user/edit', {
-			method: 'POST',
-			body: JSON.stringify({ u: Number(user_id) } satisfies QueryUserEditInput),
-			headers: { 'Content-type': 'application/json; charset=UTF-8' }
-		});
+		const response = await server_call(
+			QUERY_USER_EDIT,
+			'POST',
+			JSON.stringify({ u: Number(user_id) } satisfies QueryUserEditInput)
+		);
 		if (response.status >= 400) {
 			const message = await response.text();
 			alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
@@ -88,23 +90,23 @@ async function submit_was_clicked(_event: any) {
 		return;
 	}
 
-	const response = await fetch('/user/edit', {
-		method: 'POST',
-		body: JSON.stringify({
+	const response = await server_call(
+		USER_EDIT,
+		'POST',
+		JSON.stringify({
 			u: Number(user_rid),
 			f: first_name,
 			l: last_name,
 			r: selected_roles
-		} satisfies UserEditInput),
-		headers: { 'Content-type': 'application/json; charset=UTF-8' }
-	});
+		} satisfies UserEditInput)
+	);
 	if (response.status >= 400) {
 		const message = await response.text();
 		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
 		return;
 	}
 
-	window.location.href = '/home';
+	window.location.href = HOME;
 }
 
 window.onload = function () {

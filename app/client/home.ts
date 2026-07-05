@@ -21,12 +21,25 @@ Full source code of elo-chess-tracker:
 
 import 'htmx.org';
 
+import { server_call } from '@client/action';
 import { ADMIN, user_role_to_string, UserRole } from '@common/models/user_role';
 import { GAMES_CREATE, CREATE_USER, USER_EDIT, GAMES_SEE, GRAPHS_SEE_USER } from '@common/models/user_action';
+import {
+	USER_LOGOUT,
+	RECALCULATE_RATINGS,
+	RECALCULATE_GRAPHS,
+	QUERY_USER_HOME,
+	PAGE_USER_CREATE,
+	PAGE_USER_EDIT,
+	PAGE_GAME_CREATE,
+	PAGE_GAME_LIST_ALL,
+	PAGE_GRAPH_FULL,
+	ROOT
+} from '@common/routes';
 
 export async function logout_link_clicked(_event: any) {
 	// "query" the server
-	const response = await fetch('/user/logout', { method: 'POST' });
+	const response = await server_call(USER_LOGOUT, 'POST', '');
 
 	const data = await response.json();
 	const cookies = data['cookies'];
@@ -34,7 +47,7 @@ export async function logout_link_clicked(_event: any) {
 		document.cookie = c;
 	}
 
-	window.location.href = '/';
+	window.location.href = ROOT;
 }
 
 function fill_action_links(user_actions: string[], user_roles: string[]) {
@@ -42,31 +55,31 @@ function fill_action_links(user_actions: string[], user_roles: string[]) {
 
 	if (user_actions.includes(CREATE_USER)) {
 		let user_create_link = document.createElement('a') as HTMLAnchorElement;
-		user_create_link.href = '/page/user/create';
+		user_create_link.href = PAGE_USER_CREATE;
 		user_create_link.text = 'Create new user';
 		action_links.appendChild(user_create_link);
 	}
 	if (user_actions.includes(USER_EDIT)) {
 		let user_edit_link = document.createElement('a') as HTMLAnchorElement;
-		user_edit_link.href = '/page/user/edit';
+		user_edit_link.href = PAGE_USER_EDIT;
 		user_edit_link.text = 'Edit user';
 		action_links.appendChild(user_edit_link);
 	}
 	if (user_actions.includes(GAMES_CREATE)) {
 		let game_create_link = document.createElement('a') as HTMLAnchorElement;
-		game_create_link.href = '/page/game/create';
+		game_create_link.href = PAGE_GAME_CREATE;
 		game_create_link.text = 'Create new game';
 		action_links.appendChild(game_create_link);
 	}
 	if (user_actions.includes(GAMES_SEE)) {
 		let see_all_games_link = document.createElement('a') as HTMLAnchorElement;
-		see_all_games_link.href = '/page/game/list/all';
+		see_all_games_link.href = PAGE_GAME_LIST_ALL;
 		see_all_games_link.text = 'See all games';
 		action_links.appendChild(see_all_games_link);
 	}
 	if (user_actions.includes(GRAPHS_SEE_USER)) {
 		let see_full_graph_link = document.createElement('a') as HTMLAnchorElement;
-		see_full_graph_link.href = '/page/graph/full';
+		see_full_graph_link.href = PAGE_GRAPH_FULL;
 		see_full_graph_link.text = 'See the full graph';
 		action_links.appendChild(see_full_graph_link);
 	}
@@ -76,10 +89,7 @@ function fill_action_links(user_actions: string[], user_roles: string[]) {
 		recalculate_ratings_link.id = 'recalculate-ratings-link';
 		recalculate_ratings_link.textContent = 'Recalculate ratings';
 		recalculate_ratings_link.onclick = async function () {
-			const response = await fetch('/recalculate/ratings', {
-				method: 'POST',
-				headers: { 'Content-type': 'application/json; charset=UTF-8' }
-			});
+			const response = await server_call(RECALCULATE_RATINGS, 'POST', '');
 			if (response.status >= 400) {
 				const message = await response.text();
 				alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
@@ -92,10 +102,7 @@ function fill_action_links(user_actions: string[], user_roles: string[]) {
 		recalculate_graphs_link.id = 'recalculate-graphs';
 		recalculate_graphs_link.textContent = 'Recalculate graphs';
 		recalculate_graphs_link.onclick = async function () {
-			const response = await fetch('/recalculate/graphs', {
-				method: 'POST',
-				headers: { 'Content-type': 'application/json; charset=UTF-8' }
-			});
+			const response = await server_call(RECALCULATE_GRAPHS, 'POST', '');
 			if (response.status >= 400) {
 				const message = await response.text();
 				alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
@@ -108,10 +115,7 @@ function fill_action_links(user_actions: string[], user_roles: string[]) {
 
 async function fill_own_info() {
 	// "query" the server
-	const response = await fetch('/query/user/home', {
-		method: 'GET',
-		headers: { 'Content-type': 'application/json; charset=UTF-8' }
-	});
+	const response = await server_call(QUERY_USER_HOME, 'GET', '');
 	if (response.status >= 400) {
 		const message = await response.text();
 		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);

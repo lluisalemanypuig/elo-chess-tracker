@@ -19,8 +19,11 @@ Full source code of elo-chess-tracker:
 	https://github.com/lluisalemanypuig/elo-chess-tracker
 */
 
-import { UserLoginInput } from '@common/schemas/login_logout';
 import 'htmx.org';
+
+import { UserLoginInput } from '@common/schemas/login_logout';
+import { server_call } from '@client/action';
+import { USER_LOGIN, HOME } from '@common/routes';
 
 async function log_into_webpage(_event: any) {
 	// username box
@@ -45,11 +48,11 @@ async function log_into_webpage(_event: any) {
 	}
 
 	// "query" the server
-	const response = await fetch('/user/login', {
-		method: 'POST',
-		body: JSON.stringify({ u: username, p: password } satisfies UserLoginInput),
-		headers: { 'Content-type': 'application/json; charset=UTF-8' }
-	});
+	const response = await server_call(
+		USER_LOGIN,
+		'POST',
+		JSON.stringify({ u: username, p: password } satisfies UserLoginInput)
+	);
 	if (response.status >= 400) {
 		const message = await response.text();
 		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
@@ -63,7 +66,7 @@ async function log_into_webpage(_event: any) {
 	for (const c of cookies) {
 		document.cookie = c;
 	}
-	window.location.href = '/home';
+	window.location.href = HOME;
 }
 
 async function password_box_key_down(_event: any) {

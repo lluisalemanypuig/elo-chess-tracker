@@ -19,8 +19,11 @@ Full source code of elo-chess-tracker:
 	https://github.com/lluisalemanypuig/elo-chess-tracker
 */
 
-import { QueryUserRankingInput } from '@common/schemas/query_user';
 import 'htmx.org';
+
+import { QueryUserRankingInput } from '@common/schemas/query_user';
+import { server_call } from '@client/action';
+import { QUERY_USER_RANKING } from '@common/routes';
 
 async function fill_ranking(_event: any) {
 	const select_time_control = document.getElementById('select_time_control') as HTMLSelectElement;
@@ -37,11 +40,11 @@ async function fill_ranking(_event: any) {
 	};
 
 	// "query" the server
-	const response = await fetch('/query/user/ranking', {
-		method: 'POST',
-		body: JSON.stringify({ tc_i: time_control_id } satisfies QueryUserRankingInput),
-		headers: { 'Content-type': 'application/json; charset=UTF-8' }
-	});
+	const response = await server_call(
+		QUERY_USER_RANKING,
+		'POST',
+		JSON.stringify({ tc_i: time_control_id } satisfies QueryUserRankingInput)
+	);
 	if (response.status >= 400) {
 		const message = await response.text();
 		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);

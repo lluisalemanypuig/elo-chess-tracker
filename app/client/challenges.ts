@@ -30,6 +30,20 @@ import {
 	ChallengeSetResultInput
 } from '@common/schemas/challenges';
 import { GameResult } from '@common/models/game';
+import { server_call } from '@client/action';
+import {
+	CHALLENGE_SEND,
+	CHALLENGE_ACCEPT,
+	CHALLENGE_DECLINE,
+	CHALLENGE_SET_RESULT,
+	CHALLENGE_AGREE,
+	CHALLENGE_DISAGREE,
+	QUERY_CHALLENGE_RECEIVED,
+	QUERY_CHALLENGE_SENT,
+	QUERY_CHALLENGE_PENDING_RESULT,
+	QUERY_CHALLENGE_CONFIRM_RESULT_OTHER,
+	QUERY_CHALLENGE_CONFIRM_RESULT_SELF
+} from '@common/routes';
 
 function create_label_text(text: string): HTMLLabelElement {
 	let label = document.createElement('label') as HTMLLabelElement;
@@ -56,16 +70,16 @@ async function send_challenge_button_clicked(_event: any) {
 		const game_title = game_title_text.textContent;
 
 		// "query" the server
-		const response = await fetch('/challenge/send', {
-			method: 'POST',
-			body: JSON.stringify({
+		const response = await server_call(
+			CHALLENGE_SEND,
+			'POST',
+			JSON.stringify({
 				to: random_user_id,
 				title: game_title,
 				time_control_id: time_control_id,
 				time_control_name: time_control_name
-			} satisfies ChallengeSendInput),
-			headers: { 'Content-type': 'application/json; charset=UTF-8' }
-		});
+			} satisfies ChallengeSendInput)
+		);
 		if (response.status >= 400) {
 			const message = await response.text();
 			alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
@@ -80,11 +94,11 @@ async function accept_challenge_button_clicked(event: any) {
 	let tag_clicked = event.target;
 	let challenge_id = tag_clicked.id;
 
-	const response = await fetch('/challenge/accept', {
-		method: 'POST',
-		body: JSON.stringify({ challenge_id: challenge_id } satisfies ChallengeInputAccept),
-		headers: { 'Content-type': 'application/json; charset=UTF-8' }
-	});
+	const response = await server_call(
+		CHALLENGE_ACCEPT,
+		'POST',
+		JSON.stringify({ challenge_id: challenge_id } satisfies ChallengeInputAccept)
+	);
 	if (response.status >= 400) {
 		const message = await response.text();
 		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
@@ -97,11 +111,11 @@ async function decline_challenge_tag_clicked(event: any) {
 	let tag_clicked = event.target;
 	let challenge_id = tag_clicked.id;
 
-	const response = await fetch('/challenge/decline', {
-		method: 'POST',
-		body: JSON.stringify({ challenge_id: challenge_id } satisfies ChallengeDeclineInput),
-		headers: { 'Content-type': 'application/json; charset=UTF-8' }
-	});
+	const response = await server_call(
+		CHALLENGE_DECLINE,
+		'POST',
+		JSON.stringify({ challenge_id: challenge_id } satisfies ChallengeDeclineInput)
+	);
 	if (response.status >= 400) {
 		const message = await response.text();
 		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
@@ -134,16 +148,16 @@ async function submit_result_challenge_button_clicked(event: any) {
 	}
 
 	// "query" the server
-	const response = await fetch('/challenge/set_result', {
-		method: 'POST',
-		body: JSON.stringify({
+	const response = await server_call(
+		CHALLENGE_SET_RESULT,
+		'POST',
+		JSON.stringify({
 			challenge_id: challenge_id,
 			white: white_username,
 			black: black_username,
 			result: result
-		} satisfies ChallengeSetResultInput),
-		headers: { 'Content-type': 'application/json; charset=UTF-8' }
-	});
+		} satisfies ChallengeSetResultInput)
+	);
 	if (response.status >= 400) {
 		const message = await response.text();
 		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
@@ -157,11 +171,12 @@ async function agree_challenge_result_button_clicked(event: any) {
 	let tag_clicked = event.target;
 	let challenge_id = tag_clicked.id;
 
-	const response = await fetch('/challenge/agree', {
-		method: 'POST',
-		body: JSON.stringify({ challenge_id: challenge_id } satisfies ChallengeAgreeResultInput),
-		headers: { 'Content-type': 'application/json; charset=UTF-8' }
-	});
+	const response = await server_call(
+		CHALLENGE_AGREE,
+		'POST',
+		JSON.stringify({ challenge_id: challenge_id } satisfies ChallengeAgreeResultInput)
+	);
+
 	if (response.status >= 400) {
 		const message = await response.text();
 		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
@@ -175,11 +190,11 @@ async function disagree_challenge_result_button_clicked(event: any) {
 	let tag_clicked = event.target;
 	let challenge_id = tag_clicked.id;
 
-	const response = await fetch('/challenge/disagree', {
-		method: 'POST',
-		body: JSON.stringify({ challenge_id: challenge_id } satisfies ChallengeDisagreeResultInput),
-		headers: { 'Content-type': 'application/json; charset=UTF-8' }
-	});
+	const response = await server_call(
+		CHALLENGE_DISAGREE,
+		'POST',
+		JSON.stringify({ challenge_id: challenge_id } satisfies ChallengeDisagreeResultInput)
+	);
 	if (response.status >= 400) {
 		const message = await response.text();
 		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
@@ -190,10 +205,7 @@ async function disagree_challenge_result_button_clicked(event: any) {
 }
 
 async function fill_challenges_received() {
-	const response = await fetch('/query/challenge/received', {
-		method: 'GET',
-		headers: { 'Content-type': 'application/json; charset=UTF-8' }
-	});
+	const response = await server_call(QUERY_CHALLENGE_RECEIVED, 'GET', '');
 	if (response.status >= 400) {
 		const message = await response.text();
 		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
@@ -283,10 +295,7 @@ async function fill_challenges_received() {
 }
 
 async function fill_challenges_sent() {
-	const response = await fetch('/query/challenge/sent', {
-		method: 'GET',
-		headers: { 'Content-type': 'application/json; charset=UTF-8' }
-	});
+	const response = await server_call(QUERY_CHALLENGE_SENT, 'GET', '');
 	if (response.status >= 400) {
 		const message = await response.text();
 		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
@@ -334,10 +343,7 @@ async function fill_challenges_sent() {
 }
 
 async function fill_challenges_pending_result() {
-	const response_pending = await fetch('/query/challenge/pending_result', {
-		method: 'GET',
-		headers: { 'Content-type': 'application/json; charset=UTF-8' }
-	});
+	const response_pending = await server_call(QUERY_CHALLENGE_PENDING_RESULT, 'GET', '');
 	if (response_pending.status >= 400) {
 		const message = await response_pending.text();
 		alert(`${response_pending.status} -- ${response_pending.statusText}\nMessage: '${message}'`);
@@ -478,10 +484,7 @@ async function fill_challenges_pending_result() {
 }
 
 async function fill_challenges_confirm_result_other() {
-	const response = await fetch('/query/challenge/confirm_result/other', {
-		method: 'GET',
-		headers: { 'Content-type': 'application/json; charset=UTF-8' }
-	});
+	const response = await server_call(QUERY_CHALLENGE_CONFIRM_RESULT_OTHER, 'GET', '');
 	if (response.status >= 400) {
 		const message = await response.text();
 		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
@@ -534,10 +537,7 @@ async function fill_challenges_confirm_result_other() {
 }
 
 async function fill_challenges_confirm_result_self() {
-	const response = await fetch('/query/challenge/confirm_result/self', {
-		method: 'GET',
-		headers: { 'Content-type': 'application/json; charset=UTF-8' }
-	});
+	const response = await server_call(QUERY_CHALLENGE_CONFIRM_RESULT_SELF, 'GET', '');
 	if (response.status >= 400) {
 		const message = await response.text();
 		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);

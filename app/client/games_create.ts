@@ -19,20 +19,20 @@ Full source code of elo-chess-tracker:
 	https://github.com/lluisalemanypuig/elo-chess-tracker
 */
 
+import 'htmx.org';
+
 import { result_from_text_to_value } from '@common/models/game';
 import { GameCreateInput } from '@common/schemas/games';
 import { isDefined } from '@common/utils/is_defined';
-import 'htmx.org';
+import { server_call } from '@client/action';
+import { QUERY_HTML_USER_LIST, GAME_CREATE } from '@common/routes';
 
 async function initialize_window_client_games_create() {
 	let datalist_white_users = document.getElementById('datalist_white_users') as HTMLDataListElement;
 	let datalist_black_users = document.getElementById('datalist_black_users') as HTMLDataListElement;
 
 	// query the server for the list of users
-	const response = await fetch('/query/html/user/list', {
-		method: 'GET',
-		headers: { 'Content-type': 'application/json; charset=UTF-8' }
-	});
+	const response = await server_call(QUERY_HTML_USER_LIST, 'GET', '');
 	const data = await response.text();
 	if (response.status >= 400) {
 		alert(`${response.status} -- ${response.statusText}\nMessage: '${data}'`);
@@ -87,9 +87,10 @@ async function submit_new_game(_event: any) {
 
 	const rand_sec = `${Math.floor(Math.random() * 59)}`;
 	const rand_milli = `${Math.floor(Math.random() * 999)}`;
-	const response = await fetch('/game/create', {
-		method: 'POST',
-		body: JSON.stringify({
+	const response = await server_call(
+		GAME_CREATE,
+		'POST',
+		JSON.stringify({
 			title: game_title,
 			w: Number(white),
 			b: Number(black),
@@ -105,9 +106,8 @@ async function submit_new_game(_event: any) {
 				':' +
 				(rand_milli.length == 1 ? '00' : rand_milli.length == 2 ? '0' : '') +
 				rand_milli
-		} satisfies GameCreateInput),
-		headers: { 'Content-type': 'application/json; charset=UTF-8' }
-	});
+		} satisfies GameCreateInput)
+	);
 	if (response.status >= 400) {
 		const message = await response.text();
 		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
