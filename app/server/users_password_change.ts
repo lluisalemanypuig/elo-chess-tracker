@@ -29,6 +29,7 @@ import { Request, Response } from 'express';
 
 import { log_now } from '@server/utils/time';
 import { is_user_logged_in, session_user_delete_all } from '@server/managers/session';
+import { ROUTE_PAGE_USER_PASSWORD_CHANGE, ROUTE_USER_PASSWORD_CHANGE } from '@common/routes';
 import { encrypt_password_for_user, is_password_of_user_correct } from '@server/utils/encrypt';
 import { user_overwrite } from '@server/managers/users';
 import { ConfigurationManager } from '@server/managers/configuration_manager';
@@ -38,7 +39,7 @@ import { isDefined } from '@common/utils/is_defined';
 import { UserPasswordChangeInputSchema } from '@common/schemas/user';
 
 export async function get_page_user_password_change(req: Request, res: Response) {
-	debug(log_now(), 'GET /page/user/password_change_page...');
+	debug(log_now(), `GET ${ROUTE_PAGE_USER_PASSWORD_CHANGE}...`);
 
 	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
@@ -63,7 +64,7 @@ export async function get_page_user_password_change(req: Request, res: Response)
 }
 
 export async function post_user_password_change(req: Request, res: Response) {
-	debug(log_now(), 'POST /user/password_change...');
+	debug(log_now(), `POST ${ROUTE_USER_PASSWORD_CHANGE}...`);
 
 	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {

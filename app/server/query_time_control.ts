@@ -29,12 +29,13 @@ import { Request, Response } from 'express';
 
 import { log_now } from '@server/utils/time';
 import { is_user_logged_in } from '@server/managers/session';
+import { ROUTE_QUERY_HTML_TIME_CONTROLS, ROUTE_QUERY_HTML_TIME_CONTROLS_UNIQUE } from '@common/routes';
 import { RatingSystemManager } from '@server/managers/rating_system_manager';
 import { AuthenticationInputSchema } from '@common/schemas/authentication';
 import { isDefined } from '@common/utils/is_defined';
 
 export async function get_query_html_time_controls(req: Request, res: Response) {
-	debug(log_now(), 'GET /query/html/time_controls...');
+	debug(log_now(), `GET ${ROUTE_QUERY_HTML_TIME_CONTROLS}...`);
 
 	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
@@ -60,7 +61,7 @@ export async function get_query_html_time_controls(req: Request, res: Response) 
 }
 
 export async function get_query_html_time_controls_unique(req: Request, res: Response) {
-	debug(log_now(), 'GET /query/html/time_controls_unique...');
+	debug(log_now(), `GET ${ROUTE_QUERY_HTML_TIME_CONTROLS_UNIQUE}...`);
 
 	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {

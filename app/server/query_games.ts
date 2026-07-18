@@ -32,6 +32,7 @@ import fs from 'fs';
 
 import { DateStringShort, log_now } from '@server/utils/time';
 import { is_user_logged_in } from '@server/managers/session';
+import { ROUTE_QUERY_GAME_LIST_OWN, ROUTE_QUERY_GAME_LIST_ALL } from '@common/routes';
 import { GameNumber, User } from '@common/models/user';
 import { Game } from '@common/models/game';
 import { RatingSystemManager } from '@server/managers/rating_system_manager';
@@ -152,7 +153,7 @@ function filter_game_list(
 }
 
 export async function post_query_game_list_own(req: Request, res: Response) {
-	debug(log_now(), 'POST /query/game/list/own...');
+	debug(log_now(), `POST ${ROUTE_QUERY_GAME_LIST_OWN}...`);
 
 	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
@@ -254,7 +255,7 @@ function merge_by_date(v1: any[], v2: any[]): any[] {
 }
 
 export async function post_query_game_list_all(req: Request, res: Response) {
-	debug(log_now(), 'POST /query/game/list/all...');
+	debug(log_now(), `POST ${ROUTE_QUERY_GAME_LIST_ALL}...`);
 
 	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {

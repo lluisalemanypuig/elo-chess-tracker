@@ -31,6 +31,16 @@ import { DateStringShort, log_now } from '@server/utils/time';
 import { is_user_logged_in } from '@server/managers/session';
 import { GAMES_CREATE, GAMES_DELETE, GAMES_EDIT } from '@common/models/user_action';
 import {
+	ROUTE_PAGE_GAME_LIST_OWN,
+	ROUTE_PAGE_GAME_LIST_ALL,
+	ROUTE_PAGE_GAME_CREATE,
+	GAME_CREATE,
+	ROUTE_GAME_EDIT_RESULT,
+	ROUTE_GAME_EDIT_TITLE,
+	ROUTE_GAME_DELETE,
+	ROUTE_RECALCULATE_RATINGS
+} from '@common/routes';
+import {
 	game_add_new,
 	game_delete,
 	game_edit_result,
@@ -59,7 +69,7 @@ import {
 } from '@common/schemas/games';
 
 export async function get_page_game_list_own(req: Request, res: Response) {
-	debug(log_now(), 'GET /page/game/list/own...');
+	debug(log_now(), `GET ${ROUTE_PAGE_GAME_LIST_OWN}...`);
 
 	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
@@ -85,7 +95,7 @@ export async function get_page_game_list_own(req: Request, res: Response) {
 }
 
 export async function get_page_game_list_all(req: Request, res: Response) {
-	debug(log_now(), 'GET /game/list/all...');
+	debug(log_now(), `GET ${ROUTE_PAGE_GAME_LIST_ALL}...`);
 
 	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
@@ -111,7 +121,7 @@ export async function get_page_game_list_all(req: Request, res: Response) {
 }
 
 export async function get_page_game_create(req: Request, res: Response) {
-	debug(log_now(), 'GET /page/game/create...');
+	debug(log_now(), `GET ${ROUTE_PAGE_GAME_CREATE}...`);
 
 	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
@@ -143,7 +153,7 @@ export async function get_page_game_create(req: Request, res: Response) {
 }
 
 export async function post_game_create(req: Request, res: Response) {
-	debug(log_now(), 'POST /game/create...');
+	debug(log_now(), `POST ${GAME_CREATE}...`);
 
 	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
@@ -237,7 +247,7 @@ export async function post_game_create(req: Request, res: Response) {
 }
 
 export async function post_game_edit_result(req: Request, res: Response) {
-	debug(log_now(), 'POST /game/edit_result...');
+	debug(log_now(), `POST ${ROUTE_GAME_EDIT_RESULT}...`);
 
 	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
@@ -312,7 +322,7 @@ export async function post_game_edit_result(req: Request, res: Response) {
 }
 
 export async function post_game_edit_title(req: Request, res: Response) {
-	debug(log_now(), 'POST /game/edit_title...');
+	debug(log_now(), `POST ${ROUTE_GAME_EDIT_TITLE}...`);
 
 	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
@@ -387,7 +397,7 @@ export async function post_game_edit_title(req: Request, res: Response) {
 }
 
 export async function post_game_delete(req: Request, res: Response) {
-	debug(log_now(), 'POST /game/delete...');
+	debug(log_now(), `POST ${ROUTE_GAME_DELETE}...`);
 
 	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
@@ -459,7 +469,7 @@ export async function post_game_delete(req: Request, res: Response) {
 }
 
 export async function post_recalculate_ratings(req: Request, res: Response) {
-	debug(log_now(), 'POST /recalculate/ratings...');
+	debug(log_now(), `POST ${ROUTE_RECALCULATE_RATINGS}...`);
 
 	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
