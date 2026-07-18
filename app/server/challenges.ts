@@ -48,16 +48,9 @@ import { ConfigurationManager } from '@server/managers/configuration_manager';
 import { RatingSystemManager } from '@server/managers/rating_system_manager';
 import { get_execution_directory } from '@server/managers/environment_manager';
 import { AuthenticationInputSchema } from '@common/schemas/authentication';
-import {
-	ChallengeSendInputSchema,
-	ChallengeAcceptInputSchema,
-	ChallengeSetResultInputSchema,
-	ChallengeDeclineInputSchema,
-	ChallengeAgreeResultInputSchema,
-	ChallengeDisagreeResultInputSchema
-} from '@common/schemas/challenges';
 import { isDefined } from '@common/utils/is_defined';
 import { Routes } from '@common/routes';
+import { InputSchemaOf } from '@common/api/schemas';
 
 export async function get_page_challenge(req: Request, res: Response) {
 	debug(log_now(), `GET ${Routes.PAGE_CHALLENGE}...`);
@@ -96,7 +89,7 @@ export async function post_challenge_send(req: Request, res: Response) {
 	}
 	const session = session_parse.data;
 
-	const challenge_parse = ChallengeSendInputSchema.safeParse(req.body);
+	const challenge_parse = InputSchemaOf(Routes.CHALLENGE_SEND).safeParse(req.body);
 	if (!challenge_parse.success) {
 		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${challenge_parse.error}'`);
@@ -186,7 +179,7 @@ export async function post_challenge_accept(req: Request, res: Response) {
 		return;
 	}
 
-	const challenge_parse = ChallengeAcceptInputSchema.safeParse(req.body);
+	const challenge_parse = InputSchemaOf(Routes.CHALLENGE_ACCEPT).safeParse(req.body);
 	if (!challenge_parse.success) {
 		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${challenge_parse.error}'`);
@@ -232,7 +225,7 @@ export async function post_challenge_decline(req: Request, res: Response) {
 		return;
 	}
 
-	const challenge_parse = ChallengeDeclineInputSchema.safeParse(req.body);
+	const challenge_parse = InputSchemaOf(Routes.CHALLENGE_DECLINE).safeParse(req.body);
 	if (!challenge_parse.success) {
 		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${challenge_parse.error}'`);
@@ -278,7 +271,7 @@ export async function post_challenge_set_result(req: Request, res: Response) {
 	}
 
 	const setter_user = session.username;
-	const challenge_parse = ChallengeSetResultInputSchema.safeParse(req.body);
+	const challenge_parse = InputSchemaOf(Routes.CHALLENGE_SET_RESULT).safeParse(req.body);
 	if (!challenge_parse.success) {
 		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${challenge_parse.error}'`);
@@ -368,7 +361,7 @@ export async function post_challenge_agree(req: Request, res: Response) {
 		return;
 	}
 
-	const challenge_parse = ChallengeAgreeResultInputSchema.safeParse(req.body);
+	const challenge_parse = InputSchemaOf(Routes.CHALLENGE_AGREE).safeParse(req.body);
 	if (!challenge_parse.success) {
 		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${challenge_parse.error}'`);
@@ -405,7 +398,7 @@ export async function post_challenge_disagree(req: Request, res: Response) {
 		return;
 	}
 
-	const challenge_parse = ChallengeDisagreeResultInputSchema.safeParse(req.body);
+	const challenge_parse = InputSchemaOf(Routes.CHALLENGE_DISAGREE).safeParse(req.body);
 	if (!challenge_parse.success) {
 		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${challenge_parse.error}'`);

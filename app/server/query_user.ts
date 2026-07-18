@@ -35,8 +35,8 @@ import { UsersManager } from '@server/managers/users_manager';
 import { TimeControlRating } from '@common/models/time_control_rating';
 import { AuthenticationInputSchema } from '@common/schemas/authentication';
 import { isDefined } from '@common/utils/is_defined';
-import { QueryUserEditInputSchema, QueryUserRankingInputSchema } from '@common/schemas/query_user';
 import { Routes } from '@common/routes';
+import { InputSchemaOf } from '@common/api/schemas';
 
 /// Returns the list of user full names and usernames sorted by name
 export async function get_query_user_list(req: Request, res: Response) {
@@ -146,7 +146,7 @@ export async function post_query_user_edit(req: Request, res: Response) {
 		return;
 	}
 
-	const user_query = QueryUserEditInputSchema.safeParse(req.body);
+	const user_query = InputSchemaOf(Routes.QUERY_USER_EDIT).safeParse(req.body);
 	if (!user_query.success) {
 		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${user_query.error}'`);
@@ -190,7 +190,7 @@ export async function post_query_user_ranking(req: Request, res: Response) {
 		return;
 	}
 
-	const user_query = QueryUserRankingInputSchema.safeParse(req.body);
+	const user_query = InputSchemaOf(Routes.QUERY_USER_RANKING).safeParse(req.body);
 	if (!user_query.success) {
 		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${user_query.error}'`);

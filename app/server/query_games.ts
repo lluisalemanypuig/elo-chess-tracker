@@ -45,8 +45,8 @@ import { search_by_key } from '@server/utils/searching';
 import { read_directory } from '@server/utils/read_directory';
 import { isDefined } from '@common/utils/is_defined';
 import { AuthenticationInputSchema } from '@common/schemas/authentication';
-import { QueryGamesListAllInputSchema, QueryGamesListOwnInputSchema } from '@common/schemas/query_games';
 import { Routes } from '@common/routes';
+import { InputSchemaOf } from '@common/api/schemas';
 
 function increment(g: Game): any {
 	const [white_after, black_after] = RatingSystemManager.get_instance().apply_rating_function(g);
@@ -171,7 +171,7 @@ export async function post_query_game_list_own(req: Request, res: Response) {
 		return;
 	}
 
-	const game_parse = QueryGamesListOwnInputSchema.safeParse(req.body);
+	const game_parse = InputSchemaOf(Routes.QUERY_GAME_LIST_OWN).safeParse(req.body);
 	if (!game_parse.success) {
 		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${game_parse.error}'`);
@@ -278,7 +278,7 @@ export async function post_query_game_list_all(req: Request, res: Response) {
 		return;
 	}
 
-	const game_parse = QueryGamesListAllInputSchema.safeParse(req.body);
+	const game_parse = InputSchemaOf(Routes.QUERY_GAME_LIST_ALL).safeParse(req.body);
 	if (!game_parse.success) {
 		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${game_parse.error}'`);

@@ -35,8 +35,8 @@ import { ConfigurationManager } from '@server/managers/configuration_manager';
 import { get_execution_directory } from '@server/managers/environment_manager';
 import { AuthenticationInputSchema } from '@common/schemas/authentication';
 import { isDefined } from '@common/utils/is_defined';
-import { UserPasswordChangeInputSchema } from '@common/schemas/user';
 import { Routes } from '@common/routes';
+import { InputSchemaOf } from '@common/api/schemas';
 
 export async function get_page_user_password_change(req: Request, res: Response) {
 	debug(log_now(), `GET ${Routes.PAGE_USER_PASSWORD_CHANGE}...`);
@@ -75,7 +75,7 @@ export async function post_user_password_change(req: Request, res: Response) {
 	}
 	const session = session_parse.data;
 
-	const password_parse = UserPasswordChangeInputSchema.safeParse(req.body);
+	const password_parse = InputSchemaOf(Routes.USER_PASSWORD_CHANGE).safeParse(req.body);
 	if (!password_parse.success) {
 		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${password_parse.error}'`);

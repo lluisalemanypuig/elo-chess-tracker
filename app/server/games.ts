@@ -51,13 +51,8 @@ import { ConfigurationManager } from '@server/managers/configuration_manager';
 import { get_execution_directory } from '@server/managers/environment_manager';
 import { AuthenticationInputSchema } from '@common/schemas/authentication';
 import { isDefined } from '@common/utils/is_defined';
-import {
-	GameCreateInputSchema,
-	GameDeleteInputSchema,
-	GameEditResultInputSchema,
-	GameEditTitleInputSchema
-} from '@common/schemas/games';
 import { Routes } from '@common/routes';
+import { InputSchemaOf } from '@common/api/schemas';
 
 export async function get_page_game_list_own(req: Request, res: Response) {
 	debug(log_now(), `GET ${Routes.PAGE_GAME_LIST_OWN}...`);
@@ -168,7 +163,7 @@ export async function post_game_create(req: Request, res: Response) {
 		return;
 	}
 
-	const game_parse = GameCreateInputSchema.safeParse(req.body);
+	const game_parse = InputSchemaOf(Routes.GAME_CREATE).safeParse(req.body);
 	if (!game_parse.success) {
 		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${game_parse.error}'`);
@@ -262,7 +257,7 @@ export async function post_game_edit_result(req: Request, res: Response) {
 		return;
 	}
 
-	const game_parse = GameEditResultInputSchema.safeParse(req.body);
+	const game_parse = InputSchemaOf(Routes.GAME_EDIT_RESULT).safeParse(req.body);
 	if (!game_parse.success) {
 		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${game_parse.error}'`);
@@ -337,7 +332,7 @@ export async function post_game_edit_title(req: Request, res: Response) {
 		return;
 	}
 
-	const game_parse = GameEditTitleInputSchema.safeParse(req.body);
+	const game_parse = InputSchemaOf(Routes.GAME_EDIT_TITLE).safeParse(req.body);
 	if (!game_parse.success) {
 		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${game_parse.error}'`);
@@ -412,7 +407,7 @@ export async function post_game_delete(req: Request, res: Response) {
 		return;
 	}
 
-	const game_parse = GameDeleteInputSchema.safeParse(req.body);
+	const game_parse = InputSchemaOf(Routes.GAME_DELETE).safeParse(req.body);
 	if (!game_parse.success) {
 		debug(log_now(), 'Failed to parse schema');
 		debug(log_now(), `Error: '${game_parse.error}'`);
