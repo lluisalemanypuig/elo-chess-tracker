@@ -33,15 +33,15 @@ export type Empty = undefined;
 
 export type ApiType = {
 	[R in Route]: {
-		body: z.output<(typeof API_SCHEMA)[R]['body']>;
-		result: z.output<(typeof API_SCHEMA)[R]['result']>;
+		input: z.output<(typeof API_SCHEMA)[R]['input']>;
+		output: z.output<(typeof API_SCHEMA)[R]['output']>;
 	};
 };
 
-export type BodyTypeOf = {
-	[R in Route]: ApiType[R]['body'];
+export type InputTypeOf = {
+	[R in Route]: ApiType[R]['input'];
 };
 
-export type ResultTypeOf = {
-	[R in Route]: ApiType[R]['result'];
+export type OutputTypeOf = {
+	[R in Route]: ApiType[R]['output'];
 };

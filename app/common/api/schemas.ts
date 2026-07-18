@@ -49,8 +49,8 @@ import { UserCreateInputSchema, UserEditInputSchema, UserPasswordChangeInputSche
 export const EmptySchema = z.object({}).strict();
 
 type ApiSchemaEntry = {
-	body: z.ZodTypeAny;
-	result: z.ZodTypeAny;
+	input: z.ZodTypeAny;
+	output: z.ZodTypeAny;
 };
 
 /**
@@ -63,218 +63,218 @@ type ApiSchemaEntry = {
  */
 export const API_SCHEMA = {
 	[Routes.CSS_ALL]: {
-		result: EmptySchema,
-		body: EmptySchema
+		output: EmptySchema,
+		input: EmptySchema
 	},
 	[Routes.VERSION_NUMBER]: {
-		result: EmptySchema,
-		body: EmptySchema
+		output: EmptySchema,
+		input: EmptySchema
 	},
 	[Routes.FAVICON_ICO]: {
-		result: EmptySchema,
-		body: EmptySchema
+		output: EmptySchema,
+		input: EmptySchema
 	},
 	[Routes.ICON_LOGIN_PAGE]: {
-		result: EmptySchema,
-		body: EmptySchema
+		output: EmptySchema,
+		input: EmptySchema
 	},
 	[Routes.ICON_HOME_PAGE]: {
-		result: EmptySchema,
-		body: EmptySchema
+		output: EmptySchema,
+		input: EmptySchema
 	},
 	[Routes.TITLE_LOGIN_PAGE]: {
-		result: EmptySchema,
-		body: EmptySchema
+		output: EmptySchema,
+		input: EmptySchema
 	},
 	[Routes.TITLE_HOME_PAGE]: {
-		result: EmptySchema,
-		body: EmptySchema
+		output: EmptySchema,
+		input: EmptySchema
 	},
 	[Routes.ROOT]: {
-		result: EmptySchema,
-		body: EmptySchema
+		output: EmptySchema,
+		input: EmptySchema
 	},
 	[Routes.HOME]: {
-		result: EmptySchema,
-		body: EmptySchema
+		output: EmptySchema,
+		input: EmptySchema
 	},
 	[Routes.JS_ALL]: {
-		result: EmptySchema,
-		body: EmptySchema
+		output: EmptySchema,
+		input: EmptySchema
 	},
 	[Routes.QUERY_USER_LIST]: {
-		result: EmptySchema,
-		body: EmptySchema
+		output: EmptySchema,
+		input: EmptySchema
 	},
 	[Routes.QUERY_HTML_USER_LIST]: {
-		result: EmptySchema,
-		body: EmptySchema
+		output: EmptySchema,
+		input: EmptySchema
 	},
 	[Routes.QUERY_USER_HOME]: {
-		result: EmptySchema,
-		body: EmptySchema
+		output: EmptySchema,
+		input: EmptySchema
 	},
 	[Routes.QUERY_USER_EDIT]: {
-		result: QueryUserEditInputSchema,
-		body: QueryUserEditInputSchema
+		output: QueryUserEditInputSchema,
+		input: QueryUserEditInputSchema
 	},
 	[Routes.QUERY_USER_RANKING]: {
-		result: QueryUserRankingInputSchema,
-		body: QueryUserRankingInputSchema
+		output: QueryUserRankingInputSchema,
+		input: QueryUserRankingInputSchema
 	},
 	[Routes.QUERY_CHALLENGE_RECEIVED]: {
-		result: EmptySchema,
-		body: EmptySchema
+		output: EmptySchema,
+		input: EmptySchema
 	},
 	[Routes.QUERY_CHALLENGE_SENT]: {
-		result: EmptySchema,
-		body: EmptySchema
+		output: EmptySchema,
+		input: EmptySchema
 	},
 	[Routes.QUERY_CHALLENGE_PENDING_RESULT]: {
-		result: EmptySchema,
-		body: EmptySchema
+		output: EmptySchema,
+		input: EmptySchema
 	},
 	[Routes.QUERY_CHALLENGE_CONFIRM_RESULT_OTHER]: {
-		result: EmptySchema,
-		body: EmptySchema
+		output: EmptySchema,
+		input: EmptySchema
 	},
 	[Routes.QUERY_CHALLENGE_CONFIRM_RESULT_SELF]: {
-		result: EmptySchema,
-		body: EmptySchema
+		output: EmptySchema,
+		input: EmptySchema
 	},
 	[Routes.QUERY_GAME_LIST_OWN]: {
-		result: EmptySchema,
-		body: QueryGamesListOwnInputSchema
+		output: EmptySchema,
+		input: QueryGamesListOwnInputSchema
 	},
 	[Routes.QUERY_GAME_LIST_ALL]: {
-		result: EmptySchema,
-		body: QueryGamesListAllInputSchema
+		output: EmptySchema,
+		input: QueryGamesListAllInputSchema
 	},
 	[Routes.QUERY_GRAPH_OWN]: {
-		result: EmptySchema,
-		body: QueryGraphInputSchema
+		output: EmptySchema,
+		input: QueryGraphInputSchema
 	},
 	[Routes.QUERY_GRAPH_FULL]: {
-		result: EmptySchema,
-		body: QueryGraphInputSchema
+		output: EmptySchema,
+		input: QueryGraphInputSchema
 	},
 	[Routes.QUERY_HTML_TIME_CONTROLS]: {
-		result: EmptySchema,
-		body: EmptySchema
+		output: EmptySchema,
+		input: EmptySchema
 	},
 	[Routes.QUERY_HTML_TIME_CONTROLS_UNIQUE]: {
-		result: EmptySchema,
-		body: EmptySchema
+		output: EmptySchema,
+		input: EmptySchema
 	},
 	[Routes.USER_LOGIN]: {
-		result: EmptySchema,
-		body: UserLoginInputSchema
+		output: EmptySchema,
+		input: UserLoginInputSchema
 	},
 	[Routes.USER_LOGOUT]: {
-		result: EmptySchema,
-		body: EmptySchema
+		output: EmptySchema,
+		input: EmptySchema
 	},
 	[Routes.USER_CREATE]: {
-		result: EmptySchema,
-		body: UserCreateInputSchema
+		output: EmptySchema,
+		input: UserCreateInputSchema
 	},
 	[Routes.USER_EDIT]: {
-		result: EmptySchema,
-		body: UserEditInputSchema
+		output: EmptySchema,
+		input: UserEditInputSchema
 	},
 	[Routes.USER_PASSWORD_CHANGE]: {
-		result: EmptySchema,
-		body: UserPasswordChangeInputSchema
+		output: EmptySchema,
+		input: UserPasswordChangeInputSchema
 	},
 	[Routes.PAGE_USER_CREATE]: {
-		result: EmptySchema,
-		body: EmptySchema
+		output: EmptySchema,
+		input: EmptySchema
 	},
 	[Routes.PAGE_USER_EDIT]: {
-		result: EmptySchema,
-		body: EmptySchema
+		output: EmptySchema,
+		input: EmptySchema
 	},
 	[Routes.PAGE_USER_PASSWORD_CHANGE]: {
-		result: EmptySchema,
-		body: EmptySchema
+		output: EmptySchema,
+		input: EmptySchema
 	},
 	[Routes.PAGE_USER_RANKING]: {
-		result: EmptySchema,
-		body: EmptySchema
+		output: EmptySchema,
+		input: EmptySchema
 	},
 	[Routes.PAGE_GAME_CREATE]: {
-		result: EmptySchema,
-		body: EmptySchema
+		output: EmptySchema,
+		input: EmptySchema
 	},
 	[Routes.PAGE_GAME_LIST_OWN]: {
-		result: EmptySchema,
-		body: EmptySchema
+		output: EmptySchema,
+		input: EmptySchema
 	},
 	[Routes.PAGE_GAME_LIST_ALL]: {
-		result: EmptySchema,
-		body: EmptySchema
+		output: EmptySchema,
+		input: EmptySchema
 	},
 	[Routes.PAGE_GRAPH_OWN]: {
-		result: EmptySchema,
-		body: EmptySchema
+		output: EmptySchema,
+		input: EmptySchema
 	},
 	[Routes.PAGE_GRAPH_FULL]: {
-		result: EmptySchema,
-		body: EmptySchema
+		output: EmptySchema,
+		input: EmptySchema
 	},
 	[Routes.PAGE_CHALLENGE]: {
-		result: EmptySchema,
-		body: EmptySchema
+		output: EmptySchema,
+		input: EmptySchema
 	},
 	[Routes.GAME_CREATE]: {
-		result: EmptySchema,
-		body: GameCreateInputSchema
+		output: EmptySchema,
+		input: GameCreateInputSchema
 	},
 	[Routes.GAME_DELETE]: {
-		result: EmptySchema,
-		body: GameDeleteInputSchema
+		output: EmptySchema,
+		input: GameDeleteInputSchema
 	},
 	[Routes.GAME_EDIT_TITLE]: {
-		result: EmptySchema,
-		body: GameEditTitleInputSchema
+		output: EmptySchema,
+		input: GameEditTitleInputSchema
 	},
 	[Routes.GAME_EDIT_RESULT]: {
-		result: EmptySchema,
-		body: GameEditResultInputSchema
+		output: EmptySchema,
+		input: GameEditResultInputSchema
 	},
 	[Routes.CHALLENGE_SEND]: {
-		result: EmptySchema,
-		body: ChallengeSendInputSchema
+		output: EmptySchema,
+		input: ChallengeSendInputSchema
 	},
 	[Routes.CHALLENGE_ACCEPT]: {
-		result: EmptySchema,
-		body: ChallengeAcceptInputSchema
+		output: EmptySchema,
+		input: ChallengeAcceptInputSchema
 	},
 	[Routes.CHALLENGE_DECLINE]: {
-		result: EmptySchema,
-		body: ChallengeDeclineInputSchema
+		output: EmptySchema,
+		input: ChallengeDeclineInputSchema
 	},
 	[Routes.CHALLENGE_SET_RESULT]: {
-		result: EmptySchema,
-		body: ChallengeSetResultInputSchema
+		output: EmptySchema,
+		input: ChallengeSetResultInputSchema
 	},
 	[Routes.CHALLENGE_AGREE]: {
-		result: EmptySchema,
-		body: ChallengeAgreeResultInputSchema
+		output: EmptySchema,
+		input: ChallengeAgreeResultInputSchema
 	},
 	[Routes.CHALLENGE_DISAGREE]: {
-		result: EmptySchema,
-		body: ChallengeDisagreeResultInputSchema
+		output: EmptySchema,
+		input: ChallengeDisagreeResultInputSchema
 	},
 	[Routes.RECALCULATE_RATINGS]: {
-		result: EmptySchema,
-		body: EmptySchema
+		output: EmptySchema,
+		input: EmptySchema
 	},
 	[Routes.RECALCULATE_GRAPHS]: {
-		result: EmptySchema,
-		body: EmptySchema
+		output: EmptySchema,
+		input: EmptySchema
 	}
 } satisfies Record<Route, ApiSchemaEntry>;
 
-export const BodySchemaOf = <R extends Route>(route: R) => API_SCHEMA[route].body;
-export const ResultSchemaOf = <R extends Route>(route: R) => API_SCHEMA[route].result;
+export const InputSchemaOf = <R extends Route>(route: R) => API_SCHEMA[route].input;
+export const OutputSchemaOf = <R extends Route>(route: R) => API_SCHEMA[route].output;
