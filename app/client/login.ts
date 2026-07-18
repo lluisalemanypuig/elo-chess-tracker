@@ -23,7 +23,7 @@ import 'htmx.org';
 
 import { UserLoginInput } from '@common/schemas/login_logout';
 import { server_call } from '@client/action';
-import { USER_LOGIN, HOME } from '@common/routes';
+import { ROUTE_USER_LOGIN, ROUTE_HOME } from '@common/routes';
 
 async function log_into_webpage(_event: any) {
 	// username box
@@ -49,7 +49,7 @@ async function log_into_webpage(_event: any) {
 
 	// "query" the server
 	const response = await server_call(
-		USER_LOGIN,
+		ROUTE_USER_LOGIN,
 		'POST',
 		JSON.stringify({ u: username, p: password } satisfies UserLoginInput)
 	);
@@ -66,7 +66,7 @@ async function log_into_webpage(_event: any) {
 	for (const c of cookies) {
 		document.cookie = c;
 	}
-	window.location.href = HOME;
+	window.location.href = ROUTE_HOME;
 }
 
 async function password_box_key_down(_event: any) {

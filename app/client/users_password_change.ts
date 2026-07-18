@@ -23,7 +23,7 @@ import 'htmx.org';
 
 import { UserPasswordChangeInput } from '@common/schemas/user';
 import { server_call } from '@client/action';
-import { USER_PASSWORD_CHANGE, ROOT } from '@common/routes';
+import { ROUTE_USER_PASSWORD_CHANGE, ROUTE_ROOT } from '@common/routes';
 
 async function button_submit_clicked() {
 	let box_old_password = document.getElementById('box_old_password') as HTMLInputElement;
@@ -36,7 +36,7 @@ async function button_submit_clicked() {
 	}
 
 	const response = await server_call(
-		USER_PASSWORD_CHANGE,
+		ROUTE_USER_PASSWORD_CHANGE,
 		'POST',
 		JSON.stringify({
 			old: box_old_password.value,
@@ -50,7 +50,7 @@ async function button_submit_clicked() {
 	}
 
 	// return to login page
-	window.location.href = ROOT;
+	window.location.href = ROUTE_ROOT;
 }
 
 window.onload = function () {

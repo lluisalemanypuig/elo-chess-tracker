@@ -23,7 +23,7 @@ import 'htmx.org';
 
 import { QueryUserRankingInput } from '@common/schemas/query_user';
 import { server_call } from '@client/action';
-import { QUERY_USER_RANKING } from '@common/routes';
+import { ROUTE_QUERY_USER_RANKING } from '@common/routes';
 
 async function fill_ranking(_event: any) {
 	const select_time_control = document.getElementById('select_time_control') as HTMLSelectElement;
@@ -41,7 +41,7 @@ async function fill_ranking(_event: any) {
 
 	// "query" the server
 	const response = await server_call(
-		QUERY_USER_RANKING,
+		ROUTE_QUERY_USER_RANKING,
 		'POST',
 		JSON.stringify({ tc_i: time_control_id } satisfies QueryUserRankingInput)
 	);

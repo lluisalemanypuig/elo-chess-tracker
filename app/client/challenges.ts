@@ -32,17 +32,17 @@ import {
 import { GameResult } from '@common/models/game';
 import { server_call } from '@client/action';
 import {
-	CHALLENGE_SEND,
-	CHALLENGE_ACCEPT,
-	CHALLENGE_DECLINE,
-	CHALLENGE_SET_RESULT,
-	CHALLENGE_AGREE,
-	CHALLENGE_DISAGREE,
-	QUERY_CHALLENGE_RECEIVED,
-	QUERY_CHALLENGE_SENT,
-	QUERY_CHALLENGE_PENDING_RESULT,
-	QUERY_CHALLENGE_CONFIRM_RESULT_OTHER,
-	QUERY_CHALLENGE_CONFIRM_RESULT_SELF
+	ROUTE_CHALLENGE_SEND,
+	ROUTE_CHALLENGE_ACCEPT,
+	ROUTE_CHALLENGE_DECLINE,
+	ROUTE_CHALLENGE_SET_RESULT,
+	ROUTE_CHALLENGE_AGREE,
+	ROUTE_CHALLENGE_DISAGREE,
+	ROUTE_QUERY_CHALLENGE_RECEIVED,
+	ROUTE_QUERY_CHALLENGE_SENT,
+	ROUTE_QUERY_CHALLENGE_PENDING_RESULT,
+	ROUTE_QUERY_CHALLENGE_CONFIRM_RESULT_OTHER,
+	ROUTE_QUERY_CHALLENGE_CONFIRM_RESULT_SELF
 } from '@common/routes';
 
 function create_label_text(text: string): HTMLLabelElement {
@@ -71,7 +71,7 @@ async function send_challenge_button_clicked(_event: any) {
 
 		// "query" the server
 		const response = await server_call(
-			CHALLENGE_SEND,
+			ROUTE_CHALLENGE_SEND,
 			'POST',
 			JSON.stringify({
 				to: random_user_id,
@@ -95,7 +95,7 @@ async function accept_challenge_button_clicked(event: any) {
 	let challenge_id = tag_clicked.id;
 
 	const response = await server_call(
-		CHALLENGE_ACCEPT,
+		ROUTE_CHALLENGE_ACCEPT,
 		'POST',
 		JSON.stringify({ challenge_id: challenge_id } satisfies ChallengeInputAccept)
 	);
@@ -112,7 +112,7 @@ async function decline_challenge_tag_clicked(event: any) {
 	let challenge_id = tag_clicked.id;
 
 	const response = await server_call(
-		CHALLENGE_DECLINE,
+		ROUTE_CHALLENGE_DECLINE,
 		'POST',
 		JSON.stringify({ challenge_id: challenge_id } satisfies ChallengeDeclineInput)
 	);
@@ -149,7 +149,7 @@ async function submit_result_challenge_button_clicked(event: any) {
 
 	// "query" the server
 	const response = await server_call(
-		CHALLENGE_SET_RESULT,
+		ROUTE_CHALLENGE_SET_RESULT,
 		'POST',
 		JSON.stringify({
 			challenge_id: challenge_id,
@@ -172,7 +172,7 @@ async function agree_challenge_result_button_clicked(event: any) {
 	let challenge_id = tag_clicked.id;
 
 	const response = await server_call(
-		CHALLENGE_AGREE,
+		ROUTE_CHALLENGE_AGREE,
 		'POST',
 		JSON.stringify({ challenge_id: challenge_id } satisfies ChallengeAgreeResultInput)
 	);
@@ -191,7 +191,7 @@ async function disagree_challenge_result_button_clicked(event: any) {
 	let challenge_id = tag_clicked.id;
 
 	const response = await server_call(
-		CHALLENGE_DISAGREE,
+		ROUTE_CHALLENGE_DISAGREE,
 		'POST',
 		JSON.stringify({ challenge_id: challenge_id } satisfies ChallengeDisagreeResultInput)
 	);
@@ -205,7 +205,7 @@ async function disagree_challenge_result_button_clicked(event: any) {
 }
 
 async function fill_challenges_received() {
-	const response = await server_call(QUERY_CHALLENGE_RECEIVED, 'GET', '');
+	const response = await server_call(ROUTE_QUERY_CHALLENGE_RECEIVED, 'GET', '');
 	if (response.status >= 400) {
 		const message = await response.text();
 		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
@@ -295,7 +295,7 @@ async function fill_challenges_received() {
 }
 
 async function fill_challenges_sent() {
-	const response = await server_call(QUERY_CHALLENGE_SENT, 'GET', '');
+	const response = await server_call(ROUTE_QUERY_CHALLENGE_SENT, 'GET', '');
 	if (response.status >= 400) {
 		const message = await response.text();
 		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
@@ -343,7 +343,7 @@ async function fill_challenges_sent() {
 }
 
 async function fill_challenges_pending_result() {
-	const response_pending = await server_call(QUERY_CHALLENGE_PENDING_RESULT, 'GET', '');
+	const response_pending = await server_call(ROUTE_QUERY_CHALLENGE_PENDING_RESULT, 'GET', '');
 	if (response_pending.status >= 400) {
 		const message = await response_pending.text();
 		alert(`${response_pending.status} -- ${response_pending.statusText}\nMessage: '${message}'`);
@@ -484,7 +484,7 @@ async function fill_challenges_pending_result() {
 }
 
 async function fill_challenges_confirm_result_other() {
-	const response = await server_call(QUERY_CHALLENGE_CONFIRM_RESULT_OTHER, 'GET', '');
+	const response = await server_call(ROUTE_QUERY_CHALLENGE_CONFIRM_RESULT_OTHER, 'GET', '');
 	if (response.status >= 400) {
 		const message = await response.text();
 		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
@@ -537,7 +537,7 @@ async function fill_challenges_confirm_result_other() {
 }
 
 async function fill_challenges_confirm_result_self() {
-	const response = await server_call(QUERY_CHALLENGE_CONFIRM_RESULT_SELF, 'GET', '');
+	const response = await server_call(ROUTE_QUERY_CHALLENGE_CONFIRM_RESULT_SELF, 'GET', '');
 	if (response.status >= 400) {
 		const message = await response.text();
 		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);

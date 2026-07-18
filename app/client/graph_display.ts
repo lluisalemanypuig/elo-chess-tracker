@@ -22,7 +22,7 @@ Full source code of elo-chess-tracker:
 import 'htmx.org';
 
 import { server_call } from '@client/action';
-import { QUERY_GRAPH_FULL, QUERY_GRAPH_OWN } from '@common/routes';
+import { ROUTE_QUERY_GRAPH_FULL, ROUTE_QUERY_GRAPH_OWN } from '@common/routes';
 import { EdgeCurvedArrowProgram } from '@sigma/edge-curve';
 import Graph from 'graphology';
 import Sigma from 'sigma';
@@ -86,10 +86,10 @@ async function load_graph() {
 	const val = document.getElementById('graph-viewer')?.getAttribute('value');
 	const query_to_server: string = (() => {
 		if (val == 'full') {
-			return QUERY_GRAPH_FULL;
+			return ROUTE_QUERY_GRAPH_FULL;
 		}
 		if (val == 'own') {
-			return QUERY_GRAPH_OWN;
+			return ROUTE_QUERY_GRAPH_OWN;
 		}
 		return '?';
 	})();

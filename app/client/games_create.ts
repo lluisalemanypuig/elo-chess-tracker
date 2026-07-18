@@ -25,14 +25,14 @@ import { result_from_text_to_value } from '@common/models/game';
 import { GameCreateInput } from '@common/schemas/games';
 import { isDefined } from '@common/utils/is_defined';
 import { server_call } from '@client/action';
-import { QUERY_HTML_USER_LIST, GAME_CREATE } from '@common/routes';
+import { ROUTE_QUERY_HTML_USER_LIST, GAME_CREATE } from '@common/routes';
 
 async function initialize_window_client_games_create() {
 	let datalist_white_users = document.getElementById('datalist_white_users') as HTMLDataListElement;
 	let datalist_black_users = document.getElementById('datalist_black_users') as HTMLDataListElement;
 
 	// query the server for the list of users
-	const response = await server_call(QUERY_HTML_USER_LIST, 'GET', '');
+	const response = await server_call(ROUTE_QUERY_HTML_USER_LIST, 'GET', '');
 	const data = await response.text();
 	if (response.status >= 400) {
 		alert(`${response.status} -- ${response.statusText}\nMessage: '${data}'`);

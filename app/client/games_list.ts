@@ -27,11 +27,11 @@ import { QueryGamesListAllInput, QueryGamesListOwnInput } from '@common/schemas/
 import { result_from_text_to_value } from '@common/models/game';
 import { server_call } from '@client/action';
 import {
-	GAME_EDIT_RESULT,
-	GAME_DELETE,
-	GAME_EDIT_TITLE,
-	QUERY_GAME_LIST_ALL,
-	QUERY_GAME_LIST_OWN
+	ROUTE_GAME_EDIT_RESULT,
+	ROUTE_GAME_DELETE,
+	ROUTE_GAME_EDIT_TITLE,
+	ROUTE_QUERY_GAME_LIST_ALL,
+	ROUTE_QUERY_GAME_LIST_OWN
 } from '@common/routes';
 
 function new_text_cell(text: string) {
@@ -72,7 +72,7 @@ async function select_result_game_on_change(event: any) {
 	}
 
 	const response = await server_call(
-		GAME_EDIT_RESULT,
+		ROUTE_GAME_EDIT_RESULT,
 		'POST',
 		JSON.stringify({
 			id: game_id,
@@ -122,7 +122,11 @@ async function button_delete_game_on_click(event: any) {
 	let previous_time_control_id = select_time_control.options[select_time_control.selectedIndex].value;
 
 	const game_id = button.getAttribute('game_id');
-	const response = await server_call(GAME_DELETE, 'POST', JSON.stringify({ id: game_id } satisfies GameDeleteInput));
+	const response = await server_call(
+		ROUTE_GAME_DELETE,
+		'POST',
+		JSON.stringify({ id: game_id } satisfies GameDeleteInput)
+	);
 
 	if (response.status >= 400) {
 		const message = await response.text();
@@ -160,7 +164,7 @@ async function trigger_edit_game_title(event: Event) {
 	}
 
 	const response = await server_call(
-		GAME_EDIT_TITLE,
+		ROUTE_GAME_EDIT_TITLE,
 		'POST',
 		JSON.stringify({ id: game_id, title: new_title } satisfies GameEditTitleInput)
 	);
@@ -210,13 +214,13 @@ async function fill_games_list_time_control(time_control_id: string) {
 	let response;
 	if (val == 'all') {
 		response = await server_call(
-			QUERY_GAME_LIST_ALL,
+			ROUTE_QUERY_GAME_LIST_ALL,
 			'POST',
 			JSON.stringify({ tc_i: time_control_id } satisfies QueryGamesListAllInput)
 		);
 	} else if (val == 'own') {
 		response = await server_call(
-			QUERY_GAME_LIST_OWN,
+			ROUTE_QUERY_GAME_LIST_OWN,
 			'POST',
 			JSON.stringify({ tc_i: time_control_id } satisfies QueryGamesListOwnInput)
 		);

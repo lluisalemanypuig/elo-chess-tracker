@@ -25,7 +25,7 @@ import { server_call } from '@client/action';
 import { isDefined } from '@common/utils/is_defined';
 import { UserRole, all_user_roles, array_string_to_roles, user_role_to_string } from '@common/models/user_role';
 import { UserCreateInput } from '@common/schemas/user';
-import { USER_CREATE, HOME } from '@common/routes';
+import { ROUTE_USER_CREATE, ROUTE_HOME } from '@common/routes';
 
 async function submit_new_user_clicked(_event: any) {
 	// username box
@@ -105,7 +105,7 @@ async function submit_new_user_clicked(_event: any) {
 	}
 
 	const response = await server_call(
-		USER_CREATE,
+		ROUTE_USER_CREATE,
 		'POST',
 		JSON.stringify({
 			u: username,
@@ -121,7 +121,7 @@ async function submit_new_user_clicked(_event: any) {
 		return;
 	}
 
-	window.location.href = HOME;
+	window.location.href = ROUTE_HOME;
 }
 
 window.onload = function () {
