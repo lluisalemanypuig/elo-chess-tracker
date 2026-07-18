@@ -29,7 +29,6 @@ import { Request, Response } from 'express';
 
 import { log_now } from '@server/utils/time';
 import { is_user_logged_in } from '@server/managers/session';
-import { ROUTE_QUERY_GRAPH_OWN, ROUTE_QUERY_GRAPH_FULL } from '@common/routes';
 import { User } from '@common/models/user';
 import { GraphsManager } from '@server/managers/graphs_manager';
 import { TimeControlID } from '@common/models/time_control';
@@ -41,6 +40,7 @@ import { GRAPHS_SEE_USER } from '@common/models/user_action';
 import { AuthenticationInputSchema } from '@common/schemas/authentication';
 import { isDefined } from '@common/utils/is_defined';
 import { QueryGraphInputSchema } from '@common/schemas/query_graphs';
+import { Routes } from '@common/routes';
 
 class NodeWeight {
 	rating: number = 0;
@@ -221,7 +221,7 @@ function retrieve_graph_full(querier: User, time_control_id: TimeControlID): [No
 }
 
 export async function post_query_graph_own(req: Request, res: Response) {
-	debug(log_now(), `POST ${ROUTE_QUERY_GRAPH_OWN}...`);
+	debug(log_now(), `POST ${Routes.QUERY_GRAPH_OWN}...`);
 
 	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
@@ -257,7 +257,7 @@ export async function post_query_graph_own(req: Request, res: Response) {
 }
 
 export async function post_query_graph_full(req: Request, res: Response) {
-	debug(log_now(), `POST ${ROUTE_QUERY_GRAPH_FULL}...`);
+	debug(log_now(), `POST ${Routes.QUERY_GRAPH_FULL}...`);
 
 	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {

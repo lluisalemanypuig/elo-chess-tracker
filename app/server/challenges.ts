@@ -37,15 +37,7 @@ import {
 	challenge_unset_result,
 	challenge_agree_result
 } from '@server/managers/challenges';
-import {
-	ROUTE_PAGE_CHALLENGE,
-	ROUTE_CHALLENGE_SEND,
-	ROUTE_CHALLENGE_ACCEPT,
-	ROUTE_CHALLENGE_DECLINE,
-	ROUTE_CHALLENGE_SET_RESULT,
-	ROUTE_CHALLENGE_AGREE,
-	ROUTE_CHALLENGE_DISAGREE
-} from '@common/routes';
+
 import { ChallengeID } from '@common/models/challenge';
 import { USER_CHALLENGE } from '@common/models/user_action';
 import { can_user_send_challenge } from '@server/managers/user_relationships';
@@ -65,9 +57,10 @@ import {
 	ChallengeDisagreeResultInputSchema
 } from '@common/schemas/challenges';
 import { isDefined } from '@common/utils/is_defined';
+import { Routes } from '@common/routes';
 
 export async function get_page_challenge(req: Request, res: Response) {
-	debug(log_now(), `GET ${ROUTE_PAGE_CHALLENGE}...`);
+	debug(log_now(), `GET ${Routes.PAGE_CHALLENGE}...`);
 
 	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
@@ -92,7 +85,7 @@ export async function get_page_challenge(req: Request, res: Response) {
 }
 
 export async function post_challenge_send(req: Request, res: Response) {
-	debug(log_now(), `POST ${ROUTE_CHALLENGE_SEND}...`);
+	debug(log_now(), `POST ${Routes.CHALLENGE_SEND}...`);
 
 	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
@@ -176,7 +169,7 @@ export async function post_challenge_send(req: Request, res: Response) {
 }
 
 export async function post_challenge_accept(req: Request, res: Response) {
-	debug(log_now(), `POST ${ROUTE_CHALLENGE_ACCEPT}...`);
+	debug(log_now(), `POST ${Routes.CHALLENGE_ACCEPT}...`);
 
 	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
@@ -222,7 +215,7 @@ export async function post_challenge_accept(req: Request, res: Response) {
 }
 
 export async function post_challenge_decline(req: Request, res: Response) {
-	debug(log_now(), `POST ${ROUTE_CHALLENGE_DECLINE}...`);
+	debug(log_now(), `POST ${Routes.CHALLENGE_DECLINE}...`);
 
 	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
@@ -268,7 +261,7 @@ export async function post_challenge_decline(req: Request, res: Response) {
 }
 
 export async function post_challenge_set_result(req: Request, res: Response) {
-	debug(log_now(), `POST ${ROUTE_CHALLENGE_SET_RESULT}...`);
+	debug(log_now(), `POST ${Routes.CHALLENGE_SET_RESULT}...`);
 
 	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
@@ -358,7 +351,7 @@ export async function post_challenge_set_result(req: Request, res: Response) {
 }
 
 export async function post_challenge_agree(req: Request, res: Response) {
-	debug(log_now(), `POST ${ROUTE_CHALLENGE_AGREE}...`);
+	debug(log_now(), `POST ${Routes.CHALLENGE_AGREE}...`);
 
 	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
@@ -395,7 +388,7 @@ export async function post_challenge_agree(req: Request, res: Response) {
 }
 
 export async function post_challenge_disagree(req: Request, res: Response) {
-	debug(log_now(), `POST ${ROUTE_CHALLENGE_DISAGREE}...`);
+	debug(log_now(), `POST ${Routes.CHALLENGE_DISAGREE}...`);
 
 	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {

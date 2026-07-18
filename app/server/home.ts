@@ -30,14 +30,14 @@ import { Request, Response } from 'express';
 import { log_now } from '@server/utils/time';
 import { is_user_logged_in } from '@server/managers/session';
 import { ConfigurationManager } from '@server/managers/configuration_manager';
-import { ROUTE_HOME } from '@common/routes';
 import { get_execution_directory } from '@server/managers/environment_manager';
 import { AuthenticationInputSchema } from '@common/schemas/authentication';
 import { isDefined } from '@common/utils/is_defined';
+import { Routes } from '@common/routes';
 
 export async function get_page_login(req: Request, res: Response) {
 	let send_home: boolean;
-	debug(log_now(), `GET ${ROUTE_HOME}`);
+	debug(log_now(), `GET ${Routes.HOME}`);
 
 	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
@@ -77,7 +77,7 @@ export async function get_page_login(req: Request, res: Response) {
 }
 
 export async function get_page_home(req: Request, res: Response) {
-	debug(log_now(), `GET ${ROUTE_HOME}`);
+	debug(log_now(), `GET ${Routes.HOME}`);
 
 	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {

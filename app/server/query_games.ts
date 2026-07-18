@@ -32,7 +32,6 @@ import fs from 'fs';
 
 import { DateStringShort, log_now } from '@server/utils/time';
 import { is_user_logged_in } from '@server/managers/session';
-import { ROUTE_QUERY_GAME_LIST_OWN, ROUTE_QUERY_GAME_LIST_ALL } from '@common/routes';
 import { GameNumber, User } from '@common/models/user';
 import { Game } from '@common/models/game';
 import { RatingSystemManager } from '@server/managers/rating_system_manager';
@@ -47,6 +46,7 @@ import { read_directory } from '@server/utils/read_directory';
 import { isDefined } from '@common/utils/is_defined';
 import { AuthenticationInputSchema } from '@common/schemas/authentication';
 import { QueryGamesListAllInputSchema, QueryGamesListOwnInputSchema } from '@common/schemas/query_games';
+import { Routes } from '@common/routes';
 
 function increment(g: Game): any {
 	const [white_after, black_after] = RatingSystemManager.get_instance().apply_rating_function(g);
@@ -153,7 +153,7 @@ function filter_game_list(
 }
 
 export async function post_query_game_list_own(req: Request, res: Response) {
-	debug(log_now(), `POST ${ROUTE_QUERY_GAME_LIST_OWN}...`);
+	debug(log_now(), `POST ${Routes.QUERY_GAME_LIST_OWN}...`);
 
 	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
@@ -255,7 +255,7 @@ function merge_by_date(v1: any[], v2: any[]): any[] {
 }
 
 export async function post_query_game_list_all(req: Request, res: Response) {
-	debug(log_now(), `POST ${ROUTE_QUERY_GAME_LIST_ALL}...`);
+	debug(log_now(), `POST ${Routes.QUERY_GAME_LIST_ALL}...`);
 
 	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {

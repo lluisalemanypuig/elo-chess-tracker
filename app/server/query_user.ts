@@ -28,13 +28,6 @@ const debug = Debug('ELO_CHESS_TRACKER:server_query_users');
 import { Request, Response } from 'express';
 
 import { log_now } from '@server/utils/time';
-import {
-	ROUTE_QUERY_USER_LIST,
-	ROUTE_QUERY_HTML_USER_LIST,
-	ROUTE_QUERY_USER_HOME,
-	ROUTE_QUERY_USER_EDIT,
-	ROUTE_QUERY_USER_RANKING
-} from '@common/routes';
 import { user_get_all_name_randid } from '@server/managers/users';
 import { is_user_logged_in } from '@server/managers/session';
 import { User } from '@common/models/user';
@@ -43,10 +36,11 @@ import { TimeControlRating } from '@common/models/time_control_rating';
 import { AuthenticationInputSchema } from '@common/schemas/authentication';
 import { isDefined } from '@common/utils/is_defined';
 import { QueryUserEditInputSchema, QueryUserRankingInputSchema } from '@common/schemas/query_user';
+import { Routes } from '@common/routes';
 
 /// Returns the list of user full names and usernames sorted by name
 export async function get_query_user_list(req: Request, res: Response) {
-	debug(log_now(), `GET ${ROUTE_QUERY_USER_LIST}...`);
+	debug(log_now(), `GET ${Routes.QUERY_USER_LIST}...`);
 
 	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
@@ -72,7 +66,7 @@ export async function get_query_user_list(req: Request, res: Response) {
 }
 
 export async function get_query_html_user_list(req: Request, res: Response) {
-	debug(log_now(), `GET ${ROUTE_QUERY_HTML_USER_LIST}...`);
+	debug(log_now(), `GET ${Routes.QUERY_HTML_USER_LIST}...`);
 
 	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
@@ -102,7 +96,7 @@ export async function get_query_html_user_list(req: Request, res: Response) {
 }
 
 export async function get_query_user_home(req: Request, res: Response) {
-	debug(log_now(), `GET ${ROUTE_QUERY_USER_HOME}...`);
+	debug(log_now(), `GET ${Routes.QUERY_USER_HOME}...`);
 
 	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
@@ -135,7 +129,7 @@ export async function get_query_user_home(req: Request, res: Response) {
 }
 
 export async function post_query_user_edit(req: Request, res: Response) {
-	debug(log_now(), `POST ${ROUTE_QUERY_USER_EDIT}...`);
+	debug(log_now(), `POST ${Routes.QUERY_USER_EDIT}...`);
 
 	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
@@ -179,7 +173,7 @@ export async function post_query_user_edit(req: Request, res: Response) {
 }
 
 export async function post_query_user_ranking(req: Request, res: Response) {
-	debug(log_now(), `POST ${ROUTE_QUERY_USER_RANKING}...`);
+	debug(log_now(), `POST ${Routes.QUERY_USER_RANKING}...`);
 
 	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {

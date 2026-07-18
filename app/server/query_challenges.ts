@@ -29,13 +29,6 @@ import { Request, Response } from 'express';
 
 import { log_now } from '@server/utils/time';
 import { is_user_logged_in } from '@server/managers/session';
-import {
-	ROUTE_QUERY_CHALLENGE_RECEIVED,
-	ROUTE_QUERY_CHALLENGE_SENT,
-	ROUTE_QUERY_CHALLENGE_PENDING_RESULT,
-	ROUTE_QUERY_CHALLENGE_CONFIRM_RESULT_OTHER,
-	ROUTE_QUERY_CHALLENGE_CONFIRM_RESULT_SELF
-} from '@common/routes';
 import { User } from '@common/models/user';
 import { challenge_set_retrieve } from '@server/managers/challenges';
 import { Challenge } from '@common/models/challenge';
@@ -43,10 +36,11 @@ import { UsersManager } from '@server/managers/users_manager';
 import { can_user_decline_challenge } from '@server/managers/user_relationships';
 import { AuthenticationInputSchema } from '@common/schemas/authentication';
 import { isDefined } from '@common/utils/is_defined';
+import { Routes } from '@common/routes';
 
 /// Query the server for challenges received sento to me by other users
 export async function get_query_challenge_received(req: Request, res: Response) {
-	debug(log_now(), `GET ${ROUTE_QUERY_CHALLENGE_RECEIVED}...`);
+	debug(log_now(), `GET ${Routes.QUERY_CHALLENGE_RECEIVED}...`);
 
 	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
@@ -105,7 +99,7 @@ export async function get_query_challenge_received(req: Request, res: Response) 
 
 /// Query the server for challenges sent to other users by me
 export async function get_query_challenge_sent(req: Request, res: Response) {
-	debug(log_now(), `GET ${ROUTE_QUERY_CHALLENGE_SENT}...`);
+	debug(log_now(), `GET ${Routes.QUERY_CHALLENGE_SENT}...`);
 
 	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
@@ -168,7 +162,7 @@ export async function get_query_challenge_sent(req: Request, res: Response) {
 
 /// Query the server for accepted challenges whose result has not been set yet.
 export async function get_query_challenge_pending_result(req: Request, res: Response) {
-	debug(log_now(), `GET ${ROUTE_QUERY_CHALLENGE_PENDING_RESULT}...`);
+	debug(log_now(), `GET ${Routes.QUERY_CHALLENGE_PENDING_RESULT}...`);
 
 	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
@@ -248,7 +242,7 @@ export async function get_query_challenge_pending_result(req: Request, res: Resp
 
 /// Query the server for accepted challenges whose result has been set by me
 export async function get_query_challenge_confirm_result_other(req: Request, res: Response) {
-	debug(log_now(), `GET ${ROUTE_QUERY_CHALLENGE_CONFIRM_RESULT_OTHER}...`);
+	debug(log_now(), `GET ${Routes.QUERY_CHALLENGE_CONFIRM_RESULT_OTHER}...`);
 
 	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
@@ -341,7 +335,7 @@ export async function get_query_challenge_confirm_result_other(req: Request, res
 
 /// Query the server for accepted challenges whose result has been set by my opponent
 export async function get_query_challenge_confirm_result_self(req: Request, res: Response) {
-	debug(log_now(), `GET ${ROUTE_QUERY_CHALLENGE_CONFIRM_RESULT_SELF}...`);
+	debug(log_now(), `GET ${Routes.QUERY_CHALLENGE_CONFIRM_RESULT_SELF}...`);
 
 	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {

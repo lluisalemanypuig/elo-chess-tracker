@@ -29,7 +29,6 @@ import { Request, Response } from 'express';
 
 import { log_now } from '@server/utils/time';
 import { is_user_logged_in } from '@server/managers/session';
-import { ROUTE_PAGE_USER_EDIT, ROUTE_USER_EDIT } from '@common/routes';
 import { user_rename_and_reassign_roles } from '@server/managers/users';
 import { USER_ROLE_ASSIGN_ID, USER_EDIT, get_role_action_name } from '@common/models/user_action';
 import { can_user_edit } from '@server/managers/user_relationships';
@@ -39,9 +38,10 @@ import { get_execution_directory } from '@server/managers/environment_manager';
 import { AuthenticationInputSchema } from '@common/schemas/authentication';
 import { isDefined } from '@common/utils/is_defined';
 import { UserEditInputSchema } from '@common/schemas/user';
+import { Routes } from '@common/routes';
 
 export async function get_page_user_edit(req: Request, res: Response) {
-	debug(log_now(), `GET ${ROUTE_PAGE_USER_EDIT}...`);
+	debug(log_now(), `GET ${Routes.PAGE_USER_EDIT}...`);
 
 	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
@@ -73,7 +73,7 @@ export async function get_page_user_edit(req: Request, res: Response) {
 }
 
 export async function post_user_edit(req: Request, res: Response) {
-	debug(log_now(), `POST ${ROUTE_USER_EDIT}...`);
+	debug(log_now(), `POST ${Routes.USER_EDIT}...`);
 
 	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {

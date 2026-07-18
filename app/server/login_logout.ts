@@ -30,7 +30,6 @@ import { Request, Response } from 'express';
 import { log_now } from '@server/utils/time';
 import { is_password_of_user_correct } from '@server/utils/encrypt';
 import { empty_session_id_cookie, make_session_id_cookie } from '@server/utils/cookies';
-import { ROUTE_USER_LOGIN, ROUTE_USER_LOGOUT } from '@common/routes';
 import { session_id_add, session_id_delete } from '@server/managers/session';
 import { SessionIDManager } from '@server/managers/session_id_manager';
 import { SessionIDTokenFieldName, SessionIDUsernameFieldName } from '@common/models/session_id';
@@ -39,9 +38,10 @@ import { UsersManager } from '@server/managers/users_manager';
 import { AuthenticationInputSchema } from '@common/schemas/authentication';
 import { isDefined } from '@common/utils/is_defined';
 import { UserLoginInputSchema } from '@common/schemas/login_logout';
+import { Routes } from '@common/routes';
 
 export async function post_user_login(req: Request, res: Response) {
-	debug(log_now(), `POST ${ROUTE_USER_LOGIN}`);
+	debug(log_now(), `POST ${Routes.USER_LOGIN}`);
 
 	const login_parse = UserLoginInputSchema.safeParse(req.body);
 	if (!login_parse.success) {
@@ -92,7 +92,7 @@ export async function post_user_login(req: Request, res: Response) {
 }
 
 export async function post_user_logout(req: Request, res: Response) {
-	debug(log_now(), `POST ${ROUTE_USER_LOGOUT}`);
+	debug(log_now(), `POST ${Routes.USER_LOGOUT}`);
 
 	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {

@@ -31,15 +31,15 @@ import { log_now } from '@server/utils/time';
 import { is_user_logged_in } from '@server/managers/session';
 import { GRAPHS_SEE_USER } from '@common/models/user_action';
 import { ADMIN } from '@common/models/user_role';
-import { ROUTE_PAGE_GRAPH_OWN, ROUTE_PAGE_GRAPH_FULL, ROUTE_RECALCULATE_GRAPHS } from '@common/routes';
 import { recalculate_all_graphs } from '@server/managers/graphs';
 import { ConfigurationManager } from '@server/managers/configuration_manager';
 import { get_execution_directory } from '@server/managers/environment_manager';
 import { AuthenticationInputSchema } from '@common/schemas/authentication';
 import { isDefined } from '@common/utils/is_defined';
+import { Routes } from '@common/routes';
 
 export async function get_page_graph_own(req: Request, res: Response) {
-	debug(log_now(), `GET ${ROUTE_PAGE_GRAPH_OWN}...`);
+	debug(log_now(), `GET ${Routes.PAGE_GRAPH_OWN}...`);
 
 	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
@@ -64,7 +64,7 @@ export async function get_page_graph_own(req: Request, res: Response) {
 }
 
 export async function get_page_graph_full(req: Request, res: Response) {
-	debug(log_now(), `GET ${ROUTE_PAGE_GRAPH_FULL}...`);
+	debug(log_now(), `GET ${Routes.PAGE_GRAPH_FULL}...`);
 
 	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
@@ -96,7 +96,7 @@ export async function get_page_graph_full(req: Request, res: Response) {
 }
 
 export async function post_recalculate_graphs(req: Request, res: Response) {
-	debug(log_now(), `POST ${ROUTE_RECALCULATE_GRAPHS}...`);
+	debug(log_now(), `POST ${Routes.RECALCULATE_GRAPHS}...`);
 
 	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {

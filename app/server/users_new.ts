@@ -29,7 +29,6 @@ import { Request, Response } from 'express';
 
 import { log_now } from '@server/utils/time';
 import { is_user_logged_in } from '@server/managers/session';
-import { ROUTE_PAGE_USER_CREATE, ROUTE_USER_CREATE } from '@common/routes';
 import { user_add_new } from '@server/managers/users';
 import { is_role_string_correct } from '@common/models/user_role';
 import { CREATE_USER, USER_ROLE_ASSIGN, get_role_action_name, USER_ROLE_ASSIGN_ID } from '@common/models/user_action';
@@ -39,9 +38,10 @@ import { get_execution_directory } from '@server/managers/environment_manager';
 import { AuthenticationInputSchema } from '@common/schemas/authentication';
 import { isDefined } from '@common/utils/is_defined';
 import { UserCreateInputSchema } from '@common/schemas/user';
+import { Routes } from '@common/routes';
 
 export async function get_page_user_create(req: Request, res: Response) {
-	debug(log_now(), `GET ${ROUTE_PAGE_USER_CREATE}...`);
+	debug(log_now(), `GET ${Routes.PAGE_USER_CREATE}...`);
 
 	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
@@ -78,7 +78,7 @@ export async function get_page_user_create(req: Request, res: Response) {
 }
 
 export async function post_user_create(req: Request, res: Response) {
-	debug(log_now(), `POST ${ROUTE_USER_CREATE}`);
+	debug(log_now(), `POST ${Routes.USER_CREATE}`);
 
 	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
 	if (!session_parse.success) {
