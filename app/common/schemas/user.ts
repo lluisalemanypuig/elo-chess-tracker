@@ -24,7 +24,7 @@ Contact:
 */
 
 import { z } from 'zod';
-import { UserRoleArraySchema } from '../models/user_role';
+import { UserRoleArraySchema } from '@common/models/user_role';
 
 export const UserCreateInputSchema = z.object({
 	u: z.string(),

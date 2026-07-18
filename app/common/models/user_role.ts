@@ -24,7 +24,7 @@ Contact:
 */
 
 import { z } from 'zod';
-import { isDefined } from '../utils/is_defined';
+import { isDefined } from '@common/utils/is_defined';
 
 /// Administrator
 export const ADMIN = 'admin';

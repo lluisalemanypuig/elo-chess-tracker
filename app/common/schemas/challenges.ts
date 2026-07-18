@@ -24,7 +24,7 @@ Contact:
 */
 
 import { z } from 'zod';
-import { GameResultSchema } from '../models/game';
+import { GameResultSchema } from '@common/models/game';
 
 export const ChallengeSendInputSchema = z.object({
 	to: z.number().gte(0),
