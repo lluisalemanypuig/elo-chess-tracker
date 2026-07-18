@@ -31,7 +31,7 @@ async function initialize_window_client_games_create() {
 	let datalist_black_users = document.getElementById('datalist_black_users') as HTMLDataListElement;
 
 	// query the server for the list of users
-	const response = await server_call(Routes.QUERY_HTML_USER_LIST, 'GET', {});
+	const response = await server_call(Routes.QUERY_HTML_USER_LIST, {});
 	const data = await response.text();
 	if (response.status >= 400) {
 		alert(`${response.status} -- ${response.statusText}\nMessage: '${data}'`);
@@ -86,7 +86,7 @@ async function submit_new_game(_event: any) {
 
 	const rand_sec = `${Math.floor(Math.random() * 59)}`;
 	const rand_milli = `${Math.floor(Math.random() * 999)}`;
-	const response = await server_call(Routes.GAME_CREATE, 'POST', {
+	const response = await server_call(Routes.GAME_CREATE, {
 		title: game_title,
 		w: Number(white),
 		b: Number(black),

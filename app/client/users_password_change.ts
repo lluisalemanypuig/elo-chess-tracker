@@ -34,7 +34,7 @@ async function button_submit_clicked() {
 		return;
 	}
 
-	const response = await server_call(Routes.USER_PASSWORD_CHANGE, 'POST', {
+	const response = await server_call(Routes.USER_PASSWORD_CHANGE, {
 		old: box_old_password.value,
 		new: box_new_password.value
 	});

@@ -63,7 +63,7 @@ async function select_result_game_on_change(event: any) {
 		return;
 	}
 
-	const response = await server_call(Routes.GAME_EDIT_RESULT, 'POST', {
+	const response = await server_call(Routes.GAME_EDIT_RESULT, {
 		id: game_id,
 		new_result: new_result
 	});
@@ -110,7 +110,7 @@ async function button_delete_game_on_click(event: any) {
 	let previous_time_control_id = select_time_control.options[select_time_control.selectedIndex].value;
 
 	const game_id = button.getAttribute('game_id');
-	const response = await server_call(Routes.GAME_DELETE, 'POST', { id: game_id });
+	const response = await server_call(Routes.GAME_DELETE, { id: game_id });
 
 	if (response.status >= 400) {
 		const message = await response.text();
@@ -147,7 +147,7 @@ async function trigger_edit_game_title(event: Event) {
 		return;
 	}
 
-	const response = await server_call(Routes.GAME_EDIT_TITLE, 'POST', { id: game_id, title: new_title });
+	const response = await server_call(Routes.GAME_EDIT_TITLE, { id: game_id, title: new_title });
 
 	if (response.status >= 400) {
 		const message = await response.text();
@@ -193,9 +193,9 @@ async function fill_games_list_time_control(time_control_id: string) {
 
 	let response;
 	if (val == 'all') {
-		response = await server_call(Routes.QUERY_GAME_LIST_ALL, 'POST', { tc_i: time_control_id });
+		response = await server_call(Routes.QUERY_GAME_LIST_ALL, { tc_i: time_control_id });
 	} else if (val == 'own') {
-		response = await server_call(Routes.QUERY_GAME_LIST_OWN, 'POST', { tc_i: time_control_id });
+		response = await server_call(Routes.QUERY_GAME_LIST_OWN, { tc_i: time_control_id });
 	} else {
 		console.log(`Wrong value for list '${val}'.`);
 		return;

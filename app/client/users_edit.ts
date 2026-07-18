@@ -41,7 +41,7 @@ async function user_was_changed(_event: any) {
 
 	if (username_option != null) {
 		const user_id = (username_option as HTMLOptionElement).id;
-		const response = await server_call(Routes.QUERY_USER_EDIT, 'POST', { u: Number(user_id) });
+		const response = await server_call(Routes.QUERY_USER_EDIT, { u: Number(user_id) });
 		if (response.status >= 400) {
 			const message = await response.text();
 			alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
@@ -84,7 +84,7 @@ async function submit_was_clicked(_event: any) {
 		return;
 	}
 
-	const response = await server_call(Routes.USER_EDIT, 'POST', {
+	const response = await server_call(Routes.USER_EDIT, {
 		u: Number(user_rid),
 		f: first_name,
 		l: last_name,

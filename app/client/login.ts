@@ -47,7 +47,7 @@ async function log_into_webpage(_event: any) {
 	}
 
 	// "query" the server
-	const response = await server_call(Routes.USER_LOGIN, 'POST', { u: username, p: password });
+	const response = await server_call(Routes.USER_LOGIN, { u: username, p: password });
 	if (response.status >= 400) {
 		const message = await response.text();
 		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);

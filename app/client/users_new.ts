@@ -103,7 +103,7 @@ async function submit_new_user_clicked(_event: any) {
 		return;
 	}
 
-	const response = await server_call(Routes.USER_CREATE, 'POST', {
+	const response = await server_call(Routes.USER_CREATE, {
 		u: username,
 		fn: firstname,
 		ln: lastname,

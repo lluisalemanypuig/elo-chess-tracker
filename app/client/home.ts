@@ -28,7 +28,7 @@ import { Routes } from '@common/routes';
 
 export async function logout_link_clicked(_event: any) {
 	// "query" the server
-	const response = await server_call(Routes.USER_LOGOUT, 'POST', {});
+	const response = await server_call(Routes.USER_LOGOUT, {});
 
 	const data = await response.json();
 	const cookies = data['cookies'];
@@ -78,7 +78,7 @@ function fill_action_links(user_actions: string[], user_roles: string[]) {
 		recalculate_ratings_link.id = 'recalculate-ratings-link';
 		recalculate_ratings_link.textContent = 'Recalculate ratings';
 		recalculate_ratings_link.onclick = async function () {
-			const response = await server_call(Routes.RECALCULATE_RATINGS, 'POST', {});
+			const response = await server_call(Routes.RECALCULATE_RATINGS, {});
 			if (response.status >= 400) {
 				const message = await response.text();
 				alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
@@ -91,7 +91,7 @@ function fill_action_links(user_actions: string[], user_roles: string[]) {
 		recalculate_graphs_link.id = 'recalculate-graphs';
 		recalculate_graphs_link.textContent = 'Recalculate graphs';
 		recalculate_graphs_link.onclick = async function () {
-			const response = await server_call(Routes.RECALCULATE_GRAPHS, 'POST', {});
+			const response = await server_call(Routes.RECALCULATE_GRAPHS, {});
 			if (response.status >= 400) {
 				const message = await response.text();
 				alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
@@ -104,7 +104,7 @@ function fill_action_links(user_actions: string[], user_roles: string[]) {
 
 async function fill_own_info() {
 	// "query" the server
-	const response = await server_call(Routes.QUERY_USER_HOME, 'GET', {});
+	const response = await server_call(Routes.QUERY_USER_HOME, {});
 	if (response.status >= 400) {
 		const message = await response.text();
 		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);

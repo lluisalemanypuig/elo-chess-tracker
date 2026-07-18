@@ -39,7 +39,7 @@ async function fill_ranking(_event: any) {
 	};
 
 	// "query" the server
-	const response = await server_call(Routes.QUERY_USER_RANKING, 'POST', { tc_i: time_control_id });
+	const response = await server_call(Routes.QUERY_USER_RANKING, { tc_i: time_control_id });
 	if (response.status >= 400) {
 		const message = await response.text();
 		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);

@@ -95,7 +95,7 @@ async function load_graph() {
 	})();
 
 	// "query" the server
-	const response = await server_call(query_to_server, 'POST', { tc_i: time_control_id });
+	const response = await server_call(query_to_server, { tc_i: time_control_id });
 	if (response.status >= 400) {
 		const message = await response.text();
 		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);

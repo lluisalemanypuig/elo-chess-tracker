@@ -23,22 +23,23 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
+import { MethodTypeOf } from '@common/api/schemas';
 import { InputTypeOf } from '@common/api/types';
 import { Route } from '@common/routes';
 import { isNotDefined } from '@common/utils/is_defined';
 
-export type Method = 'POST' | 'GET';
+export async function server_call<T extends Route>(route: T, body: InputTypeOf[T] | undefined | null) {
+	const method = MethodTypeOf(route);
 
-export async function server_call<T extends Route>(route: T, m: Method, body: InputTypeOf[T] | undefined | null) {
 	if (isNotDefined(body)) {
 		return fetch(route, {
-			method: m,
+			method: method,
 			headers: { 'Content-type': 'application/json; charset=UTF-8' }
 		});
 	}
 
 	return fetch(route, {
-		method: m,
+		method: method,
 		body: JSON.stringify(body, null, ''),
 		headers: { 'Content-type': 'application/json; charset=UTF-8' }
 	});
