@@ -26,7 +26,7 @@ import { UserRole, all_user_roles, user_role_to_string, array_string_to_roles } 
 import { QueryUserEditInput } from '@common/schemas/query_user';
 import { UserEditInput } from '@common/schemas/user';
 import { isDefined } from '@common/utils/is_defined';
-import { ROUTE_QUERY_USER_EDIT, ROUTE_USER_EDIT, ROUTE_HOME } from '@common/routes';
+import { Routes } from '@common/routes';
 
 async function user_was_changed(_event: any) {
 	all_user_roles.forEach(function (role: string) {
@@ -44,7 +44,7 @@ async function user_was_changed(_event: any) {
 	if (username_option != null) {
 		const user_id = (username_option as HTMLOptionElement).id;
 		const response = await server_call(
-			ROUTE_QUERY_USER_EDIT,
+			Routes.QUERY_USER_EDIT,
 			'POST',
 			JSON.stringify({ u: Number(user_id) } satisfies QueryUserEditInput)
 		);
@@ -91,7 +91,7 @@ async function submit_was_clicked(_event: any) {
 	}
 
 	const response = await server_call(
-		ROUTE_USER_EDIT,
+		Routes.USER_EDIT,
 		'POST',
 		JSON.stringify({
 			u: Number(user_rid),
@@ -106,7 +106,7 @@ async function submit_was_clicked(_event: any) {
 		return;
 	}
 
-	window.location.href = ROUTE_HOME;
+	window.location.href = Routes.HOME;
 }
 
 window.onload = function () {

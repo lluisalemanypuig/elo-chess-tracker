@@ -23,21 +23,21 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
+import { isNotDefined } from '@app/common/utils/is_defined';
+
 export type Method = 'POST' | 'GET';
 
-export async function server_call(route: string, m: Method, body: string) {
-	let promise: Promise<Response>;
-	if (body === '') {
-		promise = fetch(route, {
+export async function server_call<T>(route: string, m: Method, body: T | undefined | null) {
+	if (isNotDefined(body)) {
+		return fetch(route, {
 			method: m,
-			headers: { 'Content-type': 'application/json; charset=UTF-8' }
-		});
-	} else {
-		promise = fetch(route, {
-			method: m,
-			body: body,
 			headers: { 'Content-type': 'application/json; charset=UTF-8' }
 		});
 	}
-	return promise;
+
+	return fetch(route, {
+		method: m,
+		body: JSON.stringify(body, null, ''),
+		headers: { 'Content-type': 'application/json; charset=UTF-8' }
+	});
 }

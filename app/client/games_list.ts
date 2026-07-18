@@ -26,13 +26,7 @@ import { GameDeleteInput, GameEditResultInput, GameEditTitleInput } from '@commo
 import { QueryGamesListAllInput, QueryGamesListOwnInput } from '@common/schemas/query_games';
 import { result_from_text_to_value } from '@common/models/game';
 import { server_call } from '@client/action';
-import {
-	ROUTE_GAME_EDIT_RESULT,
-	ROUTE_GAME_DELETE,
-	ROUTE_GAME_EDIT_TITLE,
-	ROUTE_QUERY_GAME_LIST_ALL,
-	ROUTE_QUERY_GAME_LIST_OWN
-} from '@common/routes';
+import { Routes } from '@common/routes';
 
 function new_text_cell(text: string) {
 	let cell = document.createElement('td');
@@ -72,7 +66,7 @@ async function select_result_game_on_change(event: any) {
 	}
 
 	const response = await server_call(
-		ROUTE_GAME_EDIT_RESULT,
+		Routes.GAME_EDIT_RESULT,
 		'POST',
 		JSON.stringify({
 			id: game_id,
@@ -123,7 +117,7 @@ async function button_delete_game_on_click(event: any) {
 
 	const game_id = button.getAttribute('game_id');
 	const response = await server_call(
-		ROUTE_GAME_DELETE,
+		Routes.GAME_DELETE,
 		'POST',
 		JSON.stringify({ id: game_id } satisfies GameDeleteInput)
 	);
@@ -164,7 +158,7 @@ async function trigger_edit_game_title(event: Event) {
 	}
 
 	const response = await server_call(
-		ROUTE_GAME_EDIT_TITLE,
+		Routes.GAME_EDIT_TITLE,
 		'POST',
 		JSON.stringify({ id: game_id, title: new_title } satisfies GameEditTitleInput)
 	);
@@ -214,13 +208,13 @@ async function fill_games_list_time_control(time_control_id: string) {
 	let response;
 	if (val == 'all') {
 		response = await server_call(
-			ROUTE_QUERY_GAME_LIST_ALL,
+			Routes.QUERY_GAME_LIST_ALL,
 			'POST',
 			JSON.stringify({ tc_i: time_control_id } satisfies QueryGamesListAllInput)
 		);
 	} else if (val == 'own') {
 		response = await server_call(
-			ROUTE_QUERY_GAME_LIST_OWN,
+			Routes.QUERY_GAME_LIST_OWN,
 			'POST',
 			JSON.stringify({ tc_i: time_control_id } satisfies QueryGamesListOwnInput)
 		);
