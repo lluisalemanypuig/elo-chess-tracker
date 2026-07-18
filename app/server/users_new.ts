@@ -38,13 +38,13 @@ import { get_execution_directory } from '@server/managers/environment_manager';
 import { isDefined } from '@common/utils/is_defined';
 import { Routes } from '@common/routes';
 import { InputSchemaOf } from '@common/api/schemas';
-import { parse_schema } from '@server/utils/schemas';
+import { parse_error_message, parse_schema } from '@server/utils/schemas';
 import { AuthenticationInputSchema } from '@common/schemas/authentication';
 
 export async function get_page_user_create(req: Request, res: Response) {
 	debug(log_now(), `GET ${Routes.PAGE_USER_CREATE}...`);
 
-	const session_parse = parse_schema(req, AuthenticationInputSchema, debug);
+	const session_parse = parse_schema(req.cookies, AuthenticationInputSchema, debug);
 	if (session_parse.result !== 'Success') {
 		res.status(401).send(`Failure to parse cookies ${session_parse.result}.`);
 		return;
@@ -79,7 +79,7 @@ export async function get_page_user_create(req: Request, res: Response) {
 export async function post_user_create(req: Request, res: Response) {
 	debug(log_now(), `POST ${Routes.USER_CREATE}`);
 
-	const session_parse = parse_schema(req, AuthenticationInputSchema, debug);
+	const session_parse = parse_schema(req.cookies, AuthenticationInputSchema, debug);
 	if (session_parse.result !== 'Success') {
 		res.status(401).send(`Failure to parse cookies ${session_parse.result}.`);
 		return;
@@ -104,11 +104,9 @@ export async function post_user_create(req: Request, res: Response) {
 		return;
 	}
 
-	const user_parse = InputSchemaOf(Routes.USER_CREATE).safeParse(req.body);
-	if (!user_parse.success) {
-		debug(log_now(), 'Failed to parse schema');
-		debug(log_now(), `Error: '${user_parse.error}'`);
-		res.status(401).send('Internal error');
+	const user_parse = parse_schema(req.body, InputSchemaOf(Routes.USER_CREATE), debug);
+	if (user_parse.result !== 'Success') {
+		res.status(401).send(parse_error_message(user_parse.result));
 		return;
 	}
 

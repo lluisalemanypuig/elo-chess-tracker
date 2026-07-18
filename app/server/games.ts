@@ -52,13 +52,13 @@ import { get_execution_directory } from '@server/managers/environment_manager';
 import { isDefined } from '@common/utils/is_defined';
 import { Routes } from '@common/routes';
 import { InputSchemaOf } from '@common/api/schemas';
-import { parse_schema } from '@server/utils/schemas';
+import { parse_error_message, parse_schema } from '@server/utils/schemas';
 import { AuthenticationInputSchema } from '@common/schemas/authentication';
 
 export async function get_page_game_list_own(req: Request, res: Response) {
 	debug(log_now(), `GET ${Routes.PAGE_GAME_LIST_OWN}...`);
 
-	const session_parse = parse_schema(req, AuthenticationInputSchema, debug);
+	const session_parse = parse_schema(req.cookies, AuthenticationInputSchema, debug);
 	if (session_parse.result !== 'Success') {
 		res.status(401).send(`Failure to parse cookies ${session_parse.result}.`);
 		return;
@@ -82,7 +82,7 @@ export async function get_page_game_list_own(req: Request, res: Response) {
 export async function get_page_game_list_all(req: Request, res: Response) {
 	debug(log_now(), `GET ${Routes.PAGE_GAME_LIST_ALL}...`);
 
-	const session_parse = parse_schema(req, AuthenticationInputSchema, debug);
+	const session_parse = parse_schema(req.cookies, AuthenticationInputSchema, debug);
 	if (session_parse.result !== 'Success') {
 		res.status(401).send(`Failure to parse cookies ${session_parse.result}.`);
 		return;
@@ -106,7 +106,7 @@ export async function get_page_game_list_all(req: Request, res: Response) {
 export async function get_page_game_create(req: Request, res: Response) {
 	debug(log_now(), `GET ${Routes.PAGE_GAME_CREATE}...`);
 
-	const session_parse = parse_schema(req, AuthenticationInputSchema, debug);
+	const session_parse = parse_schema(req.cookies, AuthenticationInputSchema, debug);
 	if (session_parse.result !== 'Success') {
 		res.status(401).send(`Failure to parse cookies ${session_parse.result}.`);
 		return;
@@ -136,7 +136,7 @@ export async function get_page_game_create(req: Request, res: Response) {
 export async function post_game_create(req: Request, res: Response) {
 	debug(log_now(), `POST ${Routes.GAME_CREATE}...`);
 
-	const session_parse = parse_schema(req, AuthenticationInputSchema, debug);
+	const session_parse = parse_schema(req.cookies, AuthenticationInputSchema, debug);
 	if (session_parse.result !== 'Success') {
 		res.status(401).send(`Failure to parse cookies ${session_parse.result}.`);
 		return;
@@ -156,11 +156,9 @@ export async function post_game_create(req: Request, res: Response) {
 		return;
 	}
 
-	const game_parse = InputSchemaOf(Routes.GAME_CREATE).safeParse(req.body);
-	if (!game_parse.success) {
-		debug(log_now(), 'Failed to parse schema');
-		debug(log_now(), `Error: '${game_parse.error}'`);
-		res.status(401).send('Internal error');
+	const game_parse = parse_schema(req.body, InputSchemaOf(Routes.GAME_CREATE), debug);
+	if (game_parse.result !== 'Success') {
+		res.status(401).send(parse_error_message(game_parse));
 		return;
 	}
 
@@ -228,7 +226,7 @@ export async function post_game_create(req: Request, res: Response) {
 export async function post_game_edit_result(req: Request, res: Response) {
 	debug(log_now(), `POST ${Routes.GAME_EDIT_RESULT}...`);
 
-	const session_parse = parse_schema(req, AuthenticationInputSchema, debug);
+	const session_parse = parse_schema(req.cookies, AuthenticationInputSchema, debug);
 	if (session_parse.result !== 'Success') {
 		res.status(401).send(`Failure to parse cookies ${session_parse.result}.`);
 		return;
@@ -248,11 +246,9 @@ export async function post_game_edit_result(req: Request, res: Response) {
 		return;
 	}
 
-	const game_parse = InputSchemaOf(Routes.GAME_EDIT_RESULT).safeParse(req.body);
-	if (!game_parse.success) {
-		debug(log_now(), 'Failed to parse schema');
-		debug(log_now(), `Error: '${game_parse.error}'`);
-		res.status(401).send('Internal error');
+	const game_parse = parse_schema(req.body, InputSchemaOf(Routes.GAME_EDIT_RESULT), debug);
+	if (game_parse.result !== 'Success') {
+		res.status(401).send(parse_error_message(game_parse));
 		return;
 	}
 
@@ -301,7 +297,7 @@ export async function post_game_edit_result(req: Request, res: Response) {
 export async function post_game_edit_title(req: Request, res: Response) {
 	debug(log_now(), `POST ${Routes.GAME_EDIT_TITLE}...`);
 
-	const session_parse = parse_schema(req, AuthenticationInputSchema, debug);
+	const session_parse = parse_schema(req.cookies, AuthenticationInputSchema, debug);
 	if (session_parse.result !== 'Success') {
 		res.status(401).send(`Failure to parse cookies ${session_parse.result}.`);
 		return;
@@ -321,11 +317,9 @@ export async function post_game_edit_title(req: Request, res: Response) {
 		return;
 	}
 
-	const game_parse = InputSchemaOf(Routes.GAME_EDIT_TITLE).safeParse(req.body);
-	if (!game_parse.success) {
-		debug(log_now(), 'Failed to parse schema');
-		debug(log_now(), `Error: '${game_parse.error}'`);
-		res.status(401).send('Internal error');
+	const game_parse = parse_schema(req.body, InputSchemaOf(Routes.GAME_EDIT_TITLE), debug);
+	if (game_parse.result !== 'Success') {
+		res.status(401).send(parse_error_message(game_parse));
 		return;
 	}
 
@@ -374,7 +368,7 @@ export async function post_game_edit_title(req: Request, res: Response) {
 export async function post_game_delete(req: Request, res: Response) {
 	debug(log_now(), `POST ${Routes.GAME_DELETE}...`);
 
-	const session_parse = parse_schema(req, AuthenticationInputSchema, debug);
+	const session_parse = parse_schema(req.cookies, AuthenticationInputSchema, debug);
 	if (session_parse.result !== 'Success') {
 		res.status(401).send(`Failure to parse cookies ${session_parse.result}.`);
 		return;
@@ -394,11 +388,9 @@ export async function post_game_delete(req: Request, res: Response) {
 		return;
 	}
 
-	const game_parse = InputSchemaOf(Routes.GAME_DELETE).safeParse(req.body);
-	if (!game_parse.success) {
-		debug(log_now(), 'Failed to parse schema');
-		debug(log_now(), `Error: '${game_parse.error}'`);
-		res.status(401).send('Internal error');
+	const game_parse = parse_schema(req.body, InputSchemaOf(Routes.GAME_DELETE), debug);
+	if (game_parse.result !== 'Success') {
+		res.status(401).send(parse_error_message(game_parse));
 		return;
 	}
 
@@ -444,7 +436,7 @@ export async function post_game_delete(req: Request, res: Response) {
 export async function post_recalculate_ratings(req: Request, res: Response) {
 	debug(log_now(), `POST ${Routes.RECALCULATE_RATINGS}...`);
 
-	const session_parse = parse_schema(req, AuthenticationInputSchema, debug);
+	const session_parse = parse_schema(req.cookies, AuthenticationInputSchema, debug);
 	if (session_parse.result !== 'Success') {
 		res.status(401).send(`Failure to parse cookies ${session_parse.result}.`);
 		return;

@@ -38,17 +38,15 @@ import { UsersManager } from '@server/managers/users_manager';
 import { isDefined } from '@common/utils/is_defined';
 import { UserLoginInputSchema } from '@common/schemas/login_logout';
 import { Routes } from '@common/routes';
-import { parse_schema } from '@server/utils/schemas';
+import { parse_error_message, parse_schema } from '@server/utils/schemas';
 import { AuthenticationInputSchema } from '@common/schemas/authentication';
 
 export async function post_user_login(req: Request, res: Response) {
 	debug(log_now(), `POST ${Routes.USER_LOGIN}`);
 
-	const login_parse = UserLoginInputSchema.safeParse(req.body);
-	if (!login_parse.success) {
-		debug(log_now(), 'Failed to parse schema');
-		debug(log_now(), `Error: '${login_parse.error}'`);
-		res.status(401).send('Internal error');
+	const login_parse = parse_schema(req.body, UserLoginInputSchema, debug);
+	if (login_parse.result !== 'Success') {
+		res.status(401).send(parse_error_message(login_parse));
 		return;
 	}
 
@@ -95,7 +93,7 @@ export async function post_user_login(req: Request, res: Response) {
 export async function post_user_logout(req: Request, res: Response) {
 	debug(log_now(), `POST ${Routes.USER_LOGOUT}`);
 
-	const session_parse = parse_schema(req, AuthenticationInputSchema, debug);
+	const session_parse = parse_schema(req.cookies, AuthenticationInputSchema, debug);
 	if (session_parse.result !== 'Success') {
 		res.status(401).send(`Failure to parse cookies ${session_parse.result}.`);
 		return;

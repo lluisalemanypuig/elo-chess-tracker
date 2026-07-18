@@ -38,7 +38,7 @@ import { AuthenticationInputSchema } from '@common/schemas/authentication';
 export async function get_query_html_time_controls(req: Request, res: Response) {
 	debug(log_now(), `GET ${Routes.QUERY_HTML_TIME_CONTROLS}...`);
 
-	const session_parse = parse_schema(req, AuthenticationInputSchema, debug);
+	const session_parse = parse_schema(req.cookies, AuthenticationInputSchema, debug);
 	if (session_parse.result !== 'Success') {
 		res.status(401).send(`Failure to parse cookies ${session_parse.result}.`);
 		return;
@@ -62,7 +62,7 @@ export async function get_query_html_time_controls(req: Request, res: Response) 
 export async function get_query_html_time_controls_unique(req: Request, res: Response) {
 	debug(log_now(), `GET ${Routes.QUERY_HTML_TIME_CONTROLS_UNIQUE}...`);
 
-	const session_parse = parse_schema(req, AuthenticationInputSchema, debug);
+	const session_parse = parse_schema(req.cookies, AuthenticationInputSchema, debug);
 	if (session_parse.result !== 'Success') {
 		res.status(401).send(`Failure to parse cookies ${session_parse.result}.`);
 		return;

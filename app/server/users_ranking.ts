@@ -39,7 +39,7 @@ import { AuthenticationInputSchema } from '@common/schemas/authentication';
 export async function get_page_user_ranking(req: Request, res: Response) {
 	debug(log_now(), `GET ${Routes.PAGE_USER_RANKING}...`);
 
-	const session_parse = parse_schema(req, AuthenticationInputSchema, debug);
+	const session_parse = parse_schema(req.cookies, AuthenticationInputSchema, debug);
 	if (session_parse.result !== 'Success') {
 		res.status(401).send(`Failure to parse cookies ${session_parse.result}.`);
 		return;

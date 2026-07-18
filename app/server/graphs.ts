@@ -42,7 +42,7 @@ import { AuthenticationInputSchema } from '@common/schemas/authentication';
 export async function get_page_graph_own(req: Request, res: Response) {
 	debug(log_now(), `GET ${Routes.PAGE_GRAPH_OWN}...`);
 
-	const session_parse = parse_schema(req, AuthenticationInputSchema, debug);
+	const session_parse = parse_schema(req.cookies, AuthenticationInputSchema, debug);
 	if (session_parse.result !== 'Success') {
 		res.status(401).send(`Failure to parse cookies ${session_parse.result}.`);
 		return;
@@ -65,7 +65,7 @@ export async function get_page_graph_own(req: Request, res: Response) {
 export async function get_page_graph_full(req: Request, res: Response) {
 	debug(log_now(), `GET ${Routes.PAGE_GRAPH_FULL}...`);
 
-	const session_parse = parse_schema(req, AuthenticationInputSchema, debug);
+	const session_parse = parse_schema(req.cookies, AuthenticationInputSchema, debug);
 	if (session_parse.result !== 'Success') {
 		res.status(401).send(`Failure to parse cookies ${session_parse.result}.`);
 		return;
@@ -95,7 +95,7 @@ export async function get_page_graph_full(req: Request, res: Response) {
 export async function post_recalculate_graphs(req: Request, res: Response) {
 	debug(log_now(), `POST ${Routes.RECALCULATE_GRAPHS}...`);
 
-	const session_parse = parse_schema(req, AuthenticationInputSchema, debug);
+	const session_parse = parse_schema(req.cookies, AuthenticationInputSchema, debug);
 	if (session_parse.result !== 'Success') {
 		res.status(401).send(`Failure to parse cookies ${session_parse.result}.`);
 		return;

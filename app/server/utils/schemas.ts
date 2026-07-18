@@ -29,6 +29,8 @@ import { z } from 'zod';
 import { isNotDefined } from '@common/utils/is_defined';
 import { log_now } from '@server/utils/time';
 
+export type ParseResult = 'JsonDataNotProvided' | 'Error' | 'Success';
+
 export type ParseSchemaResult<T> =
 	| {
 			result: 'JsonDataNotProvided' | 'Error';
@@ -62,4 +64,8 @@ export function parse_schema<S extends z.ZodTypeAny>(
 		result: 'Success',
 		data: parse.data
 	};
+}
+
+export function parse_error_message<T>(res: ParseSchemaResult<T>) {
+	return `Request input data (body) sent from client is malformed ${res.result}`;
 }

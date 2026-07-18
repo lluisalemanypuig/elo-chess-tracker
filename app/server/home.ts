@@ -40,7 +40,7 @@ export async function get_page_login(req: Request, res: Response) {
 	let send_home: boolean;
 	debug(log_now(), `GET ${Routes.ROOT}`);
 
-	const session_parse = parse_schema(req, AuthenticationInputSchema, debug);
+	const session_parse = parse_schema(req.cookies, AuthenticationInputSchema, debug);
 	if (session_parse.result === 'Error') {
 		res.status(401).send(`Failure to parse cookies ${session_parse.result}.`);
 		return;
@@ -78,7 +78,7 @@ export async function get_page_login(req: Request, res: Response) {
 export async function get_page_home(req: Request, res: Response) {
 	debug(log_now(), `GET ${Routes.HOME}`);
 
-	const session_parse = parse_schema(req, AuthenticationInputSchema, debug);
+	const session_parse = parse_schema(req.cookies, AuthenticationInputSchema, debug);
 	if (session_parse.result !== 'Success') {
 		res.status(401).send(`Failure to parse cookies ${session_parse.result}.`);
 		return;

@@ -40,7 +40,7 @@ import { GRAPHS_SEE_USER } from '@common/models/user_action';
 import { isDefined } from '@common/utils/is_defined';
 import { Routes } from '@common/routes';
 import { InputSchemaOf } from '@common/api/schemas';
-import { parse_schema } from '@server/utils/schemas';
+import { parse_error_message, parse_schema } from '@server/utils/schemas';
 import { AuthenticationInputSchema } from '@common/schemas/authentication';
 
 class NodeWeight {
@@ -224,7 +224,7 @@ function retrieve_graph_full(querier: User, time_control_id: TimeControlID): [No
 export async function post_query_graph_own(req: Request, res: Response) {
 	debug(log_now(), `POST ${Routes.QUERY_GRAPH_OWN}...`);
 
-	const session_parse = parse_schema(req, AuthenticationInputSchema, debug);
+	const session_parse = parse_schema(req.cookies, AuthenticationInputSchema, debug);
 	if (session_parse.result !== 'Success') {
 		res.status(401).send(`Failure to parse cookies ${session_parse.result}.`);
 		return;
@@ -237,11 +237,9 @@ export async function post_query_graph_own(req: Request, res: Response) {
 		return;
 	}
 
-	const graph_parse = InputSchemaOf(Routes.QUERY_GRAPH_OWN).safeParse(req.body);
-	if (!graph_parse.success) {
-		debug(log_now(), 'Failed to parse schema');
-		debug(log_now(), `Error: '${graph_parse.error}'`);
-		res.status(401).send('Internal error');
+	const graph_parse = parse_schema(req.body, InputSchemaOf(Routes.QUERY_GRAPH_OWN), debug);
+	if (graph_parse.result !== 'Success') {
+		res.status(401).send(parse_error_message(graph_parse.result));
 		return;
 	}
 	const time_control_id = graph_parse.data.tc_i;
@@ -258,7 +256,7 @@ export async function post_query_graph_own(req: Request, res: Response) {
 export async function post_query_graph_full(req: Request, res: Response) {
 	debug(log_now(), `POST ${Routes.QUERY_GRAPH_FULL}...`);
 
-	const session_parse = parse_schema(req, AuthenticationInputSchema, debug);
+	const session_parse = parse_schema(req.cookies, AuthenticationInputSchema, debug);
 	if (session_parse.result !== 'Success') {
 		res.status(401).send(`Failure to parse cookies ${session_parse.result}.`);
 		return;
@@ -277,11 +275,9 @@ export async function post_query_graph_full(req: Request, res: Response) {
 		return;
 	}
 
-	const graph_parse = InputSchemaOf(Routes.QUERY_GRAPH_FULL).safeParse(req.body);
-	if (!graph_parse.success) {
-		debug(log_now(), 'Failed to parse schema');
-		debug(log_now(), `Error: '${graph_parse.error}'`);
-		res.status(401).send('Internal error');
+	const graph_parse = parse_schema(req.body, InputSchemaOf(Routes.QUERY_GRAPH_FULL), debug);
+	if (graph_parse.result !== 'Success') {
+		res.status(401).send(parse_error_message(graph_parse.result));
 		return;
 	}
 	const time_control_id = graph_parse.data.tc_i;

@@ -46,7 +46,7 @@ import { read_directory } from '@server/utils/read_directory';
 import { isDefined } from '@common/utils/is_defined';
 import { Routes } from '@common/routes';
 import { InputSchemaOf } from '@common/api/schemas';
-import { parse_schema } from '@server/utils/schemas';
+import { parse_error_message, parse_schema } from '@server/utils/schemas';
 import { AuthenticationInputSchema } from '@common/schemas/authentication';
 
 function increment(g: Game): any {
@@ -156,7 +156,7 @@ function filter_game_list(
 export async function post_query_game_list_own(req: Request, res: Response) {
 	debug(log_now(), `POST ${Routes.QUERY_GAME_LIST_OWN}...`);
 
-	const session_parse = parse_schema(req, AuthenticationInputSchema, debug);
+	const session_parse = parse_schema(req.cookies, AuthenticationInputSchema, debug);
 	if (session_parse.result !== 'Success') {
 		res.status(401).send(`Failure to parse cookies ${session_parse.result}.`);
 		return;
@@ -170,11 +170,9 @@ export async function post_query_game_list_own(req: Request, res: Response) {
 		return;
 	}
 
-	const game_parse = InputSchemaOf(Routes.QUERY_GAME_LIST_OWN).safeParse(req.body);
-	if (!game_parse.success) {
-		debug(log_now(), 'Failed to parse schema');
-		debug(log_now(), `Error: '${game_parse.error}'`);
-		res.status(401).send('Internal error');
+	const game_parse = parse_schema(req.body, InputSchemaOf(Routes.QUERY_GAME_LIST_OWN), debug);
+	if (game_parse.result !== 'Success') {
+		res.status(401).send(parse_error_message(game_parse));
 		return;
 	}
 	const time_control_id = game_parse.data.tc_i;
@@ -256,7 +254,7 @@ function merge_by_date(v1: any[], v2: any[]): any[] {
 export async function post_query_game_list_all(req: Request, res: Response) {
 	debug(log_now(), `POST ${Routes.QUERY_GAME_LIST_ALL}...`);
 
-	const session_parse = parse_schema(req, AuthenticationInputSchema, debug);
+	const session_parse = parse_schema(req.cookies, AuthenticationInputSchema, debug);
 	if (session_parse.result !== 'Success') {
 		res.status(401).send(`Failure to parse cookies ${session_parse.result}.`);
 		return;
@@ -275,11 +273,9 @@ export async function post_query_game_list_all(req: Request, res: Response) {
 		return;
 	}
 
-	const game_parse = InputSchemaOf(Routes.QUERY_GAME_LIST_ALL).safeParse(req.body);
-	if (!game_parse.success) {
-		debug(log_now(), 'Failed to parse schema');
-		debug(log_now(), `Error: '${game_parse.error}'`);
-		res.status(401).send('Internal error');
+	const game_parse = parse_schema(req.body, InputSchemaOf(Routes.QUERY_GAME_LIST_ALL), debug);
+	if (game_parse.result !== 'Success') {
+		res.status(401).send(parse_error_message(game_parse));
 		return;
 	}
 	const time_control_id = game_parse.data.tc_i;

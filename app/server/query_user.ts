@@ -36,14 +36,14 @@ import { TimeControlRating } from '@common/models/time_control_rating';
 import { isDefined } from '@common/utils/is_defined';
 import { Routes } from '@common/routes';
 import { InputSchemaOf } from '@common/api/schemas';
-import { parse_schema } from '@server/utils/schemas';
+import { parse_error_message, parse_schema } from '@server/utils/schemas';
 import { AuthenticationInputSchema } from '@common/schemas/authentication';
 
 /// Returns the list of user full names and usernames sorted by name
 export async function get_query_user_list(req: Request, res: Response) {
 	debug(log_now(), `GET ${Routes.QUERY_USER_LIST}...`);
 
-	const session_parse = parse_schema(req, AuthenticationInputSchema, debug);
+	const session_parse = parse_schema(req.cookies, AuthenticationInputSchema, debug);
 	if (session_parse.result !== 'Success') {
 		res.status(401).send(`Failure to parse cookies ${session_parse.result}.`);
 		return;
@@ -67,7 +67,7 @@ export async function get_query_user_list(req: Request, res: Response) {
 export async function get_query_html_user_list(req: Request, res: Response) {
 	debug(log_now(), `GET ${Routes.QUERY_HTML_USER_LIST}...`);
 
-	const session_parse = parse_schema(req, AuthenticationInputSchema, debug);
+	const session_parse = parse_schema(req.cookies, AuthenticationInputSchema, debug);
 	if (session_parse.result !== 'Success') {
 		res.status(401).send(`Failure to parse cookies ${session_parse.result}.`);
 		return;
@@ -95,7 +95,7 @@ export async function get_query_html_user_list(req: Request, res: Response) {
 export async function get_query_user_home(req: Request, res: Response) {
 	debug(log_now(), `GET ${Routes.QUERY_USER_HOME}...`);
 
-	const session_parse = parse_schema(req, AuthenticationInputSchema, debug);
+	const session_parse = parse_schema(req.cookies, AuthenticationInputSchema, debug);
 	if (session_parse.result !== 'Success') {
 		res.status(401).send(`Failure to parse cookies ${session_parse.result}.`);
 		return;
@@ -126,7 +126,7 @@ export async function get_query_user_home(req: Request, res: Response) {
 export async function post_query_user_edit(req: Request, res: Response) {
 	debug(log_now(), `POST ${Routes.QUERY_USER_EDIT}...`);
 
-	const session_parse = parse_schema(req, AuthenticationInputSchema, debug);
+	const session_parse = parse_schema(req.cookies, AuthenticationInputSchema, debug);
 	if (session_parse.result !== 'Success') {
 		res.status(401).send(`Failure to parse cookies ${session_parse.result}.`);
 		return;
@@ -139,11 +139,9 @@ export async function post_query_user_edit(req: Request, res: Response) {
 		return;
 	}
 
-	const user_query = InputSchemaOf(Routes.QUERY_USER_EDIT).safeParse(req.body);
-	if (!user_query.success) {
-		debug(log_now(), 'Failed to parse schema');
-		debug(log_now(), `Error: '${user_query.error}'`);
-		res.status(401).send('Internal error');
+	const user_query = parse_schema(req.body, InputSchemaOf(Routes.QUERY_USER_EDIT), debug);
+	if (user_query.result !== 'Success') {
+		res.status(401).send(parse_error_message(user_query));
 		return;
 	}
 
@@ -168,7 +166,7 @@ export async function post_query_user_edit(req: Request, res: Response) {
 export async function post_query_user_ranking(req: Request, res: Response) {
 	debug(log_now(), `POST ${Routes.QUERY_USER_RANKING}...`);
 
-	const session_parse = parse_schema(req, AuthenticationInputSchema, debug);
+	const session_parse = parse_schema(req.cookies, AuthenticationInputSchema, debug);
 	if (session_parse.result !== 'Success') {
 		res.status(401).send(`Failure to parse cookies ${session_parse.result}.`);
 		return;
@@ -181,11 +179,9 @@ export async function post_query_user_ranking(req: Request, res: Response) {
 		return;
 	}
 
-	const user_query = InputSchemaOf(Routes.QUERY_USER_RANKING).safeParse(req.body);
-	if (!user_query.success) {
-		debug(log_now(), 'Failed to parse schema');
-		debug(log_now(), `Error: '${user_query.error}'`);
-		res.status(401).send('Internal error');
+	const user_query = parse_schema(req.body, InputSchemaOf(Routes.QUERY_USER_RANKING), debug);
+	if (user_query.result !== 'Success') {
+		res.status(401).send(parse_error_message(user_query));
 		return;
 	}
 
