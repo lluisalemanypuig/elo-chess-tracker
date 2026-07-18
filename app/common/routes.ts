@@ -83,4 +83,6 @@ export const Routes = {
 
 	RECALCULATE_RATINGS: '/recalculate/ratings',
 	RECALCULATE_GRAPHS: '/recalculate/graphs'
-} as const;
+} as const satisfies Record<string, string>;
+
+export type Route = (typeof Routes)[keyof typeof Routes];
