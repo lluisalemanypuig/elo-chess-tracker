@@ -276,5 +276,8 @@ export const API_SCHEMA = {
 	}
 } satisfies Record<Route, ApiSchemaEntry>;
 
-export const InputSchemaOf = <R extends Route>(route: R) => API_SCHEMA[route].input;
-export const OutputSchemaOf = <R extends Route>(route: R) => API_SCHEMA[route].output;
+type InputSchemaFor<R extends Route> = (typeof API_SCHEMA)[R]['input'];
+type OutputSchemaFor<R extends Route> = (typeof API_SCHEMA)[R]['output'];
+
+export const InputSchemaOf = <R extends Route>(route: R): InputSchemaFor<R> => API_SCHEMA[route].input;
+export const OutputSchemaOf = <R extends Route>(route: R): OutputSchemaFor<R> => API_SCHEMA[route].output;
