@@ -49,19 +49,18 @@ import {
 import { UsersManager } from '@server/managers/users_manager';
 import { ConfigurationManager } from '@server/managers/configuration_manager';
 import { get_execution_directory } from '@server/managers/environment_manager';
-import { AuthenticationInputSchema } from '@common/schemas/authentication';
 import { isDefined } from '@common/utils/is_defined';
 import { Routes } from '@common/routes';
 import { InputSchemaOf } from '@common/api/schemas';
+import { parse_schema } from '@server/utils/schemas';
+import { AuthenticationInputSchema } from '@common/schemas/authentication';
 
 export async function get_page_game_list_own(req: Request, res: Response) {
 	debug(log_now(), `GET ${Routes.PAGE_GAME_LIST_OWN}...`);
 
-	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
-	if (!session_parse.success) {
-		debug(log_now(), 'Failed to parse schema');
-		debug(log_now(), `Error: '${session_parse.error}'`);
-		res.status(401).send('Internal error');
+	const session_parse = parse_schema(req, AuthenticationInputSchema, debug);
+	if (session_parse.result !== 'Success') {
+		res.status(401).send(`Failure to parse cookies ${session_parse.result}.`);
 		return;
 	}
 	const session = session_parse.data;
@@ -83,11 +82,9 @@ export async function get_page_game_list_own(req: Request, res: Response) {
 export async function get_page_game_list_all(req: Request, res: Response) {
 	debug(log_now(), `GET ${Routes.PAGE_GAME_LIST_ALL}...`);
 
-	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
-	if (!session_parse.success) {
-		debug(log_now(), 'Failed to parse schema');
-		debug(log_now(), `Error: '${session_parse.error}'`);
-		res.status(401).send('Internal error');
+	const session_parse = parse_schema(req, AuthenticationInputSchema, debug);
+	if (session_parse.result !== 'Success') {
+		res.status(401).send(`Failure to parse cookies ${session_parse.result}.`);
 		return;
 	}
 	const session = session_parse.data;
@@ -109,11 +106,9 @@ export async function get_page_game_list_all(req: Request, res: Response) {
 export async function get_page_game_create(req: Request, res: Response) {
 	debug(log_now(), `GET ${Routes.PAGE_GAME_CREATE}...`);
 
-	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
-	if (!session_parse.success) {
-		debug(log_now(), 'Failed to parse schema');
-		debug(log_now(), `Error: '${session_parse.error}'`);
-		res.status(401).send('Internal error');
+	const session_parse = parse_schema(req, AuthenticationInputSchema, debug);
+	if (session_parse.result !== 'Success') {
+		res.status(401).send(`Failure to parse cookies ${session_parse.result}.`);
 		return;
 	}
 	const session = session_parse.data;
@@ -141,11 +136,9 @@ export async function get_page_game_create(req: Request, res: Response) {
 export async function post_game_create(req: Request, res: Response) {
 	debug(log_now(), `POST ${Routes.GAME_CREATE}...`);
 
-	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
-	if (!session_parse.success) {
-		debug(log_now(), 'Failed to parse schema');
-		debug(log_now(), `Error: '${session_parse.error}'`);
-		res.status(401).send('Internal error');
+	const session_parse = parse_schema(req, AuthenticationInputSchema, debug);
+	if (session_parse.result !== 'Success') {
+		res.status(401).send(`Failure to parse cookies ${session_parse.result}.`);
 		return;
 	}
 	const session = session_parse.data;
@@ -235,11 +228,9 @@ export async function post_game_create(req: Request, res: Response) {
 export async function post_game_edit_result(req: Request, res: Response) {
 	debug(log_now(), `POST ${Routes.GAME_EDIT_RESULT}...`);
 
-	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
-	if (!session_parse.success) {
-		debug(log_now(), 'Failed to parse schema');
-		debug(log_now(), `Error: '${session_parse.error}'`);
-		res.status(401).send('Internal error');
+	const session_parse = parse_schema(req, AuthenticationInputSchema, debug);
+	if (session_parse.result !== 'Success') {
+		res.status(401).send(`Failure to parse cookies ${session_parse.result}.`);
 		return;
 	}
 	const session = session_parse.data;
@@ -310,11 +301,9 @@ export async function post_game_edit_result(req: Request, res: Response) {
 export async function post_game_edit_title(req: Request, res: Response) {
 	debug(log_now(), `POST ${Routes.GAME_EDIT_TITLE}...`);
 
-	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
-	if (!session_parse.success) {
-		debug(log_now(), 'Failed to parse schema');
-		debug(log_now(), `Error: '${session_parse.error}'`);
-		res.status(401).send('Internal error');
+	const session_parse = parse_schema(req, AuthenticationInputSchema, debug);
+	if (session_parse.result !== 'Success') {
+		res.status(401).send(`Failure to parse cookies ${session_parse.result}.`);
 		return;
 	}
 	const session = session_parse.data;
@@ -385,11 +374,9 @@ export async function post_game_edit_title(req: Request, res: Response) {
 export async function post_game_delete(req: Request, res: Response) {
 	debug(log_now(), `POST ${Routes.GAME_DELETE}...`);
 
-	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
-	if (!session_parse.success) {
-		debug(log_now(), 'Failed to parse schema');
-		debug(log_now(), `Error: '${session_parse.error}'`);
-		res.status(401).send('Internal error');
+	const session_parse = parse_schema(req, AuthenticationInputSchema, debug);
+	if (session_parse.result !== 'Success') {
+		res.status(401).send(`Failure to parse cookies ${session_parse.result}.`);
 		return;
 	}
 	const session = session_parse.data;
@@ -457,11 +444,9 @@ export async function post_game_delete(req: Request, res: Response) {
 export async function post_recalculate_ratings(req: Request, res: Response) {
 	debug(log_now(), `POST ${Routes.RECALCULATE_RATINGS}...`);
 
-	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
-	if (!session_parse.success) {
-		debug(log_now(), 'Failed to parse schema');
-		debug(log_now(), `Error: '${session_parse.error}'`);
-		res.status(401).send('Internal error');
+	const session_parse = parse_schema(req, AuthenticationInputSchema, debug);
+	if (session_parse.result !== 'Success') {
+		res.status(401).send(`Failure to parse cookies ${session_parse.result}.`);
 		return;
 	}
 	const session = session_parse.data;

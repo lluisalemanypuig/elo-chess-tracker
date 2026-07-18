@@ -35,10 +35,11 @@ import { SessionIDManager } from '@server/managers/session_id_manager';
 import { SessionIDTokenFieldName, SessionIDUsernameFieldName } from '@common/models/session_id';
 import { User } from '@common/models/user';
 import { UsersManager } from '@server/managers/users_manager';
-import { AuthenticationInputSchema } from '@common/schemas/authentication';
 import { isDefined } from '@common/utils/is_defined';
 import { UserLoginInputSchema } from '@common/schemas/login_logout';
 import { Routes } from '@common/routes';
+import { parse_schema } from '@server/utils/schemas';
+import { AuthenticationInputSchema } from '@common/schemas/authentication';
 
 export async function post_user_login(req: Request, res: Response) {
 	debug(log_now(), `POST ${Routes.USER_LOGIN}`);
@@ -94,11 +95,9 @@ export async function post_user_login(req: Request, res: Response) {
 export async function post_user_logout(req: Request, res: Response) {
 	debug(log_now(), `POST ${Routes.USER_LOGOUT}`);
 
-	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
-	if (!session_parse.success) {
-		debug(log_now(), 'Failed to parse schema');
-		debug(log_now(), `Error: '${session_parse.error}'`);
-		res.status(401).send('Internal error');
+	const session_parse = parse_schema(req, AuthenticationInputSchema, debug);
+	if (session_parse.result !== 'Success') {
+		res.status(401).send(`Failure to parse cookies ${session_parse.result}.`);
 		return;
 	}
 	const session = session_parse.data;

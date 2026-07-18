@@ -30,18 +30,17 @@ import { Request, Response } from 'express';
 import { log_now } from '@server/utils/time';
 import { is_user_logged_in } from '@server/managers/session';
 import { RatingSystemManager } from '@server/managers/rating_system_manager';
-import { AuthenticationInputSchema } from '@common/schemas/authentication';
 import { isDefined } from '@common/utils/is_defined';
 import { Routes } from '@common/routes';
+import { parse_schema } from '@server/utils/schemas';
+import { AuthenticationInputSchema } from '@common/schemas/authentication';
 
 export async function get_query_html_time_controls(req: Request, res: Response) {
 	debug(log_now(), `GET ${Routes.QUERY_HTML_TIME_CONTROLS}...`);
 
-	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
-	if (!session_parse.success) {
-		debug(log_now(), 'Failed to parse schema');
-		debug(log_now(), `Error: '${session_parse.error}'`);
-		res.status(401).send('Internal error');
+	const session_parse = parse_schema(req, AuthenticationInputSchema, debug);
+	if (session_parse.result !== 'Success') {
+		res.status(401).send(`Failure to parse cookies ${session_parse.result}.`);
 		return;
 	}
 	const session = session_parse.data;
@@ -63,11 +62,9 @@ export async function get_query_html_time_controls(req: Request, res: Response) 
 export async function get_query_html_time_controls_unique(req: Request, res: Response) {
 	debug(log_now(), `GET ${Routes.QUERY_HTML_TIME_CONTROLS_UNIQUE}...`);
 
-	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
-	if (!session_parse.success) {
-		debug(log_now(), 'Failed to parse schema');
-		debug(log_now(), `Error: '${session_parse.error}'`);
-		res.status(401).send('Internal error');
+	const session_parse = parse_schema(req, AuthenticationInputSchema, debug);
+	if (session_parse.result !== 'Success') {
+		res.status(401).send(`Failure to parse cookies ${session_parse.result}.`);
 		return;
 	}
 	const session = session_parse.data;

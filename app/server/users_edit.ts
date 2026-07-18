@@ -35,19 +35,18 @@ import { can_user_edit } from '@server/managers/user_relationships';
 import { UsersManager } from '@server/managers/users_manager';
 import { ConfigurationManager } from '@server/managers/configuration_manager';
 import { get_execution_directory } from '@server/managers/environment_manager';
-import { AuthenticationInputSchema } from '@common/schemas/authentication';
 import { isDefined } from '@common/utils/is_defined';
 import { Routes } from '@common/routes';
 import { InputSchemaOf } from '@common/api/schemas';
+import { parse_schema } from '@server/utils/schemas';
+import { AuthenticationInputSchema } from '@common/schemas/authentication';
 
 export async function get_page_user_edit(req: Request, res: Response) {
 	debug(log_now(), `GET ${Routes.PAGE_USER_EDIT}...`);
 
-	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
-	if (!session_parse.success) {
-		debug(log_now(), 'Failed to parse schema');
-		debug(log_now(), `Error: '${session_parse.error}'`);
-		res.status(401).send('Internal error');
+	const session_parse = parse_schema(req, AuthenticationInputSchema, debug);
+	if (session_parse.result !== 'Success') {
+		res.status(401).send(`Failure to parse cookies ${session_parse.result}.`);
 		return;
 	}
 	const session = session_parse.data;
@@ -75,11 +74,9 @@ export async function get_page_user_edit(req: Request, res: Response) {
 export async function post_user_edit(req: Request, res: Response) {
 	debug(log_now(), `POST ${Routes.USER_EDIT}...`);
 
-	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
-	if (!session_parse.success) {
-		debug(log_now(), 'Failed to parse schema');
-		debug(log_now(), `Error: '${session_parse.error}'`);
-		res.status(401).send('Internal error');
+	const session_parse = parse_schema(req, AuthenticationInputSchema, debug);
+	if (session_parse.result !== 'Success') {
+		res.status(401).send(`Failure to parse cookies ${session_parse.result}.`);
 		return;
 	}
 	const session = session_parse.data;

@@ -37,10 +37,11 @@ import { UsersManager } from '@server/managers/users_manager';
 import { Edge } from '@common/models/graph/edge';
 import { can_user_see_graph } from '@server/managers/user_relationships';
 import { GRAPHS_SEE_USER } from '@common/models/user_action';
-import { AuthenticationInputSchema } from '@common/schemas/authentication';
 import { isDefined } from '@common/utils/is_defined';
 import { Routes } from '@common/routes';
 import { InputSchemaOf } from '@common/api/schemas';
+import { parse_schema } from '@server/utils/schemas';
+import { AuthenticationInputSchema } from '@common/schemas/authentication';
 
 class NodeWeight {
 	rating: number = 0;
@@ -223,11 +224,9 @@ function retrieve_graph_full(querier: User, time_control_id: TimeControlID): [No
 export async function post_query_graph_own(req: Request, res: Response) {
 	debug(log_now(), `POST ${Routes.QUERY_GRAPH_OWN}...`);
 
-	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
-	if (!session_parse.success) {
-		debug(log_now(), 'Failed to parse schema');
-		debug(log_now(), `Error: '${session_parse.error}'`);
-		res.status(401).send('Internal error');
+	const session_parse = parse_schema(req, AuthenticationInputSchema, debug);
+	if (session_parse.result !== 'Success') {
+		res.status(401).send(`Failure to parse cookies ${session_parse.result}.`);
 		return;
 	}
 	const session = session_parse.data;
@@ -259,11 +258,9 @@ export async function post_query_graph_own(req: Request, res: Response) {
 export async function post_query_graph_full(req: Request, res: Response) {
 	debug(log_now(), `POST ${Routes.QUERY_GRAPH_FULL}...`);
 
-	const session_parse = AuthenticationInputSchema.safeParse(req.cookies);
-	if (!session_parse.success) {
-		debug(log_now(), 'Failed to parse schema');
-		debug(log_now(), `Error: '${session_parse.error}'`);
-		res.status(401).send('Internal error');
+	const session_parse = parse_schema(req, AuthenticationInputSchema, debug);
+	if (session_parse.result !== 'Success') {
+		res.status(401).send(`Failure to parse cookies ${session_parse.result}.`);
 		return;
 	}
 	const session = session_parse.data;
