@@ -39,7 +39,7 @@ export const ChallengeAcceptInputSchema = z.object({
 	challenge_id: z.string()
 });
 
-export type ChallengeInputAccept = z.infer<typeof ChallengeAcceptInputSchema>;
+export type ChallengeAcceptInput = z.infer<typeof ChallengeAcceptInputSchema>;
 
 export const ChallengeDeclineInputSchema = z.object({
 	challenge_id: z.string()
