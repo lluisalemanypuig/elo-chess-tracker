@@ -56,14 +56,6 @@ type ApiSchemaEntry = {
 	method: ApiMethod;
 };
 
-/**
- * For each API route, each field defines the type of
- * - body: the body field
- * - result: the type (as a schema) of the data returned
- *
- * When `body` is "Empty", then there is no body to be parsed in `body.body`.
- * When `result` is "Empty", then there is nothing to parse from `result.json()`.
- */
 export const API_SCHEMA = {
 	[Routes.CSS_ALL]: {
 		output: EmptySchema,
