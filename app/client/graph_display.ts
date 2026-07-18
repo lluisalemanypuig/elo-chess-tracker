@@ -29,7 +29,7 @@ import { EdgeArrowProgram } from 'sigma/rendering';
 import forceAtlas2 from 'graphology-layout-forceatlas2';
 import { scaleLinear } from 'd3-scale';
 import { interpolateRgb } from 'd3-interpolate';
-import { Routes } from '@common/routes';
+import { Route, Routes } from '@common/routes';
 
 let s: Sigma;
 let graph_data: any;
@@ -84,18 +84,18 @@ async function load_graph() {
 	}
 
 	const val = document.getElementById('graph-viewer')?.getAttribute('value');
-	const query_to_server: string = (() => {
+	const query_to_server: Route = (() => {
 		if (val == 'full') {
 			return Routes.QUERY_GRAPH_FULL;
 		}
 		if (val == 'own') {
 			return Routes.QUERY_GRAPH_OWN;
 		}
-		return '?';
+		throw new Error(`Wrong value for page configuration ${val}`);
 	})();
 
 	// "query" the server
-	const response = await server_call(query_to_server, 'POST', JSON.stringify({ tc_i: time_control_id }));
+	const response = await server_call(query_to_server, 'POST', { tc_i: time_control_id });
 	if (response.status >= 400) {
 		const message = await response.text();
 		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);

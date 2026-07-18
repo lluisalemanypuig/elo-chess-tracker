@@ -21,14 +21,6 @@ Full source code of elo-chess-tracker:
 
 import 'htmx.org';
 
-import {
-	ChallengeAcceptInput,
-	ChallengeAgreeResultInput,
-	ChallengeDeclineInput,
-	ChallengeDisagreeResultInput,
-	ChallengeSendInput,
-	ChallengeSetResultInput
-} from '@common/schemas/challenges';
 import { GameResult } from '@common/models/game';
 import { server_call } from '@client/action';
 import { Routes } from '@common/routes';
@@ -58,16 +50,12 @@ async function send_challenge_button_clicked(_event: any) {
 		const game_title = game_title_text.textContent;
 
 		// "query" the server
-		const response = await server_call(
-			Routes.CHALLENGE_SEND,
-			'POST',
-			JSON.stringify({
-				to: random_user_id,
-				title: game_title,
-				time_control_id: time_control_id,
-				time_control_name: time_control_name
-			} satisfies ChallengeSendInput)
-		);
+		const response = await server_call(Routes.CHALLENGE_SEND, 'POST', {
+			to: random_user_id,
+			title: game_title,
+			time_control_id: time_control_id,
+			time_control_name: time_control_name
+		});
 		if (response.status >= 400) {
 			const message = await response.text();
 			alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
@@ -82,11 +70,7 @@ async function accept_challenge_button_clicked(event: any) {
 	let tag_clicked = event.target;
 	let challenge_id = tag_clicked.id;
 
-	const response = await server_call(
-		Routes.CHALLENGE_ACCEPT,
-		'POST',
-		JSON.stringify({ challenge_id: challenge_id } satisfies ChallengeAcceptInput)
-	);
+	const response = await server_call(Routes.CHALLENGE_ACCEPT, 'POST', { challenge_id: challenge_id });
 	if (response.status >= 400) {
 		const message = await response.text();
 		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
@@ -99,11 +83,7 @@ async function decline_challenge_tag_clicked(event: any) {
 	let tag_clicked = event.target;
 	let challenge_id = tag_clicked.id;
 
-	const response = await server_call(
-		Routes.CHALLENGE_DECLINE,
-		'POST',
-		JSON.stringify({ challenge_id: challenge_id } satisfies ChallengeDeclineInput)
-	);
+	const response = await server_call(Routes.CHALLENGE_DECLINE, 'POST', { challenge_id: challenge_id });
 	if (response.status >= 400) {
 		const message = await response.text();
 		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
@@ -136,16 +116,12 @@ async function submit_result_challenge_button_clicked(event: any) {
 	}
 
 	// "query" the server
-	const response = await server_call(
-		Routes.CHALLENGE_SET_RESULT,
-		'POST',
-		JSON.stringify({
-			challenge_id: challenge_id,
-			white: white_username,
-			black: black_username,
-			result: result
-		} satisfies ChallengeSetResultInput)
-	);
+	const response = await server_call(Routes.CHALLENGE_SET_RESULT, 'POST', {
+		challenge_id: challenge_id,
+		white: white_username,
+		black: black_username,
+		result: result
+	});
 	if (response.status >= 400) {
 		const message = await response.text();
 		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
@@ -159,11 +135,7 @@ async function agree_challenge_result_button_clicked(event: any) {
 	let tag_clicked = event.target;
 	let challenge_id = tag_clicked.id;
 
-	const response = await server_call(
-		Routes.CHALLENGE_AGREE,
-		'POST',
-		JSON.stringify({ challenge_id: challenge_id } satisfies ChallengeAgreeResultInput)
-	);
+	const response = await server_call(Routes.CHALLENGE_AGREE, 'POST', { challenge_id: challenge_id });
 
 	if (response.status >= 400) {
 		const message = await response.text();
@@ -178,11 +150,7 @@ async function disagree_challenge_result_button_clicked(event: any) {
 	let tag_clicked = event.target;
 	let challenge_id = tag_clicked.id;
 
-	const response = await server_call(
-		Routes.CHALLENGE_DISAGREE,
-		'POST',
-		JSON.stringify({ challenge_id: challenge_id } satisfies ChallengeDisagreeResultInput)
-	);
+	const response = await server_call(Routes.CHALLENGE_DISAGREE, 'POST', { challenge_id: challenge_id });
 	if (response.status >= 400) {
 		const message = await response.text();
 		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
@@ -193,7 +161,7 @@ async function disagree_challenge_result_button_clicked(event: any) {
 }
 
 async function fill_challenges_received() {
-	const response = await server_call(Routes.QUERY_CHALLENGE_RECEIVED, 'GET', '');
+	const response = await server_call(Routes.QUERY_CHALLENGE_RECEIVED, 'GET', {});
 	if (response.status >= 400) {
 		const message = await response.text();
 		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
@@ -283,7 +251,7 @@ async function fill_challenges_received() {
 }
 
 async function fill_challenges_sent() {
-	const response = await server_call(Routes.QUERY_CHALLENGE_SENT, 'GET', '');
+	const response = await server_call(Routes.QUERY_CHALLENGE_SENT, 'GET', {});
 	if (response.status >= 400) {
 		const message = await response.text();
 		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
@@ -331,7 +299,7 @@ async function fill_challenges_sent() {
 }
 
 async function fill_challenges_pending_result() {
-	const response_pending = await server_call(Routes.QUERY_CHALLENGE_PENDING_RESULT, 'GET', '');
+	const response_pending = await server_call(Routes.QUERY_CHALLENGE_PENDING_RESULT, 'GET', {});
 	if (response_pending.status >= 400) {
 		const message = await response_pending.text();
 		alert(`${response_pending.status} -- ${response_pending.statusText}\nMessage: '${message}'`);
@@ -472,7 +440,7 @@ async function fill_challenges_pending_result() {
 }
 
 async function fill_challenges_confirm_result_other() {
-	const response = await server_call(Routes.QUERY_CHALLENGE_CONFIRM_RESULT_OTHER, 'GET', '');
+	const response = await server_call(Routes.QUERY_CHALLENGE_CONFIRM_RESULT_OTHER, 'GET', {});
 	if (response.status >= 400) {
 		const message = await response.text();
 		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
@@ -525,7 +493,7 @@ async function fill_challenges_confirm_result_other() {
 }
 
 async function fill_challenges_confirm_result_self() {
-	const response = await server_call(Routes.QUERY_CHALLENGE_CONFIRM_RESULT_SELF, 'GET', '');
+	const response = await server_call(Routes.QUERY_CHALLENGE_CONFIRM_RESULT_SELF, 'GET', {});
 	if (response.status >= 400) {
 		const message = await response.text();
 		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);

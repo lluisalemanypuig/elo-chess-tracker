@@ -23,11 +23,13 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { isNotDefined } from '@app/common/utils/is_defined';
+import { BodyTypeOf } from '@common/api/types';
+import { Route } from '@common/routes';
+import { isNotDefined } from '@common/utils/is_defined';
 
 export type Method = 'POST' | 'GET';
 
-export async function server_call<T>(route: string, m: Method, body: T | undefined | null) {
+export async function server_call<T extends Route>(route: T, m: Method, body: BodyTypeOf[T] | undefined | null) {
 	if (isNotDefined(body)) {
 		return fetch(route, {
 			method: m,

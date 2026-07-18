@@ -21,7 +21,6 @@ Full source code of elo-chess-tracker:
 
 import 'htmx.org';
 
-import { UserLoginInput } from '@common/schemas/login_logout';
 import { server_call } from '@client/action';
 import { Routes } from '@common/routes';
 
@@ -48,11 +47,7 @@ async function log_into_webpage(_event: any) {
 	}
 
 	// "query" the server
-	const response = await server_call(
-		Routes.USER_LOGIN,
-		'POST',
-		JSON.stringify({ u: username, p: password } satisfies UserLoginInput)
-	);
+	const response = await server_call(Routes.USER_LOGIN, 'POST', { u: username, p: password });
 	if (response.status >= 400) {
 		const message = await response.text();
 		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);

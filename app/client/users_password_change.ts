@@ -21,7 +21,6 @@ Full source code of elo-chess-tracker:
 
 import 'htmx.org';
 
-import { UserPasswordChangeInput } from '@common/schemas/user';
 import { server_call } from '@client/action';
 import { Routes } from '@common/routes';
 
@@ -35,14 +34,10 @@ async function button_submit_clicked() {
 		return;
 	}
 
-	const response = await server_call(
-		Routes.USER_PASSWORD_CHANGE,
-		'POST',
-		JSON.stringify({
-			old: box_old_password.value,
-			new: box_new_password.value
-		} satisfies UserPasswordChangeInput)
-	);
+	const response = await server_call(Routes.USER_PASSWORD_CHANGE, 'POST', {
+		old: box_old_password.value,
+		new: box_new_password.value
+	});
 	if (response.status >= 400) {
 		const message = await response.text();
 		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);

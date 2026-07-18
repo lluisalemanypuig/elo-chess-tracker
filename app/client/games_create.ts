@@ -22,7 +22,6 @@ Full source code of elo-chess-tracker:
 import 'htmx.org';
 
 import { result_from_text_to_value } from '@common/models/game';
-import { GameCreateInput } from '@common/schemas/games';
 import { isDefined } from '@common/utils/is_defined';
 import { server_call } from '@client/action';
 import { Routes } from '@common/routes';
@@ -32,7 +31,7 @@ async function initialize_window_client_games_create() {
 	let datalist_black_users = document.getElementById('datalist_black_users') as HTMLDataListElement;
 
 	// query the server for the list of users
-	const response = await server_call(Routes.QUERY_HTML_USER_LIST, 'GET', '');
+	const response = await server_call(Routes.QUERY_HTML_USER_LIST, 'GET', {});
 	const data = await response.text();
 	if (response.status >= 400) {
 		alert(`${response.status} -- ${response.statusText}\nMessage: '${data}'`);
@@ -87,27 +86,23 @@ async function submit_new_game(_event: any) {
 
 	const rand_sec = `${Math.floor(Math.random() * 59)}`;
 	const rand_milli = `${Math.floor(Math.random() * 999)}`;
-	const response = await server_call(
-		Routes.GAME_CREATE,
-		'POST',
-		JSON.stringify({
-			title: game_title,
-			w: Number(white),
-			b: Number(black),
-			r: result,
-			tc_i: time_control_id,
-			tc_n: time_control_name,
-			d: input_game_date.value,
-			t:
-				input_game_time.value +
-				':' +
-				(rand_sec.length == 1 ? '0' : '') +
-				rand_sec +
-				':' +
-				(rand_milli.length == 1 ? '00' : rand_milli.length == 2 ? '0' : '') +
-				rand_milli
-		} satisfies GameCreateInput)
-	);
+	const response = await server_call(Routes.GAME_CREATE, 'POST', {
+		title: game_title,
+		w: Number(white),
+		b: Number(black),
+		r: result,
+		tc_i: time_control_id,
+		tc_n: time_control_name,
+		d: input_game_date.value,
+		t:
+			input_game_time.value +
+			':' +
+			(rand_sec.length == 1 ? '0' : '') +
+			rand_sec +
+			':' +
+			(rand_milli.length == 1 ? '00' : rand_milli.length == 2 ? '0' : '') +
+			rand_milli
+	});
 	if (response.status >= 400) {
 		const message = await response.text();
 		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
