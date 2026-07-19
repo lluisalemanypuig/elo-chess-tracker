@@ -23,32 +23,46 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-function make_cookie(values: any): string {
+import { isDefined } from '@common/utils/is_defined';
+
+type SameSite = 'Lax';
+
+interface CookiesParams {
+	name: string;
+	value: string;
+	days?: number;
+	path?: string;
+	samesite?: SameSite;
+	domain?: string;
+	secure: boolean;
+}
+
+function make_cookie({ name, value, days, path, samesite, domain, secure }: CookiesParams): string {
 	let cookie: string = '';
 
-	cookie += encodeURIComponent(values['name']) + '=' + encodeURIComponent(values['value']);
+	cookie += encodeURIComponent(name) + '=' + encodeURIComponent(value);
 
-	if (values['domain'] != undefined) {
-		cookie += '; Domain=' + values['domain'];
+	if (isDefined(domain)) {
+		cookie += '; Domain=' + domain;
 	}
 
 	{
-		let days = 1;
-		if (values['days'] != undefined) {
-			days = parseInt(values['days'], 10);
+		let num_days = 1;
+		if (isDefined(days)) {
+			num_days = days;
 		}
 		const d = new Date();
-		d.setTime(d.getTime() + days * 24 * 60 * 60 * 1000);
+		d.setTime(d.getTime() + num_days * 24 * 60 * 60 * 1000);
 		cookie += '; expires=' + d.toUTCString();
 	}
 
-	if (values['path'] != undefined) {
-		cookie += '; path=' + values['path'];
+	if (isDefined(path)) {
+		cookie += '; path=' + path;
 	}
-	if (values['samesite'] != undefined) {
-		cookie += '; SameSite=' + values['samesite'];
+	if (isDefined(samesite)) {
+		cookie += '; SameSite=' + samesite;
 	}
-	if (values['secure']) {
+	if (secure) {
 		cookie += '; Secure';
 	}
 
@@ -69,7 +83,6 @@ export function make_session_id_cookie(name: string, value: string, days: number
 		days: days,
 		path: '/',
 		samesite: 'Lax',
-		domain: undefined,
 		secure: true
 	});
 }
@@ -86,7 +99,6 @@ export function empty_session_id_cookie(name: string): string {
 		days: 1,
 		path: '/',
 		samesite: 'Lax',
-		domain: undefined,
 		secure: true
 	});
 }

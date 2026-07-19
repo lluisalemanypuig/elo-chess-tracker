@@ -117,5 +117,5 @@ export async function post_recalculate_graphs(req: Request, res: Response) {
 	// actually recalculating ratings
 	recalculate_all_graphs();
 
-	res.status(200).send({ r: '1' });
+	res.status(200).send();
 }
