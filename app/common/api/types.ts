@@ -27,7 +27,7 @@ import { z } from 'zod';
 
 import { Route } from '@common/routes';
 
-import { API_SCHEMA } from './schemas';
+import { API_SCHEMA } from '@common/api/schemas';
 
 export type Empty = undefined;
 
