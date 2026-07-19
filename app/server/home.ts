@@ -42,6 +42,7 @@ export async function get_page_login(req: Request, res: Response) {
 
 	const session_parse = parse_schema(req.cookies, AuthenticationInputSchema, debug);
 	if (session_parse.result === 'Error') {
+		console.log('asdf');
 		return;
 	}
 	const session = session_parse.data;

@@ -35,7 +35,7 @@ import { SessionIDManager } from '@server/managers/session_id_manager';
 import { SessionIDTokenFieldName, SessionIDUsernameFieldName } from '@common/models/session_id';
 import { User } from '@common/models/user';
 import { UsersManager } from '@server/managers/users_manager';
-import { isDefined } from '@common/utils/is_defined';
+import { isNotDefined } from '@common/utils/is_defined';
 import { UserLoginInputSchema } from '@common/schemas/login_logout';
 import { Routes } from '@common/routes';
 import { safe_parse_request_body, safe_parse_request_cookies } from '@server/utils/schemas';
@@ -57,7 +57,7 @@ export async function post_user_login(req: Request, res: Response) {
 	const user_data = UsersManager.get_instance().get_user_by_username(username);
 
 	// nonexistent user
-	if (!isDefined(user_data)) {
+	if (isNotDefined(user_data)) {
 		debug(log_now(), `    User ${username} does not exist`);
 		res.status(404).send('Incorrect user or password.');
 		return;

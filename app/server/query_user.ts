@@ -38,6 +38,15 @@ import { Routes } from '@common/routes';
 import { InputSchemaOf } from '@common/api/schemas';
 import { safe_parse_request_body, safe_parse_request_cookies } from '@server/utils/schemas';
 import { AuthenticationInputSchema } from '@common/schemas/authentication';
+import { UserThin } from '@common/models/user_thin';
+import {
+	QueryUserEditOutput,
+	QueryUserHomeOutput,
+	QueryUserRankingOutput,
+	TimeControlAndRating,
+	UserWithGames,
+	UserWithoutGames
+} from '@common/schemas/query_user';
 
 /// Returns the list of user full names and usernames sorted by name
 export async function get_query_user_list(req: Request, res: Response) {
@@ -56,8 +65,8 @@ export async function get_query_user_list(req: Request, res: Response) {
 	}
 
 	let list = user_get_all_name_randid();
-	list.sort(function (a: [string, number], b: [string, number]): number {
-		return a[0].localeCompare(b[0]);
+	list.sort(function (a: UserThin, b: UserThin): number {
+		return a.name.localeCompare(b.name);
 	});
 
 	res.status(200).send(list);
@@ -79,13 +88,13 @@ export async function get_query_html_user_list(req: Request, res: Response) {
 	}
 
 	let list = user_get_all_name_randid();
-	list.sort(function (a: [string, number], b: [string, number]): number {
-		return a[0].localeCompare(b[0]);
+	list.sort(function (a: UserThin, b: UserThin): number {
+		return a.name.localeCompare(b.name);
 	});
 
 	let data: string = '';
-	for (const [name, rand_id] of list) {
-		data += `<option value="${name}" id="${rand_id}">`;
+	for (const u of list) {
+		data += `<option value="${u.name}" id="${u.id}">`;
 	}
 	res.status(200).send(data);
 }
@@ -106,18 +115,19 @@ export async function get_query_user_home(req: Request, res: Response) {
 		return;
 	}
 
-	const ratings_user = user.ratings.map((value: TimeControlRating) => {
+	const ratings_user = user.ratings.map((value: TimeControlRating): TimeControlAndRating => {
 		let R = value.rating.clone();
 		R.rating = Math.round(R.rating);
-		return { id: value.time_control, v: R };
+		return { time_control_name: value.time_control, rating: R };
 	});
 
-	res.status(200).send({
+	const output: QueryUserHomeOutput = {
 		fullname: user.get_full_name(),
 		roles: user.roles,
 		actions: user.get_actions(),
 		ratings: ratings_user
-	});
+	};
+	res.status(200).send(output);
 }
 
 export async function post_query_user_edit(req: Request, res: Response) {
@@ -151,11 +161,12 @@ export async function post_query_user_edit(req: Request, res: Response) {
 		return;
 	}
 
-	res.status(200).send({
+	const output: QueryUserEditOutput = {
 		first_name: to_edit.first_name,
 		last_name: to_edit.last_name,
 		roles: to_edit.roles
-	});
+	};
+	res.status(200).send(output);
 }
 
 export async function post_query_user_ranking(req: Request, res: Response) {
@@ -180,8 +191,8 @@ export async function post_query_user_ranking(req: Request, res: Response) {
 
 	const time_control_id = user_query.data.tc_i;
 
-	let users_without_games: any[] = [];
-	let users_with_games: any[] = [];
+	let users_without_games: UserWithoutGames[] = [];
+	let users_with_games: UserWithGames[] = [];
 	{
 		const mem = UsersManager.get_instance();
 		for (let i = 0; i < mem.num_users(); ++i) {
@@ -204,7 +215,7 @@ export async function post_query_user_ranking(req: Request, res: Response) {
 		}
 	}
 
-	users_with_games.sort((u1: any, u2: any): number => {
+	users_with_games.sort((u1: UserWithGames, u2: UserWithGames): number => {
 		if (u1.rating < u2.rating) {
 			return 1;
 		}
@@ -217,5 +228,6 @@ export async function post_query_user_ranking(req: Request, res: Response) {
 	debug(log_now(), `    Found ${users_with_games.length} users with games.`);
 	debug(log_now(), `    Found ${users_without_games.length} users without games.`);
 
-	res.status(200).send({ with_games: users_with_games, without_games: users_without_games });
+	const output: QueryUserRankingOutput = { with_games: users_with_games, without_games: users_without_games };
+	res.status(200).send(output);
 }

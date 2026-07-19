@@ -27,7 +27,7 @@ import Debug from 'debug';
 import { z } from 'zod';
 import { Request, Response } from 'express';
 
-import { isNotDefined } from '@common/utils/is_defined';
+import { isDefined, isNotDefined } from '@common/utils/is_defined';
 import { log_now } from '@server/utils/time';
 
 export type ParseResult = 'JsonDataNotProvided' | 'Error' | 'Success';
@@ -47,7 +47,13 @@ export function parse_schema<S extends z.ZodTypeAny>(
 	schema_obj: S,
 	debug: Debug.Debugger
 ): ParseSchemaResult<z.output<S>> {
-	if (isNotDefined(json)) {
+	const isEmptyPlainObject = (v: unknown) =>
+		typeof v === 'object' &&
+		isDefined(v) &&
+		!Array.isArray(v) &&
+		Object.keys(v as Record<string, unknown>).length === 0;
+
+	if (isNotDefined(json) || isEmptyPlainObject(json)) {
 		return {
 			result: 'JsonDataNotProvided',
 			data: undefined

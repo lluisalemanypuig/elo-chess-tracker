@@ -38,6 +38,13 @@ import { isDefined } from '@common/utils/is_defined';
 import { Routes } from '@common/routes';
 import { safe_parse_request_cookies } from '@server/utils/schemas';
 import { AuthenticationInputSchema } from '@common/schemas/authentication';
+import {
+	QueryChallengesConfirmResultOtherOutput,
+	QueryChallengesConfirmResultSelfOutput,
+	QueryChallengesPendingResultOutput,
+	QueryChallengesReceivedOutput,
+	QueryChallengesSentOutput
+} from '@common/schemas/query_challenges';
 
 /// Query the server for challenges received sento to me by other users
 export async function get_query_challenge_received(req: Request, res: Response) {
@@ -69,7 +76,7 @@ export async function get_query_challenge_received(req: Request, res: Response) 
 
 	let manager = UsersManager.get_instance();
 
-	let all_challenges_received: any[] = [];
+	let all_challenges_received: QueryChallengesReceivedOutput = [];
 	for (const c of to_return) {
 		const sent_by = manager.get_user_by_username(c.sent_by);
 		if (!isDefined(sent_by)) {
@@ -130,7 +137,7 @@ export async function get_query_challenge_sent(req: Request, res: Response) {
 		return;
 	}
 
-	let all_challenges: any[] = [];
+	let all_challenges: QueryChallengesSentOutput = [];
 	for (const c of to_return) {
 		const sent_to = manager.get_user_by_username(c.sent_to);
 		if (!isDefined(sent_to)) {
@@ -190,7 +197,7 @@ export async function get_query_challenge_pending_result(req: Request, res: Resp
 
 	let manager = UsersManager.get_instance();
 
-	let all_challenges: any[] = [];
+	let all_challenges: QueryChallengesPendingResultOutput = [];
 	for (const c of to_return) {
 		const user_sent_to = manager.get_user_by_username(c.sent_to);
 		if (!isDefined(user_sent_to)) {
@@ -271,7 +278,7 @@ export async function get_query_challenge_confirm_result_other(req: Request, res
 
 	let manager = UsersManager.get_instance();
 
-	let all_challenges: any[] = [];
+	let all_challenges: QueryChallengesConfirmResultOtherOutput = [];
 	for (const c of to_return) {
 		const user_sent_to = manager.get_user_by_username(c.sent_to);
 		if (!isDefined(user_sent_to)) {
@@ -361,7 +368,7 @@ export async function get_query_challenge_confirm_result_self(req: Request, res:
 
 	let manager = UsersManager.get_instance();
 
-	let all_challenges: any[] = [];
+	let all_challenges: QueryChallengesConfirmResultSelfOutput = [];
 	for (const c of to_return) {
 		const user_sent_to = manager.get_user_by_username(c.sent_to);
 		if (!isDefined(user_sent_to)) {

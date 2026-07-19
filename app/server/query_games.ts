@@ -48,6 +48,7 @@ import { Routes } from '@common/routes';
 import { InputSchemaOf } from '@common/api/schemas';
 import { safe_parse_request_body, safe_parse_request_cookies } from '@server/utils/schemas';
 import { AuthenticationInputSchema } from '@common/schemas/authentication';
+import { QueryGamesListOutput, QueryGamesListOutputSingle } from '@common/schemas/query_games';
 
 function increment(g: Game): any {
 	const [white_after, black_after] = RatingSystemManager.get_instance().apply_rating_function(g);
@@ -69,8 +70,8 @@ function filter_game_list(
 	time_control_id: TimeControlID,
 	filter_game_record: Function,
 	filter_game: Function
-): any[] {
-	let data_to_return: any[] = [];
+): QueryGamesListOutputSingle[] {
+	let data_to_return: QueryGamesListOutputSingle[] = [];
 
 	const games_id_dir = EnvironmentManager.get_instance().get_dir_games_time_control(time_control_id);
 
@@ -140,12 +141,12 @@ function filter_game_list(
 				result: result,
 				time_control: g.time_control_name,
 				date: g.when.replace('..', ' '),
-				white_rating: Math.round(g.white_rating.rating),
-				black_rating: Math.round(g.black_rating.rating),
-				white_increment: inc.white_increment < 0 ? inc.white_increment : '+' + inc.white_increment,
-				black_increment: inc.black_increment < 0 ? inc.black_increment : '+' + inc.black_increment,
-				editable: is_editable ? 'y' : 'n',
-				deleteable: is_deleteable ? 'y' : 'n'
+				white_rating: `${Math.round(g.white_rating.rating)}`,
+				black_rating: `${Math.round(g.black_rating.rating)}`,
+				white_increment: inc.white_increment < 0 ? `${inc.white_increment}` : `+${inc.white_increment}`,
+				black_increment: inc.black_increment < 0 ? `${inc.black_increment}` : `+${inc.black_increment}`,
+				editable: is_editable,
+				deleteable: is_deleteable
 			});
 		}
 	}
@@ -179,7 +180,7 @@ export async function post_query_game_list_own(req: Request, res: Response) {
 		return g.is_user_involved(session.username);
 	};
 
-	let data_to_return: any[] = [];
+	let data_to_return: QueryGamesListOutput = [];
 	if (time_control_id != '') {
 		data_to_return = filter_game_list(
 			user,
@@ -219,8 +220,11 @@ export async function post_query_game_list_own(req: Request, res: Response) {
 	res.status(200).send(data_to_return);
 }
 
-function merge_by_date(v1: any[], v2: any[]): any[] {
-	let v3: any[] = [];
+function merge_by_date(
+	v1: QueryGamesListOutputSingle[],
+	v2: QueryGamesListOutputSingle[]
+): QueryGamesListOutputSingle[] {
+	let v3: QueryGamesListOutputSingle[] = [];
 	let i: number = 0;
 	let j: number = 0;
 	while (i < v1.length && j < v2.length) {
@@ -277,7 +281,7 @@ export async function post_query_game_list_all(req: Request, res: Response) {
 	const time_control_id = game_parse.data.tc_i;
 
 	let manager = UsersManager.get_instance();
-	let data_to_return: any[] = [];
+	let data_to_return: QueryGamesListOutput = [];
 	if (time_control_id != '') {
 		data_to_return = filter_game_list(
 			user,

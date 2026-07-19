@@ -37,6 +37,7 @@ import { encrypt_password_for_user } from '@server/utils/encrypt';
 import { RatingSystemManager } from '@server/managers/rating_system_manager';
 import { TimeControlRating } from '@common/models/time_control_rating';
 import { log_now } from '@server/utils/time';
+import { UserThin } from '@common/models/user_thin';
 
 /// Dump the data in user @e u into its corresponding file.
 export function user_overwrite(user: User): void {
@@ -111,14 +112,14 @@ export function user_add_new(
 }
 
 /// Returns the list of all (full) names and usernames
-export function user_get_all_name_randid(): [string, number][] {
-	let res: [string, number][] = [];
+export function user_get_all_name_randid(): UserThin[] {
+	let res: UserThin[] = [];
 
 	const mem = UsersManager.get_instance();
 	for (let i = 0; i < mem.num_users(); ++i) {
 		const user = mem.get_user_at(i) as User;
 		const random_id = mem.get_user_random_ID_at(i) as UserRandomID;
-		res.push([user.get_full_name(), random_id]);
+		res.push({ name: user.get_full_name(), id: random_id });
 	}
 	return res;
 }

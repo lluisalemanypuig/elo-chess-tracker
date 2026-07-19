@@ -42,61 +42,42 @@ import { Routes } from '@common/routes';
 import { InputSchemaOf } from '@common/api/schemas';
 import { safe_parse_request_body, safe_parse_request_cookies } from '@server/utils/schemas';
 import { AuthenticationInputSchema } from '@common/schemas/authentication';
+import { EdgeInfo, NodeInfo, QueryGraphOutput } from '@common/schemas/query_graphs';
 
-class NodeWeight {
-	rating: number = 0;
-}
-
-class NodeInfo {
-	id: number = 0;
-	full_name: string = '';
-	weight: NodeWeight = new NodeWeight();
-}
-
-class EdgeWeight {
-	wins: number = 0;
-	draws: number = 0;
-	losses: number = 0;
-}
-
-class EdgeInfo {
-	source: number = 0;
-	target: number = 0;
-	label: string = '';
-	weight: EdgeWeight = new EdgeWeight();
-}
-
-function retrieve_graph_user(username: string, time_control_id: TimeControlID): [NodeInfo[], EdgeInfo[]] {
+function retrieve_graph_user(username: string, time_control_id: TimeControlID): QueryGraphOutput {
 	const users = UsersManager.get_instance();
 	const graphs = GraphsManager.get_instance();
 
 	const this_user_idx = users.get_user_index_by_username(username);
 	if (!isDefined(this_user_idx)) {
 		debug(log_now(), `Index for user '${username}' could not be found.`);
-		return [[], []];
+		return { nodes: [], edges: [] };
 	}
 	const this_user_rand_id = users.get_user_random_ID_at(this_user_idx);
 	if (!isDefined(this_user_rand_id)) {
 		debug(log_now(), `Random id for user '${username}' could not be found.`);
-		return [[], []];
+		return { nodes: [], edges: [] };
 	}
 	const this_user = users.get_user_at(this_user_idx);
 	if (!isDefined(this_user)) {
 		debug(log_now(), `User '${username}' could not be found.`);
-		return [[], []];
+		return { nodes: [], edges: [] };
 	}
 	const G = graphs.get_graph(time_control_id);
 	if (!isDefined(G)) {
 		debug(log_now(), `Graph for '${time_control_id}' could not be found.`);
-		return [[], []];
+		return { nodes: [], edges: [] };
 	}
 
 	let list_nodes: NodeInfo[];
 	{
-		let node = new NodeInfo();
-		node.full_name = this_user.get_full_name();
-		node.id = this_user_rand_id;
-		node.weight.rating = this_user.get_rating(time_control_id).rating;
+		const node: NodeInfo = {
+			id: this_user_rand_id,
+			full_name: this_user.get_full_name(),
+			weight: {
+				rating: this_user.get_rating(time_control_id).rating
+			}
+		};
 		list_nodes = [node];
 	}
 	let list_edges: EdgeInfo[] = [];
@@ -106,19 +87,25 @@ function retrieve_graph_user(username: string, time_control_id: TimeControlID): 
 		const edge_user_rand_id = users.get_user_random_ID_at(edge_user_idx) as number;
 		const edge_user = users.get_user_at(edge_user_idx) as User;
 
-		let node = new NodeInfo();
-		node.id = edge_user_rand_id;
-		node.full_name = edge_user.get_full_name();
-		node.weight.rating = edge_user.get_rating(time_control_id).rating;
+		const node: NodeInfo = {
+			id: edge_user_rand_id,
+			full_name: edge_user.get_full_name(),
+			weight: {
+				rating: edge_user.get_rating(time_control_id).rating
+			}
+		};
 		list_nodes.push(node);
 
-		let edge = new EdgeInfo();
-		edge.source = this_user_rand_id;
-		edge.target = edge_user_rand_id;
-		edge.label = e.metadata.to_string();
-		edge.weight.wins = e.metadata.num_games_won;
-		edge.weight.draws = e.metadata.num_games_drawn;
-		edge.weight.losses = e.metadata.num_games_lost;
+		const edge: EdgeInfo = {
+			source: this_user_rand_id,
+			target: edge_user_rand_id,
+			label: e.metadata.to_string(),
+			weight: {
+				wins: e.metadata.num_games_won,
+				draws: e.metadata.num_games_drawn,
+				losses: e.metadata.num_games_lost
+			}
+		};
 		list_edges.push(edge);
 	});
 	G.get_incoming_edges(username)?.forEach((e: Edge) => {
@@ -132,34 +119,40 @@ function retrieve_graph_user(username: string, time_control_id: TimeControlID): 
 		if (idx == -1) {
 			const edge_user = users.get_user_at(neighbor_idx) as User;
 
-			let node = new NodeInfo();
-			node.id = neighbor_rand_id;
-			node.weight.rating = edge_user.get_rating(time_control_id).rating;
-			node.full_name = edge_user.get_full_name();
+			const node: NodeInfo = {
+				id: neighbor_rand_id,
+				full_name: edge_user.get_full_name(),
+				weight: {
+					rating: edge_user.get_rating(time_control_id).rating
+				}
+			};
 			list_nodes.push(node);
 		}
 
-		let edge = new EdgeInfo();
-		edge.source = neighbor_rand_id;
-		edge.target = this_user_rand_id;
-		edge.label = e.metadata.clone().reverse().to_string();
-		edge.weight.wins = e.metadata.num_games_lost;
-		edge.weight.draws = e.metadata.num_games_drawn;
-		edge.weight.losses = e.metadata.num_games_won;
+		const edge: EdgeInfo = {
+			source: neighbor_rand_id,
+			target: this_user_rand_id,
+			label: e.metadata.clone().reverse().to_string(),
+			weight: {
+				wins: e.metadata.num_games_lost,
+				draws: e.metadata.num_games_drawn,
+				losses: e.metadata.num_games_won
+			}
+		};
 		list_edges.push(edge);
 	});
 
-	return [list_nodes, list_edges];
+	return { nodes: list_nodes, edges: list_edges };
 }
 
-function retrieve_graph_full(querier: User, time_control_id: TimeControlID): [NodeInfo[], EdgeInfo[]] {
+function retrieve_graph_full(querier: User, time_control_id: TimeControlID): QueryGraphOutput {
 	const users = UsersManager.get_instance();
 	const graphs = GraphsManager.get_instance();
 
 	const G = graphs.get_graph(time_control_id);
 	if (!isDefined(G)) {
 		debug(log_now(), `Graph for '${time_control_id}' could not be found.`);
-		return [[], []];
+		return { nodes: [], edges: [] };
 	}
 
 	let list_nodes: NodeInfo[] = [];
@@ -169,7 +162,7 @@ function retrieve_graph_full(querier: User, time_control_id: TimeControlID): [No
 		const this_user = users.get_user_at(idx);
 		if (!isDefined(this_user)) {
 			debug(log_now(), `User at index '${idx}' could not be found.`);
-			return [[], []];
+			return { nodes: [], edges: [] };
 		}
 		if (!can_user_see_graph(querier, this_user)) {
 			continue;
@@ -196,29 +189,34 @@ function retrieve_graph_full(querier: User, time_control_id: TimeControlID): [No
 
 			const edge_user_rand_id = users.get_user_random_ID_at(edge_user_idx) as number;
 
-			let edge = new EdgeInfo();
-			edge.source = this_user_rand_id;
-			edge.target = edge_user_rand_id;
-			edge.label = e.metadata.to_string();
-			edge.weight.wins = e.metadata.num_games_won;
-			edge.weight.draws = e.metadata.num_games_drawn;
-			edge.weight.losses = e.metadata.num_games_lost;
+			const edge: EdgeInfo = {
+				source: this_user_rand_id,
+				target: edge_user_rand_id,
+				label: e.metadata.to_string(),
+				weight: {
+					wins: e.metadata.num_games_won,
+					draws: e.metadata.num_games_drawn,
+					losses: e.metadata.num_games_lost
+				}
+			};
 			list_edges.push(edge);
-
 			++out_degree;
 		});
 
 		const degree = G.get_in_degree(username) + out_degree;
 		if (degree > 0) {
-			let node = new NodeInfo();
-			node.full_name = this_user.get_full_name();
-			node.id = users.get_user_random_ID_at(idx) as number;
-			node.weight.rating = this_user.get_rating(time_control_id).rating;
+			const node: NodeInfo = {
+				id: users.get_user_random_ID_at(idx) as number,
+				full_name: this_user.get_full_name(),
+				weight: {
+					rating: this_user.get_rating(time_control_id).rating
+				}
+			};
 			list_nodes.push(node);
 		}
 	}
 
-	return [list_nodes, list_edges];
+	return { nodes: list_nodes, edges: list_edges };
 }
 
 export async function post_query_graph_own(req: Request, res: Response) {
@@ -244,11 +242,8 @@ export async function post_query_graph_own(req: Request, res: Response) {
 
 	debug(log_now(), `User ${session.username} is querying their own graph of time control ${time_control_id}.`);
 
-	const [list_nodes, list_edges] = retrieve_graph_user(session.username, time_control_id);
-	res.status(200).send({
-		nodes: list_nodes,
-		edges: list_edges
-	});
+	const graph = retrieve_graph_user(session.username, time_control_id);
+	res.status(200).send(graph);
 }
 
 export async function post_query_graph_full(req: Request, res: Response) {
@@ -283,9 +278,6 @@ export async function post_query_graph_full(req: Request, res: Response) {
 		`User ${session.username} is querying the graph of the entire server of time control ${time_control_id}.`
 	);
 
-	const [list_nodes, list_edges] = retrieve_graph_full(user, time_control_id);
-	res.status(200).send({
-		nodes: list_nodes,
-		edges: list_edges
-	});
+	const graph = retrieve_graph_full(user, time_control_id);
+	res.status(200).send(graph);
 }
