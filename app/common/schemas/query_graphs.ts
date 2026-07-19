@@ -25,8 +25,57 @@ Contact:
 
 import { z } from 'zod';
 
-export const QueryGraphInputSchema = z.object({
+export const QueryGraphInputOwnSchema = z.object({
 	tc_i: z.string()
 });
 
-export type QueryGraphInput = z.infer<typeof QueryGraphInputSchema>;
+export type QueryGraphOwnInput = z.infer<typeof QueryGraphInputOwnSchema>;
+
+// ----------------
+
+export const QueryGraphInputFullSchema = z.object({
+	tc_i: z.string()
+});
+
+export type QueryGraphFullInput = z.infer<typeof QueryGraphInputFullSchema>;
+
+// ----------------
+// ----------------
+
+export const NodeWeightSchema = z.object({
+	rating: z.number()
+});
+
+export type NodeWeight = z.infer<typeof NodeWeightSchema>;
+
+export const NodeInfoSchema = z.object({
+	id: z.number(),
+	full_name: z.string(),
+	weight: NodeWeightSchema
+});
+
+export type NodeInfo = z.infer<typeof NodeInfoSchema>;
+
+export const EdgeWeightSchema = z.object({
+	wins: z.number(),
+	draws: z.number(),
+	losses: z.number()
+});
+
+export type EdgeWeight = z.infer<typeof EdgeWeightSchema>;
+
+export const EdgeInfoSchema = z.object({
+	source: z.number(),
+	target: z.number(),
+	label: z.string(),
+	weight: EdgeWeightSchema
+});
+
+export type EdgeInfo = z.infer<typeof EdgeInfoSchema>;
+
+export const QueryGraphOutputSchema = z.object({
+	nodes: z.array(NodeInfoSchema),
+	edges: z.array(EdgeInfoSchema)
+});
+
+export type QueryGraphOutput = z.infer<typeof QueryGraphOutputSchema>;

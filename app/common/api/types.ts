@@ -38,10 +38,6 @@ export type ApiType = {
 	};
 };
 
-export type InputTypeOf = {
-	[R in Route]: ApiType[R]['input'];
-};
+export type InputTypeOf<R extends Route> = ApiType[R]['input'];
 
-export type OutputTypeOf = {
-	[R in Route]: ApiType[R]['output'];
-};
+export type OutputTypeOf<R extends Route> = ApiType[R]['output'];

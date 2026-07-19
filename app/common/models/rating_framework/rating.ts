@@ -23,6 +23,8 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
+import { z } from 'zod';
+
 /// Generic class for a rating.
 export class Rating {
 	/// Actual rating
@@ -66,3 +68,13 @@ export class Rating {
 		return [this.num_games, this.won, this.drawn, this.lost];
 	}
 }
+
+export const RatingSchema = z.object({
+	rating: z.number(),
+	num_games: z.number(),
+	won: z.number(),
+	drawn: z.number(),
+	lost: z.number()
+});
+
+export const RatingArraySchema = z.array(RatingSchema);

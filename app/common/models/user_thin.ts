@@ -25,23 +25,9 @@ Contact:
 
 import { z } from 'zod';
 
-export const UserLoginInputSchema = z.object({
-	u: z.string(),
-	p: z.string()
+export const UserThinSchema = z.object({
+	name: z.string(),
+	id: z.number()
 });
 
-export type UserLoginInput = z.infer<typeof UserLoginInputSchema>;
-
-export const UserLoginOutputSchema = z.object({
-	cookies: z.array(z.string())
-});
-
-export type UserLoginOutput = z.infer<typeof UserLoginOutputSchema>;
-
-// --------------------------
-
-export const UserLogoutOutputSchema = z.object({
-	cookies: z.array(z.string())
-});
-
-export type UserLogoutOutput = z.infer<typeof UserLogoutOutputSchema>;
+export type UserThin = z.infer<typeof UserThinSchema>;

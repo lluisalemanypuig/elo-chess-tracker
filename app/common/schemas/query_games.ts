@@ -31,8 +31,34 @@ export const QueryGamesListOwnInputSchema = z.object({
 
 export type QueryGamesListOwnInput = z.infer<typeof QueryGamesListOwnInputSchema>;
 
+// ----------------------
+
 export const QueryGamesListAllInputSchema = z.object({
 	tc_i: z.string()
 });
 
 export type QueryGamesListAllInput = z.infer<typeof QueryGamesListAllInputSchema>;
+
+// ----------------------
+
+export const QueryGamesListOutputSingleSchema = z.object({
+	id: z.string(),
+	title: z.string(),
+	white: z.string(),
+	black: z.string(),
+	result: z.string(),
+	time_control: z.string(),
+	date: z.string(),
+	white_rating: z.string(),
+	black_rating: z.string(),
+	white_increment: z.string(),
+	black_increment: z.string(),
+	editable: z.boolean(),
+	deleteable: z.boolean()
+});
+
+export type QueryGamesListOutputSingle = z.infer<typeof QueryGamesListOutputSingleSchema>;
+
+export const QueryGamesListOutputSchema = z.array(QueryGamesListOutputSingleSchema);
+
+export type QueryGamesListOutput = z.infer<typeof QueryGamesListOutputSchema>;

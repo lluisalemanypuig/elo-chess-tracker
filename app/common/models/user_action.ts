@@ -175,6 +175,8 @@ export type UserAction = (typeof all_actions)[number];
 
 export const UserActionSchema = z.enum(all_actions);
 
+export const UserActionArraySchema = z.array(UserActionSchema);
+
 // -----------------------------------------------------------------------------
 
 export const GAMES_CREATE_ID = 'create_games';
