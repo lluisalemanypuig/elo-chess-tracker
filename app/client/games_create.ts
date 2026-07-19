@@ -23,7 +23,7 @@ import 'htmx.org';
 
 import { result_from_text_to_value } from '@common/models/game';
 import { isDefined } from '@common/utils/is_defined';
-import { server_call } from '@client/action';
+import { message_from_response, server_call } from '@client/action';
 import { Routes } from '@common/routes';
 
 async function initialize_window_client_games_create() {
@@ -31,15 +31,14 @@ async function initialize_window_client_games_create() {
 	let datalist_black_users = document.getElementById('datalist_black_users') as HTMLDataListElement;
 
 	// query the server for the list of users
-	const response = await server_call(Routes.QUERY_HTML_USER_LIST, {});
-	const data = await response.text();
-	if (response.status >= 400) {
-		alert(`${response.status} -- ${response.statusText}\nMessage: '${data}'`);
+	const response = await server_call(Routes.QUERY_HTML_USER_LIST, null);
+	if (response.status === 'Error') {
+		alert(message_from_response(response));
 		return;
 	}
 
-	datalist_white_users.innerHTML = data;
-	datalist_black_users.innerHTML = data;
+	datalist_white_users.innerHTML = response.value;
+	datalist_black_users.innerHTML = response.value;
 }
 
 async function submit_new_game(_event: any) {
@@ -103,9 +102,8 @@ async function submit_new_game(_event: any) {
 			(rand_milli.length == 1 ? '00' : rand_milli.length == 2 ? '0' : '') +
 			rand_milli
 	});
-	if (response.status >= 400) {
-		const message = await response.text();
-		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
+	if (response.status === 'Error') {
+		alert(message_from_response(response));
 		return;
 	}
 

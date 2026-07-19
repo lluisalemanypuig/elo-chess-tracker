@@ -22,8 +22,15 @@ Full source code of elo-chess-tracker:
 import 'htmx.org';
 
 import { GameResult } from '@common/models/game';
-import { server_call } from '@client/action';
+import { message_from_response, server_call } from '@client/action';
 import { Routes } from '@common/routes';
+import {
+	QueryChallengesConfirmResultOtherOutputSingle,
+	QueryChallengesConfirmResultSelfOutputSingle,
+	QueryChallengesPendingResultOutputSingle,
+	QueryChallengesReceivedOutputSingle,
+	QueryChallengesSentOutputSingle
+} from '@common/schemas/query_challenges';
 
 function create_label_text(text: string): HTMLLabelElement {
 	let label = document.createElement('label') as HTMLLabelElement;
@@ -56,9 +63,8 @@ async function send_challenge_button_clicked(_event: any) {
 			time_control_id: time_control_id,
 			time_control_name: time_control_name
 		});
-		if (response.status >= 400) {
-			const message = await response.text();
-			alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
+		if (response.status === 'Error') {
+			alert(message_from_response(response));
 			return;
 		}
 
@@ -71,9 +77,8 @@ async function accept_challenge_button_clicked(event: any) {
 	let challenge_id = tag_clicked.id;
 
 	const response = await server_call(Routes.CHALLENGE_ACCEPT, { challenge_id: challenge_id });
-	if (response.status >= 400) {
-		const message = await response.text();
-		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
+	if (response.status === 'Error') {
+		alert(message_from_response(response));
 		return;
 	}
 	window.location.href = '/page/challenge';
@@ -84,9 +89,8 @@ async function decline_challenge_tag_clicked(event: any) {
 	let challenge_id = tag_clicked.id;
 
 	const response = await server_call(Routes.CHALLENGE_DECLINE, { challenge_id: challenge_id });
-	if (response.status >= 400) {
-		const message = await response.text();
-		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
+	if (response.status === 'Error') {
+		alert(message_from_response(response));
 		return;
 	}
 	window.location.href = '/page/challenge';
@@ -122,9 +126,8 @@ async function submit_result_challenge_button_clicked(event: any) {
 		black: black_username,
 		result: result
 	});
-	if (response.status >= 400) {
-		const message = await response.text();
-		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
+	if (response.status === 'Error') {
+		alert(message_from_response(response));
 		return;
 	}
 
@@ -137,9 +140,8 @@ async function agree_challenge_result_button_clicked(event: any) {
 
 	const response = await server_call(Routes.CHALLENGE_AGREE, { challenge_id: challenge_id });
 
-	if (response.status >= 400) {
-		const message = await response.text();
-		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
+	if (response.status === 'Error') {
+		alert(message_from_response(response));
 		return;
 	}
 
@@ -151,9 +153,8 @@ async function disagree_challenge_result_button_clicked(event: any) {
 	let challenge_id = tag_clicked.id;
 
 	const response = await server_call(Routes.CHALLENGE_DISAGREE, { challenge_id: challenge_id });
-	if (response.status >= 400) {
-		const message = await response.text();
-		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
+	if (response.status === 'Error') {
+		alert(message_from_response(response));
 		return;
 	}
 
@@ -161,17 +162,16 @@ async function disagree_challenge_result_button_clicked(event: any) {
 }
 
 async function fill_challenges_received() {
-	const response = await server_call(Routes.QUERY_CHALLENGE_RECEIVED, {});
-	if (response.status >= 400) {
-		const message = await response.text();
-		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
+	const response = await server_call(Routes.QUERY_CHALLENGE_RECEIVED, null);
+	if (response.status === 'Error') {
+		alert(message_from_response(response));
 		return;
 	}
-	const data = (await response.json()) as any[];
+	const data = response.value;
 
 	let challenge_list = document.createElement('ul') as HTMLUListElement;
 	challenge_list.className = 'challenge-items';
-	data.forEach(function (elem: any, index: number) {
+	data.forEach(function (elem: QueryChallengesReceivedOutputSingle, index: number) {
 		let challenge_div = document.createElement('div') as HTMLDivElement;
 		{
 			// ---
@@ -251,18 +251,17 @@ async function fill_challenges_received() {
 }
 
 async function fill_challenges_sent() {
-	const response = await server_call(Routes.QUERY_CHALLENGE_SENT, {});
-	if (response.status >= 400) {
-		const message = await response.text();
-		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
+	const response = await server_call(Routes.QUERY_CHALLENGE_SENT, null);
+	if (response.status === 'Error') {
+		alert(message_from_response(response));
 		return;
 	}
-	const data = (await response.json()) as any[];
+	const data = response.value;
 
 	let challenge_list = document.createElement('ul') as HTMLUListElement;
 	challenge_list.className = 'challenge-items';
 
-	data.forEach(function (elem: any) {
+	data.forEach(function (elem: QueryChallengesSentOutputSingle) {
 		// ----
 		let li = document.createElement('li') as HTMLLIElement;
 		li.className = 'challenge-items-bullet';
@@ -299,17 +298,15 @@ async function fill_challenges_sent() {
 }
 
 async function fill_challenges_pending_result() {
-	const response_pending = await server_call(Routes.QUERY_CHALLENGE_PENDING_RESULT, {});
-	if (response_pending.status >= 400) {
-		const message = await response_pending.text();
-		alert(`${response_pending.status} -- ${response_pending.statusText}\nMessage: '${message}'`);
+	const response = await server_call(Routes.QUERY_CHALLENGE_PENDING_RESULT, null);
+	if (response.status === 'Error') {
+		alert(message_from_response(response));
 		return;
 	}
-
-	const challenge_data = await response_pending.json();
+	const challenge_data = response.value;
 
 	let all_challenges_list = document.getElementById('challenges_pending_result__list') as HTMLDivElement;
-	challenge_data.forEach(function (elem: any, index: number) {
+	challenge_data.forEach(function (elem: QueryChallengesPendingResultOutputSingle, index: number) {
 		{
 			let header = document.createElement('ul') as HTMLUListElement;
 			header.className = 'challenge-items';
@@ -440,18 +437,17 @@ async function fill_challenges_pending_result() {
 }
 
 async function fill_challenges_confirm_result_other() {
-	const response = await server_call(Routes.QUERY_CHALLENGE_CONFIRM_RESULT_OTHER, {});
-	if (response.status >= 400) {
-		const message = await response.text();
-		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
+	const response = await server_call(Routes.QUERY_CHALLENGE_CONFIRM_RESULT_OTHER, null);
+	if (response.status === 'Error') {
+		alert(message_from_response(response));
 		return;
 	}
 
-	const challenge_data = (await response.json()) as any[];
+	const challenge_data = response.value;
 
 	let challenge_list = document.createElement('ul') as HTMLUListElement;
 	challenge_list.className = 'challenge-items';
-	challenge_data.forEach(function (elem: any) {
+	challenge_data.forEach(function (elem: QueryChallengesConfirmResultOtherOutputSingle) {
 		{
 			let li = document.createElement('li') as HTMLLIElement;
 			li.className = 'challenge-items-bullet';
@@ -493,18 +489,17 @@ async function fill_challenges_confirm_result_other() {
 }
 
 async function fill_challenges_confirm_result_self() {
-	const response = await server_call(Routes.QUERY_CHALLENGE_CONFIRM_RESULT_SELF, {});
-	if (response.status >= 400) {
-		const message = await response.text();
-		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
+	const response = await server_call(Routes.QUERY_CHALLENGE_CONFIRM_RESULT_SELF, null);
+	if (response.status === 'Error') {
+		alert(message_from_response(response));
 		return;
 	}
 
-	const challenge_data = (await response.json()) as any[];
+	const challenge_data = response.value;
 
 	let challenge_list = document.createElement('ul') as HTMLUListElement;
 	challenge_list.className = 'challenge-items';
-	challenge_data.forEach(function (elem: any, index: number) {
+	challenge_data.forEach(function (elem: QueryChallengesConfirmResultSelfOutputSingle, index: number) {
 		let confirmation_div = document.createElement('div') as HTMLDivElement;
 		{
 			let li = document.createElement('li') as HTMLLIElement;

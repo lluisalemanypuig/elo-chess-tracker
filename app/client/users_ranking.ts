@@ -21,7 +21,7 @@ Full source code of elo-chess-tracker:
 
 import 'htmx.org';
 
-import { server_call } from '@client/action';
+import { message_from_response, server_call } from '@client/action';
 import { Routes } from '@common/routes';
 
 async function fill_ranking(_event: any) {
@@ -40,13 +40,12 @@ async function fill_ranking(_event: any) {
 
 	// "query" the server
 	const response = await server_call(Routes.QUERY_USER_RANKING, { tc_i: time_control_id });
-	if (response.status >= 400) {
-		const message = await response.text();
-		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
+	if (response.status === 'Error') {
+		alert(message_from_response(response));
 		return;
 	}
 
-	const list_of_users = (await response.json()) as any;
+	const list_of_users = response.value;
 
 	{
 		let table = document.getElementById('users_table_with_games') as HTMLTableElement;
@@ -57,11 +56,11 @@ async function fill_ranking(_event: any) {
 		for (var i = 0; i < users.length; i++) {
 			let row = document.createElement('tr');
 			row.appendChild(new_cell(users[i].name));
-			row.appendChild(new_cell(users[i].rating));
-			row.appendChild(new_cell(users[i].total_games));
-			row.appendChild(new_cell(users[i].won));
-			row.appendChild(new_cell(users[i].drawn));
-			row.appendChild(new_cell(users[i].lost));
+			row.appendChild(new_cell(`${users[i].rating}`));
+			row.appendChild(new_cell(`${users[i].total_games}`));
+			row.appendChild(new_cell(`${users[i].won}`));
+			row.appendChild(new_cell(`${users[i].drawn}`));
+			row.appendChild(new_cell(`${users[i].lost}`));
 			new_tbody.appendChild(row);
 		}
 
@@ -79,7 +78,7 @@ async function fill_ranking(_event: any) {
 		for (var i = 0; i < users.length; i++) {
 			let row = document.createElement('tr');
 			row.appendChild(new_cell(users[i].name));
-			row.appendChild(new_cell(users[i].rating));
+			row.appendChild(new_cell(`${users[i].rating}`));
 			row.appendChild(new_cell('-'));
 			row.appendChild(new_cell('-'));
 			row.appendChild(new_cell('-'));

@@ -23,7 +23,7 @@ import 'htmx.org';
 
 import { isDefined } from '@common/utils/is_defined';
 import { result_from_text_to_value } from '@common/models/game';
-import { server_call } from '@client/action';
+import { message_from_response, server_call } from '@client/action';
 import { Routes } from '@common/routes';
 
 function new_text_cell(text: string) {
@@ -68,9 +68,8 @@ async function select_result_game_on_change(event: any) {
 		new_result: new_result
 	});
 
-	if (response.status >= 400) {
-		const message = await response.text();
-		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
+	if (response.status === 'Error') {
+		alert(message_from_response(response));
 		return;
 	}
 
@@ -112,9 +111,8 @@ async function button_delete_game_on_click(event: any) {
 	const game_id = button.getAttribute('game_id');
 	const response = await server_call(Routes.GAME_DELETE, { id: game_id });
 
-	if (response.status >= 400) {
-		const message = await response.text();
-		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
+	if (response.status === 'Error') {
+		alert(message_from_response(response));
 		return;
 	}
 
@@ -148,10 +146,8 @@ async function trigger_edit_game_title(event: Event) {
 	}
 
 	const response = await server_call(Routes.GAME_EDIT_TITLE, { id: game_id, title: new_title });
-
-	if (response.status >= 400) {
-		const message = await response.text();
-		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
+	if (response.status === 'Error') {
+		alert(message_from_response(response));
 		return;
 	}
 
@@ -197,23 +193,22 @@ async function fill_games_list_time_control(time_control_id: string) {
 	} else if (val == 'own') {
 		response = await server_call(Routes.QUERY_GAME_LIST_OWN, { tc_i: time_control_id });
 	} else {
-		console.log(`Wrong value for list '${val}'.`);
+		alert(`Wrong value for list '${val}'.`);
 		return;
 	}
 
-	if (response.status >= 400) {
-		const message = await response.text();
-		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
+	if (response.status === 'Error') {
+		alert(message_from_response(response));
 		return;
 	}
 
-	const games = (await response.json()) as any[];
+	const games = response.value;
 
 	let new_tbody = document.createElement('tbody');
 	for (const g of games) {
 		let row = document.createElement('tr');
 
-		if (g.editable == 'y') {
+		if (g.editable) {
 			if (g.title == '') {
 				row.appendChild(new_text_cell(''));
 			} else {
@@ -231,7 +226,7 @@ async function fill_games_list_time_control(time_control_id: string) {
 		row.appendChild(new_rating_cell(g.white_rating, g.white_increment));
 		row.appendChild(new_text_cell(g.white));
 
-		if (g.editable == 'y') {
+		if (g.editable) {
 			row.appendChild(new_cell_select_result(g.result, g.id));
 		} else {
 			row.appendChild(new_text_cell(g.result));
@@ -240,7 +235,7 @@ async function fill_games_list_time_control(time_control_id: string) {
 		row.appendChild(new_text_cell(g.black));
 		row.appendChild(new_rating_cell(g.black_rating, g.black_increment));
 
-		if (g.deleteable == 'y') {
+		if (g.deleteable) {
 			row.appendChild(new_cell_button_delete_game(g.id));
 		}
 

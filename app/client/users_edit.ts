@@ -21,9 +21,15 @@ Full source code of elo-chess-tracker:
 
 import 'htmx.org';
 
-import { server_call } from '@client/action';
-import { UserRole, all_user_roles, user_role_to_string, array_string_to_roles } from '@common/models/user_role';
-import { isDefined } from '@common/utils/is_defined';
+import { message_from_response, server_call } from '@client/action';
+import {
+	UserRole,
+	all_user_roles,
+	user_role_to_string,
+	array_string_to_roles,
+	string_to_role
+} from '@common/models/user_role';
+import { isDefined, isNotDefined } from '@common/utils/is_defined';
 import { Routes } from '@common/routes';
 
 async function user_was_changed(_event: any) {
@@ -42,19 +48,23 @@ async function user_was_changed(_event: any) {
 	if (username_option != null) {
 		const user_id = (username_option as HTMLOptionElement).id;
 		const response = await server_call(Routes.QUERY_USER_EDIT, { u: Number(user_id) });
-		if (response.status >= 400) {
-			const message = await response.text();
-			alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
+		if (response.status === 'Error') {
+			alert(message_from_response(response));
 			return;
 		}
 
-		const data = await response.json();
+		const data = response.value;
 		box_first_name.value = data.first_name;
 		box_last_name.value = data.last_name;
 
 		all_user_roles.forEach(function (role: string) {
 			let checkbox_role = document.getElementById('checkbox_' + role) as HTMLInputElement;
-			if (data.roles.includes(role)) {
+			const proper_role = string_to_role(role);
+			if (isNotDefined(proper_role)) {
+				console.log(`Role '${role}' could not be converted to a proper role.`);
+				return;
+			}
+			if (data.roles.includes(proper_role)) {
 				checkbox_role.checked = true;
 			}
 		});
@@ -90,9 +100,8 @@ async function submit_was_clicked(_event: any) {
 		l: last_name,
 		r: selected_roles
 	});
-	if (response.status >= 400) {
-		const message = await response.text();
-		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
+	if (response.status === 'Error') {
+		alert(message_from_response(response));
 		return;
 	}
 

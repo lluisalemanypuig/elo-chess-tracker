@@ -21,18 +21,21 @@ Full source code of elo-chess-tracker:
 
 import 'htmx.org';
 
-import { server_call } from '@client/action';
+import { message_from_response, server_call } from '@client/action';
 import { ADMIN, user_role_to_string, UserRole } from '@common/models/user_role';
 import { GAMES_CREATE, CREATE_USER, USER_EDIT, GAMES_SEE, GRAPHS_SEE_USER } from '@common/models/user_action';
 import { Routes } from '@common/routes';
 
 export async function logout_link_clicked(_event: any) {
 	// "query" the server
-	const response = await server_call(Routes.USER_LOGOUT, {});
+	const response = await server_call(Routes.USER_LOGOUT, null);
+	if (response.status === 'Error') {
+		alert(message_from_response(response));
+		return;
+	}
 
-	const data = await response.json();
-	const cookies = data['cookies'];
-	for (const c of cookies) {
+	const data = response.value;
+	for (const c of data.cookies) {
 		document.cookie = c;
 	}
 
@@ -78,10 +81,9 @@ function fill_action_links(user_actions: string[], user_roles: string[]) {
 		recalculate_ratings_link.id = 'recalculate-ratings-link';
 		recalculate_ratings_link.textContent = 'Recalculate ratings';
 		recalculate_ratings_link.onclick = async function () {
-			const response = await server_call(Routes.RECALCULATE_RATINGS, {});
-			if (response.status >= 400) {
-				const message = await response.text();
-				alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
+			const response = await server_call(Routes.RECALCULATE_RATINGS, null);
+			if (response.status === 'Error') {
+				alert(message_from_response(response));
 				return;
 			}
 		};
@@ -91,10 +93,9 @@ function fill_action_links(user_actions: string[], user_roles: string[]) {
 		recalculate_graphs_link.id = 'recalculate-graphs';
 		recalculate_graphs_link.textContent = 'Recalculate graphs';
 		recalculate_graphs_link.onclick = async function () {
-			const response = await server_call(Routes.RECALCULATE_GRAPHS, {});
-			if (response.status >= 400) {
-				const message = await response.text();
-				alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
+			const response = await server_call(Routes.RECALCULATE_GRAPHS, null);
+			if (response.status === 'Error') {
+				alert(message_from_response(response));
 				return;
 			}
 		};
@@ -104,14 +105,13 @@ function fill_action_links(user_actions: string[], user_roles: string[]) {
 
 async function fill_own_info() {
 	// "query" the server
-	const response = await server_call(Routes.QUERY_USER_HOME, {});
-	if (response.status >= 400) {
-		const message = await response.text();
-		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
+	const response = await server_call(Routes.QUERY_USER_HOME, null);
+	if (response.status === 'Error') {
+		alert(message_from_response(response));
 		return;
 	}
 
-	const data = await response.json();
+	const data = response.value;
 
 	// add hrefs according to the user's permissions.
 	fill_action_links(data.actions, data.roles);
@@ -139,12 +139,12 @@ async function fill_own_info() {
 
 			let row = table.insertRow(-1);
 
-			row.insertCell(-1).appendChild(document.createTextNode(data_i.id));
-			row.insertCell(-1).appendChild(document.createTextNode(data_i.v.rating));
-			row.insertCell(-1).appendChild(document.createTextNode(data_i.v.num_games));
-			row.insertCell(-1).appendChild(document.createTextNode(data_i.v.won));
-			row.insertCell(-1).appendChild(document.createTextNode(data_i.v.drawn));
-			row.insertCell(-1).appendChild(document.createTextNode(data_i.v.lost));
+			row.insertCell(-1).appendChild(document.createTextNode(data_i.time_control_name));
+			row.insertCell(-1).appendChild(document.createTextNode(data_i.rating.rating));
+			row.insertCell(-1).appendChild(document.createTextNode(data_i.rating.num_games));
+			row.insertCell(-1).appendChild(document.createTextNode(data_i.rating.won));
+			row.insertCell(-1).appendChild(document.createTextNode(data_i.rating.drawn));
+			row.insertCell(-1).appendChild(document.createTextNode(data_i.rating.lost));
 		}
 	}
 }

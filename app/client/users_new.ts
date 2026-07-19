@@ -21,7 +21,7 @@ Full source code of elo-chess-tracker:
 
 import 'htmx.org';
 
-import { server_call } from '@client/action';
+import { message_from_response, server_call } from '@client/action';
 import { isDefined } from '@common/utils/is_defined';
 import { UserRole, all_user_roles, array_string_to_roles, user_role_to_string } from '@common/models/user_role';
 import { Routes } from '@common/routes';
@@ -110,9 +110,8 @@ async function submit_new_user_clicked(_event: any) {
 		r: selected_roles,
 		p: password
 	});
-	if (response.status >= 400) {
-		const message = await response.text();
-		alert(`${response.status} -- ${response.statusText}\nMessage: '${message}'`);
+	if (response.status === 'Error') {
+		alert(message_from_response(response));
 		return;
 	}
 
