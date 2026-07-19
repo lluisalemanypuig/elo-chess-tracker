@@ -36,16 +36,15 @@ import { TimeControlRating } from '@common/models/time_control_rating';
 import { isDefined } from '@common/utils/is_defined';
 import { Routes } from '@common/routes';
 import { InputSchemaOf } from '@common/api/schemas';
-import { parse_error_message, parse_schema } from '@server/utils/schemas';
+import { safe_parse_request_body, safe_parse_request_cookies } from '@server/utils/schemas';
 import { AuthenticationInputSchema } from '@common/schemas/authentication';
 
 /// Returns the list of user full names and usernames sorted by name
 export async function get_query_user_list(req: Request, res: Response) {
 	debug(log_now(), `GET ${Routes.QUERY_USER_LIST}...`);
 
-	const session_parse = parse_schema(req.cookies, AuthenticationInputSchema, debug);
-	if (session_parse.result !== 'Success') {
-		res.status(401).send(`Failure to parse cookies ${session_parse.result}.`);
+	const session_parse = safe_parse_request_cookies(req, AuthenticationInputSchema, res, debug);
+	if (session_parse.result === 'Exit') {
 		return;
 	}
 	const session = session_parse.data;
@@ -67,9 +66,8 @@ export async function get_query_user_list(req: Request, res: Response) {
 export async function get_query_html_user_list(req: Request, res: Response) {
 	debug(log_now(), `GET ${Routes.QUERY_HTML_USER_LIST}...`);
 
-	const session_parse = parse_schema(req.cookies, AuthenticationInputSchema, debug);
-	if (session_parse.result !== 'Success') {
-		res.status(401).send(`Failure to parse cookies ${session_parse.result}.`);
+	const session_parse = safe_parse_request_cookies(req, AuthenticationInputSchema, res, debug);
+	if (session_parse.result === 'Exit') {
 		return;
 	}
 	const session = session_parse.data;
@@ -95,9 +93,8 @@ export async function get_query_html_user_list(req: Request, res: Response) {
 export async function get_query_user_home(req: Request, res: Response) {
 	debug(log_now(), `GET ${Routes.QUERY_USER_HOME}...`);
 
-	const session_parse = parse_schema(req.cookies, AuthenticationInputSchema, debug);
-	if (session_parse.result !== 'Success') {
-		res.status(401).send(`Failure to parse cookies ${session_parse.result}.`);
+	const session_parse = safe_parse_request_cookies(req, AuthenticationInputSchema, res, debug);
+	if (session_parse.result === 'Exit') {
 		return;
 	}
 	const session = session_parse.data;
@@ -126,9 +123,8 @@ export async function get_query_user_home(req: Request, res: Response) {
 export async function post_query_user_edit(req: Request, res: Response) {
 	debug(log_now(), `POST ${Routes.QUERY_USER_EDIT}...`);
 
-	const session_parse = parse_schema(req.cookies, AuthenticationInputSchema, debug);
-	if (session_parse.result !== 'Success') {
-		res.status(401).send(`Failure to parse cookies ${session_parse.result}.`);
+	const session_parse = safe_parse_request_cookies(req, AuthenticationInputSchema, res, debug);
+	if (session_parse.result === 'Exit') {
 		return;
 	}
 	const session = session_parse.data;
@@ -139,9 +135,8 @@ export async function post_query_user_edit(req: Request, res: Response) {
 		return;
 	}
 
-	const user_query = parse_schema(req.body, InputSchemaOf(Routes.QUERY_USER_EDIT), debug);
-	if (user_query.result !== 'Success') {
-		res.status(401).send(parse_error_message(user_query));
+	const user_query = safe_parse_request_body(req, InputSchemaOf(Routes.QUERY_USER_EDIT), res, debug);
+	if (user_query.result === 'Exit') {
 		return;
 	}
 
@@ -166,9 +161,8 @@ export async function post_query_user_edit(req: Request, res: Response) {
 export async function post_query_user_ranking(req: Request, res: Response) {
 	debug(log_now(), `POST ${Routes.QUERY_USER_RANKING}...`);
 
-	const session_parse = parse_schema(req.cookies, AuthenticationInputSchema, debug);
-	if (session_parse.result !== 'Success') {
-		res.status(401).send(`Failure to parse cookies ${session_parse.result}.`);
+	const session_parse = safe_parse_request_cookies(req, AuthenticationInputSchema, res, debug);
+	if (session_parse.result === 'Exit') {
 		return;
 	}
 	const session = session_parse.data;
@@ -179,9 +173,8 @@ export async function post_query_user_ranking(req: Request, res: Response) {
 		return;
 	}
 
-	const user_query = parse_schema(req.body, InputSchemaOf(Routes.QUERY_USER_RANKING), debug);
-	if (user_query.result !== 'Success') {
-		res.status(401).send(parse_error_message(user_query));
+	const user_query = safe_parse_request_body(req, InputSchemaOf(Routes.QUERY_USER_RANKING), res, debug);
+	if (user_query.result === 'Exit') {
 		return;
 	}
 

@@ -33,8 +33,8 @@ import { ConfigurationManager } from '@server/managers/configuration_manager';
 import { get_execution_directory } from '@server/managers/environment_manager';
 import { isDefined } from '@common/utils/is_defined';
 import { Routes } from '@common/routes';
-import { parse_schema } from '@server/utils/schemas';
-import { AuthenticationInputSchema } from '@app/common/schemas/authentication';
+import { safe_parse_request_cookies, parse_schema } from '@server/utils/schemas';
+import { AuthenticationInputSchema } from '@common/schemas/authentication';
 
 export async function get_page_login(req: Request, res: Response) {
 	let send_home: boolean;
@@ -42,7 +42,6 @@ export async function get_page_login(req: Request, res: Response) {
 
 	const session_parse = parse_schema(req.cookies, AuthenticationInputSchema, debug);
 	if (session_parse.result === 'Error') {
-		res.status(401).send(`Failure to parse cookies ${session_parse.result}.`);
 		return;
 	}
 	const session = session_parse.data;
@@ -78,9 +77,8 @@ export async function get_page_login(req: Request, res: Response) {
 export async function get_page_home(req: Request, res: Response) {
 	debug(log_now(), `GET ${Routes.HOME}`);
 
-	const session_parse = parse_schema(req.cookies, AuthenticationInputSchema, debug);
-	if (session_parse.result !== 'Success') {
-		res.status(401).send(`Failure to parse cookies ${session_parse.result}.`);
+	const session_parse = safe_parse_request_cookies(req, AuthenticationInputSchema, res, debug);
+	if (session_parse.result === 'Exit') {
 		return;
 	}
 	const session = session_parse.data;

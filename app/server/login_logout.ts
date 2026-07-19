@@ -38,15 +38,14 @@ import { UsersManager } from '@server/managers/users_manager';
 import { isDefined } from '@common/utils/is_defined';
 import { UserLoginInputSchema } from '@common/schemas/login_logout';
 import { Routes } from '@common/routes';
-import { parse_error_message, parse_schema } from '@server/utils/schemas';
+import { safe_parse_request_body, safe_parse_request_cookies } from '@server/utils/schemas';
 import { AuthenticationInputSchema } from '@common/schemas/authentication';
 
 export async function post_user_login(req: Request, res: Response) {
 	debug(log_now(), `POST ${Routes.USER_LOGIN}`);
 
-	const login_parse = parse_schema(req.body, UserLoginInputSchema, debug);
-	if (login_parse.result !== 'Success') {
-		res.status(401).send(parse_error_message(login_parse));
+	const login_parse = safe_parse_request_body(req, UserLoginInputSchema, res, debug);
+	if (login_parse.result === 'Exit') {
 		return;
 	}
 
@@ -93,9 +92,8 @@ export async function post_user_login(req: Request, res: Response) {
 export async function post_user_logout(req: Request, res: Response) {
 	debug(log_now(), `POST ${Routes.USER_LOGOUT}`);
 
-	const session_parse = parse_schema(req.cookies, AuthenticationInputSchema, debug);
-	if (session_parse.result !== 'Success') {
-		res.status(401).send(`Failure to parse cookies ${session_parse.result}.`);
+	const session_parse = safe_parse_request_cookies(req, AuthenticationInputSchema, res, debug);
+	if (session_parse.result === 'Exit') {
 		return;
 	}
 	const session = session_parse.data;

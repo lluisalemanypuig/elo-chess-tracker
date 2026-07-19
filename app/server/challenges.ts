@@ -50,15 +50,14 @@ import { get_execution_directory } from '@server/managers/environment_manager';
 import { isDefined } from '@common/utils/is_defined';
 import { Routes } from '@common/routes';
 import { InputSchemaOf } from '@common/api/schemas';
-import { parse_error_message, parse_schema } from '@server/utils/schemas';
+import { safe_parse_request_body, safe_parse_request_cookies } from '@server/utils/schemas';
 import { AuthenticationInputSchema } from '@common/schemas/authentication';
 
 export async function get_page_challenge(req: Request, res: Response) {
 	debug(log_now(), `GET ${Routes.PAGE_CHALLENGE}...`);
 
-	const session_parse = parse_schema(req.cookies, AuthenticationInputSchema, debug);
-	if (session_parse.result !== 'Success') {
-		res.status(401).send(`Failure to parse cookies ${session_parse.result}.`);
+	const session_parse = safe_parse_request_cookies(req, AuthenticationInputSchema, res, debug);
+	if (session_parse.result === 'Exit') {
 		return;
 	}
 	const session = session_parse.data;
@@ -79,16 +78,14 @@ export async function get_page_challenge(req: Request, res: Response) {
 export async function post_challenge_send(req: Request, res: Response) {
 	debug(log_now(), `POST ${Routes.CHALLENGE_SEND}...`);
 
-	const session_parse = parse_schema(req.cookies, AuthenticationInputSchema, debug);
-	if (session_parse.result !== 'Success') {
-		res.status(401).send(`Failure to parse cookies ${session_parse.result}.`);
+	const session_parse = safe_parse_request_cookies(req, AuthenticationInputSchema, res, debug);
+	if (session_parse.result === 'Exit') {
 		return;
 	}
 	const session = session_parse.data;
 
-	const challenge_parse = parse_schema(req.body, InputSchemaOf(Routes.CHALLENGE_SEND), debug);
-	if (challenge_parse.result !== 'Success') {
-		res.status(401).send(parse_error_message(challenge_parse));
+	const challenge_parse = safe_parse_request_body(req.body, InputSchemaOf(Routes.CHALLENGE_SEND), res, debug);
+	if (challenge_parse.result === 'Exit') {
 		return;
 	}
 	const to_random_id = challenge_parse.data.to;
@@ -159,9 +156,8 @@ export async function post_challenge_send(req: Request, res: Response) {
 export async function post_challenge_accept(req: Request, res: Response) {
 	debug(log_now(), `POST ${Routes.CHALLENGE_ACCEPT}...`);
 
-	const session_parse = parse_schema(req.cookies, AuthenticationInputSchema, debug);
-	if (session_parse.result !== 'Success') {
-		res.status(401).send(`Failure to parse cookies ${session_parse.result}.`);
+	const session_parse = safe_parse_request_cookies(req, AuthenticationInputSchema, res, debug);
+	if (session_parse.result === 'Exit') {
 		return;
 	}
 	const session = session_parse.data;
@@ -172,9 +168,8 @@ export async function post_challenge_accept(req: Request, res: Response) {
 		return;
 	}
 
-	const challenge_parse = parse_schema(req.body, InputSchemaOf(Routes.CHALLENGE_ACCEPT), debug);
-	if (challenge_parse.result !== 'Success') {
-		res.status(401).send(parse_error_message(challenge_parse));
+	const challenge_parse = safe_parse_request_body(req.body, InputSchemaOf(Routes.CHALLENGE_ACCEPT), res, debug);
+	if (challenge_parse.result === 'Exit') {
 		return;
 	}
 	const challenge_id = challenge_parse.data.challenge_id;
@@ -201,9 +196,8 @@ export async function post_challenge_accept(req: Request, res: Response) {
 export async function post_challenge_decline(req: Request, res: Response) {
 	debug(log_now(), `POST ${Routes.CHALLENGE_DECLINE}...`);
 
-	const session_parse = parse_schema(req.cookies, AuthenticationInputSchema, debug);
-	if (session_parse.result !== 'Success') {
-		res.status(401).send(`Failure to parse cookies ${session_parse.result}.`);
+	const session_parse = safe_parse_request_cookies(req, AuthenticationInputSchema, res, debug);
+	if (session_parse.result === 'Exit') {
 		return;
 	}
 	const session = session_parse.data;
@@ -214,9 +208,8 @@ export async function post_challenge_decline(req: Request, res: Response) {
 		return;
 	}
 
-	const challenge_parse = parse_schema(req.body, InputSchemaOf(Routes.CHALLENGE_DECLINE), debug);
-	if (challenge_parse.result !== 'Success') {
-		res.status(401).send(parse_error_message(challenge_parse));
+	const challenge_parse = safe_parse_request_body(req.body, InputSchemaOf(Routes.CHALLENGE_DECLINE), res, debug);
+	if (challenge_parse.result === 'Exit') {
 		return;
 	}
 	const challenge_id = challenge_parse.data.challenge_id;
@@ -243,9 +236,8 @@ export async function post_challenge_decline(req: Request, res: Response) {
 export async function post_challenge_set_result(req: Request, res: Response) {
 	debug(log_now(), `POST ${Routes.CHALLENGE_SET_RESULT}...`);
 
-	const session_parse = parse_schema(req.cookies, AuthenticationInputSchema, debug);
-	if (session_parse.result !== 'Success') {
-		res.status(401).send(`Failure to parse cookies ${session_parse.result}.`);
+	const session_parse = safe_parse_request_cookies(req, AuthenticationInputSchema, res, debug);
+	if (session_parse.result === 'Exit') {
 		return;
 	}
 	const session = session_parse.data;
@@ -256,9 +248,8 @@ export async function post_challenge_set_result(req: Request, res: Response) {
 	}
 
 	const setter_user = session.username;
-	const challenge_parse = parse_schema(req.body, InputSchemaOf(Routes.CHALLENGE_SET_RESULT), debug);
-	if (challenge_parse.result !== 'Success') {
-		res.status(401).send(parse_error_message(challenge_parse));
+	const challenge_parse = safe_parse_request_body(req.body, InputSchemaOf(Routes.CHALLENGE_SET_RESULT), res, debug);
+	if (challenge_parse.result === 'Exit') {
 		return;
 	}
 
@@ -329,9 +320,8 @@ export async function post_challenge_set_result(req: Request, res: Response) {
 export async function post_challenge_agree(req: Request, res: Response) {
 	debug(log_now(), `POST ${Routes.CHALLENGE_AGREE}...`);
 
-	const session_parse = parse_schema(req.cookies, AuthenticationInputSchema, debug);
-	if (session_parse.result !== 'Success') {
-		res.status(401).send(`Failure to parse cookies ${session_parse.result}.`);
+	const session_parse = safe_parse_request_cookies(req, AuthenticationInputSchema, res, debug);
+	if (session_parse.result === 'Exit') {
 		return;
 	}
 	const session = session_parse.data;
@@ -342,9 +332,8 @@ export async function post_challenge_agree(req: Request, res: Response) {
 		return;
 	}
 
-	const challenge_parse = parse_schema(req.body, InputSchemaOf(Routes.CHALLENGE_AGREE), debug);
-	if (challenge_parse.result !== 'Success') {
-		res.status(401).send(parse_error_message(challenge_parse));
+	const challenge_parse = safe_parse_request_body(req.body, InputSchemaOf(Routes.CHALLENGE_AGREE), res, debug);
+	if (challenge_parse.result === 'Exit') {
 		return;
 	}
 	const challenge_id = challenge_parse.data.challenge_id;
@@ -362,9 +351,8 @@ export async function post_challenge_agree(req: Request, res: Response) {
 export async function post_challenge_disagree(req: Request, res: Response) {
 	debug(log_now(), `POST ${Routes.CHALLENGE_DISAGREE}...`);
 
-	const session_parse = parse_schema(req.cookies, AuthenticationInputSchema, debug);
-	if (session_parse.result !== 'Success') {
-		res.status(401).send(`Failure to parse cookies ${session_parse.result}.`);
+	const session_parse = safe_parse_request_cookies(req, AuthenticationInputSchema, res, debug);
+	if (session_parse.result === 'Exit') {
 		return;
 	}
 	const session = session_parse.data;
@@ -375,9 +363,8 @@ export async function post_challenge_disagree(req: Request, res: Response) {
 		return;
 	}
 
-	const challenge_parse = parse_schema(req.body, InputSchemaOf(Routes.CHALLENGE_DISAGREE), debug);
-	if (challenge_parse.result !== 'Success') {
-		res.status(401).send(parse_error_message(challenge_parse));
+	const challenge_parse = safe_parse_request_body(req.body, InputSchemaOf(Routes.CHALLENGE_DISAGREE), res, debug);
+	if (challenge_parse.result === 'Exit') {
 		return;
 	}
 	const challenge_id = challenge_parse.data.challenge_id;

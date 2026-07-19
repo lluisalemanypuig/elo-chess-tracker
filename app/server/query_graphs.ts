@@ -40,7 +40,7 @@ import { GRAPHS_SEE_USER } from '@common/models/user_action';
 import { isDefined } from '@common/utils/is_defined';
 import { Routes } from '@common/routes';
 import { InputSchemaOf } from '@common/api/schemas';
-import { parse_error_message, parse_schema } from '@server/utils/schemas';
+import { safe_parse_request_body, safe_parse_request_cookies } from '@server/utils/schemas';
 import { AuthenticationInputSchema } from '@common/schemas/authentication';
 
 class NodeWeight {
@@ -224,9 +224,8 @@ function retrieve_graph_full(querier: User, time_control_id: TimeControlID): [No
 export async function post_query_graph_own(req: Request, res: Response) {
 	debug(log_now(), `POST ${Routes.QUERY_GRAPH_OWN}...`);
 
-	const session_parse = parse_schema(req.cookies, AuthenticationInputSchema, debug);
-	if (session_parse.result !== 'Success') {
-		res.status(401).send(`Failure to parse cookies ${session_parse.result}.`);
+	const session_parse = safe_parse_request_cookies(req, AuthenticationInputSchema, res, debug);
+	if (session_parse.result === 'Exit') {
 		return;
 	}
 	const session = session_parse.data;
@@ -237,9 +236,8 @@ export async function post_query_graph_own(req: Request, res: Response) {
 		return;
 	}
 
-	const graph_parse = parse_schema(req.body, InputSchemaOf(Routes.QUERY_GRAPH_OWN), debug);
-	if (graph_parse.result !== 'Success') {
-		res.status(401).send(parse_error_message(graph_parse.result));
+	const graph_parse = safe_parse_request_body(req, InputSchemaOf(Routes.QUERY_GRAPH_OWN), res, debug);
+	if (graph_parse.result === 'Exit') {
 		return;
 	}
 	const time_control_id = graph_parse.data.tc_i;
@@ -256,9 +254,8 @@ export async function post_query_graph_own(req: Request, res: Response) {
 export async function post_query_graph_full(req: Request, res: Response) {
 	debug(log_now(), `POST ${Routes.QUERY_GRAPH_FULL}...`);
 
-	const session_parse = parse_schema(req.cookies, AuthenticationInputSchema, debug);
-	if (session_parse.result !== 'Success') {
-		res.status(401).send(`Failure to parse cookies ${session_parse.result}.`);
+	const session_parse = safe_parse_request_cookies(req, AuthenticationInputSchema, res, debug);
+	if (session_parse.result === 'Exit') {
 		return;
 	}
 	const session = session_parse.data;
@@ -275,9 +272,8 @@ export async function post_query_graph_full(req: Request, res: Response) {
 		return;
 	}
 
-	const graph_parse = parse_schema(req.body, InputSchemaOf(Routes.QUERY_GRAPH_FULL), debug);
-	if (graph_parse.result !== 'Success') {
-		res.status(401).send(parse_error_message(graph_parse.result));
+	const graph_parse = safe_parse_request_body(req, InputSchemaOf(Routes.QUERY_GRAPH_FULL), res, debug);
+	if (graph_parse.result === 'Exit') {
 		return;
 	}
 	const time_control_id = graph_parse.data.tc_i;

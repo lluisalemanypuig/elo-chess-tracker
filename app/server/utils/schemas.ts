@@ -25,6 +25,7 @@ Contact:
 
 import Debug from 'debug';
 import { z } from 'zod';
+import { Request, Response } from 'express';
 
 import { isNotDefined } from '@common/utils/is_defined';
 import { log_now } from '@server/utils/time';
@@ -66,6 +67,56 @@ export function parse_schema<S extends z.ZodTypeAny>(
 	};
 }
 
-export function parse_error_message<T>(res: ParseSchemaResult<T>) {
+export type SafeParseSchemaResult<T> =
+	| {
+			result: 'Exit';
+			data: undefined;
+	  }
+	| {
+			result: 'Continue';
+			data: T;
+	  };
+
+export function safe_parse_request_cookies<S extends z.ZodTypeAny>(
+	req: Request,
+	schema_obj: S,
+	res: Response,
+	debug: Debug.Debugger
+): SafeParseSchemaResult<z.output<S>> {
+	const parse = parse_schema(req.cookies, schema_obj, debug);
+	if (parse.result !== 'Success') {
+		res.status(401).send(`Failure to parse cookies ${parse.result}.`);
+		return {
+			result: 'Exit',
+			data: undefined
+		};
+	}
+	return {
+		result: 'Continue',
+		data: parse.data
+	};
+}
+
+export function safe_parse_request_body<S extends z.ZodTypeAny>(
+	req: Request,
+	schema_obj: S,
+	res: Response,
+	debug: Debug.Debugger
+): SafeParseSchemaResult<z.output<S>> {
+	const parse = parse_schema(req.body, schema_obj, debug);
+	if (parse.result !== 'Success') {
+		res.status(401).send(parse_error_message(parse));
+		return {
+			result: 'Exit',
+			data: undefined
+		};
+	}
+	return {
+		result: 'Continue',
+		data: parse.data
+	};
+}
+
+function parse_error_message<T>(res: ParseSchemaResult<T>) {
 	return `Request input data (body) sent from client is malformed ${res.result}`;
 }
