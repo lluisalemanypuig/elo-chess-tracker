@@ -27,13 +27,13 @@ import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:server_query_users');
 import { Request, Response } from 'express';
 
-import { log_now } from '@server/utils/time';
-import { user_get_all_name_randid } from '@server/managers/users';
+import { log_now } from '@app/common/utils/time';
+import { user_get_all_name_public_id } from '@server/managers/users';
 import { is_user_logged_in } from '@server/managers/session';
 import { User } from '@common/models/user';
 import { UsersManager } from '@server/managers/users_manager';
 import { TimeControlRating } from '@common/models/time_control_rating';
-import { isDefined } from '@common/utils/is_defined';
+import { isNotDefined } from '@common/utils/is_defined';
 import { Routes } from '@common/routes';
 import { InputSchemaOf } from '@common/api/schemas';
 import { safe_parse_request_body, safe_parse_request_cookies } from '@server/utils/schemas';
@@ -59,12 +59,12 @@ export async function get_query_user_list(req: Request, res: Response) {
 	const session = session_parse.data;
 	const r = is_user_logged_in(session);
 
-	if (!isDefined(r[2])) {
+	if (isNotDefined(r[2])) {
 		res.status(401).send(r[1]);
 		return;
 	}
 
-	let list = user_get_all_name_randid();
+	let list = user_get_all_name_public_id();
 	list.sort(function (a: UserThin, b: UserThin): number {
 		return a.name.localeCompare(b.name);
 	});
@@ -82,12 +82,12 @@ export async function get_query_html_user_list(req: Request, res: Response) {
 	const session = session_parse.data;
 	const r = is_user_logged_in(session);
 
-	if (!isDefined(r[2])) {
+	if (isNotDefined(r[2])) {
 		res.status(401).send(r[1]);
 		return;
 	}
 
-	let list = user_get_all_name_randid();
+	let list = user_get_all_name_public_id();
 	list.sort(function (a: UserThin, b: UserThin): number {
 		return a.name.localeCompare(b.name);
 	});
@@ -110,7 +110,7 @@ export async function get_query_user_home(req: Request, res: Response) {
 	const r = is_user_logged_in(session);
 
 	const user = r[2];
-	if (!isDefined(user)) {
+	if (isNotDefined(user)) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -118,7 +118,7 @@ export async function get_query_user_home(req: Request, res: Response) {
 	const ratings_user = user.ratings.map((value: TimeControlRating): TimeControlAndRating => {
 		let R = value.rating.clone();
 		R.rating = Math.round(R.rating);
-		return { time_control_name: value.time_control, rating: R };
+		return { time_control_id: value.time_control, rating: R };
 	});
 
 	const output: QueryUserHomeOutput = {
@@ -140,7 +140,7 @@ export async function post_query_user_edit(req: Request, res: Response) {
 	const session = session_parse.data;
 	const r = is_user_logged_in(session);
 
-	if (!isDefined(r[2])) {
+	if (isNotDefined(r[2])) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -154,8 +154,8 @@ export async function post_query_user_edit(req: Request, res: Response) {
 
 	const mem = UsersManager.get_instance();
 
-	const to_edit = mem.get_user_by_random_id(to_edit_rid);
-	if (!isDefined(to_edit)) {
+	const to_edit = mem.get_user_by_public_id(to_edit_rid);
+	if (isNotDefined(to_edit)) {
 		debug(log_now(), `Random id '${to_edit_rid}' for edited user is not valid.`);
 		res.status(404).send('Invalid user');
 		return;
@@ -179,7 +179,7 @@ export async function post_query_user_ranking(req: Request, res: Response) {
 	const session = session_parse.data;
 	const r = is_user_logged_in(session);
 
-	if (!isDefined(r[2])) {
+	if (isNotDefined(r[2])) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -189,7 +189,7 @@ export async function post_query_user_ranking(req: Request, res: Response) {
 		return;
 	}
 
-	const time_control_id = user_query.data.tc_i;
+	const time_control_id = user_query.data.time_control_id;
 
 	let users_without_games: UserWithoutGames[] = [];
 	let users_with_games: UserWithGames[] = [];

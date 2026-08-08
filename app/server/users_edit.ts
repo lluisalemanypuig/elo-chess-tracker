@@ -27,7 +27,7 @@ import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:server_users_edit');
 import { Request, Response } from 'express';
 
-import { log_now } from '@server/utils/time';
+import { log_now } from '@app/common/utils/time';
 import { is_user_logged_in } from '@server/managers/session';
 import { user_rename_and_reassign_roles } from '@server/managers/users';
 import { USER_ROLE_ASSIGN_ID, USER_EDIT, get_role_action_name } from '@common/models/user_action';
@@ -35,7 +35,7 @@ import { can_user_edit } from '@server/managers/user_relationships';
 import { UsersManager } from '@server/managers/users_manager';
 import { ConfigurationManager } from '@server/managers/configuration_manager';
 import { get_execution_directory } from '@server/managers/environment_manager';
-import { isDefined } from '@common/utils/is_defined';
+import { isNotDefined } from '@common/utils/is_defined';
 import { Routes } from '@common/routes';
 import { InputSchemaOf } from '@common/api/schemas';
 import { safe_parse_request_body, safe_parse_request_cookies } from '@server/utils/schemas';
@@ -52,7 +52,7 @@ export async function get_page_user_edit(req: Request, res: Response) {
 	const r = is_user_logged_in(session);
 
 	const user = r[2];
-	if (!isDefined(user)) {
+	if (isNotDefined(user)) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -81,7 +81,7 @@ export async function post_user_edit(req: Request, res: Response) {
 	const r = is_user_logged_in(session);
 
 	const editor = r[2];
-	if (!isDefined(editor)) {
+	if (isNotDefined(editor)) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -98,8 +98,8 @@ export async function post_user_edit(req: Request, res: Response) {
 
 	const mem = UsersManager.get_instance();
 
-	const edited = mem.get_user_by_random_id(edited_rid);
-	if (!isDefined(edited)) {
+	const edited = mem.get_user_by_public_id(edited_rid);
+	if (isNotDefined(edited)) {
 		debug(log_now(), `Random id '${edited_rid}' for user is not valid.`);
 		res.status(404).send('Invalid user');
 		return;

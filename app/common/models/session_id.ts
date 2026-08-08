@@ -24,10 +24,11 @@ Contact:
 */
 
 import { z } from 'zod';
+import { PlayerPrivateIdSchema } from '@common/models/player';
 
 export const SessionIDLenientSchema = z.object({
 	token: z.string(),
-	username: z.string()
+	username: PlayerPrivateIdSchema
 });
 
 export const SessionIDSchema = SessionIDLenientSchema.strict().readonly();

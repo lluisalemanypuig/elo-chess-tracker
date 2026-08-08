@@ -30,7 +30,7 @@ import { Request, Response } from 'express';
 import path from 'path';
 import fs from 'fs';
 
-import { DateStringShort, log_now } from '@server/utils/time';
+import { DateYYYYMMDD, log_now } from '@app/common/utils/time';
 import { is_user_logged_in } from '@server/managers/session';
 import { GameNumber, User } from '@common/models/user';
 import { Game } from '@common/models/game';
@@ -38,12 +38,12 @@ import { RatingSystemManager } from '@server/managers/rating_system_manager';
 import { EnvironmentManager } from '@server/managers/environment_manager';
 import { GAMES_SEE } from '@common/models/user_action';
 import { can_user_delete_a_game, can_user_edit_a_game, can_user_see_a_game } from '@server/managers/user_relationships';
-import { TimeControlID } from '@common/models/time_control';
+import { TimeControlId } from '@common/models/time_control';
 import { game_array_from_string } from '@common/io/game';
 import { UsersManager } from '@server/managers/users_manager';
 import { search_by_key } from '@server/utils/searching';
 import { read_directory } from '@server/utils/read_directory';
-import { isDefined } from '@common/utils/is_defined';
+import { isNotDefined } from '@common/utils/is_defined';
 import { Routes } from '@common/routes';
 import { InputSchemaOf } from '@common/api/schemas';
 import { safe_parse_request_body, safe_parse_request_cookies } from '@server/utils/schemas';
@@ -67,7 +67,7 @@ function increment(g: Game): any {
  */
 function filter_game_list(
 	user: User,
-	time_control_id: TimeControlID,
+	time_control_id: TimeControlId,
 	filter_game_record: Function,
 	filter_game: Function
 ): QueryGamesListOutputSingle[] {
@@ -95,7 +95,7 @@ function filter_game_list(
 		const data = fs.readFileSync(game_record_file, 'utf8');
 		debug(log_now(), `        Game record '${game_record_file}' read.`);
 		const game_set = game_array_from_string(data);
-		if (!isDefined(game_set)) {
+		if (isNotDefined(game_set)) {
 			debug(log_now(), `        Game record '${game_record_file}' could not be parsed.`);
 			continue;
 		}
@@ -120,12 +120,12 @@ function filter_game_list(
 			})();
 
 			const white = manager.get_user_by_username(g.white);
-			if (!isDefined(white)) {
+			if (isNotDefined(white)) {
 				debug(log_now(), `User with username '${g.white}' could not be found.`);
 				return [];
 			}
 			const black = manager.get_user_by_username(g.black);
-			if (!isDefined(black)) {
+			if (isNotDefined(black)) {
 				debug(log_now(), `User with username '${g.black}' could not be found.`);
 				return [];
 			}
@@ -139,7 +139,7 @@ function filter_game_list(
 				white: white.get_full_name(),
 				black: black.get_full_name(),
 				result: result,
-				time_control: g.time_control_name,
+				time_control_name: g.time_control_name,
 				date: g.when.replace('..', ' '),
 				white_rating: `${Math.round(g.white_rating.rating)}`,
 				black_rating: `${Math.round(g.black_rating.rating)}`,
@@ -165,7 +165,7 @@ export async function post_query_game_list_own(req: Request, res: Response) {
 	const r = is_user_logged_in(session);
 
 	const user = r[2];
-	if (!isDefined(user)) {
+	if (isNotDefined(user)) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -174,7 +174,7 @@ export async function post_query_game_list_own(req: Request, res: Response) {
 	if (game_parse.result === 'Exit') {
 		return;
 	}
-	const time_control_id = game_parse.data.tc_i;
+	const time_control_id = game_parse.data.time_control_id;
 
 	const filter_game_function = (g: Game): boolean => {
 		return g.is_user_involved(session.username);
@@ -185,7 +185,7 @@ export async function post_query_game_list_own(req: Request, res: Response) {
 		data_to_return = filter_game_list(
 			user,
 			time_control_id,
-			(record_id: DateStringShort): boolean => {
+			(record_id: DateYYYYMMDD): boolean => {
 				const game_record_list = user.get_games(time_control_id);
 				return (
 					search_by_key(game_record_list, (r: GameNumber): number => {
@@ -201,7 +201,7 @@ export async function post_query_game_list_own(req: Request, res: Response) {
 			const data = filter_game_list(
 				user,
 				tid,
-				(record_id: DateStringShort): boolean => {
+				(record_id: DateYYYYMMDD): boolean => {
 					const game_record_list = user.get_games(tid);
 					return (
 						search_by_key(game_record_list, (r: GameNumber): number => {
@@ -264,7 +264,7 @@ export async function post_query_game_list_all(req: Request, res: Response) {
 	const r = is_user_logged_in(session);
 
 	const user = r[2];
-	if (!isDefined(user)) {
+	if (isNotDefined(user)) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -278,7 +278,7 @@ export async function post_query_game_list_all(req: Request, res: Response) {
 	if (game_parse.result === 'Exit') {
 		return;
 	}
-	const time_control_id = game_parse.data.tc_i;
+	const time_control_id = game_parse.data.time_control_id;
 
 	let manager = UsersManager.get_instance();
 	let data_to_return: QueryGamesListOutput = [];
@@ -286,18 +286,18 @@ export async function post_query_game_list_all(req: Request, res: Response) {
 		data_to_return = filter_game_list(
 			user,
 			time_control_id,
-			(_: DateStringShort): boolean => {
+			(_: DateYYYYMMDD): boolean => {
 				return true;
 			},
 			(g: Game): boolean => {
 				const white = manager.get_user_by_username(g.white);
-				if (!isDefined(white)) {
+				if (isNotDefined(white)) {
 					debug(log_now(), `User with username '${g.white}' could not be found.`);
 					res.status(500).send('Invalid white user sent to the server.');
 					return false;
 				}
 				const black = manager.get_user_by_username(g.black);
-				if (!isDefined(black)) {
+				if (isNotDefined(black)) {
 					debug(log_now(), `User with username '${g.black}' could not be found.`);
 					res.status(500).send('Invalid black user sent to the server.');
 					return false;
@@ -311,17 +311,17 @@ export async function post_query_game_list_all(req: Request, res: Response) {
 			const data = filter_game_list(
 				user,
 				tid,
-				(_: DateStringShort): boolean => {
+				(_: DateYYYYMMDD): boolean => {
 					return true;
 				},
 				(g: Game): boolean => {
 					const white = manager.get_user_by_username(g.white);
-					if (!isDefined(white)) {
+					if (isNotDefined(white)) {
 						debug(log_now(), `User with username '${g.white}' could not be found.`);
 						return false;
 					}
 					const black = manager.get_user_by_username(g.black);
-					if (!isDefined(black)) {
+					if (isNotDefined(black)) {
 						debug(log_now(), `User with username '${g.black}' could not be found.`);
 						return false;
 					}

@@ -23,20 +23,47 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
+import { z } from 'zod';
 import { Rating } from '@common/models/rating_framework/rating';
 import { copyarray } from '@server/utils/misc';
 import { search_linear_by_key } from '@server/utils/searching';
-import { TimeControlID } from '@common/models/time_control';
+import { TimeControlId } from '@common/models/time_control';
 import { TimeControlRating } from '@common/models/time_control_rating';
 
 export const PlayerKeys = ['username', 'ratings'];
+
+// Player public ID
+
+declare const PlayerPublicIdBrand: unique symbol;
+export type PlayerPublicIdLocal = number & {
+	readonly [PlayerPublicIdBrand]: 'PlayerPublicId';
+};
+export const PlayerPublicIdSchema = z.number().gte(0).brand<'PlayerPublicIdLocal'>();
+export type PlayerPublicId = z.infer<typeof PlayerPublicIdSchema>;
+
+export function toPlayerPublicId(n: number): PlayerPublicId {
+	return n as PlayerPublicId;
+}
+
+// Player private ID
+
+declare const PlayerPrivateIdBrand: unique symbol;
+export type PlayerPrivateIdLocal = string & {
+	readonly [PlayerPrivateIdBrand]: 'PlayerPrivateId';
+};
+export const PlayerPrivateIdSchema = z.string().brand<'PlayerPrivateIdLocal'>();
+export type PlayerPrivateId = z.infer<typeof PlayerPrivateIdSchema>;
+
+export function toPlayerPrivateId(s: string): PlayerPrivateId {
+	return s as PlayerPrivateId;
+}
 
 /**
  * @brief Simple class to encode a Player
  */
 export class Player {
 	/// The user name of the the player
-	public readonly username: string;
+	public readonly username: PlayerPrivateId;
 
 	/// Rating info of the player per time control id
 	public ratings: TimeControlRating[];
@@ -46,13 +73,13 @@ export class Player {
 	 * @param username User name of the player.
 	 * @param ratings All the ratings of this user.
 	 */
-	constructor(username: string, ratings: TimeControlRating[]) {
+	constructor(username: PlayerPrivateId, ratings: TimeControlRating[]) {
 		this.username = username;
 		this.ratings = ratings;
 	}
 
 	/// Returns whether the rating under the given time control id exists
-	has_rating(id: TimeControlID): boolean {
+	has_rating(id: TimeControlId): boolean {
 		return this.index_time_control_id(id) != -1;
 	}
 
@@ -62,12 +89,12 @@ export class Player {
 	 * @param rating Rating object
 	 * @pre Rating does not exist
 	 */
-	add_rating(id: TimeControlID, rating: Rating): void {
+	add_rating(id: TimeControlId, rating: Rating): void {
 		this.ratings.push(new TimeControlRating(id, rating));
 	}
 
 	/// Returns the rating of the player under the given time control id
-	get_rating(id: TimeControlID): Rating {
+	get_rating(id: TimeControlId): Rating {
 		const index = this.index_time_control_id(id);
 		if (index == -1) {
 			throw new Error(`Rating with id '${id}' does not exist!`);
@@ -76,7 +103,7 @@ export class Player {
 	}
 
 	/// Sets the rating of the player
-	set_rating(id: TimeControlID, rating: Rating): void {
+	set_rating(id: TimeControlId, rating: Rating): void {
 		const index = this.index_time_control_id(id);
 		if (index == -1) {
 			throw new Error(`Rating with id '${id}' does not exist!`);
@@ -94,7 +121,7 @@ export class Player {
 		);
 	}
 
-	index_time_control_id(id: TimeControlID): number {
+	index_time_control_id(id: TimeControlId): number {
 		return search_linear_by_key(this.ratings, (v: TimeControlRating): boolean => {
 			return v.time_control == id;
 		});

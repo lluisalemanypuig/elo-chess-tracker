@@ -23,7 +23,7 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { isDefined } from '@common/utils/is_defined';
+import { isNotDefined } from '@common/utils/is_defined';
 import { time_control_rating_array_from_string, time_control_rating_from_string } from '@common/io/time_control_rating';
 import { initialize_rating_functions } from '@server/managers/rating_system';
 
@@ -35,7 +35,7 @@ describe('IO conversion -- Elo', () => {
 			'{ "time_control": "blitz", "rating": { "rating": 1500.43, "num_games": 100, "won": 50, "drawn": 20, "lost": 30, "K": 40, "surpassed_2400": true } }'
 		);
 		expect(tcr).not.toBeNull();
-		if (!isDefined(tcr)) {
+		if (isNotDefined(tcr)) {
 			return;
 		}
 		expect(tcr.rating).toEqual({
@@ -55,7 +55,7 @@ describe('IO conversion -- Elo', () => {
 			'[{ "time_control": "blitz", "rating": { "rating": 1500.43, "num_games": 100, "won": 50, "drawn": 20, "lost": 30, "K": 40, "surpassed_2400": true } }]'
 		);
 		expect(tcr).not.toBeNull();
-		if (!isDefined(tcr)) {
+		if (isNotDefined(tcr)) {
 			return;
 		}
 		expect(tcr[0].rating).toEqual({

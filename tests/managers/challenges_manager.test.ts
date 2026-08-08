@@ -23,32 +23,40 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { ChallengesManager } from '@server/managers/challenges_manager';
-import { new_challenge } from '@common/models/challenge';
-import { number_to_string } from '@server/utils/misc';
+import { ChallengesManager, numberToChallengeId } from '@server/managers/challenges_manager';
+import { new_challenge, toChallengeId } from '@common/models/challenge';
+import { toPlayerPrivateId } from '@common/models/player';
+import { toTimeControlId, toTimeControlName } from '@common/models/time_control';
+import { toDateYYYYMMDDHHmmssSSS } from '@app/common/utils/time';
+
+const Classical = toTimeControlId('Classical');
+const Classical90p30 = toTimeControlName('Classical (90 + 30)');
 
 describe('Challenges Manager', () => {
 	test('Empty manager', () => {
 		let challenges = ChallengesManager.get_instance();
 		challenges.clear();
 
+		const id00001 = toChallengeId('00001');
+		const id00002 = toChallengeId('00002');
+
 		expect(challenges.get_max_challenge_id()).toBe(0);
 		expect(challenges.num_challenges()).toBe(0);
 
 		const c = new_challenge(
-			'00001',
+			id00001,
 			'sample',
-			'a',
-			'b',
-			'classical',
-			'Classical (90 + 30)',
-			'2025-01-07..17:49:20:000'
+			toPlayerPrivateId('a'),
+			toPlayerPrivateId('b'),
+			Classical,
+			Classical90p30,
+			toDateYYYYMMDDHHmmssSSS('2025-01-07..17:49:20:000')
 		);
 		expect(challenges.get_challenge_index(c)).toBe(-1);
-		expect(challenges.get_challenge_index_by_id('00001')).toBe(-1);
-		expect(challenges.get_challenge_index_by_id('00002')).toBe(-1);
-		expect(challenges.get_challenge_by_id('00001')).toBe(undefined);
-		expect(challenges.get_challenge_by_id('00002')).toBe(undefined);
+		expect(challenges.get_challenge_index_by_id(id00001)).toBe(-1);
+		expect(challenges.get_challenge_index_by_id(id00002)).toBe(-1);
+		expect(challenges.get_challenge_by_id(id00001)).toBe(undefined);
+		expect(challenges.get_challenge_by_id(id00002)).toBe(undefined);
 		expect(challenges.get_challenge_at(0)).toBe(undefined);
 		expect(challenges.get_challenge_at(1)).toBe(undefined);
 	});
@@ -69,24 +77,40 @@ describe('Challenges Manager', () => {
 		challenges.clear();
 
 		const yesterday_id = challenges.new_challenge_id();
-		expect(yesterday_id).toBe(number_to_string(1));
+		expect(yesterday_id).toBe(numberToChallengeId(1));
 		const yesterday = new_challenge(
 			yesterday_id,
 			'sample',
-			'a',
-			'b',
-			'classical',
-			'Classical (90 + 30)',
-			'yesterday'
+			toPlayerPrivateId('a'),
+			toPlayerPrivateId('b'),
+			Classical,
+			Classical90p30,
+			toDateYYYYMMDDHHmmssSSS('yesterday')
 		);
 
 		const today_id = challenges.new_challenge_id();
-		expect(today_id).toBe(number_to_string(2));
-		const today = new_challenge(today_id, 'sample', 'a', 'b', 'classical', 'Classical (90 + 30)', 'today__');
+		expect(today_id).toBe(numberToChallengeId(2));
+		const today = new_challenge(
+			today_id,
+			'sample',
+			toPlayerPrivateId('a'),
+			toPlayerPrivateId('b'),
+			Classical,
+			Classical90p30,
+			toDateYYYYMMDDHHmmssSSS('today')
+		);
 
 		const tomorrow_id = challenges.new_challenge_id();
-		expect(tomorrow_id).toBe(number_to_string(3));
-		const tomorrow = new_challenge(tomorrow_id, 'sample', 'a', 'b', 'classical', 'Classical (90 + 30)', 'tomorrow');
+		expect(tomorrow_id).toBe(numberToChallengeId(3));
+		const tomorrow = new_challenge(
+			tomorrow_id,
+			'sample',
+			toPlayerPrivateId('a'),
+			toPlayerPrivateId('b'),
+			Classical,
+			Classical90p30,
+			toDateYYYYMMDDHHmmssSSS('tomorrow')
+		);
 
 		challenges.add_challenge(yesterday);
 		expect(challenges.num_challenges()).toBe(1);
@@ -116,35 +140,51 @@ describe('Challenges Manager', () => {
 		challenges.clear();
 
 		const yesterday_id = challenges.new_challenge_id();
-		expect(yesterday_id).toBe(number_to_string(1));
+		expect(yesterday_id).toBe(numberToChallengeId(1));
 		const yesterday = new_challenge(
 			yesterday_id,
 			'sample',
-			'a',
-			'b',
-			'classical',
-			'Classical (90 + 30)',
-			'yesterday'
+			toPlayerPrivateId('a'),
+			toPlayerPrivateId('b'),
+			Classical,
+			Classical90p30,
+			toDateYYYYMMDDHHmmssSSS('yesterday')
 		);
 
 		const today_id = challenges.new_challenge_id();
-		expect(today_id).toBe(number_to_string(2));
-		const today = new_challenge(today_id, 'sample', 'a', 'b', 'classical', 'Classical (90 + 30)', 'today__');
+		expect(today_id).toBe(numberToChallengeId(2));
+		const today = new_challenge(
+			today_id,
+			'sample',
+			toPlayerPrivateId('a'),
+			toPlayerPrivateId('b'),
+			Classical,
+			Classical90p30,
+			toDateYYYYMMDDHHmmssSSS('today')
+		);
 
 		const tomorrow_id = challenges.new_challenge_id();
-		expect(tomorrow_id).toBe(number_to_string(3));
-		const tomorrow = new_challenge(tomorrow_id, 'sample', 'a', 'b', 'classical', 'Classical (90 + 30)', 'tomorrow');
+		expect(tomorrow_id).toBe(numberToChallengeId(3));
+		const tomorrow = new_challenge(
+			tomorrow_id,
+			'sample',
+			toPlayerPrivateId('a'),
+			toPlayerPrivateId('b'),
+			Classical,
+			Classical90p30,
+			toDateYYYYMMDDHHmmssSSS('tomorrow')
+		);
 
 		const day_after_tomorrow_id = challenges.new_challenge_id();
-		expect(day_after_tomorrow_id).toBe(number_to_string(4));
+		expect(day_after_tomorrow_id).toBe(numberToChallengeId(4));
 		const day_after_tomorrow = new_challenge(
 			day_after_tomorrow_id,
 			'sample',
-			'a',
-			'b',
-			'classical',
-			'Classical (90 + 30)',
-			'day_after_tomorrow'
+			toPlayerPrivateId('a'),
+			toPlayerPrivateId('b'),
+			Classical,
+			Classical90p30,
+			toDateYYYYMMDDHHmmssSSS('day_after_tomorrow')
 		);
 
 		challenges.add_challenge(yesterday);

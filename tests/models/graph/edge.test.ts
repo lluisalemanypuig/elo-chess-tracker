@@ -25,11 +25,16 @@ Contact:
 
 import { EdgeMetadata } from '@common/models/graph/edge_metadata';
 import { Edge } from '@common/models/graph/edge';
+import { toPlayerPrivateId } from '@common/models/player';
+
+const a = toPlayerPrivateId('a');
+const b = toPlayerPrivateId('b');
+const c = toPlayerPrivateId('c');
 
 describe('Merge edges', () => {
 	test('1', () => {
-		let e1 = new Edge('a', new EdgeMetadata(1, 0, 10));
-		let e2 = new Edge('a', new EdgeMetadata(0, 0, 0));
+		let e1 = new Edge(a, new EdgeMetadata(1, 0, 10));
+		let e2 = new Edge(a, new EdgeMetadata(0, 0, 0));
 		e1.merge(e2);
 
 		expect(e1.neighbor).toBe('a');
@@ -39,8 +44,8 @@ describe('Merge edges', () => {
 	});
 
 	test('2', () => {
-		let e1 = new Edge('b', new EdgeMetadata(1, 0, 10));
-		let e2 = new Edge('b', new EdgeMetadata(0, 3, 0));
+		let e1 = new Edge(b, new EdgeMetadata(1, 0, 10));
+		let e2 = new Edge(b, new EdgeMetadata(0, 3, 0));
 		e1.merge(e2);
 
 		expect(e1.neighbor).toBe('b');
@@ -50,11 +55,11 @@ describe('Merge edges', () => {
 	});
 
 	test('3', () => {
-		let e1 = new Edge('c', new EdgeMetadata(1, 0, 10));
-		let e2 = new Edge('c', new EdgeMetadata(0, 3, 0));
+		let e1 = new Edge(c, new EdgeMetadata(1, 0, 10));
+		let e2 = new Edge(c, new EdgeMetadata(0, 3, 0));
 		e1.merge(e2);
 
-		let e3 = new Edge('c', new EdgeMetadata(50, 3, 0));
+		let e3 = new Edge(c, new EdgeMetadata(50, 3, 0));
 		e1.merge(e3);
 
 		expect(e1.neighbor).toBe('c');

@@ -32,8 +32,9 @@ import path from 'path';
 import { Neighborhood, Graph } from '@common/models/graph/graph';
 import { edge_array_from_string } from '@common/io/graph/edge';
 import { read_directory } from '@server/utils/read_directory';
-import { isDefined } from '@common/utils/is_defined';
-import { log_now } from '@server/utils/time';
+import { isNotDefined } from '@common/utils/is_defined';
+import { log_now } from '@app/common/utils/time';
+import { PlayerPrivateId, toPlayerPrivateId } from '@common/models/player';
 
 /**
  * @brief Save a portion of the graph from a file.
@@ -44,7 +45,7 @@ import { log_now } from '@server/utils/time';
  * @param username The actual filename.
  * @param edges The information to save.
  */
-export function neighborhood_to_file(dir: string, username: string, edges: Neighborhood): void {
+export function neighborhood_to_file(dir: string, username: PlayerPrivateId, edges: Neighborhood): void {
 	const filename = path.join(dir, username);
 	fs.writeFileSync(filename, JSON.stringify(edges, null, 4));
 }
@@ -61,11 +62,11 @@ export function neighborhood_to_file(dir: string, username: string, edges: Neigh
  * @param changes The users for which their portion graph is to be saved.
  * @param g The graph to be saved.
  */
-export function graph_to_file(dir: string, changes: string[], g: Graph): void {
+export function graph_to_file(dir: string, changes: PlayerPrivateId[], g: Graph): void {
 	for (const username of changes) {
 		if (g.get_out_degree(username) > 0) {
 			const out = g.get_outgoing_edges(username);
-			if (!isDefined(out)) {
+			if (isNotDefined(out)) {
 				debug(log_now(), `Could not get niehgbors of user '${username}'`);
 				continue;
 			}
@@ -88,7 +89,7 @@ export function graph_to_file(dir: string, changes: string[], g: Graph): void {
 export function graph_full_to_file(dir: string, g: Graph): void {
 	for (const username of g.get_out_entries()) {
 		const out = g.get_outgoing_edges(username);
-		if (!isDefined(out)) {
+		if (isNotDefined(out)) {
 			debug(log_now(), `Could not get niehgbors of user '${username}'`);
 			continue;
 		}
@@ -119,13 +120,14 @@ export function graph_from_string(dir: string): Graph | null {
 		}
 		const edge_array = fs.readFileSync(filename, 'utf8');
 		const edge_set = edge_array_from_string(edge_array);
-		if (!isDefined(edge_set)) {
+		if (isNotDefined(edge_set)) {
 			debug(log_now(), `Could not read edge set at file '${filename}'.`);
 			return null;
 		}
 
+		const usernameId = toPlayerPrivateId(username);
 		for (const edge of edge_set) {
-			g.add_edge_raw(username, edge.neighbor, edge);
+			g.add_edge_raw(usernameId, edge.neighbor, edge);
 		}
 	}
 

@@ -24,7 +24,7 @@ Contact:
 */
 
 import { TimeControlRating } from '@common/models/time_control_rating';
-import { User } from '@common/models/user';
+import { toUserGivenName, User } from '@common/models/user';
 import {
 	USER_ROLE_ASSIGN_ADMIN,
 	USER_ROLE_ASSIGN_MEMBER,
@@ -57,6 +57,13 @@ import {
 import { ADMIN, MEMBER, STUDENT, TEACHER } from '@common/models/user_role';
 import { initialize_permissions, UserRoleToUserAction } from '@server/managers/user_role_action';
 import { EloRating } from '@common/models/rating_framework/Elo/rating';
+import { toPlayerPrivateId } from '@common/models/player';
+import { toTimeControlId } from '@common/models/time_control';
+import { toDateYYYYMMDD } from '@app/common/utils/time';
+
+const Classical = toTimeControlId('Classical');
+const Rapid = toTimeControlId('Rapid');
+const Blitz = toTimeControlId('Blitz');
 
 describe('Elo', () => {
 	//const bullet = new EloRating(1400, 0, 0, 0, 0, 40, false);
@@ -66,16 +73,16 @@ describe('Elo', () => {
 
 	test('basic gets', () => {
 		const u = new User(
-			'user.name',
-			'First',
-			'Last',
+			toPlayerPrivateId('user.name'),
+			toUserGivenName('First'),
+			toUserGivenName('Last'),
 			{ encrypted: 'asdf', iv: 'ivrandom' },
 			[ADMIN, TEACHER],
 			[
-				{ time_control: 'blitz', records: [{ record: '2024-12-24', amount: 1 }] },
-				{ time_control: 'rapid', records: [{ record: '2024-12-25', amount: 1 }] }
+				{ time_control: Blitz, records: [{ record: toDateYYYYMMDD('2024-12-24'), amount: 1 }] },
+				{ time_control: Rapid, records: [{ record: toDateYYYYMMDD('2024-12-25'), amount: 1 }] }
 			],
-			[new TimeControlRating('blitz', blitz), new TimeControlRating('classical', classical)]
+			[new TimeControlRating(Blitz, blitz), new TimeControlRating(Classical, classical)]
 		);
 
 		expect(u.is(ADMIN)).toBe(true);
@@ -89,22 +96,22 @@ describe('Elo', () => {
 		expect(u.first_name).toEqual('First');
 		expect(u.last_name).toEqual('Last');
 		expect(u.get_full_name()).toEqual('First Last');
-		expect(u.get_games('blitz')).toEqual([{ record: '2024-12-24', amount: 1 }]);
-		expect(u.get_games('rapid')).toEqual([{ record: '2024-12-25', amount: 1 }]);
+		expect(u.get_games(Blitz)).toEqual([{ record: toDateYYYYMMDD('2024-12-24'), amount: 1 }]);
+		expect(u.get_games(Rapid)).toEqual([{ record: toDateYYYYMMDD('2024-12-25'), amount: 1 }]);
 	});
 
 	test('basic sets', () => {
 		let u = new User(
-			'user.name',
-			'First',
-			'Last',
+			toPlayerPrivateId('user.name'),
+			toUserGivenName('First'),
+			toUserGivenName('Last'),
 			{ encrypted: 'asdf', iv: 'ivrandom' },
 			[ADMIN, TEACHER],
 			[
-				{ time_control: 'blitz', records: [{ record: '2024-12-24', amount: 1 }] },
-				{ time_control: 'rapid', records: [{ record: '2024-12-25', amount: 1 }] }
+				{ time_control: Blitz, records: [{ record: toDateYYYYMMDD('2024-12-24'), amount: 1 }] },
+				{ time_control: Rapid, records: [{ record: toDateYYYYMMDD('2024-12-25'), amount: 1 }] }
 			],
-			[new TimeControlRating('blitz', blitz), new TimeControlRating('classical', classical)]
+			[new TimeControlRating(Blitz, blitz), new TimeControlRating(Classical, classical)]
 		);
 
 		expect(u.is(ADMIN)).toBe(true);
@@ -115,8 +122,8 @@ describe('Elo', () => {
 		expect(u.roles).toEqual([ADMIN, TEACHER]);
 		expect(u.roles).not.toEqual([TEACHER, ADMIN]);
 
-		u.first_name = 'Perico';
-		u.last_name = 'Palotes';
+		u.first_name = toUserGivenName('Perico');
+		u.last_name = toUserGivenName('Palotes');
 		expect(u.first_name).toEqual('Perico');
 		expect(u.last_name).toEqual('Palotes');
 		expect(u.get_full_name()).toEqual('Perico Palotes');
@@ -127,95 +134,97 @@ describe('Elo', () => {
 
 	test('Adding games', () => {
 		let u = new User(
-			'user.name',
-			'First',
-			'Last',
+			toPlayerPrivateId('user.name'),
+			toUserGivenName('First'),
+			toUserGivenName('Last'),
 			{ encrypted: 'asdf', iv: 'ivrandom' },
 			[ADMIN, TEACHER],
 			[
-				{ time_control: 'blitz', records: [{ record: '2024-12-24', amount: 1 }] },
-				{ time_control: 'rapid', records: [{ record: '2024-12-25', amount: 1 }] }
+				{ time_control: Blitz, records: [{ record: toDateYYYYMMDD('2024-12-24'), amount: 1 }] },
+				{ time_control: Rapid, records: [{ record: toDateYYYYMMDD('2024-12-25'), amount: 1 }] }
 			],
-			[new TimeControlRating('blitz', blitz), new TimeControlRating('classical', classical)]
+			[new TimeControlRating(Blitz, blitz), new TimeControlRating(Classical, classical)]
 		);
 
 		// blitz
 
-		expect(u.get_games('blitz')).toEqual([{ record: '2024-12-24', amount: 1 }]);
+		expect(u.get_games(Blitz)).toEqual([{ record: '2024-12-24', amount: 1 }]);
 
-		u.add_game('blitz', '2024-12-31');
-		expect(u.get_games('blitz')).toEqual([
-			{ record: '2024-12-24', amount: 1 },
-			{ record: '2024-12-31', amount: 1 }
+		u.add_game(Blitz, toDateYYYYMMDD('2024-12-31'));
+		expect(u.get_games(Blitz)).toEqual([
+			{ record: toDateYYYYMMDD('2024-12-24'), amount: 1 },
+			{ record: toDateYYYYMMDD('2024-12-31'), amount: 1 }
 		]);
 
-		u.add_game('blitz', '2024-12-01');
-		expect(u.get_games('blitz')).toEqual([
-			{ record: '2024-12-01', amount: 1 },
-			{ record: '2024-12-24', amount: 1 },
-			{ record: '2024-12-31', amount: 1 }
+		u.add_game(Blitz, toDateYYYYMMDD('2024-12-01'));
+		expect(u.get_games(Blitz)).toEqual([
+			{ record: toDateYYYYMMDD('2024-12-01'), amount: 1 },
+			{ record: toDateYYYYMMDD('2024-12-24'), amount: 1 },
+			{ record: toDateYYYYMMDD('2024-12-31'), amount: 1 }
 		]);
 
-		u.add_game('blitz', '2024-12-31');
-		expect(u.get_games('blitz')).toEqual([
-			{ record: '2024-12-01', amount: 1 },
-			{ record: '2024-12-24', amount: 1 },
-			{ record: '2024-12-31', amount: 2 }
+		u.add_game(Blitz, toDateYYYYMMDD('2024-12-31'));
+		expect(u.get_games(Blitz)).toEqual([
+			{ record: toDateYYYYMMDD('2024-12-01'), amount: 1 },
+			{ record: toDateYYYYMMDD('2024-12-24'), amount: 1 },
+			{ record: toDateYYYYMMDD('2024-12-31'), amount: 2 }
 		]);
 
-		u.add_game('blitz', '2024-12-31');
-		expect(u.get_games('blitz')).toEqual([
-			{ record: '2024-12-01', amount: 1 },
-			{ record: '2024-12-24', amount: 1 },
-			{ record: '2024-12-31', amount: 3 }
+		u.add_game(Blitz, toDateYYYYMMDD('2024-12-31'));
+		expect(u.get_games(Blitz)).toEqual([
+			{ record: toDateYYYYMMDD('2024-12-01'), amount: 1 },
+			{ record: toDateYYYYMMDD('2024-12-24'), amount: 1 },
+			{ record: toDateYYYYMMDD('2024-12-31'), amount: 3 }
 		]);
 
-		u.add_game('blitz', '2024-12-01');
-		expect(u.get_games('blitz')).toEqual([
-			{ record: '2024-12-01', amount: 2 },
-			{ record: '2024-12-24', amount: 1 },
-			{ record: '2024-12-31', amount: 3 }
+		u.add_game(Blitz, toDateYYYYMMDD('2024-12-01'));
+		expect(u.get_games(Blitz)).toEqual([
+			{ record: toDateYYYYMMDD('2024-12-01'), amount: 2 },
+			{ record: toDateYYYYMMDD('2024-12-24'), amount: 1 },
+			{ record: toDateYYYYMMDD('2024-12-31'), amount: 3 }
 		]);
 
 		// rapid
 
-		expect(u.get_games('rapid')).toEqual([{ record: '2024-12-25', amount: 1 }]);
+		expect(u.get_games(Rapid)).toEqual([{ record: '2024-12-25', amount: 1 }]);
 
-		u.add_game('rapid', '2024-12-28');
-		expect(u.get_games('rapid')).toEqual([
-			{ record: '2024-12-25', amount: 1 },
-			{ record: '2024-12-28', amount: 1 }
+		u.add_game(Rapid, toDateYYYYMMDD('2024-12-28'));
+		expect(u.get_games(Rapid)).toEqual([
+			{ record: toDateYYYYMMDD('2024-12-25'), amount: 1 },
+			{ record: toDateYYYYMMDD('2024-12-28'), amount: 1 }
 		]);
 
-		u.add_game('rapid', '2019-12-31');
-		expect(u.get_games('rapid')).toEqual([
-			{ record: '2019-12-31', amount: 1 },
-			{ record: '2024-12-25', amount: 1 },
-			{ record: '2024-12-28', amount: 1 }
+		u.add_game(Rapid, toDateYYYYMMDD('2019-12-31'));
+		expect(u.get_games(Rapid)).toEqual([
+			{ record: toDateYYYYMMDD('2019-12-31'), amount: 1 },
+			{ record: toDateYYYYMMDD('2024-12-25'), amount: 1 },
+			{ record: toDateYYYYMMDD('2024-12-28'), amount: 1 }
 		]);
 
-		u.add_game('rapid', '2019-12-31');
-		expect(u.get_games('rapid')).toEqual([
-			{ record: '2019-12-31', amount: 2 },
-			{ record: '2024-12-25', amount: 1 },
-			{ record: '2024-12-28', amount: 1 }
+		u.add_game(Rapid, toDateYYYYMMDD('2019-12-31'));
+		expect(u.get_games(Rapid)).toEqual([
+			{ record: toDateYYYYMMDD('2019-12-31'), amount: 2 },
+			{ record: toDateYYYYMMDD('2024-12-25'), amount: 1 },
+			{ record: toDateYYYYMMDD('2024-12-28'), amount: 1 }
 		]);
 
-		u.add_game('rapid', '2024-12-28');
-		expect(u.get_games('rapid')).toEqual([
-			{ record: '2019-12-31', amount: 2 },
-			{ record: '2024-12-25', amount: 1 },
-			{ record: '2024-12-28', amount: 2 }
+		u.add_game(Rapid, toDateYYYYMMDD('2024-12-28'));
+		expect(u.get_games(Rapid)).toEqual([
+			{ record: toDateYYYYMMDD('2019-12-31'), amount: 2 },
+			{ record: toDateYYYYMMDD('2024-12-25'), amount: 1 },
+			{ record: toDateYYYYMMDD('2024-12-28'), amount: 2 }
 		]);
 
-		u.add_game('rapid', '2024-12-28');
-		expect(u.get_games('rapid')).toEqual([
-			{ record: '2019-12-31', amount: 2 },
-			{ record: '2024-12-25', amount: 1 },
-			{ record: '2024-12-28', amount: 3 }
+		u.add_game(Rapid, toDateYYYYMMDD('2024-12-28'));
+		expect(u.get_games(Rapid)).toEqual([
+			{ record: toDateYYYYMMDD('2019-12-31'), amount: 2 },
+			{ record: toDateYYYYMMDD('2024-12-25'), amount: 1 },
+			{ record: toDateYYYYMMDD('2024-12-28'), amount: 3 }
 		]);
 	});
 });
+
+const u = toPlayerPrivateId('u');
 
 describe('Actions allowed per user (single role)', () => {
 	test('Admin', () => {
@@ -227,7 +236,15 @@ describe('Actions allowed per user (single role)', () => {
 			member: []
 		});
 
-		const admin = new User('u', 'F', 'L', { encrypted: 'a', iv: 'i' }, [ADMIN], [], []);
+		const admin = new User(
+			u,
+			toUserGivenName('F'),
+			toUserGivenName('L'),
+			{ encrypted: 'a', iv: 'i' },
+			[ADMIN],
+			[],
+			[]
+		);
 
 		const actions = admin.get_actions();
 		expect(actions.length).toBe(2);
@@ -272,7 +289,15 @@ describe('Actions allowed per user (single role)', () => {
 			member: []
 		});
 
-		const teacher = new User('u', 'F', 'L', { encrypted: 'a', iv: 'i' }, [TEACHER], [], []);
+		const teacher = new User(
+			u,
+			toUserGivenName('F'),
+			toUserGivenName('L'),
+			{ encrypted: 'a', iv: 'i' },
+			[TEACHER],
+			[],
+			[]
+		);
 
 		const actions = teacher.get_actions();
 		expect(actions.length).toBe(2);
@@ -317,7 +342,15 @@ describe('Actions allowed per user (single role)', () => {
 			member: []
 		});
 
-		const student = new User('u', 'F', 'L', { encrypted: 'a', iv: 'i' }, [STUDENT], [], []);
+		const student = new User(
+			u,
+			toUserGivenName('F'),
+			toUserGivenName('L'),
+			{ encrypted: 'a', iv: 'i' },
+			[STUDENT],
+			[],
+			[]
+		);
 
 		const actions = student.get_actions();
 		expect(actions.length).toBe(2);
@@ -362,7 +395,15 @@ describe('Actions allowed per user (single role)', () => {
 			member: [USER_CHALLENGE_ADMIN, USER_CHALLENGE_STUDENT]
 		});
 
-		const member = new User('u', 'F', 'L', { encrypted: 'a', iv: 'i' }, [MEMBER], [], []);
+		const member = new User(
+			u,
+			toUserGivenName('F'),
+			toUserGivenName('L'),
+			{ encrypted: 'a', iv: 'i' },
+			[MEMBER],
+			[],
+			[]
+		);
 
 		const actions = member.get_actions();
 		expect(actions.length).toBe(3);
@@ -410,7 +451,15 @@ describe('Actions allowed per user (multiple roles)', () => {
 			member: []
 		});
 
-		const admin_teacher = new User('u', 'F', 'L', { encrypted: 'a', iv: 'i' }, [ADMIN, TEACHER], [], []);
+		const admin_teacher = new User(
+			u,
+			toUserGivenName('F'),
+			toUserGivenName('L'),
+			{ encrypted: 'a', iv: 'i' },
+			[ADMIN, TEACHER],
+			[],
+			[]
+		);
 
 		const actions = admin_teacher.get_actions();
 		expect(actions.length).toBe(2);
@@ -457,7 +506,15 @@ describe('Actions allowed per user (multiple roles)', () => {
 			member: []
 		});
 
-		const admin_student = new User('u', 'F', 'L', { encrypted: 'a', iv: 'i' }, [ADMIN, STUDENT], [], []);
+		const admin_student = new User(
+			u,
+			toUserGivenName('F'),
+			toUserGivenName('L'),
+			{ encrypted: 'a', iv: 'i' },
+			[ADMIN, STUDENT],
+			[],
+			[]
+		);
 
 		const actions = admin_student.get_actions();
 		expect(actions.length).toBe(4);

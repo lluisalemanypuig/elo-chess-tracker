@@ -25,7 +25,7 @@ Contact:
 
 import Debug from 'debug';
 
-import { log_now } from '@server/utils/time';
+import { log_now } from '@app/common/utils/time';
 import { User } from '@common/models/user';
 const debug = Debug('ELO_CHESS_TRACKER:managers/session');
 
@@ -33,7 +33,8 @@ import { SessionIDManager } from '@server/managers/session_id_manager';
 import { SessionID } from '@common/models/session_id';
 import { shuffle } from '@server/utils/shuffle_random';
 import { UsersManager } from '@server/managers/users_manager';
-import { isDefined } from '@common/utils/is_defined';
+import { isNotDefined } from '@common/utils/is_defined';
+import { PlayerPrivateId } from '@common/models/player';
 
 // The original string was
 // "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+-*/ª!·$%&/()=?¿¡'º|@#~€¬^{},;.:_";
@@ -65,7 +66,7 @@ function random_session_id(str: string): string {
  * @param username Username.
  * @returns The authentication token.
  */
-export function session_id_add(username: string): string {
+export function session_id_add(username: PlayerPrivateId): string {
 	const token = random_session_id(username);
 	const session_id: SessionID = { token: token, username: username };
 	SessionIDManager.get_instance().add_session_id(session_id);
@@ -89,7 +90,7 @@ export function session_id_delete(session: SessionID): void {
 }
 
 /// Deletes a session id.
-export function session_user_delete_all(username: string): void {
+export function session_user_delete_all(username: PlayerPrivateId): void {
 	let mem = SessionIDManager.get_instance();
 
 	debug(log_now(), `Before deleting, '${mem.num_session_ids()}' sessions`);
@@ -106,7 +107,7 @@ export function session_user_delete_all(username: string): void {
  */
 export function is_user_logged_in(session: SessionID): [boolean, string, User | undefined] {
 	const user = UsersManager.get_instance().get_user_by_username(session.username);
-	if (!isDefined(user)) {
+	if (isNotDefined(user)) {
 		debug(log_now(), `User '${session.username}' does not exist.`);
 		return [false, 'Forbidden access. <a href="/">Go home</a>.', undefined];
 	}

@@ -24,10 +24,12 @@ Contact:
 */
 
 import { z } from 'zod';
+import { PlayerPublicIdSchema } from '@common/models/player';
+import { UserGivenNameSchema } from '@common/models/user';
 
 export const UserThinSchema = z.object({
-	name: z.string(),
-	id: z.number()
+	name: UserGivenNameSchema,
+	id: PlayerPublicIdSchema
 });
 
 export type UserThin = z.infer<typeof UserThinSchema>;

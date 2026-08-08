@@ -25,7 +25,7 @@ Contact:
 
 import { Game } from '@common/models/game';
 import { Rating } from '@common/models/rating_framework/rating';
-import { TimeControl, TimeControlID } from '@common/models/time_control';
+import { TimeControl, TimeControlId } from '@common/models/time_control';
 
 /**
  * @brief Rating System Manager singleton class
@@ -97,7 +97,7 @@ export class RatingSystemManager {
 	/// All ratings used in the server
 	private all_time_controls: TimeControl[] = [];
 	/// All unique rating ids used in the server
-	private all_unique_time_controls: TimeControlID[] = [];
+	private all_unique_time_controls: TimeControlId[] = [];
 
 	set_functions(formula: Function, new_rating: Function, from_string: Function, from_json: Function): void {
 		this.rating_formula_func = formula;
@@ -133,11 +133,11 @@ export class RatingSystemManager {
 		this.all_time_controls = all_ratings;
 
 		this.all_unique_time_controls = [
-			...new Set(this.all_time_controls.map<string>((value: TimeControl): string => value.id))
+			...new Set(this.all_time_controls.map((value: TimeControl): TimeControlId => value.id))
 		];
 	}
 
-	is_time_control_id_valid(id: TimeControlID): boolean {
+	is_time_control_id_valid(id: TimeControlId): boolean {
 		for (const tc of this.all_time_controls) {
 			if (tc.id == id) {
 				return true;
@@ -150,7 +150,7 @@ export class RatingSystemManager {
 		return this.all_time_controls;
 	}
 
-	get_unique_time_controls_ids(): TimeControlID[] {
+	get_unique_time_controls_ids(): TimeControlId[] {
 		return this.all_unique_time_controls;
 	}
 }

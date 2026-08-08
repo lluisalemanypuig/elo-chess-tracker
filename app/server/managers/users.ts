@@ -28,16 +28,18 @@ import path from 'path';
 import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:managers/users');
 
-import { Player } from '@common/models/player';
-import { TimeControlGame, User, UserRandomID } from '@common/models/user';
+import { Player, PlayerPrivateId } from '@common/models/player';
+import { UserGivenName, TimeControlGame, User } from '@common/models/user';
 import { EnvironmentManager } from '@server/managers/environment_manager';
 import { UsersManager } from '@server/managers/users_manager';
 import { UserRole } from '@common/models/user_role';
 import { encrypt_password_for_user } from '@server/utils/encrypt';
 import { RatingSystemManager } from '@server/managers/rating_system_manager';
 import { TimeControlRating } from '@common/models/time_control_rating';
-import { log_now } from '@server/utils/time';
+import { log_now } from '@app/common/utils/time';
 import { UserThin } from '@common/models/user_thin';
+import { isNotDefined } from '@common/utils/is_defined';
+import { TimeControlId } from '@common/models/time_control';
 
 /// Dump the data in user @e u into its corresponding file.
 export function user_overwrite(user: User): void {
@@ -48,9 +50,9 @@ export function user_overwrite(user: User): void {
 
 /// Overwrites user data
 export function user_rename_and_reassign_roles(
-	username: string,
-	first_name: string,
-	last_name: string,
+	username: PlayerPrivateId,
+	first_name: UserGivenName,
+	last_name: UserGivenName,
 	roles: UserRole[]
 ): User {
 	let user = UsersManager.get_instance().get_user_by_username(username) as User;
@@ -74,9 +76,9 @@ export function user_rename_and_reassign_roles(
  * @returns The new user created.
  */
 export function user_add_new(
-	username: string,
-	firstname: string,
-	lastname: string,
+	username: PlayerPrivateId,
+	firstname: UserGivenName,
+	lastname: UserGivenName,
 	pass: string,
 	roles: UserRole[]
 ): User {
@@ -84,7 +86,7 @@ export function user_add_new(
 
 	let games: TimeControlGame[] = [];
 	let ratings: TimeControlRating[] = [];
-	rating_system.get_unique_time_controls_ids().forEach((id: string) => {
+	rating_system.get_unique_time_controls_ids().forEach((id: TimeControlId) => {
 		ratings.push(new TimeControlRating(id, rating_system.get_new_rating()));
 		games.push({ time_control: id, records: [] });
 	});
@@ -112,13 +114,16 @@ export function user_add_new(
 }
 
 /// Returns the list of all (full) names and usernames
-export function user_get_all_name_randid(): UserThin[] {
+export function user_get_all_name_public_id(): UserThin[] {
 	let res: UserThin[] = [];
 
 	const mem = UsersManager.get_instance();
 	for (let i = 0; i < mem.num_users(); ++i) {
 		const user = mem.get_user_at(i) as User;
-		const random_id = mem.get_user_random_ID_at(i) as UserRandomID;
+		const random_id = mem.get_user_public_id_at(i);
+		if (isNotDefined(random_id)) {
+			throw new Error(`Public id for user is not defined.`);
+		}
 		res.push({ name: user.get_full_name(), id: random_id });
 	}
 	return res;

@@ -28,9 +28,16 @@ import fs from 'fs';
 import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:managers/games');
 
-import { DateStringLongMillis, DateStringShort, log_now, long_date_to_short_date } from '@server/utils/time';
-import { Player } from '@common/models/player';
-import { Game, GameID, GameResult } from '@common/models/game';
+import {
+	DateYYYYMMDDHHmmssSSS,
+	DateYYYYMMDD,
+	DateHHmmssSSS,
+	log_now,
+	long_date_to_short_date,
+	toDateYYYYMMDDHHmmssSSS
+} from '@app/common/utils/time';
+import { Player, PlayerPrivateId } from '@common/models/player';
+import { Game, GameId, GameResult } from '@common/models/game';
 import { User } from '@common/models/user';
 import { where_should_be_inserted_by_key } from '@server/utils/searching';
 import { GamesManager } from '@server/managers/games_manager';
@@ -39,11 +46,11 @@ import { RatingSystemManager } from '@server/managers/rating_system_manager';
 import { EnvironmentManager } from '@server/managers/environment_manager';
 import { user_update_from_player_data } from '@server/managers/users';
 import { Rating } from '@common/models/rating_framework/rating';
-import { TimeControlID } from '@common/models/time_control';
+import { TimeControlId, TimeControlName } from '@common/models/time_control';
 import { graph_delete_edge, graph_modify_edge, graph_update } from '@server/managers/graphs';
 import { GamesIterator } from '@server/managers/games_iterator';
 import { TimeControlRating } from '@common/models/time_control_rating';
-import { isDefined } from '@common/utils/is_defined';
+import { isDefined, isNotDefined } from '@common/utils/is_defined';
 
 /// Returns g1 < g2 using dates
 function game_compare_dates(g: Game): Function {
@@ -61,9 +68,9 @@ function game_compare_dates(g: Game): Function {
 /// Return the game where player 'username' is involved with
 /// date after later than date 'when'.
 function game_next_of_player(
-	username: string,
-	time_control_id: TimeControlID,
-	when: DateStringLongMillis
+	username: PlayerPrivateId,
+	time_control_id: TimeControlId,
+	when: DateYYYYMMDDHHmmssSSS
 ): Game | undefined {
 	const games_dir = EnvironmentManager.get_instance().get_dir_games_time_control(time_control_id);
 
@@ -91,15 +98,15 @@ function game_next_of_player(
 /// Creates a new game with no players using the parameters given
 function game_new(
 	title: string,
-	white: string,
-	black: string,
+	white: PlayerPrivateId,
+	black: PlayerPrivateId,
 	result: GameResult,
-	time_control_id: TimeControlID,
-	time_control_name: string,
-	when: DateStringLongMillis
+	time_control_id: TimeControlId,
+	time_control_name: TimeControlName,
+	when: DateYYYYMMDDHHmmssSSS
 ): Game {
 	// retrieve next id and increment maximum id
-	const id_str: GameID = GamesManager.get_instance().new_game_id();
+	const id_str: GameId = GamesManager.get_instance().new_game_id();
 	debug(log_now(), `ID for new game: ${id_str}`);
 
 	let white_to_assign: Rating;
@@ -119,7 +126,7 @@ function game_new(
 		} else {
 			// there is no next game for white
 			const white_user = UsersManager.get_instance().get_user_by_username(white);
-			if (!isDefined(white_user)) {
+			if (isNotDefined(white_user)) {
 				throw new Error(`White user '${white}' is not in the users database`);
 			}
 			white_to_assign = white_user.get_rating(time_control_id).clone();
@@ -139,7 +146,7 @@ function game_new(
 			}
 		} else {
 			const black_user = UsersManager.get_instance().get_user_by_username(black);
-			if (!isDefined(black_user)) {
+			if (isNotDefined(black_user)) {
 				throw new Error(`Black user '${black}' is not in the users database`);
 			}
 			black_to_assign = black_user.get_rating(time_control_id).clone();
@@ -160,14 +167,14 @@ function game_new(
 	);
 }
 
-function rating_into_player(time_control_id: TimeControlID, player: string, rating: Rating): Player {
+function rating_into_player(time_control_id: TimeControlId, player: PlayerPrivateId, rating: Rating): Player {
 	return new Player(player, [new TimeControlRating(time_control_id, rating.clone())]);
 }
 
 /// Updates the given game record
 function update_game_record(
 	games_iter: GamesIterator,
-	time_control_id: TimeControlID,
+	time_control_id: TimeControlId,
 	updated_players: Player[],
 	player_to_index: Map<string, number>
 ): void {
@@ -245,7 +252,7 @@ function update_game_record(
  * @param record_id Game record id, the file into which we have to add the new game
  * @post Users in the server are update (both memory and user files)
  */
-function game_insert_in_history(g: Game, record_id: DateStringShort): void {
+function game_insert_in_history(g: Game, record_id: DateYYYYMMDD): void {
 	let updated_players: Player[] = [];
 
 	const white_username = g.white;
@@ -337,12 +344,12 @@ export function game_add_new(
 	white: User,
 	black: User,
 	result: GameResult,
-	time_control_id: TimeControlID,
-	time_control_name: string,
-	game_record: DateStringShort,
-	hhmmss: string
+	time_control_id: TimeControlId,
+	time_control_name: TimeControlName,
+	game_record: DateYYYYMMDD,
+	hhmmss: DateHHmmssSSS
 ): void {
-	const when = game_record + '..' + hhmmss;
+	const when = toDateYYYYMMDDHHmmssSSS(game_record + '..' + hhmmss);
 	const white_username = white.username;
 	const black_username = black.username;
 	const g = game_new(title, white_username, black_username, result, time_control_id, time_control_name, when);
@@ -361,11 +368,11 @@ export function game_add_new(
  * @param game_id The game G to be returned.
  * @returns The game object that has identifier equal to @e game_id.
  */
-export function game_find_by_id(game_id: GameID): Game | undefined {
+export function game_find_by_id(game_id: GameId): Game | undefined {
 	const info = GamesManager.get_instance().get_game_info(game_id);
 
 	// game_id does not exist
-	if (!isDefined(info)) {
+	if (isNotDefined(info)) {
 		return undefined;
 	}
 
@@ -399,11 +406,11 @@ export function game_find_by_id(game_id: GameID): Game | undefined {
  * @param game_id The ID of the game to edit
  * @param new_result The (new) result of the game
  */
-export function game_edit_result(game_id: GameID, new_result: GameResult): void {
+export function game_edit_result(game_id: GameId, new_result: GameResult): void {
 	const info = GamesManager.get_instance().get_game_info(game_id);
 
 	// game_id does not exist
-	if (!isDefined(info)) {
+	if (isNotDefined(info)) {
 		throw new Error(`Game id '${game_id}' does not exist in the Games Manager`);
 	}
 
@@ -469,11 +476,11 @@ export function game_edit_result(game_id: GameID, new_result: GameResult): void 
  * @param game_id The ID of the game to edit
  * @param new_result The (new) result of the game
  */
-export function game_edit_title(game_id: GameID, new_title: string): void {
+export function game_edit_title(game_id: GameId, new_title: string): void {
 	const info = GamesManager.get_instance().get_game_info(game_id);
 
 	// game_id does not exist
-	if (!isDefined(info)) {
+	if (isNotDefined(info)) {
 		throw new Error(`Game id '${game_id}' does not exist in the Games Manager`);
 	}
 
@@ -502,12 +509,12 @@ export function game_edit_title(game_id: GameID, new_title: string): void {
 	fs.writeFileSync(game_record_file, JSON.stringify(game_set, null, 4));
 }
 
-export function game_delete(game_id: GameID): void {
+export function game_delete(game_id: GameId): void {
 	let games_manager = GamesManager.get_instance();
 	const info = games_manager.get_game_info(game_id);
 
 	// game_id does not exist
-	if (!isDefined(info)) {
+	if (isNotDefined(info)) {
 		throw new Error(`Game id '${game_id}' does not exist in the Games Manager`);
 	}
 
@@ -574,14 +581,14 @@ export function game_delete(game_id: GameID): void {
 	let users_manager = UsersManager.get_instance();
 
 	let w = users_manager.get_user_by_username(white);
-	if (!isDefined(w)) {
+	if (isNotDefined(w)) {
 		debug(log_now(), `User ${white} could not be found`);
 		return;
 	}
 	w.delete_game(time_control_id, game_record);
 
 	let b = users_manager.get_user_by_username(black);
-	if (!isDefined(b)) {
+	if (isNotDefined(b)) {
 		debug(log_now(), `User ${black} could not be found`);
 		return;
 	}

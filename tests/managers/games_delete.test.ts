@@ -31,14 +31,27 @@ import { server_init_from_data } from '@server/managers/memory/initialization';
 import { user_add_new } from '@server/managers/users';
 import { ADMIN } from '@common/models/user_role';
 import { run_command } from '@tests/exec_utils';
-import { User } from '@common/models/user';
-import { UsersManager } from '@server/managers/users_manager';
+import { toUserGivenName, User } from '@common/models/user';
 import { GamesManager } from '@server/managers/games_manager';
 import { EnvironmentManager } from '@server/managers/environment_manager';
 import { EdgeMetadata } from '@common/models/graph/edge_metadata';
 import { GraphsManager } from '@server/managers/graphs_manager';
 import { Graph } from '@common/models/graph/graph';
 import { Configuration } from '@common/models/configuration/configuration';
+import { toPlayerPrivateId } from '@common/models/player';
+import { toGameId } from '@common/models/game';
+import { toTimeControlId, toTimeControlName } from '@common/models/time_control';
+import { toDateYYYYMMDD, toDateHHmmssSSS } from '@app/common/utils/time';
+
+const Classical = toTimeControlId('Classical');
+const Classical90p30 = toTimeControlName('Classical (90 + 30)');
+
+const Rapid = toTimeControlId('Rapid');
+const Rapid12p5 = toTimeControlName('Rapid (12 + 5)');
+const Rapid10p0 = toTimeControlName('Rapid (10 + 0)');
+
+const Blitz = toTimeControlId('Blitz');
+const Blitz5p3 = toTimeControlName('Blitz (5 + 3)');
 
 const configuration: Configuration = {
 	environment: {
@@ -67,20 +80,20 @@ const configuration: Configuration = {
 	rating_system: 'Elo',
 	time_controls: [
 		{
-			id: 'Classical',
-			name: 'Classical (90 + 30)'
+			id: Classical,
+			name: Classical90p30
 		},
 		{
-			id: 'Rapid',
-			name: 'Rapid (12 + 5)'
+			id: Rapid,
+			name: Rapid12p5
 		},
 		{
-			id: 'Rapid',
-			name: 'Rapid (10 + 0)'
+			id: Rapid,
+			name: Rapid10p0
 		},
 		{
-			id: 'Blitz',
-			name: 'Blitz (5 + 3)'
+			id: Blitz,
+			name: Blitz5p3
 		}
 	],
 	behavior: {
@@ -96,251 +109,318 @@ const configuration: Configuration = {
 	}
 };
 
-let a: User;
-let b: User;
-let c: User;
-let d: User;
-let e: User;
-let f: User;
+let aU: User;
+let bU: User;
+let cU: User;
+let dU: User;
+let eU: User;
+let fU: User;
 
-function u(username: string): User {
-	return UsersManager.get_instance().get_user_by_username(username) as User;
-}
+const a = toPlayerPrivateId('a');
+const b = toPlayerPrivateId('b');
+const c = toPlayerPrivateId('c');
+const d = toPlayerPrivateId('d');
+const e = toPlayerPrivateId('e');
+const f = toPlayerPrivateId('f');
+
+const A = toUserGivenName('A');
+const B = toUserGivenName('B');
+const C = toUserGivenName('C');
+const D = toUserGivenName('D');
+const E = toUserGivenName('E');
+const F = toUserGivenName('F');
+
+const aa = toUserGivenName('aa');
+const bb = toUserGivenName('bb');
+const cc = toUserGivenName('cc');
+const dd = toUserGivenName('dd');
+const ee = toUserGivenName('ee');
+const ff = toUserGivenName('ff');
 
 describe('Server setup', () => {
 	test('Fill an empty server', async () => {
 		await run_command('./tests/initialize_empty.sh');
 		expect(() => server_init_from_data('tests/webpage', configuration)).not.toThrow();
 
-		a = user_add_new('a', 'A', 'aa', 'aaaa', [ADMIN]);
-		b = user_add_new('b', 'B', 'bb', 'dddd', [ADMIN]);
-		c = user_add_new('c', 'C', 'cc', 'cccc', [ADMIN]);
-		d = user_add_new('d', 'D', 'dd', 'dddd', [ADMIN]);
-		e = user_add_new('e', 'E', 'ee', 'eeee', [ADMIN]);
-		f = user_add_new('f', 'F', 'ff', 'ffff', [ADMIN]);
+		aU = user_add_new(a, A, aa, 'aaaa', [ADMIN]);
+		bU = user_add_new(b, B, bb, 'dddd', [ADMIN]);
+		cU = user_add_new(c, C, cc, 'cccc', [ADMIN]);
+		dU = user_add_new(d, D, dd, 'dddd', [ADMIN]);
+		eU = user_add_new(e, E, ee, 'eeee', [ADMIN]);
+		fU = user_add_new(f, F, ff, 'ffff', [ADMIN]);
 	});
 });
 
 describe('Sequential game creation', () => {
 	test('Add "Blitz" games', () => {
-		game_add_new('sample', u('a'), u('b'), 'white_wins', 'Blitz', 'Blitz (5 + 3)', '2025-01-19', '17:06:00:000');
-		game_add_new('sample', u('c'), u('d'), 'black_wins', 'Blitz', 'Blitz (5 + 3)', '2025-01-19', '17:06:10:000');
-		game_add_new('sample', u('e'), u('f'), 'draw', 'Blitz', 'Blitz (5 + 3)', '2025-01-19', '17:06:20:000');
-		game_add_new('sample', u('a'), u('f'), 'black_wins', 'Blitz', 'Blitz (5 + 3)', '2025-01-19', '17:06:30:000');
-		game_add_new('sample', u('b'), u('a'), 'white_wins', 'Blitz', 'Blitz (5 + 3)', '2025-01-19', '17:06:40:000');
+		game_add_new(
+			'sample',
+			aU,
+			bU,
+			'white_wins',
+			Blitz,
+			Blitz5p3,
+			toDateYYYYMMDD('2025-01-19'),
+			toDateHHmmssSSS('17:06:00:000')
+		);
+		game_add_new(
+			'sample',
+			cU,
+			dU,
+			'black_wins',
+			Blitz,
+			Blitz5p3,
+			toDateYYYYMMDD('2025-01-19'),
+			toDateHHmmssSSS('17:06:10:000')
+		);
+		game_add_new(
+			'sample',
+			eU,
+			fU,
+			'draw',
+			Blitz,
+			Blitz5p3,
+			toDateYYYYMMDD('2025-01-19'),
+			toDateHHmmssSSS('17:06:20:000')
+		);
+		game_add_new(
+			'sample',
+			aU,
+			fU,
+			'black_wins',
+			Blitz,
+			Blitz5p3,
+			toDateYYYYMMDD('2025-01-19'),
+			toDateHHmmssSSS('17:06:30:000')
+		);
+		game_add_new(
+			'sample',
+			bU,
+			aU,
+			'white_wins',
+			Blitz,
+			Blitz5p3,
+			toDateYYYYMMDD('2025-01-19'),
+			toDateHHmmssSSS('17:06:40:000')
+		);
 
-		expect(a.get_games('Blitz').length).toBe(1);
-		expect(b.get_games('Blitz').length).toBe(1);
-		expect(c.get_games('Blitz').length).toBe(1);
-		expect(d.get_games('Blitz').length).toBe(1);
-		expect(e.get_games('Blitz').length).toBe(1);
-		expect(f.get_games('Blitz').length).toBe(1);
+		expect(aU.get_games(Blitz).length).toBe(1);
+		expect(bU.get_games(Blitz).length).toBe(1);
+		expect(cU.get_games(Blitz).length).toBe(1);
+		expect(dU.get_games(Blitz).length).toBe(1);
+		expect(eU.get_games(Blitz).length).toBe(1);
+		expect(fU.get_games(Blitz).length).toBe(1);
 
-		expect(a.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
-		expect(b.get_rating('Blitz').num_won_drawn_lost()).toEqual([2, 1, 0, 1]);
-		expect(c.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
-		expect(d.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
-		expect(e.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 1, 0]);
-		expect(f.get_rating('Blitz').num_won_drawn_lost()).toEqual([2, 1, 1, 0]);
+		expect(aU.get_rating(Blitz).num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
+		expect(bU.get_rating(Blitz).num_won_drawn_lost()).toEqual([2, 1, 0, 1]);
+		expect(cU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
+		expect(dU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
+		expect(eU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 0, 1, 0]);
+		expect(fU.get_rating(Blitz).num_won_drawn_lost()).toEqual([2, 1, 1, 0]);
 	});
 
 	test('Check "Blitz" graph', () => {
 		const graphs_manager = GraphsManager.get_instance();
-		const g = graphs_manager.get_graph('Blitz') as Graph;
+		const g = graphs_manager.get_graph(Blitz) as Graph;
 
 		// white
 
-		expect(g.get_data_as_white('a', 'b')).toEqual(new EdgeMetadata(1, 0, 0));
-		expect(g.get_data_as_white('a', 'c')).toEqual(undefined);
-		expect(g.get_data_as_white('a', 'd')).toEqual(undefined);
-		expect(g.get_data_as_white('a', 'e')).toEqual(undefined);
-		expect(g.get_data_as_white('a', 'f')).toEqual(new EdgeMetadata(0, 0, 1));
+		expect(g.get_data_as_white(a, b)).toEqual(new EdgeMetadata(1, 0, 0));
+		expect(g.get_data_as_white(a, c)).toEqual(undefined);
+		expect(g.get_data_as_white(a, d)).toEqual(undefined);
+		expect(g.get_data_as_white(a, e)).toEqual(undefined);
+		expect(g.get_data_as_white(a, f)).toEqual(new EdgeMetadata(0, 0, 1));
 
-		expect(g.get_data_as_white('b', 'a')).toEqual(new EdgeMetadata(1, 0, 0));
-		expect(g.get_data_as_white('b', 'c')).toEqual(undefined);
-		expect(g.get_data_as_white('b', 'd')).toEqual(undefined);
-		expect(g.get_data_as_white('b', 'e')).toEqual(undefined);
-		expect(g.get_data_as_white('b', 'f')).toEqual(undefined);
+		expect(g.get_data_as_white(b, a)).toEqual(new EdgeMetadata(1, 0, 0));
+		expect(g.get_data_as_white(b, c)).toEqual(undefined);
+		expect(g.get_data_as_white(b, d)).toEqual(undefined);
+		expect(g.get_data_as_white(b, e)).toEqual(undefined);
+		expect(g.get_data_as_white(b, f)).toEqual(undefined);
 
-		expect(g.get_data_as_white('c', 'a')).toEqual(undefined);
-		expect(g.get_data_as_white('c', 'b')).toEqual(undefined);
-		expect(g.get_data_as_white('c', 'd')).toEqual(new EdgeMetadata(0, 0, 1));
-		expect(g.get_data_as_white('c', 'e')).toEqual(undefined);
-		expect(g.get_data_as_white('c', 'f')).toEqual(undefined);
+		expect(g.get_data_as_white(c, a)).toEqual(undefined);
+		expect(g.get_data_as_white(c, b)).toEqual(undefined);
+		expect(g.get_data_as_white(c, d)).toEqual(new EdgeMetadata(0, 0, 1));
+		expect(g.get_data_as_white(c, e)).toEqual(undefined);
+		expect(g.get_data_as_white(c, f)).toEqual(undefined);
 
-		expect(g.get_data_as_white('d', 'a')).toEqual(undefined);
-		expect(g.get_data_as_white('d', 'b')).toEqual(undefined);
-		expect(g.get_data_as_white('d', 'c')).toEqual(undefined);
-		expect(g.get_data_as_white('d', 'e')).toEqual(undefined);
-		expect(g.get_data_as_white('d', 'f')).toEqual(undefined);
+		expect(g.get_data_as_white(d, a)).toEqual(undefined);
+		expect(g.get_data_as_white(d, b)).toEqual(undefined);
+		expect(g.get_data_as_white(d, c)).toEqual(undefined);
+		expect(g.get_data_as_white(d, e)).toEqual(undefined);
+		expect(g.get_data_as_white(d, f)).toEqual(undefined);
 
-		expect(g.get_data_as_white('e', 'a')).toEqual(undefined);
-		expect(g.get_data_as_white('e', 'b')).toEqual(undefined);
-		expect(g.get_data_as_white('e', 'c')).toEqual(undefined);
-		expect(g.get_data_as_white('e', 'd')).toEqual(undefined);
-		expect(g.get_data_as_white('e', 'f')).toEqual(new EdgeMetadata(0, 1, 0));
+		expect(g.get_data_as_white(e, a)).toEqual(undefined);
+		expect(g.get_data_as_white(e, b)).toEqual(undefined);
+		expect(g.get_data_as_white(e, c)).toEqual(undefined);
+		expect(g.get_data_as_white(e, d)).toEqual(undefined);
+		expect(g.get_data_as_white(e, f)).toEqual(new EdgeMetadata(0, 1, 0));
 
-		expect(g.get_data_as_white('f', 'a')).toEqual(undefined);
-		expect(g.get_data_as_white('f', 'b')).toEqual(undefined);
-		expect(g.get_data_as_white('f', 'c')).toEqual(undefined);
-		expect(g.get_data_as_white('f', 'd')).toEqual(undefined);
-		expect(g.get_data_as_white('f', 'e')).toEqual(undefined);
+		expect(g.get_data_as_white(f, a)).toEqual(undefined);
+		expect(g.get_data_as_white(f, b)).toEqual(undefined);
+		expect(g.get_data_as_white(f, c)).toEqual(undefined);
+		expect(g.get_data_as_white(f, d)).toEqual(undefined);
+		expect(g.get_data_as_white(f, e)).toEqual(undefined);
 
 		// black
 
-		expect(g.get_data_as_black('a', 'b')).toEqual(new EdgeMetadata(0, 0, 1));
-		expect(g.get_data_as_black('a', 'c')).toEqual(undefined);
-		expect(g.get_data_as_black('a', 'd')).toEqual(undefined);
-		expect(g.get_data_as_black('a', 'e')).toEqual(undefined);
-		expect(g.get_data_as_black('a', 'f')).toEqual(undefined);
+		expect(g.get_data_as_black(a, b)).toEqual(new EdgeMetadata(0, 0, 1));
+		expect(g.get_data_as_black(a, c)).toEqual(undefined);
+		expect(g.get_data_as_black(a, d)).toEqual(undefined);
+		expect(g.get_data_as_black(a, e)).toEqual(undefined);
+		expect(g.get_data_as_black(a, f)).toEqual(undefined);
 
-		expect(g.get_data_as_black('b', 'a')).toEqual(new EdgeMetadata(0, 0, 1));
-		expect(g.get_data_as_black('b', 'c')).toEqual(undefined);
-		expect(g.get_data_as_black('b', 'd')).toEqual(undefined);
-		expect(g.get_data_as_black('b', 'e')).toEqual(undefined);
-		expect(g.get_data_as_black('b', 'f')).toEqual(undefined);
+		expect(g.get_data_as_black(b, a)).toEqual(new EdgeMetadata(0, 0, 1));
+		expect(g.get_data_as_black(b, c)).toEqual(undefined);
+		expect(g.get_data_as_black(b, d)).toEqual(undefined);
+		expect(g.get_data_as_black(b, e)).toEqual(undefined);
+		expect(g.get_data_as_black(b, f)).toEqual(undefined);
 
-		expect(g.get_data_as_black('c', 'a')).toEqual(undefined);
-		expect(g.get_data_as_black('c', 'b')).toEqual(undefined);
-		expect(g.get_data_as_black('c', 'd')).toEqual(undefined);
-		expect(g.get_data_as_black('c', 'e')).toEqual(undefined);
-		expect(g.get_data_as_black('c', 'f')).toEqual(undefined);
+		expect(g.get_data_as_black(c, a)).toEqual(undefined);
+		expect(g.get_data_as_black(c, b)).toEqual(undefined);
+		expect(g.get_data_as_black(c, d)).toEqual(undefined);
+		expect(g.get_data_as_black(c, e)).toEqual(undefined);
+		expect(g.get_data_as_black(c, f)).toEqual(undefined);
 
-		expect(g.get_data_as_black('d', 'a')).toEqual(undefined);
-		expect(g.get_data_as_black('d', 'b')).toEqual(undefined);
-		expect(g.get_data_as_black('d', 'c')).toEqual(new EdgeMetadata(1, 0, 0));
-		expect(g.get_data_as_black('d', 'e')).toEqual(undefined);
-		expect(g.get_data_as_black('d', 'f')).toEqual(undefined);
+		expect(g.get_data_as_black(d, a)).toEqual(undefined);
+		expect(g.get_data_as_black(d, b)).toEqual(undefined);
+		expect(g.get_data_as_black(d, c)).toEqual(new EdgeMetadata(1, 0, 0));
+		expect(g.get_data_as_black(d, e)).toEqual(undefined);
+		expect(g.get_data_as_black(d, f)).toEqual(undefined);
 
-		expect(g.get_data_as_black('e', 'a')).toEqual(undefined);
-		expect(g.get_data_as_black('e', 'b')).toEqual(undefined);
-		expect(g.get_data_as_black('e', 'c')).toEqual(undefined);
-		expect(g.get_data_as_black('e', 'd')).toEqual(undefined);
-		expect(g.get_data_as_black('e', 'f')).toEqual(undefined);
+		expect(g.get_data_as_black(e, a)).toEqual(undefined);
+		expect(g.get_data_as_black(e, b)).toEqual(undefined);
+		expect(g.get_data_as_black(e, c)).toEqual(undefined);
+		expect(g.get_data_as_black(e, d)).toEqual(undefined);
+		expect(g.get_data_as_black(e, f)).toEqual(undefined);
 
-		expect(g.get_data_as_black('f', 'a')).toEqual(new EdgeMetadata(1, 0, 0));
-		expect(g.get_data_as_black('f', 'b')).toEqual(undefined);
-		expect(g.get_data_as_black('f', 'c')).toEqual(undefined);
-		expect(g.get_data_as_black('f', 'd')).toEqual(undefined);
-		expect(g.get_data_as_black('f', 'e')).toEqual(new EdgeMetadata(0, 1, 0));
+		expect(g.get_data_as_black(f, a)).toEqual(new EdgeMetadata(1, 0, 0));
+		expect(g.get_data_as_black(f, b)).toEqual(undefined);
+		expect(g.get_data_as_black(f, c)).toEqual(undefined);
+		expect(g.get_data_as_black(f, d)).toEqual(undefined);
+		expect(g.get_data_as_black(f, e)).toEqual(new EdgeMetadata(0, 1, 0));
 
-		const blitz_dir = EnvironmentManager.get_instance().get_dir_graphs_time_control('Blitz');
+		const blitz_dir = EnvironmentManager.get_instance().get_dir_graphs_time_control(Blitz);
 		expect(fs.existsSync(path.join(blitz_dir, 'a'))).toBe(true);
 		expect(fs.existsSync(path.join(blitz_dir, 'b'))).toBe(true);
 		expect(fs.existsSync(path.join(blitz_dir, 'c'))).toBe(true);
 		expect(fs.existsSync(path.join(blitz_dir, 'e'))).toBe(true);
 	});
 
+	const id0000000001 = toGameId('0000000001');
+	const id0000000002 = toGameId('0000000002');
+	const id0000000003 = toGameId('0000000003');
+	const id0000000004 = toGameId('0000000004');
+	const id0000000005 = toGameId('0000000005');
+
 	test('Delete game 0000000001', () => {
-		expect(() => game_delete('0000000001')).not.toThrow();
+		expect(() => game_delete(id0000000001)).not.toThrow();
 
 		let man = GamesManager.get_instance();
-		expect(man.game_exists('0000000001')).toBe(false);
-		expect(man.game_exists('0000000002')).toBe(true);
-		expect(man.game_exists('0000000003')).toBe(true);
-		expect(man.game_exists('0000000004')).toBe(true);
-		expect(man.game_exists('0000000005')).toBe(true);
+		expect(man.game_exists(id0000000001)).toBe(false);
+		expect(man.game_exists(id0000000002)).toBe(true);
+		expect(man.game_exists(id0000000003)).toBe(true);
+		expect(man.game_exists(id0000000004)).toBe(true);
+		expect(man.game_exists(id0000000005)).toBe(true);
 
-		expect(a.get_games('Blitz').length).toBe(1);
-		expect(b.get_games('Blitz').length).toBe(1);
-		expect(c.get_games('Blitz').length).toBe(1);
-		expect(d.get_games('Blitz').length).toBe(1);
-		expect(e.get_games('Blitz').length).toBe(1);
-		expect(f.get_games('Blitz').length).toBe(1);
+		expect(aU.get_games(Blitz).length).toBe(1);
+		expect(bU.get_games(Blitz).length).toBe(1);
+		expect(cU.get_games(Blitz).length).toBe(1);
+		expect(dU.get_games(Blitz).length).toBe(1);
+		expect(eU.get_games(Blitz).length).toBe(1);
+		expect(fU.get_games(Blitz).length).toBe(1);
 
-		expect(a.get_rating('Blitz').num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
-		expect(b.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
-		expect(c.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
-		expect(d.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
-		expect(e.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 1, 0]);
-		expect(f.get_rating('Blitz').num_won_drawn_lost()).toEqual([2, 1, 1, 0]);
+		expect(aU.get_rating(Blitz).num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
+		expect(bU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
+		expect(cU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
+		expect(dU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
+		expect(eU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 0, 1, 0]);
+		expect(fU.get_rating(Blitz).num_won_drawn_lost()).toEqual([2, 1, 1, 0]);
 
-		const blitz_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Blitz');
+		const blitz_dir = EnvironmentManager.get_instance().get_dir_games_time_control(Blitz);
 		expect(fs.existsSync(path.join(blitz_dir, '2025-01-19'))).toBe(true);
 	});
 
-	/*
 	test('Check "Blitz" graph', () => {
 		const graphs_manager = GraphsManager.get_instance();
-		const g = graphs_manager.get_graph('Blitz') as Graph;
+		const g = graphs_manager.get_graph(Blitz) as Graph;
 
 		// white
 
-		expect(g.get_data_as_white('a', 'b')).toEqual(undefined);
-		expect(g.get_data_as_white('a', 'c')).toEqual(undefined);
-		expect(g.get_data_as_white('a', 'd')).toEqual(undefined);
-		expect(g.get_data_as_white('a', 'e')).toEqual(undefined);
-		expect(g.get_data_as_white('a', 'f')).toEqual(new EdgeMetadata(0, 0, 1));
+		expect(g.get_data_as_white(a, b)).toEqual(undefined);
+		expect(g.get_data_as_white(a, c)).toEqual(undefined);
+		expect(g.get_data_as_white(a, d)).toEqual(undefined);
+		expect(g.get_data_as_white(a, e)).toEqual(undefined);
+		expect(g.get_data_as_white(a, f)).toEqual(new EdgeMetadata(0, 0, 1));
 
-		expect(g.get_data_as_white('b', 'a')).toEqual(new EdgeMetadata(1, 0, 0));
-		expect(g.get_data_as_white('b', 'c')).toEqual(undefined);
-		expect(g.get_data_as_white('b', 'd')).toEqual(undefined);
-		expect(g.get_data_as_white('b', 'e')).toEqual(undefined);
-		expect(g.get_data_as_white('b', 'f')).toEqual(undefined);
+		expect(g.get_data_as_white(b, a)).toEqual(new EdgeMetadata(1, 0, 0));
+		expect(g.get_data_as_white(b, c)).toEqual(undefined);
+		expect(g.get_data_as_white(b, d)).toEqual(undefined);
+		expect(g.get_data_as_white(b, e)).toEqual(undefined);
+		expect(g.get_data_as_white(b, f)).toEqual(undefined);
 
-		expect(g.get_data_as_white('c', 'a')).toEqual(undefined);
-		expect(g.get_data_as_white('c', 'b')).toEqual(undefined);
-		expect(g.get_data_as_white('c', 'd')).toEqual(new EdgeMetadata(0, 0, 1));
-		expect(g.get_data_as_white('c', 'e')).toEqual(undefined);
-		expect(g.get_data_as_white('c', 'f')).toEqual(undefined);
+		expect(g.get_data_as_white(c, a)).toEqual(undefined);
+		expect(g.get_data_as_white(c, b)).toEqual(undefined);
+		expect(g.get_data_as_white(c, d)).toEqual(new EdgeMetadata(0, 0, 1));
+		expect(g.get_data_as_white(c, e)).toEqual(undefined);
+		expect(g.get_data_as_white(c, f)).toEqual(undefined);
 
-		expect(g.get_data_as_white('d', 'a')).toEqual(undefined);
-		expect(g.get_data_as_white('d', 'b')).toEqual(undefined);
-		expect(g.get_data_as_white('d', 'c')).toEqual(undefined);
-		expect(g.get_data_as_white('d', 'e')).toEqual(undefined);
-		expect(g.get_data_as_white('d', 'f')).toEqual(undefined);
+		expect(g.get_data_as_white(d, a)).toEqual(undefined);
+		expect(g.get_data_as_white(d, b)).toEqual(undefined);
+		expect(g.get_data_as_white(d, c)).toEqual(undefined);
+		expect(g.get_data_as_white(d, e)).toEqual(undefined);
+		expect(g.get_data_as_white(d, f)).toEqual(undefined);
 
-		expect(g.get_data_as_white('e', 'a')).toEqual(undefined);
-		expect(g.get_data_as_white('e', 'b')).toEqual(undefined);
-		expect(g.get_data_as_white('e', 'c')).toEqual(undefined);
-		expect(g.get_data_as_white('e', 'd')).toEqual(undefined);
-		expect(g.get_data_as_white('e', 'f')).toEqual(new EdgeMetadata(0, 1, 0));
+		expect(g.get_data_as_white(e, a)).toEqual(undefined);
+		expect(g.get_data_as_white(e, b)).toEqual(undefined);
+		expect(g.get_data_as_white(e, c)).toEqual(undefined);
+		expect(g.get_data_as_white(e, d)).toEqual(undefined);
+		expect(g.get_data_as_white(e, f)).toEqual(new EdgeMetadata(0, 1, 0));
 
-		expect(g.get_data_as_white('f', 'a')).toEqual(undefined);
-		expect(g.get_data_as_white('f', 'b')).toEqual(undefined);
-		expect(g.get_data_as_white('f', 'c')).toEqual(undefined);
-		expect(g.get_data_as_white('f', 'd')).toEqual(undefined);
-		expect(g.get_data_as_white('f', 'e')).toEqual(undefined);
+		expect(g.get_data_as_white(f, a)).toEqual(undefined);
+		expect(g.get_data_as_white(f, b)).toEqual(undefined);
+		expect(g.get_data_as_white(f, c)).toEqual(undefined);
+		expect(g.get_data_as_white(f, d)).toEqual(undefined);
+		expect(g.get_data_as_white(f, e)).toEqual(undefined);
 
 		// black
 
-		expect(g.get_data_as_black('a', 'b')).toEqual(new EdgeMetadata(0, 0, 1));
-		expect(g.get_data_as_black('a', 'c')).toEqual(undefined);
-		expect(g.get_data_as_black('a', 'd')).toEqual(undefined);
-		expect(g.get_data_as_black('a', 'e')).toEqual(undefined);
-		expect(g.get_data_as_black('a', 'f')).toEqual(undefined);
+		expect(g.get_data_as_black(a, b)).toEqual(new EdgeMetadata(0, 0, 1));
+		expect(g.get_data_as_black(a, c)).toEqual(undefined);
+		expect(g.get_data_as_black(a, d)).toEqual(undefined);
+		expect(g.get_data_as_black(a, e)).toEqual(undefined);
+		expect(g.get_data_as_black(a, f)).toEqual(undefined);
 
-		expect(g.get_data_as_black('b', 'a')).toEqual(undefined);
-		expect(g.get_data_as_black('b', 'c')).toEqual(undefined);
-		expect(g.get_data_as_black('b', 'd')).toEqual(undefined);
-		expect(g.get_data_as_black('b', 'e')).toEqual(undefined);
-		expect(g.get_data_as_black('b', 'f')).toEqual(undefined);
+		expect(g.get_data_as_black(b, a)).toEqual(undefined);
+		expect(g.get_data_as_black(b, c)).toEqual(undefined);
+		expect(g.get_data_as_black(b, d)).toEqual(undefined);
+		expect(g.get_data_as_black(b, e)).toEqual(undefined);
+		expect(g.get_data_as_black(b, f)).toEqual(undefined);
 
-		expect(g.get_data_as_black('c', 'a')).toEqual(undefined);
-		expect(g.get_data_as_black('c', 'b')).toEqual(undefined);
-		expect(g.get_data_as_black('c', 'd')).toEqual(undefined);
-		expect(g.get_data_as_black('c', 'e')).toEqual(undefined);
-		expect(g.get_data_as_black('c', 'f')).toEqual(undefined);
+		expect(g.get_data_as_black(c, a)).toEqual(undefined);
+		expect(g.get_data_as_black(c, b)).toEqual(undefined);
+		expect(g.get_data_as_black(c, d)).toEqual(undefined);
+		expect(g.get_data_as_black(c, e)).toEqual(undefined);
+		expect(g.get_data_as_black(c, f)).toEqual(undefined);
 
-		expect(g.get_data_as_black('d', 'a')).toEqual(undefined);
-		expect(g.get_data_as_black('d', 'b')).toEqual(undefined);
-		expect(g.get_data_as_black('d', 'c')).toEqual(new EdgeMetadata(1, 0, 0));
-		expect(g.get_data_as_black('d', 'e')).toEqual(undefined);
-		expect(g.get_data_as_black('d', 'f')).toEqual(undefined);
+		expect(g.get_data_as_black(d, a)).toEqual(undefined);
+		expect(g.get_data_as_black(d, b)).toEqual(undefined);
+		expect(g.get_data_as_black(d, c)).toEqual(new EdgeMetadata(1, 0, 0));
+		expect(g.get_data_as_black(d, e)).toEqual(undefined);
+		expect(g.get_data_as_black(d, f)).toEqual(undefined);
 
-		expect(g.get_data_as_black('e', 'a')).toEqual(undefined);
-		expect(g.get_data_as_black('e', 'b')).toEqual(undefined);
-		expect(g.get_data_as_black('e', 'c')).toEqual(undefined);
-		expect(g.get_data_as_black('e', 'd')).toEqual(undefined);
-		expect(g.get_data_as_black('e', 'f')).toEqual(undefined);
+		expect(g.get_data_as_black(e, a)).toEqual(undefined);
+		expect(g.get_data_as_black(e, b)).toEqual(undefined);
+		expect(g.get_data_as_black(e, c)).toEqual(undefined);
+		expect(g.get_data_as_black(e, d)).toEqual(undefined);
+		expect(g.get_data_as_black(e, f)).toEqual(undefined);
 
-		expect(g.get_data_as_black('f', 'a')).toEqual(new EdgeMetadata(1, 0, 0));
-		expect(g.get_data_as_black('f', 'b')).toEqual(undefined);
-		expect(g.get_data_as_black('f', 'c')).toEqual(undefined);
-		expect(g.get_data_as_black('f', 'd')).toEqual(undefined);
-		expect(g.get_data_as_black('f', 'e')).toEqual(new EdgeMetadata(0, 1, 0));
+		expect(g.get_data_as_black(f, a)).toEqual(new EdgeMetadata(1, 0, 0));
+		expect(g.get_data_as_black(f, b)).toEqual(undefined);
+		expect(g.get_data_as_black(f, c)).toEqual(undefined);
+		expect(g.get_data_as_black(f, d)).toEqual(undefined);
+		expect(g.get_data_as_black(f, e)).toEqual(new EdgeMetadata(0, 1, 0));
 
-		const blitz_dir = EnvironmentManager.get_instance().get_dir_graphs_time_control('Blitz');
+		const blitz_dir = EnvironmentManager.get_instance().get_dir_graphs_time_control(Blitz);
 		expect(fs.existsSync(path.join(blitz_dir, 'a'))).toBe(true);
 		expect(fs.existsSync(path.join(blitz_dir, 'b'))).toBe(true);
 		expect(fs.existsSync(path.join(blitz_dir, 'c'))).toBe(true);
@@ -348,114 +428,114 @@ describe('Sequential game creation', () => {
 	});
 
 	test('Delete game 0000000004', () => {
-		expect(() => game_delete('0000000004')).not.toThrow();
+		expect(() => game_delete(id0000000004)).not.toThrow();
 
 		let man = GamesManager.get_instance();
-		expect(man.game_exists('0000000001')).toBe(false);
-		expect(man.game_exists('0000000002')).toBe(true);
-		expect(man.game_exists('0000000003')).toBe(true);
-		expect(man.game_exists('0000000004')).toBe(false);
-		expect(man.game_exists('0000000005')).toBe(true);
+		expect(man.game_exists(id0000000001)).toBe(false);
+		expect(man.game_exists(id0000000002)).toBe(true);
+		expect(man.game_exists(id0000000003)).toBe(true);
+		expect(man.game_exists(id0000000004)).toBe(false);
+		expect(man.game_exists(id0000000005)).toBe(true);
 
-		expect(a.get_games('Blitz').length).toBe(1);
-		expect(b.get_games('Blitz').length).toBe(1);
-		expect(c.get_games('Blitz').length).toBe(1);
-		expect(d.get_games('Blitz').length).toBe(1);
-		expect(e.get_games('Blitz').length).toBe(1);
-		expect(f.get_games('Blitz').length).toBe(1);
+		expect(aU.get_games(Blitz).length).toBe(1);
+		expect(bU.get_games(Blitz).length).toBe(1);
+		expect(cU.get_games(Blitz).length).toBe(1);
+		expect(dU.get_games(Blitz).length).toBe(1);
+		expect(eU.get_games(Blitz).length).toBe(1);
+		expect(fU.get_games(Blitz).length).toBe(1);
 
-		expect(a.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
-		expect(b.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
-		expect(c.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
-		expect(d.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
-		expect(e.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 1, 0]);
-		expect(f.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 1, 0]);
+		expect(aU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
+		expect(bU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
+		expect(cU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
+		expect(dU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
+		expect(eU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 0, 1, 0]);
+		expect(fU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 0, 1, 0]);
 
-		const blitz_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Blitz');
+		const blitz_dir = EnvironmentManager.get_instance().get_dir_games_time_control(Blitz);
 		expect(fs.existsSync(path.join(blitz_dir, '2025-01-19'))).toBe(true);
 	});
 
 	test('Check "Blitz" graph', () => {
 		const graphs_manager = GraphsManager.get_instance();
-		const g = graphs_manager.get_graph('Blitz') as Graph;
+		const g = graphs_manager.get_graph(Blitz) as Graph;
 
 		// white
 
-		expect(g.get_data_as_white('a', 'b')).toEqual(undefined);
-		expect(g.get_data_as_white('a', 'c')).toEqual(undefined);
-		expect(g.get_data_as_white('a', 'd')).toEqual(undefined);
-		expect(g.get_data_as_white('a', 'e')).toEqual(undefined);
-		expect(g.get_data_as_white('a', 'f')).toEqual(undefined);
+		expect(g.get_data_as_white(a, b)).toEqual(undefined);
+		expect(g.get_data_as_white(a, c)).toEqual(undefined);
+		expect(g.get_data_as_white(a, d)).toEqual(undefined);
+		expect(g.get_data_as_white(a, e)).toEqual(undefined);
+		expect(g.get_data_as_white(a, f)).toEqual(undefined);
 
-		expect(g.get_data_as_white('b', 'a')).toEqual(new EdgeMetadata(1, 0, 0));
-		expect(g.get_data_as_white('b', 'c')).toEqual(undefined);
-		expect(g.get_data_as_white('b', 'd')).toEqual(undefined);
-		expect(g.get_data_as_white('b', 'e')).toEqual(undefined);
-		expect(g.get_data_as_white('b', 'f')).toEqual(undefined);
+		expect(g.get_data_as_white(b, a)).toEqual(new EdgeMetadata(1, 0, 0));
+		expect(g.get_data_as_white(b, c)).toEqual(undefined);
+		expect(g.get_data_as_white(b, d)).toEqual(undefined);
+		expect(g.get_data_as_white(b, e)).toEqual(undefined);
+		expect(g.get_data_as_white(b, f)).toEqual(undefined);
 
-		expect(g.get_data_as_white('c', 'a')).toEqual(undefined);
-		expect(g.get_data_as_white('c', 'b')).toEqual(undefined);
-		expect(g.get_data_as_white('c', 'd')).toEqual(new EdgeMetadata(0, 0, 1));
-		expect(g.get_data_as_white('c', 'e')).toEqual(undefined);
-		expect(g.get_data_as_white('c', 'f')).toEqual(undefined);
+		expect(g.get_data_as_white(c, a)).toEqual(undefined);
+		expect(g.get_data_as_white(c, b)).toEqual(undefined);
+		expect(g.get_data_as_white(c, d)).toEqual(new EdgeMetadata(0, 0, 1));
+		expect(g.get_data_as_white(c, e)).toEqual(undefined);
+		expect(g.get_data_as_white(c, f)).toEqual(undefined);
 
-		expect(g.get_data_as_white('d', 'a')).toEqual(undefined);
-		expect(g.get_data_as_white('d', 'b')).toEqual(undefined);
-		expect(g.get_data_as_white('d', 'c')).toEqual(undefined);
-		expect(g.get_data_as_white('d', 'e')).toEqual(undefined);
-		expect(g.get_data_as_white('d', 'f')).toEqual(undefined);
+		expect(g.get_data_as_white(d, a)).toEqual(undefined);
+		expect(g.get_data_as_white(d, b)).toEqual(undefined);
+		expect(g.get_data_as_white(d, c)).toEqual(undefined);
+		expect(g.get_data_as_white(d, e)).toEqual(undefined);
+		expect(g.get_data_as_white(d, f)).toEqual(undefined);
 
-		expect(g.get_data_as_white('e', 'a')).toEqual(undefined);
-		expect(g.get_data_as_white('e', 'b')).toEqual(undefined);
-		expect(g.get_data_as_white('e', 'c')).toEqual(undefined);
-		expect(g.get_data_as_white('e', 'd')).toEqual(undefined);
-		expect(g.get_data_as_white('e', 'f')).toEqual(new EdgeMetadata(0, 1, 0));
+		expect(g.get_data_as_white(e, a)).toEqual(undefined);
+		expect(g.get_data_as_white(e, b)).toEqual(undefined);
+		expect(g.get_data_as_white(e, c)).toEqual(undefined);
+		expect(g.get_data_as_white(e, d)).toEqual(undefined);
+		expect(g.get_data_as_white(e, f)).toEqual(new EdgeMetadata(0, 1, 0));
 
-		expect(g.get_data_as_white('f', 'a')).toEqual(undefined);
-		expect(g.get_data_as_white('f', 'b')).toEqual(undefined);
-		expect(g.get_data_as_white('f', 'c')).toEqual(undefined);
-		expect(g.get_data_as_white('f', 'd')).toEqual(undefined);
-		expect(g.get_data_as_white('f', 'e')).toEqual(undefined);
+		expect(g.get_data_as_white(f, a)).toEqual(undefined);
+		expect(g.get_data_as_white(f, b)).toEqual(undefined);
+		expect(g.get_data_as_white(f, c)).toEqual(undefined);
+		expect(g.get_data_as_white(f, d)).toEqual(undefined);
+		expect(g.get_data_as_white(f, e)).toEqual(undefined);
 
 		// black
 
-		expect(g.get_data_as_black('a', 'b')).toEqual(new EdgeMetadata(0, 0, 1));
-		expect(g.get_data_as_black('a', 'c')).toEqual(undefined);
-		expect(g.get_data_as_black('a', 'd')).toEqual(undefined);
-		expect(g.get_data_as_black('a', 'e')).toEqual(undefined);
-		expect(g.get_data_as_black('a', 'f')).toEqual(undefined);
+		expect(g.get_data_as_black(a, b)).toEqual(new EdgeMetadata(0, 0, 1));
+		expect(g.get_data_as_black(a, c)).toEqual(undefined);
+		expect(g.get_data_as_black(a, d)).toEqual(undefined);
+		expect(g.get_data_as_black(a, e)).toEqual(undefined);
+		expect(g.get_data_as_black(a, f)).toEqual(undefined);
 
-		expect(g.get_data_as_black('b', 'a')).toEqual(undefined);
-		expect(g.get_data_as_black('b', 'c')).toEqual(undefined);
-		expect(g.get_data_as_black('b', 'd')).toEqual(undefined);
-		expect(g.get_data_as_black('b', 'e')).toEqual(undefined);
-		expect(g.get_data_as_black('b', 'f')).toEqual(undefined);
+		expect(g.get_data_as_black(b, a)).toEqual(undefined);
+		expect(g.get_data_as_black(b, c)).toEqual(undefined);
+		expect(g.get_data_as_black(b, d)).toEqual(undefined);
+		expect(g.get_data_as_black(b, e)).toEqual(undefined);
+		expect(g.get_data_as_black(b, f)).toEqual(undefined);
 
-		expect(g.get_data_as_black('c', 'a')).toEqual(undefined);
-		expect(g.get_data_as_black('c', 'b')).toEqual(undefined);
-		expect(g.get_data_as_black('c', 'd')).toEqual(undefined);
-		expect(g.get_data_as_black('c', 'e')).toEqual(undefined);
-		expect(g.get_data_as_black('c', 'f')).toEqual(undefined);
+		expect(g.get_data_as_black(c, a)).toEqual(undefined);
+		expect(g.get_data_as_black(c, b)).toEqual(undefined);
+		expect(g.get_data_as_black(c, d)).toEqual(undefined);
+		expect(g.get_data_as_black(c, e)).toEqual(undefined);
+		expect(g.get_data_as_black(c, f)).toEqual(undefined);
 
-		expect(g.get_data_as_black('d', 'a')).toEqual(undefined);
-		expect(g.get_data_as_black('d', 'b')).toEqual(undefined);
-		expect(g.get_data_as_black('d', 'c')).toEqual(new EdgeMetadata(1, 0, 0));
-		expect(g.get_data_as_black('d', 'e')).toEqual(undefined);
-		expect(g.get_data_as_black('d', 'f')).toEqual(undefined);
+		expect(g.get_data_as_black(d, a)).toEqual(undefined);
+		expect(g.get_data_as_black(d, b)).toEqual(undefined);
+		expect(g.get_data_as_black(d, c)).toEqual(new EdgeMetadata(1, 0, 0));
+		expect(g.get_data_as_black(d, e)).toEqual(undefined);
+		expect(g.get_data_as_black(d, f)).toEqual(undefined);
 
-		expect(g.get_data_as_black('e', 'a')).toEqual(undefined);
-		expect(g.get_data_as_black('e', 'b')).toEqual(undefined);
-		expect(g.get_data_as_black('e', 'c')).toEqual(undefined);
-		expect(g.get_data_as_black('e', 'd')).toEqual(undefined);
-		expect(g.get_data_as_black('e', 'f')).toEqual(undefined);
+		expect(g.get_data_as_black(e, a)).toEqual(undefined);
+		expect(g.get_data_as_black(e, b)).toEqual(undefined);
+		expect(g.get_data_as_black(e, c)).toEqual(undefined);
+		expect(g.get_data_as_black(e, d)).toEqual(undefined);
+		expect(g.get_data_as_black(e, f)).toEqual(undefined);
 
-		expect(g.get_data_as_black('f', 'a')).toEqual(undefined);
-		expect(g.get_data_as_black('f', 'b')).toEqual(undefined);
-		expect(g.get_data_as_black('f', 'c')).toEqual(undefined);
-		expect(g.get_data_as_black('f', 'd')).toEqual(undefined);
-		expect(g.get_data_as_black('f', 'e')).toEqual(new EdgeMetadata(0, 1, 0));
+		expect(g.get_data_as_black(f, a)).toEqual(undefined);
+		expect(g.get_data_as_black(f, b)).toEqual(undefined);
+		expect(g.get_data_as_black(f, c)).toEqual(undefined);
+		expect(g.get_data_as_black(f, d)).toEqual(undefined);
+		expect(g.get_data_as_black(f, e)).toEqual(new EdgeMetadata(0, 1, 0));
 
-		const blitz_dir = EnvironmentManager.get_instance().get_dir_graphs_time_control('Blitz');
+		const blitz_dir = EnvironmentManager.get_instance().get_dir_graphs_time_control(Blitz);
 		expect(fs.existsSync(path.join(blitz_dir, 'a'))).toBe(false);
 		expect(fs.existsSync(path.join(blitz_dir, 'b'))).toBe(true);
 		expect(fs.existsSync(path.join(blitz_dir, 'c'))).toBe(true);
@@ -463,114 +543,114 @@ describe('Sequential game creation', () => {
 	});
 
 	test('Delete game 0000000003', () => {
-		expect(() => game_delete('0000000003')).not.toThrow();
+		expect(() => game_delete(id0000000003)).not.toThrow();
 
 		let man = GamesManager.get_instance();
-		expect(man.game_exists('0000000001')).toBe(false);
-		expect(man.game_exists('0000000002')).toBe(true);
-		expect(man.game_exists('0000000003')).toBe(false);
-		expect(man.game_exists('0000000004')).toBe(false);
-		expect(man.game_exists('0000000005')).toBe(true);
+		expect(man.game_exists(id0000000001)).toBe(false);
+		expect(man.game_exists(id0000000002)).toBe(true);
+		expect(man.game_exists(id0000000003)).toBe(false);
+		expect(man.game_exists(id0000000004)).toBe(false);
+		expect(man.game_exists(id0000000005)).toBe(true);
 
-		expect(a.get_games('Blitz').length).toBe(1);
-		expect(b.get_games('Blitz').length).toBe(1);
-		expect(c.get_games('Blitz').length).toBe(1);
-		expect(d.get_games('Blitz').length).toBe(1);
-		expect(e.get_games('Blitz').length).toBe(0);
-		expect(f.get_games('Blitz').length).toBe(0);
+		expect(aU.get_games(Blitz).length).toBe(1);
+		expect(bU.get_games(Blitz).length).toBe(1);
+		expect(cU.get_games(Blitz).length).toBe(1);
+		expect(dU.get_games(Blitz).length).toBe(1);
+		expect(eU.get_games(Blitz).length).toBe(0);
+		expect(fU.get_games(Blitz).length).toBe(0);
 
-		expect(a.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
-		expect(b.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
-		expect(c.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
-		expect(d.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
-		expect(e.get_rating('Blitz').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
-		expect(f.get_rating('Blitz').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+		expect(aU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
+		expect(bU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
+		expect(cU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
+		expect(dU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
+		expect(eU.get_rating(Blitz).num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+		expect(fU.get_rating(Blitz).num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
 
-		const blitz_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Blitz');
+		const blitz_dir = EnvironmentManager.get_instance().get_dir_games_time_control(Blitz);
 		expect(fs.existsSync(path.join(blitz_dir, '2025-01-19'))).toBe(true);
 	});
 
 	test('Check "Blitz" graph', () => {
 		const graphs_manager = GraphsManager.get_instance();
-		const g = graphs_manager.get_graph('Blitz') as Graph;
+		const g = graphs_manager.get_graph(Blitz) as Graph;
 
 		// white
 
-		expect(g.get_data_as_white('a', 'b')).toEqual(undefined);
-		expect(g.get_data_as_white('a', 'c')).toEqual(undefined);
-		expect(g.get_data_as_white('a', 'd')).toEqual(undefined);
-		expect(g.get_data_as_white('a', 'e')).toEqual(undefined);
-		expect(g.get_data_as_white('a', 'f')).toEqual(undefined);
+		expect(g.get_data_as_white(a, b)).toEqual(undefined);
+		expect(g.get_data_as_white(a, c)).toEqual(undefined);
+		expect(g.get_data_as_white(a, d)).toEqual(undefined);
+		expect(g.get_data_as_white(a, e)).toEqual(undefined);
+		expect(g.get_data_as_white(a, f)).toEqual(undefined);
 
-		expect(g.get_data_as_white('b', 'a')).toEqual(new EdgeMetadata(1, 0, 0));
-		expect(g.get_data_as_white('b', 'c')).toEqual(undefined);
-		expect(g.get_data_as_white('b', 'd')).toEqual(undefined);
-		expect(g.get_data_as_white('b', 'e')).toEqual(undefined);
-		expect(g.get_data_as_white('b', 'f')).toEqual(undefined);
+		expect(g.get_data_as_white(b, a)).toEqual(new EdgeMetadata(1, 0, 0));
+		expect(g.get_data_as_white(b, c)).toEqual(undefined);
+		expect(g.get_data_as_white(b, d)).toEqual(undefined);
+		expect(g.get_data_as_white(b, e)).toEqual(undefined);
+		expect(g.get_data_as_white(b, f)).toEqual(undefined);
 
-		expect(g.get_data_as_white('c', 'a')).toEqual(undefined);
-		expect(g.get_data_as_white('c', 'b')).toEqual(undefined);
-		expect(g.get_data_as_white('c', 'd')).toEqual(new EdgeMetadata(0, 0, 1));
-		expect(g.get_data_as_white('c', 'e')).toEqual(undefined);
-		expect(g.get_data_as_white('c', 'f')).toEqual(undefined);
+		expect(g.get_data_as_white(c, a)).toEqual(undefined);
+		expect(g.get_data_as_white(c, b)).toEqual(undefined);
+		expect(g.get_data_as_white(c, d)).toEqual(new EdgeMetadata(0, 0, 1));
+		expect(g.get_data_as_white(c, e)).toEqual(undefined);
+		expect(g.get_data_as_white(c, f)).toEqual(undefined);
 
-		expect(g.get_data_as_white('d', 'a')).toEqual(undefined);
-		expect(g.get_data_as_white('d', 'b')).toEqual(undefined);
-		expect(g.get_data_as_white('d', 'c')).toEqual(undefined);
-		expect(g.get_data_as_white('d', 'e')).toEqual(undefined);
-		expect(g.get_data_as_white('d', 'f')).toEqual(undefined);
+		expect(g.get_data_as_white(d, a)).toEqual(undefined);
+		expect(g.get_data_as_white(d, b)).toEqual(undefined);
+		expect(g.get_data_as_white(d, c)).toEqual(undefined);
+		expect(g.get_data_as_white(d, e)).toEqual(undefined);
+		expect(g.get_data_as_white(d, f)).toEqual(undefined);
 
-		expect(g.get_data_as_white('e', 'a')).toEqual(undefined);
-		expect(g.get_data_as_white('e', 'b')).toEqual(undefined);
-		expect(g.get_data_as_white('e', 'c')).toEqual(undefined);
-		expect(g.get_data_as_white('e', 'd')).toEqual(undefined);
-		expect(g.get_data_as_white('e', 'f')).toEqual(undefined);
+		expect(g.get_data_as_white(e, a)).toEqual(undefined);
+		expect(g.get_data_as_white(e, b)).toEqual(undefined);
+		expect(g.get_data_as_white(e, c)).toEqual(undefined);
+		expect(g.get_data_as_white(e, d)).toEqual(undefined);
+		expect(g.get_data_as_white(e, f)).toEqual(undefined);
 
-		expect(g.get_data_as_white('f', 'a')).toEqual(undefined);
-		expect(g.get_data_as_white('f', 'b')).toEqual(undefined);
-		expect(g.get_data_as_white('f', 'c')).toEqual(undefined);
-		expect(g.get_data_as_white('f', 'd')).toEqual(undefined);
-		expect(g.get_data_as_white('f', 'e')).toEqual(undefined);
+		expect(g.get_data_as_white(f, a)).toEqual(undefined);
+		expect(g.get_data_as_white(f, b)).toEqual(undefined);
+		expect(g.get_data_as_white(f, c)).toEqual(undefined);
+		expect(g.get_data_as_white(f, d)).toEqual(undefined);
+		expect(g.get_data_as_white(f, e)).toEqual(undefined);
 
 		// black
 
-		expect(g.get_data_as_black('a', 'b')).toEqual(new EdgeMetadata(0, 0, 1));
-		expect(g.get_data_as_black('a', 'c')).toEqual(undefined);
-		expect(g.get_data_as_black('a', 'd')).toEqual(undefined);
-		expect(g.get_data_as_black('a', 'e')).toEqual(undefined);
-		expect(g.get_data_as_black('a', 'f')).toEqual(undefined);
+		expect(g.get_data_as_black(a, b)).toEqual(new EdgeMetadata(0, 0, 1));
+		expect(g.get_data_as_black(a, c)).toEqual(undefined);
+		expect(g.get_data_as_black(a, d)).toEqual(undefined);
+		expect(g.get_data_as_black(a, e)).toEqual(undefined);
+		expect(g.get_data_as_black(a, f)).toEqual(undefined);
 
-		expect(g.get_data_as_black('b', 'a')).toEqual(undefined);
-		expect(g.get_data_as_black('b', 'c')).toEqual(undefined);
-		expect(g.get_data_as_black('b', 'd')).toEqual(undefined);
-		expect(g.get_data_as_black('b', 'e')).toEqual(undefined);
-		expect(g.get_data_as_black('b', 'f')).toEqual(undefined);
+		expect(g.get_data_as_black(b, a)).toEqual(undefined);
+		expect(g.get_data_as_black(b, c)).toEqual(undefined);
+		expect(g.get_data_as_black(b, d)).toEqual(undefined);
+		expect(g.get_data_as_black(b, e)).toEqual(undefined);
+		expect(g.get_data_as_black(b, f)).toEqual(undefined);
 
-		expect(g.get_data_as_black('c', 'a')).toEqual(undefined);
-		expect(g.get_data_as_black('c', 'b')).toEqual(undefined);
-		expect(g.get_data_as_black('c', 'd')).toEqual(undefined);
-		expect(g.get_data_as_black('c', 'e')).toEqual(undefined);
-		expect(g.get_data_as_black('c', 'f')).toEqual(undefined);
+		expect(g.get_data_as_black(c, a)).toEqual(undefined);
+		expect(g.get_data_as_black(c, b)).toEqual(undefined);
+		expect(g.get_data_as_black(c, d)).toEqual(undefined);
+		expect(g.get_data_as_black(c, e)).toEqual(undefined);
+		expect(g.get_data_as_black(c, f)).toEqual(undefined);
 
-		expect(g.get_data_as_black('d', 'a')).toEqual(undefined);
-		expect(g.get_data_as_black('d', 'b')).toEqual(undefined);
-		expect(g.get_data_as_black('d', 'c')).toEqual(new EdgeMetadata(1, 0, 0));
-		expect(g.get_data_as_black('d', 'e')).toEqual(undefined);
-		expect(g.get_data_as_black('d', 'f')).toEqual(undefined);
+		expect(g.get_data_as_black(d, a)).toEqual(undefined);
+		expect(g.get_data_as_black(d, b)).toEqual(undefined);
+		expect(g.get_data_as_black(d, c)).toEqual(new EdgeMetadata(1, 0, 0));
+		expect(g.get_data_as_black(d, e)).toEqual(undefined);
+		expect(g.get_data_as_black(d, f)).toEqual(undefined);
 
-		expect(g.get_data_as_black('e', 'a')).toEqual(undefined);
-		expect(g.get_data_as_black('e', 'b')).toEqual(undefined);
-		expect(g.get_data_as_black('e', 'c')).toEqual(undefined);
-		expect(g.get_data_as_black('e', 'd')).toEqual(undefined);
-		expect(g.get_data_as_black('e', 'f')).toEqual(undefined);
+		expect(g.get_data_as_black(e, a)).toEqual(undefined);
+		expect(g.get_data_as_black(e, b)).toEqual(undefined);
+		expect(g.get_data_as_black(e, c)).toEqual(undefined);
+		expect(g.get_data_as_black(e, d)).toEqual(undefined);
+		expect(g.get_data_as_black(e, f)).toEqual(undefined);
 
-		expect(g.get_data_as_black('f', 'a')).toEqual(undefined);
-		expect(g.get_data_as_black('f', 'b')).toEqual(undefined);
-		expect(g.get_data_as_black('f', 'c')).toEqual(undefined);
-		expect(g.get_data_as_black('f', 'd')).toEqual(undefined);
-		expect(g.get_data_as_black('f', 'e')).toEqual(undefined);
+		expect(g.get_data_as_black(f, a)).toEqual(undefined);
+		expect(g.get_data_as_black(f, b)).toEqual(undefined);
+		expect(g.get_data_as_black(f, c)).toEqual(undefined);
+		expect(g.get_data_as_black(f, d)).toEqual(undefined);
+		expect(g.get_data_as_black(f, e)).toEqual(undefined);
 
-		const blitz_dir = EnvironmentManager.get_instance().get_dir_graphs_time_control('Blitz');
+		const blitz_dir = EnvironmentManager.get_instance().get_dir_graphs_time_control(Blitz);
 		expect(fs.existsSync(path.join(blitz_dir, 'a'))).toBe(false);
 		expect(fs.existsSync(path.join(blitz_dir, 'b'))).toBe(true);
 		expect(fs.existsSync(path.join(blitz_dir, 'c'))).toBe(true);
@@ -578,114 +658,114 @@ describe('Sequential game creation', () => {
 	});
 
 	test('Delete game 0000000002', () => {
-		expect(() => game_delete('0000000002')).not.toThrow();
+		expect(() => game_delete(id0000000002)).not.toThrow();
 
 		let man = GamesManager.get_instance();
-		expect(man.game_exists('0000000001')).toBe(false);
-		expect(man.game_exists('0000000002')).toBe(false);
-		expect(man.game_exists('0000000003')).toBe(false);
-		expect(man.game_exists('0000000004')).toBe(false);
-		expect(man.game_exists('0000000005')).toBe(true);
+		expect(man.game_exists(id0000000001)).toBe(false);
+		expect(man.game_exists(id0000000002)).toBe(false);
+		expect(man.game_exists(id0000000003)).toBe(false);
+		expect(man.game_exists(id0000000004)).toBe(false);
+		expect(man.game_exists(id0000000005)).toBe(true);
 
-		expect(a.get_games('Blitz').length).toBe(1);
-		expect(b.get_games('Blitz').length).toBe(1);
-		expect(c.get_games('Blitz').length).toBe(0);
-		expect(d.get_games('Blitz').length).toBe(0);
-		expect(e.get_games('Blitz').length).toBe(0);
-		expect(f.get_games('Blitz').length).toBe(0);
+		expect(aU.get_games(Blitz).length).toBe(1);
+		expect(bU.get_games(Blitz).length).toBe(1);
+		expect(cU.get_games(Blitz).length).toBe(0);
+		expect(dU.get_games(Blitz).length).toBe(0);
+		expect(eU.get_games(Blitz).length).toBe(0);
+		expect(fU.get_games(Blitz).length).toBe(0);
 
-		expect(a.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
-		expect(b.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
-		expect(c.get_rating('Blitz').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
-		expect(d.get_rating('Blitz').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
-		expect(e.get_rating('Blitz').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
-		expect(f.get_rating('Blitz').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+		expect(aU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
+		expect(bU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
+		expect(cU.get_rating(Blitz).num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+		expect(dU.get_rating(Blitz).num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+		expect(eU.get_rating(Blitz).num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+		expect(fU.get_rating(Blitz).num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
 
-		const blitz_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Blitz');
+		const blitz_dir = EnvironmentManager.get_instance().get_dir_games_time_control(Blitz);
 		expect(fs.existsSync(path.join(blitz_dir, '2025-01-19'))).toBe(true);
 	});
 
 	test('Check "Blitz" graph', () => {
 		const graphs_manager = GraphsManager.get_instance();
-		const g = graphs_manager.get_graph('Blitz') as Graph;
+		const g = graphs_manager.get_graph(Blitz) as Graph;
 
 		// white
 
-		expect(g.get_data_as_white('a', 'b')).toEqual(undefined);
-		expect(g.get_data_as_white('a', 'c')).toEqual(undefined);
-		expect(g.get_data_as_white('a', 'd')).toEqual(undefined);
-		expect(g.get_data_as_white('a', 'e')).toEqual(undefined);
-		expect(g.get_data_as_white('a', 'f')).toEqual(undefined);
+		expect(g.get_data_as_white(a, b)).toEqual(undefined);
+		expect(g.get_data_as_white(a, c)).toEqual(undefined);
+		expect(g.get_data_as_white(a, d)).toEqual(undefined);
+		expect(g.get_data_as_white(a, e)).toEqual(undefined);
+		expect(g.get_data_as_white(a, f)).toEqual(undefined);
 
-		expect(g.get_data_as_white('b', 'a')).toEqual(new EdgeMetadata(1, 0, 0));
-		expect(g.get_data_as_white('b', 'c')).toEqual(undefined);
-		expect(g.get_data_as_white('b', 'd')).toEqual(undefined);
-		expect(g.get_data_as_white('b', 'e')).toEqual(undefined);
-		expect(g.get_data_as_white('b', 'f')).toEqual(undefined);
+		expect(g.get_data_as_white(b, a)).toEqual(new EdgeMetadata(1, 0, 0));
+		expect(g.get_data_as_white(b, c)).toEqual(undefined);
+		expect(g.get_data_as_white(b, d)).toEqual(undefined);
+		expect(g.get_data_as_white(b, e)).toEqual(undefined);
+		expect(g.get_data_as_white(b, f)).toEqual(undefined);
 
-		expect(g.get_data_as_white('c', 'a')).toEqual(undefined);
-		expect(g.get_data_as_white('c', 'b')).toEqual(undefined);
-		expect(g.get_data_as_white('c', 'd')).toEqual(undefined);
-		expect(g.get_data_as_white('c', 'e')).toEqual(undefined);
-		expect(g.get_data_as_white('c', 'f')).toEqual(undefined);
+		expect(g.get_data_as_white(c, a)).toEqual(undefined);
+		expect(g.get_data_as_white(c, b)).toEqual(undefined);
+		expect(g.get_data_as_white(c, d)).toEqual(undefined);
+		expect(g.get_data_as_white(c, e)).toEqual(undefined);
+		expect(g.get_data_as_white(c, f)).toEqual(undefined);
 
-		expect(g.get_data_as_white('d', 'a')).toEqual(undefined);
-		expect(g.get_data_as_white('d', 'b')).toEqual(undefined);
-		expect(g.get_data_as_white('d', 'c')).toEqual(undefined);
-		expect(g.get_data_as_white('d', 'e')).toEqual(undefined);
-		expect(g.get_data_as_white('d', 'f')).toEqual(undefined);
+		expect(g.get_data_as_white(d, a)).toEqual(undefined);
+		expect(g.get_data_as_white(d, b)).toEqual(undefined);
+		expect(g.get_data_as_white(d, c)).toEqual(undefined);
+		expect(g.get_data_as_white(d, e)).toEqual(undefined);
+		expect(g.get_data_as_white(d, f)).toEqual(undefined);
 
-		expect(g.get_data_as_white('e', 'a')).toEqual(undefined);
-		expect(g.get_data_as_white('e', 'b')).toEqual(undefined);
-		expect(g.get_data_as_white('e', 'c')).toEqual(undefined);
-		expect(g.get_data_as_white('e', 'd')).toEqual(undefined);
-		expect(g.get_data_as_white('e', 'f')).toEqual(undefined);
+		expect(g.get_data_as_white(e, a)).toEqual(undefined);
+		expect(g.get_data_as_white(e, b)).toEqual(undefined);
+		expect(g.get_data_as_white(e, c)).toEqual(undefined);
+		expect(g.get_data_as_white(e, d)).toEqual(undefined);
+		expect(g.get_data_as_white(e, f)).toEqual(undefined);
 
-		expect(g.get_data_as_white('f', 'a')).toEqual(undefined);
-		expect(g.get_data_as_white('f', 'b')).toEqual(undefined);
-		expect(g.get_data_as_white('f', 'c')).toEqual(undefined);
-		expect(g.get_data_as_white('f', 'd')).toEqual(undefined);
-		expect(g.get_data_as_white('f', 'e')).toEqual(undefined);
+		expect(g.get_data_as_white(f, a)).toEqual(undefined);
+		expect(g.get_data_as_white(f, b)).toEqual(undefined);
+		expect(g.get_data_as_white(f, c)).toEqual(undefined);
+		expect(g.get_data_as_white(f, d)).toEqual(undefined);
+		expect(g.get_data_as_white(f, e)).toEqual(undefined);
 
 		// black
 
-		expect(g.get_data_as_black('a', 'b')).toEqual(new EdgeMetadata(0, 0, 1));
-		expect(g.get_data_as_black('a', 'c')).toEqual(undefined);
-		expect(g.get_data_as_black('a', 'd')).toEqual(undefined);
-		expect(g.get_data_as_black('a', 'e')).toEqual(undefined);
-		expect(g.get_data_as_black('a', 'f')).toEqual(undefined);
+		expect(g.get_data_as_black(a, b)).toEqual(new EdgeMetadata(0, 0, 1));
+		expect(g.get_data_as_black(a, c)).toEqual(undefined);
+		expect(g.get_data_as_black(a, d)).toEqual(undefined);
+		expect(g.get_data_as_black(a, e)).toEqual(undefined);
+		expect(g.get_data_as_black(a, f)).toEqual(undefined);
 
-		expect(g.get_data_as_black('b', 'a')).toEqual(undefined);
-		expect(g.get_data_as_black('b', 'c')).toEqual(undefined);
-		expect(g.get_data_as_black('b', 'd')).toEqual(undefined);
-		expect(g.get_data_as_black('b', 'e')).toEqual(undefined);
-		expect(g.get_data_as_black('b', 'f')).toEqual(undefined);
+		expect(g.get_data_as_black(b, a)).toEqual(undefined);
+		expect(g.get_data_as_black(b, c)).toEqual(undefined);
+		expect(g.get_data_as_black(b, d)).toEqual(undefined);
+		expect(g.get_data_as_black(b, e)).toEqual(undefined);
+		expect(g.get_data_as_black(b, f)).toEqual(undefined);
 
-		expect(g.get_data_as_black('c', 'a')).toEqual(undefined);
-		expect(g.get_data_as_black('c', 'b')).toEqual(undefined);
-		expect(g.get_data_as_black('c', 'd')).toEqual(undefined);
-		expect(g.get_data_as_black('c', 'e')).toEqual(undefined);
-		expect(g.get_data_as_black('c', 'f')).toEqual(undefined);
+		expect(g.get_data_as_black(c, a)).toEqual(undefined);
+		expect(g.get_data_as_black(c, b)).toEqual(undefined);
+		expect(g.get_data_as_black(c, d)).toEqual(undefined);
+		expect(g.get_data_as_black(c, e)).toEqual(undefined);
+		expect(g.get_data_as_black(c, f)).toEqual(undefined);
 
-		expect(g.get_data_as_black('d', 'a')).toEqual(undefined);
-		expect(g.get_data_as_black('d', 'b')).toEqual(undefined);
-		expect(g.get_data_as_black('d', 'c')).toEqual(undefined);
-		expect(g.get_data_as_black('d', 'e')).toEqual(undefined);
-		expect(g.get_data_as_black('d', 'f')).toEqual(undefined);
+		expect(g.get_data_as_black(d, a)).toEqual(undefined);
+		expect(g.get_data_as_black(d, b)).toEqual(undefined);
+		expect(g.get_data_as_black(d, c)).toEqual(undefined);
+		expect(g.get_data_as_black(d, e)).toEqual(undefined);
+		expect(g.get_data_as_black(d, f)).toEqual(undefined);
 
-		expect(g.get_data_as_black('e', 'a')).toEqual(undefined);
-		expect(g.get_data_as_black('e', 'b')).toEqual(undefined);
-		expect(g.get_data_as_black('e', 'c')).toEqual(undefined);
-		expect(g.get_data_as_black('e', 'd')).toEqual(undefined);
-		expect(g.get_data_as_black('e', 'f')).toEqual(undefined);
+		expect(g.get_data_as_black(e, a)).toEqual(undefined);
+		expect(g.get_data_as_black(e, b)).toEqual(undefined);
+		expect(g.get_data_as_black(e, c)).toEqual(undefined);
+		expect(g.get_data_as_black(e, d)).toEqual(undefined);
+		expect(g.get_data_as_black(e, f)).toEqual(undefined);
 
-		expect(g.get_data_as_black('f', 'a')).toEqual(undefined);
-		expect(g.get_data_as_black('f', 'b')).toEqual(undefined);
-		expect(g.get_data_as_black('f', 'c')).toEqual(undefined);
-		expect(g.get_data_as_black('f', 'd')).toEqual(undefined);
-		expect(g.get_data_as_black('f', 'e')).toEqual(undefined);
+		expect(g.get_data_as_black(f, a)).toEqual(undefined);
+		expect(g.get_data_as_black(f, b)).toEqual(undefined);
+		expect(g.get_data_as_black(f, c)).toEqual(undefined);
+		expect(g.get_data_as_black(f, d)).toEqual(undefined);
+		expect(g.get_data_as_black(f, e)).toEqual(undefined);
 
-		const blitz_dir = EnvironmentManager.get_instance().get_dir_graphs_time_control('Blitz');
+		const blitz_dir = EnvironmentManager.get_instance().get_dir_graphs_time_control(Blitz);
 		expect(fs.existsSync(path.join(blitz_dir, 'a'))).toBe(false);
 		expect(fs.existsSync(path.join(blitz_dir, 'b'))).toBe(true);
 		expect(fs.existsSync(path.join(blitz_dir, 'c'))).toBe(false);
@@ -693,118 +773,117 @@ describe('Sequential game creation', () => {
 	});
 
 	test('Delete game 0000000005', () => {
-		expect(() => game_delete('0000000005')).not.toThrow();
+		expect(() => game_delete(id0000000005)).not.toThrow();
 
 		let man = GamesManager.get_instance();
-		expect(man.game_exists('0000000001')).toBe(false);
-		expect(man.game_exists('0000000002')).toBe(false);
-		expect(man.game_exists('0000000003')).toBe(false);
-		expect(man.game_exists('0000000004')).toBe(false);
-		expect(man.game_exists('0000000005')).toBe(false);
+		expect(man.game_exists(id0000000001)).toBe(false);
+		expect(man.game_exists(id0000000002)).toBe(false);
+		expect(man.game_exists(id0000000003)).toBe(false);
+		expect(man.game_exists(id0000000004)).toBe(false);
+		expect(man.game_exists(id0000000005)).toBe(false);
 
-		expect(a.get_games('Blitz').length).toBe(0);
-		expect(b.get_games('Blitz').length).toBe(0);
-		expect(c.get_games('Blitz').length).toBe(0);
-		expect(d.get_games('Blitz').length).toBe(0);
-		expect(e.get_games('Blitz').length).toBe(0);
-		expect(f.get_games('Blitz').length).toBe(0);
+		expect(aU.get_games(Blitz).length).toBe(0);
+		expect(bU.get_games(Blitz).length).toBe(0);
+		expect(cU.get_games(Blitz).length).toBe(0);
+		expect(dU.get_games(Blitz).length).toBe(0);
+		expect(eU.get_games(Blitz).length).toBe(0);
+		expect(fU.get_games(Blitz).length).toBe(0);
 
-		expect(a.get_rating('Blitz').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
-		expect(b.get_rating('Blitz').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
-		expect(c.get_rating('Blitz').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
-		expect(d.get_rating('Blitz').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
-		expect(e.get_rating('Blitz').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
-		expect(f.get_rating('Blitz').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+		expect(aU.get_rating(Blitz).num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+		expect(bU.get_rating(Blitz).num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+		expect(cU.get_rating(Blitz).num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+		expect(dU.get_rating(Blitz).num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+		expect(eU.get_rating(Blitz).num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+		expect(fU.get_rating(Blitz).num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
 
-		const blitz_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Blitz');
+		const blitz_dir = EnvironmentManager.get_instance().get_dir_games_time_control(Blitz);
 		expect(fs.existsSync(path.join(blitz_dir, '2025-01-19'))).toBe(false);
 	});
 
 	test('Check "Blitz" graph', () => {
 		const graphs_manager = GraphsManager.get_instance();
-		const g = graphs_manager.get_graph('Blitz') as Graph;
+		const g = graphs_manager.get_graph(Blitz) as Graph;
 
 		// white
 
-		expect(g.get_data_as_white('a', 'b')).toEqual(undefined);
-		expect(g.get_data_as_white('a', 'c')).toEqual(undefined);
-		expect(g.get_data_as_white('a', 'd')).toEqual(undefined);
-		expect(g.get_data_as_white('a', 'e')).toEqual(undefined);
-		expect(g.get_data_as_white('a', 'f')).toEqual(undefined);
+		expect(g.get_data_as_white(a, b)).toEqual(undefined);
+		expect(g.get_data_as_white(a, c)).toEqual(undefined);
+		expect(g.get_data_as_white(a, d)).toEqual(undefined);
+		expect(g.get_data_as_white(a, e)).toEqual(undefined);
+		expect(g.get_data_as_white(a, f)).toEqual(undefined);
 
-		expect(g.get_data_as_white('b', 'a')).toEqual(undefined);
-		expect(g.get_data_as_white('b', 'c')).toEqual(undefined);
-		expect(g.get_data_as_white('b', 'd')).toEqual(undefined);
-		expect(g.get_data_as_white('b', 'e')).toEqual(undefined);
-		expect(g.get_data_as_white('b', 'f')).toEqual(undefined);
+		expect(g.get_data_as_white(b, a)).toEqual(undefined);
+		expect(g.get_data_as_white(b, c)).toEqual(undefined);
+		expect(g.get_data_as_white(b, d)).toEqual(undefined);
+		expect(g.get_data_as_white(b, e)).toEqual(undefined);
+		expect(g.get_data_as_white(b, f)).toEqual(undefined);
 
-		expect(g.get_data_as_white('c', 'a')).toEqual(undefined);
-		expect(g.get_data_as_white('c', 'b')).toEqual(undefined);
-		expect(g.get_data_as_white('c', 'd')).toEqual(undefined);
-		expect(g.get_data_as_white('c', 'e')).toEqual(undefined);
-		expect(g.get_data_as_white('c', 'f')).toEqual(undefined);
+		expect(g.get_data_as_white(c, a)).toEqual(undefined);
+		expect(g.get_data_as_white(c, b)).toEqual(undefined);
+		expect(g.get_data_as_white(c, d)).toEqual(undefined);
+		expect(g.get_data_as_white(c, e)).toEqual(undefined);
+		expect(g.get_data_as_white(c, f)).toEqual(undefined);
 
-		expect(g.get_data_as_white('d', 'a')).toEqual(undefined);
-		expect(g.get_data_as_white('d', 'b')).toEqual(undefined);
-		expect(g.get_data_as_white('d', 'c')).toEqual(undefined);
-		expect(g.get_data_as_white('d', 'e')).toEqual(undefined);
-		expect(g.get_data_as_white('d', 'f')).toEqual(undefined);
+		expect(g.get_data_as_white(d, a)).toEqual(undefined);
+		expect(g.get_data_as_white(d, b)).toEqual(undefined);
+		expect(g.get_data_as_white(d, c)).toEqual(undefined);
+		expect(g.get_data_as_white(d, e)).toEqual(undefined);
+		expect(g.get_data_as_white(d, f)).toEqual(undefined);
 
-		expect(g.get_data_as_white('e', 'a')).toEqual(undefined);
-		expect(g.get_data_as_white('e', 'b')).toEqual(undefined);
-		expect(g.get_data_as_white('e', 'c')).toEqual(undefined);
-		expect(g.get_data_as_white('e', 'd')).toEqual(undefined);
-		expect(g.get_data_as_white('e', 'f')).toEqual(undefined);
+		expect(g.get_data_as_white(e, a)).toEqual(undefined);
+		expect(g.get_data_as_white(e, b)).toEqual(undefined);
+		expect(g.get_data_as_white(e, c)).toEqual(undefined);
+		expect(g.get_data_as_white(e, d)).toEqual(undefined);
+		expect(g.get_data_as_white(e, f)).toEqual(undefined);
 
-		expect(g.get_data_as_white('f', 'a')).toEqual(undefined);
-		expect(g.get_data_as_white('f', 'b')).toEqual(undefined);
-		expect(g.get_data_as_white('f', 'c')).toEqual(undefined);
-		expect(g.get_data_as_white('f', 'd')).toEqual(undefined);
-		expect(g.get_data_as_white('f', 'e')).toEqual(undefined);
+		expect(g.get_data_as_white(f, a)).toEqual(undefined);
+		expect(g.get_data_as_white(f, b)).toEqual(undefined);
+		expect(g.get_data_as_white(f, c)).toEqual(undefined);
+		expect(g.get_data_as_white(f, d)).toEqual(undefined);
+		expect(g.get_data_as_white(f, e)).toEqual(undefined);
 
 		// black
 
-		expect(g.get_data_as_black('a', 'b')).toEqual(undefined);
-		expect(g.get_data_as_black('a', 'c')).toEqual(undefined);
-		expect(g.get_data_as_black('a', 'd')).toEqual(undefined);
-		expect(g.get_data_as_black('a', 'e')).toEqual(undefined);
-		expect(g.get_data_as_black('a', 'f')).toEqual(undefined);
+		expect(g.get_data_as_black(a, b)).toEqual(undefined);
+		expect(g.get_data_as_black(a, c)).toEqual(undefined);
+		expect(g.get_data_as_black(a, d)).toEqual(undefined);
+		expect(g.get_data_as_black(a, e)).toEqual(undefined);
+		expect(g.get_data_as_black(a, f)).toEqual(undefined);
 
-		expect(g.get_data_as_black('b', 'a')).toEqual(undefined);
-		expect(g.get_data_as_black('b', 'c')).toEqual(undefined);
-		expect(g.get_data_as_black('b', 'd')).toEqual(undefined);
-		expect(g.get_data_as_black('b', 'e')).toEqual(undefined);
-		expect(g.get_data_as_black('b', 'f')).toEqual(undefined);
+		expect(g.get_data_as_black(b, a)).toEqual(undefined);
+		expect(g.get_data_as_black(b, c)).toEqual(undefined);
+		expect(g.get_data_as_black(b, d)).toEqual(undefined);
+		expect(g.get_data_as_black(b, e)).toEqual(undefined);
+		expect(g.get_data_as_black(b, f)).toEqual(undefined);
 
-		expect(g.get_data_as_black('c', 'a')).toEqual(undefined);
-		expect(g.get_data_as_black('c', 'b')).toEqual(undefined);
-		expect(g.get_data_as_black('c', 'd')).toEqual(undefined);
-		expect(g.get_data_as_black('c', 'e')).toEqual(undefined);
-		expect(g.get_data_as_black('c', 'f')).toEqual(undefined);
+		expect(g.get_data_as_black(c, a)).toEqual(undefined);
+		expect(g.get_data_as_black(c, b)).toEqual(undefined);
+		expect(g.get_data_as_black(c, d)).toEqual(undefined);
+		expect(g.get_data_as_black(c, e)).toEqual(undefined);
+		expect(g.get_data_as_black(c, f)).toEqual(undefined);
 
-		expect(g.get_data_as_black('d', 'a')).toEqual(undefined);
-		expect(g.get_data_as_black('d', 'b')).toEqual(undefined);
-		expect(g.get_data_as_black('d', 'c')).toEqual(undefined);
-		expect(g.get_data_as_black('d', 'e')).toEqual(undefined);
-		expect(g.get_data_as_black('d', 'f')).toEqual(undefined);
+		expect(g.get_data_as_black(d, a)).toEqual(undefined);
+		expect(g.get_data_as_black(d, b)).toEqual(undefined);
+		expect(g.get_data_as_black(d, c)).toEqual(undefined);
+		expect(g.get_data_as_black(d, e)).toEqual(undefined);
+		expect(g.get_data_as_black(d, f)).toEqual(undefined);
 
-		expect(g.get_data_as_black('e', 'a')).toEqual(undefined);
-		expect(g.get_data_as_black('e', 'b')).toEqual(undefined);
-		expect(g.get_data_as_black('e', 'c')).toEqual(undefined);
-		expect(g.get_data_as_black('e', 'd')).toEqual(undefined);
-		expect(g.get_data_as_black('e', 'f')).toEqual(undefined);
+		expect(g.get_data_as_black(e, a)).toEqual(undefined);
+		expect(g.get_data_as_black(e, b)).toEqual(undefined);
+		expect(g.get_data_as_black(e, c)).toEqual(undefined);
+		expect(g.get_data_as_black(e, d)).toEqual(undefined);
+		expect(g.get_data_as_black(e, f)).toEqual(undefined);
 
-		expect(g.get_data_as_black('f', 'a')).toEqual(undefined);
-		expect(g.get_data_as_black('f', 'b')).toEqual(undefined);
-		expect(g.get_data_as_black('f', 'c')).toEqual(undefined);
-		expect(g.get_data_as_black('f', 'd')).toEqual(undefined);
-		expect(g.get_data_as_black('f', 'e')).toEqual(undefined);
+		expect(g.get_data_as_black(f, a)).toEqual(undefined);
+		expect(g.get_data_as_black(f, b)).toEqual(undefined);
+		expect(g.get_data_as_black(f, c)).toEqual(undefined);
+		expect(g.get_data_as_black(f, d)).toEqual(undefined);
+		expect(g.get_data_as_black(f, e)).toEqual(undefined);
 
-		const blitz_dir = EnvironmentManager.get_instance().get_dir_graphs_time_control('Blitz');
+		const blitz_dir = EnvironmentManager.get_instance().get_dir_graphs_time_control(Blitz);
 		expect(fs.existsSync(path.join(blitz_dir, 'a'))).toBe(false);
 		expect(fs.existsSync(path.join(blitz_dir, 'b'))).toBe(false);
 		expect(fs.existsSync(path.join(blitz_dir, 'c'))).toBe(false);
 		expect(fs.existsSync(path.join(blitz_dir, 'e'))).toBe(false);
 	});
-	*/
 });

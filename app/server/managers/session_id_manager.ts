@@ -23,6 +23,7 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
+import { PlayerPrivateId } from '@common/models/player';
 import { SessionID } from '@common/models/session_id';
 import { search_linear_by_key } from '@server/utils/searching';
 
@@ -72,7 +73,7 @@ export class SessionIDManager {
 	remove_session_id(idx: number): void {
 		this.session_ids.splice(idx, 1);
 	}
-	remove_user_sessions(username: string): void {
+	remove_user_sessions(username: PlayerPrivateId): void {
 		for (let i = this.session_ids.length - 1; i >= 0; --i) {
 			if (this.session_ids[i].username == username) {
 				this.remove_session_id(i);

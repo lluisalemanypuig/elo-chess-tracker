@@ -23,21 +23,23 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { GameID } from '@common/models/game';
-import { TimeControlID } from '@common/models/time_control';
-import { DateStringShort } from '@server/utils/time';
+import { GameId, toGameId } from '@common/models/game';
+import { TimeControlId } from '@common/models/time_control';
+import { DateYYYYMMDD } from '@app/common/utils/time';
 import { number_to_string } from '@server/utils/misc';
+
+export const GAME_ID_LENGTH = 10;
 
 /**
  * @brief The minimal summary of a game.
  */
 export class GameInfo {
-	public game_record: DateStringShort;
-	public time_control_id: TimeControlID;
+	public game_record: DateYYYYMMDD;
+	public time_control_id: TimeControlId;
 
-	constructor(_when: DateStringShort, _time_id: TimeControlID) {
-		this.game_record = _when;
-		this.time_control_id = _time_id;
+	constructor(when: DateYYYYMMDD, time_id: TimeControlId) {
+		this.game_record = when;
+		this.time_control_id = time_id;
 	}
 }
 
@@ -67,7 +69,7 @@ export class GamesManager {
 	/// Number of games in the system
 	private max_game_id: number = 0;
 	/// Map from game ID to game information
-	private game_info: Map<GameID, GameInfo> = new Map();
+	private game_info: Map<GameId, GameInfo> = new Map();
 
 	clear(): void {
 		this.max_game_id = 0;
@@ -75,7 +77,7 @@ export class GamesManager {
 	}
 
 	/// Does a game exist?
-	game_exists(game_id: GameID): boolean {
+	game_exists(game_id: GameId): boolean {
 		return this.game_info.has(game_id);
 	}
 	num_games(): number {
@@ -87,17 +89,19 @@ export class GamesManager {
 	 * @returns The largest existing ID. When there are no games, returns the
 	 * all-zero ID.
 	 */
-	get_max_game_id(): string {
-		return number_to_string(this.max_game_id);
+	get_max_game_id(): GameId {
+		const strId = number_to_string(this.max_game_id, GAME_ID_LENGTH);
+		return toGameId(strId);
 	}
 	/// Sets the maximum game ID
 	set_max_game_id(id: number): void {
 		this.max_game_id = id;
 	}
 	/// Increase current maximum game ID
-	new_game_id(): GameID {
+	new_game_id(): GameId {
 		this.max_game_id += 1;
-		return number_to_string(this.max_game_id);
+		const strId = number_to_string(this.max_game_id, GAME_ID_LENGTH);
+		return toGameId(strId);
 	}
 
 	/**
@@ -107,17 +111,17 @@ export class GamesManager {
 	 * @param time_id The time control id of the game (recall, could be 'blitz',
 	 * 'classical', ...)
 	 */
-	add_game(game_id: GameID, when: DateStringShort, time_id: TimeControlID): void {
+	add_game(game_id: GameId, when: DateYYYYMMDD, time_id: TimeControlId): void {
 		this.game_info.set(game_id, new GameInfo(when, time_id));
 	}
 
 	/// Returns the information associated to game @e game_id.
-	get_game_info(game_id: GameID): GameInfo | undefined {
+	get_game_info(game_id: GameId): GameInfo | undefined {
 		return this.game_info.get(game_id);
 	}
 
 	/// Delete a game ID from the manager
-	delete_game_id(id: GameID): void {
+	delete_game_id(id: GameId): void {
 		this.game_info.delete(id);
 	}
 }

@@ -27,13 +27,13 @@ import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:server_users_password_changes');
 import { Request, Response } from 'express';
 
-import { log_now } from '@server/utils/time';
+import { log_now } from '@app/common/utils/time';
 import { is_user_logged_in, session_user_delete_all } from '@server/managers/session';
 import { encrypt_password_for_user, is_password_of_user_correct } from '@server/utils/encrypt';
 import { user_overwrite } from '@server/managers/users';
 import { ConfigurationManager } from '@server/managers/configuration_manager';
 import { get_execution_directory } from '@server/managers/environment_manager';
-import { isDefined } from '@common/utils/is_defined';
+import { isNotDefined } from '@common/utils/is_defined';
 import { Routes } from '@common/routes';
 import { InputSchemaOf } from '@common/api/schemas';
 import { safe_parse_request_body, safe_parse_request_cookies } from '@server/utils/schemas';
@@ -49,7 +49,7 @@ export async function get_page_user_password_change(req: Request, res: Response)
 	const session = session_parse.data;
 
 	const r = is_user_logged_in(session);
-	if (!isDefined(r[2])) {
+	if (isNotDefined(r[2])) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -81,19 +81,14 @@ export async function post_user_password_change(req: Request, res: Response) {
 	const r = is_user_logged_in(session);
 	const user = r[2];
 
-	if (!isDefined(user)) {
+	if (isNotDefined(user)) {
 		res.status(200).send(r[1]);
 		return;
 	}
 
 	// check if password is correct
 	const old_pwd = user.password;
-	const is_password_correct = is_password_of_user_correct(
-		old_pwd.encrypted,
-		session.username,
-		old_password,
-		old_pwd.iv
-	);
+	const is_password_correct = is_password_of_user_correct(session.username, old_password, old_pwd);
 
 	// is the password correct?
 	if (!is_password_correct) {

@@ -23,10 +23,10 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-/// Convert a number to a string of 10 digits
-export function number_to_string(n: number): string {
+/// Convert a number to a string of d digits
+export function number_to_string(n: number, d: number): string {
 	const str = Number(n).toString();
-	return '0'.repeat(10 - str.length) + str;
+	return '0'.repeat(d - str.length) + str;
 }
 
 /**

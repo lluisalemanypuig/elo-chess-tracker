@@ -27,14 +27,14 @@ import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:server_query_challenges');
 import { Request, Response } from 'express';
 
-import { log_now } from '@server/utils/time';
+import { log_now } from '@app/common/utils/time';
 import { is_user_logged_in } from '@server/managers/session';
-import { User } from '@common/models/user';
+import { UserGivenName, User } from '@common/models/user';
 import { challenge_set_retrieve } from '@server/managers/challenges';
 import { Challenge } from '@common/models/challenge';
 import { UsersManager } from '@server/managers/users_manager';
 import { can_user_decline_challenge } from '@server/managers/user_relationships';
-import { isDefined } from '@common/utils/is_defined';
+import { isDefined, isNotDefined } from '@common/utils/is_defined';
 import { Routes } from '@common/routes';
 import { safe_parse_request_cookies } from '@server/utils/schemas';
 import { AuthenticationInputSchema } from '@common/schemas/authentication';
@@ -58,7 +58,7 @@ export async function get_query_challenge_received(req: Request, res: Response) 
 	const r = is_user_logged_in(session);
 
 	const sent_to = r[2];
-	if (!isDefined(sent_to)) {
+	if (isNotDefined(sent_to)) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -79,7 +79,7 @@ export async function get_query_challenge_received(req: Request, res: Response) 
 	let all_challenges_received: QueryChallengesReceivedOutput = [];
 	for (const c of to_return) {
 		const sent_by = manager.get_user_by_username(c.sent_by);
-		if (!isDefined(sent_by)) {
+		if (isNotDefined(sent_by)) {
 			debug(log_now(), `User '${c.sent_by}' does not exist.`);
 			res.status(500).send();
 			return;
@@ -113,7 +113,7 @@ export async function get_query_challenge_sent(req: Request, res: Response) {
 	const session = session_parse.data;
 	const r = is_user_logged_in(session);
 
-	if (!isDefined(r[2])) {
+	if (isNotDefined(r[2])) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -131,7 +131,7 @@ export async function get_query_challenge_sent(req: Request, res: Response) {
 
 	let manager = UsersManager.get_instance();
 	const sent_by = manager.get_user_by_username(session.username);
-	if (!isDefined(sent_by)) {
+	if (isNotDefined(sent_by)) {
 		debug(log_now(), `User '${session.username}' does not exist.`);
 		res.status(500).send();
 		return;
@@ -140,7 +140,7 @@ export async function get_query_challenge_sent(req: Request, res: Response) {
 	let all_challenges: QueryChallengesSentOutput = [];
 	for (const c of to_return) {
 		const sent_to = manager.get_user_by_username(c.sent_to);
-		if (!isDefined(sent_to)) {
+		if (isNotDefined(sent_to)) {
 			debug(log_now(), `User '${c.sent_to}' does not exist.`);
 			res.status(500).send();
 			return;
@@ -173,7 +173,7 @@ export async function get_query_challenge_pending_result(req: Request, res: Resp
 	const session = session_parse.data;
 	const r = is_user_logged_in(session);
 
-	if (!isDefined(r[2])) {
+	if (isNotDefined(r[2])) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -185,7 +185,7 @@ export async function get_query_challenge_pending_result(req: Request, res: Resp
 			return false;
 		}
 		// must have been accepted
-		if (!isDefined(c.when_challenge_accepted)) {
+		if (isNotDefined(c.when_challenge_accepted)) {
 			return false;
 		}
 		// result can't have been set
@@ -200,20 +200,20 @@ export async function get_query_challenge_pending_result(req: Request, res: Resp
 	let all_challenges: QueryChallengesPendingResultOutput = [];
 	for (const c of to_return) {
 		const user_sent_to = manager.get_user_by_username(c.sent_to);
-		if (!isDefined(user_sent_to)) {
+		if (isNotDefined(user_sent_to)) {
 			debug(log_now(), `User '${c.sent_to}' does not exist.`);
 			res.status(500).send();
 			return;
 		}
 
 		const user_sent_by = manager.get_user_by_username(c.sent_by);
-		if (!isDefined(user_sent_by)) {
+		if (isNotDefined(user_sent_by)) {
 			debug(log_now(), `User '${c.sent_by}' does not exist.`);
 			res.status(500).send();
 			return;
 		}
 
-		const opponent: string = ((): string => {
+		const opponent = ((): UserGivenName => {
 			if (user_sent_by.username == session.username) {
 				return user_sent_to.get_full_name();
 			}
@@ -250,7 +250,7 @@ export async function get_query_challenge_confirm_result_other(req: Request, res
 	const session = session_parse.data;
 	const r = is_user_logged_in(session);
 
-	if (!isDefined(r[2])) {
+	if (isNotDefined(r[2])) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -262,11 +262,11 @@ export async function get_query_challenge_confirm_result_other(req: Request, res
 			return false;
 		}
 		// must have been accepted
-		if (!isDefined(c.when_challenge_accepted)) {
+		if (isNotDefined(c.when_challenge_accepted)) {
 			return false;
 		}
 		// result already set
-		if (!isDefined(c.result_set_by)) {
+		if (isNotDefined(c.result_set_by)) {
 			return false;
 		}
 		// result should have been set by this user
@@ -281,20 +281,26 @@ export async function get_query_challenge_confirm_result_other(req: Request, res
 	let all_challenges: QueryChallengesConfirmResultOtherOutput = [];
 	for (const c of to_return) {
 		const user_sent_to = manager.get_user_by_username(c.sent_to);
-		if (!isDefined(user_sent_to)) {
+		if (isNotDefined(user_sent_to)) {
 			debug(log_now(), `User '${c.sent_to}' does not exist.`);
 			res.status(500).send();
 			return;
 		}
 
 		const user_sent_by = manager.get_user_by_username(c.sent_by);
-		if (!isDefined(user_sent_by)) {
+		if (isNotDefined(user_sent_by)) {
 			debug(log_now(), `User '${c.sent_by}' does not exist.`);
 			res.status(500).send();
 			return;
 		}
 
-		const opponent: string = ((): string => {
+		if (isNotDefined(c.white) || isNotDefined(c.black)) {
+			debug(log_now(), `White or Black player is not set in challenge.`);
+			res.status(500).send();
+			return;
+		}
+
+		const opponent = ((): UserGivenName => {
 			if (user_sent_by.username == session.username) {
 				return user_sent_to.get_full_name();
 			}
@@ -317,10 +323,10 @@ export async function get_query_challenge_confirm_result_other(req: Request, res
 			title: c.title,
 			opponent: opponent,
 			sent_when: c.when_challenge_sent,
-			white: (manager.get_user_by_username(c.white as string) as User).get_full_name(),
-			black: (manager.get_user_by_username(c.black as string) as User).get_full_name(),
+			white: (manager.get_user_by_username(c.white) as User).get_full_name(),
+			black: (manager.get_user_by_username(c.black) as User).get_full_name(),
 			result: nice_result,
-			time_control: c.time_control_name
+			time_control_name: c.time_control_name
 		});
 	}
 
@@ -340,7 +346,7 @@ export async function get_query_challenge_confirm_result_self(req: Request, res:
 	const session = session_parse.data;
 	const r = is_user_logged_in(session);
 
-	if (!isDefined(r[2])) {
+	if (isNotDefined(r[2])) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -352,11 +358,11 @@ export async function get_query_challenge_confirm_result_self(req: Request, res:
 			return false;
 		}
 		// must have been accepted
-		if (!isDefined(c.when_challenge_accepted)) {
+		if (isNotDefined(c.when_challenge_accepted)) {
 			return false;
 		}
 		// result already set by somebody
-		if (!isDefined(c.result_set_by)) {
+		if (isNotDefined(c.result_set_by)) {
 			return false;
 		}
 		// result should NOT have been set by this user
@@ -371,20 +377,26 @@ export async function get_query_challenge_confirm_result_self(req: Request, res:
 	let all_challenges: QueryChallengesConfirmResultSelfOutput = [];
 	for (const c of to_return) {
 		const user_sent_to = manager.get_user_by_username(c.sent_to);
-		if (!isDefined(user_sent_to)) {
+		if (isNotDefined(user_sent_to)) {
 			debug(log_now(), `User '${c.sent_to}' does not exist.`);
 			res.status(500).send();
 			return;
 		}
 
 		const user_sent_by = manager.get_user_by_username(c.sent_by);
-		if (!isDefined(user_sent_by)) {
+		if (isNotDefined(user_sent_by)) {
 			debug(log_now(), `User '${c.sent_by}' does not exist.`);
 			res.status(500).send();
 			return;
 		}
 
-		const opponent: string = ((): string => {
+		if (isNotDefined(c.white) || isNotDefined(c.black)) {
+			debug(log_now(), `White or Black player is not set in challenge.`);
+			res.status(500).send();
+			return;
+		}
+
+		const opponent = ((): UserGivenName => {
 			if (user_sent_by.username == session.username) {
 				return user_sent_to.get_full_name();
 			}
@@ -407,10 +419,10 @@ export async function get_query_challenge_confirm_result_self(req: Request, res:
 			title: c.title,
 			opponent: opponent,
 			sent_when: c.when_challenge_sent,
-			white: (manager.get_user_by_username(c.white as string) as User).get_full_name(),
-			black: (manager.get_user_by_username(c.black as string) as User).get_full_name(),
+			white: (manager.get_user_by_username(c.white) as User).get_full_name(),
+			black: (manager.get_user_by_username(c.black) as User).get_full_name(),
 			result: nice_result,
-			time_control: c.time_control_name
+			time_control_name: c.time_control_name
 		});
 	}
 

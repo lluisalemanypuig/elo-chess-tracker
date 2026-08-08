@@ -24,7 +24,7 @@ Contact:
 */
 
 import { z } from 'zod';
-import { isDefined } from '@common/utils/is_defined';
+import { isNotDefined } from '@common/utils/is_defined';
 
 /// Administrator
 export const ADMIN = 'admin';
@@ -82,7 +82,7 @@ export function array_string_to_roles(roles: string[]): UserRole[] | undefined {
 	let actual_roles: UserRole[] = [];
 	for (const role_str of roles) {
 		const res = string_to_role(role_str);
-		if (!isDefined(res)) {
+		if (isNotDefined(res)) {
 			return undefined;
 		}
 		actual_roles.push(res);

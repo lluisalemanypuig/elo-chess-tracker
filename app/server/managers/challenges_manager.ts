@@ -23,8 +23,15 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { Challenge, ChallengeID } from '@common/models/challenge';
+import { Challenge, ChallengeId, toChallengeId } from '@common/models/challenge';
 import { number_to_string } from '@server/utils/misc';
+
+export const CHALLENGE_ID_LENGTH = 10;
+
+export function numberToChallengeId(n: number): ChallengeId {
+	const s = number_to_string(n, CHALLENGE_ID_LENGTH);
+	return toChallengeId(s);
+}
 
 /**
  * @brief Challenges Manager singleton class.
@@ -80,14 +87,14 @@ export class ChallengesManager {
 	get_challenge_at(idx: number): Challenge | undefined {
 		return 0 <= idx && idx < this.challenges.length ? this.challenges[idx] : undefined;
 	}
-	get_challenge_by_id(id: ChallengeID): Challenge | undefined {
+	get_challenge_by_id(id: ChallengeId): Challenge | undefined {
 		return this.get_challenge_at(this.get_challenge_index_by_id(id));
 	}
 
 	get_challenge_index(c: Challenge): number {
 		return this.get_challenge_index_by_id(c.id);
 	}
-	get_challenge_index_by_id(id: ChallengeID): number {
+	get_challenge_index_by_id(id: ChallengeId): number {
 		for (let i = 0; i < this.challenges.length; ++i) {
 			if (this.challenges[i].id == id) {
 				return i;
@@ -105,8 +112,9 @@ export class ChallengesManager {
 		this.max_challenge_id = id;
 	}
 	/// Increase current maximum challenge ID
-	new_challenge_id(): ChallengeID {
+	new_challenge_id(): ChallengeId {
 		this.max_challenge_id += 1;
-		return number_to_string(this.max_challenge_id);
+		const strId = number_to_string(this.max_challenge_id, CHALLENGE_ID_LENGTH);
+		return toChallengeId(strId);
 	}
 }

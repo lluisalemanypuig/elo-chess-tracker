@@ -25,7 +25,7 @@ Contact:
 
 import { initialize_rating_functions } from '@server/managers/rating_system';
 import { game_from_string } from '@common/io/game';
-import { isDefined } from '@common/utils/is_defined';
+import { isNotDefined } from '@common/utils/is_defined';
 
 describe('IO conversion -- Elo', () => {
 	initialize_rating_functions('Elo');
@@ -35,7 +35,7 @@ describe('IO conversion -- Elo', () => {
 			'{ "id": "0001", "title": "asdf", "white": "W", "white_rating": {"rating": 1500.43, "num_games": 100, "won": 50, "drawn": 20, "lost": 30, "K": 40, "surpassed_2400": true}, "black": "B", "black_rating" : {"rating": 1500.43, "num_games": 100, "won": 50, "drawn": 20, "lost": 30, "K": 40, "surpassed_2400": false}, "result": "black_wins", "time_control_id": "blitz", "time_control_name": "Blitz (5 + 3)", "when": "2024-12-29..12:24:00"}'
 		);
 		expect(g).not.toBeNull();
-		if (!isDefined(g)) {
+		if (isNotDefined(g)) {
 			return;
 		}
 		expect(g.id).toEqual('0001');

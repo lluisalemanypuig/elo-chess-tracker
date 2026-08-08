@@ -23,6 +23,7 @@ import 'htmx.org';
 
 import { message_from_response, server_call } from '@client/action';
 import { Routes } from '@common/routes';
+import { PlayerPrivateId } from '@common/models/player';
 
 async function log_into_webpage(_event: any) {
 	// username box
@@ -39,8 +40,8 @@ async function log_into_webpage(_event: any) {
 		return;
 	}
 
-	const username = (_username_box as HTMLInputElement).value;
-	const password = (_password_box as HTMLInputElement).value;
+	const username = (_username_box as HTMLInputElement).value as PlayerPrivateId;
+	const password = (_password_box as HTMLInputElement).value as PlayerPrivateId;
 
 	if (username == '' || password == '') {
 		return;

@@ -30,7 +30,6 @@ describe('IO conversion', () => {
 		expect(time_control_from_string('{ "id": "A", "name": "B" }')).toEqual({ id: 'A', name: 'B' });
 		expect(time_control_from_string('{ "id": "", "name": "" }')).toEqual({ id: '', name: '' });
 	});
-
 	test('string to TimeControl[]', () => {
 		expect(time_control_array_from_string('[{ "id": "A", "name": "B" }]')).toEqual([{ id: 'A', name: 'B' }]);
 		expect(time_control_array_from_string('[{ "id": "", "name": "" }]')).toEqual([{ id: '', name: '' }]);

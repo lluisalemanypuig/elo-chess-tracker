@@ -28,7 +28,7 @@ import path from 'path';
 import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:managers/initialization');
 
-import { log_now } from '@server/utils/time';
+import { log_now } from '@app/common/utils/time';
 import { EnvironmentManager } from '@server/managers/environment_manager';
 import { ConfigurationManager } from '@server/managers/configuration_manager';
 import { ChallengesManager } from '@server/managers/challenges_manager';
@@ -36,7 +36,7 @@ import { GamesManager } from '@server/managers/games_manager';
 import { UsersManager } from '@server/managers/users_manager';
 import { initialize_rating_time_controls, initialize_rating_functions } from '@server/managers/rating_system';
 import { RatingSystemManager } from '@server/managers/rating_system_manager';
-import { Game, GameID } from '@common/models/game';
+import { Game, toGameId } from '@common/models/game';
 import { TimeControl, TimeControlArray } from '@common/models/time_control';
 import { Graph } from '@common/models/graph/graph';
 import { GraphsManager } from '@server/managers/graphs_manager';
@@ -46,7 +46,7 @@ import { user_from_string } from '@common/io/user';
 import { graph_from_string } from '@common/io/graph/graph';
 import { UsersBehavior } from '@server/managers/users_behavior';
 import { read_directory } from '@server/utils/read_directory';
-import { isDefined } from '@common/utils/is_defined';
+import { isNotDefined } from '@common/utils/is_defined';
 import { RatingFrameworkType } from '@common/models/rating_framework/rating_framework_type';
 import { configuration_from_string } from '@common/io/configuration';
 import { Configuration } from '@common/models/configuration/configuration';
@@ -184,7 +184,7 @@ function init_users(): void {
 		debug(log_now(), `        Reading file '${user_file}'`);
 		const user_str = fs.readFileSync(user_file, 'utf8');
 		const user = user_from_string(user_str);
-		if (!isDefined(user)) {
+		if (isNotDefined(user)) {
 			throw new Error(`Could not parse user at index '${i}', at file '${user_file}'.`);
 			continue;
 		}
@@ -225,7 +225,7 @@ function init_challenges(): void {
 		debug(log_now(), `        Reading file '${challenge_file}'`);
 		const challenge_data = fs.readFileSync(challenge_file, 'utf8');
 		const c = challenge_from_string(challenge_data);
-		if (!isDefined(c)) {
+		if (isNotDefined(c)) {
 			throw new Error(`Challenge at index '${i}' could not be parsed.`);
 			continue;
 		}
@@ -246,7 +246,7 @@ function init_games(): void {
 	const ratings = RatingSystemManager.get_instance();
 	let games = GamesManager.get_instance();
 	let num_games: number = 0;
-	let max_game_id: GameID = '0';
+	let max_game_id = toGameId('0');
 
 	for (const id of ratings.get_unique_time_controls_ids()) {
 		const games_dir = EnvironmentManager.get_instance().get_dir_games_time_control(id);
@@ -260,7 +260,7 @@ function init_games(): void {
 			debug(log_now(), `        Reading file '${game_record_file}'`);
 			const game_record_data = fs.readFileSync(game_record_file, 'utf8');
 			const game_set = game_array_from_string(game_record_data);
-			if (!isDefined(game_set)) {
+			if (isNotDefined(game_set)) {
 				throw new Error(`File '${game_record_file}' could not be parsed.`);
 			}
 
@@ -297,7 +297,7 @@ function init_graphs(): void {
 		} else {
 			debug(log_now(), `    Found directory ${graphs_dir}`);
 			const g_id = graph_from_string(graphs_dir);
-			if (!isDefined(g_id)) {
+			if (isNotDefined(g_id)) {
 				throw new Error(`Could not read graph from directory '${graphs_dir}'.`);
 			}
 			graph_manager.add_graph(id, g_id);
@@ -331,7 +331,7 @@ export function server_init_from_configuration_file(configuration_file: string):
 
 	const data = fs.readFileSync(configuration_file, 'utf8');
 	const configuration = configuration_from_string(data);
-	if (!isDefined(configuration)) {
+	if (isNotDefined(configuration)) {
 		debug(log_now(), `Configuration file '${configuration_file}' not found.`);
 		return;
 	}

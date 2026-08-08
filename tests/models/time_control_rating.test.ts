@@ -25,10 +25,11 @@ Contact:
 
 import { TimeControlRating } from '@common/models/time_control_rating';
 import { EloRating } from '@common/models/rating_framework/Elo/rating';
+import { toTimeControlId } from '@common/models/time_control';
 
 describe('clone', () => {
 	test('', () => {
-		const tcr = new TimeControlRating('blitz', new EloRating(1500.43, 100, 50, 20, 30, 40, true));
+		const tcr = new TimeControlRating(toTimeControlId('blitz'), new EloRating(1500.43, 100, 50, 20, 30, 40, true));
 		const tcrc = tcr.clone();
 
 		expect(tcr).not.toBe(tcrc);

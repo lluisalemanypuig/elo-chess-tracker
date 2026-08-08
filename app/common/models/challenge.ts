@@ -24,45 +24,62 @@ Contact:
 */
 
 import { z } from 'zod';
-import { DateStringLongMillis } from '@server/utils/time';
+import { DateYYYYMMDDHHmmssSSS, DateYYYYMMDDHHmmssSSSSchema } from '@app/common/utils/time';
 import { GameResult, GameResultSchema } from '@common/models/game';
-import { TimeControlID } from '@common/models/time_control';
+import {
+	TimeControlId,
+	TimeControlIdSchema,
+	TimeControlName,
+	TimeControlNameSchema
+} from '@common/models/time_control';
+import { PlayerPrivateId, PlayerPrivateIdSchema } from '@common/models/player';
 
-export type ChallengeID = string;
+/// A type for challenge IDs.
+
+declare const ChallengeIdBrand: unique symbol;
+export type ChallengeIdLocal = string & {
+	readonly [ChallengeIdBrand]: 'ChallengeIdLocal';
+};
+export const ChallengeIdSchema = z.string().brand<'ChallengeIdLocal'>();
+export type ChallengeId = z.infer<typeof ChallengeIdSchema>;
+
+export function toChallengeId(s: string): ChallengeId {
+	return s as ChallengeId;
+}
 
 export const ChallengeSchema = z
 	.object({
-		id: z.string() as z.ZodType<ChallengeID>,
+		id: ChallengeIdSchema,
 		/// Name of the game that will result from this challenge
 		title: z.string(),
 		/// The user sending the challenge
-		sent_by: z.string(),
+		sent_by: PlayerPrivateIdSchema,
 		/// The user receiving the challenge
-		sent_to: z.string(),
+		sent_to: PlayerPrivateIdSchema,
 		/// Time control of the challenge
-		time_control_id: z.string() as z.ZodType<TimeControlID>,
+		time_control_id: TimeControlIdSchema,
 		/// Time control of the challenge
-		time_control_name: z.string(),
+		time_control_name: TimeControlNameSchema,
 		/// Date when the challenge was sent
-		when_challenge_sent: z.string() as z.ZodType<DateStringLongMillis>,
+		when_challenge_sent: DateYYYYMMDDHHmmssSSSSchema,
 		/// Date when the challenge was accepted
-		when_challenge_accepted: z.string().optional() as z.ZodType<DateStringLongMillis | undefined>,
+		when_challenge_accepted: DateYYYYMMDDHHmmssSSSSchema.optional(),
 
 		/// Has the result been set at some point?
 		result_was_set: z.boolean().default(false),
 		/// Date when the result of the game was last modified
-		when_result_set: z.string().optional() as z.ZodType<DateStringLongMillis | undefined>,
+		when_result_set: DateYYYYMMDDHHmmssSSSSchema.optional(),
 		/// Player who set the result
-		result_set_by: z.string().optional(),
+		result_set_by: PlayerPrivateIdSchema.optional(),
 
 		/// Date when the result of the game was accepted.
-		when_result_accepted: z.string().optional() as z.ZodType<DateStringLongMillis | undefined>,
+		when_result_accepted: DateYYYYMMDDHHmmssSSSSchema.optional(),
 		/// User that accepted the result
 		result_accepted_by: z.string().optional(),
 
 		/// The resulting game of the challenge
-		white: z.string().optional(),
-		black: z.string().optional(),
+		white: PlayerPrivateIdSchema.optional(),
+		black: PlayerPrivateIdSchema.optional(),
 		result: GameResultSchema.optional()
 	})
 	.strict();
@@ -79,13 +96,13 @@ export const ChallengeArraySchema = z.array(ChallengeSchema);
 export type ChallengeArray = z.infer<typeof ChallengeArraySchema>;
 
 export function new_challenge(
-	id: string,
+	id: ChallengeId,
 	title: string,
-	sent_by: string,
-	sent_to: string,
-	time_control_id: TimeControlID,
-	time_control_name: string,
-	when_challenge_sent: DateStringLongMillis
+	sent_by: PlayerPrivateId,
+	sent_to: PlayerPrivateId,
+	time_control_id: TimeControlId,
+	time_control_name: TimeControlName,
+	when_challenge_sent: DateYYYYMMDDHHmmssSSS
 ): Challenge {
 	return {
 		id: id,
@@ -108,10 +125,10 @@ export function new_challenge(
 }
 
 interface Result {
-	by: string;
-	when: DateStringLongMillis;
-	white: string;
-	black: string;
+	by: PlayerPrivateId;
+	when: DateYYYYMMDDHHmmssSSS;
+	white: PlayerPrivateId;
+	black: PlayerPrivateId;
 	result: GameResult;
 }
 
@@ -146,7 +163,7 @@ export function unset_result(c: Challenge): void {
 }
 
 /// Accepts the result
-export function set_result_accepted(c: Challenge, by: string, d: string) {
+export function set_result_accepted(c: Challenge, by: string, when: DateYYYYMMDDHHmmssSSS) {
 	if (!c.result_was_set) {
 		throw new Error('Result must have been set previously');
 	}
@@ -155,5 +172,5 @@ export function set_result_accepted(c: Challenge, by: string, d: string) {
 	}
 
 	c.result_accepted_by = by;
-	c.when_result_accepted = d;
+	c.when_result_accepted = when;
 }

@@ -29,8 +29,10 @@ import {
 	array_string_to_roles,
 	string_to_role
 } from '@common/models/user_role';
-import { isDefined, isNotDefined } from '@common/utils/is_defined';
+import { isNotDefined } from '@common/utils/is_defined';
 import { Routes } from '@common/routes';
+import { PlayerPublicId } from '@common/models/player';
+import { toUserGivenName } from '@common/models/user';
 
 async function user_was_changed(_event: any) {
 	all_user_roles.forEach(function (role: string) {
@@ -47,7 +49,7 @@ async function user_was_changed(_event: any) {
 
 	if (username_option != null) {
 		const user_id = (username_option as HTMLOptionElement).id;
-		const response = await server_call(Routes.QUERY_USER_EDIT, { u: Number(user_id) });
+		const response = await server_call(Routes.QUERY_USER_EDIT, { u: Number(user_id) as PlayerPublicId });
 		if (response.status === 'Error') {
 			alert(message_from_response(response));
 			return;
@@ -90,14 +92,14 @@ async function submit_was_clicked(_event: any) {
 		}
 	});
 	const selected_roles = array_string_to_roles(selected_roles_str);
-	if (!isDefined(selected_roles)) {
+	if (isNotDefined(selected_roles)) {
 		return;
 	}
 
 	const response = await server_call(Routes.USER_EDIT, {
-		u: Number(user_rid),
-		f: first_name,
-		l: last_name,
+		u: Number(user_rid) as PlayerPublicId,
+		f: toUserGivenName(first_name),
+		l: toUserGivenName(last_name),
 		r: selected_roles
 	});
 	if (response.status === 'Error') {

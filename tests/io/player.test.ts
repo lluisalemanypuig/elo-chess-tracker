@@ -25,7 +25,11 @@ Contact:
 
 import { initialize_rating_functions } from '@server/managers/rating_system';
 import { player_from_string } from '@common/io/player';
-import { isDefined } from '@common/utils/is_defined';
+import { isNotDefined } from '@common/utils/is_defined';
+import { toTimeControlId } from '@common/models/time_control';
+
+const Classical = toTimeControlId('classical');
+const Blitz = toTimeControlId('blitz');
 
 describe('IO conversion -- Elo', () => {
 	initialize_rating_functions('Elo');
@@ -65,13 +69,13 @@ describe('IO conversion -- Elo', () => {
 		);
 
 		expect(p).not.toBeNull();
-		if (!isDefined(p)) {
+		if (isNotDefined(p)) {
 			return;
 		}
 		expect(p.username).toEqual('user.name');
 		expect(p.ratings.length).toEqual(2);
-		expect(p.has_rating('blitz')).toEqual(true);
-		expect(p.has_rating('classical')).toEqual(true);
-		expect(p.get_rating('classical')).toEqual(classical);
+		expect(p.has_rating(Blitz)).toEqual(true);
+		expect(p.has_rating(Classical)).toEqual(true);
+		expect(p.get_rating(Classical)).toEqual(classical);
 	});
 });

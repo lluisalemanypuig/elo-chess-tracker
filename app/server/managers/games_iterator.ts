@@ -29,12 +29,12 @@ const debug = Debug('ELO_CHESS_TRACKER:managers/challenges');
 import path from 'path';
 import fs from 'fs';
 
-import { Game, GameID } from '@common/models/game';
-import { DateStringLongMillis, DateStringShort, log_now } from '@server/utils/time';
+import { Game, GameId } from '@common/models/game';
+import { DateYYYYMMDDHHmmssSSS, DateYYYYMMDD, log_now } from '@app/common/utils/time';
 import { game_array_from_string } from '@common/io/game';
 import { search_by_key, where_should_be_inserted_by_key } from '@server/utils/searching';
 import { read_directory } from '@server/utils/read_directory';
-import { isDefined } from '@common/utils/is_defined';
+import { isNotDefined } from '@common/utils/is_defined';
 
 /* TODO: add a function that iterates only through those game records
  * where a player has games in.
@@ -50,7 +50,7 @@ import { isDefined } from '@common/utils/is_defined';
  */
 export class GamesIterator {
 	private directory: string = '';
-	private record_files_list: DateStringShort[] = [];
+	private record_files_list: DateYYYYMMDD[] = [];
 	private record_idx: number = 0;
 
 	private game_set: Game[] = [];
@@ -59,7 +59,7 @@ export class GamesIterator {
 	private load_current_record(): void {
 		const filename = path.join(this.directory, this.record_files_list[this.record_idx]);
 		const array = game_array_from_string(fs.readFileSync(filename, 'utf8'));
-		if (!isDefined(array)) {
+		if (isNotDefined(array)) {
 			debug(log_now(), `File '${filename}' does not contain a valid game array.`);
 			return;
 		}
@@ -86,10 +86,10 @@ export class GamesIterator {
 	get_number_of_records(): number {
 		return this.record_files_list.length;
 	}
-	get_all_records(): DateStringShort[] {
+	get_all_records(): DateYYYYMMDD[] {
 		return this.record_files_list;
 	}
-	get_current_record_name(): DateStringShort {
+	get_current_record_name(): DateYYYYMMDD {
 		return this.record_files_list[this.record_idx];
 	}
 	get_current_record_index(): number {
@@ -178,8 +178,8 @@ export class GamesIterator {
 	}
 
 	/// Locate the record named 'record'
-	locate_record(record: DateStringShort): boolean {
-		const [idx, exists] = where_should_be_inserted_by_key(this.record_files_list, (s: DateStringShort): number => {
+	locate_record(record: DateYYYYMMDD): boolean {
+		const [idx, exists] = where_should_be_inserted_by_key(this.record_files_list, (s: DateYYYYMMDD): number => {
 			return record.localeCompare(s);
 		});
 		this.record_idx = idx;
@@ -204,10 +204,10 @@ export class GamesIterator {
 	 * @pre The iterator can be in any state prior to calling this function.
 	 * @post The iterator is left in an invalid state in case of failure.
 	 */
-	locate_first_game_after(record: DateStringShort, when: DateStringLongMillis): boolean {
+	locate_first_game_after(record: DateYYYYMMDD, when: DateYYYYMMDDHHmmssSSS): boolean {
 		const [record_idx, record_exists] = where_should_be_inserted_by_key(
 			this.record_files_list,
-			(s: DateStringShort): number => {
+			(s: DateYYYYMMDD): number => {
 				return record.localeCompare(s);
 			}
 		);
@@ -238,8 +238,8 @@ export class GamesIterator {
 	 * @pre The iterator can be in any state prior to calling this function.
 	 * @post The iterator is left in an invalid state in case of failure.
 	 */
-	locate_game(record: DateStringShort, id: GameID): boolean {
-		this.record_idx = search_by_key(this.record_files_list, (s: DateStringShort): number => {
+	locate_game(record: DateYYYYMMDD, id: GameId): boolean {
+		this.record_idx = search_by_key(this.record_files_list, (s: DateYYYYMMDD): number => {
 			return record.localeCompare(s);
 		});
 		if (this.record_idx == -1) {

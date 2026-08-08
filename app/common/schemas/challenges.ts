@@ -25,45 +25,59 @@ Contact:
 
 import { z } from 'zod';
 import { GameResultSchema } from '@common/models/game';
+import { PlayerPrivateIdSchema, PlayerPublicIdSchema } from '@common/models/player';
+import { ChallengeIdSchema } from '@common/models/challenge';
+import { TimeControlIdSchema, TimeControlNameSchema } from '@common/models/time_control';
+
+// Routes.CHALLENGE_SEND
 
 export const ChallengeSendInputSchema = z.object({
-	to: z.number().gte(0),
-	time_control_id: z.string(),
-	time_control_name: z.string(),
+	to: PlayerPublicIdSchema,
+	time_control_id: TimeControlIdSchema,
+	time_control_name: TimeControlNameSchema,
 	title: z.string()
 });
 
 export type ChallengeSendInput = z.infer<typeof ChallengeSendInputSchema>;
 
+// Routes.CHALLENGE_ACCEPT
+
 export const ChallengeAcceptInputSchema = z.object({
-	challenge_id: z.string()
+	id: ChallengeIdSchema
 });
 
 export type ChallengeAcceptInput = z.infer<typeof ChallengeAcceptInputSchema>;
 
+// Routes.CHALLENGE_DECLINE
+
 export const ChallengeDeclineInputSchema = z.object({
-	challenge_id: z.string()
+	id: ChallengeIdSchema
 });
 
 export type ChallengeDeclineInput = z.infer<typeof ChallengeDeclineInputSchema>;
 
+// Routes.CHALLENGE_SET_RESULT
+
 export const ChallengeSetResultInputSchema = z.object({
-	challenge_id: z.string(),
-	white: z.string(),
-	black: z.string(),
+	id: ChallengeIdSchema,
+	/// TODO: use public ids
+	white: PlayerPrivateIdSchema,
+	black: PlayerPrivateIdSchema,
 	result: GameResultSchema
 });
 
 export type ChallengeSetResultInput = z.infer<typeof ChallengeSetResultInputSchema>;
 
+// Routes.CHALLENGE_AGREE
+
 export const ChallengeAgreeResultInputSchema = z.object({
-	challenge_id: z.string()
+	id: ChallengeIdSchema
 });
 
 export type ChallengeAgreeResultInput = z.infer<typeof ChallengeAgreeResultInputSchema>;
 
 export const ChallengeDisagreeResultInputSchema = z.object({
-	challenge_id: z.string()
+	id: ChallengeIdSchema
 });
 
 export type ChallengeDisagreeResultInput = z.infer<typeof ChallengeDisagreeResultInputSchema>;

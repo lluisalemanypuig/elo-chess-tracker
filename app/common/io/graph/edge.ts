@@ -25,7 +25,7 @@ Contact:
 
 import { Edge, EdgeArraySchema, EdgeSchema } from '@common/models/graph/edge';
 import { read_schema } from '@common/io/generic';
-import { isDefined } from '@common/utils/is_defined';
+import { isNotDefined } from '@common/utils/is_defined';
 import { EdgeMetadata } from '@common/models/graph/edge_metadata';
 
 /**
@@ -35,7 +35,7 @@ import { EdgeMetadata } from '@common/models/graph/edge_metadata';
  */
 export function edge_from_string(str: string): Edge | null {
 	const data = read_schema(EdgeSchema, str);
-	if (!isDefined(data)) {
+	if (isNotDefined(data)) {
 		return null;
 	}
 	return new Edge(
@@ -51,7 +51,7 @@ export function edge_from_string(str: string): Edge | null {
  */
 export function edge_array_from_string(str: string): Edge[] | null {
 	const data = read_schema(EdgeArraySchema, str);
-	if (!isDefined(data)) {
+	if (isNotDefined(data)) {
 		return null;
 	}
 

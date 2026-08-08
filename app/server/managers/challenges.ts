@@ -28,16 +28,25 @@ import path from 'path';
 import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:managers/challenges');
 
-import { DateStringLong, log_now, long_date_to_short_and_tiny_date } from '@server/utils/time';
+import {
+	DateYYYYMMDDHHmmss,
+	DateYYYYMMDDHHmmssSSS,
+	log_now,
+	long_date_to_short_and_tiny_date,
+	toDateYYYYMMDDHHmmssSSS,
+	toDateYYYYMMDD,
+	toDateHHmmssSSS
+} from '@app/common/utils/time';
 import { ChallengesManager } from '@server/managers/challenges_manager';
 import { EnvironmentManager } from '@server/managers/environment_manager';
 import { Challenge, new_challenge, set_result, unset_result } from '@common/models/challenge';
 import { GameResult } from '@common/models/game';
 import { game_add_new } from '@server/managers/games';
-import { TimeControlID } from '@common/models/time_control';
+import { TimeControlId, TimeControlName } from '@common/models/time_control';
 import { UsersManager } from '@server/managers/users_manager';
 import { User } from '@common/models/user';
-import { isDefined } from '@common/utils/is_defined';
+import { isNotDefined } from '@common/utils/is_defined';
+import { PlayerPrivateId } from '@common/models/player';
 
 /**
  * @brief Filters the set of challenges that are accepted by the filter function @e by.
@@ -69,16 +78,16 @@ export function challenge_set_retrieve(
  */
 export function challenge_send_new(
 	title: string,
-	sender: string,
-	receiver: string,
-	time_control_id: TimeControlID,
-	time_control_name: string,
-	when: DateStringLong
+	sender: PlayerPrivateId,
+	receiver: PlayerPrivateId,
+	time_control_id: TimeControlId,
+	time_control_name: TimeControlName,
+	when: DateYYYYMMDDHHmmssSSS
 ): Challenge {
 	debug(log_now(), 'Adding a new challenge...');
 
 	let mem = ChallengesManager.get_instance();
-	const new_id: string = mem.new_challenge_id();
+	const new_id = mem.new_challenge_id();
 
 	const c = new_challenge(new_id, title, sender, receiver, time_control_id, time_control_name, when);
 
@@ -101,7 +110,7 @@ export function challenge_send_new(
 export function challenge_accept(c: Challenge): void {
 	debug(log_now(), `Accepting challenge '${c.id}'`);
 
-	c.when_challenge_accepted = log_now();
+	c.when_challenge_accepted = toDateYYYYMMDDHHmmssSSS(log_now());
 
 	const challenge_dir = EnvironmentManager.get_instance().get_dir_challenges();
 	const challenge_file = path.join(challenge_dir, c.id);
@@ -134,10 +143,10 @@ export function challenge_decline(c: Challenge): void {
  */
 export function challenge_set_result(
 	c: Challenge,
-	by: string,
-	when: DateStringLong,
-	white: string,
-	black: string,
+	by: PlayerPrivateId,
+	when: DateYYYYMMDDHHmmssSSS,
+	white: PlayerPrivateId,
+	black: PlayerPrivateId,
 	result: GameResult
 ): void {
 	debug(log_now(), `Set the result of the challenge '${c.id}'`);
@@ -158,21 +167,21 @@ export function challenge_set_result(
 export function challenge_agree_result(c: Challenge): void {
 	debug(log_now(), `Agree to result of challenge '${c.id}'...`);
 
-	if (!isDefined(c.when_result_set)) {
+	if (isNotDefined(c.when_result_set)) {
 		debug(log_now(), `Date 'when_result_set' is not defined`);
 		return;
 	}
-	if (!isDefined(c.white) || !isDefined(c.black)) {
+	if (isNotDefined(c.white) || isNotDefined(c.black)) {
 		debug(log_now(), `Player 'white' or 'black' is not defined.`);
 		debug(log_now(), `    White: '${c.white}'.`);
 		debug(log_now(), `    Black: '${c.black}'.`);
 		return;
 	}
-	if (!isDefined(c.result) || !c.result_was_set) {
+	if (isNotDefined(c.result) || !c.result_was_set) {
 		debug(log_now(), `Result is not set.`);
 		return;
 	}
-	if (!isDefined(c.result) || !c.result_was_set) {
+	if (isNotDefined(c.result) || !c.result_was_set) {
 		debug(log_now(), `Result is not set.`);
 		return;
 	}
@@ -192,16 +201,10 @@ export function challenge_agree_result(c: Challenge): void {
 	const black = mem.get_user_by_username(c.black) as User;
 
 	const rand_milli = `${Math.floor(Math.random() * 999)}`;
-	game_add_new(
-		c.title,
-		white,
-		black,
-		c.result,
-		c.time_control_id,
-		c.time_control_name,
-		split[0],
+	const date = toDateHHmmssSSS(
 		split[1] + ':' + (rand_milli.length == 1 ? '00' : rand_milli.length == 2 ? '0' : '') + rand_milli
 	);
+	game_add_new(c.title, white, black, c.result, c.time_control_id, c.time_control_name, split[0], date);
 
 	{
 		debug(log_now(), `    Deleting the challenge from the memory...`);

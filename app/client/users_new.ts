@@ -22,14 +22,16 @@ Full source code of elo-chess-tracker:
 import 'htmx.org';
 
 import { message_from_response, server_call } from '@client/action';
-import { isDefined } from '@common/utils/is_defined';
+import { isNotDefined } from '@common/utils/is_defined';
 import { UserRole, all_user_roles, array_string_to_roles, user_role_to_string } from '@common/models/user_role';
 import { Routes } from '@common/routes';
+import { toPlayerPrivateId } from '@common/models/player';
+import { toUserGivenName } from '@common/models/user';
 
 async function submit_new_user_clicked(_event: any) {
 	// username box
 	const _username_box = document.getElementById('username_box');
-	if (!isDefined(_username_box)) {
+	if (isNotDefined(_username_box)) {
 		console.log("Element 'username_box' does not exist.");
 		return;
 	}
@@ -37,7 +39,7 @@ async function submit_new_user_clicked(_event: any) {
 
 	// first_name box
 	const _box_first_name = document.getElementById('box_first_name');
-	if (!isDefined(_box_first_name)) {
+	if (isNotDefined(_box_first_name)) {
 		console.log("Element 'box_first_name' does not exist.");
 		return;
 	}
@@ -45,7 +47,7 @@ async function submit_new_user_clicked(_event: any) {
 
 	// last_name box
 	const _box_last_name = document.getElementById('box_last_name');
-	if (!isDefined(_box_last_name)) {
+	if (isNotDefined(_box_last_name)) {
 		console.log("Element 'box_last_name' does not exist.");
 		return;
 	}
@@ -53,7 +55,7 @@ async function submit_new_user_clicked(_event: any) {
 
 	// password box
 	const _password_box = document.getElementById('password_box');
-	if (!isDefined(_password_box)) {
+	if (isNotDefined(_password_box)) {
 		console.log("Element 'password_box' does not exist.");
 		return;
 	}
@@ -71,7 +73,7 @@ async function submit_new_user_clicked(_event: any) {
 		}
 	});
 	const selected_roles = array_string_to_roles(selected_roles_str);
-	if (!isDefined(selected_roles)) {
+	if (isNotDefined(selected_roles)) {
 		return;
 	}
 
@@ -98,17 +100,17 @@ async function submit_new_user_clicked(_event: any) {
 		return;
 	}
 
-	if (!isDefined(username)) {
+	if (isNotDefined(username)) {
 		alert('username was not given');
 		return;
 	}
 
 	const response = await server_call(Routes.USER_CREATE, {
-		u: username,
-		fn: firstname,
-		ln: lastname,
+		u: toPlayerPrivateId(username),
+		fn: toUserGivenName(firstname),
+		ln: toUserGivenName(lastname),
 		r: selected_roles,
-		p: password
+		password: password
 	});
 	if (response.status === 'Error') {
 		alert(message_from_response(response));

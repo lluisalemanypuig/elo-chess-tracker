@@ -26,13 +26,13 @@ Contact:
 import Debug from 'debug';
 const debug = Debug(`ELO_CHESS_TRACKER:io`);
 
-import { log_now } from '@server/utils/time';
+import { log_now } from '@app/common/utils/time';
 import { z } from 'zod';
-import { isDefined } from '@common/utils/is_defined';
+import { isNotDefined } from '@common/utils/is_defined';
 
 export function read_schema<T extends z.ZodTypeAny>(schema: T, str: string): z.output<T> | null {
 	const parse = JSON.parse(str);
-	if (!isDefined) {
+	if (isNotDefined(parse)) {
 		debug(log_now(), `JSON Failed to parse schema.`);
 		return null;
 	}
@@ -117,7 +117,7 @@ export function read_json_array_string<T>(
 		}
 
 		const conv = conversion(obj);
-		if (!isDefined(conv)) {
+		if (isNotDefined(conv)) {
 			debug(log_now(), `JSON object could not be converted to object of type T`);
 			return null;
 		}

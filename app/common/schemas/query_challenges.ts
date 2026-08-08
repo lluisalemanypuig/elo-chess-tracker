@@ -24,13 +24,20 @@ Contact:
 */
 
 import { z } from 'zod';
+import { PlayerPrivateIdSchema } from '@common/models/player';
+import { UserGivenNameSchema } from '@common/models/user';
+import { ChallengeIdSchema } from '@common/models/challenge';
+import { TimeControlNameSchema } from '@common/models/time_control';
+import { DateYYYYMMDDHHmmssSSSSchema } from '@app/common/utils/time';
+
+// Routes.QUERY_CHALLENGE_RECEIVED
 
 export const QueryChallengesReceivedOutputSingleSchema = z.object({
-	id: z.string(),
+	id: ChallengeIdSchema,
 	title: z.string(),
-	sent_by: z.string(),
-	sent_when: z.string(), // DateStringLongMillis
-	time_control_name: z.string(),
+	sent_by: UserGivenNameSchema,
+	sent_when: DateYYYYMMDDHHmmssSSSSchema,
+	time_control_name: TimeControlNameSchema,
 	can_be_declined: z.boolean()
 });
 
@@ -40,14 +47,14 @@ export const QueryChallengesReceivedOutputSchema = z.array(QueryChallengesReceiv
 
 export type QueryChallengesReceivedOutput = z.infer<typeof QueryChallengesReceivedOutputSchema>;
 
-// --------------------
+// Routes.QUERY_CHALLENGE_SENT
 
 export const QueryChallengesSentOutputSingleSchema = z.object({
-	id: z.string(),
+	id: ChallengeIdSchema,
 	title: z.string(),
-	sent_to: z.string(),
-	sent_when: z.string(), // DateStringLongMillis
-	time_control_name: z.string(),
+	sent_to: UserGivenNameSchema,
+	sent_when: DateYYYYMMDDHHmmssSSSSchema,
+	time_control_name: TimeControlNameSchema,
 	can_be_declined: z.boolean()
 });
 
@@ -57,18 +64,20 @@ export const QueryChallengesSentOutputSchema = z.array(QueryChallengesSentOutput
 
 export type QueryChallengesSentOutput = z.infer<typeof QueryChallengesSentOutputSchema>;
 
-// --------------------
+// Routes.QUERY_CHALLENGE_PENDING_RESULT
 
 export const QueryChallengesPendingResultOutputSingleSchema = z.object({
-	id: z.string(),
+	id: ChallengeIdSchema,
 	title: z.string(),
-	sent_by_name: z.string(),
-	sent_by_username: z.string(),
-	sent_to_name: z.string(),
-	sent_to_username: z.string(),
-	opponent: z.string(),
-	sent_when: z.string(), // DateStringLongMillis
-	time_control_name: z.string()
+	sent_by_name: UserGivenNameSchema,
+	/// TODO: use user public IDs
+	sent_by_username: PlayerPrivateIdSchema,
+	sent_to_name: UserGivenNameSchema,
+	/// TODO: use user public IDs
+	sent_to_username: PlayerPrivateIdSchema,
+	opponent: UserGivenNameSchema,
+	sent_when: DateYYYYMMDDHHmmssSSSSchema,
+	time_control_name: TimeControlNameSchema
 });
 
 export type QueryChallengesPendingResultOutputSingle = z.infer<typeof QueryChallengesPendingResultOutputSingleSchema>;
@@ -77,17 +86,17 @@ export const QueryChallengesPendingResultOutputSchema = z.array(QueryChallengesP
 
 export type QueryChallengesPendingResultOutput = z.infer<typeof QueryChallengesPendingResultOutputSchema>;
 
-// --------------------
+// Routes.QUERY_CHALLENGE_CONFIRM_RESULT_OTHER
 
 export const QueryChallengesConfirmResultOtherOutputSingleSchema = z.object({
-	id: z.string(),
+	id: ChallengeIdSchema,
 	title: z.string(),
-	opponent: z.string(),
-	sent_when: z.string(), // DateStringLongMillis
-	white: z.string(),
-	black: z.string(),
+	opponent: UserGivenNameSchema,
+	sent_when: DateYYYYMMDDHHmmssSSSSchema,
+	white: UserGivenNameSchema,
+	black: UserGivenNameSchema,
 	result: z.string(),
-	time_control: z.string()
+	time_control_name: TimeControlNameSchema
 });
 
 export type QueryChallengesConfirmResultOtherOutputSingle = z.infer<
@@ -100,17 +109,17 @@ export const QueryChallengesConfirmResultOtherOutputSchema = z.array(
 
 export type QueryChallengesConfirmResultOtherOutput = z.infer<typeof QueryChallengesConfirmResultOtherOutputSchema>;
 
-// --------------------
+// Routes.QUERY_CHALLENGE_CONFIRM_RESULT_SELF
 
 export const QueryChallengesConfirmResultSelfOutputSingleSchema = z.object({
-	id: z.string(),
+	id: ChallengeIdSchema,
 	title: z.string(),
-	opponent: z.string(),
-	sent_when: z.string(), // DateStringLongMillis
-	white: z.string(),
-	black: z.string(),
+	opponent: UserGivenNameSchema,
+	sent_when: DateYYYYMMDDHHmmssSSSSchema,
+	white: UserGivenNameSchema,
+	black: UserGivenNameSchema,
 	result: z.string(),
-	time_control: z.string()
+	time_control_name: TimeControlNameSchema
 });
 
 export type QueryChallengesConfirmResultSelfOutputSingle = z.infer<

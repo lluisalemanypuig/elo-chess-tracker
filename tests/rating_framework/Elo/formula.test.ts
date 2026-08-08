@@ -23,25 +23,35 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { Game } from '@common/models/game';
+import { toPlayerPrivateId } from '@common/models/player';
+import { toTimeControlId, toTimeControlName } from '@common/models/time_control';
+import { Game, toGameId } from '@common/models/game';
 import { EloRating } from '@common/models/rating_framework/Elo/rating';
 import { Elo_player_vs_player } from '@server/rating_framework/Elo/formula';
+import { toDateYYYYMMDDHHmmss, toDateYYYYMMDDHHmmssSSS } from '@app/common/utils/time';
+
+const Classical = toTimeControlId('Classical');
+
+const Rapid = toTimeControlId('Rapid');
+
+const Blitz = toTimeControlId('Blitz');
+const Blitz5p3 = toTimeControlName('Blitz (5 + 3)');
 
 describe('Simple games', () => {
 	test('white_wins', () => {
 		const bW = new EloRating(1500, 0, 0, 0, 0, 40, false);
 		const bB = new EloRating(1500, 0, 0, 0, 0, 40, false);
 		const game = new Game(
-			'01',
+			toGameId('01'),
 			'sample',
-			'W',
+			toPlayerPrivateId('W'),
 			bW,
-			'B',
+			toPlayerPrivateId('B'),
 			bB,
 			'white_wins',
-			'blitz',
-			'Blitz (5+3)',
-			'2024-12-28..16:41:00'
+			Blitz,
+			Blitz5p3,
+			toDateYYYYMMDDHHmmssSSS('2024-12-28..16:41:00')
 		);
 
 		const [aW, aB] = Elo_player_vs_player(game);
@@ -64,7 +74,18 @@ describe('Simple games', () => {
 	test('draw', () => {
 		const bW = new EloRating(1500, 0, 0, 0, 0, 40, false);
 		const bB = new EloRating(1500, 0, 0, 0, 0, 40, false);
-		const game = new Game('01', 'sample', 'W', bW, 'B', bB, 'draw', 'blitz', 'Blitz (5+3)', '2024-12-28..16:41:00');
+		const game = new Game(
+			toGameId('01'),
+			'sample',
+			toPlayerPrivateId('W'),
+			bW,
+			toPlayerPrivateId('B'),
+			bB,
+			'draw',
+			Blitz,
+			Blitz5p3,
+			toDateYYYYMMDDHHmmssSSS('2024-12-28..16:41:00')
+		);
 
 		const [aW, aB] = Elo_player_vs_player(game);
 
@@ -85,16 +106,16 @@ describe('Simple games', () => {
 		const bW = new EloRating(1500, 0, 0, 0, 0, 40, false);
 		const bB = new EloRating(1500, 0, 0, 0, 0, 40, false);
 		const game = new Game(
-			'01',
+			toGameId('01'),
 			'sample',
-			'W',
+			toPlayerPrivateId('W'),
 			bW,
-			'B',
+			toPlayerPrivateId('B'),
 			bB,
 			'black_wins',
-			'blitz',
-			'Blitz (5+3)',
-			'2024-12-28..16:41:00'
+			Blitz,
+			Blitz5p3,
+			toDateYYYYMMDDHHmmssSSS('2024-12-28..16:41:00')
 		);
 
 		const [aW, aB] = Elo_player_vs_player(game);
@@ -122,32 +143,32 @@ describe('Series of games', () => {
 
 		while (W.num_games < 29) {
 			const game = new Game(
-				'01',
+				toGameId('01'),
 				'sample',
-				'W',
+				toPlayerPrivateId('W'),
 				W,
-				'B',
+				toPlayerPrivateId('B'),
 				B,
 				'white_wins',
-				'blitz',
-				'Blitz (5+3)',
-				'2024-12-28..16:41:00'
+				Blitz,
+				Blitz5p3,
+				toDateYYYYMMDDHHmmssSSS('2024-12-28..16:41:00')
 			);
 			[W, B] = Elo_player_vs_player(game);
 		}
 		expect(W.K).toBe(40);
 
 		const game = new Game(
-			'01',
+			toGameId('01'),
 			'sample',
-			'W',
+			toPlayerPrivateId('W'),
 			W,
-			'B',
+			toPlayerPrivateId('B'),
 			B,
 			'white_wins',
-			'blitz',
-			'Blitz (5+3)',
-			'2024-12-28..16:41:00'
+			Blitz,
+			Blitz5p3,
+			toDateYYYYMMDDHHmmssSSS('2024-12-28..16:41:00')
 		);
 		[W, B] = Elo_player_vs_player(game);
 
@@ -160,16 +181,16 @@ describe('Series of games', () => {
 
 		while (W.num_games < 30) {
 			const game = new Game(
-				'01',
+				toGameId('01'),
 				'sample',
-				'W',
+				toPlayerPrivateId('W'),
 				W,
-				'B',
+				toPlayerPrivateId('B'),
 				B,
 				'white_wins',
-				'blitz',
-				'Blitz (5+3)',
-				'2024-12-28..16:41:00'
+				Blitz,
+				Blitz5p3,
+				toDateYYYYMMDDHHmmssSSS('2024-12-28..16:41:00')
 			);
 			[W, B] = Elo_player_vs_player(game);
 			B.rating = 2000;
@@ -180,16 +201,16 @@ describe('Series of games', () => {
 
 		while (W.rating < 2400) {
 			const game = new Game(
-				'01',
+				toGameId('01'),
 				'sample',
-				'W',
+				toPlayerPrivateId('W'),
 				W,
-				'B',
+				toPlayerPrivateId('B'),
 				B,
 				'white_wins',
-				'blitz',
-				'Blitz (5+3)',
-				'2024-12-28..16:41:00'
+				Blitz,
+				Blitz5p3,
+				toDateYYYYMMDDHHmmssSSS('2024-12-28..16:41:00')
 			);
 			[W, B] = Elo_player_vs_player(game);
 			B.rating = 2000;
@@ -202,16 +223,16 @@ describe('Series of games', () => {
 
 		while (W.rating > 2200) {
 			const game = new Game(
-				'01',
+				toGameId('01'),
 				'sample',
-				'W',
+				toPlayerPrivateId('W'),
 				W,
-				'B',
+				toPlayerPrivateId('B'),
 				B,
 				'black_wins',
-				'blitz',
-				'Blitz (5+3)',
-				'2024-12-28..16:41:00'
+				Blitz,
+				Blitz5p3,
+				toDateYYYYMMDDHHmmssSSS('2024-12-28..16:41:00')
 			);
 			[W, B] = Elo_player_vs_player(game);
 			B.rating = 2000;
@@ -224,16 +245,16 @@ describe('Series of games', () => {
 
 		while (W.K != 10) {
 			const game = new Game(
-				'01',
+				toGameId('01'),
 				'sample',
-				'W',
+				toPlayerPrivateId('W'),
 				W,
-				'B',
+				toPlayerPrivateId('B'),
 				B,
 				'white_wins',
-				'blitz',
-				'Blitz (5+3)',
-				'2024-12-28..16:41:00'
+				Blitz,
+				Blitz5p3,
+				toDateYYYYMMDDHHmmssSSS('2024-12-28..16:41:00')
 			);
 			[W, B] = Elo_player_vs_player(game);
 			B.rating = 2000;
@@ -244,16 +265,16 @@ describe('Series of games', () => {
 
 		while (W.rating > 2200) {
 			const game = new Game(
-				'01',
+				toGameId('01'),
 				'sample',
-				'W',
+				toPlayerPrivateId('W'),
 				W,
-				'B',
+				toPlayerPrivateId('B'),
 				B,
 				'black_wins',
-				'blitz',
-				'Blitz (5+3)',
-				'2024-12-28..16:41:00'
+				Blitz,
+				Blitz5p3,
+				toDateYYYYMMDDHHmmssSSS('2024-12-28..16:41:00')
 			);
 			[W, B] = Elo_player_vs_player(game);
 			B.rating = 2000;

@@ -25,8 +25,9 @@ Contact:
 
 import { z } from 'zod';
 import { Rating } from '@common/models/rating_framework/rating';
-import { TimeControlID } from '@common/models/time_control';
-import { DateStringLongMillis } from '@server/utils/time';
+import { TimeControlId, TimeControlName } from '@common/models/time_control';
+import { DateYYYYMMDDHHmmssSSS } from '@app/common/utils/time';
+import { PlayerPrivateId } from '@common/models/player';
 
 /// Result of a game
 export const GameResultSchema = z.enum(['white_wins', 'black_wins', 'draw']);
@@ -57,7 +58,17 @@ export function result_from_text_to_value(text: string): GameResult | undefined 
 }
 
 /// A type for game IDs.
-export type GameID = string;
+
+declare const GameIdBrand: unique symbol;
+export type GameIdLocal = string & {
+	readonly [GameIdBrand]: 'GameIdLocal';
+};
+export const GameIdSchema = z.string().brand<'GameIdLocal'>();
+export type GameId = z.infer<typeof GameIdSchema>;
+
+export function toGameId(s: string): GameId {
+	return s as GameId;
+}
 
 export const GameKeys = [
 	'id',
@@ -86,25 +97,25 @@ export const GameKeys = [
  */
 export class Game {
 	/// Identifier of the game
-	public readonly id: GameID;
+	public readonly id: GameId;
 	/// Name of the game
 	public title: string;
 	/// White player username
-	public readonly white: string;
+	public readonly white: PlayerPrivateId;
 	/// White in the state before the game
 	public white_rating: Rating;
 	/// White player username
-	public readonly black: string;
+	public readonly black: PlayerPrivateId;
 	/// White in the state before the game
 	public black_rating: Rating;
 	/// Result of the game
 	public result: GameResult;
 	/// Time control id
-	public time_control_id: TimeControlID;
+	public time_control_id: TimeControlId;
 	/// Time control name (Classical (90 + 30), Blitz (5 + 3), ...)
-	public time_control_name: string;
+	public time_control_name: TimeControlName;
 	/// Date when the game took place
-	public when: DateStringLongMillis;
+	public when: DateYYYYMMDDHHmmssSSS;
 
 	/**
 	 * @brief Constructor
@@ -119,16 +130,16 @@ export class Game {
 	 * @param when Date
 	 */
 	constructor(
-		id: GameID,
+		id: GameId,
 		title: string,
-		white: string,
+		white: PlayerPrivateId,
 		white_rating: Rating,
-		black: string,
+		black: PlayerPrivateId,
 		black_rating: Rating,
 		result: GameResult,
-		time_control_id: TimeControlID,
-		time_control_name: string,
-		when: DateStringLongMillis
+		time_control_id: TimeControlId,
+		time_control_name: TimeControlName,
+		when: DateYYYYMMDDHHmmssSSS
 	) {
 		this.id = id;
 		this.title = title;
@@ -143,7 +154,7 @@ export class Game {
 	}
 
 	/// Is user 'username' in this game?
-	is_user_involved(username: string): boolean {
+	is_user_involved(username: PlayerPrivateId): boolean {
 		return this.white == username || this.black == username;
 	}
 }

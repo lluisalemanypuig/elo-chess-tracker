@@ -25,7 +25,7 @@ Contact:
 
 import { EdgeMetadata, EdgeMetadataSchema } from '@common/models/graph/edge_metadata';
 import { read_schema } from '@common/io/generic';
-import { isDefined } from '@common/utils/is_defined';
+import { isNotDefined } from '@common/utils/is_defined';
 
 /**
  * @brief Parses a JSON string and returns an EdgeMetadata.
@@ -34,7 +34,7 @@ import { isDefined } from '@common/utils/is_defined';
  */
 export function edge_metadata_from_string(str: string): EdgeMetadata | null {
 	const data = read_schema(EdgeMetadataSchema, str);
-	if (!isDefined(data)) {
+	if (isNotDefined(data)) {
 		return null;
 	}
 	return new EdgeMetadata(data.num_games_won, data.num_games_drawn, data.num_games_lost);

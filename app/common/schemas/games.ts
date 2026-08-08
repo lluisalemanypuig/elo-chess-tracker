@@ -24,37 +24,48 @@ Contact:
 */
 
 import { z } from 'zod';
-import { GameResultSchema } from '@common/models/game';
+import { GameIdSchema, GameResultSchema } from '@common/models/game';
+import { PlayerPublicIdSchema } from '@common/models/player';
+import { TimeControlIdSchema, TimeControlNameSchema } from '@common/models/time_control';
+import { DateYYYYMMDDSchema, DateHHmmssSSSSchema } from '@app/common/utils/time';
+
+// Routes.GAME_CREATE
 
 export const GameCreateInputSchema = z.object({
-	w: z.number().gte(0),
-	b: z.number().gte(0),
+	white: PlayerPublicIdSchema,
+	black: PlayerPublicIdSchema,
 	title: z.string(),
-	r: GameResultSchema,
-	tc_i: z.string(),
-	tc_n: z.string(),
-	d: z.string(),
-	t: z.string()
+	result: GameResultSchema,
+	time_control_id: TimeControlIdSchema,
+	time_control_name: TimeControlNameSchema,
+	whenCreated: DateYYYYMMDDSchema,
+	timeCreated: DateHHmmssSSSSchema
 });
 
 export type GameCreateInput = z.infer<typeof GameCreateInputSchema>;
 
+// Routes.GAME_EDIT_RESULT
+
 export const GameEditResultInputSchema = z.object({
-	id: z.string(),
+	id: GameIdSchema,
 	new_result: GameResultSchema
 });
 
 export type GameEditResultInput = z.infer<typeof GameEditResultInputSchema>;
 
+// Routes.GAME_EDIT_TITLE
+
 export const GameEditTitleInputSchema = z.object({
-	id: z.string(),
+	id: GameIdSchema,
 	title: z.string()
 });
 
 export type GameEditTitleInput = z.infer<typeof GameEditTitleInputSchema>;
 
+// Routes.GAME_DELETE
+
 export const GameDeleteInputSchema = z.object({
-	id: z.string()
+	id: GameIdSchema
 });
 
 export type GameDeleteInput = z.infer<typeof GameDeleteInputSchema>;

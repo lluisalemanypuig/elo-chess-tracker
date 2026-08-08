@@ -25,10 +25,23 @@ Contact:
 
 import { RatingSystemManager } from '@server/managers/rating_system_manager';
 import { initialize_rating_functions, initialize_rating_time_controls } from '@server/managers/rating_system';
-
 import { Elo_player_vs_player } from '@server/rating_framework/Elo/formula';
 import { new_rating_Elo } from '@common/models/rating_framework/Elo/rating';
 import { rating_from_string_Elo } from '@common/io/ratings/Elo/rating';
+import { toTimeControlId, toTimeControlName } from '@common/models/time_control';
+
+const Classical = toTimeControlId('Classical');
+const Classical90p30 = toTimeControlName('Classical (90 + 30)');
+
+const Rapid = toTimeControlId('Rapid');
+const Rapid15p10 = toTimeControlName('Rapid (15 + 10)');
+const Rapid12p5 = toTimeControlName('Rapid (12 + 5)');
+const Rapid10p0 = toTimeControlName('Rapid (10 + 0)');
+
+const Blitz = toTimeControlId('Blitz');
+const Blitz5p3 = toTimeControlName('Blitz (5 + 3)');
+const Blitz5p0 = toTimeControlName('Blitz (5 + 0)');
+const Blitz3p2 = toTimeControlName('Blitz (3 + 2)');
 
 describe('Rating System Manager', () => {
 	test('Initialization of functions (Elo)', () => {
@@ -47,35 +60,35 @@ describe('Rating System Manager', () => {
 		rating.clear();
 
 		initialize_rating_time_controls([
-			{ id: 'classical', name: 'Classical (90 + 30)' },
-			{ id: 'rapid', name: 'Rapid (15 + 10)' },
-			{ id: 'rapid', name: 'Rapid (12 + 5)' },
-			{ id: 'rapid', name: 'Rapid (12 + 0)' },
-			{ id: 'blitz', name: 'Blitz (5 + 3)' },
-			{ id: 'blitz', name: 'Blitz (5 + 0)' },
-			{ id: 'blitz', name: 'Blitz (3 + 2)' }
+			{ id: Classical, name: Classical90p30 },
+			{ id: Rapid, name: Rapid15p10 },
+			{ id: Rapid, name: Rapid12p5 },
+			{ id: Rapid, name: Rapid10p0 },
+			{ id: Blitz, name: Blitz5p3 },
+			{ id: Blitz, name: Blitz5p0 },
+			{ id: Blitz, name: Blitz3p2 }
 		]);
 
 		expect(rating.get_time_controls().length).toBe(7);
 		expect(rating.get_unique_time_controls_ids().length).toBe(3);
-		expect(rating.is_time_control_id_valid('classical')).toBe(true);
-		expect(rating.is_time_control_id_valid('rapid')).toBe(true);
-		expect(rating.is_time_control_id_valid('blitz')).toBe(true);
+		expect(rating.is_time_control_id_valid(Classical)).toBe(true);
+		expect(rating.is_time_control_id_valid(Rapid)).toBe(true);
+		expect(rating.is_time_control_id_valid(Blitz)).toBe(true);
 
 		const unique_ids = rating.get_unique_time_controls_ids();
 		expect(
 			unique_ids.findIndex((val: string): boolean => {
-				return val == 'classical';
+				return val == Classical;
 			})
 		).not.toEqual(-1);
 		expect(
 			unique_ids.findIndex((val: string): boolean => {
-				return val == 'rapid';
+				return val == Rapid;
 			})
 		).not.toEqual(-1);
 		expect(
 			unique_ids.findIndex((val: string): boolean => {
-				return val == 'blitz';
+				return val == Blitz;
 			})
 		).not.toEqual(-1);
 	});

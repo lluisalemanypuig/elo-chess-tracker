@@ -27,11 +27,11 @@ import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:server_home');
 import { Request, Response } from 'express';
 
-import { log_now } from '@server/utils/time';
+import { log_now } from '@app/common/utils/time';
 import { is_user_logged_in } from '@server/managers/session';
 import { ConfigurationManager } from '@server/managers/configuration_manager';
 import { get_execution_directory } from '@server/managers/environment_manager';
-import { isDefined } from '@common/utils/is_defined';
+import { isDefined, isNotDefined } from '@common/utils/is_defined';
 import { Routes } from '@common/routes';
 import { safe_parse_request_cookies, parse_schema } from '@server/utils/schemas';
 import { AuthenticationInputSchema } from '@common/schemas/authentication';
@@ -84,7 +84,7 @@ export async function get_page_home(req: Request, res: Response) {
 	}
 	const session = session_parse.data;
 	const r = is_user_logged_in(session);
-	if (!isDefined(r[2])) {
+	if (isNotDefined(r[2])) {
 		debug(log_now(), `    User ${session.username} is not logged in.`);
 		res.status(401).send(r[1]);
 		return;
