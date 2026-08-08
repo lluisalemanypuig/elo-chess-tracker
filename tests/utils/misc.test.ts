@@ -23,7 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { any, interleave_strings } from '@server/utils/misc';
+import { any, interleave_strings } from '@app/server/utils/misc';
 
 describe('Interleave strings', () => {
 	test('Empty strings', () => {

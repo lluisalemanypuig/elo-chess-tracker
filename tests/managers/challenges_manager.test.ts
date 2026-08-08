@@ -24,8 +24,8 @@ Contact:
 */
 
 import { ChallengesManager } from '@server/managers/challenges_manager';
-import { new_challenge } from '@common/models/challenge';
-import { number_to_string } from '@server/utils/misc';
+import { new_challenge, toChallengeId } from '@common/models/challenge';
+import { number_to_string } from '@app/server/utils/misc';
 import { toPlayerPrivateId } from '@common/models/player';
 
 describe('Challenges Manager', () => {
@@ -33,11 +33,14 @@ describe('Challenges Manager', () => {
 		let challenges = ChallengesManager.get_instance();
 		challenges.clear();
 
+		const id00001 = toChallengeId('00001');
+		const id00002 = toChallengeId('00002');
+
 		expect(challenges.get_max_challenge_id()).toBe(0);
 		expect(challenges.num_challenges()).toBe(0);
 
 		const c = new_challenge(
-			'00001',
+			id00001,
 			'sample',
 			toPlayerPrivateId('a'),
 			toPlayerPrivateId('b'),
@@ -46,10 +49,10 @@ describe('Challenges Manager', () => {
 			'2025-01-07..17:49:20:000'
 		);
 		expect(challenges.get_challenge_index(c)).toBe(-1);
-		expect(challenges.get_challenge_index_by_id('00001')).toBe(-1);
-		expect(challenges.get_challenge_index_by_id('00002')).toBe(-1);
-		expect(challenges.get_challenge_by_id('00001')).toBe(undefined);
-		expect(challenges.get_challenge_by_id('00002')).toBe(undefined);
+		expect(challenges.get_challenge_index_by_id(id00001)).toBe(-1);
+		expect(challenges.get_challenge_index_by_id(id00002)).toBe(-1);
+		expect(challenges.get_challenge_by_id(id00001)).toBe(undefined);
+		expect(challenges.get_challenge_by_id(id00002)).toBe(undefined);
 		expect(challenges.get_challenge_at(0)).toBe(undefined);
 		expect(challenges.get_challenge_at(1)).toBe(undefined);
 	});

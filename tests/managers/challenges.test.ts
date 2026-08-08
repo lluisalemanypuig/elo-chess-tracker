@@ -42,8 +42,8 @@ import {
 	challenge_set_retrieve,
 	challenge_unset_result
 } from '@server/managers/challenges';
-import { number_to_string } from '@server/utils/misc';
-import { Challenge } from '@common/models/challenge';
+import { number_to_string } from '@app/server/utils/misc';
+import { Challenge, ChallengeId, toChallengeId } from '@common/models/challenge';
 import { toUserGivenName, User } from '@common/models/user';
 import { challenge_from_string } from '@common/io/challenge';
 import { UsersManager } from '@server/managers/users_manager';
@@ -131,6 +131,11 @@ function user_retrieve(username: PlayerPrivateId): User | undefined {
 	return UsersManager.get_instance().get_user_by_username(username);
 }
 
+function numberToChallengeId(n: number): ChallengeId {
+	const s = number_to_string(n);
+	return toChallengeId(s);
+}
+
 describe('Check initialization', () => {
 	test('In an empty server', async () => {
 		await run_command('./tests/initialize_empty.sh');
@@ -141,10 +146,10 @@ describe('Check initialization', () => {
 		expect(challenges.num_challenges()).toBe(0);
 		expect(challenges.get_max_challenge_id()).toBe(0);
 		expect(challenge_set_retrieve()).toEqual([]);
-		expect(challenges.get_challenge_by_id(number_to_string(1))).toEqual(undefined);
-		expect(challenges.get_challenge_by_id(number_to_string(2))).toEqual(undefined);
-		expect(challenges.get_challenge_index_by_id(number_to_string(1))).toEqual(-1);
-		expect(challenges.get_challenge_index_by_id(number_to_string(2))).toEqual(-1);
+		expect(challenges.get_challenge_by_id(numberToChallengeId(1))).toEqual(undefined);
+		expect(challenges.get_challenge_by_id(numberToChallengeId(2))).toEqual(undefined);
+		expect(challenges.get_challenge_index_by_id(numberToChallengeId(1))).toEqual(-1);
+		expect(challenges.get_challenge_index_by_id(numberToChallengeId(2))).toEqual(-1);
 	});
 });
 
@@ -188,10 +193,10 @@ describe('Check challenge communication', () => {
 			'2025-01-10..20:38:15:000'
 		);
 
-		const c_aa_bb_id = number_to_string(1);
-		const c_aa_cc_id = number_to_string(2);
-		const c_aa_dd_id = number_to_string(3);
-		const c_ee_ff_id = number_to_string(4);
+		const c_aa_bb_id = numberToChallengeId(1);
+		const c_aa_cc_id = numberToChallengeId(2);
+		const c_aa_dd_id = numberToChallengeId(3);
+		const c_ee_ff_id = numberToChallengeId(4);
 
 		expect(c_aa_bb.id).toEqual(c_aa_bb_id);
 		expect(c_aa_bb.sent_by).toEqual(aa);
@@ -236,21 +241,21 @@ describe('Check challenge communication', () => {
 		expect(challenges.num_challenges()).toBe(4);
 		expect(challenges.get_max_challenge_id()).toBe(4);
 		expect(challenge_set_retrieve().length).toEqual(4);
-		expect(challenges.get_challenge_by_id(number_to_string(1))).toEqual(c_aa_bb);
-		expect(challenges.get_challenge_by_id(number_to_string(2))).toEqual(c_aa_cc);
-		expect(challenges.get_challenge_by_id(number_to_string(3))).toEqual(c_aa_dd);
-		expect(challenges.get_challenge_by_id(number_to_string(4))).toEqual(c_ee_ff);
-		expect(challenges.get_challenge_index_by_id(number_to_string(1))).not.toEqual(-1);
-		expect(challenges.get_challenge_index_by_id(number_to_string(2))).not.toEqual(-1);
-		expect(challenges.get_challenge_index_by_id(number_to_string(3))).not.toEqual(-1);
-		expect(challenges.get_challenge_index_by_id(number_to_string(4))).not.toEqual(-1);
+		expect(challenges.get_challenge_by_id(numberToChallengeId(1))).toEqual(c_aa_bb);
+		expect(challenges.get_challenge_by_id(numberToChallengeId(2))).toEqual(c_aa_cc);
+		expect(challenges.get_challenge_by_id(numberToChallengeId(3))).toEqual(c_aa_dd);
+		expect(challenges.get_challenge_by_id(numberToChallengeId(4))).toEqual(c_ee_ff);
+		expect(challenges.get_challenge_index_by_id(numberToChallengeId(1))).not.toEqual(-1);
+		expect(challenges.get_challenge_index_by_id(numberToChallengeId(2))).not.toEqual(-1);
+		expect(challenges.get_challenge_index_by_id(numberToChallengeId(3))).not.toEqual(-1);
+		expect(challenges.get_challenge_index_by_id(numberToChallengeId(4))).not.toEqual(-1);
 	});
 
 	test('Accept some challenges', () => {
 		const challenges = ChallengesManager.get_instance();
 
 		for (let i of [3, 4]) {
-			const id = number_to_string(i);
+			const id = numberToChallengeId(i);
 
 			let c = challenges.get_challenge_by_id(id) as Challenge;
 			challenge_accept(c);
@@ -267,7 +272,7 @@ describe('Check challenge communication', () => {
 		const challenges = ChallengesManager.get_instance();
 
 		for (let i of [1, 2]) {
-			const id = number_to_string(i);
+			const id = numberToChallengeId(i);
 
 			let c = challenges.get_challenge_by_id(id) as Challenge;
 			challenge_decline(c);
@@ -285,7 +290,7 @@ describe('Check challenge communication', () => {
 	test('Set result (3)', () => {
 		const challenges = ChallengesManager.get_instance();
 
-		const id = number_to_string(3);
+		const id = numberToChallengeId(3);
 
 		let c = challenges.get_challenge_by_id(id) as Challenge;
 		challenge_set_result(c, aa, '2025-01-10..20:32:11:000', aa, dd, 'white_wins');
@@ -308,7 +313,7 @@ describe('Check challenge communication', () => {
 	test('Set result (4)', () => {
 		const challenges = ChallengesManager.get_instance();
 
-		const id = number_to_string(4);
+		const id = numberToChallengeId(4);
 
 		let c = challenges.get_challenge_by_id(id) as Challenge;
 		challenge_set_result(c, ff, '2025-01-10..20:37:35:000', ee, ff, 'black_wins');
@@ -331,7 +336,7 @@ describe('Check challenge communication', () => {
 	test('Accept result (4)', () => {
 		const challenges = ChallengesManager.get_instance();
 
-		const id = number_to_string(4);
+		const id = numberToChallengeId(4);
 		let c = challenges.get_challenge_by_id(id) as Challenge;
 		expect(c.white).toEqual(ee);
 		expect(c.black).toEqual(ff);
@@ -363,7 +368,7 @@ describe('Check challenge communication', () => {
 		expect(ffUser.get_games('Rapid').length).toBe(0);
 		expect(ffUser.get_games('Blitz').length).toBe(0);
 
-		expect(challenges.get_challenge_by_id(number_to_string(4))).toBe(undefined);
+		expect(challenges.get_challenge_by_id(numberToChallengeId(4))).toBe(undefined);
 
 		const challenge_file = path.join(db_challenges_dir, id);
 		expect(fs.existsSync(challenge_file)).toBe(false);
@@ -372,14 +377,14 @@ describe('Check challenge communication', () => {
 
 		const games = GamesManager.get_instance();
 		expect(games.get_max_game_id()).toEqual('0000000001');
-		const game_file = path.join(db_games_dir, number_to_string(1));
+		const game_file = path.join(db_games_dir, numberToChallengeId(1));
 		expect(fs.existsSync(game_file)).toBe(false);
 	});
 
 	test('Unset result (3)', () => {
 		const challenges = ChallengesManager.get_instance();
 
-		const id = number_to_string(3);
+		const id = numberToChallengeId(3);
 
 		let c = challenges.get_challenge_by_id(id) as Challenge;
 		challenge_unset_result(c);
@@ -402,7 +407,7 @@ describe('Check challenge communication', () => {
 	test('Set result (3)', () => {
 		const challenges = ChallengesManager.get_instance();
 
-		const id = number_to_string(3);
+		const id = numberToChallengeId(3);
 
 		let c = challenges.get_challenge_by_id(id) as Challenge;
 		challenge_set_result(c, aa, '2025-01-10..20:38:45:000', dd, aa, 'black_wins');
@@ -435,7 +440,7 @@ describe('Check initialization and communication', () => {
 	test('Accept result (3)', () => {
 		const challenges = ChallengesManager.get_instance();
 
-		const id = number_to_string(3);
+		const id = numberToChallengeId(3);
 		let c = challenges.get_challenge_by_id(id) as Challenge;
 		expect(c.white).toEqual(dd);
 		expect(c.black).toEqual(aa);
@@ -467,7 +472,7 @@ describe('Check initialization and communication', () => {
 		expect(ffUser.get_games('Rapid').length).toBe(0);
 		expect(ffUser.get_games('Blitz').length).toBe(0);
 
-		expect(challenges.get_challenge_by_id(number_to_string(4))).toBe(undefined);
+		expect(challenges.get_challenge_by_id(numberToChallengeId(4))).toBe(undefined);
 
 		const challenge_file = path.join(db_challenges_dir, id);
 		expect(fs.existsSync(challenge_file)).toBe(false);
@@ -476,7 +481,7 @@ describe('Check initialization and communication', () => {
 
 		const games = GamesManager.get_instance();
 		expect(games.get_max_game_id()).toEqual('0000000002');
-		const game_file = path.join(db_games_dir, number_to_string(1));
+		const game_file = path.join(db_games_dir, numberToChallengeId(1));
 		expect(fs.existsSync(game_file)).toBe(false);
 	});
 });
