@@ -27,7 +27,7 @@ import { EdgeMetadata } from '@common/models/graph/edge_metadata';
 import { Edge } from '@common/models/graph/edge';
 
 import { edge_from_string } from '@common/io/graph/edge';
-import { toPlayerPrivateId } from '@app/common/models/player';
+import { toPlayerPrivateId } from '@common/models/player';
 
 describe('IO conversion', () => {
 	test('string', () => {

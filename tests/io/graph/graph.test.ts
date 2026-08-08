@@ -30,7 +30,7 @@ import { Graph } from '@common/models/graph/graph';
 
 import { graph_from_string, graph_full_to_file } from '@common/io/graph/graph';
 import { isNotDefined } from '@common/utils/is_defined';
-import { toPlayerPrivateId } from '@app/common/models/player';
+import { toPlayerPrivateId } from '@common/models/player';
 
 const A = toPlayerPrivateId('A');
 const B = toPlayerPrivateId('B');

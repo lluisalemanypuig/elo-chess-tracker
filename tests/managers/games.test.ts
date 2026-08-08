@@ -33,7 +33,7 @@ import { ADMIN } from '@common/models/user_role';
 import { run_command } from '@tests/exec_utils';
 import { toPlayerPrivateId } from '@common/models/player';
 import { EnvironmentManager } from '@server/managers/environment_manager';
-import { Game } from '@common/models/game';
+import { Game, toGameId } from '@common/models/game';
 import { toUserGivenName, User } from '@common/models/user';
 import { UsersManager } from '@server/managers/users_manager';
 import { game_array_from_string } from '@common/io/game';
@@ -2133,9 +2133,20 @@ describe('Test graphs metadata before edition', () => {
 	});
 });
 
+const id0000000001 = toGameId('0000000001');
+const id0000000002 = toGameId('0000000002');
+const id0000000008 = toGameId('0000000008');
+const id0000000013 = toGameId('0000000013');
+const id0000000015 = toGameId('0000000015');
+const id0000000020 = toGameId('0000000020');
+const id0000000021 = toGameId('0000000021');
+const id1200003433 = toGameId('1200003433');
+const id1288883433 = toGameId('1288883433');
+const id1299999433 = toGameId('1299999433');
+
 describe('Edition of game results', () => {
 	test('Edit some "Blitz" games', () => {
-		game_edit_result('0000000001', 'black_wins');
+		game_edit_result(id0000000001, 'black_wins');
 
 		expect(aU.get_rating('Blitz').num_won_drawn_lost()).toEqual([8, 1, 4, 3]);
 		expect(bU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 2, 0, 1]);
@@ -2150,7 +2161,7 @@ describe('Edition of game results', () => {
 		expect(eU.get_rating('Classical').num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
 		expect(fU.get_rating('Classical').num_won_drawn_lost()).toEqual([6, 1, 5, 0]);
 
-		game_edit_result('0000000001', 'draw');
+		game_edit_result(id0000000001, 'draw');
 
 		expect(aU.get_rating('Blitz').num_won_drawn_lost()).toEqual([8, 1, 5, 2]);
 		expect(bU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 1, 1, 1]);
@@ -2165,7 +2176,7 @@ describe('Edition of game results', () => {
 		expect(eU.get_rating('Classical').num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
 		expect(fU.get_rating('Classical').num_won_drawn_lost()).toEqual([6, 1, 5, 0]);
 
-		game_edit_result('0000000001', 'draw');
+		game_edit_result(id0000000001, 'draw');
 
 		expect(aU.get_rating('Blitz').num_won_drawn_lost()).toEqual([8, 1, 5, 2]);
 		expect(bU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 1, 1, 1]);
@@ -2180,7 +2191,7 @@ describe('Edition of game results', () => {
 		expect(eU.get_rating('Classical').num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
 		expect(fU.get_rating('Classical').num_won_drawn_lost()).toEqual([6, 1, 5, 0]);
 
-		game_edit_result('0000000002', 'draw');
+		game_edit_result(id0000000002, 'draw');
 
 		expect(aU.get_rating('Blitz').num_won_drawn_lost()).toEqual([8, 1, 5, 2]);
 		expect(bU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 1, 1, 1]);
@@ -2197,7 +2208,7 @@ describe('Edition of game results', () => {
 	});
 
 	test('Edit some "Classical" games', () => {
-		game_edit_result('0000000013', 'black_wins');
+		game_edit_result(id0000000013, 'black_wins');
 
 		expect(aU.get_rating('Blitz').num_won_drawn_lost()).toEqual([8, 1, 5, 2]);
 		expect(bU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 1, 1, 1]);
@@ -2212,7 +2223,7 @@ describe('Edition of game results', () => {
 		expect(eU.get_rating('Classical').num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
 		expect(fU.get_rating('Classical').num_won_drawn_lost()).toEqual([6, 2, 4, 0]);
 
-		game_edit_result('0000000013', 'white_wins');
+		game_edit_result(id0000000013, 'white_wins');
 
 		expect(aU.get_rating('Blitz').num_won_drawn_lost()).toEqual([8, 1, 5, 2]);
 		expect(bU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 1, 1, 1]);
@@ -2227,7 +2238,7 @@ describe('Edition of game results', () => {
 		expect(eU.get_rating('Classical').num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
 		expect(fU.get_rating('Classical').num_won_drawn_lost()).toEqual([6, 1, 4, 1]);
 
-		game_edit_result('0000000013', 'draw');
+		game_edit_result(id0000000013, 'draw');
 
 		expect(aU.get_rating('Blitz').num_won_drawn_lost()).toEqual([8, 1, 5, 2]);
 		expect(bU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 1, 1, 1]);
@@ -2242,7 +2253,7 @@ describe('Edition of game results', () => {
 		expect(eU.get_rating('Classical').num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
 		expect(fU.get_rating('Classical').num_won_drawn_lost()).toEqual([6, 1, 5, 0]);
 
-		game_edit_result('0000000021', 'black_wins');
+		game_edit_result(id0000000021, 'black_wins');
 
 		expect(aU.get_rating('Blitz').num_won_drawn_lost()).toEqual([8, 1, 5, 2]);
 		expect(bU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 1, 1, 1]);
@@ -2456,7 +2467,7 @@ for (let i = 0; i < N; ++i) {
 	describe(`(${i}) Look for a game`, () => {
 		test('"Blitz" games', () => {
 			{
-				const _game = game_find_by_id('0000000001');
+				const _game = game_find_by_id(id0000000001);
 				expect(_game).not.toBe(undefined);
 				const game = _game as Game;
 				expect(game.id).toEqual('0000000001');
@@ -2468,7 +2479,7 @@ for (let i = 0; i < N; ++i) {
 			}
 
 			{
-				const _game = game_find_by_id('0000000002');
+				const _game = game_find_by_id(id0000000002);
 				expect(_game).not.toBe(undefined);
 				const game = _game as Game;
 				expect(game.id).toEqual('0000000002');
@@ -2480,7 +2491,7 @@ for (let i = 0; i < N; ++i) {
 			}
 
 			{
-				const _game = game_find_by_id('0000000020');
+				const _game = game_find_by_id(id0000000020);
 				expect(_game).not.toBe(undefined);
 				const game = _game as Game;
 				expect(game.id).toEqual('0000000020');
@@ -2494,7 +2505,7 @@ for (let i = 0; i < N; ++i) {
 
 		test('"Classical" games', () => {
 			{
-				const _game = game_find_by_id('0000000015');
+				const _game = game_find_by_id(id0000000015);
 				expect(_game).not.toBe(undefined);
 				const game = _game as Game;
 				expect(game.id).toEqual('0000000015');
@@ -2506,7 +2517,7 @@ for (let i = 0; i < N; ++i) {
 			}
 
 			{
-				const _game = game_find_by_id('0000000021');
+				const _game = game_find_by_id(id0000000021);
 				expect(_game).not.toBe(undefined);
 				const game = _game as Game;
 				expect(game.id).toEqual('0000000021');
@@ -2518,7 +2529,7 @@ for (let i = 0; i < N; ++i) {
 			}
 
 			{
-				const _game = game_find_by_id('0000000008');
+				const _game = game_find_by_id(id0000000008);
 				expect(_game).not.toBe(undefined);
 				const game = _game as Game;
 				expect(game.id).toEqual('0000000008');
@@ -2532,17 +2543,17 @@ for (let i = 0; i < N; ++i) {
 
 		test('Nonexistent games', () => {
 			{
-				const _game = game_find_by_id('1200003433');
+				const _game = game_find_by_id(id1200003433);
 				expect(_game).toBe(undefined);
 			}
 
 			{
-				const _game = game_find_by_id('1288883433');
+				const _game = game_find_by_id(id1288883433);
 				expect(_game).toBe(undefined);
 			}
 
 			{
-				const _game = game_find_by_id('1299999433');
+				const _game = game_find_by_id(id1299999433);
 				expect(_game).toBe(undefined);
 			}
 		});

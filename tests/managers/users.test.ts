@@ -37,7 +37,7 @@ import { toUserGivenName, User } from '@common/models/user';
 import { ADMIN, MEMBER, STUDENT, TEACHER, UserRole } from '@common/models/user_role';
 import { clear_server } from '@server/managers/memory/clear';
 import { run_command } from '@tests/exec_utils';
-import { Player, PlayerPrivateId, toPlayerPrivateId } from '@common/models/player';
+import { Player, toPlayerPrivateId } from '@common/models/player';
 import { EloRating } from '@common/models/rating_framework/Elo/rating';
 import { user_from_string } from '@common/io/user';
 import { UsersManager } from '@server/managers/users_manager';

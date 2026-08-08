@@ -38,7 +38,8 @@ import { EdgeMetadata } from '@common/models/graph/edge_metadata';
 import { GraphsManager } from '@server/managers/graphs_manager';
 import { Graph } from '@common/models/graph/graph';
 import { Configuration } from '@common/models/configuration/configuration';
-import { toPlayerPrivateId } from '@app/common/models/player';
+import { toPlayerPrivateId } from '@common/models/player';
+import { toGameId } from '@app/common/models/game';
 
 const configuration: Configuration = {
 	environment: {
@@ -248,15 +249,21 @@ describe('Sequential game creation', () => {
 		expect(fs.existsSync(path.join(blitz_dir, 'e'))).toBe(true);
 	});
 
+	const id0000000001 = toGameId('0000000001');
+	const id0000000002 = toGameId('0000000002');
+	const id0000000003 = toGameId('0000000003');
+	const id0000000004 = toGameId('0000000004');
+	const id0000000005 = toGameId('0000000005');
+
 	test('Delete game 0000000001', () => {
-		expect(() => game_delete('0000000001')).not.toThrow();
+		expect(() => game_delete(id0000000001)).not.toThrow();
 
 		let man = GamesManager.get_instance();
-		expect(man.game_exists('0000000001')).toBe(false);
-		expect(man.game_exists('0000000002')).toBe(true);
-		expect(man.game_exists('0000000003')).toBe(true);
-		expect(man.game_exists('0000000004')).toBe(true);
-		expect(man.game_exists('0000000005')).toBe(true);
+		expect(man.game_exists(id0000000001)).toBe(false);
+		expect(man.game_exists(id0000000002)).toBe(true);
+		expect(man.game_exists(id0000000003)).toBe(true);
+		expect(man.game_exists(id0000000004)).toBe(true);
+		expect(man.game_exists(id0000000005)).toBe(true);
 
 		expect(aU.get_games('Blitz').length).toBe(1);
 		expect(bU.get_games('Blitz').length).toBe(1);
@@ -276,7 +283,6 @@ describe('Sequential game creation', () => {
 		expect(fs.existsSync(path.join(blitz_dir, '2025-01-19'))).toBe(true);
 	});
 
-	/*
 	test('Check "Blitz" graph', () => {
 		const graphs_manager = GraphsManager.get_instance();
 		const g = graphs_manager.get_graph('Blitz') as Graph;
@@ -365,28 +371,28 @@ describe('Sequential game creation', () => {
 	});
 
 	test('Delete game 0000000004', () => {
-		expect(() => game_delete('0000000004')).not.toThrow();
+		expect(() => game_delete(id0000000004)).not.toThrow();
 
 		let man = GamesManager.get_instance();
-		expect(man.game_exists('0000000001')).toBe(false);
-		expect(man.game_exists('0000000002')).toBe(true);
-		expect(man.game_exists('0000000003')).toBe(true);
-		expect(man.game_exists('0000000004')).toBe(false);
-		expect(man.game_exists('0000000005')).toBe(true);
+		expect(man.game_exists(id0000000001)).toBe(false);
+		expect(man.game_exists(id0000000002)).toBe(true);
+		expect(man.game_exists(id0000000003)).toBe(true);
+		expect(man.game_exists(id0000000004)).toBe(false);
+		expect(man.game_exists(id0000000005)).toBe(true);
 
-		expect(a.get_games('Blitz').length).toBe(1);
-		expect(b.get_games('Blitz').length).toBe(1);
-		expect(c.get_games('Blitz').length).toBe(1);
-		expect(d.get_games('Blitz').length).toBe(1);
-		expect(e.get_games('Blitz').length).toBe(1);
-		expect(f.get_games('Blitz').length).toBe(1);
+		expect(aU.get_games('Blitz').length).toBe(1);
+		expect(bU.get_games('Blitz').length).toBe(1);
+		expect(cU.get_games('Blitz').length).toBe(1);
+		expect(dU.get_games('Blitz').length).toBe(1);
+		expect(eU.get_games('Blitz').length).toBe(1);
+		expect(fU.get_games('Blitz').length).toBe(1);
 
-		expect(a.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
-		expect(b.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
-		expect(c.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
-		expect(d.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
-		expect(e.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 1, 0]);
-		expect(f.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 1, 0]);
+		expect(aU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
+		expect(bU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
+		expect(cU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
+		expect(dU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
+		expect(eU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 1, 0]);
+		expect(fU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 1, 0]);
 
 		const blitz_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Blitz');
 		expect(fs.existsSync(path.join(blitz_dir, '2025-01-19'))).toBe(true);
@@ -480,28 +486,28 @@ describe('Sequential game creation', () => {
 	});
 
 	test('Delete game 0000000003', () => {
-		expect(() => game_delete('0000000003')).not.toThrow();
+		expect(() => game_delete(id0000000003)).not.toThrow();
 
 		let man = GamesManager.get_instance();
-		expect(man.game_exists('0000000001')).toBe(false);
-		expect(man.game_exists('0000000002')).toBe(true);
-		expect(man.game_exists('0000000003')).toBe(false);
-		expect(man.game_exists('0000000004')).toBe(false);
-		expect(man.game_exists('0000000005')).toBe(true);
+		expect(man.game_exists(id0000000001)).toBe(false);
+		expect(man.game_exists(id0000000002)).toBe(true);
+		expect(man.game_exists(id0000000003)).toBe(false);
+		expect(man.game_exists(id0000000004)).toBe(false);
+		expect(man.game_exists(id0000000005)).toBe(true);
 
-		expect(a.get_games('Blitz').length).toBe(1);
-		expect(b.get_games('Blitz').length).toBe(1);
-		expect(c.get_games('Blitz').length).toBe(1);
-		expect(d.get_games('Blitz').length).toBe(1);
-		expect(e.get_games('Blitz').length).toBe(0);
-		expect(f.get_games('Blitz').length).toBe(0);
+		expect(aU.get_games('Blitz').length).toBe(1);
+		expect(bU.get_games('Blitz').length).toBe(1);
+		expect(cU.get_games('Blitz').length).toBe(1);
+		expect(dU.get_games('Blitz').length).toBe(1);
+		expect(eU.get_games('Blitz').length).toBe(0);
+		expect(fU.get_games('Blitz').length).toBe(0);
 
-		expect(a.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
-		expect(b.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
-		expect(c.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
-		expect(d.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
-		expect(e.get_rating('Blitz').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
-		expect(f.get_rating('Blitz').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+		expect(aU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
+		expect(bU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
+		expect(cU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
+		expect(dU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
+		expect(eU.get_rating('Blitz').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+		expect(fU.get_rating('Blitz').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
 
 		const blitz_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Blitz');
 		expect(fs.existsSync(path.join(blitz_dir, '2025-01-19'))).toBe(true);
@@ -595,28 +601,28 @@ describe('Sequential game creation', () => {
 	});
 
 	test('Delete game 0000000002', () => {
-		expect(() => game_delete('0000000002')).not.toThrow();
+		expect(() => game_delete(id0000000002)).not.toThrow();
 
 		let man = GamesManager.get_instance();
-		expect(man.game_exists('0000000001')).toBe(false);
-		expect(man.game_exists('0000000002')).toBe(false);
-		expect(man.game_exists('0000000003')).toBe(false);
-		expect(man.game_exists('0000000004')).toBe(false);
-		expect(man.game_exists('0000000005')).toBe(true);
+		expect(man.game_exists(id0000000001)).toBe(false);
+		expect(man.game_exists(id0000000002)).toBe(false);
+		expect(man.game_exists(id0000000003)).toBe(false);
+		expect(man.game_exists(id0000000004)).toBe(false);
+		expect(man.game_exists(id0000000005)).toBe(true);
 
-		expect(a.get_games('Blitz').length).toBe(1);
-		expect(b.get_games('Blitz').length).toBe(1);
-		expect(c.get_games('Blitz').length).toBe(0);
-		expect(d.get_games('Blitz').length).toBe(0);
-		expect(e.get_games('Blitz').length).toBe(0);
-		expect(f.get_games('Blitz').length).toBe(0);
+		expect(aU.get_games('Blitz').length).toBe(1);
+		expect(bU.get_games('Blitz').length).toBe(1);
+		expect(cU.get_games('Blitz').length).toBe(0);
+		expect(dU.get_games('Blitz').length).toBe(0);
+		expect(eU.get_games('Blitz').length).toBe(0);
+		expect(fU.get_games('Blitz').length).toBe(0);
 
-		expect(a.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
-		expect(b.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
-		expect(c.get_rating('Blitz').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
-		expect(d.get_rating('Blitz').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
-		expect(e.get_rating('Blitz').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
-		expect(f.get_rating('Blitz').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+		expect(aU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
+		expect(bU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
+		expect(cU.get_rating('Blitz').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+		expect(dU.get_rating('Blitz').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+		expect(eU.get_rating('Blitz').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+		expect(fU.get_rating('Blitz').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
 
 		const blitz_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Blitz');
 		expect(fs.existsSync(path.join(blitz_dir, '2025-01-19'))).toBe(true);
@@ -710,28 +716,28 @@ describe('Sequential game creation', () => {
 	});
 
 	test('Delete game 0000000005', () => {
-		expect(() => game_delete('0000000005')).not.toThrow();
+		expect(() => game_delete(id0000000005)).not.toThrow();
 
 		let man = GamesManager.get_instance();
-		expect(man.game_exists('0000000001')).toBe(false);
-		expect(man.game_exists('0000000002')).toBe(false);
-		expect(man.game_exists('0000000003')).toBe(false);
-		expect(man.game_exists('0000000004')).toBe(false);
-		expect(man.game_exists('0000000005')).toBe(false);
+		expect(man.game_exists(id0000000001)).toBe(false);
+		expect(man.game_exists(id0000000002)).toBe(false);
+		expect(man.game_exists(id0000000003)).toBe(false);
+		expect(man.game_exists(id0000000004)).toBe(false);
+		expect(man.game_exists(id0000000005)).toBe(false);
 
-		expect(a.get_games('Blitz').length).toBe(0);
-		expect(b.get_games('Blitz').length).toBe(0);
-		expect(c.get_games('Blitz').length).toBe(0);
-		expect(d.get_games('Blitz').length).toBe(0);
-		expect(e.get_games('Blitz').length).toBe(0);
-		expect(f.get_games('Blitz').length).toBe(0);
+		expect(aU.get_games('Blitz').length).toBe(0);
+		expect(bU.get_games('Blitz').length).toBe(0);
+		expect(cU.get_games('Blitz').length).toBe(0);
+		expect(dU.get_games('Blitz').length).toBe(0);
+		expect(eU.get_games('Blitz').length).toBe(0);
+		expect(fU.get_games('Blitz').length).toBe(0);
 
-		expect(a.get_rating('Blitz').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
-		expect(b.get_rating('Blitz').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
-		expect(c.get_rating('Blitz').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
-		expect(d.get_rating('Blitz').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
-		expect(e.get_rating('Blitz').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
-		expect(f.get_rating('Blitz').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+		expect(aU.get_rating('Blitz').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+		expect(bU.get_rating('Blitz').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+		expect(cU.get_rating('Blitz').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+		expect(dU.get_rating('Blitz').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+		expect(eU.get_rating('Blitz').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+		expect(fU.get_rating('Blitz').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
 
 		const blitz_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Blitz');
 		expect(fs.existsSync(path.join(blitz_dir, '2025-01-19'))).toBe(false);
@@ -823,5 +829,4 @@ describe('Sequential game creation', () => {
 		expect(fs.existsSync(path.join(blitz_dir, 'c'))).toBe(false);
 		expect(fs.existsSync(path.join(blitz_dir, 'e'))).toBe(false);
 	});
-	*/
 });

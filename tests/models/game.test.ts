@@ -23,7 +23,8 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { Game } from '@common/models/game';
+import { toPlayerPrivateId } from '@app/common/models/player';
+import { Game, toGameId } from '@common/models/game';
 import { EloRating } from '@common/models/rating_framework/Elo/rating';
 
 describe('Setters and Getters -- Elo', () => {
@@ -31,11 +32,11 @@ describe('Setters and Getters -- Elo', () => {
 		const rW = new EloRating(1500, 0, 0, 0, 0, 40, false);
 		const rB = new EloRating(1500, 0, 0, 0, 0, 40, false);
 		const g = new Game(
-			'1',
+			toGameId('1'),
 			'asdf',
-			'W',
+			toPlayerPrivateId('W'),
 			rW,
-			'B',
+			toPlayerPrivateId('B'),
 			rB,
 			'white_wins',
 			'blitz',
@@ -50,26 +51,26 @@ describe('Setters and Getters -- Elo', () => {
 		expect(g.time_control_id).toEqual('blitz');
 		expect(g.time_control_name).toEqual('Blitz (5 + 3)');
 		expect(g.when).toEqual('2024-12-29..11:15:00');
-		expect(g.is_user_involved('W')).toBe(true);
-		expect(g.is_user_involved('B')).toBe(true);
-		expect(g.is_user_involved('q')).toBe(false);
+		expect(g.is_user_involved(toPlayerPrivateId('W'))).toBe(true);
+		expect(g.is_user_involved(toPlayerPrivateId('B'))).toBe(true);
+		expect(g.is_user_involved(toPlayerPrivateId('q'))).toBe(false);
 	});
 
 	test('Sets', () => {
 		let rW = new EloRating(1500, 0, 0, 0, 0, 40, false);
 		let rB = new EloRating(1500, 0, 0, 0, 0, 40, false);
-		const g = {
-			id: '1',
-			title: 'asdf',
-			white: 'W',
-			white_rating: rW,
-			black: 'B',
-			black_rating: rB,
-			result: 'white_wins',
-			time_control_id: 'blitz',
-			time_control_name: 'Blitz (5 + 3)',
-			when: '2024-12-29..11:15:00'
-		};
+		const g = new Game(
+			toGameId('1'),
+			'asdf',
+			toPlayerPrivateId('W'),
+			rW,
+			toPlayerPrivateId('B'),
+			rB,
+			'white_wins',
+			'blitz',
+			'Blitz (5 + 3)',
+			'2024-12-29..11:15:00'
+		);
 
 		expect(g.result).toEqual('white_wins');
 		g.result = 'black_wins';

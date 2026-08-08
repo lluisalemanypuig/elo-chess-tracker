@@ -48,7 +48,7 @@ import { toUserGivenName, User } from '@common/models/user';
 import { challenge_from_string } from '@common/io/challenge';
 import { UsersManager } from '@server/managers/users_manager';
 import { Configuration } from '@common/models/configuration/configuration';
-import { PlayerPrivateId, toPlayerPrivateId } from '@app/common/models/player';
+import { PlayerPrivateId, toPlayerPrivateId } from '@common/models/player';
 
 const webpage_dir = 'tests/webpage';
 const db_dir = path.join(webpage_dir, 'database');

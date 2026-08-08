@@ -26,7 +26,7 @@ Contact:
 import { clear_server } from '@server/managers/memory/clear';
 import { GraphsManager } from '@server/managers/graphs_manager';
 import { Graph } from '@common/models/graph/graph';
-import { toPlayerPrivateId } from '@app/common/models/player';
+import { toPlayerPrivateId } from '@common/models/player';
 
 describe('Graph manager', () => {
 	clear_server();

@@ -24,7 +24,7 @@ Contact:
 */
 
 import { TimeControlRating } from '@common/models/time_control_rating';
-import { User } from '@common/models/user';
+import { toUserGivenName, User } from '@common/models/user';
 import {
 	USER_ROLE_ASSIGN_ADMIN,
 	USER_ROLE_ASSIGN_MEMBER,
@@ -68,8 +68,8 @@ describe('Elo', () => {
 	test('basic gets', () => {
 		const u = new User(
 			toPlayerPrivateId('user.name'),
-			'First',
-			'Last',
+			toUserGivenName('First'),
+			toUserGivenName('Last'),
 			{ encrypted: 'asdf', iv: 'ivrandom' },
 			[ADMIN, TEACHER],
 			[
@@ -97,8 +97,8 @@ describe('Elo', () => {
 	test('basic sets', () => {
 		let u = new User(
 			toPlayerPrivateId('user.name'),
-			'First',
-			'Last',
+			toUserGivenName('First'),
+			toUserGivenName('Last'),
 			{ encrypted: 'asdf', iv: 'ivrandom' },
 			[ADMIN, TEACHER],
 			[
@@ -116,8 +116,8 @@ describe('Elo', () => {
 		expect(u.roles).toEqual([ADMIN, TEACHER]);
 		expect(u.roles).not.toEqual([TEACHER, ADMIN]);
 
-		u.first_name = 'Perico';
-		u.last_name = 'Palotes';
+		u.first_name = toUserGivenName('Perico');
+		u.last_name = toUserGivenName('Palotes');
 		expect(u.first_name).toEqual('Perico');
 		expect(u.last_name).toEqual('Palotes');
 		expect(u.get_full_name()).toEqual('Perico Palotes');
@@ -129,8 +129,8 @@ describe('Elo', () => {
 	test('Adding games', () => {
 		let u = new User(
 			toPlayerPrivateId('user.name'),
-			'First',
-			'Last',
+			toUserGivenName('First'),
+			toUserGivenName('Last'),
 			{ encrypted: 'asdf', iv: 'ivrandom' },
 			[ADMIN, TEACHER],
 			[
@@ -230,7 +230,15 @@ describe('Actions allowed per user (single role)', () => {
 			member: []
 		});
 
-		const admin = new User(u, 'F', 'L', { encrypted: 'a', iv: 'i' }, [ADMIN], [], []);
+		const admin = new User(
+			u,
+			toUserGivenName('F'),
+			toUserGivenName('L'),
+			{ encrypted: 'a', iv: 'i' },
+			[ADMIN],
+			[],
+			[]
+		);
 
 		const actions = admin.get_actions();
 		expect(actions.length).toBe(2);
@@ -275,7 +283,15 @@ describe('Actions allowed per user (single role)', () => {
 			member: []
 		});
 
-		const teacher = new User(u, 'F', 'L', { encrypted: 'a', iv: 'i' }, [TEACHER], [], []);
+		const teacher = new User(
+			u,
+			toUserGivenName('F'),
+			toUserGivenName('L'),
+			{ encrypted: 'a', iv: 'i' },
+			[TEACHER],
+			[],
+			[]
+		);
 
 		const actions = teacher.get_actions();
 		expect(actions.length).toBe(2);
@@ -320,7 +336,15 @@ describe('Actions allowed per user (single role)', () => {
 			member: []
 		});
 
-		const student = new User(u, 'F', 'L', { encrypted: 'a', iv: 'i' }, [STUDENT], [], []);
+		const student = new User(
+			u,
+			toUserGivenName('F'),
+			toUserGivenName('L'),
+			{ encrypted: 'a', iv: 'i' },
+			[STUDENT],
+			[],
+			[]
+		);
 
 		const actions = student.get_actions();
 		expect(actions.length).toBe(2);
@@ -365,7 +389,15 @@ describe('Actions allowed per user (single role)', () => {
 			member: [USER_CHALLENGE_ADMIN, USER_CHALLENGE_STUDENT]
 		});
 
-		const member = new User(u, 'F', 'L', { encrypted: 'a', iv: 'i' }, [MEMBER], [], []);
+		const member = new User(
+			u,
+			toUserGivenName('F'),
+			toUserGivenName('L'),
+			{ encrypted: 'a', iv: 'i' },
+			[MEMBER],
+			[],
+			[]
+		);
 
 		const actions = member.get_actions();
 		expect(actions.length).toBe(3);
@@ -413,7 +445,15 @@ describe('Actions allowed per user (multiple roles)', () => {
 			member: []
 		});
 
-		const admin_teacher = new User(u, 'F', 'L', { encrypted: 'a', iv: 'i' }, [ADMIN, TEACHER], [], []);
+		const admin_teacher = new User(
+			u,
+			toUserGivenName('F'),
+			toUserGivenName('L'),
+			{ encrypted: 'a', iv: 'i' },
+			[ADMIN, TEACHER],
+			[],
+			[]
+		);
 
 		const actions = admin_teacher.get_actions();
 		expect(actions.length).toBe(2);
@@ -460,7 +500,15 @@ describe('Actions allowed per user (multiple roles)', () => {
 			member: []
 		});
 
-		const admin_student = new User(u, 'F', 'L', { encrypted: 'a', iv: 'i' }, [ADMIN, STUDENT], [], []);
+		const admin_student = new User(
+			u,
+			toUserGivenName('F'),
+			toUserGivenName('L'),
+			{ encrypted: 'a', iv: 'i' },
+			[ADMIN, STUDENT],
+			[],
+			[]
+		);
 
 		const actions = admin_student.get_actions();
 		expect(actions.length).toBe(4);
