@@ -29,11 +29,22 @@ import { GameResult, GameResultSchema } from '@common/models/game';
 import { TimeControlID } from '@common/models/time_control';
 import { PlayerPrivateId, PlayerPrivateIdSchema } from '@common/models/player';
 
-export type ChallengeID = string;
+/// A type for challenge IDs.
+
+declare const ChallengeIdBrand: unique symbol;
+export type ChallengeIdLocal = string & {
+	readonly [ChallengeIdBrand]: 'ChallengeIdLocal';
+};
+export const ChallengeIdSchema = z.string().brand<'ChallengeIdLocal'>();
+export type ChallengeId = z.infer<typeof ChallengeIdSchema>;
+
+export function toChallengeId(s: string): ChallengeId {
+	return s as ChallengeId;
+}
 
 export const ChallengeSchema = z
 	.object({
-		id: z.string() as z.ZodType<ChallengeID>,
+		id: ChallengeIdSchema,
 		/// Name of the game that will result from this challenge
 		title: z.string(),
 		/// The user sending the challenge
@@ -80,7 +91,7 @@ export const ChallengeArraySchema = z.array(ChallengeSchema);
 export type ChallengeArray = z.infer<typeof ChallengeArraySchema>;
 
 export function new_challenge(
-	id: string,
+	id: ChallengeId,
 	title: string,
 	sent_by: PlayerPrivateId,
 	sent_to: PlayerPrivateId,

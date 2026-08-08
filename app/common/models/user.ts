@@ -31,7 +31,7 @@ import { UserAction } from '@common/models/user_action';
 import { UserRoleToUserAction } from '@server/managers/user_role_action';
 import { TimeControlRating } from '@common/models/time_control_rating';
 import { TimeControlID } from '@common/models/time_control';
-import { copyarray } from '@server/utils/misc';
+import { copyarray } from '@app/server/utils/misc';
 import { search_by_key, search_linear_by_key, where_should_be_inserted_by_key } from '@server/utils/searching';
 import { DateStringShort } from '@server/utils/time';
 

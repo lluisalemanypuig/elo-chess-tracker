@@ -26,7 +26,7 @@ Contact:
 import { GameId } from '@common/models/game';
 import { TimeControlID } from '@common/models/time_control';
 import { DateStringShort } from '@server/utils/time';
-import { number_to_string } from '@server/utils/misc';
+import { number_to_string } from '@app/server/utils/misc';
 
 /**
  * @brief The minimal summary of a game.

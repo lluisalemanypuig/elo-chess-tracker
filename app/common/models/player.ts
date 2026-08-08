@@ -25,7 +25,7 @@ Contact:
 
 import { z } from 'zod';
 import { Rating } from '@common/models/rating_framework/rating';
-import { copyarray } from '@server/utils/misc';
+import { copyarray } from '@app/server/utils/misc';
 import { search_linear_by_key } from '@server/utils/searching';
 import { TimeControlID } from '@common/models/time_control';
 import { TimeControlRating } from '@common/models/time_control_rating';

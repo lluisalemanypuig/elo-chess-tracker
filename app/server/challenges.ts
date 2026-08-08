@@ -38,7 +38,7 @@ import {
 	challenge_agree_result
 } from '@server/managers/challenges';
 
-import { ChallengeID } from '@common/models/challenge';
+import { ChallengeId } from '@common/models/challenge';
 import { USER_CHALLENGE } from '@common/models/user_action';
 import { can_user_send_challenge } from '@server/managers/user_relationships';
 import { ChallengesManager } from '@server/managers/challenges_manager';
@@ -253,7 +253,7 @@ export async function post_challenge_set_result(req: Request, res: Response) {
 		return;
 	}
 
-	const challenge_id: ChallengeID = challenge_parse.data.id;
+	const challenge_id: ChallengeId = challenge_parse.data.id;
 	const white_username = challenge_parse.data.white;
 	const black_username = challenge_parse.data.black;
 	const result: GameResult = challenge_parse.data.result;
