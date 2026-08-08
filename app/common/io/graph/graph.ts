@@ -34,6 +34,7 @@ import { edge_array_from_string } from '@common/io/graph/edge';
 import { read_directory } from '@server/utils/read_directory';
 import { isDefined } from '@common/utils/is_defined';
 import { log_now } from '@server/utils/time';
+import { PlayerPrivateId, toPlayerPrivateId } from '@common/models/player';
 
 /**
  * @brief Save a portion of the graph from a file.
@@ -61,7 +62,7 @@ export function neighborhood_to_file(dir: string, username: PlayerPrivateId, edg
  * @param changes The users for which their portion graph is to be saved.
  * @param g The graph to be saved.
  */
-export function graph_to_file(dir: string, changes: string[], g: Graph): void {
+export function graph_to_file(dir: string, changes: PlayerPrivateId[], g: Graph): void {
 	for (const username of changes) {
 		if (g.get_out_degree(username) > 0) {
 			const out = g.get_outgoing_edges(username);
@@ -124,8 +125,9 @@ export function graph_from_string(dir: string): Graph | null {
 			return null;
 		}
 
+		const usernameId = toPlayerPrivateId(username);
 		for (const edge of edge_set) {
-			g.add_edge_raw(username, edge.neighbor, edge);
+			g.add_edge_raw(usernameId, edge.neighbor, edge);
 		}
 	}
 

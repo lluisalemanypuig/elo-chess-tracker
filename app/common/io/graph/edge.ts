@@ -27,13 +27,14 @@ import { Edge, EdgeArraySchema, EdgeSchema } from '@common/models/graph/edge';
 import { read_schema } from '@common/io/generic';
 import { isDefined } from '@common/utils/is_defined';
 import { EdgeMetadata } from '@common/models/graph/edge_metadata';
+import { PlayerPrivateId } from '@common/models/player';
 
 /**
  * @brief Parses a JSON string and returns an Edge.
  * @param str A string with data of an Edge.
  * @returns A new Edge object.
  */
-export function edge_from_string(str: string): Edge | null {
+export function edge_from_string(str: PlayerPrivateId): Edge | null {
 	const data = read_schema(EdgeSchema, str);
 	if (!isDefined(data)) {
 		return null;

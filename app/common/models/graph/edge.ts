@@ -25,10 +25,11 @@ Contact:
 
 import { z } from 'zod';
 import { EdgeMetadataSchema, EdgeMetadata } from '@common/models/graph/edge_metadata';
+import { PlayerPrivateId, PlayerPrivateIdSchema } from '@common/models/player';
 
 export const EdgeSchema = z
 	.object({
-		neighbor: z.string(),
+		neighbor: PlayerPrivateIdSchema,
 		metadata: EdgeMetadataSchema
 	})
 	.strict();
@@ -43,12 +44,12 @@ export const EdgeSchema = z
  */
 export class Edge {
 	/// The id of B (the target of the edge).
-	public neighbor: string;
+	public neighbor: PlayerPrivateId;
 
 	/// The metadata of this edge.
 	public metadata: EdgeMetadata;
 
-	constructor(neigh: string, data: EdgeMetadata) {
+	constructor(neigh: PlayerPrivateId, data: EdgeMetadata) {
 		this.neighbor = neigh;
 		this.metadata = data;
 	}
