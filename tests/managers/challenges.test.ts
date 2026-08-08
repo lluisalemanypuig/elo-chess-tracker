@@ -31,7 +31,7 @@ import { clear_server } from '@server/managers/memory/clear';
 import { server_init_from_data } from '@server/managers/memory/initialization';
 import { ADMIN, MEMBER, STUDENT } from '@common/models/user_role';
 import { user_add_new } from '@server/managers/users';
-import { CHALLENGE_ID_LENGTH, ChallengesManager, numberToChallengeId } from '@server/managers/challenges_manager';
+import { ChallengesManager, numberToChallengeId } from '@server/managers/challenges_manager';
 import { GamesManager } from '@server/managers/games_manager';
 import {
 	challenge_accept,
@@ -42,14 +42,14 @@ import {
 	challenge_set_retrieve,
 	challenge_unset_result
 } from '@server/managers/challenges';
-import { number_to_string } from '@app/server/utils/misc';
-import { Challenge, ChallengeId, toChallengeId } from '@common/models/challenge';
+import { Challenge } from '@common/models/challenge';
 import { toUserGivenName, User } from '@common/models/user';
 import { challenge_from_string } from '@common/io/challenge';
 import { UsersManager } from '@server/managers/users_manager';
 import { Configuration } from '@common/models/configuration/configuration';
 import { PlayerPrivateId, toPlayerPrivateId } from '@common/models/player';
 import { toTimeControlId, toTimeControlName } from '@common/models/time_control';
+import { toDateYYYYMMDDHHmmssSSS } from '@server/utils/time';
 
 const webpage_dir = 'tests/webpage';
 const db_dir = path.join(webpage_dir, 'database');
@@ -173,10 +173,38 @@ describe('Check challenge communication', () => {
 		const challenges = ChallengesManager.get_instance();
 		expect(challenges.get_max_challenge_id()).toBe(0);
 
-		const c_aa_bb = challenge_send_new('sample', aa, bb, Classical, Classical90p30, '2025-01-10..20:38:12:000');
-		const c_aa_cc = challenge_send_new('sample', aa, cc, Classical, Classical90p30, '2025-01-10..20:38:13:000');
-		const c_aa_dd = challenge_send_new('sample', aa, dd, Blitz, Blitz5p3, '2025-01-10..20:38:14:000');
-		const c_ee_ff = challenge_send_new('sample', ee, ff, Classical, Classical90p30, '2025-01-10..20:38:15:000');
+		const c_aa_bb = challenge_send_new(
+			'sample',
+			aa,
+			bb,
+			Classical,
+			Classical90p30,
+			toDateYYYYMMDDHHmmssSSS('2025-01-10..20:38:12:000')
+		);
+		const c_aa_cc = challenge_send_new(
+			'sample',
+			aa,
+			cc,
+			Classical,
+			Classical90p30,
+			toDateYYYYMMDDHHmmssSSS('2025-01-10..20:38:13:000')
+		);
+		const c_aa_dd = challenge_send_new(
+			'sample',
+			aa,
+			dd,
+			Blitz,
+			Blitz5p3,
+			toDateYYYYMMDDHHmmssSSS('2025-01-10..20:38:14:000')
+		);
+		const c_ee_ff = challenge_send_new(
+			'sample',
+			ee,
+			ff,
+			Classical,
+			Classical90p30,
+			toDateYYYYMMDDHHmmssSSS('2025-01-10..20:38:15:000')
+		);
 
 		const c_aa_bb_id = numberToChallengeId(1);
 		const c_aa_cc_id = numberToChallengeId(2);
@@ -278,7 +306,7 @@ describe('Check challenge communication', () => {
 		const id = numberToChallengeId(3);
 
 		let c = challenges.get_challenge_by_id(id) as Challenge;
-		challenge_set_result(c, aa, '2025-01-10..20:32:11:000', aa, dd, 'white_wins');
+		challenge_set_result(c, aa, toDateYYYYMMDDHHmmssSSS('2025-01-10..20:32:11:000'), aa, dd, 'white_wins');
 
 		expect(c.result_set_by).toEqual(aa);
 		expect(c.white).toEqual(aa);
@@ -301,7 +329,7 @@ describe('Check challenge communication', () => {
 		const id = numberToChallengeId(4);
 
 		let c = challenges.get_challenge_by_id(id) as Challenge;
-		challenge_set_result(c, ff, '2025-01-10..20:37:35:000', ee, ff, 'black_wins');
+		challenge_set_result(c, ff, toDateYYYYMMDDHHmmssSSS('2025-01-10..20:37:35:000'), ee, ff, 'black_wins');
 
 		expect(c.result_set_by).toEqual(ff);
 		expect(c.white).toEqual(ee);
@@ -395,7 +423,7 @@ describe('Check challenge communication', () => {
 		const id = numberToChallengeId(3);
 
 		let c = challenges.get_challenge_by_id(id) as Challenge;
-		challenge_set_result(c, aa, '2025-01-10..20:38:45:000', dd, aa, 'black_wins');
+		challenge_set_result(c, aa, toDateYYYYMMDDHHmmssSSS('2025-01-10..20:38:45:000'), dd, aa, 'black_wins');
 
 		expect(c.result_set_by).toEqual(aa);
 		expect(c.white).toEqual(dd);
@@ -473,14 +501,27 @@ describe('Check initialization and communication', () => {
 
 describe('Fast challenge communication', () => {
 	test('New challenge (Blitz) aa -- bb', () => {
-		const c_aa_bb = challenge_send_new('sample', aa, bb, Blitz, Blitz5p3, '2025-01-10..20:38:45:000');
+		const c_aa_bb = challenge_send_new(
+			'sample',
+			aa,
+			bb,
+			Blitz,
+			Blitz5p3,
+			toDateYYYYMMDDHHmmssSSS('2025-01-10..20:38:45:000')
+		);
 		challenge_accept(c_aa_bb);
 
-		expect(() => challenge_set_result(c_aa_bb, ee, '2025-01-10..20:39:15:000', aa, bb, 'black_wins')).toThrow();
-		expect(() => challenge_set_result(c_aa_bb, aa, '2025-01-10..20:39:16:000', dd, aa, 'black_wins')).toThrow();
-		expect(() => challenge_set_result(c_aa_bb, aa, '2025-01-10..20:39:17:000', aa, ee, 'black_wins')).toThrow();
+		expect(() =>
+			challenge_set_result(c_aa_bb, ee, toDateYYYYMMDDHHmmssSSS('2025-01-10..20:39:15:000'), aa, bb, 'black_wins')
+		).toThrow();
+		expect(() =>
+			challenge_set_result(c_aa_bb, aa, toDateYYYYMMDDHHmmssSSS('2025-01-10..20:39:16:000'), dd, aa, 'black_wins')
+		).toThrow();
+		expect(() =>
+			challenge_set_result(c_aa_bb, aa, toDateYYYYMMDDHHmmssSSS('2025-01-10..20:39:17:000'), aa, ee, 'black_wins')
+		).toThrow();
 
-		challenge_set_result(c_aa_bb, aa, '2025-01-10..20:39:20:000', bb, aa, 'black_wins');
+		challenge_set_result(c_aa_bb, aa, toDateYYYYMMDDHHmmssSSS('2025-01-10..20:39:20:000'), bb, aa, 'black_wins');
 		challenge_agree_result(c_aa_bb);
 
 		const aaUser = user_retrieve(aa) as User;
@@ -510,14 +551,27 @@ describe('Fast challenge communication', () => {
 	});
 
 	test('New challenge (Classical) cc -- bb', () => {
-		const c_bb_cc = challenge_send_new('sample', cc, bb, Classical, Classical90p30, '2025-01-10..20:40:00:000');
+		const c_bb_cc = challenge_send_new(
+			'sample',
+			cc,
+			bb,
+			Classical,
+			Classical90p30,
+			toDateYYYYMMDDHHmmssSSS('2025-01-10..20:40:00:000')
+		);
 		challenge_accept(c_bb_cc);
 
-		expect(() => challenge_set_result(c_bb_cc, aa, '2025-01-10..20:39:30:000', bb, cc, 'black_wins')).toThrow();
-		expect(() => challenge_set_result(c_bb_cc, bb, '2025-01-10..20:39:31:000', aa, cc, 'black_wins')).toThrow();
-		expect(() => challenge_set_result(c_bb_cc, bb, '2025-01-10..20:39:32:000', bb, aa, 'black_wins')).toThrow();
+		expect(() =>
+			challenge_set_result(c_bb_cc, aa, toDateYYYYMMDDHHmmssSSS('2025-01-10..20:39:30:000'), bb, cc, 'black_wins')
+		).toThrow();
+		expect(() =>
+			challenge_set_result(c_bb_cc, bb, toDateYYYYMMDDHHmmssSSS('2025-01-10..20:39:31:000'), aa, cc, 'black_wins')
+		).toThrow();
+		expect(() =>
+			challenge_set_result(c_bb_cc, bb, toDateYYYYMMDDHHmmssSSS('2025-01-10..20:39:32:000'), bb, aa, 'black_wins')
+		).toThrow();
 
-		challenge_set_result(c_bb_cc, bb, '2025-01-10..20:39:33:000', bb, cc, 'black_wins');
+		challenge_set_result(c_bb_cc, bb, toDateYYYYMMDDHHmmssSSS('2025-01-10..20:39:33:000'), bb, cc, 'black_wins');
 		challenge_agree_result(c_bb_cc);
 
 		const aaUser = user_retrieve(aa) as User;

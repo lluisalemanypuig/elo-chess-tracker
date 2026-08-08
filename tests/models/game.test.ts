@@ -27,6 +27,7 @@ import { toPlayerPrivateId } from '@common/models/player';
 import { Game, toGameId } from '@common/models/game';
 import { EloRating } from '@common/models/rating_framework/Elo/rating';
 import { toTimeControlId, toTimeControlName } from '@common/models/time_control';
+import { toDateYYYYMMDDHHmmss, toDateYYYYMMDDHHmmssSSS } from '@server/utils/time';
 
 const Blitz = toTimeControlId('Blitz');
 const Blitz5p3 = toTimeControlName('Blitz (5 + 3)');
@@ -45,7 +46,7 @@ describe('Setters and Getters -- Elo', () => {
 			'white_wins',
 			Blitz,
 			Blitz5p3,
-			'2024-12-29..11:15:00'
+			toDateYYYYMMDDHHmmssSSS('2024-12-29..11:15:00')
 		);
 
 		expect(g.id).toEqual('1');
@@ -54,7 +55,7 @@ describe('Setters and Getters -- Elo', () => {
 		expect(g.result).toEqual('white_wins');
 		expect(g.time_control_id).toEqual(Blitz);
 		expect(g.time_control_name).toEqual(Blitz5p3);
-		expect(g.when).toEqual('2024-12-29..11:15:00');
+		expect(g.when).toEqual(toDateYYYYMMDDHHmmss('2024-12-29..11:15:00'));
 		expect(g.is_user_involved(toPlayerPrivateId('W'))).toBe(true);
 		expect(g.is_user_involved(toPlayerPrivateId('B'))).toBe(true);
 		expect(g.is_user_involved(toPlayerPrivateId('q'))).toBe(false);
@@ -73,7 +74,7 @@ describe('Setters and Getters -- Elo', () => {
 			'white_wins',
 			Blitz,
 			Blitz5p3,
-			'2024-12-29..11:15:00'
+			toDateYYYYMMDDHHmmssSSS('2024-12-29..11:15:00')
 		);
 
 		expect(g.result).toEqual('white_wins');

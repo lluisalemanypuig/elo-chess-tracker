@@ -25,19 +25,12 @@ Contact:
 
 import { ChallengesManager, numberToChallengeId } from '@server/managers/challenges_manager';
 import { new_challenge, toChallengeId } from '@common/models/challenge';
-import { number_to_string } from '@app/server/utils/misc';
 import { toPlayerPrivateId } from '@common/models/player';
 import { toTimeControlId, toTimeControlName } from '@common/models/time_control';
+import { toDateYYYYMMDDHHmmssSSS } from '@server/utils/time';
 
 const Classical = toTimeControlId('Classical');
 const Classical90p30 = toTimeControlName('Classical (90 + 30)');
-
-const Rapid = toTimeControlId('Rapid');
-const Rapid12p5 = toTimeControlName('Rapid (12 + 5)');
-const Rapid10p0 = toTimeControlName('Rapid (10 + 0)');
-
-const Blitz = toTimeControlId('Blitz');
-const Blitz5p3 = toTimeControlName('Blitz (5 + 3)');
 
 describe('Challenges Manager', () => {
 	test('Empty manager', () => {
@@ -57,7 +50,7 @@ describe('Challenges Manager', () => {
 			toPlayerPrivateId('b'),
 			Classical,
 			Classical90p30,
-			'2025-01-07..17:49:20:000'
+			toDateYYYYMMDDHHmmssSSS('2025-01-07..17:49:20:000')
 		);
 		expect(challenges.get_challenge_index(c)).toBe(-1);
 		expect(challenges.get_challenge_index_by_id(id00001)).toBe(-1);
@@ -92,7 +85,7 @@ describe('Challenges Manager', () => {
 			toPlayerPrivateId('b'),
 			Classical,
 			Classical90p30,
-			'yesterday'
+			toDateYYYYMMDDHHmmssSSS('yesterday')
 		);
 
 		const today_id = challenges.new_challenge_id();
@@ -104,7 +97,7 @@ describe('Challenges Manager', () => {
 			toPlayerPrivateId('b'),
 			Classical,
 			Classical90p30,
-			'today__'
+			toDateYYYYMMDDHHmmssSSS('today')
 		);
 
 		const tomorrow_id = challenges.new_challenge_id();
@@ -116,7 +109,7 @@ describe('Challenges Manager', () => {
 			toPlayerPrivateId('b'),
 			Classical,
 			Classical90p30,
-			'tomorrow'
+			toDateYYYYMMDDHHmmssSSS('tomorrow')
 		);
 
 		challenges.add_challenge(yesterday);
@@ -155,7 +148,7 @@ describe('Challenges Manager', () => {
 			toPlayerPrivateId('b'),
 			Classical,
 			Classical90p30,
-			'yesterday'
+			toDateYYYYMMDDHHmmssSSS('yesterday')
 		);
 
 		const today_id = challenges.new_challenge_id();
@@ -167,7 +160,7 @@ describe('Challenges Manager', () => {
 			toPlayerPrivateId('b'),
 			Classical,
 			Classical90p30,
-			'today__'
+			toDateYYYYMMDDHHmmssSSS('today')
 		);
 
 		const tomorrow_id = challenges.new_challenge_id();
@@ -179,7 +172,7 @@ describe('Challenges Manager', () => {
 			toPlayerPrivateId('b'),
 			Classical,
 			Classical90p30,
-			'tomorrow'
+			toDateYYYYMMDDHHmmssSSS('tomorrow')
 		);
 
 		const day_after_tomorrow_id = challenges.new_challenge_id();
@@ -191,7 +184,7 @@ describe('Challenges Manager', () => {
 			toPlayerPrivateId('b'),
 			Classical,
 			Classical90p30,
-			'day_after_tomorrow'
+			toDateYYYYMMDDHHmmssSSS('day_after_tomorrow')
 		);
 
 		challenges.add_challenge(yesterday);

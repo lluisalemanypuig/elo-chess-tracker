@@ -23,8 +23,14 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { number_to_string } from '@app/server/utils/misc';
-import { long_date_to_short_and_tiny_date, long_date_to_short_date, long_date_to_tiny_date } from '@server/utils/time';
+import { number_to_string } from '@server/utils/misc';
+import {
+	long_date_to_short_and_tiny_date,
+	long_date_to_short_date,
+	long_date_to_tiny_date,
+	toDateYYYYMMDDHHmmss,
+	toDateYYYYMMDDHHmmssSSS
+} from '@server/utils/time';
 
 describe('Number to string', () => {
 	test('1 digit', () => {
@@ -117,28 +123,46 @@ describe('Number to string', () => {
 
 describe('date-to-string conversions', () => {
 	test('long date to short date', () => {
-		expect(long_date_to_short_date('2022-10-01..01:01:01')).toBe('2022-10-01');
-		expect(long_date_to_short_date('2022-10-01..01:01:10')).toBe('2022-10-01');
-		expect(long_date_to_short_date('2022-10-21..10:01:10')).toBe('2022-10-21');
+		expect(long_date_to_short_date(toDateYYYYMMDDHHmmss('2022-10-01..01:01:01'))).toBe('2022-10-01');
+		expect(long_date_to_short_date(toDateYYYYMMDDHHmmss('2022-10-01..01:01:10'))).toBe('2022-10-01');
+		expect(long_date_to_short_date(toDateYYYYMMDDHHmmss('2022-10-21..10:01:10'))).toBe('2022-10-21');
 	});
 
 	test('long date to tiny date', () => {
-		expect(long_date_to_tiny_date('2022-10-01..01:01:01')).toBe('01:01:01');
-		expect(long_date_to_tiny_date('2022-10-01..01:01:10')).toBe('01:01:10');
-		expect(long_date_to_tiny_date('2022-10-21..10:01:10')).toBe('10:01:10');
+		expect(long_date_to_tiny_date(toDateYYYYMMDDHHmmssSSS('2022-10-01..01:01:01'))).toBe('01:01:01');
+		expect(long_date_to_tiny_date(toDateYYYYMMDDHHmmssSSS('2022-10-01..01:01:10'))).toBe('01:01:10');
+		expect(long_date_to_tiny_date(toDateYYYYMMDDHHmmssSSS('2022-10-21..10:01:10'))).toBe('10:01:10');
 
-		expect(long_date_to_tiny_date('2022-10-01..01:01:01:111')).toBe('01:01:01:111');
-		expect(long_date_to_tiny_date('2022-10-01..01:01:10:222')).toBe('01:01:10:222');
-		expect(long_date_to_tiny_date('2022-10-21..10:01:10:333')).toBe('10:01:10:333');
+		expect(long_date_to_tiny_date(toDateYYYYMMDDHHmmssSSS('2022-10-01..01:01:01:111'))).toBe('01:01:01:111');
+		expect(long_date_to_tiny_date(toDateYYYYMMDDHHmmssSSS('2022-10-01..01:01:10:222'))).toBe('01:01:10:222');
+		expect(long_date_to_tiny_date(toDateYYYYMMDDHHmmssSSS('2022-10-21..10:01:10:333'))).toBe('10:01:10:333');
 	});
 
 	test('long date to short and tiny date', () => {
-		expect(long_date_to_short_and_tiny_date('2022-10-01..01:01:01')).toEqual(['2022-10-01', '01:01:01']);
-		expect(long_date_to_short_and_tiny_date('2022-10-01..01:01:10')).toEqual(['2022-10-01', '01:01:10']);
-		expect(long_date_to_short_and_tiny_date('2022-10-21..10:01:10')).toEqual(['2022-10-21', '10:01:10']);
+		expect(long_date_to_short_and_tiny_date(toDateYYYYMMDDHHmmssSSS('2022-10-01..01:01:01'))).toEqual([
+			'2022-10-01',
+			'01:01:01'
+		]);
+		expect(long_date_to_short_and_tiny_date(toDateYYYYMMDDHHmmssSSS('2022-10-01..01:01:10'))).toEqual([
+			'2022-10-01',
+			'01:01:10'
+		]);
+		expect(long_date_to_short_and_tiny_date(toDateYYYYMMDDHHmmssSSS('2022-10-21..10:01:10'))).toEqual([
+			'2022-10-21',
+			'10:01:10'
+		]);
 
-		expect(long_date_to_short_and_tiny_date('2022-10-01..01:01:01:111')).toEqual(['2022-10-01', '01:01:01:111']);
-		expect(long_date_to_short_and_tiny_date('2022-10-01..01:01:10:222')).toEqual(['2022-10-01', '01:01:10:222']);
-		expect(long_date_to_short_and_tiny_date('2022-10-21..10:01:10:333')).toEqual(['2022-10-21', '10:01:10:333']);
+		expect(long_date_to_short_and_tiny_date(toDateYYYYMMDDHHmmssSSS('2022-10-01..01:01:01:111'))).toEqual([
+			'2022-10-01',
+			'01:01:01:111'
+		]);
+		expect(long_date_to_short_and_tiny_date(toDateYYYYMMDDHHmmssSSS('2022-10-01..01:01:10:222'))).toEqual([
+			'2022-10-01',
+			'01:01:10:222'
+		]);
+		expect(long_date_to_short_and_tiny_date(toDateYYYYMMDDHHmmssSSS('2022-10-21..10:01:10:333'))).toEqual([
+			'2022-10-21',
+			'10:01:10:333'
+		]);
 	});
 });
