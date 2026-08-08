@@ -26,7 +26,7 @@ Contact:
 import { z } from 'zod';
 import { Rating } from '@common/models/rating_framework/rating';
 import { TimeControlId, TimeControlName } from '@common/models/time_control';
-import { DateLongMillis } from '@server/utils/time';
+import { DateYYYYMMDDHHmmssSSS } from '@server/utils/time';
 import { PlayerPrivateId } from '@common/models/player';
 
 /// Result of a game
@@ -115,7 +115,7 @@ export class Game {
 	/// Time control name (Classical (90 + 30), Blitz (5 + 3), ...)
 	public time_control_name: TimeControlName;
 	/// Date when the game took place
-	public when: DateLongMillis;
+	public when: DateYYYYMMDDHHmmssSSS;
 
 	/**
 	 * @brief Constructor
@@ -139,7 +139,7 @@ export class Game {
 		result: GameResult,
 		time_control_id: TimeControlId,
 		time_control_name: TimeControlName,
-		when: DateLongMillis
+		when: DateYYYYMMDDHHmmssSSS
 	) {
 		this.id = id;
 		this.title = title;

@@ -39,6 +39,7 @@ import { TimeControlRating } from '@common/models/time_control_rating';
 import { log_now } from '@server/utils/time';
 import { UserThin } from '@common/models/user_thin';
 import { isNotDefined } from '@common/utils/is_defined';
+import { TimeControlId } from '@common/models/time_control';
 
 /// Dump the data in user @e u into its corresponding file.
 export function user_overwrite(user: User): void {
@@ -85,7 +86,7 @@ export function user_add_new(
 
 	let games: TimeControlGame[] = [];
 	let ratings: TimeControlRating[] = [];
-	rating_system.get_unique_time_controls_ids().forEach((id: string) => {
+	rating_system.get_unique_time_controls_ids().forEach((id: TimeControlId) => {
 		ratings.push(new TimeControlRating(id, rating_system.get_new_rating()));
 		games.push({ time_control: id, records: [] });
 	});

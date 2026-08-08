@@ -27,7 +27,7 @@ import { message_from_response, server_call } from '@client/action';
 import { Routes } from '@common/routes';
 import { PlayerPublicId } from '@common/models/player';
 import { TimeControlId, TimeControlName } from '@common/models/time_control';
-import { toDateShort, toDateTiny } from '@server/utils/time';
+import { toDateYYYYMMDD, toDateHHmmssSSS } from '@server/utils/time';
 
 async function initialize_window_client_games_create() {
 	let datalist_white_users = document.getElementById('datalist_white_users') as HTMLDataListElement;
@@ -85,11 +85,11 @@ async function submit_new_game(_event: any) {
 	}
 	const white = Number(white_option.id) as PlayerPublicId;
 	const black = Number(black_option.id) as PlayerPublicId;
-	const whenCreated = toDateShort(input_game_date.value);
+	const whenCreated = toDateYYYYMMDD(input_game_date.value);
 
 	const rand_sec = `${Math.floor(Math.random() * 59)}`;
 	const rand_milli = `${Math.floor(Math.random() * 999)}`;
-	const timeCreated = toDateTiny(
+	const timeCreated = toDateHHmmssSSS(
 		input_game_time.value +
 			':' +
 			(rand_sec.length == 1 ? '0' : '') +

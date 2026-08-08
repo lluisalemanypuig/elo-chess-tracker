@@ -28,7 +28,7 @@ import { PlayerPrivateIdSchema } from '@common/models/player';
 import { UserGivenNameSchema } from '@common/models/user';
 import { ChallengeIdSchema } from '@common/models/challenge';
 import { TimeControlNameSchema } from '@common/models/time_control';
-import { DateLongMillisSchema } from '@server/utils/time';
+import { DateYYYYMMDDHHmmssSSSSchema } from '@server/utils/time';
 
 // Routes.QUERY_CHALLENGE_RECEIVED
 
@@ -36,7 +36,7 @@ export const QueryChallengesReceivedOutputSingleSchema = z.object({
 	id: ChallengeIdSchema,
 	title: z.string(),
 	sent_by: UserGivenNameSchema,
-	sent_when: DateLongMillisSchema,
+	sent_when: DateYYYYMMDDHHmmssSSSSchema,
 	time_control_name: TimeControlNameSchema,
 	can_be_declined: z.boolean()
 });
@@ -53,7 +53,7 @@ export const QueryChallengesSentOutputSingleSchema = z.object({
 	id: ChallengeIdSchema,
 	title: z.string(),
 	sent_to: UserGivenNameSchema,
-	sent_when: DateLongMillisSchema,
+	sent_when: DateYYYYMMDDHHmmssSSSSchema,
 	time_control_name: TimeControlNameSchema,
 	can_be_declined: z.boolean()
 });
@@ -76,7 +76,7 @@ export const QueryChallengesPendingResultOutputSingleSchema = z.object({
 	/// TODO: use user public IDs
 	sent_to_username: PlayerPrivateIdSchema,
 	opponent: z.string(),
-	sent_when: DateLongMillisSchema,
+	sent_when: DateYYYYMMDDHHmmssSSSSchema,
 	time_control_name: TimeControlNameSchema
 });
 
@@ -92,7 +92,7 @@ export const QueryChallengesConfirmResultOtherOutputSingleSchema = z.object({
 	id: ChallengeIdSchema,
 	title: z.string(),
 	opponent: UserGivenNameSchema,
-	sent_when: DateLongMillisSchema,
+	sent_when: DateYYYYMMDDHHmmssSSSSchema,
 	white: UserGivenNameSchema,
 	black: UserGivenNameSchema,
 	result: z.string(),
@@ -115,7 +115,7 @@ export const QueryChallengesConfirmResultSelfOutputSingleSchema = z.object({
 	id: ChallengeIdSchema,
 	title: z.string(),
 	opponent: UserGivenNameSchema,
-	sent_when: DateLongMillisSchema,
+	sent_when: DateYYYYMMDDHHmmssSSSSchema,
 	white: UserGivenNameSchema,
 	black: UserGivenNameSchema,
 	result: z.string(),

@@ -133,7 +133,7 @@ export class RatingSystemManager {
 		this.all_time_controls = all_ratings;
 
 		this.all_unique_time_controls = [
-			...new Set(this.all_time_controls.map<string>((value: TimeControl): string => value.id))
+			...new Set(this.all_time_controls.map((value: TimeControl): TimeControlId => value.id))
 		];
 	}
 

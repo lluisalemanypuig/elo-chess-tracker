@@ -28,7 +28,15 @@ import path from 'path';
 import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:managers/challenges');
 
-import { DateLong, log_now, long_date_to_short_and_tiny_date } from '@server/utils/time';
+import {
+	DateYYYYMMDDHHmmss,
+	DateYYYYMMDDHHmmssSSS,
+	log_now,
+	long_date_to_short_and_tiny_date,
+	toDateYYYYMMDDHHmmssSSS,
+	toDateYYYYMMDD,
+	toDateHHmmssSSS
+} from '@server/utils/time';
 import { ChallengesManager } from '@server/managers/challenges_manager';
 import { EnvironmentManager } from '@server/managers/environment_manager';
 import { Challenge, new_challenge, set_result, unset_result } from '@common/models/challenge';
@@ -74,7 +82,7 @@ export function challenge_send_new(
 	receiver: PlayerPrivateId,
 	time_control_id: TimeControlId,
 	time_control_name: TimeControlName,
-	when: DateLong
+	when: DateYYYYMMDDHHmmssSSS
 ): Challenge {
 	debug(log_now(), 'Adding a new challenge...');
 
@@ -102,7 +110,7 @@ export function challenge_send_new(
 export function challenge_accept(c: Challenge): void {
 	debug(log_now(), `Accepting challenge '${c.id}'`);
 
-	c.when_challenge_accepted = log_now();
+	c.when_challenge_accepted = toDateYYYYMMDDHHmmssSSS(log_now());
 
 	const challenge_dir = EnvironmentManager.get_instance().get_dir_challenges();
 	const challenge_file = path.join(challenge_dir, c.id);
@@ -136,7 +144,7 @@ export function challenge_decline(c: Challenge): void {
 export function challenge_set_result(
 	c: Challenge,
 	by: PlayerPrivateId,
-	when: DateLong,
+	when: DateYYYYMMDDHHmmssSSS,
 	white: PlayerPrivateId,
 	black: PlayerPrivateId,
 	result: GameResult
@@ -193,16 +201,10 @@ export function challenge_agree_result(c: Challenge): void {
 	const black = mem.get_user_by_username(c.black) as User;
 
 	const rand_milli = `${Math.floor(Math.random() * 999)}`;
-	game_add_new(
-		c.title,
-		white,
-		black,
-		c.result,
-		c.time_control_id,
-		c.time_control_name,
-		split[0],
+	const date = toDateHHmmssSSS(
 		split[1] + ':' + (rand_milli.length == 1 ? '00' : rand_milli.length == 2 ? '0' : '') + rand_milli
 	);
+	game_add_new(c.title, white, black, c.result, c.time_control_id, c.time_control_name, split[0], date);
 
 	{
 		debug(log_now(), `    Deleting the challenge from the memory...`);

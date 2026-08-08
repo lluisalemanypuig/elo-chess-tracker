@@ -27,7 +27,7 @@ import { z } from 'zod';
 import { GameIdSchema, GameResultSchema } from '@common/models/game';
 import { PlayerPublicIdSchema } from '@common/models/player';
 import { TimeControlIdSchema, TimeControlNameSchema } from '@common/models/time_control';
-import { DateShortSchema, DateTinySchema } from '@server/utils/time';
+import { DateYYYYMMDDSchema, DateHHmmssSSSSchema } from '@server/utils/time';
 
 // Routes.GAME_CREATE
 
@@ -38,8 +38,8 @@ export const GameCreateInputSchema = z.object({
 	result: GameResultSchema,
 	time_control_id: TimeControlIdSchema,
 	time_control_name: TimeControlNameSchema,
-	whenCreated: DateShortSchema,
-	timeCreated: DateTinySchema
+	whenCreated: DateYYYYMMDDSchema,
+	timeCreated: DateHHmmssSSSSchema
 });
 
 export type GameCreateInput = z.infer<typeof GameCreateInputSchema>;

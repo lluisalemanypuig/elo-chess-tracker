@@ -30,7 +30,7 @@ import { Request, Response } from 'express';
 import path from 'path';
 import fs from 'fs';
 
-import { DateShort, log_now } from '@server/utils/time';
+import { DateYYYYMMDD, log_now } from '@server/utils/time';
 import { is_user_logged_in } from '@server/managers/session';
 import { GameNumber, User } from '@common/models/user';
 import { Game } from '@common/models/game';
@@ -185,7 +185,7 @@ export async function post_query_game_list_own(req: Request, res: Response) {
 		data_to_return = filter_game_list(
 			user,
 			time_control_id,
-			(record_id: DateShort): boolean => {
+			(record_id: DateYYYYMMDD): boolean => {
 				const game_record_list = user.get_games(time_control_id);
 				return (
 					search_by_key(game_record_list, (r: GameNumber): number => {
@@ -201,7 +201,7 @@ export async function post_query_game_list_own(req: Request, res: Response) {
 			const data = filter_game_list(
 				user,
 				tid,
-				(record_id: DateShort): boolean => {
+				(record_id: DateYYYYMMDD): boolean => {
 					const game_record_list = user.get_games(tid);
 					return (
 						search_by_key(game_record_list, (r: GameNumber): number => {
@@ -286,7 +286,7 @@ export async function post_query_game_list_all(req: Request, res: Response) {
 		data_to_return = filter_game_list(
 			user,
 			time_control_id,
-			(_: DateShort): boolean => {
+			(_: DateYYYYMMDD): boolean => {
 				return true;
 			},
 			(g: Game): boolean => {
@@ -311,7 +311,7 @@ export async function post_query_game_list_all(req: Request, res: Response) {
 			const data = filter_game_list(
 				user,
 				tid,
-				(_: DateShort): boolean => {
+				(_: DateYYYYMMDD): boolean => {
 					return true;
 				},
 				(g: Game): boolean => {

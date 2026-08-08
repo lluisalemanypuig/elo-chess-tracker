@@ -25,7 +25,7 @@ Contact:
 
 import { GameId, toGameId } from '@common/models/game';
 import { TimeControlId } from '@common/models/time_control';
-import { DateShort } from '@server/utils/time';
+import { DateYYYYMMDD } from '@server/utils/time';
 import { number_to_string } from '@server/utils/misc';
 
 export const GAME_ID_LENGTH = 10;
@@ -34,10 +34,10 @@ export const GAME_ID_LENGTH = 10;
  * @brief The minimal summary of a game.
  */
 export class GameInfo {
-	public game_record: DateShort;
+	public game_record: DateYYYYMMDD;
 	public time_control_id: TimeControlId;
 
-	constructor(when: DateShort, time_id: TimeControlId) {
+	constructor(when: DateYYYYMMDD, time_id: TimeControlId) {
 		this.game_record = when;
 		this.time_control_id = time_id;
 	}
@@ -111,7 +111,7 @@ export class GamesManager {
 	 * @param time_id The time control id of the game (recall, could be 'blitz',
 	 * 'classical', ...)
 	 */
-	add_game(game_id: GameId, when: DateShort, time_id: TimeControlId): void {
+	add_game(game_id: GameId, when: DateYYYYMMDD, time_id: TimeControlId): void {
 		this.game_info.set(game_id, new GameInfo(when, time_id));
 	}
 
