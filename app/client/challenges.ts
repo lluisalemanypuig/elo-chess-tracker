@@ -31,6 +31,7 @@ import {
 	QueryChallengesReceivedOutputSingle,
 	QueryChallengesSentOutputSingle
 } from '@common/schemas/query_challenges';
+import { PlayerPrivateId, PlayerPublicId } from '@common/models/player';
 
 function create_label_text(text: string): HTMLLabelElement {
 	let label = document.createElement('label') as HTMLLabelElement;
@@ -48,7 +49,7 @@ async function send_challenge_button_clicked(_event: any) {
 	const username_option = document.querySelector('option[value="' + username_list_input.value + '"]');
 
 	if (username_option != null) {
-		const random_user_id = Number(username_option.id);
+		const random_user_id = Number(username_option.id) as PlayerPublicId;
 
 		const select_time_control = document.getElementById('select_time_control') as HTMLSelectElement;
 		const time_control_id = select_time_control.options[select_time_control.selectedIndex].value;
@@ -76,7 +77,7 @@ async function accept_challenge_button_clicked(event: any) {
 	let tag_clicked = event.target;
 	let challenge_id = tag_clicked.id;
 
-	const response = await server_call(Routes.CHALLENGE_ACCEPT, { challenge_id: challenge_id });
+	const response = await server_call(Routes.CHALLENGE_ACCEPT, { id: challenge_id });
 	if (response.status === 'Error') {
 		alert(message_from_response(response));
 		return;
@@ -88,7 +89,7 @@ async function decline_challenge_tag_clicked(event: any) {
 	let tag_clicked = event.target;
 	let challenge_id = tag_clicked.id;
 
-	const response = await server_call(Routes.CHALLENGE_DECLINE, { challenge_id: challenge_id });
+	const response = await server_call(Routes.CHALLENGE_DECLINE, { id: challenge_id });
 	if (response.status === 'Error') {
 		alert(message_from_response(response));
 		return;
@@ -104,8 +105,8 @@ async function submit_result_challenge_button_clicked(event: any) {
 	const black_select = document.getElementById('black_select_' + challenge_id) as HTMLSelectElement;
 	const select_result_game = document.getElementById('select_result_game_' + challenge_id) as HTMLSelectElement;
 
-	const white_username = white_select.options[white_select.selectedIndex].value;
-	const black_username = black_select.options[black_select.selectedIndex].value;
+	const white_username = white_select.options[white_select.selectedIndex].value as PlayerPrivateId;
+	const black_username = black_select.options[black_select.selectedIndex].value as PlayerPrivateId;
 	const result_str = select_result_game.options[select_result_game.selectedIndex].value;
 	let result: GameResult;
 	if (result_str == 'white_wins') {
@@ -121,7 +122,7 @@ async function submit_result_challenge_button_clicked(event: any) {
 
 	// "query" the server
 	const response = await server_call(Routes.CHALLENGE_SET_RESULT, {
-		challenge_id: challenge_id,
+		id: challenge_id,
 		white: white_username,
 		black: black_username,
 		result: result
@@ -138,7 +139,7 @@ async function agree_challenge_result_button_clicked(event: any) {
 	let tag_clicked = event.target;
 	let challenge_id = tag_clicked.id;
 
-	const response = await server_call(Routes.CHALLENGE_AGREE, { challenge_id: challenge_id });
+	const response = await server_call(Routes.CHALLENGE_AGREE, { id: challenge_id });
 
 	if (response.status === 'Error') {
 		alert(message_from_response(response));
@@ -152,7 +153,7 @@ async function disagree_challenge_result_button_clicked(event: any) {
 	let tag_clicked = event.target;
 	let challenge_id = tag_clicked.id;
 
-	const response = await server_call(Routes.CHALLENGE_DISAGREE, { challenge_id: challenge_id });
+	const response = await server_call(Routes.CHALLENGE_DISAGREE, { id: challenge_id });
 	if (response.status === 'Error') {
 		alert(message_from_response(response));
 		return;

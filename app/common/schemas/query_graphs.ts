@@ -24,7 +24,7 @@ Contact:
 */
 
 import { z } from 'zod';
-import { NameOfUserSchema } from '@common/models/user';
+import { UserGivenNameSchema } from '@common/models/user';
 import { PlayerPublicIdSchema } from '@common/models/player';
 
 // utils
@@ -37,7 +37,7 @@ export type NodeWeight = z.infer<typeof NodeWeightSchema>;
 
 export const NodeInfoSchema = z.object({
 	id: PlayerPublicIdSchema,
-	full_name: NameOfUserSchema,
+	full_name: UserGivenNameSchema,
 	weight: NodeWeightSchema
 });
 

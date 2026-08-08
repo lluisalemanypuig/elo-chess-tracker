@@ -21,7 +21,7 @@ Full source code of elo-chess-tracker:
 
 import 'htmx.org';
 
-import { isDefined } from '@common/utils/is_defined';
+import { isNotDefined } from '@common/utils/is_defined';
 import { result_from_text_to_value } from '@common/models/game';
 import { message_from_response, server_call } from '@client/action';
 import { Routes } from '@common/routes';

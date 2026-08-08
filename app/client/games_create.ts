@@ -22,9 +22,10 @@ Full source code of elo-chess-tracker:
 import 'htmx.org';
 
 import { result_from_text_to_value } from '@common/models/game';
-import { isDefined } from '@common/utils/is_defined';
+import { isNotDefined } from '@common/utils/is_defined';
 import { message_from_response, server_call } from '@client/action';
 import { Routes } from '@common/routes';
+import { PlayerPublicId } from '@common/models/player';
 
 async function initialize_window_client_games_create() {
 	let datalist_white_users = document.getElementById('datalist_white_users') as HTMLDataListElement;
@@ -80,15 +81,15 @@ async function submit_new_game(_event: any) {
 		console.log('Could not find black option');
 		return;
 	}
-	const white = white_option.id;
-	const black = black_option.id;
+	const white = Number(white_option.id) as PlayerPublicId;
+	const black = Number(black_option.id) as PlayerPublicId;
 
 	const rand_sec = `${Math.floor(Math.random() * 59)}`;
 	const rand_milli = `${Math.floor(Math.random() * 999)}`;
 	const response = await server_call(Routes.GAME_CREATE, {
 		title: game_title,
-		w: Number(white),
-		b: Number(black),
+		w: white,
+		b: black,
 		r: result,
 		tc_i: time_control_id,
 		tc_n: time_control_name,

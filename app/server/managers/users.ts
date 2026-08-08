@@ -29,7 +29,7 @@ import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:managers/users');
 
 import { Player, PlayerPrivateId } from '@common/models/player';
-import { NameOfUser, TimeControlGame, User } from '@common/models/user';
+import { UserGivenName, TimeControlGame, User } from '@common/models/user';
 import { EnvironmentManager } from '@server/managers/environment_manager';
 import { UsersManager } from '@server/managers/users_manager';
 import { UserRole } from '@common/models/user_role';
@@ -38,7 +38,7 @@ import { RatingSystemManager } from '@server/managers/rating_system_manager';
 import { TimeControlRating } from '@common/models/time_control_rating';
 import { log_now } from '@server/utils/time';
 import { UserThin } from '@common/models/user_thin';
-import { isNotDefined } from '@app/common/utils/is_defined';
+import { isNotDefined } from '@common/utils/is_defined';
 
 /// Dump the data in user @e u into its corresponding file.
 export function user_overwrite(user: User): void {
@@ -50,8 +50,8 @@ export function user_overwrite(user: User): void {
 /// Overwrites user data
 export function user_rename_and_reassign_roles(
 	username: PlayerPrivateId,
-	first_name: NameOfUser,
-	last_name: NameOfUser,
+	first_name: UserGivenName,
+	last_name: UserGivenName,
 	roles: UserRole[]
 ): User {
 	let user = UsersManager.get_instance().get_user_by_username(username) as User;
@@ -76,8 +76,8 @@ export function user_rename_and_reassign_roles(
  */
 export function user_add_new(
 	username: PlayerPrivateId,
-	firstname: NameOfUser,
-	lastname: NameOfUser,
+	firstname: UserGivenName,
+	lastname: UserGivenName,
 	pass: string,
 	roles: UserRole[]
 ): User {

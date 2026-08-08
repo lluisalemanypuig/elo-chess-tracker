@@ -172,7 +172,7 @@ export async function post_challenge_accept(req: Request, res: Response) {
 	if (challenge_parse.result === 'Exit') {
 		return;
 	}
-	const challenge_id = challenge_parse.data.challenge_id;
+	const challenge_id = challenge_parse.data.id;
 
 	debug(log_now(), `User '${session.username}' wants to accept challenge '${challenge_parse}'`);
 
@@ -212,7 +212,7 @@ export async function post_challenge_decline(req: Request, res: Response) {
 	if (challenge_parse.result === 'Exit') {
 		return;
 	}
-	const challenge_id = challenge_parse.data.challenge_id;
+	const challenge_id = challenge_parse.data.id;
 
 	debug(log_now(), `User '${session.username}' wants to decline challenge '${challenge_id}'`);
 
@@ -253,7 +253,7 @@ export async function post_challenge_set_result(req: Request, res: Response) {
 		return;
 	}
 
-	const challenge_id: ChallengeID = challenge_parse.data.challenge_id;
+	const challenge_id: ChallengeID = challenge_parse.data.id;
 	const white_username = challenge_parse.data.white;
 	const black_username = challenge_parse.data.black;
 	const result: GameResult = challenge_parse.data.result;
@@ -336,7 +336,7 @@ export async function post_challenge_agree(req: Request, res: Response) {
 	if (challenge_parse.result === 'Exit') {
 		return;
 	}
-	const challenge_id = challenge_parse.data.challenge_id;
+	const challenge_id = challenge_parse.data.id;
 
 	let c = ChallengesManager.get_instance().get_challenge_by_id(challenge_id);
 	if (isNotDefined(c)) {
@@ -367,7 +367,7 @@ export async function post_challenge_disagree(req: Request, res: Response) {
 	if (challenge_parse.result === 'Exit') {
 		return;
 	}
-	const challenge_id = challenge_parse.data.challenge_id;
+	const challenge_id = challenge_parse.data.id;
 
 	let c = ChallengesManager.get_instance().get_challenge_by_id(challenge_id);
 	if (isNotDefined(c)) {

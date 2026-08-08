@@ -65,15 +65,15 @@ export const UserKeys = ['username', 'first_name', 'last_name', 'password', 'rol
 
 // User name
 
-declare const NameOfUserBrand: unique symbol;
-export type NameOfUserLocal = string & {
-	readonly [NameOfUserBrand]: 'NameOfUserLocal';
+declare const UserGivenNameBrand: unique symbol;
+export type UserGivenNameLocal = string & {
+	readonly [UserGivenNameBrand]: 'UserGivenNameLocal';
 };
-export const NameOfUserSchema = z.string().brand<'NameOfUserLocal'>();
-export type NameOfUser = z.infer<typeof NameOfUserSchema>;
+export const UserGivenNameSchema = z.string().brand<'UserGivenNameLocal'>();
+export type UserGivenName = z.infer<typeof UserGivenNameSchema>;
 
-export function toUserName(s: string): NameOfUser {
-	return s as NameOfUser;
+export function toUserName(s: string): UserGivenName {
+	return s as UserGivenName;
 }
 
 /**
@@ -84,9 +84,9 @@ export function toUserName(s: string): NameOfUser {
  */
 export class User extends Player {
 	/// First name
-	public first_name: NameOfUser;
+	public first_name: UserGivenName;
 	/// Last name
-	public last_name: NameOfUser;
+	public last_name: UserGivenName;
 	/// Password
 	public password: Password;
 	/// Roles of this user
@@ -111,8 +111,8 @@ export class User extends Player {
 	 */
 	constructor(
 		username: PlayerPrivateId,
-		first_name: NameOfUser,
-		last_name: NameOfUser,
+		first_name: UserGivenName,
+		last_name: UserGivenName,
 		password: Password,
 		roles: UserRole[],
 		games: TimeControlGame[],
@@ -127,7 +127,7 @@ export class User extends Player {
 	}
 
 	/// Returns the full name of this user
-	get_full_name(): NameOfUser {
+	get_full_name(): UserGivenName {
 		return toUserName(`${this.first_name} ${this.last_name}`);
 	}
 

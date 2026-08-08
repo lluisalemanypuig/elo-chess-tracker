@@ -26,6 +26,8 @@ Contact:
 import { z } from 'zod';
 import { PlayerPrivateIdSchema } from '@common/models/player';
 
+// Routes.USER_LOGIN
+
 export const UserLoginInputSchema = z.object({
 	u: PlayerPrivateIdSchema,
 	p: PlayerPrivateIdSchema
@@ -39,7 +41,7 @@ export const UserLoginOutputSchema = z.object({
 
 export type UserLoginOutput = z.infer<typeof UserLoginOutputSchema>;
 
-// --------------------------
+// Routes.USER_LOGOUT
 
 export const UserLogoutOutputSchema = z.object({
 	cookies: z.array(z.string())

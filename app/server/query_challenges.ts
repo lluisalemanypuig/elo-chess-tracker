@@ -29,7 +29,7 @@ import { Request, Response } from 'express';
 
 import { log_now } from '@server/utils/time';
 import { is_user_logged_in } from '@server/managers/session';
-import { NameOfUser, User } from '@common/models/user';
+import { UserGivenName, User } from '@common/models/user';
 import { challenge_set_retrieve } from '@server/managers/challenges';
 import { Challenge } from '@common/models/challenge';
 import { UsersManager } from '@server/managers/users_manager';
@@ -300,7 +300,7 @@ export async function get_query_challenge_confirm_result_other(req: Request, res
 			return;
 		}
 
-		const opponent = ((): NameOfUser => {
+		const opponent = ((): UserGivenName => {
 			if (user_sent_by.username == session.username) {
 				return user_sent_to.get_full_name();
 			}
@@ -396,7 +396,7 @@ export async function get_query_challenge_confirm_result_self(req: Request, res:
 			return;
 		}
 
-		const opponent = ((): NameOfUser => {
+		const opponent = ((): UserGivenName => {
 			if (user_sent_by.username == session.username) {
 				return user_sent_to.get_full_name();
 			}

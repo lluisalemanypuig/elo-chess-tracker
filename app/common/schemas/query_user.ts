@@ -29,6 +29,7 @@ import { UserRoleArraySchema } from '@common/models/user_role';
 import { UserActionArraySchema } from '@common/models/user_action';
 import { RatingSchema } from '@common/models/rating_framework/rating';
 import { PlayerPublicIdSchema } from '@common/models/player';
+import { UserGivenNameSchema } from '@common/models/user';
 
 // Routes.QUERY_USER_LIST
 
@@ -52,7 +53,7 @@ export const QueryUserRankingInputSchema = z.object({
 
 export type QueryUserRankingInput = z.infer<typeof QueryUserRankingInputSchema>;
 
-// ----------
+// Routes.QUERY_USER_HOME
 
 export const TimeControlAndRatingSchema = z.object({
 	time_control_name: z.string(),
@@ -62,7 +63,7 @@ export const TimeControlAndRatingSchema = z.object({
 export type TimeControlAndRating = z.infer<typeof TimeControlAndRatingSchema>;
 
 export const QueryUserHomeOutputSchema = z.object({
-	fullname: z.string(),
+	fullname: UserGivenNameSchema,
 	roles: UserRoleArraySchema,
 	actions: UserActionArraySchema,
 	ratings: z.array(TimeControlAndRatingSchema)
@@ -70,20 +71,20 @@ export const QueryUserHomeOutputSchema = z.object({
 
 export type QueryUserHomeOutput = z.infer<typeof QueryUserHomeOutputSchema>;
 
-// ----------
+// Routes.QUERY_USER_EDIT
 
 export const QueryUserEditOutputSchema = z.object({
-	first_name: z.string(),
-	last_name: z.string(),
+	first_name: UserGivenNameSchema,
+	last_name: UserGivenNameSchema,
 	roles: UserRoleArraySchema
 });
 
 export type QueryUserEditOutput = z.infer<typeof QueryUserEditOutputSchema>;
 
-// ----------
+// Routes.QUERY_USER_RANKING
 
 export const UserWithGamesSchema = z.object({
-	name: z.string(),
+	name: UserGivenNameSchema,
 	rating: z.number(),
 	total_games: z.number(),
 	won: z.number(),
@@ -94,7 +95,7 @@ export const UserWithGamesSchema = z.object({
 export type UserWithGames = z.infer<typeof UserWithGamesSchema>;
 
 export const UserWithoutGamesSchema = z.object({
-	name: z.string(),
+	name: UserGivenNameSchema,
 	rating: z.number()
 });
 

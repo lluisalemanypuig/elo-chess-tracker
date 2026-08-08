@@ -41,7 +41,7 @@ export type ChallengeSendInput = z.infer<typeof ChallengeSendInputSchema>;
 // Routes.CHALLENGE_ACCEPT
 
 export const ChallengeAcceptInputSchema = z.object({
-	challenge_id: z.string()
+	id: z.string()
 });
 
 export type ChallengeAcceptInput = z.infer<typeof ChallengeAcceptInputSchema>;
@@ -49,7 +49,7 @@ export type ChallengeAcceptInput = z.infer<typeof ChallengeAcceptInputSchema>;
 // Routes.CHALLENGE_DECLINE
 
 export const ChallengeDeclineInputSchema = z.object({
-	challenge_id: z.string()
+	id: z.string()
 });
 
 export type ChallengeDeclineInput = z.infer<typeof ChallengeDeclineInputSchema>;
@@ -57,8 +57,8 @@ export type ChallengeDeclineInput = z.infer<typeof ChallengeDeclineInputSchema>;
 // Routes.CHALLENGE_SET_RESULT
 
 export const ChallengeSetResultInputSchema = z.object({
-	challenge_id: z.string(),
-	/// TODO: use public ids in the input schema
+	id: z.string(),
+	/// TODO: use public ids
 	white: PlayerPrivateIdSchema,
 	black: PlayerPrivateIdSchema,
 	result: GameResultSchema
@@ -69,13 +69,13 @@ export type ChallengeSetResultInput = z.infer<typeof ChallengeSetResultInputSche
 // Routes.CHALLENGE_AGREE
 
 export const ChallengeAgreeResultInputSchema = z.object({
-	challenge_id: z.string()
+	id: z.string()
 });
 
 export type ChallengeAgreeResultInput = z.infer<typeof ChallengeAgreeResultInputSchema>;
 
 export const ChallengeDisagreeResultInputSchema = z.object({
-	challenge_id: z.string()
+	id: z.string()
 });
 
 export type ChallengeDisagreeResultInput = z.infer<typeof ChallengeDisagreeResultInputSchema>;

@@ -26,7 +26,7 @@ Contact:
 import { isDefined } from '@common/utils/is_defined';
 import { User } from '@common/models/user';
 import { search_linear_by_key } from '@server/utils/searching';
-import { PlayerPrivateId, PlayerPublicId, toPlayerPublicId } from '@app/common/models/player';
+import { PlayerPrivateId, PlayerPublicId, toPlayerPublicId } from '@common/models/player';
 
 /**
  * @brief Users Manager singleton class

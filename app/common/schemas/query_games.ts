@@ -24,7 +24,7 @@ Contact:
 */
 
 import { z } from 'zod';
-import { NameOfUserSchema } from '@common/models/user';
+import { UserGivenNameSchema } from '@common/models/user';
 
 // Routes.QUERY_GAME_LIST_OWN
 
@@ -47,8 +47,8 @@ export type QueryGamesListAllInput = z.infer<typeof QueryGamesListAllInputSchema
 export const QueryGamesListOutputSingleSchema = z.object({
 	id: z.string(),
 	title: z.string(),
-	white: NameOfUserSchema,
-	black: NameOfUserSchema,
+	white: UserGivenNameSchema,
+	black: UserGivenNameSchema,
 	result: z.string(),
 	time_control: z.string(),
 	date: z.string(),
