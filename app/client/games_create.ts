@@ -27,7 +27,7 @@ import { message_from_response, server_call } from '@client/action';
 import { Routes } from '@common/routes';
 import { PlayerPublicId } from '@common/models/player';
 import { TimeControlId, TimeControlName } from '@common/models/time_control';
-import { toDateYYYYMMDD, toDateHHmmssSSS } from '@server/utils/time';
+import { toDateYYYYMMDD, toDateHHmmssSSS } from '@app/common/utils/time';
 
 async function initialize_window_client_games_create() {
 	let datalist_white_users = document.getElementById('datalist_white_users') as HTMLDataListElement;

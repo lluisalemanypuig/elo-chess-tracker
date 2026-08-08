@@ -36,7 +36,7 @@ import { UserRole } from '@common/models/user_role';
 import { encrypt_password_for_user } from '@server/utils/encrypt';
 import { RatingSystemManager } from '@server/managers/rating_system_manager';
 import { TimeControlRating } from '@common/models/time_control_rating';
-import { log_now } from '@server/utils/time';
+import { log_now } from '@app/common/utils/time';
 import { UserThin } from '@common/models/user_thin';
 import { isNotDefined } from '@common/utils/is_defined';
 import { TimeControlId } from '@common/models/time_control';

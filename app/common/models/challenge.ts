@@ -24,7 +24,7 @@ Contact:
 */
 
 import { z } from 'zod';
-import { DateYYYYMMDDHHmmssSSS, DateYYYYMMDDHHmmssSSSSchema } from '@server/utils/time';
+import { DateYYYYMMDDHHmmssSSS, DateYYYYMMDDHHmmssSSSSchema } from '@app/common/utils/time';
 import { GameResult, GameResultSchema } from '@common/models/game';
 import {
 	TimeControlId,

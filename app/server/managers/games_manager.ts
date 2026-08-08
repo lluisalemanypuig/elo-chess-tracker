@@ -25,7 +25,7 @@ Contact:
 
 import { GameId, toGameId } from '@common/models/game';
 import { TimeControlId } from '@common/models/time_control';
-import { DateYYYYMMDD } from '@server/utils/time';
+import { DateYYYYMMDD } from '@app/common/utils/time';
 import { number_to_string } from '@server/utils/misc';
 
 export const GAME_ID_LENGTH = 10;

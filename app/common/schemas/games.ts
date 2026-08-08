@@ -27,7 +27,7 @@ import { z } from 'zod';
 import { GameIdSchema, GameResultSchema } from '@common/models/game';
 import { PlayerPublicIdSchema } from '@common/models/player';
 import { TimeControlIdSchema, TimeControlNameSchema } from '@common/models/time_control';
-import { DateYYYYMMDDSchema, DateHHmmssSSSSchema } from '@server/utils/time';
+import { DateYYYYMMDDSchema, DateHHmmssSSSSchema } from '@app/common/utils/time';
 
 // Routes.GAME_CREATE
 

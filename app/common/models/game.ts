@@ -26,7 +26,7 @@ Contact:
 import { z } from 'zod';
 import { Rating } from '@common/models/rating_framework/rating';
 import { TimeControlId, TimeControlName } from '@common/models/time_control';
-import { DateYYYYMMDDHHmmssSSS } from '@server/utils/time';
+import { DateYYYYMMDDHHmmssSSS } from '@app/common/utils/time';
 import { PlayerPrivateId } from '@common/models/player';
 
 /// Result of a game

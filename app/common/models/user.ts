@@ -33,7 +33,7 @@ import { TimeControlRating } from '@common/models/time_control_rating';
 import { TimeControlId, TimeControlIdSchema } from '@common/models/time_control';
 import { copyarray } from '@server/utils/misc';
 import { search_by_key, search_linear_by_key, where_should_be_inserted_by_key } from '@server/utils/searching';
-import { DateYYYYMMDD, DateYYYYMMDDSchema } from '@server/utils/time';
+import { DateYYYYMMDD, DateYYYYMMDDSchema } from '@app/common/utils/time';
 
 export const GameNumberSchema = z
 	.object({

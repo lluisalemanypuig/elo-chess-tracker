@@ -30,7 +30,7 @@ import path from 'path';
 import fs from 'fs';
 
 import { Game, GameId } from '@common/models/game';
-import { DateYYYYMMDDHHmmssSSS, DateYYYYMMDD, log_now } from '@server/utils/time';
+import { DateYYYYMMDDHHmmssSSS, DateYYYYMMDD, log_now } from '@app/common/utils/time';
 import { game_array_from_string } from '@common/io/game';
 import { search_by_key, where_should_be_inserted_by_key } from '@server/utils/searching';
 import { read_directory } from '@server/utils/read_directory';

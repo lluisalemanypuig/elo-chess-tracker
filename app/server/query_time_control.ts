@@ -27,7 +27,7 @@ import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:server_query_time_control');
 import { Request, Response } from 'express';
 
-import { log_now } from '@server/utils/time';
+import { log_now } from '@app/common/utils/time';
 import { is_user_logged_in } from '@server/managers/session';
 import { RatingSystemManager } from '@server/managers/rating_system_manager';
 import { isNotDefined } from '@common/utils/is_defined';

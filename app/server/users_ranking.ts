@@ -27,7 +27,7 @@ import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:server_users_ranking');
 import { Request, Response } from 'express';
 
-import { log_now } from '@server/utils/time';
+import { log_now } from '@app/common/utils/time';
 import { is_user_logged_in } from '@server/managers/session';
 import { ConfigurationManager } from '@server/managers/configuration_manager';
 import { get_execution_directory } from '@server/managers/environment_manager';

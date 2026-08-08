@@ -27,7 +27,7 @@ import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:server_users_edit');
 import { Request, Response } from 'express';
 
-import { log_now } from '@server/utils/time';
+import { log_now } from '@app/common/utils/time';
 import { is_user_logged_in } from '@server/managers/session';
 import { user_rename_and_reassign_roles } from '@server/managers/users';
 import { USER_ROLE_ASSIGN_ID, USER_EDIT, get_role_action_name } from '@common/models/user_action';

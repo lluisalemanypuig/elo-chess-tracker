@@ -27,7 +27,7 @@ import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:server_games');
 import { Request, Response } from 'express';
 
-import { log_now } from '@server/utils/time';
+import { log_now } from '@app/common/utils/time';
 import { is_user_logged_in } from '@server/managers/session';
 import { GAMES_CREATE, GAMES_DELETE, GAMES_EDIT } from '@common/models/user_action';
 import {

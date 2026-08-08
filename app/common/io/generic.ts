@@ -26,7 +26,7 @@ Contact:
 import Debug from 'debug';
 const debug = Debug(`ELO_CHESS_TRACKER:io`);
 
-import { log_now } from '@server/utils/time';
+import { log_now } from '@app/common/utils/time';
 import { z } from 'zod';
 import { isNotDefined } from '@common/utils/is_defined';
 

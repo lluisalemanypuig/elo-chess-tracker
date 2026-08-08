@@ -27,7 +27,7 @@ import { z } from 'zod';
 import { UserGivenNameSchema } from '@common/models/user';
 import { TimeControlIdSchema, TimeControlNameSchema } from '@common/models/time_control';
 import { GameIdSchema } from '@common/models/game';
-import { DateYYYYMMDDHHmmssSSSSchema } from '@server/utils/time';
+import { DateYYYYMMDDHHmmssSSSSchema } from '@app/common/utils/time';
 
 // Routes.QUERY_GAME_LIST_OWN
 

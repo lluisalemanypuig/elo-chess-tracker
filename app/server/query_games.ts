@@ -30,7 +30,7 @@ import { Request, Response } from 'express';
 import path from 'path';
 import fs from 'fs';
 
-import { DateYYYYMMDD, log_now } from '@server/utils/time';
+import { DateYYYYMMDD, log_now } from '@app/common/utils/time';
 import { is_user_logged_in } from '@server/managers/session';
 import { GameNumber, User } from '@common/models/user';
 import { Game } from '@common/models/game';

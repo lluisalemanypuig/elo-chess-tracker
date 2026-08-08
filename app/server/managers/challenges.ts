@@ -36,7 +36,7 @@ import {
 	toDateYYYYMMDDHHmmssSSS,
 	toDateYYYYMMDD,
 	toDateHHmmssSSS
-} from '@server/utils/time';
+} from '@app/common/utils/time';
 import { ChallengesManager } from '@server/managers/challenges_manager';
 import { EnvironmentManager } from '@server/managers/environment_manager';
 import { Challenge, new_challenge, set_result, unset_result } from '@common/models/challenge';

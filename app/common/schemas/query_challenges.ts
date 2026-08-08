@@ -28,7 +28,7 @@ import { PlayerPrivateIdSchema } from '@common/models/player';
 import { UserGivenNameSchema } from '@common/models/user';
 import { ChallengeIdSchema } from '@common/models/challenge';
 import { TimeControlNameSchema } from '@common/models/time_control';
-import { DateYYYYMMDDHHmmssSSSSchema } from '@server/utils/time';
+import { DateYYYYMMDDHHmmssSSSSchema } from '@app/common/utils/time';
 
 // Routes.QUERY_CHALLENGE_RECEIVED
 

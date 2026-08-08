@@ -35,7 +35,7 @@ import {
 	log_now,
 	long_date_to_short_date,
 	toDateYYYYMMDDHHmmssSSS
-} from '@server/utils/time';
+} from '@app/common/utils/time';
 import { Player, PlayerPrivateId } from '@common/models/player';
 import { Game, GameId, GameResult } from '@common/models/game';
 import { User } from '@common/models/user';
