@@ -25,8 +25,8 @@ import { message_from_response, server_call } from '@client/action';
 import { isNotDefined } from '@common/utils/is_defined';
 import { UserRole, all_user_roles, array_string_to_roles, user_role_to_string } from '@common/models/user_role';
 import { Routes } from '@common/routes';
-import { PlayerPrivateId } from '@common/models/player';
-import { UserGivenName } from '@common/models/user';
+import { PlayerPrivateId, toPlayerPrivateId } from '@common/models/player';
+import { toUserGivenName, UserGivenName } from '@common/models/user';
 
 async function submit_new_user_clicked(_event: any) {
 	// username box
@@ -106,9 +106,9 @@ async function submit_new_user_clicked(_event: any) {
 	}
 
 	const response = await server_call(Routes.USER_CREATE, {
-		u: username as PlayerPrivateId,
-		fn: firstname as UserGivenName,
-		ln: lastname as UserGivenName,
+		u: toPlayerPrivateId(username),
+		fn: toUserGivenName(firstname),
+		ln: toUserGivenName(lastname),
 		r: selected_roles,
 		p: password
 	});

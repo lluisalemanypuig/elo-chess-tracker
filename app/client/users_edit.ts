@@ -32,7 +32,7 @@ import {
 import { isNotDefined } from '@common/utils/is_defined';
 import { Routes } from '@common/routes';
 import { PlayerPublicId } from '@common/models/player';
-import { UserGivenName } from '@common/models/user';
+import { toUserGivenName, UserGivenName } from '@common/models/user';
 
 async function user_was_changed(_event: any) {
 	all_user_roles.forEach(function (role: string) {
@@ -98,8 +98,8 @@ async function submit_was_clicked(_event: any) {
 
 	const response = await server_call(Routes.USER_EDIT, {
 		u: Number(user_rid) as PlayerPublicId,
-		f: first_name as UserGivenName,
-		l: last_name as UserGivenName,
+		f: toUserGivenName(first_name),
+		l: toUserGivenName(last_name),
 		r: selected_roles
 	});
 	if (response.status === 'Error') {

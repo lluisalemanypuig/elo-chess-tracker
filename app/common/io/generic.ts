@@ -28,11 +28,11 @@ const debug = Debug(`ELO_CHESS_TRACKER:io`);
 
 import { log_now } from '@server/utils/time';
 import { z } from 'zod';
-import { isDefined } from '@common/utils/is_defined';
+import { isNotDefined } from '@common/utils/is_defined';
 
 export function read_schema<T extends z.ZodTypeAny>(schema: T, str: string): z.output<T> | null {
 	const parse = JSON.parse(str);
-	if (isNotDefined) {
+	if (isNotDefined(parse)) {
 		debug(log_now(), `JSON Failed to parse schema.`);
 		return null;
 	}

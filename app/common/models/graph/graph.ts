@@ -28,7 +28,7 @@ import { EdgeMetadata } from '@common/models/graph/edge_metadata';
 import { EdgeSchema, Edge } from '@common/models/graph/edge';
 import { search_by_key, where_should_be_inserted_by_key } from '@server/utils/searching';
 import { GameResult, opposite_result } from '@common/models/game';
-import { isDefined } from '@common/utils/is_defined';
+import { isDefined, isNotDefined } from '@common/utils/is_defined';
 import { PlayerPrivateId } from '@common/models/player';
 
 export const NeighborhoodSchema = z.array(EdgeSchema);

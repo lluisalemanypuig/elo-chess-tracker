@@ -72,7 +72,7 @@ export type UserGivenNameLocal = string & {
 export const UserGivenNameSchema = z.string().brand<'UserGivenNameLocal'>();
 export type UserGivenName = z.infer<typeof UserGivenNameSchema>;
 
-export function toUserName(s: string): UserGivenName {
+export function toUserGivenName(s: string): UserGivenName {
 	return s as UserGivenName;
 }
 
@@ -128,7 +128,7 @@ export class User extends Player {
 
 	/// Returns the full name of this user
 	get_full_name(): UserGivenName {
-		return toUserName(`${this.first_name} ${this.last_name}`);
+		return toUserGivenName(`${this.first_name} ${this.last_name}`);
 	}
 
 	/**

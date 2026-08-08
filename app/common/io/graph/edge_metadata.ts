@@ -25,7 +25,7 @@ Contact:
 
 import { EdgeMetadata, EdgeMetadataSchema } from '@common/models/graph/edge_metadata';
 import { read_schema } from '@common/io/generic';
-import { isDefined } from '@common/utils/is_defined';
+import { isNotDefined } from '@common/utils/is_defined';
 
 /**
  * @brief Parses a JSON string and returns an EdgeMetadata.
