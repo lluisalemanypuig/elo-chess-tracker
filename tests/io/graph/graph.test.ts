@@ -29,16 +29,21 @@ import { EdgeMetadata } from '@common/models/graph/edge_metadata';
 import { Graph } from '@common/models/graph/graph';
 
 import { graph_from_string, graph_full_to_file } from '@common/io/graph/graph';
-import { isDefined } from '@common/utils/is_defined';
+import { isNotDefined } from '@common/utils/is_defined';
+import { toPlayerPrivateId } from '@app/common/models/player';
+
+const A = toPlayerPrivateId('A');
+const B = toPlayerPrivateId('B');
+const C = toPlayerPrivateId('C');
 
 describe('Write to and read from disk', () => {
 	test('2 users -- write', () => {
 		let g = new Graph();
 
-		g.add_edge('A', 'B', 'white_wins');
-		g.add_edge('B', 'A', 'white_wins');
-		g.add_edge('A', 'B', 'draw');
-		g.add_edge('B', 'A', 'draw');
+		g.add_edge(A, B, 'white_wins');
+		g.add_edge(B, A, 'white_wins');
+		g.add_edge(A, B, 'draw');
+		g.add_edge(B, A, 'draw');
 
 		if (fs.existsSync('graph_test/')) {
 			fs.rmdirSync('graph_test/', { recursive: true });
@@ -54,32 +59,32 @@ describe('Write to and read from disk', () => {
 
 		const g = graph_from_string('graph_test/');
 		expect(g).not.toBeNull();
-		if (!isDefined(g)) {
+		if (isNotDefined(g)) {
 			return;
 		}
-		expect(g.get_data_as_white('A', 'B')).toEqual(new EdgeMetadata(1, 1, 0));
-		expect(g.get_data_as_black('A', 'B')).toEqual(new EdgeMetadata(0, 1, 1));
-		expect(g.get_out_degree('A')).toBe(1);
-		expect(g.get_in_degree('A')).toBe(1);
-		expect(g.get_black_opponents('A')).toEqual(['B']);
-		expect(g.get_white_opponents('A')).toEqual(['B']);
-		expect(g.get_data_as_white('B', 'A')).toEqual(new EdgeMetadata(1, 1, 0));
-		expect(g.get_data_as_black('B', 'A')).toEqual(new EdgeMetadata(0, 1, 1));
-		expect(g.get_out_degree('B')).toBe(1);
-		expect(g.get_in_degree('B')).toBe(1);
-		expect(g.get_black_opponents('B')).toEqual(['A']);
-		expect(g.get_white_opponents('B')).toEqual(['A']);
+		expect(g.get_data_as_white(A, B)).toEqual(new EdgeMetadata(1, 1, 0));
+		expect(g.get_data_as_black(A, B)).toEqual(new EdgeMetadata(0, 1, 1));
+		expect(g.get_out_degree(A)).toBe(1);
+		expect(g.get_in_degree(A)).toBe(1);
+		expect(g.get_black_opponents(A)).toEqual(['B']);
+		expect(g.get_white_opponents(A)).toEqual(['B']);
+		expect(g.get_data_as_white(B, A)).toEqual(new EdgeMetadata(1, 1, 0));
+		expect(g.get_data_as_black(B, A)).toEqual(new EdgeMetadata(0, 1, 1));
+		expect(g.get_out_degree(B)).toBe(1);
+		expect(g.get_in_degree(B)).toBe(1);
+		expect(g.get_black_opponents(B)).toEqual(['A']);
+		expect(g.get_white_opponents(B)).toEqual(['A']);
 	});
 
 	test('3 users -- write', () => {
 		let g = new Graph();
 
-		g.add_edge('A', 'B', 'white_wins');
-		g.add_edge('A', 'C', 'black_wins');
-		g.add_edge('B', 'C', 'draw');
-		g.add_edge('C', 'B', 'white_wins');
-		g.add_edge('C', 'A', 'white_wins');
-		g.add_edge('C', 'B', 'black_wins');
+		g.add_edge(A, B, 'white_wins');
+		g.add_edge(A, C, 'black_wins');
+		g.add_edge(B, C, 'draw');
+		g.add_edge(C, B, 'white_wins');
+		g.add_edge(C, A, 'white_wins');
+		g.add_edge(C, B, 'black_wins');
 
 		if (fs.existsSync('graph_test/')) {
 			fs.rmdirSync('graph_test/', { recursive: true });
@@ -96,34 +101,34 @@ describe('Write to and read from disk', () => {
 
 		const g = graph_from_string('graph_test/');
 		expect(g).not.toBeNull();
-		if (!isDefined(g)) {
+		if (isNotDefined(g)) {
 			return;
 		}
-		expect(g.get_data_as_white('A', 'B')).toEqual(new EdgeMetadata(1, 0, 0));
-		expect(g.get_data_as_black('A', 'B')).toEqual(undefined);
-		expect(g.get_data_as_white('A', 'C')).toEqual(new EdgeMetadata(0, 0, 1));
-		expect(g.get_data_as_black('A', 'C')).toEqual(new EdgeMetadata(0, 0, 1));
-		expect(g.get_out_degree('A')).toBe(2);
-		expect(g.get_in_degree('A')).toBe(1);
-		expect(g.get_black_opponents('A')).toEqual(['B', 'C']);
-		expect(g.get_white_opponents('A')).toEqual(['C']);
+		expect(g.get_data_as_white(A, B)).toEqual(new EdgeMetadata(1, 0, 0));
+		expect(g.get_data_as_black(A, B)).toEqual(undefined);
+		expect(g.get_data_as_white(A, C)).toEqual(new EdgeMetadata(0, 0, 1));
+		expect(g.get_data_as_black(A, C)).toEqual(new EdgeMetadata(0, 0, 1));
+		expect(g.get_out_degree(A)).toBe(2);
+		expect(g.get_in_degree(A)).toBe(1);
+		expect(g.get_black_opponents(A)).toEqual(['B', 'C']);
+		expect(g.get_white_opponents(A)).toEqual(['C']);
 
-		expect(g.get_data_as_white('B', 'A')).toEqual(undefined);
-		expect(g.get_data_as_black('B', 'A')).toEqual(new EdgeMetadata(0, 0, 1));
-		expect(g.get_data_as_white('B', 'C')).toEqual(new EdgeMetadata(0, 1, 0));
-		expect(g.get_data_as_black('B', 'C')).toEqual(new EdgeMetadata(1, 0, 1));
-		expect(g.get_out_degree('B')).toBe(1);
-		expect(g.get_in_degree('B')).toBe(2);
-		expect(g.get_black_opponents('B')).toEqual(['C']);
-		expect(g.get_white_opponents('B')).toEqual(['A', 'C']);
+		expect(g.get_data_as_white(B, A)).toEqual(undefined);
+		expect(g.get_data_as_black(B, A)).toEqual(new EdgeMetadata(0, 0, 1));
+		expect(g.get_data_as_white(B, C)).toEqual(new EdgeMetadata(0, 1, 0));
+		expect(g.get_data_as_black(B, C)).toEqual(new EdgeMetadata(1, 0, 1));
+		expect(g.get_out_degree(B)).toBe(1);
+		expect(g.get_in_degree(B)).toBe(2);
+		expect(g.get_black_opponents(B)).toEqual(['C']);
+		expect(g.get_white_opponents(B)).toEqual(['A', 'C']);
 
-		expect(g.get_data_as_white('C', 'A')).toEqual(new EdgeMetadata(1, 0, 0));
-		expect(g.get_data_as_black('C', 'A')).toEqual(new EdgeMetadata(1, 0, 0));
-		expect(g.get_data_as_white('C', 'B')).toEqual(new EdgeMetadata(1, 0, 1));
-		expect(g.get_data_as_black('C', 'B')).toEqual(new EdgeMetadata(0, 1, 0));
-		expect(g.get_out_degree('C')).toBe(2);
-		expect(g.get_in_degree('C')).toBe(2);
-		expect(g.get_black_opponents('C')).toEqual(['A', 'B']);
-		expect(g.get_white_opponents('C')).toEqual(['A', 'B']);
+		expect(g.get_data_as_white(C, A)).toEqual(new EdgeMetadata(1, 0, 0));
+		expect(g.get_data_as_black(C, A)).toEqual(new EdgeMetadata(1, 0, 0));
+		expect(g.get_data_as_white(C, B)).toEqual(new EdgeMetadata(1, 0, 1));
+		expect(g.get_data_as_black(C, B)).toEqual(new EdgeMetadata(0, 1, 0));
+		expect(g.get_out_degree(C)).toBe(2);
+		expect(g.get_in_degree(C)).toBe(2);
+		expect(g.get_black_opponents(C)).toEqual(['A', 'B']);
+		expect(g.get_white_opponents(C)).toEqual(['A', 'B']);
 	});
 });

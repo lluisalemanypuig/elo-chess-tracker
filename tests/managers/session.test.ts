@@ -38,6 +38,7 @@ import { ADMIN, MEMBER, STUDENT } from '@common/models/user_role';
 import { run_command } from '@tests/exec_utils';
 import { Configuration } from '@common/models/configuration/configuration';
 import { toPlayerPrivateId } from '@common/models/player';
+import { toUserGivenName } from '@common/models/user';
 
 function makeSession(token: string, username: string) {
 	return { token, username: toPlayerPrivateId(username) };
@@ -99,18 +100,39 @@ const configuration: Configuration = {
 	}
 };
 
+const aa = toPlayerPrivateId('aa');
+const bb = toPlayerPrivateId('bb');
+const cc = toPlayerPrivateId('cc');
+const dd = toPlayerPrivateId('dd');
+const ee = toPlayerPrivateId('ee');
+const ff = toPlayerPrivateId('ff');
+
+const A = toUserGivenName('A');
+const B = toUserGivenName('B');
+const C = toUserGivenName('C');
+const D = toUserGivenName('D');
+const E = toUserGivenName('E');
+const F = toUserGivenName('F');
+
+const a = toUserGivenName('a');
+const b = toUserGivenName('b');
+const c = toUserGivenName('c');
+const d = toUserGivenName('d');
+const e = toUserGivenName('e');
+const f = toUserGivenName('f');
+
 describe('Session management via functions', () => {
 	test('Load an empty server', async () => {
 		await run_command('./tests/initialize_empty.sh');
 		clear_server();
 		expect(() => server_init_from_data('tests/webpage', configuration)).not.toThrow();
 
-		user_add_new(toPlayerPrivateId('aa'), 'A', 'a', 'pass_a', [ADMIN]);
-		user_add_new(toPlayerPrivateId('bb'), 'B', 'b', 'pass_b', [MEMBER]);
-		user_add_new(toPlayerPrivateId('cc'), 'C', 'c', 'pass_c', [MEMBER]);
-		user_add_new(toPlayerPrivateId('dd'), 'D', 'd', 'pass_d', [STUDENT]);
-		user_add_new(toPlayerPrivateId('ee'), 'E', 'e', 'pass_e', [STUDENT]);
-		user_add_new(toPlayerPrivateId('ff'), 'F', 'f', 'pass_f', [STUDENT]);
+		user_add_new(aa, A, a, 'pass_a', [ADMIN]);
+		user_add_new(bb, B, b, 'pass_b', [MEMBER]);
+		user_add_new(cc, C, c, 'pass_c', [MEMBER]);
+		user_add_new(dd, D, d, 'pass_d', [STUDENT]);
+		user_add_new(ee, E, e, 'pass_e', [STUDENT]);
+		user_add_new(ff, F, f, 'pass_f', [STUDENT]);
 	});
 
 	let session_aa_1: SessionID;
@@ -129,7 +151,7 @@ describe('Session management via functions', () => {
 	test('Add a few sessions', () => {
 		const manager = SessionIDManager.get_instance();
 
-		const token_aa = session_id_add('aa');
+		const token_aa = session_id_add(aa);
 		session_aa_1 = makeSession(token_aa, 'aa');
 		{
 			const log = is_user_logged_in(session_aa_1);
@@ -138,7 +160,7 @@ describe('Session management via functions', () => {
 		}
 		expect(manager.num_session_ids()).toBe(1);
 
-		const token_bb = session_id_add('bb');
+		const token_bb = session_id_add(bb);
 		session_bb_1 = makeSession(token_bb, 'bb');
 		{
 			const log = is_user_logged_in(session_aa_1);
@@ -152,7 +174,7 @@ describe('Session management via functions', () => {
 		}
 		expect(manager.num_session_ids()).toBe(2);
 
-		const token_cc = session_id_add('cc');
+		const token_cc = session_id_add(cc);
 		session_cc_1 = makeSession(token_cc, 'cc');
 		{
 			const log = is_user_logged_in(session_aa_1);
@@ -171,7 +193,7 @@ describe('Session management via functions', () => {
 		}
 		expect(manager.num_session_ids()).toBe(3);
 
-		const token_dd = session_id_add('dd');
+		const token_dd = session_id_add(dd);
 		session_dd_1 = makeSession(token_dd, 'dd');
 		{
 			const log = is_user_logged_in(session_aa_1);
@@ -195,7 +217,7 @@ describe('Session management via functions', () => {
 		}
 		expect(manager.num_session_ids()).toBe(4);
 
-		const token_ee = session_id_add('ee');
+		const token_ee = session_id_add(ee);
 		session_ee_1 = makeSession(token_ee, 'ee');
 		{
 			const log = is_user_logged_in(session_aa_1);
@@ -224,7 +246,7 @@ describe('Session management via functions', () => {
 		}
 		expect(manager.num_session_ids()).toBe(5);
 
-		const token_ff = session_id_add('ff');
+		const token_ff = session_id_add(ff);
 		session_ff_1 = makeSession(token_ff, 'ff');
 		{
 			const log = is_user_logged_in(session_aa_1);
@@ -262,7 +284,7 @@ describe('Session management via functions', () => {
 	test('Add repeated sessions', () => {
 		const manager = SessionIDManager.get_instance();
 
-		const token_aa = session_id_add('aa');
+		const token_aa = session_id_add(aa);
 		session_aa_2 = makeSession(token_aa, 'aa');
 		{
 			const log = is_user_logged_in(session_aa_1);
@@ -301,7 +323,7 @@ describe('Session management via functions', () => {
 		}
 		expect(manager.num_session_ids()).toBe(7);
 
-		const token_bb = session_id_add('bb');
+		const token_bb = session_id_add(bb);
 		session_bb_2 = makeSession(token_bb, 'bb');
 		{
 			const log = is_user_logged_in(session_aa_1);
@@ -345,7 +367,7 @@ describe('Session management via functions', () => {
 		}
 		expect(manager.num_session_ids()).toBe(8);
 
-		const token_cc = session_id_add('cc');
+		const token_cc = session_id_add(cc);
 		session_cc_2 = makeSession(token_cc, 'cc');
 		{
 			const log = is_user_logged_in(session_aa_1);
@@ -394,7 +416,7 @@ describe('Session management via functions', () => {
 		}
 		expect(manager.num_session_ids()).toBe(9);
 
-		const token_dd = session_id_add('dd');
+		const token_dd = session_id_add(dd);
 		session_dd_2 = makeSession(token_dd, 'dd');
 		{
 			const log = is_user_logged_in(session_aa_1);
@@ -448,7 +470,7 @@ describe('Session management via functions', () => {
 		}
 		expect(manager.num_session_ids()).toBe(10);
 
-		const token_ee = session_id_add('ee');
+		const token_ee = session_id_add(ee);
 		session_ee_2 = makeSession(token_ee, 'ee');
 		{
 			const log = is_user_logged_in(session_aa_1);
@@ -507,7 +529,7 @@ describe('Session management via functions', () => {
 		}
 		expect(manager.num_session_ids()).toBe(11);
 
-		const token_ff = session_id_add('ff');
+		const token_ff = session_id_add(ff);
 		session_ff_2 = makeSession(token_ff, 'ff');
 		{
 			const log = is_user_logged_in(session_aa_1);
@@ -774,7 +796,7 @@ describe('Session management via functions', () => {
 	test('A user has all its sessions deleted', () => {
 		const manager = SessionIDManager.get_instance();
 
-		session_user_delete_all('aa');
+		session_user_delete_all(aa);
 		{
 			const log = is_user_logged_in(session_aa_1);
 			expect(log[0]).toBe(false);
@@ -841,7 +863,7 @@ describe('Session management via functions', () => {
 		}
 		expect(manager.num_session_ids()).toBe(8);
 
-		session_user_delete_all('bb');
+		session_user_delete_all(bb);
 		{
 			const log = is_user_logged_in(session_aa_1);
 			expect(log[0]).toBe(false);
@@ -910,7 +932,7 @@ describe('Session management via functions', () => {
 		}
 		expect(manager.num_session_ids()).toBe(6);
 
-		session_user_delete_all('cc');
+		session_user_delete_all(cc);
 		{
 			const log = is_user_logged_in(session_aa_1);
 			expect(log[0]).toBe(false);
@@ -981,7 +1003,7 @@ describe('Session management via functions', () => {
 		}
 		expect(manager.num_session_ids()).toBe(4);
 
-		session_user_delete_all('ff');
+		session_user_delete_all(ff);
 		{
 			const log = is_user_logged_in(session_aa_1);
 			expect(log[0]).toBe(false);
@@ -1053,7 +1075,7 @@ describe('Session management via functions', () => {
 		}
 		expect(manager.num_session_ids()).toBe(3);
 
-		session_user_delete_all('dd');
+		session_user_delete_all(dd);
 		{
 			const log = is_user_logged_in(session_aa_1);
 			expect(log[0]).toBe(false);
@@ -1127,7 +1149,7 @@ describe('Session management via functions', () => {
 		}
 		expect(manager.num_session_ids()).toBe(1);
 
-		session_user_delete_all('ee');
+		session_user_delete_all(ee);
 		{
 			const log = is_user_logged_in(session_aa_1);
 			expect(log[0]).toBe(false);

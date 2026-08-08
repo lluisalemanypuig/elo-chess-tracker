@@ -26,6 +26,7 @@ Contact:
 import { clear_server } from '@server/managers/memory/clear';
 import { GraphsManager } from '@server/managers/graphs_manager';
 import { Graph } from '@common/models/graph/graph';
+import { toPlayerPrivateId } from '@app/common/models/player';
 
 describe('Graph manager', () => {
 	clear_server();
@@ -47,15 +48,22 @@ describe('Graph manager', () => {
 	let classical = new Graph();
 	let rapid = new Graph();
 
+	const A = toPlayerPrivateId('A');
+	const B = toPlayerPrivateId('B');
+	const C = toPlayerPrivateId('C');
+	const D = toPlayerPrivateId('D');
+	const E = toPlayerPrivateId('E');
+	const F = toPlayerPrivateId('F');
+
 	test('Modify some graphs', () => {
-		blitz.add_edge('C', 'D', 'draw');
-		man.get_graph('Blitz')?.add_edge('C', 'D', 'draw');
+		blitz.add_edge(C, D, 'draw');
+		man.get_graph('Blitz')?.add_edge(C, D, 'draw');
 
-		classical.add_edge('E', 'F', 'black_wins');
-		man.get_graph('Classical')?.add_edge('E', 'F', 'black_wins');
+		classical.add_edge(E, F, 'black_wins');
+		man.get_graph('Classical')?.add_edge(E, F, 'black_wins');
 
-		rapid.add_edge('A', 'B', 'white_wins');
-		man.get_graph('Rapid')?.add_edge('A', 'B', 'white_wins');
+		rapid.add_edge(A, B, 'white_wins');
+		man.get_graph('Rapid')?.add_edge(A, B, 'white_wins');
 	});
 
 	test('Get graphs', () => {

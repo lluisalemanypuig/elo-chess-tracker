@@ -27,6 +27,7 @@ import { EdgeMetadata } from '@common/models/graph/edge_metadata';
 import { Edge } from '@common/models/graph/edge';
 
 import { edge_from_string } from '@common/io/graph/edge';
+import { toPlayerPrivateId } from '@app/common/models/player';
 
 describe('IO conversion', () => {
 	test('string', () => {
@@ -34,6 +35,6 @@ describe('IO conversion', () => {
 			edge_from_string(
 				'{"neighbor": "A", "metadata": {"num_games_won": 1, "num_games_drawn": 0, "num_games_lost": 300}}'
 			)
-		).toEqual(new Edge('A', new EdgeMetadata(1, 0, 300)));
+		).toEqual(new Edge(toPlayerPrivateId('A'), new EdgeMetadata(1, 0, 300)));
 	});
 });

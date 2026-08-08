@@ -26,7 +26,7 @@ Contact:
 import { ADMIN, STUDENT } from '@common/models/user_role';
 import { initialize_rating_functions } from '@server/managers/rating_system';
 import { user_from_string } from '@common/io/user';
-import { isDefined } from '@common/utils/is_defined';
+import { isNotDefined } from '@common/utils/is_defined';
 
 describe('IO conversion (Elo)', () => {
 	initialize_rating_functions('Elo');
@@ -61,7 +61,7 @@ describe('IO conversion (Elo)', () => {
 		);
 
 		expect(u).not.toBeNull();
-		if (!isDefined(u)) {
+		if (isNotDefined(u)) {
 			return;
 		}
 		expect(u.username).toEqual('u');
@@ -82,7 +82,7 @@ describe('IO conversion (Elo)', () => {
 		);
 
 		expect(u1).not.toBeNull();
-		if (!isDefined(u1)) {
+		if (isNotDefined(u1)) {
 			return;
 		}
 		expect(u1.roles).toEqual([ADMIN, STUDENT]);
@@ -116,7 +116,7 @@ describe('IO conversion (Elo)', () => {
 			}'
 		);
 		expect(u2).not.toBeNull();
-		if (!isDefined(u2)) {
+		if (isNotDefined(u2)) {
 			return;
 		}
 		expect(u2.roles).toEqual([STUDENT, ADMIN]);
@@ -128,7 +128,7 @@ describe('IO conversion (Elo)', () => {
 			'{ "username": "u", "first_name": "f", "last_name": "l", "password": { "encrypted": "a", "iv": "b" }, "roles": ["student", "admin"], "games": [ {"time_control": "blitz", "records": [{ "record": "2024-12-31", "amount": 1 }]}, {"time_control": "rapid", "records": [{ "record": "2025-01-01", "amount": 1 }]} ], "ratings": [ { "time_control": "blitz", "rating": { "rating": 1500, "num_games": 0, "won": 0, "drawn": 0, "lost": 0, "K": 40, "surpassed_2400": false } }, { "time_control": "classical", "rating": { "rating": 1700, "num_games": 0, "won": 0, "drawn": 0, "lost": 0, "K": 40, "surpassed_2400": false } } ] }'
 		);
 		expect(u).not.toBeNull();
-		if (!isDefined(u)) {
+		if (isNotDefined(u)) {
 			return;
 		}
 		expect(u.ratings.length).toBe(2);

@@ -25,7 +25,7 @@ Contact:
 
 import { initialize_rating_functions } from '@server/managers/rating_system';
 import { player_from_string } from '@common/io/player';
-import { isDefined } from '@common/utils/is_defined';
+import { isNotDefined } from '@common/utils/is_defined';
 
 describe('IO conversion -- Elo', () => {
 	initialize_rating_functions('Elo');
@@ -65,7 +65,7 @@ describe('IO conversion -- Elo', () => {
 		);
 
 		expect(p).not.toBeNull();
-		if (!isDefined(p)) {
+		if (isNotDefined(p)) {
 			return;
 		}
 		expect(p.username).toEqual('user.name');

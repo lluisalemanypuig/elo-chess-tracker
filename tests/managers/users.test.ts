@@ -33,18 +33,18 @@ import {
 	user_rename_and_reassign_roles,
 	user_update_from_player_data
 } from '@server/managers/users';
-import { User } from '@common/models/user';
-import { ADMIN, MEMBER, STUDENT, TEACHER } from '@common/models/user_role';
+import { toUserGivenName, User } from '@common/models/user';
+import { ADMIN, MEMBER, STUDENT, TEACHER, UserRole } from '@common/models/user_role';
 import { clear_server } from '@server/managers/memory/clear';
 import { run_command } from '@tests/exec_utils';
 import { Player, PlayerPrivateId, toPlayerPrivateId } from '@common/models/player';
 import { EloRating } from '@common/models/rating_framework/Elo/rating';
 import { user_from_string } from '@common/io/user';
 import { UsersManager } from '@server/managers/users_manager';
-import { isDefined } from '@common/utils/is_defined';
+import { isNotDefined } from '@common/utils/is_defined';
 import { Configuration } from '@common/models/configuration/configuration';
 import { TimeControlRating } from '@common/models/time_control_rating';
-import { UserThin } from '@app/common/models/user_thin';
+import { UserThin } from '@common/models/user_thin';
 
 const webpage_dir = 'tests/webpage';
 const db_dir = path.join(webpage_dir, 'database');
@@ -210,17 +210,43 @@ const classical: Configuration = {
 	}
 };
 
-function user_exists(username: PlayerPrivateId): boolean {
-	return UsersManager.get_instance().exists(username);
+function test_user_exists(username: string): boolean {
+	return UsersManager.get_instance().exists(toPlayerPrivateId(username));
 }
 
-function user_retrieve(username: PlayerPrivateId): User | undefined {
-	return UsersManager.get_instance().get_user_by_username(username);
+function test_user_retrieve(username: string): User | undefined {
+	return UsersManager.get_instance().get_user_by_username(toPlayerPrivateId(username));
 }
 
 function user_get_all(): User[] {
 	return UsersManager.get_instance().all();
 }
+
+function test_user_add_new(username: string, firstName: string, lastName: string, password: string, roles: UserRole[]) {
+	return user_add_new(
+		toPlayerPrivateId(username),
+		toUserGivenName(firstName),
+		toUserGivenName(lastName),
+		password,
+		roles
+	);
+}
+
+function test_user_rename_and_reassign_roles(username: string, firstName: string, lastName: string, roles: UserRole[]) {
+	return user_rename_and_reassign_roles(
+		toPlayerPrivateId(username),
+		toUserGivenName(firstName),
+		toUserGivenName(lastName),
+		roles
+	);
+}
+
+const aa = toPlayerPrivateId('aa');
+const bb = toPlayerPrivateId('bb');
+const cc = toPlayerPrivateId('cc');
+const dd = toPlayerPrivateId('dd');
+const ee = toPlayerPrivateId('ee');
+const ff = toPlayerPrivateId('ff');
 
 describe('Create users', () => {
 	test('In an empty server', async () => {
@@ -228,29 +254,27 @@ describe('Create users', () => {
 		clear_server();
 		server_init_from_data('tests/webpage/', classical_rapid_blitz);
 
-		const asdf = toPlayerPrivateId('asdf');
-
-		const new_user = user_add_new(asdf, 'First', 'Last', 'password', [ADMIN]);
+		const new_user = test_user_add_new('asdf', 'First', 'Last', 'password', [ADMIN]);
 
 		{
-			const asdf_user_file = path.join(db_users_dir, asdf);
+			const asdf_user_file = path.join(db_users_dir, 'asdf');
 			expect(fs.existsSync(asdf_user_file)).toBe(true);
 			const u = user_from_string(fs.readFileSync(asdf_user_file, 'utf8'));
 			expect(u).toBeDefined();
-			if (!isDefined(u)) {
+			if (isNotDefined(u)) {
 				return;
 			}
 			expect(new_user).toEqual(u);
 			expect(u.ratings.length).toBe(3);
 		}
 
-		expect(user_exists(asdf)).toBe(true);
+		expect(test_user_exists('asdf')).toBe(true);
 
 		const all_users = user_get_all();
 		expect(all_users.length).toBe(1);
 		expect(all_users[0]).toEqual(new_user);
 		expect(all_users[0].ratings.length).toEqual(3);
-		expect(user_retrieve(asdf)).toEqual(new_user);
+		expect(test_user_retrieve('asdf')).toEqual(new_user);
 
 		expect(
 			user_get_all_name_public_id().map((d: UserThin): string => {
@@ -281,25 +305,24 @@ describe('Create users', () => {
 			expect(fs.existsSync(asdf_user_file)).toBe(true);
 			const u = user_from_string(fs.readFileSync(asdf_user_file, 'utf8'));
 			expect(u).toBeDefined();
-			if (!isDefined(u)) {
+			if (isNotDefined(u)) {
 				return;
 			}
 			expect(u.ratings.length).toBe(4);
 		}
 
-		const qwer = toPlayerPrivateId('qwer');
-		const new_user = user_add_new(qwer, 'Perico', 'Palotes', 'password', [TEACHER]);
+		const new_user = test_user_add_new('qwer', 'Perico', 'Palotes', 'password', [TEACHER]);
 
 		const qwer_user_file = path.join(db_users_dir, 'qwer');
 		expect(fs.existsSync(qwer_user_file)).toBe(true);
 		const u = user_from_string(fs.readFileSync(qwer_user_file, 'utf8'));
 		expect(u).toBeDefined();
-		if (!isDefined(u)) {
+		if (isNotDefined(u)) {
 			return;
 		}
 		expect(u.ratings.length).toBe(4);
 
-		expect(user_retrieve(qwer)).toEqual(new_user);
+		expect(test_user_retrieve('qwer')).toEqual(new_user);
 
 		const all_users = user_get_all();
 
@@ -321,8 +344,8 @@ describe('Create users', () => {
 				}, true)
 		).toEqual(true);
 
-		expect(user_exists(toPlayerPrivateId('asdf'))).toBe(true);
-		expect(user_exists(toPlayerPrivateId('qwer'))).toBe(true);
+		expect(test_user_exists(toPlayerPrivateId('asdf'))).toBe(true);
+		expect(test_user_exists(toPlayerPrivateId('qwer'))).toBe(true);
 	});
 
 	test('Check users with extra ratings', async () => {
@@ -341,8 +364,8 @@ describe('Create users', () => {
 				}, true)
 		).toEqual(true);
 
-		expect(user_exists(toPlayerPrivateId('asdf'))).toBe(true);
-		expect(user_exists(toPlayerPrivateId('qwer'))).toBe(true);
+		expect(test_user_exists(toPlayerPrivateId('asdf'))).toBe(true);
+		expect(test_user_exists(toPlayerPrivateId('qwer'))).toBe(true);
 	});
 });
 
@@ -353,8 +376,7 @@ describe('Modify existing users', () => {
 		clear_server();
 		server_init_from_data('tests/webpage/', classical_rapid_blitz);
 
-		const asdf = toPlayerPrivateId('asdf');
-		const new_user = user_add_new(asdf, 'First', 'Last', 'password', [ADMIN]);
+		const new_user = test_user_add_new('asdf', 'First', 'Last', 'password', [ADMIN]);
 
 		const asdf_user_file = path.join(db_users_dir, 'asdf');
 
@@ -364,10 +386,10 @@ describe('Modify existing users', () => {
 			expect(new_user).toEqual(u);
 		}
 
-		const modified_user = user_rename_and_reassign_roles(asdf, 'QQQ', 'WWW', [TEACHER]);
+		const modified_user = test_user_rename_and_reassign_roles('asdf', 'QQQ', 'WWW', [TEACHER]);
 
-		expect(user_retrieve(asdf)).toEqual(modified_user);
-		expect(user_exists(asdf)).toBe(true);
+		expect(test_user_retrieve('asdf')).toEqual(modified_user);
+		expect(test_user_exists('asdf')).toBe(true);
 		expect(
 			user_get_all_name_public_id().map((d: UserThin): string => {
 				return d.name;
@@ -378,7 +400,7 @@ describe('Modify existing users', () => {
 			expect(fs.existsSync(asdf_user_file)).toBe(true);
 			const u = user_from_string(fs.readFileSync(asdf_user_file, 'utf8'));
 			expect(u).not.toBeNull();
-			if (!isDefined(u)) {
+			if (isNotDefined(u)) {
 				return;
 			}
 			expect(modified_user).toEqual(u);
@@ -392,14 +414,13 @@ describe('Modify existing users', () => {
 		clear_server();
 		server_init_from_data('tests/webpage/', classical_rapid_blitz);
 
-		const asdf = toPlayerPrivateId('asdf');
-		const modified_user = user_rename_and_reassign_roles(asdf, 'FFF', 'GGG', [ADMIN, MEMBER]);
+		const modified_user = test_user_rename_and_reassign_roles('asdf', 'FFF', 'GGG', [ADMIN, MEMBER]);
 
 		const asdf_user_file = path.join(db_users_dir, 'asdf');
 		expect(fs.existsSync(asdf_user_file)).toBe(true);
 		const u = user_from_string(fs.readFileSync(asdf_user_file, 'utf8'));
 		expect(u).toBeDefined();
-		if (!isDefined(u)) {
+		if (isNotDefined(u)) {
 			return;
 		}
 		expect(modified_user).toEqual(u);
@@ -407,8 +428,8 @@ describe('Modify existing users', () => {
 		expect(u.last_name).toEqual('GGG');
 		expect(u.roles).toEqual([ADMIN, MEMBER]);
 
-		expect(user_retrieve(asdf)).toEqual(modified_user);
-		expect(user_exists(asdf)).toBe(true);
+		expect(test_user_retrieve('asdf')).toEqual(modified_user);
+		expect(test_user_exists('asdf')).toBe(true);
 		expect(
 			user_get_all_name_public_id().map((d: UserThin): string => {
 				return d.name;
@@ -420,18 +441,12 @@ describe('Modify existing users', () => {
 		clear_server();
 		server_init_from_data('tests/webpage/', classical_rapid_blitz);
 
-		const aa = toPlayerPrivateId('aa');
-		const bb = toPlayerPrivateId('bb');
-		const cc = toPlayerPrivateId('cc');
-		const dd = toPlayerPrivateId('dd');
-		const ee = toPlayerPrivateId('ee');
-		const ff = toPlayerPrivateId('ff');
-		user_add_new(aa, 'A', 'a', 'pass_a', [ADMIN]);
-		user_add_new(bb, 'B', 'b', 'pass_b', [MEMBER]);
-		user_add_new(cc, 'C', 'c', 'pass_c', [MEMBER]);
-		user_add_new(dd, 'D', 'd', 'pass_d', [STUDENT]);
-		user_add_new(ee, 'E', 'e', 'pass_e', [STUDENT]);
-		user_add_new(ff, 'F', 'f', 'pass_f', [STUDENT]);
+		test_user_add_new(aa, 'A', 'a', 'pass_a', [ADMIN]);
+		test_user_add_new(bb, 'B', 'b', 'pass_b', [MEMBER]);
+		test_user_add_new(cc, 'C', 'c', 'pass_c', [MEMBER]);
+		test_user_add_new(dd, 'D', 'd', 'pass_d', [STUDENT]);
+		test_user_add_new(ee, 'E', 'e', 'pass_e', [STUDENT]);
+		test_user_add_new(ff, 'F', 'f', 'pass_f', [STUDENT]);
 
 		const aa_Classical = new TimeControlRating('Classical', new EloRating(2000, 10, 10, 0, 0, 40, false));
 		const aa_Blitz = new TimeControlRating('Blitz', new EloRating(300, 100, 0, 0, 100, 40, false));
@@ -469,7 +484,7 @@ describe('Modify existing users', () => {
 			new Player(ff, rating_ff)
 		]);
 
-		const user_aa = user_retrieve(aa) as User;
+		const user_aa = test_user_retrieve(aa) as User;
 		expect(user_aa.get_rating('Blitz')).toEqual(aa_Blitz.rating);
 		expect(user_aa.get_rating('Classical')).toEqual(aa_Classical.rating);
 		expect(user_aa.get_rating('Rapid')).toEqual(aa_Rapid.rating);
@@ -478,7 +493,7 @@ describe('Modify existing users', () => {
 			expect(fs.existsSync(user_file)).toBe(true);
 			const u = user_from_string(fs.readFileSync(user_file, 'utf8'));
 			expect(u).toBeDefined();
-			if (!isDefined(u)) {
+			if (isNotDefined(u)) {
 				return;
 			}
 			expect(u.get_rating('Blitz')).toEqual(aa_Blitz.rating);
@@ -486,7 +501,7 @@ describe('Modify existing users', () => {
 			expect(u.get_rating('Rapid')).toEqual(aa_Rapid.rating);
 		}
 
-		const user_bb = user_retrieve(bb) as User;
+		const user_bb = test_user_retrieve(bb) as User;
 		expect(user_bb.get_rating('Blitz')).toEqual(bb_Blitz.rating);
 		expect(user_bb.get_rating('Classical')).toEqual(bb_Classical.rating);
 		expect(user_bb.get_rating('Rapid')).toEqual(bb_Rapid.rating);
@@ -495,7 +510,7 @@ describe('Modify existing users', () => {
 			expect(fs.existsSync(user_file)).toBe(true);
 			const u = user_from_string(fs.readFileSync(user_file, 'utf8'));
 			expect(u).toBeDefined();
-			if (!isDefined(u)) {
+			if (isNotDefined(u)) {
 				return;
 			}
 			expect(u.get_rating('Blitz')).toEqual(bb_Blitz.rating);
@@ -503,7 +518,7 @@ describe('Modify existing users', () => {
 			expect(u.get_rating('Rapid')).toEqual(bb_Rapid.rating);
 		}
 
-		const user_cc = user_retrieve(cc) as User;
+		const user_cc = test_user_retrieve(cc) as User;
 		expect(user_cc.get_rating('Blitz')).toEqual(cc_Blitz.rating);
 		expect(user_cc.get_rating('Classical')).toEqual(cc_Classical.rating);
 		expect(user_cc.get_rating('Rapid')).toEqual(cc_Rapid.rating);
@@ -512,7 +527,7 @@ describe('Modify existing users', () => {
 			expect(fs.existsSync(user_file)).toBe(true);
 			const u = user_from_string(fs.readFileSync(user_file, 'utf8'));
 			expect(u).toBeDefined();
-			if (!isDefined(u)) {
+			if (isNotDefined(u)) {
 				return;
 			}
 			expect(u.get_rating('Blitz')).toEqual(cc_Blitz.rating);
@@ -520,7 +535,7 @@ describe('Modify existing users', () => {
 			expect(u.get_rating('Rapid')).toEqual(cc_Rapid.rating);
 		}
 
-		const user_dd = user_retrieve(dd) as User;
+		const user_dd = test_user_retrieve(dd) as User;
 		expect(user_dd.get_rating('Classical')).toEqual(dd_Classical.rating);
 		expect(user_dd.get_rating('Rapid')).toEqual(dd_Rapid.rating);
 		{
@@ -528,14 +543,14 @@ describe('Modify existing users', () => {
 			expect(fs.existsSync(user_file)).toBe(true);
 			const u = user_from_string(fs.readFileSync(user_file, 'utf8'));
 			expect(u).toBeDefined();
-			if (!isDefined(u)) {
+			if (isNotDefined(u)) {
 				return;
 			}
 			expect(u.get_rating('Classical')).toEqual(dd_Classical.rating);
 			expect(u.get_rating('Rapid')).toEqual(dd_Rapid.rating);
 		}
 
-		const user_ee = user_retrieve(ee) as User;
+		const user_ee = test_user_retrieve(ee) as User;
 		expect(user_ee.get_rating('Blitz')).toEqual(ee_Blitz.rating);
 		expect(user_ee.get_rating('Rapid')).toEqual(ee_Rapid.rating);
 		{
@@ -543,14 +558,14 @@ describe('Modify existing users', () => {
 			expect(fs.existsSync(user_file)).toBe(true);
 			const u = user_from_string(fs.readFileSync(user_file, 'utf8'));
 			expect(u).toBeDefined();
-			if (!isDefined(u)) {
+			if (isNotDefined(u)) {
 				return;
 			}
 			expect(u.get_rating('Blitz')).toEqual(ee_Blitz.rating);
 			expect(u.get_rating('Rapid')).toEqual(ee_Rapid.rating);
 		}
 
-		const user_ff = user_retrieve(ff) as User;
+		const user_ff = test_user_retrieve(ff) as User;
 		expect(user_ff.get_rating('Blitz')).toEqual(ff_Blitz.rating);
 		expect(user_ff.get_rating('Classical')).toEqual(ff_Classical.rating);
 		{
@@ -558,7 +573,7 @@ describe('Modify existing users', () => {
 			expect(fs.existsSync(user_file)).toBe(true);
 			const u = user_from_string(fs.readFileSync(user_file, 'utf8'));
 			expect(u).toBeDefined();
-			if (!isDefined(u)) {
+			if (isNotDefined(u)) {
 				return;
 			}
 			expect(u.get_rating('Blitz')).toEqual(ff_Blitz.rating);
