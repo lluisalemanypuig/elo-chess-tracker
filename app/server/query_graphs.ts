@@ -44,7 +44,7 @@ import { safe_parse_request_body, safe_parse_request_cookies } from '@server/uti
 import { AuthenticationInputSchema } from '@common/schemas/authentication';
 import { EdgeInfo, NodeInfo, QueryGraphOutput } from '@common/schemas/query_graphs';
 
-function retrieve_graph_user(username: PlayerPrivateID, time_control_id: TimeControlID): QueryGraphOutput {
+function retrieve_graph_user(username: PlayerPrivateId, time_control_id: TimeControlID): QueryGraphOutput {
 	const users = UsersManager.get_instance();
 	const graphs = GraphsManager.get_instance();
 

@@ -65,7 +65,7 @@ function random_session_id(str: string): string {
  * @param username Username.
  * @returns The authentication token.
  */
-export function session_id_add(username: PlayerPrivateID): string {
+export function session_id_add(username: PlayerPrivateId): string {
 	const token = random_session_id(username);
 	const session_id: SessionID = { token: token, username: username };
 	SessionIDManager.get_instance().add_session_id(session_id);
@@ -89,7 +89,7 @@ export function session_id_delete(session: SessionID): void {
 }
 
 /// Deletes a session id.
-export function session_user_delete_all(username: PlayerPrivateID): void {
+export function session_user_delete_all(username: PlayerPrivateId): void {
 	let mem = SessionIDManager.get_instance();
 
 	debug(log_now(), `Before deleting, '${mem.num_session_ids()}' sessions`);
