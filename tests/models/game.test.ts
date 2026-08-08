@@ -27,7 +27,7 @@ import { toPlayerPrivateId } from '@common/models/player';
 import { Game, toGameId } from '@common/models/game';
 import { EloRating } from '@common/models/rating_framework/Elo/rating';
 import { toTimeControlId, toTimeControlName } from '@common/models/time_control';
-import { toDateYYYYMMDDHHmmss, toDateYYYYMMDDHHmmssSSS } from '@server/utils/time';
+import { toDateYYYYMMDDHHmmss, toDateYYYYMMDDHHmmssSSS } from '@app/common/utils/time';
 
 const Blitz = toTimeControlId('Blitz');
 const Blitz5p3 = toTimeControlName('Blitz (5 + 3)');

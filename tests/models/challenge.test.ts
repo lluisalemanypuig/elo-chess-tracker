@@ -26,7 +26,7 @@ Contact:
 import { toPlayerPrivateId } from '@common/models/player';
 import { new_challenge, set_result, unset_result, set_result_accepted, toChallengeId } from '@common/models/challenge';
 import { toTimeControlId, toTimeControlName } from '@common/models/time_control';
-import { toDateYYYYMMDDHHmmssSSS } from '@server/utils/time';
+import { toDateYYYYMMDDHHmmssSSS } from '@app/common/utils/time';
 
 const Blitz = toTimeControlId('Blitz');
 const Blitz5p3 = toTimeControlName('Blitz (5 + 3)');

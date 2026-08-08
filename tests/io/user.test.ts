@@ -27,7 +27,7 @@ import { ADMIN, STUDENT } from '@common/models/user_role';
 import { initialize_rating_functions } from '@server/managers/rating_system';
 import { user_from_string } from '@common/io/user';
 import { isNotDefined } from '@common/utils/is_defined';
-import { toDateYYYYMMDD } from '@server/utils/time';
+import { toDateYYYYMMDD } from '@app/common/utils/time';
 import { toTimeControlId } from '@common/models/time_control';
 
 const Classical = toTimeControlId('classical');

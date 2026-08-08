@@ -30,7 +30,7 @@ import {
 	long_date_to_tiny_date,
 	toDateYYYYMMDDHHmmss,
 	toDateYYYYMMDDHHmmssSSS
-} from '@server/utils/time';
+} from '@app/common/utils/time';
 
 describe('Number to string', () => {
 	test('1 digit', () => {

@@ -49,7 +49,7 @@ import { UsersManager } from '@server/managers/users_manager';
 import { Configuration } from '@common/models/configuration/configuration';
 import { PlayerPrivateId, toPlayerPrivateId } from '@common/models/player';
 import { toTimeControlId, toTimeControlName } from '@common/models/time_control';
-import { toDateYYYYMMDDHHmmssSSS } from '@server/utils/time';
+import { toDateYYYYMMDDHHmmssSSS } from '@app/common/utils/time';
 
 const webpage_dir = 'tests/webpage';
 const db_dir = path.join(webpage_dir, 'database');

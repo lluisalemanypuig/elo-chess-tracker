@@ -38,7 +38,7 @@ import { toUserGivenName, User } from '@common/models/user';
 import { UsersManager } from '@server/managers/users_manager';
 import { game_array_from_string } from '@common/io/game';
 import { GamesIterator } from '@server/managers/games_iterator';
-import { long_date_to_short_date, toDateHHmmssSSS, toDateYYYYMMDD } from '@server/utils/time';
+import { long_date_to_short_date, toDateHHmmssSSS, toDateYYYYMMDD } from '@app/common/utils/time';
 import { clear_server } from '@server/managers/memory/clear';
 import { GraphsManager } from '@server/managers/graphs_manager';
 import { Graph } from '@common/models/graph/graph';

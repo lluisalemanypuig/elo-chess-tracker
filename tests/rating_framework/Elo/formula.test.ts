@@ -28,7 +28,7 @@ import { toTimeControlId, toTimeControlName } from '@common/models/time_control'
 import { Game, toGameId } from '@common/models/game';
 import { EloRating } from '@common/models/rating_framework/Elo/rating';
 import { Elo_player_vs_player } from '@server/rating_framework/Elo/formula';
-import { toDateYYYYMMDDHHmmss, toDateYYYYMMDDHHmmssSSS } from '@server/utils/time';
+import { toDateYYYYMMDDHHmmss, toDateYYYYMMDDHHmmssSSS } from '@app/common/utils/time';
 
 const Classical = toTimeControlId('Classical');
 

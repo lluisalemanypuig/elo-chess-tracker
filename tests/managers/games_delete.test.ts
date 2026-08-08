@@ -41,7 +41,7 @@ import { Configuration } from '@common/models/configuration/configuration';
 import { toPlayerPrivateId } from '@common/models/player';
 import { toGameId } from '@common/models/game';
 import { toTimeControlId, toTimeControlName } from '@common/models/time_control';
-import { toDateYYYYMMDD, toDateHHmmssSSS } from '@server/utils/time';
+import { toDateYYYYMMDD, toDateHHmmssSSS } from '@app/common/utils/time';
 
 const Classical = toTimeControlId('Classical');
 const Classical90p30 = toTimeControlName('Classical (90 + 30)');

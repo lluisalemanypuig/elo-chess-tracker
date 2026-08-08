@@ -59,7 +59,7 @@ import { initialize_permissions, UserRoleToUserAction } from '@server/managers/u
 import { EloRating } from '@common/models/rating_framework/Elo/rating';
 import { toPlayerPrivateId } from '@common/models/player';
 import { toTimeControlId } from '@common/models/time_control';
-import { toDateYYYYMMDD } from '@server/utils/time';
+import { toDateYYYYMMDD } from '@app/common/utils/time';
 
 const Classical = toTimeControlId('Classical');
 const Rapid = toTimeControlId('Rapid');

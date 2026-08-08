@@ -27,7 +27,7 @@ import { ChallengesManager, numberToChallengeId } from '@server/managers/challen
 import { new_challenge, toChallengeId } from '@common/models/challenge';
 import { toPlayerPrivateId } from '@common/models/player';
 import { toTimeControlId, toTimeControlName } from '@common/models/time_control';
-import { toDateYYYYMMDDHHmmssSSS } from '@server/utils/time';
+import { toDateYYYYMMDDHHmmssSSS } from '@app/common/utils/time';
 
 const Classical = toTimeControlId('Classical');
 const Classical90p30 = toTimeControlName('Classical (90 + 30)');
