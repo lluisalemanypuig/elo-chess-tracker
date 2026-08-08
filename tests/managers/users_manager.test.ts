@@ -25,6 +25,12 @@ Contact:
 
 import { UsersManager } from '@server/managers/users_manager';
 import { User } from '@common/models/user';
+import { toPlayerPrivateId } from '@common/models/player';
+
+const pa = toPlayerPrivateId('a');
+const pb = toPlayerPrivateId('b');
+const pc = toPlayerPrivateId('c');
+const pd = toPlayerPrivateId('d');
 
 describe('Users Manager', () => {
 	test('Empty manager', () => {
@@ -38,9 +44,9 @@ describe('Users Manager', () => {
 		let users = UsersManager.get_instance();
 		users.clear();
 
-		const a = new User('a', 'AA', 'aa', { encrypted: 'p', iv: 'w' }, [], [], []);
-		const b = new User('b', 'BB', 'bb', { encrypted: 'p', iv: 'w' }, [], [], []);
-		const c = new User('c', 'CC', 'cc', { encrypted: 'p', iv: 'w' }, [], [], []);
+		const a = new User(pa, 'AA', 'aa', { encrypted: 'p', iv: 'w' }, [], [], []);
+		const b = new User(pb, 'BB', 'bb', { encrypted: 'p', iv: 'w' }, [], [], []);
+		const c = new User(pc, 'CC', 'cc', { encrypted: 'p', iv: 'w' }, [], [], []);
 
 		users.add_user(a);
 		expect(users.num_users()).toBe(1);
@@ -55,13 +61,13 @@ describe('Users Manager', () => {
 		expect(users.get_user_at(1)).toEqual(b);
 		expect(users.get_user_at(2)).toEqual(c);
 
-		expect(users.get_user_index_by_username('a')).toBe(0);
+		expect(users.get_user_index_by_username(pa)).toBe(0);
 		expect(users.get_user_index(a)).toBe(0);
 
-		expect(users.get_user_index_by_username('b')).toBe(1);
+		expect(users.get_user_index_by_username(pb)).toBe(1);
 		expect(users.get_user_index(b)).toBe(1);
 
-		expect(users.get_user_index_by_username('c')).toBe(2);
+		expect(users.get_user_index_by_username(pc)).toBe(2);
 		expect(users.get_user_index(c)).toBe(2);
 	});
 
@@ -69,15 +75,15 @@ describe('Users Manager', () => {
 		let users = UsersManager.get_instance();
 		users.clear();
 
-		const a = new User('a', 'AA', 'aa', { encrypted: 'p', iv: 'w' }, [], [], []);
-		const b = new User('b', 'BB', 'bb', { encrypted: 'p', iv: 'w' }, [], [], []);
-		const c = new User('c', 'CC', 'cc', { encrypted: 'p', iv: 'w' }, [], [], []);
+		const a = new User(pa, 'AA', 'aa', { encrypted: 'p', iv: 'w' }, [], [], []);
+		const b = new User(pb, 'BB', 'bb', { encrypted: 'p', iv: 'w' }, [], [], []);
+		const c = new User(pc, 'CC', 'cc', { encrypted: 'p', iv: 'w' }, [], [], []);
 
 		users.add_user(a);
 		users.add_user(b);
 		users.add_user(c);
 
-		const d = new User('d', 'DD', 'dd', { encrypted: 'p', iv: 'w' }, [], [], []);
+		const d = new User(pd, 'DD', 'dd', { encrypted: 'p', iv: 'w' }, [], [], []);
 
 		users.replace_user(d, users.get_user_index(b) as number);
 
@@ -89,16 +95,16 @@ describe('Users Manager', () => {
 		expect(users.get_user_at(1)).toEqual(d);
 		expect(users.get_user_at(2)).toEqual(c);
 
-		expect(users.get_user_index_by_username('a')).toBe(0);
+		expect(users.get_user_index_by_username(pa)).toBe(0);
 		expect(users.get_user_index(a)).toBe(0);
 
-		expect(users.get_user_index_by_username('b')).toBe(undefined);
+		expect(users.get_user_index_by_username(pb)).toBe(undefined);
 		expect(users.get_user_index(b)).toBe(undefined);
 
-		expect(users.get_user_index_by_username('d')).toBe(1);
+		expect(users.get_user_index_by_username(pd)).toBe(1);
 		expect(users.get_user_index(d)).toBe(1);
 
-		expect(users.get_user_index_by_username('c')).toBe(2);
+		expect(users.get_user_index_by_username(pc)).toBe(2);
 		expect(users.get_user_index(c)).toBe(2);
 	});
 });

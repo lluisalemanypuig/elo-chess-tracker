@@ -57,6 +57,7 @@ import {
 import { ADMIN, MEMBER, STUDENT, TEACHER } from '@common/models/user_role';
 import { initialize_permissions, UserRoleToUserAction } from '@server/managers/user_role_action';
 import { EloRating } from '@common/models/rating_framework/Elo/rating';
+import { toPlayerPrivateId } from '@common/models/player';
 
 describe('Elo', () => {
 	//const bullet = new EloRating(1400, 0, 0, 0, 0, 40, false);
@@ -66,7 +67,7 @@ describe('Elo', () => {
 
 	test('basic gets', () => {
 		const u = new User(
-			'user.name',
+			toPlayerPrivateId('user.name'),
 			'First',
 			'Last',
 			{ encrypted: 'asdf', iv: 'ivrandom' },
@@ -95,7 +96,7 @@ describe('Elo', () => {
 
 	test('basic sets', () => {
 		let u = new User(
-			'user.name',
+			toPlayerPrivateId('user.name'),
 			'First',
 			'Last',
 			{ encrypted: 'asdf', iv: 'ivrandom' },
@@ -127,7 +128,7 @@ describe('Elo', () => {
 
 	test('Adding games', () => {
 		let u = new User(
-			'user.name',
+			toPlayerPrivateId('user.name'),
 			'First',
 			'Last',
 			{ encrypted: 'asdf', iv: 'ivrandom' },
@@ -217,6 +218,8 @@ describe('Elo', () => {
 	});
 });
 
+const u = toPlayerPrivateId('u');
+
 describe('Actions allowed per user (single role)', () => {
 	test('Admin', () => {
 		UserRoleToUserAction.get_instance().clear();
@@ -227,7 +230,7 @@ describe('Actions allowed per user (single role)', () => {
 			member: []
 		});
 
-		const admin = new User('u', 'F', 'L', { encrypted: 'a', iv: 'i' }, [ADMIN], [], []);
+		const admin = new User(u, 'F', 'L', { encrypted: 'a', iv: 'i' }, [ADMIN], [], []);
 
 		const actions = admin.get_actions();
 		expect(actions.length).toBe(2);
@@ -272,7 +275,7 @@ describe('Actions allowed per user (single role)', () => {
 			member: []
 		});
 
-		const teacher = new User('u', 'F', 'L', { encrypted: 'a', iv: 'i' }, [TEACHER], [], []);
+		const teacher = new User(u, 'F', 'L', { encrypted: 'a', iv: 'i' }, [TEACHER], [], []);
 
 		const actions = teacher.get_actions();
 		expect(actions.length).toBe(2);
@@ -317,7 +320,7 @@ describe('Actions allowed per user (single role)', () => {
 			member: []
 		});
 
-		const student = new User('u', 'F', 'L', { encrypted: 'a', iv: 'i' }, [STUDENT], [], []);
+		const student = new User(u, 'F', 'L', { encrypted: 'a', iv: 'i' }, [STUDENT], [], []);
 
 		const actions = student.get_actions();
 		expect(actions.length).toBe(2);
@@ -362,7 +365,7 @@ describe('Actions allowed per user (single role)', () => {
 			member: [USER_CHALLENGE_ADMIN, USER_CHALLENGE_STUDENT]
 		});
 
-		const member = new User('u', 'F', 'L', { encrypted: 'a', iv: 'i' }, [MEMBER], [], []);
+		const member = new User(u, 'F', 'L', { encrypted: 'a', iv: 'i' }, [MEMBER], [], []);
 
 		const actions = member.get_actions();
 		expect(actions.length).toBe(3);
@@ -410,7 +413,7 @@ describe('Actions allowed per user (multiple roles)', () => {
 			member: []
 		});
 
-		const admin_teacher = new User('u', 'F', 'L', { encrypted: 'a', iv: 'i' }, [ADMIN, TEACHER], [], []);
+		const admin_teacher = new User(u, 'F', 'L', { encrypted: 'a', iv: 'i' }, [ADMIN, TEACHER], [], []);
 
 		const actions = admin_teacher.get_actions();
 		expect(actions.length).toBe(2);
@@ -457,7 +460,7 @@ describe('Actions allowed per user (multiple roles)', () => {
 			member: []
 		});
 
-		const admin_student = new User('u', 'F', 'L', { encrypted: 'a', iv: 'i' }, [ADMIN, STUDENT], [], []);
+		const admin_student = new User(u, 'F', 'L', { encrypted: 'a', iv: 'i' }, [ADMIN, STUDENT], [], []);
 
 		const actions = admin_student.get_actions();
 		expect(actions.length).toBe(4);

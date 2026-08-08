@@ -23,7 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { Player } from '@common/models/player';
+import { Player, toPlayerPrivateId } from '@common/models/player';
 import { TimeControlRating } from '@common/models/time_control_rating';
 import { EloRating } from '@common/models/rating_framework/Elo/rating';
 
@@ -38,7 +38,7 @@ describe('construct', () => {
 	const classical = new EloRating(1700, 0, 0, 0, 0, 40, false);
 
 	test('Setters and getters', () => {
-		let p = new Player('user.name', [
+		let p = new Player(toPlayerPrivateId('user.name'), [
 			new TimeControlRating('blitz', blitz),
 			new TimeControlRating('rapid', rapid),
 			new TimeControlRating('classical', classical)
@@ -92,7 +92,7 @@ describe('construct', () => {
 	});
 
 	test('Clone', () => {
-		let p = new Player('user.name', [
+		let p = new Player(toPlayerPrivateId('user.name'), [
 			new TimeControlRating('blitz', blitz),
 			new TimeControlRating('rapid', rapid),
 			new TimeControlRating('classical', classical)

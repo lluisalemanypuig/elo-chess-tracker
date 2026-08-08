@@ -23,10 +23,11 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
+import { toPlayerPrivateId } from '@common/models/player';
 import { SessionID } from '@common/models/session_id';
 
 test('Fields contents are correct', () => {
-	const sid: SessionID = { token: 'asdf', username: 'qwer' };
+	const sid: SessionID = { token: 'asdf', username: toPlayerPrivateId('qwer') };
 	expect(sid.token).toEqual('asdf');
 	expect(sid.username).toEqual('qwer');
 });

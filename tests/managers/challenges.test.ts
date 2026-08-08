@@ -112,7 +112,7 @@ const classical_rapid_blitz: Configuration = {
 	}
 };
 
-function user_retrieve(username: string): User | undefined {
+function user_retrieve(username: PlayerPrivateId): User | undefined {
 	return UsersManager.get_instance().get_user_by_username(username);
 }
 

@@ -31,6 +31,7 @@ import { server_init_from_data } from '@server/managers/memory/initialization';
 import { user_add_new } from '@server/managers/users';
 import { ADMIN } from '@common/models/user_role';
 import { run_command } from '@tests/exec_utils';
+import { toPlayerPrivateId } from '@common/models/player';
 import { EnvironmentManager } from '@server/managers/environment_manager';
 import { Game } from '@common/models/game';
 import { User } from '@common/models/user';
@@ -111,7 +112,7 @@ let e: User;
 let f: User;
 
 function u(username: string): User {
-	return UsersManager.get_instance().get_user_by_username(username) as User;
+	return UsersManager.get_instance().get_user_by_username(toPlayerPrivateId(username)) as User;
 }
 
 describe('Server setup', () => {
@@ -119,12 +120,12 @@ describe('Server setup', () => {
 		await run_command('./tests/initialize_empty.sh');
 		expect(() => server_init_from_data('tests/webpage', configuration)).not.toThrow();
 
-		a = user_add_new('a', 'A', 'aa', 'aaaa', [ADMIN]);
-		b = user_add_new('b', 'B', 'bb', 'dddd', [ADMIN]);
-		c = user_add_new('c', 'C', 'cc', 'cccc', [ADMIN]);
-		d = user_add_new('d', 'D', 'dd', 'dddd', [ADMIN]);
-		e = user_add_new('e', 'E', 'ee', 'eeee', [ADMIN]);
-		f = user_add_new('f', 'F', 'ff', 'ffff', [ADMIN]);
+		a = user_add_new(toPlayerPrivateId('a'), 'A', 'aa', 'aaaa', [ADMIN]);
+		b = user_add_new(toPlayerPrivateId('b'), 'B', 'bb', 'dddd', [ADMIN]);
+		c = user_add_new(toPlayerPrivateId('c'), 'C', 'cc', 'cccc', [ADMIN]);
+		d = user_add_new(toPlayerPrivateId('d'), 'D', 'dd', 'dddd', [ADMIN]);
+		e = user_add_new(toPlayerPrivateId('e'), 'E', 'ee', 'eeee', [ADMIN]);
+		f = user_add_new(toPlayerPrivateId('f'), 'F', 'ff', 'ffff', [ADMIN]);
 	});
 });
 

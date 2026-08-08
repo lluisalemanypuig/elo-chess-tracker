@@ -103,7 +103,7 @@ let d: User;
 let e: User;
 let f: User;
 
-function u(username: string): User {
+function u(username: PlayerPrivateId): User {
 	return UsersManager.get_instance().get_user_by_username(username) as User;
 }
 
