@@ -110,7 +110,7 @@ async function submit_new_user_clicked(_event: any) {
 		fn: toUserGivenName(firstname),
 		ln: toUserGivenName(lastname),
 		r: selected_roles,
-		p: password
+		password: password
 	});
 	if (response.status === 'Error') {
 		alert(message_from_response(response));

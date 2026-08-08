@@ -75,7 +75,7 @@ export const QueryChallengesPendingResultOutputSingleSchema = z.object({
 	sent_to_name: UserGivenNameSchema,
 	/// TODO: use user public IDs
 	sent_to_username: PlayerPrivateIdSchema,
-	opponent: z.string(),
+	opponent: UserGivenNameSchema,
 	sent_when: DateYYYYMMDDHHmmssSSSSchema,
 	time_control_name: TimeControlNameSchema
 });

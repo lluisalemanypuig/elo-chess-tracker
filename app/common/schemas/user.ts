@@ -28,11 +28,13 @@ import { UserRoleArraySchema } from '@common/models/user_role';
 import { PlayerPrivateIdSchema, PlayerPublicIdSchema } from '@common/models/player';
 import { UserGivenNameSchema } from '@common/models/user';
 
+// Routes.USER_CREATE
+
 export const UserCreateInputSchema = z.object({
 	u: PlayerPrivateIdSchema,
 	fn: UserGivenNameSchema,
 	ln: UserGivenNameSchema,
-	p: z.string(),
+	password: z.string(),
 	r: UserRoleArraySchema
 });
 

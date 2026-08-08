@@ -110,7 +110,7 @@ export async function post_user_create(req: Request, res: Response) {
 	const username = user_parse.data.u;
 	const firstname = user_parse.data.fn;
 	const lastname = user_parse.data.ln;
-	const password = user_parse.data.p;
+	const password = user_parse.data.password;
 	const roles = user_parse.data.r;
 
 	debug(log_now(), `User '${session.username}' is trying to create a new user:`);

@@ -213,7 +213,7 @@ export async function get_query_challenge_pending_result(req: Request, res: Resp
 			return;
 		}
 
-		const opponent: string = ((): string => {
+		const opponent = ((): UserGivenName => {
 			if (user_sent_by.username == session.username) {
 				return user_sent_to.get_full_name();
 			}
