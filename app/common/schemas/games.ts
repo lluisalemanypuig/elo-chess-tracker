@@ -31,10 +31,10 @@ import { TimeControlIdSchema, TimeControlNameSchema } from '@common/models/time_
 // Routes.GAME_CREATE
 
 export const GameCreateInputSchema = z.object({
-	w: PlayerPublicIdSchema.gte(0),
-	b: PlayerPublicIdSchema.gte(0),
+	white: PlayerPublicIdSchema,
+	black: PlayerPublicIdSchema,
 	title: z.string(),
-	r: GameResultSchema,
+	result: GameResultSchema,
 	time_control_id: TimeControlIdSchema,
 	time_control_name: TimeControlNameSchema,
 	d: z.string(),

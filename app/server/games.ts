@@ -157,10 +157,10 @@ export async function post_game_create(req: Request, res: Response) {
 		return;
 	}
 
-	const white_rid = game_parse.data.w;
-	const black_rid = game_parse.data.b;
+	const white_rid = game_parse.data.white;
+	const black_rid = game_parse.data.black;
 	const game_title = game_parse.data.title;
-	const result: GameResult = game_parse.data.r;
+	const result: GameResult = game_parse.data.result;
 	const time_control_id: TimeControlId = game_parse.data.time_control_id;
 	const time_control_name = game_parse.data.time_control_name;
 	const game_date: DateStringShort = game_parse.data.d;

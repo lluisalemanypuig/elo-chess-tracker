@@ -38,7 +38,7 @@ declare const PlayerPublicIdBrand: unique symbol;
 export type PlayerPublicIdLocal = number & {
 	readonly [PlayerPublicIdBrand]: 'PlayerPublicId';
 };
-export const PlayerPublicIdSchema = z.number().brand<'PlayerPublicIdLocal'>();
+export const PlayerPublicIdSchema = z.number().gte(0).brand<'PlayerPublicIdLocal'>();
 export type PlayerPublicId = z.infer<typeof PlayerPublicIdSchema>;
 
 export function toPlayerPublicId(n: number): PlayerPublicId {

@@ -88,9 +88,9 @@ async function submit_new_game(_event: any) {
 	const rand_milli = `${Math.floor(Math.random() * 999)}`;
 	const response = await server_call(Routes.GAME_CREATE, {
 		title: game_title,
-		w: white,
-		b: black,
-		r: result,
+		white: white,
+		black: black,
+		result: result,
 		time_control_id: time_control_id,
 		time_control_name: time_control_name,
 		d: input_game_date.value,

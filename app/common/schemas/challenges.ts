@@ -32,7 +32,7 @@ import { TimeControlIdSchema, TimeControlNameSchema } from '@common/models/time_
 // Routes.CHALLENGE_SEND
 
 export const ChallengeSendInputSchema = z.object({
-	to: PlayerPublicIdSchema.gte(0),
+	to: PlayerPublicIdSchema,
 	time_control_id: TimeControlIdSchema,
 	time_control_name: TimeControlNameSchema,
 	title: z.string()
