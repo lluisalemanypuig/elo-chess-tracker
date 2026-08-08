@@ -25,11 +25,13 @@ Contact:
 
 import { z } from 'zod';
 import { UserGivenNameSchema } from '@common/models/user';
+import { TimeControlIdSchema, TimeControlNameSchema } from '@common/models/time_control';
+import { GameIdSchema } from '@common/models/game';
 
 // Routes.QUERY_GAME_LIST_OWN
 
 export const QueryGamesListOwnInputSchema = z.object({
-	tc_i: z.string()
+	time_control_id: TimeControlIdSchema
 });
 
 export type QueryGamesListOwnInput = z.infer<typeof QueryGamesListOwnInputSchema>;
@@ -37,20 +39,20 @@ export type QueryGamesListOwnInput = z.infer<typeof QueryGamesListOwnInputSchema
 // Routes.QUERY_GAME_LIST_ALL
 
 export const QueryGamesListAllInputSchema = z.object({
-	tc_i: z.string()
+	time_control_id: TimeControlIdSchema
 });
 
 export type QueryGamesListAllInput = z.infer<typeof QueryGamesListAllInputSchema>;
 
-// ----------------------
+// Routes.QUERY_GAME_LIST_OWN + Routes.QUERY_GAME_LIST_ALL
 
 export const QueryGamesListOutputSingleSchema = z.object({
-	id: z.string(),
+	id: GameIdSchema,
 	title: z.string(),
 	white: UserGivenNameSchema,
 	black: UserGivenNameSchema,
 	result: z.string(),
-	time_control: z.string(),
+	time_control_name: TimeControlNameSchema,
 	date: z.string(),
 	white_rating: z.string(),
 	black_rating: z.string(),

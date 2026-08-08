@@ -33,7 +33,7 @@ import { encrypt_password_for_user, is_password_of_user_correct } from '@server/
 import { user_overwrite } from '@server/managers/users';
 import { ConfigurationManager } from '@server/managers/configuration_manager';
 import { get_execution_directory } from '@server/managers/environment_manager';
-import { isDefined } from '@common/utils/is_defined';
+import { isNotDefined } from '@common/utils/is_defined';
 import { Routes } from '@common/routes';
 import { InputSchemaOf } from '@common/api/schemas';
 import { safe_parse_request_body, safe_parse_request_cookies } from '@server/utils/schemas';
@@ -88,12 +88,7 @@ export async function post_user_password_change(req: Request, res: Response) {
 
 	// check if password is correct
 	const old_pwd = user.password;
-	const is_password_correct = is_password_of_user_correct(
-		old_pwd.encrypted,
-		session.username,
-		old_password,
-		old_pwd.iv
-	);
+	const is_password_correct = is_password_of_user_correct(session.username, old_password, old_pwd);
 
 	// is the password correct?
 	if (!is_password_correct) {

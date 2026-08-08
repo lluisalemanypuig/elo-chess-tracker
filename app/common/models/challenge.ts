@@ -26,7 +26,12 @@ Contact:
 import { z } from 'zod';
 import { DateStringLongMillis } from '@server/utils/time';
 import { GameResult, GameResultSchema } from '@common/models/game';
-import { TimeControlID } from '@common/models/time_control';
+import {
+	TimeControlId,
+	TimeControlIdSchema,
+	TimeControlName,
+	TimeControlNameSchema
+} from '@common/models/time_control';
 import { PlayerPrivateId, PlayerPrivateIdSchema } from '@common/models/player';
 
 /// A type for challenge IDs.
@@ -52,9 +57,9 @@ export const ChallengeSchema = z
 		/// The user receiving the challenge
 		sent_to: PlayerPrivateIdSchema,
 		/// Time control of the challenge
-		time_control_id: z.string() as z.ZodType<TimeControlID>,
+		time_control_id: TimeControlIdSchema,
 		/// Time control of the challenge
-		time_control_name: z.string(),
+		time_control_name: TimeControlNameSchema,
 		/// Date when the challenge was sent
 		when_challenge_sent: z.string() as z.ZodType<DateStringLongMillis>,
 		/// Date when the challenge was accepted
@@ -95,8 +100,8 @@ export function new_challenge(
 	title: string,
 	sent_by: PlayerPrivateId,
 	sent_to: PlayerPrivateId,
-	time_control_id: TimeControlID,
-	time_control_name: string,
+	time_control_id: TimeControlId,
+	time_control_name: TimeControlName,
 	when_challenge_sent: DateStringLongMillis
 ): Challenge {
 	return {

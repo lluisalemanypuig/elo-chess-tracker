@@ -32,6 +32,7 @@ import {
 	QueryChallengesSentOutputSingle
 } from '@common/schemas/query_challenges';
 import { PlayerPrivateId, PlayerPublicId } from '@common/models/player';
+import { TimeControlId, TimeControlName } from '@common/models/time_control';
 
 function create_label_text(text: string): HTMLLabelElement {
 	let label = document.createElement('label') as HTMLLabelElement;
@@ -49,17 +50,18 @@ async function send_challenge_button_clicked(_event: any) {
 	const username_option = document.querySelector('option[value="' + username_list_input.value + '"]');
 
 	if (username_option != null) {
-		const random_user_id = Number(username_option.id) as PlayerPublicId;
+		const public_user_id = Number(username_option.id) as PlayerPublicId;
 
 		const select_time_control = document.getElementById('select_time_control') as HTMLSelectElement;
-		const time_control_id = select_time_control.options[select_time_control.selectedIndex].value;
-		const time_control_name = select_time_control.options[select_time_control.selectedIndex].text;
+		const time_control_id = select_time_control.options[select_time_control.selectedIndex].value as TimeControlId;
+		const time_control_name = select_time_control.options[select_time_control.selectedIndex]
+			.text as TimeControlName;
 		const game_title_text = document.getElementById('input_game_title') as HTMLSelectElement;
 		const game_title = game_title_text.textContent;
 
 		// "query" the server
 		const response = await server_call(Routes.CHALLENGE_SEND, {
-			to: random_user_id,
+			to: public_user_id,
 			title: game_title,
 			time_control_id: time_control_id,
 			time_control_name: time_control_name
@@ -472,7 +474,7 @@ async function fill_challenges_confirm_result_other() {
 			//
 			li = document.createElement('li') as HTMLLIElement;
 			li.className = 'challenge-items-nobullet';
-			li.textContent = `Time control: ${elem.time_control}.`;
+			li.textContent = `Time control: ${elem.time_control_name}.`;
 			challenge_list.appendChild(li);
 			//
 			if (elem.title != '') {
@@ -525,7 +527,7 @@ async function fill_challenges_confirm_result_self() {
 			//
 			li = document.createElement('li') as HTMLLIElement;
 			li.className = 'challenge-items-nobullet';
-			li.textContent = `Time control: ${elem.time_control}.`;
+			li.textContent = `Time control: ${elem.time_control_name}.`;
 			confirmation_div.appendChild(li);
 			//
 			if (elem.title != '') {

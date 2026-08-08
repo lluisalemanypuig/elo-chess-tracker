@@ -30,6 +30,7 @@ import { UserActionArraySchema } from '@common/models/user_action';
 import { RatingSchema } from '@common/models/rating_framework/rating';
 import { PlayerPublicIdSchema } from '@common/models/player';
 import { UserGivenNameSchema } from '@common/models/user';
+import { TimeControlIdSchema } from '../models/time_control';
 
 // Routes.QUERY_USER_LIST
 
@@ -48,7 +49,7 @@ export type QueryUserEditInput = z.infer<typeof QueryUserEditInputSchema>;
 // Routes.QUERY_USER_RANKING
 
 export const QueryUserRankingInputSchema = z.object({
-	tc_i: z.string()
+	time_control_id: TimeControlIdSchema
 });
 
 export type QueryUserRankingInput = z.infer<typeof QueryUserRankingInputSchema>;
@@ -56,7 +57,7 @@ export type QueryUserRankingInput = z.infer<typeof QueryUserRankingInputSchema>;
 // Routes.QUERY_USER_HOME
 
 export const TimeControlAndRatingSchema = z.object({
-	time_control_name: z.string(),
+	time_control_id: TimeControlIdSchema,
 	rating: RatingSchema
 });
 

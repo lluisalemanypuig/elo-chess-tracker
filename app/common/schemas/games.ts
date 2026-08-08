@@ -26,6 +26,7 @@ Contact:
 import { z } from 'zod';
 import { GameIdSchema, GameResultSchema } from '@common/models/game';
 import { PlayerPublicIdSchema } from '@common/models/player';
+import { TimeControlIdSchema, TimeControlNameSchema } from '@common/models/time_control';
 
 // Routes.GAME_CREATE
 
@@ -34,8 +35,8 @@ export const GameCreateInputSchema = z.object({
 	b: PlayerPublicIdSchema.gte(0),
 	title: z.string(),
 	r: GameResultSchema,
-	tc_i: z.string(),
-	tc_n: z.string(),
+	time_control_id: TimeControlIdSchema,
+	time_control_name: TimeControlNameSchema,
 	d: z.string(),
 	t: z.string()
 });

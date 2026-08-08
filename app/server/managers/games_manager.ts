@@ -23,21 +23,23 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { GameId } from '@common/models/game';
-import { TimeControlID } from '@common/models/time_control';
+import { GameId, toGameId } from '@common/models/game';
+import { TimeControlId } from '@common/models/time_control';
 import { DateStringShort } from '@server/utils/time';
 import { number_to_string } from '@app/server/utils/misc';
+
+export const GAME_ID_LENGTH = 10;
 
 /**
  * @brief The minimal summary of a game.
  */
 export class GameInfo {
 	public game_record: DateStringShort;
-	public time_control_id: TimeControlID;
+	public time_control_id: TimeControlId;
 
-	constructor(_when: DateStringShort, _time_id: TimeControlID) {
-		this.game_record = _when;
-		this.time_control_id = _time_id;
+	constructor(when: DateStringShort, time_id: TimeControlId) {
+		this.game_record = when;
+		this.time_control_id = time_id;
 	}
 }
 
@@ -87,8 +89,9 @@ export class GamesManager {
 	 * @returns The largest existing ID. When there are no games, returns the
 	 * all-zero ID.
 	 */
-	get_max_game_id(): string {
-		return number_to_string(this.max_game_id);
+	get_max_game_id(): GameId {
+		const strId = number_to_string(this.max_game_id, GAME_ID_LENGTH);
+		return toGameId(strId);
 	}
 	/// Sets the maximum game ID
 	set_max_game_id(id: number): void {
@@ -97,7 +100,8 @@ export class GamesManager {
 	/// Increase current maximum game ID
 	new_game_id(): GameId {
 		this.max_game_id += 1;
-		return number_to_string(this.max_game_id);
+		const strId = number_to_string(this.max_game_id, GAME_ID_LENGTH);
+		return toGameId(strId);
 	}
 
 	/**
@@ -107,7 +111,7 @@ export class GamesManager {
 	 * @param time_id The time control id of the game (recall, could be 'blitz',
 	 * 'classical', ...)
 	 */
-	add_game(game_id: GameId, when: DateStringShort, time_id: TimeControlID): void {
+	add_game(game_id: GameId, when: DateStringShort, time_id: TimeControlId): void {
 		this.game_info.set(game_id, new GameInfo(when, time_id));
 	}
 

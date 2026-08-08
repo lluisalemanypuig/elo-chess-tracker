@@ -25,6 +25,7 @@ import { isNotDefined } from '@common/utils/is_defined';
 import { GameId, result_from_text_to_value } from '@common/models/game';
 import { message_from_response, server_call } from '@client/action';
 import { Routes } from '@common/routes';
+import { TimeControlId } from '@common/models/time_control';
 
 function new_text_cell(text: string) {
 	let cell = document.createElement('td');
@@ -106,7 +107,8 @@ async function button_delete_game_on_click(event: any) {
 	const button = event.target;
 
 	let select_time_control = document.getElementById('select_time_control') as HTMLSelectElement;
-	let previous_time_control_id = select_time_control.options[select_time_control.selectedIndex].value;
+	let previous_time_control_id = select_time_control.options[select_time_control.selectedIndex]
+		.value as TimeControlId;
 
 	const game_id = button.getAttribute('game_id');
 	const response = await server_call(Routes.GAME_DELETE, { id: game_id });
@@ -186,18 +188,18 @@ function new_cell_text_input(game_id: string, title: string) {
 	return cell;
 }
 
-async function fill_games_list_time_control(time_control_id: string) {
+async function fill_games_list_time_control(time_control_id: TimeControlId) {
 	let table = document.getElementById('table-games') as HTMLTableElement;
 	const val = table.getAttribute('value');
 
 	let response;
 	if (val == 'all') {
 		response = await server_call(Routes.QUERY_GAME_LIST_ALL, {
-			tc_i: time_control_id
+			time_control_id: time_control_id
 		});
 	} else if (val == 'own') {
 		response = await server_call(Routes.QUERY_GAME_LIST_OWN, {
-			tc_i: time_control_id
+			time_control_id: time_control_id
 		});
 	} else {
 		alert(`Wrong value for list '${val}'.`);
@@ -225,7 +227,7 @@ async function fill_games_list_time_control(time_control_id: string) {
 			row.appendChild(new_text_cell(g.title));
 		}
 
-		row.appendChild(new_text_cell(g.time_control));
+		row.appendChild(new_text_cell(g.time_control_name));
 
 		const when = g.date.substring(0, g.date.length - (3 + 1 + 2 + 1));
 		row.appendChild(new_text_cell(when));
@@ -255,12 +257,12 @@ async function fill_games_list_time_control(time_control_id: string) {
 
 async function fill_games_list(_event: any) {
 	const select_time_control = document.getElementById('select_time_control') as HTMLSelectElement;
-	const time_control_id = select_time_control.options[select_time_control.selectedIndex].value;
+	const time_control_id = select_time_control.options[select_time_control.selectedIndex].value as TimeControlId;
 	fill_games_list_time_control(time_control_id);
 }
 
 window.onload = async function () {
-	fill_games_list_time_control('');
+	fill_games_list_time_control('' as TimeControlId);
 
 	let time_control = document.getElementById('select_time_control') as HTMLSelectElement;
 	time_control.onchange = fill_games_list;

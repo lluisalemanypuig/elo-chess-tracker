@@ -39,7 +39,7 @@ import { RatingSystemManager } from '@server/managers/rating_system_manager';
 import { EnvironmentManager } from '@server/managers/environment_manager';
 import { user_update_from_player_data } from '@server/managers/users';
 import { Rating } from '@common/models/rating_framework/rating';
-import { TimeControlID } from '@common/models/time_control';
+import { TimeControlId, TimeControlName } from '@common/models/time_control';
 import { graph_delete_edge, graph_modify_edge, graph_update } from '@server/managers/graphs';
 import { GamesIterator } from '@server/managers/games_iterator';
 import { TimeControlRating } from '@common/models/time_control_rating';
@@ -62,7 +62,7 @@ function game_compare_dates(g: Game): Function {
 /// date after later than date 'when'.
 function game_next_of_player(
 	username: PlayerPrivateId,
-	time_control_id: TimeControlID,
+	time_control_id: TimeControlId,
 	when: DateStringLongMillis
 ): Game | undefined {
 	const games_dir = EnvironmentManager.get_instance().get_dir_games_time_control(time_control_id);
@@ -94,8 +94,8 @@ function game_new(
 	white: PlayerPrivateId,
 	black: PlayerPrivateId,
 	result: GameResult,
-	time_control_id: TimeControlID,
-	time_control_name: string,
+	time_control_id: TimeControlId,
+	time_control_name: TimeControlName,
 	when: DateStringLongMillis
 ): Game {
 	// retrieve next id and increment maximum id
@@ -160,14 +160,14 @@ function game_new(
 	);
 }
 
-function rating_into_player(time_control_id: TimeControlID, player: PlayerPrivateId, rating: Rating): Player {
+function rating_into_player(time_control_id: TimeControlId, player: PlayerPrivateId, rating: Rating): Player {
 	return new Player(player, [new TimeControlRating(time_control_id, rating.clone())]);
 }
 
 /// Updates the given game record
 function update_game_record(
 	games_iter: GamesIterator,
-	time_control_id: TimeControlID,
+	time_control_id: TimeControlId,
 	updated_players: Player[],
 	player_to_index: Map<string, number>
 ): void {
@@ -337,8 +337,8 @@ export function game_add_new(
 	white: User,
 	black: User,
 	result: GameResult,
-	time_control_id: TimeControlID,
-	time_control_name: string,
+	time_control_id: TimeControlId,
+	time_control_name: TimeControlName,
 	game_record: DateStringShort,
 	hhmmss: string
 ): void {

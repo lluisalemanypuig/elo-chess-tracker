@@ -32,6 +32,7 @@ import { interpolateRgb } from 'd3-interpolate';
 import { message_from_response, server_call } from '@client/action';
 import { Route, Routes } from '@common/routes';
 import { QueryGraphOutput } from '@common/schemas/query_graphs';
+import { TimeControlId } from '@common/models/time_control';
 
 let s: Sigma;
 let graph_data: QueryGraphOutput;
@@ -79,7 +80,7 @@ function initialize_sigma() {
 
 async function load_graph() {
 	const select_time_control = document.getElementById('select_time_control') as HTMLSelectElement;
-	const time_control_id = select_time_control.options[select_time_control.selectedIndex].value;
+	const time_control_id = select_time_control.options[select_time_control.selectedIndex].value as TimeControlId;
 
 	if (time_control_id == '') {
 		return;
@@ -97,7 +98,7 @@ async function load_graph() {
 	})();
 
 	// "query" the server
-	const response = await server_call(query_to_server, { tc_i: time_control_id });
+	const response = await server_call(query_to_server, { time_control_id: time_control_id });
 	if (response.status === 'Error') {
 		alert(message_from_response(response));
 		return;

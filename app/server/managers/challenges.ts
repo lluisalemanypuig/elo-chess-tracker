@@ -34,7 +34,7 @@ import { EnvironmentManager } from '@server/managers/environment_manager';
 import { Challenge, new_challenge, set_result, unset_result } from '@common/models/challenge';
 import { GameResult } from '@common/models/game';
 import { game_add_new } from '@server/managers/games';
-import { TimeControlID } from '@common/models/time_control';
+import { TimeControlId, TimeControlName } from '@common/models/time_control';
 import { UsersManager } from '@server/managers/users_manager';
 import { User } from '@common/models/user';
 import { isNotDefined } from '@common/utils/is_defined';
@@ -72,14 +72,14 @@ export function challenge_send_new(
 	title: string,
 	sender: PlayerPrivateId,
 	receiver: PlayerPrivateId,
-	time_control_id: TimeControlID,
-	time_control_name: string,
+	time_control_id: TimeControlId,
+	time_control_name: TimeControlName,
 	when: DateStringLong
 ): Challenge {
 	debug(log_now(), 'Adding a new challenge...');
 
 	let mem = ChallengesManager.get_instance();
-	const new_id: string = mem.new_challenge_id();
+	const new_id = mem.new_challenge_id();
 
 	const c = new_challenge(new_id, title, sender, receiver, time_control_id, time_control_name, when);
 

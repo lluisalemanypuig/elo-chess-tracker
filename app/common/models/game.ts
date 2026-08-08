@@ -25,7 +25,7 @@ Contact:
 
 import { z } from 'zod';
 import { Rating } from '@common/models/rating_framework/rating';
-import { TimeControlID } from '@common/models/time_control';
+import { TimeControlId, TimeControlName } from '@common/models/time_control';
 import { DateStringLongMillis } from '@server/utils/time';
 import { PlayerPrivateId } from '@common/models/player';
 
@@ -111,9 +111,9 @@ export class Game {
 	/// Result of the game
 	public result: GameResult;
 	/// Time control id
-	public time_control_id: TimeControlID;
+	public time_control_id: TimeControlId;
 	/// Time control name (Classical (90 + 30), Blitz (5 + 3), ...)
-	public time_control_name: string;
+	public time_control_name: TimeControlName;
 	/// Date when the game took place
 	public when: DateStringLongMillis;
 
@@ -137,8 +137,8 @@ export class Game {
 		black: PlayerPrivateId,
 		black_rating: Rating,
 		result: GameResult,
-		time_control_id: TimeControlID,
-		time_control_name: string,
+		time_control_id: TimeControlId,
+		time_control_name: TimeControlName,
 		when: DateStringLongMillis
 	) {
 		this.id = id;

@@ -26,6 +26,13 @@ Contact:
 import { Challenge, ChallengeId, toChallengeId } from '@common/models/challenge';
 import { number_to_string } from '@app/server/utils/misc';
 
+export const CHALLENGE_ID_LENGTH = 10;
+
+export function numberToChallengeId(n: number): ChallengeId {
+	const s = number_to_string(n, CHALLENGE_ID_LENGTH);
+	return toChallengeId(s);
+}
+
 /**
  * @brief Challenges Manager singleton class.
  *
@@ -107,6 +114,7 @@ export class ChallengesManager {
 	/// Increase current maximum challenge ID
 	new_challenge_id(): ChallengeId {
 		this.max_challenge_id += 1;
-		return toChallengeId(number_to_string(this.max_challenge_id));
+		const strId = number_to_string(this.max_challenge_id, CHALLENGE_ID_LENGTH);
+		return toChallengeId(strId);
 	}
 }

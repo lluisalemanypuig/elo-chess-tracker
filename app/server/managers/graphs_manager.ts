@@ -24,7 +24,7 @@ Contact:
 */
 
 import { Graph } from '@common/models/graph/graph';
-import { TimeControlID } from '@common/models/time_control';
+import { TimeControlId } from '@common/models/time_control';
 import { search_linear_by_key } from '@server/utils/searching';
 
 /**
@@ -48,14 +48,14 @@ export class GraphsManager {
 		return GraphsManager.instance;
 	}
 
-	private graph_list: [TimeControlID, Graph][] = [];
+	private graph_list: [TimeControlId, Graph][] = [];
 
 	clear(): void {
 		this.graph_list = [];
 	}
 
-	add_graph(id: TimeControlID, g: Graph): void {
-		const idx = search_linear_by_key(this.graph_list, (pair: [TimeControlID, Graph]): boolean => {
+	add_graph(id: TimeControlId, g: Graph): void {
+		const idx = search_linear_by_key(this.graph_list, (pair: [TimeControlId, Graph]): boolean => {
 			return pair[0] == id;
 		});
 		if (idx == -1) {
@@ -63,8 +63,8 @@ export class GraphsManager {
 		}
 	}
 
-	get_graph(id: TimeControlID): Graph | undefined {
-		const idx = search_linear_by_key(this.graph_list, (pair: [TimeControlID, Graph]): boolean => {
+	get_graph(id: TimeControlId): Graph | undefined {
+		const idx = search_linear_by_key(this.graph_list, (pair: [TimeControlId, Graph]): boolean => {
 			return pair[0] == id;
 		});
 		return idx != -1 ? this.graph_list[idx][1] : undefined;

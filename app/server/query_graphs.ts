@@ -31,7 +31,7 @@ import { log_now } from '@server/utils/time';
 import { is_user_logged_in } from '@server/managers/session';
 import { User } from '@common/models/user';
 import { GraphsManager } from '@server/managers/graphs_manager';
-import { TimeControlID } from '@common/models/time_control';
+import { TimeControlId } from '@common/models/time_control';
 import { search_linear_by_key } from '@server/utils/searching';
 import { UsersManager } from '@server/managers/users_manager';
 import { Edge } from '@common/models/graph/edge';
@@ -45,7 +45,7 @@ import { AuthenticationInputSchema } from '@common/schemas/authentication';
 import { EdgeInfo, NodeInfo, QueryGraphOutput } from '@common/schemas/query_graphs';
 import { PlayerPrivateId, PlayerPublicId } from '@common/models/player';
 
-function retrieve_graph_user(username: PlayerPrivateId, time_control_id: TimeControlID): QueryGraphOutput {
+function retrieve_graph_user(username: PlayerPrivateId, time_control_id: TimeControlId): QueryGraphOutput {
 	const users = UsersManager.get_instance();
 	const graphs = GraphsManager.get_instance();
 
@@ -146,7 +146,7 @@ function retrieve_graph_user(username: PlayerPrivateId, time_control_id: TimeCon
 	return { nodes: list_nodes, edges: list_edges };
 }
 
-function retrieve_graph_full(querier: User, time_control_id: TimeControlID): QueryGraphOutput {
+function retrieve_graph_full(querier: User, time_control_id: TimeControlId): QueryGraphOutput {
 	const users = UsersManager.get_instance();
 	const graphs = GraphsManager.get_instance();
 
@@ -240,7 +240,7 @@ export async function post_query_graph_own(req: Request, res: Response) {
 	if (graph_parse.result === 'Exit') {
 		return;
 	}
-	const time_control_id = graph_parse.data.tc_i;
+	const time_control_id = graph_parse.data.time_control_id;
 
 	debug(log_now(), `User ${session.username} is querying their own graph of time control ${time_control_id}.`);
 
@@ -273,7 +273,7 @@ export async function post_query_graph_full(req: Request, res: Response) {
 	if (graph_parse.result === 'Exit') {
 		return;
 	}
-	const time_control_id = graph_parse.data.tc_i;
+	const time_control_id = graph_parse.data.time_control_id;
 
 	debug(
 		log_now(),

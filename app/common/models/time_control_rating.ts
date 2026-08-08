@@ -24,16 +24,16 @@ Contact:
 */
 
 import { Rating } from '@common/models/rating_framework/rating';
-import { TimeControlID } from '@common/models/time_control';
+import { TimeControlId } from '@common/models/time_control';
 
 /**
  * @brief A pair of time control id and rating
  */
 export class TimeControlRating {
-	public readonly time_control: TimeControlID;
+	public readonly time_control: TimeControlId;
 	public rating: Rating;
 
-	constructor(id: TimeControlID, data: Rating) {
+	constructor(id: TimeControlId, data: Rating) {
 		this.time_control = id;
 		this.rating = data;
 	}

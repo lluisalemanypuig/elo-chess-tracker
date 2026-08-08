@@ -118,7 +118,7 @@ export async function get_query_user_home(req: Request, res: Response) {
 	const ratings_user = user.ratings.map((value: TimeControlRating): TimeControlAndRating => {
 		let R = value.rating.clone();
 		R.rating = Math.round(R.rating);
-		return { time_control_name: value.time_control, rating: R };
+		return { time_control_id: value.time_control, rating: R };
 	});
 
 	const output: QueryUserHomeOutput = {
@@ -189,7 +189,7 @@ export async function post_query_user_ranking(req: Request, res: Response) {
 		return;
 	}
 
-	const time_control_id = user_query.data.tc_i;
+	const time_control_id = user_query.data.time_control_id;
 
 	let users_without_games: UserWithoutGames[] = [];
 	let users_with_games: UserWithGames[] = [];

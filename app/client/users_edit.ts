@@ -32,7 +32,7 @@ import {
 import { isNotDefined } from '@common/utils/is_defined';
 import { Routes } from '@common/routes';
 import { PlayerPublicId } from '@common/models/player';
-import { toUserGivenName, UserGivenName } from '@common/models/user';
+import { toUserGivenName } from '@common/models/user';
 
 async function user_was_changed(_event: any) {
 	all_user_roles.forEach(function (role: string) {

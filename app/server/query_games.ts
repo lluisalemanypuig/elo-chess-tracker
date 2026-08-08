@@ -38,7 +38,7 @@ import { RatingSystemManager } from '@server/managers/rating_system_manager';
 import { EnvironmentManager } from '@server/managers/environment_manager';
 import { GAMES_SEE } from '@common/models/user_action';
 import { can_user_delete_a_game, can_user_edit_a_game, can_user_see_a_game } from '@server/managers/user_relationships';
-import { TimeControlID } from '@common/models/time_control';
+import { TimeControlId } from '@common/models/time_control';
 import { game_array_from_string } from '@common/io/game';
 import { UsersManager } from '@server/managers/users_manager';
 import { search_by_key } from '@server/utils/searching';
@@ -67,7 +67,7 @@ function increment(g: Game): any {
  */
 function filter_game_list(
 	user: User,
-	time_control_id: TimeControlID,
+	time_control_id: TimeControlId,
 	filter_game_record: Function,
 	filter_game: Function
 ): QueryGamesListOutputSingle[] {
@@ -139,7 +139,7 @@ function filter_game_list(
 				white: white.get_full_name(),
 				black: black.get_full_name(),
 				result: result,
-				time_control: g.time_control_name,
+				time_control_name: g.time_control_name,
 				date: g.when.replace('..', ' '),
 				white_rating: `${Math.round(g.white_rating.rating)}`,
 				black_rating: `${Math.round(g.black_rating.rating)}`,
@@ -174,7 +174,7 @@ export async function post_query_game_list_own(req: Request, res: Response) {
 	if (game_parse.result === 'Exit') {
 		return;
 	}
-	const time_control_id = game_parse.data.tc_i;
+	const time_control_id = game_parse.data.time_control_id;
 
 	const filter_game_function = (g: Game): boolean => {
 		return g.is_user_involved(session.username);
@@ -278,7 +278,7 @@ export async function post_query_game_list_all(req: Request, res: Response) {
 	if (game_parse.result === 'Exit') {
 		return;
 	}
-	const time_control_id = game_parse.data.tc_i;
+	const time_control_id = game_parse.data.time_control_id;
 
 	let manager = UsersManager.get_instance();
 	let data_to_return: QueryGamesListOutput = [];

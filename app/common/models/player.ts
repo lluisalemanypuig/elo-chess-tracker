@@ -27,7 +27,7 @@ import { z } from 'zod';
 import { Rating } from '@common/models/rating_framework/rating';
 import { copyarray } from '@app/server/utils/misc';
 import { search_linear_by_key } from '@server/utils/searching';
-import { TimeControlID } from '@common/models/time_control';
+import { TimeControlId } from '@common/models/time_control';
 import { TimeControlRating } from '@common/models/time_control_rating';
 
 export const PlayerKeys = ['username', 'ratings'];
@@ -79,7 +79,7 @@ export class Player {
 	}
 
 	/// Returns whether the rating under the given time control id exists
-	has_rating(id: TimeControlID): boolean {
+	has_rating(id: TimeControlId): boolean {
 		return this.index_time_control_id(id) != -1;
 	}
 
@@ -89,12 +89,12 @@ export class Player {
 	 * @param rating Rating object
 	 * @pre Rating does not exist
 	 */
-	add_rating(id: TimeControlID, rating: Rating): void {
+	add_rating(id: TimeControlId, rating: Rating): void {
 		this.ratings.push(new TimeControlRating(id, rating));
 	}
 
 	/// Returns the rating of the player under the given time control id
-	get_rating(id: TimeControlID): Rating {
+	get_rating(id: TimeControlId): Rating {
 		const index = this.index_time_control_id(id);
 		if (index == -1) {
 			throw new Error(`Rating with id '${id}' does not exist!`);
@@ -103,7 +103,7 @@ export class Player {
 	}
 
 	/// Sets the rating of the player
-	set_rating(id: TimeControlID, rating: Rating): void {
+	set_rating(id: TimeControlId, rating: Rating): void {
 		const index = this.index_time_control_id(id);
 		if (index == -1) {
 			throw new Error(`Rating with id '${id}' does not exist!`);
@@ -121,7 +121,7 @@ export class Player {
 		);
 	}
 
-	index_time_control_id(id: TimeControlID): number {
+	index_time_control_id(id: TimeControlId): number {
 		return search_linear_by_key(this.ratings, (v: TimeControlRating): boolean => {
 			return v.time_control == id;
 		});

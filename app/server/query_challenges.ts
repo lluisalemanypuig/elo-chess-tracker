@@ -326,7 +326,7 @@ export async function get_query_challenge_confirm_result_other(req: Request, res
 			white: (manager.get_user_by_username(c.white) as User).get_full_name(),
 			black: (manager.get_user_by_username(c.black) as User).get_full_name(),
 			result: nice_result,
-			time_control: c.time_control_name
+			time_control_name: c.time_control_name
 		});
 	}
 
@@ -422,7 +422,7 @@ export async function get_query_challenge_confirm_result_self(req: Request, res:
 			white: (manager.get_user_by_username(c.white) as User).get_full_name(),
 			black: (manager.get_user_by_username(c.black) as User).get_full_name(),
 			result: nice_result,
-			time_control: c.time_control_name
+			time_control_name: c.time_control_name
 		});
 	}
 

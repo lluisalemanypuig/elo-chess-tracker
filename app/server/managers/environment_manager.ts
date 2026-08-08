@@ -24,7 +24,7 @@ Contact:
 */
 
 import path from 'path';
-import { TimeControlID } from '@common/models/time_control';
+import { TimeControlId } from '@common/models/time_control';
 import { Environment, SSLCertificate } from '@common/models/configuration/environment';
 
 /**
@@ -82,7 +82,7 @@ export class EnvironmentManager {
 	get_dir_games(): string {
 		return this.directory_database_games;
 	}
-	get_dir_games_time_control(id: TimeControlID): string {
+	get_dir_games_time_control(id: TimeControlId): string {
 		return path.join(this.directory_database_games, id);
 	}
 	get_dir_users(): string {
@@ -94,7 +94,7 @@ export class EnvironmentManager {
 	get_dir_graphs(): string {
 		return this.directory_database_graphs;
 	}
-	get_dir_graphs_time_control(id: TimeControlID): string {
+	get_dir_graphs_time_control(id: TimeControlId): string {
 		return path.join(this.directory_database_graphs, id);
 	}
 

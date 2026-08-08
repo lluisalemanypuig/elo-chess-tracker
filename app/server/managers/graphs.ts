@@ -27,14 +27,14 @@ import { isNotDefined } from '@common/utils/is_defined';
 import { graph_full_to_file, graph_to_file } from '@common/io/graph/graph';
 import { GameResult } from '@common/models/game';
 import { Graph } from '@common/models/graph/graph';
-import { TimeControlID } from '@common/models/time_control';
+import { TimeControlId } from '@common/models/time_control';
 import { EnvironmentManager } from '@server/managers/environment_manager';
 import { GamesIterator } from '@server/managers/games_iterator';
 import { GraphsManager } from '@server/managers/graphs_manager';
 import { RatingSystemManager } from '@server/managers/rating_system_manager';
 import { PlayerPrivateId } from '@common/models/player';
 
-export function graph_update(w: PlayerPrivateId, b: PlayerPrivateId, result: GameResult, id: TimeControlID): void {
+export function graph_update(w: PlayerPrivateId, b: PlayerPrivateId, result: GameResult, id: TimeControlId): void {
 	let manager = GraphsManager.get_instance();
 	let g = manager.get_graph(id);
 	if (isNotDefined(g)) {
@@ -51,7 +51,7 @@ export function graph_modify_edge(
 	b: PlayerPrivateId,
 	old_res: GameResult,
 	new_res: GameResult,
-	id: TimeControlID
+	id: TimeControlId
 ): void {
 	let manager = GraphsManager.get_instance();
 	let g = manager.get_graph(id);
@@ -64,7 +64,7 @@ export function graph_modify_edge(
 	graph_to_file(graphs_dir, [w], g);
 }
 
-export function graph_delete_edge(w: PlayerPrivateId, b: PlayerPrivateId, result: GameResult, id: TimeControlID): void {
+export function graph_delete_edge(w: PlayerPrivateId, b: PlayerPrivateId, result: GameResult, id: TimeControlId): void {
 	let manager = GraphsManager.get_instance();
 	let g = manager.get_graph(id);
 	if (isNotDefined(g)) {

@@ -91,8 +91,8 @@ async function submit_new_game(_event: any) {
 		w: white,
 		b: black,
 		r: result,
-		tc_i: time_control_id,
-		tc_n: time_control_name,
+		time_control_id: time_control_id,
+		time_control_name: time_control_name,
 		d: input_game_date.value,
 		t:
 			input_game_time.value +
