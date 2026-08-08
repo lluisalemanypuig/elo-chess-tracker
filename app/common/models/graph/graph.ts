@@ -83,7 +83,7 @@ export class Graph {
 	add_edge(w: PlayerPrivateId, b: PlayerPrivateId, result: GameResult): void {
 		// insert into w's outgoing edges list
 		let w_out_list = this.adjacency_list.get(w);
-		if (!isDefined(w_out_list)) {
+		if (isNotDefined(w_out_list)) {
 			this.adjacency_list.set(w, []);
 			w_out_list = this.adjacency_list.get(w);
 		}
@@ -92,7 +92,7 @@ export class Graph {
 
 		// insert into b's ingoing edges list
 		let b_in_list = this.in_adjacency_list.get(b);
-		if (!isDefined(b_in_list)) {
+		if (isNotDefined(b_in_list)) {
 			this.in_adjacency_list.set(b, []);
 			b_in_list = this.in_adjacency_list.get(b);
 		}
@@ -108,7 +108,7 @@ export class Graph {
 	add_edge_raw(w: PlayerPrivateId, b: PlayerPrivateId, w_edge: Edge): void {
 		// insert into w's outgoing edges list
 		let w_out_list = this.adjacency_list.get(w);
-		if (!isDefined(w_out_list)) {
+		if (isNotDefined(w_out_list)) {
 			this.adjacency_list.set(w, []);
 			w_out_list = this.adjacency_list.get(w);
 		}
@@ -116,7 +116,7 @@ export class Graph {
 
 		// insert into b's ingoing edges list
 		let b_in_list = this.in_adjacency_list.get(b);
-		if (!isDefined(b_in_list)) {
+		if (isNotDefined(b_in_list)) {
 			this.in_adjacency_list.set(b, []);
 			b_in_list = this.in_adjacency_list.get(b);
 		}
@@ -152,7 +152,7 @@ export class Graph {
 	delete_edge(w: PlayerPrivateId, b: PlayerPrivateId, result: GameResult): void {
 		// delete from w's outgoing edges list
 		let w_out_list = this.adjacency_list.get(w);
-		if (!isDefined(w_out_list)) {
+		if (isNotDefined(w_out_list)) {
 			throw new Error(`Player '${w}' does not have any outgoing edge, and so no edge to '${b}'.`);
 		}
 		Graph.delete_from_list(w, b, result, w_out_list);
@@ -162,7 +162,7 @@ export class Graph {
 
 		// delete from b's ingoing edges list
 		let b_in_list = this.in_adjacency_list.get(b);
-		if (!isDefined(b_in_list)) {
+		if (isNotDefined(b_in_list)) {
 			throw new Error(`Player '${b}' does not have any ingoing edge, and so no edge from '${w}'.`);
 		}
 		Graph.delete_from_list(b, w, opposite_result(result), b_in_list);
@@ -180,7 +180,7 @@ export class Graph {
 	 */
 	get_data_as_white(u: PlayerPrivateId, v: PlayerPrivateId): EdgeMetadata | undefined {
 		const w_list = this.adjacency_list.get(u);
-		if (!isDefined(w_list)) {
+		if (isNotDefined(w_list)) {
 			return undefined;
 		}
 
@@ -198,7 +198,7 @@ export class Graph {
 	 */
 	get_data_as_black(u: PlayerPrivateId, v: PlayerPrivateId): EdgeMetadata | undefined {
 		const u_list = this.in_adjacency_list.get(u);
-		if (!isDefined(u_list)) {
+		if (isNotDefined(u_list)) {
 			return undefined;
 		}
 
@@ -269,7 +269,7 @@ export class Graph {
 	 */
 	get_out_degree(u: PlayerPrivateId): number {
 		const u_list = this.adjacency_list.get(u);
-		if (!isDefined(u_list)) {
+		if (isNotDefined(u_list)) {
 			return 0;
 		}
 		return u_list.length;
@@ -287,7 +287,7 @@ export class Graph {
 	 */
 	get_in_degree(u: PlayerPrivateId): number {
 		const u_list = this.in_adjacency_list.get(u);
-		if (!isDefined(u_list)) {
+		if (isNotDefined(u_list)) {
 			return 0;
 		}
 		return (u_list as Neighborhood).length;
@@ -300,7 +300,7 @@ export class Graph {
 	/// Returns the list of Black opponents of @e u.
 	get_black_opponents(u: PlayerPrivateId): PlayerPrivateId[] {
 		const u_list = this.adjacency_list.get(u);
-		if (!isDefined(u_list)) {
+		if (isNotDefined(u_list)) {
 			return [];
 		}
 		return u_list.map((e: Edge): PlayerPrivateId => {
@@ -311,7 +311,7 @@ export class Graph {
 	/// Returns the list of White opponents of @e u.
 	get_white_opponents(u: PlayerPrivateId): PlayerPrivateId[] {
 		const u_list = this.in_adjacency_list.get(u);
-		if (!isDefined(u_list)) {
+		if (isNotDefined(u_list)) {
 			return [];
 		}
 		return u_list.map((e: Edge): PlayerPrivateId => {

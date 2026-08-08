@@ -43,7 +43,7 @@ import { game_array_from_string } from '@common/io/game';
 import { UsersManager } from '@server/managers/users_manager';
 import { search_by_key } from '@server/utils/searching';
 import { read_directory } from '@server/utils/read_directory';
-import { isDefined } from '@common/utils/is_defined';
+import { isNotDefined } from '@common/utils/is_defined';
 import { Routes } from '@common/routes';
 import { InputSchemaOf } from '@common/api/schemas';
 import { safe_parse_request_body, safe_parse_request_cookies } from '@server/utils/schemas';
@@ -95,7 +95,7 @@ function filter_game_list(
 		const data = fs.readFileSync(game_record_file, 'utf8');
 		debug(log_now(), `        Game record '${game_record_file}' read.`);
 		const game_set = game_array_from_string(data);
-		if (!isDefined(game_set)) {
+		if (isNotDefined(game_set)) {
 			debug(log_now(), `        Game record '${game_record_file}' could not be parsed.`);
 			continue;
 		}
@@ -120,12 +120,12 @@ function filter_game_list(
 			})();
 
 			const white = manager.get_user_by_username(g.white);
-			if (!isDefined(white)) {
+			if (isNotDefined(white)) {
 				debug(log_now(), `User with username '${g.white}' could not be found.`);
 				return [];
 			}
 			const black = manager.get_user_by_username(g.black);
-			if (!isDefined(black)) {
+			if (isNotDefined(black)) {
 				debug(log_now(), `User with username '${g.black}' could not be found.`);
 				return [];
 			}
@@ -165,7 +165,7 @@ export async function post_query_game_list_own(req: Request, res: Response) {
 	const r = is_user_logged_in(session);
 
 	const user = r[2];
-	if (!isDefined(user)) {
+	if (isNotDefined(user)) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -264,7 +264,7 @@ export async function post_query_game_list_all(req: Request, res: Response) {
 	const r = is_user_logged_in(session);
 
 	const user = r[2];
-	if (!isDefined(user)) {
+	if (isNotDefined(user)) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -291,13 +291,13 @@ export async function post_query_game_list_all(req: Request, res: Response) {
 			},
 			(g: Game): boolean => {
 				const white = manager.get_user_by_username(g.white);
-				if (!isDefined(white)) {
+				if (isNotDefined(white)) {
 					debug(log_now(), `User with username '${g.white}' could not be found.`);
 					res.status(500).send('Invalid white user sent to the server.');
 					return false;
 				}
 				const black = manager.get_user_by_username(g.black);
-				if (!isDefined(black)) {
+				if (isNotDefined(black)) {
 					debug(log_now(), `User with username '${g.black}' could not be found.`);
 					res.status(500).send('Invalid black user sent to the server.');
 					return false;
@@ -316,12 +316,12 @@ export async function post_query_game_list_all(req: Request, res: Response) {
 				},
 				(g: Game): boolean => {
 					const white = manager.get_user_by_username(g.white);
-					if (!isDefined(white)) {
+					if (isNotDefined(white)) {
 						debug(log_now(), `User with username '${g.white}' could not be found.`);
 						return false;
 					}
 					const black = manager.get_user_by_username(g.black);
-					if (!isDefined(black)) {
+					if (isNotDefined(black)) {
 						debug(log_now(), `User with username '${g.black}' could not be found.`);
 						return false;
 					}

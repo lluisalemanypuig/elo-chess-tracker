@@ -24,23 +24,10 @@ Contact:
 */
 
 import { z } from 'zod';
+import { NameOfUserSchema } from '@common/models/user';
+import { PlayerPublicIdSchema } from '@common/models/player';
 
-export const QueryGraphInputOwnSchema = z.object({
-	tc_i: z.string()
-});
-
-export type QueryGraphOwnInput = z.infer<typeof QueryGraphInputOwnSchema>;
-
-// ----------------
-
-export const QueryGraphInputFullSchema = z.object({
-	tc_i: z.string()
-});
-
-export type QueryGraphFullInput = z.infer<typeof QueryGraphInputFullSchema>;
-
-// ----------------
-// ----------------
+// utils
 
 export const NodeWeightSchema = z.object({
 	rating: z.number()
@@ -49,8 +36,8 @@ export const NodeWeightSchema = z.object({
 export type NodeWeight = z.infer<typeof NodeWeightSchema>;
 
 export const NodeInfoSchema = z.object({
-	id: z.number(),
-	full_name: z.string(),
+	id: PlayerPublicIdSchema,
+	full_name: NameOfUserSchema,
 	weight: NodeWeightSchema
 });
 
@@ -79,3 +66,19 @@ export const QueryGraphOutputSchema = z.object({
 });
 
 export type QueryGraphOutput = z.infer<typeof QueryGraphOutputSchema>;
+
+// Routes.QUERY_GRAPH_OWN
+
+export const QueryGraphInputOwnSchema = z.object({
+	tc_i: z.string()
+});
+
+export type QueryGraphOwnInput = z.infer<typeof QueryGraphInputOwnSchema>;
+
+// Routes.QUERY_GRAPH_FULL
+
+export const QueryGraphInputFullSchema = z.object({
+	tc_i: z.string()
+});
+
+export type QueryGraphFullInput = z.infer<typeof QueryGraphInputFullSchema>;

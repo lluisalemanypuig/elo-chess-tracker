@@ -66,7 +66,7 @@ export function graph_to_file(dir: string, changes: PlayerPrivateId[], g: Graph)
 	for (const username of changes) {
 		if (g.get_out_degree(username) > 0) {
 			const out = g.get_outgoing_edges(username);
-			if (!isDefined(out)) {
+			if (isNotDefined(out)) {
 				debug(log_now(), `Could not get niehgbors of user '${username}'`);
 				continue;
 			}
@@ -89,7 +89,7 @@ export function graph_to_file(dir: string, changes: PlayerPrivateId[], g: Graph)
 export function graph_full_to_file(dir: string, g: Graph): void {
 	for (const username of g.get_out_entries()) {
 		const out = g.get_outgoing_edges(username);
-		if (!isDefined(out)) {
+		if (isNotDefined(out)) {
 			debug(log_now(), `Could not get niehgbors of user '${username}'`);
 			continue;
 		}
@@ -120,7 +120,7 @@ export function graph_from_string(dir: string): Graph | null {
 		}
 		const edge_array = fs.readFileSync(filename, 'utf8');
 		const edge_set = edge_array_from_string(edge_array);
-		if (!isDefined(edge_set)) {
+		if (isNotDefined(edge_set)) {
 			debug(log_now(), `Could not read edge set at file '${filename}'.`);
 			return null;
 		}

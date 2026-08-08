@@ -34,7 +34,7 @@ import { DateStringLongMillis, DateStringShort, log_now } from '@server/utils/ti
 import { game_array_from_string } from '@common/io/game';
 import { search_by_key, where_should_be_inserted_by_key } from '@server/utils/searching';
 import { read_directory } from '@server/utils/read_directory';
-import { isDefined } from '@common/utils/is_defined';
+import { isNotDefined } from '@common/utils/is_defined';
 
 /* TODO: add a function that iterates only through those game records
  * where a player has games in.
@@ -59,7 +59,7 @@ export class GamesIterator {
 	private load_current_record(): void {
 		const filename = path.join(this.directory, this.record_files_list[this.record_idx]);
 		const array = game_array_from_string(fs.readFileSync(filename, 'utf8'));
-		if (!isDefined(array)) {
+		if (isNotDefined(array)) {
 			debug(log_now(), `File '${filename}' does not contain a valid game array.`);
 			return;
 		}

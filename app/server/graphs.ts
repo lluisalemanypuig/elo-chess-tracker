@@ -34,7 +34,7 @@ import { ADMIN } from '@common/models/user_role';
 import { recalculate_all_graphs } from '@server/managers/graphs';
 import { ConfigurationManager } from '@server/managers/configuration_manager';
 import { get_execution_directory } from '@server/managers/environment_manager';
-import { isDefined } from '@common/utils/is_defined';
+import { isNotDefined } from '@common/utils/is_defined';
 import { Routes } from '@common/routes';
 import { safe_parse_request_cookies } from '@server/utils/schemas';
 import { AuthenticationInputSchema } from '@common/schemas/authentication';
@@ -49,7 +49,7 @@ export async function get_page_graph_own(req: Request, res: Response) {
 	const session = session_parse.data;
 	const r = is_user_logged_in(session);
 
-	if (!isDefined(r[2])) {
+	if (isNotDefined(r[2])) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -72,7 +72,7 @@ export async function get_page_graph_full(req: Request, res: Response) {
 	const r = is_user_logged_in(session);
 
 	const user = r[2];
-	if (!isDefined(user)) {
+	if (isNotDefined(user)) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -101,7 +101,7 @@ export async function post_recalculate_graphs(req: Request, res: Response) {
 	const r = is_user_logged_in(session);
 
 	const user = r[2];
-	if (!isDefined(user)) {
+	if (isNotDefined(user)) {
 		res.status(401).send(r[1]);
 		return;
 	}

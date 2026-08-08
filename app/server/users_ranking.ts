@@ -47,7 +47,7 @@ export async function get_page_user_ranking(req: Request, res: Response) {
 
 	const r = is_user_logged_in(session);
 
-	if (!isDefined(r[2])) {
+	if (isNotDefined(r[2])) {
 		res.status(401).send(r[1]);
 		return;
 	}

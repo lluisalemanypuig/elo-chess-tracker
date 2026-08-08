@@ -90,7 +90,7 @@ async function submit_was_clicked(_event: any) {
 		}
 	});
 	const selected_roles = array_string_to_roles(selected_roles_str);
-	if (!isDefined(selected_roles)) {
+	if (isNotDefined(selected_roles)) {
 		return;
 	}
 

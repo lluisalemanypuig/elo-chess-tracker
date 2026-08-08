@@ -28,5 +28,5 @@ export function isDefined<T>(x: T | null | undefined): x is NonNullable<T> {
 }
 
 export function isNotDefined<T>(x: T | null | undefined): x is null | undefined {
-	return !isDefined(x);
+	return isNotDefined(x);
 }

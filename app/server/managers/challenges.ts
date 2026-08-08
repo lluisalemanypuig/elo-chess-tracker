@@ -37,7 +37,7 @@ import { game_add_new } from '@server/managers/games';
 import { TimeControlID } from '@common/models/time_control';
 import { UsersManager } from '@server/managers/users_manager';
 import { User } from '@common/models/user';
-import { isDefined } from '@common/utils/is_defined';
+import { isNotDefined } from '@common/utils/is_defined';
 import { PlayerPrivateId } from '@common/models/player';
 
 /**
@@ -159,21 +159,21 @@ export function challenge_set_result(
 export function challenge_agree_result(c: Challenge): void {
 	debug(log_now(), `Agree to result of challenge '${c.id}'...`);
 
-	if (!isDefined(c.when_result_set)) {
+	if (isNotDefined(c.when_result_set)) {
 		debug(log_now(), `Date 'when_result_set' is not defined`);
 		return;
 	}
-	if (!isDefined(c.white) || !isDefined(c.black)) {
+	if (isNotDefined(c.white) || isNotDefined(c.black)) {
 		debug(log_now(), `Player 'white' or 'black' is not defined.`);
 		debug(log_now(), `    White: '${c.white}'.`);
 		debug(log_now(), `    Black: '${c.black}'.`);
 		return;
 	}
-	if (!isDefined(c.result) || !c.result_was_set) {
+	if (isNotDefined(c.result) || !c.result_was_set) {
 		debug(log_now(), `Result is not set.`);
 		return;
 	}
-	if (!isDefined(c.result) || !c.result_was_set) {
+	if (isNotDefined(c.result) || !c.result_was_set) {
 		debug(log_now(), `Result is not set.`);
 		return;
 	}

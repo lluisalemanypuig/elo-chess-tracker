@@ -29,7 +29,7 @@ import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:managers/users');
 
 import { Player, PlayerPrivateId } from '@common/models/player';
-import { TimeControlGame, User } from '@common/models/user';
+import { NameOfUser, TimeControlGame, User } from '@common/models/user';
 import { EnvironmentManager } from '@server/managers/environment_manager';
 import { UsersManager } from '@server/managers/users_manager';
 import { UserRole } from '@common/models/user_role';
@@ -50,8 +50,8 @@ export function user_overwrite(user: User): void {
 /// Overwrites user data
 export function user_rename_and_reassign_roles(
 	username: PlayerPrivateId,
-	first_name: string,
-	last_name: string,
+	first_name: NameOfUser,
+	last_name: NameOfUser,
 	roles: UserRole[]
 ): User {
 	let user = UsersManager.get_instance().get_user_by_username(username) as User;
@@ -76,8 +76,8 @@ export function user_rename_and_reassign_roles(
  */
 export function user_add_new(
 	username: PlayerPrivateId,
-	firstname: string,
-	lastname: string,
+	firstname: NameOfUser,
+	lastname: NameOfUser,
 	pass: string,
 	roles: UserRole[]
 ): User {

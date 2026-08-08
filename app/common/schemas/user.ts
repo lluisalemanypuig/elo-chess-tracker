@@ -25,21 +25,25 @@ Contact:
 
 import { z } from 'zod';
 import { UserRoleArraySchema } from '@common/models/user_role';
+import { PlayerPrivateIdSchema, PlayerPublicIdSchema } from '@common/models/player';
+import { NameOfUserSchema } from '@common/models/user';
 
 export const UserCreateInputSchema = z.object({
-	u: z.string(),
-	fn: z.string(),
-	ln: z.string(),
+	u: PlayerPrivateIdSchema,
+	fn: NameOfUserSchema,
+	ln: NameOfUserSchema,
 	p: z.string(),
 	r: UserRoleArraySchema
 });
 
 export type UserCreateInput = z.infer<typeof UserCreateInputSchema>;
 
+// Routes.USER_EDIT
+
 export const UserEditInputSchema = z.object({
-	u: z.number().gte(0),
-	f: z.string(),
-	l: z.string(),
+	u: PlayerPublicIdSchema,
+	f: NameOfUserSchema,
+	l: NameOfUserSchema,
 	r: UserRoleArraySchema
 });
 

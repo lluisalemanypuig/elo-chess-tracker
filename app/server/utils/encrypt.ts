@@ -25,6 +25,7 @@ Contact:
 
 import CryptoJS from 'crypto-js';
 import { interleave_strings } from '@server/utils/misc';
+import { PlayerPrivateId } from '@common/models/player';
 
 // original allowed_symbols string:
 // a!b·c$d%e&f/g(h)i=j?k¿l|m@n#o~p¬qr\'s[¡]t{u}v/w*x-y+zºAªB"C,D.E;F:G_HIJKLMNOPQRSTUVWXYZ0123456789

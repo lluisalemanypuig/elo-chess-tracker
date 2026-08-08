@@ -63,6 +63,19 @@ export type TimeControlGameArray = z.infer<typeof TimeControlGameArraySchema>;
 
 export const UserKeys = ['username', 'first_name', 'last_name', 'password', 'roles', 'games', 'ratings'];
 
+// User name
+
+declare const NameOfUserBrand: unique symbol;
+export type NameOfUserLocal = string & {
+	readonly [NameOfUserBrand]: 'NameOfUserLocal';
+};
+export const NameOfUserSchema = z.string().brand<'NameOfUserLocal'>();
+export type NameOfUser = z.infer<typeof NameOfUserSchema>;
+
+export function toUserName(s: string): NameOfUser {
+	return s as NameOfUser;
+}
+
 /**
  * @brief Simple class to encode a User
  *
@@ -71,9 +84,9 @@ export const UserKeys = ['username', 'first_name', 'last_name', 'password', 'rol
  */
 export class User extends Player {
 	/// First name
-	public first_name: string;
+	public first_name: NameOfUser;
 	/// Last name
-	public last_name: string;
+	public last_name: NameOfUser;
 	/// Password
 	public password: Password;
 	/// Roles of this user
@@ -98,8 +111,8 @@ export class User extends Player {
 	 */
 	constructor(
 		username: PlayerPrivateId,
-		first_name: string,
-		last_name: string,
+		first_name: NameOfUser,
+		last_name: NameOfUser,
 		password: Password,
 		roles: UserRole[],
 		games: TimeControlGame[],
@@ -114,8 +127,8 @@ export class User extends Player {
 	}
 
 	/// Returns the full name of this user
-	get_full_name(): string {
-		return `${this.first_name} ${this.last_name}`;
+	get_full_name(): NameOfUser {
+		return toUserName(`${this.first_name} ${this.last_name}`);
 	}
 
 	/**

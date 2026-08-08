@@ -36,7 +36,7 @@ import { PlayerPrivateId } from '@common/models/player';
  */
 export function edge_from_string(str: PlayerPrivateId): Edge | null {
 	const data = read_schema(EdgeSchema, str);
-	if (!isDefined(data)) {
+	if (isNotDefined(data)) {
 		return null;
 	}
 	return new Edge(
@@ -52,7 +52,7 @@ export function edge_from_string(str: PlayerPrivateId): Edge | null {
  */
 export function edge_array_from_string(str: string): Edge[] | null {
 	const data = read_schema(EdgeArraySchema, str);
-	if (!isDefined(data)) {
+	if (isNotDefined(data)) {
 		return null;
 	}
 

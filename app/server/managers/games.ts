@@ -29,7 +29,7 @@ import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:managers/games');
 
 import { DateStringLongMillis, DateStringShort, log_now, long_date_to_short_date } from '@server/utils/time';
-import { Player } from '@common/models/player';
+import { Player, PlayerPrivateId } from '@common/models/player';
 import { Game, GameID, GameResult } from '@common/models/game';
 import { User } from '@common/models/user';
 import { where_should_be_inserted_by_key } from '@server/utils/searching';
@@ -43,7 +43,7 @@ import { TimeControlID } from '@common/models/time_control';
 import { graph_delete_edge, graph_modify_edge, graph_update } from '@server/managers/graphs';
 import { GamesIterator } from '@server/managers/games_iterator';
 import { TimeControlRating } from '@common/models/time_control_rating';
-import { isDefined } from '@common/utils/is_defined';
+import { isDefined, isNotDefined } from '@common/utils/is_defined';
 
 /// Returns g1 < g2 using dates
 function game_compare_dates(g: Game): Function {
@@ -91,8 +91,8 @@ function game_next_of_player(
 /// Creates a new game with no players using the parameters given
 function game_new(
 	title: string,
-	white: string,
-	black: string,
+	white: PlayerPrivateId,
+	black: PlayerPrivateId,
 	result: GameResult,
 	time_control_id: TimeControlID,
 	time_control_name: string,
@@ -119,7 +119,7 @@ function game_new(
 		} else {
 			// there is no next game for white
 			const white_user = UsersManager.get_instance().get_user_by_username(white);
-			if (!isDefined(white_user)) {
+			if (isNotDefined(white_user)) {
 				throw new Error(`White user '${white}' is not in the users database`);
 			}
 			white_to_assign = white_user.get_rating(time_control_id).clone();
@@ -139,7 +139,7 @@ function game_new(
 			}
 		} else {
 			const black_user = UsersManager.get_instance().get_user_by_username(black);
-			if (!isDefined(black_user)) {
+			if (isNotDefined(black_user)) {
 				throw new Error(`Black user '${black}' is not in the users database`);
 			}
 			black_to_assign = black_user.get_rating(time_control_id).clone();
@@ -160,7 +160,7 @@ function game_new(
 	);
 }
 
-function rating_into_player(time_control_id: TimeControlID, player: string, rating: Rating): Player {
+function rating_into_player(time_control_id: TimeControlID, player: PlayerPrivateId, rating: Rating): Player {
 	return new Player(player, [new TimeControlRating(time_control_id, rating.clone())]);
 }
 
@@ -365,7 +365,7 @@ export function game_find_by_id(game_id: GameID): Game | undefined {
 	const info = GamesManager.get_instance().get_game_info(game_id);
 
 	// game_id does not exist
-	if (!isDefined(info)) {
+	if (isNotDefined(info)) {
 		return undefined;
 	}
 
@@ -403,7 +403,7 @@ export function game_edit_result(game_id: GameID, new_result: GameResult): void 
 	const info = GamesManager.get_instance().get_game_info(game_id);
 
 	// game_id does not exist
-	if (!isDefined(info)) {
+	if (isNotDefined(info)) {
 		throw new Error(`Game id '${game_id}' does not exist in the Games Manager`);
 	}
 
@@ -473,7 +473,7 @@ export function game_edit_title(game_id: GameID, new_title: string): void {
 	const info = GamesManager.get_instance().get_game_info(game_id);
 
 	// game_id does not exist
-	if (!isDefined(info)) {
+	if (isNotDefined(info)) {
 		throw new Error(`Game id '${game_id}' does not exist in the Games Manager`);
 	}
 
@@ -507,7 +507,7 @@ export function game_delete(game_id: GameID): void {
 	const info = games_manager.get_game_info(game_id);
 
 	// game_id does not exist
-	if (!isDefined(info)) {
+	if (isNotDefined(info)) {
 		throw new Error(`Game id '${game_id}' does not exist in the Games Manager`);
 	}
 
@@ -574,14 +574,14 @@ export function game_delete(game_id: GameID): void {
 	let users_manager = UsersManager.get_instance();
 
 	let w = users_manager.get_user_by_username(white);
-	if (!isDefined(w)) {
+	if (isNotDefined(w)) {
 		debug(log_now(), `User ${white} could not be found`);
 		return;
 	}
 	w.delete_game(time_control_id, game_record);
 
 	let b = users_manager.get_user_by_username(black);
-	if (!isDefined(b)) {
+	if (isNotDefined(b)) {
 		debug(log_now(), `User ${black} could not be found`);
 		return;
 	}

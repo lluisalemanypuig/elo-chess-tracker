@@ -49,7 +49,7 @@ export async function get_page_user_password_change(req: Request, res: Response)
 	const session = session_parse.data;
 
 	const r = is_user_logged_in(session);
-	if (!isDefined(r[2])) {
+	if (isNotDefined(r[2])) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -81,7 +81,7 @@ export async function post_user_password_change(req: Request, res: Response) {
 	const r = is_user_logged_in(session);
 	const user = r[2];
 
-	if (!isDefined(user)) {
+	if (isNotDefined(user)) {
 		res.status(200).send(r[1]);
 		return;
 	}

@@ -57,7 +57,7 @@ async function submit_new_game(_event: any) {
 	const time_control_name = select_time_control.options[select_time_control.selectedIndex].text;
 
 	const result = result_from_text_to_value(result_str);
-	if (!isDefined(result)) {
+	if (isNotDefined(result)) {
 		console.log(`Wrong result for the game '${result_str}'.`);
 		return;
 	}
@@ -72,11 +72,11 @@ async function submit_new_game(_event: any) {
 	}
 
 	const game_title = game_title_input.value;
-	if (!isDefined(white_option)) {
+	if (isNotDefined(white_option)) {
 		console.log('Could not find white option');
 		return;
 	}
-	if (!isDefined(black_option)) {
+	if (isNotDefined(black_option)) {
 		console.log('Could not find black option');
 		return;
 	}

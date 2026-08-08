@@ -24,10 +24,11 @@ Contact:
 */
 
 import { z } from 'zod';
+import { PlayerPrivateIdSchema } from '@common/models/player';
 
 export const UserLoginInputSchema = z.object({
-	u: z.string(),
-	p: z.string()
+	u: PlayerPrivateIdSchema,
+	p: PlayerPrivateIdSchema
 });
 
 export type UserLoginInput = z.infer<typeof UserLoginInputSchema>;

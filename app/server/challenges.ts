@@ -47,7 +47,7 @@ import { UsersManager } from '@server/managers/users_manager';
 import { ConfigurationManager } from '@server/managers/configuration_manager';
 import { RatingSystemManager } from '@server/managers/rating_system_manager';
 import { get_execution_directory } from '@server/managers/environment_manager';
-import { isDefined } from '@common/utils/is_defined';
+import { isNotDefined } from '@common/utils/is_defined';
 import { Routes } from '@common/routes';
 import { InputSchemaOf } from '@common/api/schemas';
 import { safe_parse_request_body, safe_parse_request_cookies } from '@server/utils/schemas';
@@ -63,7 +63,7 @@ export async function get_page_challenge(req: Request, res: Response) {
 	const session = session_parse.data;
 
 	const r = is_user_logged_in(session);
-	if (!isDefined(r[2])) {
+	if (isNotDefined(r[2])) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -95,7 +95,7 @@ export async function post_challenge_send(req: Request, res: Response) {
 
 	const r = is_user_logged_in(session);
 	const sender = r[2];
-	if (!isDefined(sender)) {
+	if (isNotDefined(sender)) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -110,7 +110,7 @@ export async function post_challenge_send(req: Request, res: Response) {
 
 	const receiver = UsersManager.get_instance().get_user_by_public_id(to_random_id);
 
-	if (!isDefined(receiver)) {
+	if (isNotDefined(receiver)) {
 		debug(log_now(), `User receiver of the challenge '${to_random_id}' does not exist.`);
 		res.status(404).send('User receiver of the challenge does not exist');
 		return;
@@ -163,7 +163,7 @@ export async function post_challenge_accept(req: Request, res: Response) {
 	const session = session_parse.data;
 
 	const r = is_user_logged_in(session);
-	if (!isDefined(r[2])) {
+	if (isNotDefined(r[2])) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -177,7 +177,7 @@ export async function post_challenge_accept(req: Request, res: Response) {
 	debug(log_now(), `User '${session.username}' wants to accept challenge '${challenge_parse}'`);
 
 	const c = ChallengesManager.get_instance().get_challenge_by_id(challenge_id);
-	if (!isDefined(c)) {
+	if (isNotDefined(c)) {
 		res.status(404).send('Challenge does not exist');
 		return;
 	}
@@ -203,7 +203,7 @@ export async function post_challenge_decline(req: Request, res: Response) {
 	const session = session_parse.data;
 
 	const r = is_user_logged_in(session);
-	if (!isDefined(r[2])) {
+	if (isNotDefined(r[2])) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -217,7 +217,7 @@ export async function post_challenge_decline(req: Request, res: Response) {
 	debug(log_now(), `User '${session.username}' wants to decline challenge '${challenge_id}'`);
 
 	const c = ChallengesManager.get_instance().get_challenge_by_id(challenge_id);
-	if (!isDefined(c)) {
+	if (isNotDefined(c)) {
 		res.status(404).send('Challenge does not exist');
 		return;
 	}
@@ -242,7 +242,7 @@ export async function post_challenge_set_result(req: Request, res: Response) {
 	}
 	const session = session_parse.data;
 	const r = is_user_logged_in(session);
-	if (!isDefined(r[2])) {
+	if (isNotDefined(r[2])) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -280,7 +280,7 @@ export async function post_challenge_set_result(req: Request, res: Response) {
 	}
 
 	let c = ChallengesManager.get_instance().get_challenge_by_id(challenge_id);
-	if (!isDefined(c)) {
+	if (isNotDefined(c)) {
 		res.status(404).send(`Challenge does not exist.`);
 		return;
 	}
@@ -327,7 +327,7 @@ export async function post_challenge_agree(req: Request, res: Response) {
 	const session = session_parse.data;
 	const r = is_user_logged_in(session);
 
-	if (!isDefined(r[2])) {
+	if (isNotDefined(r[2])) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -339,7 +339,7 @@ export async function post_challenge_agree(req: Request, res: Response) {
 	const challenge_id = challenge_parse.data.challenge_id;
 
 	let c = ChallengesManager.get_instance().get_challenge_by_id(challenge_id);
-	if (!isDefined(c)) {
+	if (isNotDefined(c)) {
 		res.status(404).send('Challenge does not exist');
 		return;
 	}
@@ -358,7 +358,7 @@ export async function post_challenge_disagree(req: Request, res: Response) {
 	const session = session_parse.data;
 	const r = is_user_logged_in(session);
 
-	if (!isDefined(r[2])) {
+	if (isNotDefined(r[2])) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -370,7 +370,7 @@ export async function post_challenge_disagree(req: Request, res: Response) {
 	const challenge_id = challenge_parse.data.challenge_id;
 
 	let c = ChallengesManager.get_instance().get_challenge_by_id(challenge_id);
-	if (!isDefined(c)) {
+	if (isNotDefined(c)) {
 		res.status(404).send('Challenge does not exist');
 		return;
 	}

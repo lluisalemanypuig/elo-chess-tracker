@@ -33,7 +33,8 @@ import { SessionIDManager } from '@server/managers/session_id_manager';
 import { SessionID } from '@common/models/session_id';
 import { shuffle } from '@server/utils/shuffle_random';
 import { UsersManager } from '@server/managers/users_manager';
-import { isDefined } from '@common/utils/is_defined';
+import { isNotDefined } from '@common/utils/is_defined';
+import { PlayerPrivateId } from '@common/models/player';
 
 // The original string was
 // "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+-*/ª!·$%&/()=?¿¡'º|@#~€¬^{},;.:_";
@@ -106,7 +107,7 @@ export function session_user_delete_all(username: PlayerPrivateId): void {
  */
 export function is_user_logged_in(session: SessionID): [boolean, string, User | undefined] {
 	const user = UsersManager.get_instance().get_user_by_username(session.username);
-	if (!isDefined(user)) {
+	if (isNotDefined(user)) {
 		debug(log_now(), `User '${session.username}' does not exist.`);
 		return [false, 'Forbidden access. <a href="/">Go home</a>.', undefined];
 	}

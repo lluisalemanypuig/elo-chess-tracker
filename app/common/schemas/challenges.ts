@@ -27,6 +27,8 @@ import { z } from 'zod';
 import { GameResultSchema } from '@common/models/game';
 import { PlayerPrivateIdSchema, PlayerPublicIdSchema } from '@common/models/player';
 
+// Routes.CHALLENGE_SEND
+
 export const ChallengeSendInputSchema = z.object({
 	to: PlayerPublicIdSchema.gte(0),
 	time_control_id: z.string(),
@@ -36,11 +38,15 @@ export const ChallengeSendInputSchema = z.object({
 
 export type ChallengeSendInput = z.infer<typeof ChallengeSendInputSchema>;
 
+// Routes.CHALLENGE_ACCEPT
+
 export const ChallengeAcceptInputSchema = z.object({
 	challenge_id: z.string()
 });
 
 export type ChallengeAcceptInput = z.infer<typeof ChallengeAcceptInputSchema>;
+
+// Routes.CHALLENGE_DECLINE
 
 export const ChallengeDeclineInputSchema = z.object({
 	challenge_id: z.string()
@@ -48,14 +54,19 @@ export const ChallengeDeclineInputSchema = z.object({
 
 export type ChallengeDeclineInput = z.infer<typeof ChallengeDeclineInputSchema>;
 
+// Routes.CHALLENGE_SET_RESULT
+
 export const ChallengeSetResultInputSchema = z.object({
 	challenge_id: z.string(),
+	/// TODO: use public ids in the input schema
 	white: PlayerPrivateIdSchema,
 	black: PlayerPrivateIdSchema,
 	result: GameResultSchema
 });
 
 export type ChallengeSetResultInput = z.infer<typeof ChallengeSetResultInputSchema>;
+
+// Routes.CHALLENGE_AGREE
 
 export const ChallengeAgreeResultInputSchema = z.object({
 	challenge_id: z.string()

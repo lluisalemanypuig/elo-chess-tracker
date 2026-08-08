@@ -35,7 +35,7 @@ import { CREATE_USER, USER_ROLE_ASSIGN, get_role_action_name, USER_ROLE_ASSIGN_I
 import { UsersManager } from '@server/managers/users_manager';
 import { ConfigurationManager } from '@server/managers/configuration_manager';
 import { get_execution_directory } from '@server/managers/environment_manager';
-import { isDefined } from '@common/utils/is_defined';
+import { isDefined, isNotDefined } from '@common/utils/is_defined';
 import { Routes } from '@common/routes';
 import { InputSchemaOf } from '@common/api/schemas';
 import { safe_parse_request_body, safe_parse_request_cookies } from '@server/utils/schemas';
@@ -52,7 +52,7 @@ export async function get_page_user_create(req: Request, res: Response) {
 	const r = is_user_logged_in(session);
 
 	const user = r[2];
-	if (!isDefined(user)) {
+	if (isNotDefined(user)) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -86,7 +86,7 @@ export async function post_user_create(req: Request, res: Response) {
 	const r = is_user_logged_in(session);
 
 	const registerer = r[2];
-	if (!isDefined(registerer)) {
+	if (isNotDefined(registerer)) {
 		res.status(401).send(r[1]);
 		return;
 	}

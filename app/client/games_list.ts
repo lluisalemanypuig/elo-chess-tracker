@@ -137,7 +137,7 @@ async function trigger_edit_game_title(event: Event) {
 	const original_title = input.getAttribute('original_title');
 	const new_title = input.value;
 
-	if (!isDefined(game_id)) {
+	if (isNotDefined(game_id)) {
 		console.log('Game id could not be retrieved');
 		return;
 	}

@@ -49,7 +49,7 @@ import {
 import { UsersManager } from '@server/managers/users_manager';
 import { ConfigurationManager } from '@server/managers/configuration_manager';
 import { get_execution_directory } from '@server/managers/environment_manager';
-import { isDefined } from '@common/utils/is_defined';
+import { isNotDefined } from '@common/utils/is_defined';
 import { Routes } from '@common/routes';
 import { InputSchemaOf } from '@common/api/schemas';
 import { safe_parse_request_cookies, safe_parse_request_body } from '@server/utils/schemas';
@@ -66,7 +66,7 @@ export async function get_page_game_list_own(req: Request, res: Response) {
 	const r = is_user_logged_in(session);
 
 	const user = r[2];
-	if (!isDefined(user)) {
+	if (isNotDefined(user)) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -89,7 +89,7 @@ export async function get_page_game_list_all(req: Request, res: Response) {
 	const r = is_user_logged_in(session);
 
 	const user = r[2];
-	if (!isDefined(user)) {
+	if (isNotDefined(user)) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -112,7 +112,7 @@ export async function get_page_game_create(req: Request, res: Response) {
 	const r = is_user_logged_in(session);
 
 	const user = r[2];
-	if (!isDefined(user)) {
+	if (isNotDefined(user)) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -141,7 +141,7 @@ export async function post_game_create(req: Request, res: Response) {
 	const r = is_user_logged_in(session);
 
 	const creator = r[2];
-	if (!isDefined(creator)) {
+	if (isNotDefined(creator)) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -169,14 +169,14 @@ export async function post_game_create(req: Request, res: Response) {
 	const mem = UsersManager.get_instance();
 
 	const white = mem.get_user_by_public_id(white_rid);
-	if (!isDefined(white)) {
+	if (isNotDefined(white)) {
 		debug(log_now(), `Random id '${white_rid}' for White is not valid.`);
 		res.status(500).send('Invalid white user sent to the server.');
 		return;
 	}
 
 	const black = mem.get_user_by_public_id(black_rid);
-	if (!isDefined(black)) {
+	if (isNotDefined(black)) {
 		debug(log_now(), `Random id '${black_rid}' for Black is not valid.`);
 		res.status(500).send('Invalid black user sent to the server.');
 		return;
@@ -229,7 +229,7 @@ export async function post_game_edit_result(req: Request, res: Response) {
 	const r = is_user_logged_in(session);
 
 	const user = r[2];
-	if (!isDefined(user)) {
+	if (isNotDefined(user)) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -252,7 +252,7 @@ export async function post_game_edit_result(req: Request, res: Response) {
 	debug(log_now(), `    New result: '${new_result}'`);
 
 	const game = game_find_by_id(game_id);
-	if (!isDefined(game)) {
+	if (isNotDefined(game)) {
 		res.status(404).send(`Game was not found.`);
 		return;
 	}
@@ -260,14 +260,14 @@ export async function post_game_edit_result(req: Request, res: Response) {
 	const manager = UsersManager.get_instance();
 
 	const white = manager.get_user_by_username(game.white);
-	if (!isDefined(white)) {
+	if (isNotDefined(white)) {
 		debug(log_now(), `Random id '${white}' for White is not valid.`);
 		res.status(500).send('Invalid white user sent to the server.');
 		return;
 	}
 
 	const black = manager.get_user_by_username(game.black);
-	if (!isDefined(black)) {
+	if (isNotDefined(black)) {
 		debug(log_now(), `Random id '${black}' for Black is not valid.`);
 		res.status(500).send('Invalid black user sent to the server.');
 		return;
@@ -298,7 +298,7 @@ export async function post_game_edit_title(req: Request, res: Response) {
 	const r = is_user_logged_in(session);
 
 	const user = r[2];
-	if (!isDefined(user)) {
+	if (isNotDefined(user)) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -321,7 +321,7 @@ export async function post_game_edit_title(req: Request, res: Response) {
 	debug(log_now(), `    New title: '${title}'`);
 
 	const game = game_find_by_id(game_id);
-	if (!isDefined(game)) {
+	if (isNotDefined(game)) {
 		res.status(404).send(`Game was not found.`);
 		return;
 	}
@@ -329,14 +329,14 @@ export async function post_game_edit_title(req: Request, res: Response) {
 	const manager = UsersManager.get_instance();
 
 	const white = manager.get_user_by_username(game.white);
-	if (!isDefined(white)) {
+	if (isNotDefined(white)) {
 		debug(log_now(), `Random id '${white}' for White is not valid.`);
 		res.status(500).send('Invalid white user sent to the server.');
 		return;
 	}
 
 	const black = manager.get_user_by_username(game.black);
-	if (!isDefined(black)) {
+	if (isNotDefined(black)) {
 		debug(log_now(), `Random id '${black}' for Black is not valid.`);
 		res.status(500).send('Invalid black user sent to the server.');
 		return;
@@ -367,7 +367,7 @@ export async function post_game_delete(req: Request, res: Response) {
 	const r = is_user_logged_in(session);
 
 	const user = r[2];
-	if (!isDefined(user)) {
+	if (isNotDefined(user)) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -388,7 +388,7 @@ export async function post_game_delete(req: Request, res: Response) {
 	debug(log_now(), `    Game ID: '${game_id}'`);
 
 	const game = game_find_by_id(game_id);
-	if (!isDefined(game)) {
+	if (isNotDefined(game)) {
 		res.status(404).send(`Game was not found.`);
 		return;
 	}
@@ -396,14 +396,14 @@ export async function post_game_delete(req: Request, res: Response) {
 	const manager = UsersManager.get_instance();
 
 	const white = manager.get_user_by_username(game.white);
-	if (!isDefined(white)) {
+	if (isNotDefined(white)) {
 		debug(log_now(), `Random id '${white}' for White is not valid.`);
 		res.status(500).send('Invalid white user sent to the server.');
 		return;
 	}
 
 	const black = manager.get_user_by_username(game.black);
-	if (!isDefined(black)) {
+	if (isNotDefined(black)) {
 		debug(log_now(), `Random id '${black}' for Black is not valid.`);
 		res.status(500).send('Invalid black user sent to the server.');
 		return;
@@ -433,7 +433,7 @@ export async function post_recalculate_ratings(req: Request, res: Response) {
 	const r = is_user_logged_in(session);
 
 	const user = r[2];
-	if (!isDefined(user)) {
+	if (isNotDefined(user)) {
 		res.status(401).send(r[1]);
 		return;
 	}

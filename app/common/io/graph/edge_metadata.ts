@@ -34,7 +34,7 @@ import { isDefined } from '@common/utils/is_defined';
  */
 export function edge_metadata_from_string(str: string): EdgeMetadata | null {
 	const data = read_schema(EdgeMetadataSchema, str);
-	if (!isDefined(data)) {
+	if (isNotDefined(data)) {
 		return null;
 	}
 	return new EdgeMetadata(data.num_games_won, data.num_games_drawn, data.num_games_lost);

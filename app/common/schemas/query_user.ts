@@ -28,26 +28,29 @@ import { UserThinSchema } from '@common/models/user_thin';
 import { UserRoleArraySchema } from '@common/models/user_role';
 import { UserActionArraySchema } from '@common/models/user_action';
 import { RatingSchema } from '@common/models/rating_framework/rating';
+import { PlayerPublicIdSchema } from '@common/models/player';
+
+// Routes.QUERY_USER_LIST
+
+export const QueryUserListOutputSchema = UserThinSchema;
+
+export type QueryUserListOutput = z.infer<typeof QueryUserListOutputSchema>;
+
+// Routes.QUERY_USER_LIST
 
 export const QueryUserEditInputSchema = z.object({
-	u: z.number().gte(0)
+	u: PlayerPublicIdSchema
 });
 
 export type QueryUserEditInput = z.infer<typeof QueryUserEditInputSchema>;
 
-// ----------
+// Routes.QUERY_USER_RANKING
 
 export const QueryUserRankingInputSchema = z.object({
 	tc_i: z.string()
 });
 
 export type QueryUserRankingInput = z.infer<typeof QueryUserRankingInputSchema>;
-
-// ----------
-
-export const QueryUserListOutputSchema = UserThinSchema;
-
-export type QueryUserListOutput = z.infer<typeof QueryUserListOutputSchema>;
 
 // ----------
 

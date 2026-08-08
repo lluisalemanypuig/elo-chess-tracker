@@ -27,6 +27,7 @@ import { z } from 'zod';
 import { Rating } from '@common/models/rating_framework/rating';
 import { TimeControlID } from '@common/models/time_control';
 import { DateStringLongMillis } from '@server/utils/time';
+import { PlayerPrivateId } from '@common/models/player';
 
 /// Result of a game
 export const GameResultSchema = z.enum(['white_wins', 'black_wins', 'draw']);
@@ -90,11 +91,11 @@ export class Game {
 	/// Name of the game
 	public title: string;
 	/// White player username
-	public readonly white: string;
+	public readonly white: PlayerPrivateId;
 	/// White in the state before the game
 	public white_rating: Rating;
 	/// White player username
-	public readonly black: string;
+	public readonly black: PlayerPrivateId;
 	/// White in the state before the game
 	public black_rating: Rating;
 	/// Result of the game
@@ -121,9 +122,9 @@ export class Game {
 	constructor(
 		id: GameID,
 		title: string,
-		white: string,
+		white: PlayerPrivateId,
 		white_rating: Rating,
-		black: string,
+		black: PlayerPrivateId,
 		black_rating: Rating,
 		result: GameResult,
 		time_control_id: TimeControlID,

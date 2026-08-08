@@ -37,34 +37,35 @@ import { UsersManager } from '@server/managers/users_manager';
 import { Edge } from '@common/models/graph/edge';
 import { can_user_see_graph } from '@server/managers/user_relationships';
 import { GRAPHS_SEE_USER } from '@common/models/user_action';
-import { isDefined } from '@common/utils/is_defined';
+import { isNotDefined } from '@common/utils/is_defined';
 import { Routes } from '@common/routes';
 import { InputSchemaOf } from '@common/api/schemas';
 import { safe_parse_request_body, safe_parse_request_cookies } from '@server/utils/schemas';
 import { AuthenticationInputSchema } from '@common/schemas/authentication';
 import { EdgeInfo, NodeInfo, QueryGraphOutput } from '@common/schemas/query_graphs';
+import { PlayerPrivateId, PlayerPublicId } from '@common/models/player';
 
 function retrieve_graph_user(username: PlayerPrivateId, time_control_id: TimeControlID): QueryGraphOutput {
 	const users = UsersManager.get_instance();
 	const graphs = GraphsManager.get_instance();
 
 	const this_user_idx = users.get_user_index_by_username(username);
-	if (!isDefined(this_user_idx)) {
+	if (isNotDefined(this_user_idx)) {
 		debug(log_now(), `Index for user '${username}' could not be found.`);
 		return { nodes: [], edges: [] };
 	}
 	const this_user_rand_id = users.get_user_public_id_at(this_user_idx);
-	if (!isDefined(this_user_rand_id)) {
+	if (isNotDefined(this_user_rand_id)) {
 		debug(log_now(), `Random id for user '${username}' could not be found.`);
 		return { nodes: [], edges: [] };
 	}
 	const this_user = users.get_user_at(this_user_idx);
-	if (!isDefined(this_user)) {
+	if (isNotDefined(this_user)) {
 		debug(log_now(), `User '${username}' could not be found.`);
 		return { nodes: [], edges: [] };
 	}
 	const G = graphs.get_graph(time_control_id);
-	if (!isDefined(G)) {
+	if (isNotDefined(G)) {
 		debug(log_now(), `Graph for '${time_control_id}' could not be found.`);
 		return { nodes: [], edges: [] };
 	}
@@ -84,11 +85,11 @@ function retrieve_graph_user(username: PlayerPrivateId, time_control_id: TimeCon
 
 	G.get_outgoing_edges(username)?.forEach((e: Edge) => {
 		const edge_user_idx = users.get_user_index_by_username(e.neighbor) as number;
-		const edge_user_rand_id = users.get_user_public_id_at(edge_user_idx) as number;
+		const edge_user_public_id = users.get_user_public_id_at(edge_user_idx) as PlayerPublicId;
 		const edge_user = users.get_user_at(edge_user_idx) as User;
 
 		const node: NodeInfo = {
-			id: edge_user_rand_id,
+			id: edge_user_public_id,
 			full_name: edge_user.get_full_name(),
 			weight: {
 				rating: edge_user.get_rating(time_control_id).rating
@@ -98,7 +99,7 @@ function retrieve_graph_user(username: PlayerPrivateId, time_control_id: TimeCon
 
 		const edge: EdgeInfo = {
 			source: this_user_rand_id,
-			target: edge_user_rand_id,
+			target: edge_user_public_id,
 			label: e.metadata.to_string(),
 			weight: {
 				wins: e.metadata.num_games_won,
@@ -110,17 +111,17 @@ function retrieve_graph_user(username: PlayerPrivateId, time_control_id: TimeCon
 	});
 	G.get_incoming_edges(username)?.forEach((e: Edge) => {
 		const neighbor_idx = users.get_user_index_by_username(e.neighbor) as number;
-		const neighbor_rand_id = users.get_user_public_id_at(neighbor_idx) as number;
+		const neighbor_public_id = users.get_user_public_id_at(neighbor_idx) as PlayerPublicId;
 
 		const idx = search_linear_by_key(list_nodes, (i: NodeInfo): boolean => {
-			return i.id == neighbor_rand_id;
+			return i.id == neighbor_public_id;
 		});
 
 		if (idx == -1) {
 			const edge_user = users.get_user_at(neighbor_idx) as User;
 
 			const node: NodeInfo = {
-				id: neighbor_rand_id,
+				id: neighbor_public_id,
 				full_name: edge_user.get_full_name(),
 				weight: {
 					rating: edge_user.get_rating(time_control_id).rating
@@ -130,7 +131,7 @@ function retrieve_graph_user(username: PlayerPrivateId, time_control_id: TimeCon
 		}
 
 		const edge: EdgeInfo = {
-			source: neighbor_rand_id,
+			source: neighbor_public_id,
 			target: this_user_rand_id,
 			label: e.metadata.clone().reverse().to_string(),
 			weight: {
@@ -150,7 +151,7 @@ function retrieve_graph_full(querier: User, time_control_id: TimeControlID): Que
 	const graphs = GraphsManager.get_instance();
 
 	const G = graphs.get_graph(time_control_id);
-	if (!isDefined(G)) {
+	if (isNotDefined(G)) {
 		debug(log_now(), `Graph for '${time_control_id}' could not be found.`);
 		return { nodes: [], edges: [] };
 	}
@@ -160,7 +161,7 @@ function retrieve_graph_full(querier: User, time_control_id: TimeControlID): Que
 
 	for (let idx = 0; idx < users.num_users(); ++idx) {
 		const this_user = users.get_user_at(idx);
-		if (!isDefined(this_user)) {
+		if (isNotDefined(this_user)) {
 			debug(log_now(), `User at index '${idx}' could not be found.`);
 			return { nodes: [], edges: [] };
 		}
@@ -169,17 +170,17 @@ function retrieve_graph_full(querier: User, time_control_id: TimeControlID): Que
 		}
 
 		const username = this_user.username;
-		const this_user_rand_id = users.get_user_public_id_at(idx) as number;
+		const this_user_public_id = users.get_user_public_id_at(idx) as PlayerPublicId;
 
 		let out_degree = 0;
 		G.get_outgoing_edges(username)?.forEach((e: Edge) => {
 			const edge_user_idx = users.get_user_index_by_username(e.neighbor);
-			if (!isDefined(edge_user_idx)) {
+			if (isNotDefined(edge_user_idx)) {
 				debug(log_now(), `Index of user '${e.neighbor}' does not exist`);
 				return;
 			}
 			const edge_user = users.get_user_at(edge_user_idx);
-			if (!isDefined(edge_user)) {
+			if (isNotDefined(edge_user)) {
 				debug(log_now(), `User at index '${edge_user_idx}' does not exist`);
 				return;
 			}
@@ -190,7 +191,7 @@ function retrieve_graph_full(querier: User, time_control_id: TimeControlID): Que
 			const edge_user_rand_id = users.get_user_public_id_at(edge_user_idx) as number;
 
 			const edge: EdgeInfo = {
-				source: this_user_rand_id,
+				source: this_user_public_id,
 				target: edge_user_rand_id,
 				label: e.metadata.to_string(),
 				weight: {
@@ -205,8 +206,9 @@ function retrieve_graph_full(querier: User, time_control_id: TimeControlID): Que
 
 		const degree = G.get_in_degree(username) + out_degree;
 		if (degree > 0) {
+			const public_id = users.get_user_public_id_at(idx) as PlayerPublicId;
 			const node: NodeInfo = {
-				id: users.get_user_public_id_at(idx) as number,
+				id: public_id,
 				full_name: this_user.get_full_name(),
 				weight: {
 					rating: this_user.get_rating(time_control_id).rating
@@ -229,7 +231,7 @@ export async function post_query_graph_own(req: Request, res: Response) {
 	const session = session_parse.data;
 	const r = is_user_logged_in(session);
 
-	if (!isDefined(r[2])) {
+	if (isNotDefined(r[2])) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -257,7 +259,7 @@ export async function post_query_graph_full(req: Request, res: Response) {
 	const r = is_user_logged_in(session);
 
 	const user = r[2];
-	if (!isDefined(user)) {
+	if (isNotDefined(user)) {
 		res.status(401).send(r[1]);
 		return;
 	}

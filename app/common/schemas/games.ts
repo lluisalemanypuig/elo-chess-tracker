@@ -25,10 +25,13 @@ Contact:
 
 import { z } from 'zod';
 import { GameResultSchema } from '@common/models/game';
+import { PlayerPublicIdSchema } from '@common/models/player';
+
+// Routes.GAME_CREATE
 
 export const GameCreateInputSchema = z.object({
-	w: z.number().gte(0),
-	b: z.number().gte(0),
+	w: PlayerPublicIdSchema.gte(0),
+	b: PlayerPublicIdSchema.gte(0),
 	title: z.string(),
 	r: GameResultSchema,
 	tc_i: z.string(),
@@ -39,6 +42,8 @@ export const GameCreateInputSchema = z.object({
 
 export type GameCreateInput = z.infer<typeof GameCreateInputSchema>;
 
+// Routes.GAME_EDIT_RESULT
+
 export const GameEditResultInputSchema = z.object({
 	id: z.string(),
 	new_result: GameResultSchema
@@ -46,12 +51,16 @@ export const GameEditResultInputSchema = z.object({
 
 export type GameEditResultInput = z.infer<typeof GameEditResultInputSchema>;
 
+// Routes.GAME_EDIT_TITLE
+
 export const GameEditTitleInputSchema = z.object({
 	id: z.string(),
 	title: z.string()
 });
 
 export type GameEditTitleInput = z.infer<typeof GameEditTitleInputSchema>;
+
+// Routes.GAME_DELETE
 
 export const GameDeleteInputSchema = z.object({
 	id: z.string()
