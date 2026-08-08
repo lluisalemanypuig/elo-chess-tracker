@@ -27,6 +27,7 @@ import { z } from 'zod';
 import { DateStringLongMillis } from '@server/utils/time';
 import { GameResult, GameResultSchema } from '@common/models/game';
 import { TimeControlID } from '@common/models/time_control';
+import { PlayerPrivateId, PlayerPrivateIdSchema } from '@common/models/player';
 
 export type ChallengeID = string;
 
@@ -36,9 +37,9 @@ export const ChallengeSchema = z
 		/// Name of the game that will result from this challenge
 		title: z.string(),
 		/// The user sending the challenge
-		sent_by: z.string(),
+		sent_by: PlayerPrivateIdSchema,
 		/// The user receiving the challenge
-		sent_to: z.string(),
+		sent_to: PlayerPrivateIdSchema,
 		/// Time control of the challenge
 		time_control_id: z.string() as z.ZodType<TimeControlID>,
 		/// Time control of the challenge
@@ -53,7 +54,7 @@ export const ChallengeSchema = z
 		/// Date when the result of the game was last modified
 		when_result_set: z.string().optional() as z.ZodType<DateStringLongMillis | undefined>,
 		/// Player who set the result
-		result_set_by: z.string().optional(),
+		result_set_by: PlayerPrivateIdSchema.optional(),
 
 		/// Date when the result of the game was accepted.
 		when_result_accepted: z.string().optional() as z.ZodType<DateStringLongMillis | undefined>,
@@ -61,8 +62,8 @@ export const ChallengeSchema = z
 		result_accepted_by: z.string().optional(),
 
 		/// The resulting game of the challenge
-		white: z.string().optional(),
-		black: z.string().optional(),
+		white: PlayerPrivateIdSchema.optional(),
+		black: PlayerPrivateIdSchema.optional(),
 		result: GameResultSchema.optional()
 	})
 	.strict();
@@ -81,8 +82,8 @@ export type ChallengeArray = z.infer<typeof ChallengeArraySchema>;
 export function new_challenge(
 	id: string,
 	title: string,
-	sent_by: string,
-	sent_to: string,
+	sent_by: PlayerPrivateId,
+	sent_to: PlayerPrivateId,
 	time_control_id: TimeControlID,
 	time_control_name: string,
 	when_challenge_sent: DateStringLongMillis
@@ -108,10 +109,10 @@ export function new_challenge(
 }
 
 interface Result {
-	by: string;
+	by: PlayerPrivateId;
 	when: DateStringLongMillis;
-	white: string;
-	black: string;
+	white: PlayerPrivateId;
+	black: PlayerPrivateId;
 	result: GameResult;
 }
 

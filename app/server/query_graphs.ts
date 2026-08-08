@@ -44,7 +44,7 @@ import { safe_parse_request_body, safe_parse_request_cookies } from '@server/uti
 import { AuthenticationInputSchema } from '@common/schemas/authentication';
 import { EdgeInfo, NodeInfo, QueryGraphOutput } from '@common/schemas/query_graphs';
 
-function retrieve_graph_user(username: string, time_control_id: TimeControlID): QueryGraphOutput {
+function retrieve_graph_user(username: PlayerPrivateID, time_control_id: TimeControlID): QueryGraphOutput {
 	const users = UsersManager.get_instance();
 	const graphs = GraphsManager.get_instance();
 
@@ -53,7 +53,7 @@ function retrieve_graph_user(username: string, time_control_id: TimeControlID): 
 		debug(log_now(), `Index for user '${username}' could not be found.`);
 		return { nodes: [], edges: [] };
 	}
-	const this_user_rand_id = users.get_user_random_ID_at(this_user_idx);
+	const this_user_rand_id = users.get_user_public_id_at(this_user_idx);
 	if (!isDefined(this_user_rand_id)) {
 		debug(log_now(), `Random id for user '${username}' could not be found.`);
 		return { nodes: [], edges: [] };
@@ -84,7 +84,7 @@ function retrieve_graph_user(username: string, time_control_id: TimeControlID): 
 
 	G.get_outgoing_edges(username)?.forEach((e: Edge) => {
 		const edge_user_idx = users.get_user_index_by_username(e.neighbor) as number;
-		const edge_user_rand_id = users.get_user_random_ID_at(edge_user_idx) as number;
+		const edge_user_rand_id = users.get_user_public_id_at(edge_user_idx) as number;
 		const edge_user = users.get_user_at(edge_user_idx) as User;
 
 		const node: NodeInfo = {
@@ -110,7 +110,7 @@ function retrieve_graph_user(username: string, time_control_id: TimeControlID): 
 	});
 	G.get_incoming_edges(username)?.forEach((e: Edge) => {
 		const neighbor_idx = users.get_user_index_by_username(e.neighbor) as number;
-		const neighbor_rand_id = users.get_user_random_ID_at(neighbor_idx) as number;
+		const neighbor_rand_id = users.get_user_public_id_at(neighbor_idx) as number;
 
 		const idx = search_linear_by_key(list_nodes, (i: NodeInfo): boolean => {
 			return i.id == neighbor_rand_id;
@@ -169,7 +169,7 @@ function retrieve_graph_full(querier: User, time_control_id: TimeControlID): Que
 		}
 
 		const username = this_user.username;
-		const this_user_rand_id = users.get_user_random_ID_at(idx) as number;
+		const this_user_rand_id = users.get_user_public_id_at(idx) as number;
 
 		let out_degree = 0;
 		G.get_outgoing_edges(username)?.forEach((e: Edge) => {
@@ -187,7 +187,7 @@ function retrieve_graph_full(querier: User, time_control_id: TimeControlID): Que
 				return;
 			}
 
-			const edge_user_rand_id = users.get_user_random_ID_at(edge_user_idx) as number;
+			const edge_user_rand_id = users.get_user_public_id_at(edge_user_idx) as number;
 
 			const edge: EdgeInfo = {
 				source: this_user_rand_id,
@@ -206,7 +206,7 @@ function retrieve_graph_full(querier: User, time_control_id: TimeControlID): Que
 		const degree = G.get_in_degree(username) + out_degree;
 		if (degree > 0) {
 			const node: NodeInfo = {
-				id: users.get_user_random_ID_at(idx) as number,
+				id: users.get_user_public_id_at(idx) as number,
 				full_name: this_user.get_full_name(),
 				weight: {
 					rating: this_user.get_rating(time_control_id).rating

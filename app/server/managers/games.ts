@@ -61,7 +61,7 @@ function game_compare_dates(g: Game): Function {
 /// Return the game where player 'username' is involved with
 /// date after later than date 'when'.
 function game_next_of_player(
-	username: string,
+	username: PlayerPrivateID,
 	time_control_id: TimeControlID,
 	when: DateStringLongMillis
 ): Game | undefined {

@@ -23,6 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
+import { z } from 'zod';
 import { Rating } from '@common/models/rating_framework/rating';
 import { copyarray } from '@server/utils/misc';
 import { search_linear_by_key } from '@server/utils/searching';
@@ -31,12 +32,38 @@ import { TimeControlRating } from '@common/models/time_control_rating';
 
 export const PlayerKeys = ['username', 'ratings'];
 
+// Player public ID
+
+declare const PlayerPublicIdBrand: unique symbol;
+export type PlayerPublicIdLocal = number & {
+	readonly [PlayerPublicIdBrand]: 'PlayerPublicId';
+};
+export const PlayerPublicIdSchema = z.number().brand<'PlayerPublicIdLocal'>();
+export type PlayerPublicId = z.infer<typeof PlayerPublicIdSchema>;
+
+export function toPlayerPublicId(n: number): PlayerPublicId {
+	return n as PlayerPublicId;
+}
+
+// Player private ID
+
+declare const PlayerPrivateIdBrand: unique symbol;
+export type PlayerPrivateIdLocal = string & {
+	readonly [PlayerPrivateIdBrand]: 'PlayerPrivateId';
+};
+export const PlayerPrivateIdSchema = z.string().brand<'PlayerPrivateIdLocal'>();
+export type PlayerPrivateId = z.infer<typeof PlayerPrivateIdSchema>;
+
+export function toPlayerPrivateId(s: string): PlayerPrivateId {
+	return s as PlayerPrivateId;
+}
+
 /**
  * @brief Simple class to encode a Player
  */
 export class Player {
 	/// The user name of the the player
-	public readonly username: string;
+	public readonly username: PlayerPrivateId;
 
 	/// Rating info of the player per time control id
 	public ratings: TimeControlRating[];
@@ -46,7 +73,7 @@ export class Player {
 	 * @param username User name of the player.
 	 * @param ratings All the ratings of this user.
 	 */
-	constructor(username: string, ratings: TimeControlRating[]) {
+	constructor(username: PlayerPrivateId, ratings: TimeControlRating[]) {
 		this.username = username;
 		this.ratings = ratings;
 	}

@@ -98,7 +98,7 @@ export async function post_user_edit(req: Request, res: Response) {
 
 	const mem = UsersManager.get_instance();
 
-	const edited = mem.get_user_by_random_id(edited_rid);
+	const edited = mem.get_user_by_public_id(edited_rid);
 	if (!isDefined(edited)) {
 		debug(log_now(), `Random id '${edited_rid}' for user is not valid.`);
 		res.status(404).send('Invalid user');

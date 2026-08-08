@@ -24,7 +24,7 @@ Contact:
 */
 
 import { z } from 'zod';
-import { Player } from '@common/models/player';
+import { Player, PlayerPrivateId } from '@common/models/player';
 import { Password } from '@common/models/password';
 import { UserRole } from '@common/models/user_role';
 import { UserAction } from '@common/models/user_action';
@@ -34,8 +34,6 @@ import { TimeControlID } from '@common/models/time_control';
 import { copyarray } from '@server/utils/misc';
 import { search_by_key, search_linear_by_key, where_should_be_inserted_by_key } from '@server/utils/searching';
 import { DateStringShort } from '@server/utils/time';
-
-export type UserRandomID = number;
 
 export const GameNumberSchema = z
 	.object({
@@ -99,7 +97,7 @@ export class User extends Player {
 	 * @param ratings Ratings for every time control
 	 */
 	constructor(
-		username: string,
+		username: PlayerPrivateId,
 		first_name: string,
 		last_name: string,
 		password: Password,

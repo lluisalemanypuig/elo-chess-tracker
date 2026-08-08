@@ -24,8 +24,9 @@ Contact:
 */
 
 import { isDefined } from '@common/utils/is_defined';
-import { User, UserRandomID } from '@common/models/user';
+import { User } from '@common/models/user';
 import { search_linear_by_key } from '@server/utils/searching';
+import { PlayerPrivateId, PlayerPublicId, toPlayerPublicId } from '@app/common/models/player';
 
 /**
  * @brief Users Manager singleton class
@@ -51,7 +52,7 @@ export class UsersManager {
 	/// The list of users in the database
 	private users: User[] = [];
 	/// The list of random user IDS for every user.
-	private random_ids: UserRandomID[] = [];
+	private public_ids: PlayerPublicId[] = [];
 
 	all(): User[] {
 		return this.users;
@@ -59,10 +60,10 @@ export class UsersManager {
 
 	clear(): void {
 		this.users = [];
-		this.random_ids = [];
+		this.public_ids = [];
 	}
 
-	exists(username: string): boolean {
+	exists(username: PlayerPrivateId): boolean {
 		return isDefined(this.get_user_by_username(username));
 	}
 
@@ -71,10 +72,10 @@ export class UsersManager {
 
 		// stupid and slow way of generating a unique random id
 		let new_randid = Math.floor(Math.random() * 10_000_000);
-		while (new_randid in this.random_ids) {
+		while (new_randid in this.public_ids) {
 			new_randid = Math.floor(Math.random() * 10_000_000);
 		}
-		this.random_ids.push(new_randid);
+		this.public_ids.push(toPlayerPublicId(new_randid));
 	}
 	replace_user(u: User, idx: number): void {
 		if (!(0 <= idx && idx < this.users.length)) {
@@ -84,14 +85,14 @@ export class UsersManager {
 		this.users[idx] = u;
 	}
 
-	get_user_by_username(username: string): User | undefined {
+	get_user_by_username(username: PlayerPrivateId): User | undefined {
 		const idx = search_linear_by_key(this.users, (u: User): boolean => {
 			return u.username == username;
 		});
 		return idx != -1 ? this.get_user_at(idx) : undefined;
 	}
-	get_user_by_random_id(rid: UserRandomID): User | undefined {
-		const idx = search_linear_by_key(this.random_ids, (id: UserRandomID): boolean => {
+	get_user_by_public_id(rid: PlayerPublicId): User | undefined {
+		const idx = search_linear_by_key(this.public_ids, (id: PlayerPublicId): boolean => {
 			return id == rid;
 		});
 		return idx != -1 ? this.get_user_at(idx) : undefined;
@@ -100,14 +101,14 @@ export class UsersManager {
 	get_user_at(idx: number): User | undefined {
 		return 0 <= idx && idx < this.users.length ? this.users[idx] : undefined;
 	}
-	get_user_random_ID_at(idx: number): UserRandomID | undefined {
-		return 0 <= idx && idx < this.random_ids.length ? this.random_ids[idx] : undefined;
+	get_user_public_id_at(idx: number): PlayerPublicId | undefined {
+		return 0 <= idx && idx < this.public_ids.length ? this.public_ids[idx] : undefined;
 	}
 
 	get_user_index(u: User): number | undefined {
 		return this.get_user_index_by_username(u.username);
 	}
-	get_user_index_by_username(username: string): number | undefined {
+	get_user_index_by_username(username: PlayerPrivateId): number | undefined {
 		const idx = search_linear_by_key(this.users, (u: User): boolean => {
 			return u.username == username;
 		});

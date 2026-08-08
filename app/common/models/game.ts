@@ -143,7 +143,7 @@ export class Game {
 	}
 
 	/// Is user 'username' in this game?
-	is_user_involved(username: string): boolean {
+	is_user_involved(username: PlayerPrivateID): boolean {
 		return this.white == username || this.black == username;
 	}
 }

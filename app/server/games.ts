@@ -168,14 +168,14 @@ export async function post_game_create(req: Request, res: Response) {
 
 	const mem = UsersManager.get_instance();
 
-	const white = mem.get_user_by_random_id(white_rid);
+	const white = mem.get_user_by_public_id(white_rid);
 	if (!isDefined(white)) {
 		debug(log_now(), `Random id '${white_rid}' for White is not valid.`);
 		res.status(500).send('Invalid white user sent to the server.');
 		return;
 	}
 
-	const black = mem.get_user_by_random_id(black_rid);
+	const black = mem.get_user_by_public_id(black_rid);
 	if (!isDefined(black)) {
 		debug(log_now(), `Random id '${black_rid}' for Black is not valid.`);
 		res.status(500).send('Invalid black user sent to the server.');

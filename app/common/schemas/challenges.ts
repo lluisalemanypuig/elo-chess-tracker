@@ -25,9 +25,10 @@ Contact:
 
 import { z } from 'zod';
 import { GameResultSchema } from '@common/models/game';
+import { PlayerPrivateIdSchema, PlayerPublicIdSchema } from '@common/models/player';
 
 export const ChallengeSendInputSchema = z.object({
-	to: z.number().gte(0),
+	to: PlayerPublicIdSchema.gte(0),
 	time_control_id: z.string(),
 	time_control_name: z.string(),
 	title: z.string()
@@ -49,8 +50,8 @@ export type ChallengeDeclineInput = z.infer<typeof ChallengeDeclineInputSchema>;
 
 export const ChallengeSetResultInputSchema = z.object({
 	challenge_id: z.string(),
-	white: z.string(),
-	black: z.string(),
+	white: PlayerPrivateIdSchema,
+	black: PlayerPrivateIdSchema,
 	result: GameResultSchema
 });
 

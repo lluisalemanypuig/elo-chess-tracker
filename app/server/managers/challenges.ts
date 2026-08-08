@@ -38,6 +38,7 @@ import { TimeControlID } from '@common/models/time_control';
 import { UsersManager } from '@server/managers/users_manager';
 import { User } from '@common/models/user';
 import { isDefined } from '@common/utils/is_defined';
+import { PlayerPrivateId } from '@common/models/player';
 
 /**
  * @brief Filters the set of challenges that are accepted by the filter function @e by.
@@ -69,8 +70,8 @@ export function challenge_set_retrieve(
  */
 export function challenge_send_new(
 	title: string,
-	sender: string,
-	receiver: string,
+	sender: PlayerPrivateId,
+	receiver: PlayerPrivateId,
 	time_control_id: TimeControlID,
 	time_control_name: string,
 	when: DateStringLong
@@ -134,10 +135,10 @@ export function challenge_decline(c: Challenge): void {
  */
 export function challenge_set_result(
 	c: Challenge,
-	by: string,
+	by: PlayerPrivateId,
 	when: DateStringLong,
-	white: string,
-	black: string,
+	white: PlayerPrivateId,
+	black: PlayerPrivateId,
 	result: GameResult
 ): void {
 	debug(log_now(), `Set the result of the challenge '${c.id}'`);

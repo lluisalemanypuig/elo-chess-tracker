@@ -108,7 +108,7 @@ export async function post_challenge_send(req: Request, res: Response) {
 
 	debug(log_now(), `Trying to send challenge from '${session.username}' to '${to_random_id}'.`);
 
-	const receiver = UsersManager.get_instance().get_user_by_random_id(to_random_id);
+	const receiver = UsersManager.get_instance().get_user_by_public_id(to_random_id);
 
 	if (!isDefined(receiver)) {
 		debug(log_now(), `User receiver of the challenge '${to_random_id}' does not exist.`);

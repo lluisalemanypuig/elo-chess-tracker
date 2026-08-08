@@ -97,7 +97,7 @@ export function decrypt_message(encrypted_msg: string, pwd: string): string {
  * @param password Password in plain text set by the user.
  * @returns A pair of strings: encrypted text, and random initialization vector of AES (length 16 bytes)
  */
-export function encrypt_password_for_user(username: string, password: string): [string, string] {
+export function encrypt_password_for_user(username: PlayerPrivateID, password: string): [string, string] {
 	const normalized_password = normalize_string(password);
 	const key_used_to_encrypt = CryptoJS.SHA256(normalized_password);
 
@@ -148,7 +148,7 @@ export function decrypt_password_for_user(password: string, encrypted_password: 
  * @returns True or false whether @e password is the actual password or not.
  */
 export function is_password_of_user_correct(
-	username: string,
+	username: PlayerPrivateID,
 	password: string,
 	encrypted_password: string,
 	iv: string

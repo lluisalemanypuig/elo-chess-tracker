@@ -44,7 +44,7 @@ import { log_now } from '@server/utils/time';
  * @param username The actual filename.
  * @param edges The information to save.
  */
-export function neighborhood_to_file(dir: string, username: string, edges: Neighborhood): void {
+export function neighborhood_to_file(dir: string, username: PlayerPrivateID, edges: Neighborhood): void {
 	const filename = path.join(dir, username);
 	fs.writeFileSync(filename, JSON.stringify(edges, null, 4));
 }
