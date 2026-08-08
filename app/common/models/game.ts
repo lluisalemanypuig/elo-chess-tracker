@@ -58,7 +58,17 @@ export function result_from_text_to_value(text: string): GameResult | undefined 
 }
 
 /// A type for game IDs.
-export type GameID = string;
+
+declare const GameIdBrand: unique symbol;
+export type GameIdLocal = string & {
+	readonly [GameIdBrand]: 'GameIdLocal';
+};
+export const GameIdSchema = z.string().brand<'GameIdLocal'>();
+export type GameId = z.infer<typeof GameIdSchema>;
+
+export function toGameId(s: string): GameId {
+	return s as GameId;
+}
 
 export const GameKeys = [
 	'id',
@@ -87,7 +97,7 @@ export const GameKeys = [
  */
 export class Game {
 	/// Identifier of the game
-	public readonly id: GameID;
+	public readonly id: GameId;
 	/// Name of the game
 	public title: string;
 	/// White player username
@@ -120,7 +130,7 @@ export class Game {
 	 * @param when Date
 	 */
 	constructor(
-		id: GameID,
+		id: GameId,
 		title: string,
 		white: PlayerPrivateId,
 		white_rating: Rating,

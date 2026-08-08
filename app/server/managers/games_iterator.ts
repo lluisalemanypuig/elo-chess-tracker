@@ -29,7 +29,7 @@ const debug = Debug('ELO_CHESS_TRACKER:managers/challenges');
 import path from 'path';
 import fs from 'fs';
 
-import { Game, GameID } from '@common/models/game';
+import { Game, GameId } from '@common/models/game';
 import { DateStringLongMillis, DateStringShort, log_now } from '@server/utils/time';
 import { game_array_from_string } from '@common/io/game';
 import { search_by_key, where_should_be_inserted_by_key } from '@server/utils/searching';
@@ -238,7 +238,7 @@ export class GamesIterator {
 	 * @pre The iterator can be in any state prior to calling this function.
 	 * @post The iterator is left in an invalid state in case of failure.
 	 */
-	locate_game(record: DateStringShort, id: GameID): boolean {
+	locate_game(record: DateStringShort, id: GameId): boolean {
 		this.record_idx = search_by_key(this.record_files_list, (s: DateStringShort): number => {
 			return record.localeCompare(s);
 		});

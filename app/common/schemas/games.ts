@@ -24,7 +24,7 @@ Contact:
 */
 
 import { z } from 'zod';
-import { GameResultSchema } from '@common/models/game';
+import { GameIdSchema, GameResultSchema } from '@common/models/game';
 import { PlayerPublicIdSchema } from '@common/models/player';
 
 // Routes.GAME_CREATE
@@ -45,7 +45,7 @@ export type GameCreateInput = z.infer<typeof GameCreateInputSchema>;
 // Routes.GAME_EDIT_RESULT
 
 export const GameEditResultInputSchema = z.object({
-	id: z.string(),
+	id: GameIdSchema,
 	new_result: GameResultSchema
 });
 
@@ -54,7 +54,7 @@ export type GameEditResultInput = z.infer<typeof GameEditResultInputSchema>;
 // Routes.GAME_EDIT_TITLE
 
 export const GameEditTitleInputSchema = z.object({
-	id: z.string(),
+	id: GameIdSchema,
 	title: z.string()
 });
 
@@ -63,7 +63,7 @@ export type GameEditTitleInput = z.infer<typeof GameEditTitleInputSchema>;
 // Routes.GAME_DELETE
 
 export const GameDeleteInputSchema = z.object({
-	id: z.string()
+	id: GameIdSchema
 });
 
 export type GameDeleteInput = z.infer<typeof GameDeleteInputSchema>;

@@ -23,7 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { GameID } from '@common/models/game';
+import { GameId } from '@common/models/game';
 import { TimeControlID } from '@common/models/time_control';
 import { DateStringShort } from '@server/utils/time';
 import { number_to_string } from '@server/utils/misc';
@@ -67,7 +67,7 @@ export class GamesManager {
 	/// Number of games in the system
 	private max_game_id: number = 0;
 	/// Map from game ID to game information
-	private game_info: Map<GameID, GameInfo> = new Map();
+	private game_info: Map<GameId, GameInfo> = new Map();
 
 	clear(): void {
 		this.max_game_id = 0;
@@ -75,7 +75,7 @@ export class GamesManager {
 	}
 
 	/// Does a game exist?
-	game_exists(game_id: GameID): boolean {
+	game_exists(game_id: GameId): boolean {
 		return this.game_info.has(game_id);
 	}
 	num_games(): number {
@@ -95,7 +95,7 @@ export class GamesManager {
 		this.max_game_id = id;
 	}
 	/// Increase current maximum game ID
-	new_game_id(): GameID {
+	new_game_id(): GameId {
 		this.max_game_id += 1;
 		return number_to_string(this.max_game_id);
 	}
@@ -107,17 +107,17 @@ export class GamesManager {
 	 * @param time_id The time control id of the game (recall, could be 'blitz',
 	 * 'classical', ...)
 	 */
-	add_game(game_id: GameID, when: DateStringShort, time_id: TimeControlID): void {
+	add_game(game_id: GameId, when: DateStringShort, time_id: TimeControlID): void {
 		this.game_info.set(game_id, new GameInfo(when, time_id));
 	}
 
 	/// Returns the information associated to game @e game_id.
-	get_game_info(game_id: GameID): GameInfo | undefined {
+	get_game_info(game_id: GameId): GameInfo | undefined {
 		return this.game_info.get(game_id);
 	}
 
 	/// Delete a game ID from the manager
-	delete_game_id(id: GameID): void {
+	delete_game_id(id: GameId): void {
 		this.game_info.delete(id);
 	}
 }

@@ -36,7 +36,7 @@ import { GamesManager } from '@server/managers/games_manager';
 import { UsersManager } from '@server/managers/users_manager';
 import { initialize_rating_time_controls, initialize_rating_functions } from '@server/managers/rating_system';
 import { RatingSystemManager } from '@server/managers/rating_system_manager';
-import { Game, GameID } from '@common/models/game';
+import { Game, GameId } from '@common/models/game';
 import { TimeControl, TimeControlArray } from '@common/models/time_control';
 import { Graph } from '@common/models/graph/graph';
 import { GraphsManager } from '@server/managers/graphs_manager';
@@ -246,7 +246,7 @@ function init_games(): void {
 	const ratings = RatingSystemManager.get_instance();
 	let games = GamesManager.get_instance();
 	let num_games: number = 0;
-	let max_game_id: GameID = '0';
+	let max_game_id: GameId = '0';
 
 	for (const id of ratings.get_unique_time_controls_ids()) {
 		const games_dir = EnvironmentManager.get_instance().get_dir_games_time_control(id);

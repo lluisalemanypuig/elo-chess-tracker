@@ -30,7 +30,7 @@ const debug = Debug('ELO_CHESS_TRACKER:managers/games');
 
 import { DateStringLongMillis, DateStringShort, log_now, long_date_to_short_date } from '@server/utils/time';
 import { Player, PlayerPrivateId } from '@common/models/player';
-import { Game, GameID, GameResult } from '@common/models/game';
+import { Game, GameId, GameResult } from '@common/models/game';
 import { User } from '@common/models/user';
 import { where_should_be_inserted_by_key } from '@server/utils/searching';
 import { GamesManager } from '@server/managers/games_manager';
@@ -99,7 +99,7 @@ function game_new(
 	when: DateStringLongMillis
 ): Game {
 	// retrieve next id and increment maximum id
-	const id_str: GameID = GamesManager.get_instance().new_game_id();
+	const id_str: GameId = GamesManager.get_instance().new_game_id();
 	debug(log_now(), `ID for new game: ${id_str}`);
 
 	let white_to_assign: Rating;
@@ -361,7 +361,7 @@ export function game_add_new(
  * @param game_id The game G to be returned.
  * @returns The game object that has identifier equal to @e game_id.
  */
-export function game_find_by_id(game_id: GameID): Game | undefined {
+export function game_find_by_id(game_id: GameId): Game | undefined {
 	const info = GamesManager.get_instance().get_game_info(game_id);
 
 	// game_id does not exist
@@ -399,7 +399,7 @@ export function game_find_by_id(game_id: GameID): Game | undefined {
  * @param game_id The ID of the game to edit
  * @param new_result The (new) result of the game
  */
-export function game_edit_result(game_id: GameID, new_result: GameResult): void {
+export function game_edit_result(game_id: GameId, new_result: GameResult): void {
 	const info = GamesManager.get_instance().get_game_info(game_id);
 
 	// game_id does not exist
@@ -469,7 +469,7 @@ export function game_edit_result(game_id: GameID, new_result: GameResult): void 
  * @param game_id The ID of the game to edit
  * @param new_result The (new) result of the game
  */
-export function game_edit_title(game_id: GameID, new_title: string): void {
+export function game_edit_title(game_id: GameId, new_title: string): void {
 	const info = GamesManager.get_instance().get_game_info(game_id);
 
 	// game_id does not exist
@@ -502,7 +502,7 @@ export function game_edit_title(game_id: GameID, new_title: string): void {
 	fs.writeFileSync(game_record_file, JSON.stringify(game_set, null, 4));
 }
 
-export function game_delete(game_id: GameID): void {
+export function game_delete(game_id: GameId): void {
 	let games_manager = GamesManager.get_instance();
 	const info = games_manager.get_game_info(game_id);
 

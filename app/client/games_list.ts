@@ -22,7 +22,7 @@ Full source code of elo-chess-tracker:
 import 'htmx.org';
 
 import { isNotDefined } from '@common/utils/is_defined';
-import { result_from_text_to_value } from '@common/models/game';
+import { GameId, result_from_text_to_value } from '@common/models/game';
 import { message_from_response, server_call } from '@client/action';
 import { Routes } from '@common/routes';
 
@@ -133,7 +133,7 @@ function new_cell_button_delete_game(game_id: string) {
 
 async function trigger_edit_game_title(event: Event) {
 	let input = event.target as HTMLInputElement;
-	const game_id = input.getAttribute('game_id');
+	const game_id = input.getAttribute('game_id') as GameId;
 	const original_title = input.getAttribute('original_title');
 	const new_title = input.value;
 
@@ -145,7 +145,10 @@ async function trigger_edit_game_title(event: Event) {
 		return;
 	}
 
-	const response = await server_call(Routes.GAME_EDIT_TITLE, { id: game_id, title: new_title });
+	const response = await server_call(Routes.GAME_EDIT_TITLE, {
+		id: game_id,
+		title: new_title
+	});
 	if (response.status === 'Error') {
 		alert(message_from_response(response));
 		return;
@@ -189,9 +192,13 @@ async function fill_games_list_time_control(time_control_id: string) {
 
 	let response;
 	if (val == 'all') {
-		response = await server_call(Routes.QUERY_GAME_LIST_ALL, { tc_i: time_control_id });
+		response = await server_call(Routes.QUERY_GAME_LIST_ALL, {
+			tc_i: time_control_id
+		});
 	} else if (val == 'own') {
-		response = await server_call(Routes.QUERY_GAME_LIST_OWN, { tc_i: time_control_id });
+		response = await server_call(Routes.QUERY_GAME_LIST_OWN, {
+			tc_i: time_control_id
+		});
 	} else {
 		alert(`Wrong value for list '${val}'.`);
 		return;
