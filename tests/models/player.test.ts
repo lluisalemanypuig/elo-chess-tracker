@@ -26,6 +26,12 @@ Contact:
 import { Player, toPlayerPrivateId } from '@common/models/player';
 import { TimeControlRating } from '@common/models/time_control_rating';
 import { EloRating } from '@common/models/rating_framework/Elo/rating';
+import { toTimeControlId } from '@common/models/time_control';
+
+const Classical = toTimeControlId('Classical');
+const Rapid = toTimeControlId('Rapid');
+const Blitz = toTimeControlId('Blitz');
+const Bullet = toTimeControlId('Bullet');
 
 describe('construct', () => {
 	const bullet = new EloRating(1400, 0, 0, 0, 0, 40, false);
@@ -39,80 +45,80 @@ describe('construct', () => {
 
 	test('Setters and getters', () => {
 		let p = new Player(toPlayerPrivateId('user.name'), [
-			new TimeControlRating('blitz', blitz),
-			new TimeControlRating('rapid', rapid),
-			new TimeControlRating('classical', classical)
+			new TimeControlRating(Blitz, blitz),
+			new TimeControlRating(Rapid, rapid),
+			new TimeControlRating(Classical, classical)
 		]);
 
 		expect(p.username).toEqual('user.name');
-		expect(p.has_rating('blitz')).toBe(true);
-		expect(p.has_rating('blitzy')).toBe(false);
-		expect(p.has_rating('rapid')).toBe(true);
-		expect(p.has_rating('rapido')).toBe(false);
-		expect(p.has_rating('classical')).toBe(true);
-		expect(p.has_rating('classico')).toBe(false);
+		expect(p.has_rating(Blitz)).toBe(true);
+		expect(p.has_rating(toTimeControlId('blitzy'))).toBe(false);
+		expect(p.has_rating(Rapid)).toBe(true);
+		expect(p.has_rating(toTimeControlId('rapido'))).toBe(false);
+		expect(p.has_rating(Classical)).toBe(true);
+		expect(p.has_rating(toTimeControlId('classico'))).toBe(false);
 
 		expect(p.ratings.length).toBe(3);
 
-		expect(p.has_rating('bullet')).toBe(false);
-		p.add_rating('bullet', bullet);
-		expect(p.has_rating('bullet')).toBe(true);
+		expect(p.has_rating(Bullet)).toBe(false);
+		p.add_rating(Bullet, bullet);
+		expect(p.has_rating(Bullet)).toBe(true);
 
 		expect(p.ratings.length).toBe(4);
 
-		expect(p.index_time_control_id('blitz')).toBe(0);
-		expect(p.index_time_control_id('rapid')).toBe(1);
-		expect(p.index_time_control_id('classical')).toBe(2);
-		expect(p.index_time_control_id('bullet')).toBe(3);
+		expect(p.index_time_control_id(Blitz)).toBe(0);
+		expect(p.index_time_control_id(Rapid)).toBe(1);
+		expect(p.index_time_control_id(Classical)).toBe(2);
+		expect(p.index_time_control_id(Bullet)).toBe(3);
 
-		expect(p.get_rating('bullet')).toEqual(bullet);
-		expect(p.get_rating('blitz')).toEqual(blitz);
-		expect(p.get_rating('rapid')).toEqual(rapid);
-		expect(p.get_rating('classical')).toEqual(classical);
+		expect(p.get_rating(Bullet)).toEqual(bullet);
+		expect(p.get_rating(Blitz)).toEqual(blitz);
+		expect(p.get_rating(Rapid)).toEqual(rapid);
+		expect(p.get_rating(Classical)).toEqual(classical);
 
-		expect(p.get_rating('bullet')).toBe(bullet);
-		expect(p.get_rating('blitz')).toBe(blitz);
-		expect(p.get_rating('rapid')).toBe(rapid);
-		expect(p.get_rating('classical')).toBe(classical);
+		expect(p.get_rating(Bullet)).toBe(bullet);
+		expect(p.get_rating(Blitz)).toBe(blitz);
+		expect(p.get_rating(Rapid)).toBe(rapid);
+		expect(p.get_rating(Classical)).toBe(classical);
 
-		p.set_rating('blitz', blitz_higher);
-		expect(p.get_rating('blitz')).toBe(blitz_higher);
-		expect(p.get_rating('blitz')).toEqual(blitz_higher);
-		expect(p.get_rating('blitz')).not.toBe(blitz);
+		p.set_rating(Blitz, blitz_higher);
+		expect(p.get_rating(Blitz)).toBe(blitz_higher);
+		expect(p.get_rating(Blitz)).toEqual(blitz_higher);
+		expect(p.get_rating(Blitz)).not.toBe(blitz);
 
-		p.set_rating('blitz', blitz_equal);
-		expect(p.get_rating('blitz')).toBe(blitz_equal);
-		expect(p.get_rating('blitz')).toEqual(blitz_equal);
-		expect(p.get_rating('blitz')).not.toBe(blitz);
+		p.set_rating(Blitz, blitz_equal);
+		expect(p.get_rating(Blitz)).toBe(blitz_equal);
+		expect(p.get_rating(Blitz)).toEqual(blitz_equal);
+		expect(p.get_rating(Blitz)).not.toBe(blitz);
 
-		p.set_rating('blitz', blitz);
-		expect(p.get_rating('blitz')).toBe(blitz);
-		expect(p.get_rating('blitz')).toEqual(blitz);
-		expect(p.get_rating('blitz')).not.toBe(blitz_equal);
+		p.set_rating(Blitz, blitz);
+		expect(p.get_rating(Blitz)).toBe(blitz);
+		expect(p.get_rating(Blitz)).toEqual(blitz);
+		expect(p.get_rating(Blitz)).not.toBe(blitz_equal);
 	});
 
 	test('Clone', () => {
 		let p = new Player(toPlayerPrivateId('user.name'), [
-			new TimeControlRating('blitz', blitz),
-			new TimeControlRating('rapid', rapid),
-			new TimeControlRating('classical', classical)
+			new TimeControlRating(Blitz, blitz),
+			new TimeControlRating(Rapid, rapid),
+			new TimeControlRating(Classical, classical)
 		]);
 		let pc = p.clone();
 
-		expect(pc.get_rating('blitz')).toEqual(blitz);
-		expect(pc.get_rating('rapid')).toEqual(rapid);
-		expect(pc.get_rating('classical')).toEqual(classical);
+		expect(pc.get_rating(Blitz)).toEqual(blitz);
+		expect(pc.get_rating(Rapid)).toEqual(rapid);
+		expect(pc.get_rating(Classical)).toEqual(classical);
 
-		expect(pc.get_rating('blitz')).not.toBe(blitz);
-		expect(pc.get_rating('rapid')).not.toBe(rapid);
-		expect(pc.get_rating('classical')).not.toBe(classical);
+		expect(pc.get_rating(Blitz)).not.toBe(blitz);
+		expect(pc.get_rating(Rapid)).not.toBe(rapid);
+		expect(pc.get_rating(Classical)).not.toBe(classical);
 
-		p.set_rating('blitz', blitz_higher);
-		expect(pc.get_rating('blitz')).not.toBe(blitz_higher);
-		expect(pc.get_rating('blitz')).not.toEqual(blitz_higher);
+		p.set_rating(Blitz, blitz_higher);
+		expect(pc.get_rating(Blitz)).not.toBe(blitz_higher);
+		expect(pc.get_rating(Blitz)).not.toEqual(blitz_higher);
 
-		p.set_rating('blitz', blitz_equal);
-		expect(pc.get_rating('blitz')).not.toBe(blitz);
-		expect(pc.get_rating('blitz')).toEqual(blitz);
+		p.set_rating(Blitz, blitz_equal);
+		expect(pc.get_rating(Blitz)).not.toBe(blitz);
+		expect(pc.get_rating(Blitz)).toEqual(blitz);
 	});
 });

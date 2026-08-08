@@ -23,10 +23,21 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { ChallengesManager } from '@server/managers/challenges_manager';
+import { ChallengesManager, numberToChallengeId } from '@server/managers/challenges_manager';
 import { new_challenge, toChallengeId } from '@common/models/challenge';
 import { number_to_string } from '@app/server/utils/misc';
 import { toPlayerPrivateId } from '@common/models/player';
+import { toTimeControlId, toTimeControlName } from '@common/models/time_control';
+
+const Classical = toTimeControlId('Classical');
+const Classical90p30 = toTimeControlName('Classical (90 + 30)');
+
+const Rapid = toTimeControlId('Rapid');
+const Rapid12p5 = toTimeControlName('Rapid (12 + 5)');
+const Rapid10p0 = toTimeControlName('Rapid (10 + 0)');
+
+const Blitz = toTimeControlId('Blitz');
+const Blitz5p3 = toTimeControlName('Blitz (5 + 3)');
 
 describe('Challenges Manager', () => {
 	test('Empty manager', () => {
@@ -44,8 +55,8 @@ describe('Challenges Manager', () => {
 			'sample',
 			toPlayerPrivateId('a'),
 			toPlayerPrivateId('b'),
-			'classical',
-			'Classical (90 + 30)',
+			Classical,
+			Classical90p30,
 			'2025-01-07..17:49:20:000'
 		);
 		expect(challenges.get_challenge_index(c)).toBe(-1);
@@ -73,38 +84,38 @@ describe('Challenges Manager', () => {
 		challenges.clear();
 
 		const yesterday_id = challenges.new_challenge_id();
-		expect(yesterday_id).toBe(number_to_string(1));
+		expect(yesterday_id).toBe(numberToChallengeId(1));
 		const yesterday = new_challenge(
 			yesterday_id,
 			'sample',
 			toPlayerPrivateId('a'),
 			toPlayerPrivateId('b'),
-			'classical',
-			'Classical (90 + 30)',
+			Classical,
+			Classical90p30,
 			'yesterday'
 		);
 
 		const today_id = challenges.new_challenge_id();
-		expect(today_id).toBe(number_to_string(2));
+		expect(today_id).toBe(numberToChallengeId(2));
 		const today = new_challenge(
 			today_id,
 			'sample',
 			toPlayerPrivateId('a'),
 			toPlayerPrivateId('b'),
-			'classical',
-			'Classical (90 + 30)',
+			Classical,
+			Classical90p30,
 			'today__'
 		);
 
 		const tomorrow_id = challenges.new_challenge_id();
-		expect(tomorrow_id).toBe(number_to_string(3));
+		expect(tomorrow_id).toBe(numberToChallengeId(3));
 		const tomorrow = new_challenge(
 			tomorrow_id,
 			'sample',
 			toPlayerPrivateId('a'),
 			toPlayerPrivateId('b'),
-			'classical',
-			'Classical (90 + 30)',
+			Classical,
+			Classical90p30,
 			'tomorrow'
 		);
 
@@ -136,50 +147,50 @@ describe('Challenges Manager', () => {
 		challenges.clear();
 
 		const yesterday_id = challenges.new_challenge_id();
-		expect(yesterday_id).toBe(number_to_string(1));
+		expect(yesterday_id).toBe(numberToChallengeId(1));
 		const yesterday = new_challenge(
 			yesterday_id,
 			'sample',
 			toPlayerPrivateId('a'),
 			toPlayerPrivateId('b'),
-			'classical',
-			'Classical (90 + 30)',
+			Classical,
+			Classical90p30,
 			'yesterday'
 		);
 
 		const today_id = challenges.new_challenge_id();
-		expect(today_id).toBe(number_to_string(2));
+		expect(today_id).toBe(numberToChallengeId(2));
 		const today = new_challenge(
 			today_id,
 			'sample',
 			toPlayerPrivateId('a'),
 			toPlayerPrivateId('b'),
-			'classical',
-			'Classical (90 + 30)',
+			Classical,
+			Classical90p30,
 			'today__'
 		);
 
 		const tomorrow_id = challenges.new_challenge_id();
-		expect(tomorrow_id).toBe(number_to_string(3));
+		expect(tomorrow_id).toBe(numberToChallengeId(3));
 		const tomorrow = new_challenge(
 			tomorrow_id,
 			'sample',
 			toPlayerPrivateId('a'),
 			toPlayerPrivateId('b'),
-			'classical',
-			'Classical (90 + 30)',
+			Classical,
+			Classical90p30,
 			'tomorrow'
 		);
 
 		const day_after_tomorrow_id = challenges.new_challenge_id();
-		expect(day_after_tomorrow_id).toBe(number_to_string(4));
+		expect(day_after_tomorrow_id).toBe(numberToChallengeId(4));
 		const day_after_tomorrow = new_challenge(
 			day_after_tomorrow_id,
 			'sample',
 			toPlayerPrivateId('a'),
 			toPlayerPrivateId('b'),
-			'classical',
-			'Classical (90 + 30)',
+			Classical,
+			Classical90p30,
 			'day_after_tomorrow'
 		);
 

@@ -39,7 +39,18 @@ import { GraphsManager } from '@server/managers/graphs_manager';
 import { Graph } from '@common/models/graph/graph';
 import { Configuration } from '@common/models/configuration/configuration';
 import { toPlayerPrivateId } from '@common/models/player';
-import { toGameId } from '@app/common/models/game';
+import { toGameId } from '@common/models/game';
+import { toTimeControlId, toTimeControlName } from '@app/common/models/time_control';
+
+const Classical = toTimeControlId('Classical');
+const Classical90p30 = toTimeControlName('Classical (90 + 30)');
+
+const Rapid = toTimeControlId('Rapid');
+const Rapid12p5 = toTimeControlName('Rapid (12 + 5)');
+const Rapid10p0 = toTimeControlName('Rapid (10 + 0)');
+
+const Blitz = toTimeControlId('Blitz');
+const Blitz5p3 = toTimeControlName('Blitz (5 + 3)');
 
 const configuration: Configuration = {
 	environment: {
@@ -68,20 +79,20 @@ const configuration: Configuration = {
 	rating_system: 'Elo',
 	time_controls: [
 		{
-			id: 'Classical',
-			name: 'Classical (90 + 30)'
+			id: Classical,
+			name: Classical90p30
 		},
 		{
-			id: 'Rapid',
-			name: 'Rapid (12 + 5)'
+			id: Rapid,
+			name: Rapid12p5
 		},
 		{
-			id: 'Rapid',
-			name: 'Rapid (10 + 0)'
+			id: Rapid,
+			name: Rapid10p0
 		},
 		{
-			id: 'Blitz',
-			name: 'Blitz (5 + 3)'
+			id: Blitz,
+			name: Blitz5p3
 		}
 	],
 	behavior: {
@@ -141,30 +152,30 @@ describe('Server setup', () => {
 
 describe('Sequential game creation', () => {
 	test('Add "Blitz" games', () => {
-		game_add_new('sample', aU, bU, 'white_wins', 'Blitz', 'Blitz (5 + 3)', '2025-01-19', '17:06:00:000');
-		game_add_new('sample', cU, dU, 'black_wins', 'Blitz', 'Blitz (5 + 3)', '2025-01-19', '17:06:10:000');
-		game_add_new('sample', eU, fU, 'draw', 'Blitz', 'Blitz (5 + 3)', '2025-01-19', '17:06:20:000');
-		game_add_new('sample', aU, fU, 'black_wins', 'Blitz', 'Blitz (5 + 3)', '2025-01-19', '17:06:30:000');
-		game_add_new('sample', bU, aU, 'white_wins', 'Blitz', 'Blitz (5 + 3)', '2025-01-19', '17:06:40:000');
+		game_add_new('sample', aU, bU, 'white_wins', Blitz, Blitz5p3, '2025-01-19', '17:06:00:000');
+		game_add_new('sample', cU, dU, 'black_wins', Blitz, Blitz5p3, '2025-01-19', '17:06:10:000');
+		game_add_new('sample', eU, fU, 'draw', Blitz, Blitz5p3, '2025-01-19', '17:06:20:000');
+		game_add_new('sample', aU, fU, 'black_wins', Blitz, Blitz5p3, '2025-01-19', '17:06:30:000');
+		game_add_new('sample', bU, aU, 'white_wins', Blitz, Blitz5p3, '2025-01-19', '17:06:40:000');
 
-		expect(aU.get_games('Blitz').length).toBe(1);
-		expect(bU.get_games('Blitz').length).toBe(1);
-		expect(cU.get_games('Blitz').length).toBe(1);
-		expect(dU.get_games('Blitz').length).toBe(1);
-		expect(eU.get_games('Blitz').length).toBe(1);
-		expect(fU.get_games('Blitz').length).toBe(1);
+		expect(aU.get_games(Blitz).length).toBe(1);
+		expect(bU.get_games(Blitz).length).toBe(1);
+		expect(cU.get_games(Blitz).length).toBe(1);
+		expect(dU.get_games(Blitz).length).toBe(1);
+		expect(eU.get_games(Blitz).length).toBe(1);
+		expect(fU.get_games(Blitz).length).toBe(1);
 
-		expect(aU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
-		expect(bU.get_rating('Blitz').num_won_drawn_lost()).toEqual([2, 1, 0, 1]);
-		expect(cU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
-		expect(dU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
-		expect(eU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 1, 0]);
-		expect(fU.get_rating('Blitz').num_won_drawn_lost()).toEqual([2, 1, 1, 0]);
+		expect(aU.get_rating(Blitz).num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
+		expect(bU.get_rating(Blitz).num_won_drawn_lost()).toEqual([2, 1, 0, 1]);
+		expect(cU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
+		expect(dU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
+		expect(eU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 0, 1, 0]);
+		expect(fU.get_rating(Blitz).num_won_drawn_lost()).toEqual([2, 1, 1, 0]);
 	});
 
 	test('Check "Blitz" graph', () => {
 		const graphs_manager = GraphsManager.get_instance();
-		const g = graphs_manager.get_graph('Blitz') as Graph;
+		const g = graphs_manager.get_graph(Blitz) as Graph;
 
 		// white
 
@@ -242,7 +253,7 @@ describe('Sequential game creation', () => {
 		expect(g.get_data_as_black(f, d)).toEqual(undefined);
 		expect(g.get_data_as_black(f, e)).toEqual(new EdgeMetadata(0, 1, 0));
 
-		const blitz_dir = EnvironmentManager.get_instance().get_dir_graphs_time_control('Blitz');
+		const blitz_dir = EnvironmentManager.get_instance().get_dir_graphs_time_control(Blitz);
 		expect(fs.existsSync(path.join(blitz_dir, 'a'))).toBe(true);
 		expect(fs.existsSync(path.join(blitz_dir, 'b'))).toBe(true);
 		expect(fs.existsSync(path.join(blitz_dir, 'c'))).toBe(true);
@@ -265,27 +276,27 @@ describe('Sequential game creation', () => {
 		expect(man.game_exists(id0000000004)).toBe(true);
 		expect(man.game_exists(id0000000005)).toBe(true);
 
-		expect(aU.get_games('Blitz').length).toBe(1);
-		expect(bU.get_games('Blitz').length).toBe(1);
-		expect(cU.get_games('Blitz').length).toBe(1);
-		expect(dU.get_games('Blitz').length).toBe(1);
-		expect(eU.get_games('Blitz').length).toBe(1);
-		expect(fU.get_games('Blitz').length).toBe(1);
+		expect(aU.get_games(Blitz).length).toBe(1);
+		expect(bU.get_games(Blitz).length).toBe(1);
+		expect(cU.get_games(Blitz).length).toBe(1);
+		expect(dU.get_games(Blitz).length).toBe(1);
+		expect(eU.get_games(Blitz).length).toBe(1);
+		expect(fU.get_games(Blitz).length).toBe(1);
 
-		expect(aU.get_rating('Blitz').num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
-		expect(bU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
-		expect(cU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
-		expect(dU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
-		expect(eU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 1, 0]);
-		expect(fU.get_rating('Blitz').num_won_drawn_lost()).toEqual([2, 1, 1, 0]);
+		expect(aU.get_rating(Blitz).num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
+		expect(bU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
+		expect(cU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
+		expect(dU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
+		expect(eU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 0, 1, 0]);
+		expect(fU.get_rating(Blitz).num_won_drawn_lost()).toEqual([2, 1, 1, 0]);
 
-		const blitz_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Blitz');
+		const blitz_dir = EnvironmentManager.get_instance().get_dir_games_time_control(Blitz);
 		expect(fs.existsSync(path.join(blitz_dir, '2025-01-19'))).toBe(true);
 	});
 
 	test('Check "Blitz" graph', () => {
 		const graphs_manager = GraphsManager.get_instance();
-		const g = graphs_manager.get_graph('Blitz') as Graph;
+		const g = graphs_manager.get_graph(Blitz) as Graph;
 
 		// white
 
@@ -363,7 +374,7 @@ describe('Sequential game creation', () => {
 		expect(g.get_data_as_black(f, d)).toEqual(undefined);
 		expect(g.get_data_as_black(f, e)).toEqual(new EdgeMetadata(0, 1, 0));
 
-		const blitz_dir = EnvironmentManager.get_instance().get_dir_graphs_time_control('Blitz');
+		const blitz_dir = EnvironmentManager.get_instance().get_dir_graphs_time_control(Blitz);
 		expect(fs.existsSync(path.join(blitz_dir, 'a'))).toBe(true);
 		expect(fs.existsSync(path.join(blitz_dir, 'b'))).toBe(true);
 		expect(fs.existsSync(path.join(blitz_dir, 'c'))).toBe(true);
@@ -380,27 +391,27 @@ describe('Sequential game creation', () => {
 		expect(man.game_exists(id0000000004)).toBe(false);
 		expect(man.game_exists(id0000000005)).toBe(true);
 
-		expect(aU.get_games('Blitz').length).toBe(1);
-		expect(bU.get_games('Blitz').length).toBe(1);
-		expect(cU.get_games('Blitz').length).toBe(1);
-		expect(dU.get_games('Blitz').length).toBe(1);
-		expect(eU.get_games('Blitz').length).toBe(1);
-		expect(fU.get_games('Blitz').length).toBe(1);
+		expect(aU.get_games(Blitz).length).toBe(1);
+		expect(bU.get_games(Blitz).length).toBe(1);
+		expect(cU.get_games(Blitz).length).toBe(1);
+		expect(dU.get_games(Blitz).length).toBe(1);
+		expect(eU.get_games(Blitz).length).toBe(1);
+		expect(fU.get_games(Blitz).length).toBe(1);
 
-		expect(aU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
-		expect(bU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
-		expect(cU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
-		expect(dU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
-		expect(eU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 1, 0]);
-		expect(fU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 1, 0]);
+		expect(aU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
+		expect(bU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
+		expect(cU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
+		expect(dU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
+		expect(eU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 0, 1, 0]);
+		expect(fU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 0, 1, 0]);
 
-		const blitz_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Blitz');
+		const blitz_dir = EnvironmentManager.get_instance().get_dir_games_time_control(Blitz);
 		expect(fs.existsSync(path.join(blitz_dir, '2025-01-19'))).toBe(true);
 	});
 
 	test('Check "Blitz" graph', () => {
 		const graphs_manager = GraphsManager.get_instance();
-		const g = graphs_manager.get_graph('Blitz') as Graph;
+		const g = graphs_manager.get_graph(Blitz) as Graph;
 
 		// white
 
@@ -478,7 +489,7 @@ describe('Sequential game creation', () => {
 		expect(g.get_data_as_black(f, d)).toEqual(undefined);
 		expect(g.get_data_as_black(f, e)).toEqual(new EdgeMetadata(0, 1, 0));
 
-		const blitz_dir = EnvironmentManager.get_instance().get_dir_graphs_time_control('Blitz');
+		const blitz_dir = EnvironmentManager.get_instance().get_dir_graphs_time_control(Blitz);
 		expect(fs.existsSync(path.join(blitz_dir, 'a'))).toBe(false);
 		expect(fs.existsSync(path.join(blitz_dir, 'b'))).toBe(true);
 		expect(fs.existsSync(path.join(blitz_dir, 'c'))).toBe(true);
@@ -495,27 +506,27 @@ describe('Sequential game creation', () => {
 		expect(man.game_exists(id0000000004)).toBe(false);
 		expect(man.game_exists(id0000000005)).toBe(true);
 
-		expect(aU.get_games('Blitz').length).toBe(1);
-		expect(bU.get_games('Blitz').length).toBe(1);
-		expect(cU.get_games('Blitz').length).toBe(1);
-		expect(dU.get_games('Blitz').length).toBe(1);
-		expect(eU.get_games('Blitz').length).toBe(0);
-		expect(fU.get_games('Blitz').length).toBe(0);
+		expect(aU.get_games(Blitz).length).toBe(1);
+		expect(bU.get_games(Blitz).length).toBe(1);
+		expect(cU.get_games(Blitz).length).toBe(1);
+		expect(dU.get_games(Blitz).length).toBe(1);
+		expect(eU.get_games(Blitz).length).toBe(0);
+		expect(fU.get_games(Blitz).length).toBe(0);
 
-		expect(aU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
-		expect(bU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
-		expect(cU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
-		expect(dU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
-		expect(eU.get_rating('Blitz').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
-		expect(fU.get_rating('Blitz').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+		expect(aU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
+		expect(bU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
+		expect(cU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
+		expect(dU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
+		expect(eU.get_rating(Blitz).num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+		expect(fU.get_rating(Blitz).num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
 
-		const blitz_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Blitz');
+		const blitz_dir = EnvironmentManager.get_instance().get_dir_games_time_control(Blitz);
 		expect(fs.existsSync(path.join(blitz_dir, '2025-01-19'))).toBe(true);
 	});
 
 	test('Check "Blitz" graph', () => {
 		const graphs_manager = GraphsManager.get_instance();
-		const g = graphs_manager.get_graph('Blitz') as Graph;
+		const g = graphs_manager.get_graph(Blitz) as Graph;
 
 		// white
 
@@ -593,7 +604,7 @@ describe('Sequential game creation', () => {
 		expect(g.get_data_as_black(f, d)).toEqual(undefined);
 		expect(g.get_data_as_black(f, e)).toEqual(undefined);
 
-		const blitz_dir = EnvironmentManager.get_instance().get_dir_graphs_time_control('Blitz');
+		const blitz_dir = EnvironmentManager.get_instance().get_dir_graphs_time_control(Blitz);
 		expect(fs.existsSync(path.join(blitz_dir, 'a'))).toBe(false);
 		expect(fs.existsSync(path.join(blitz_dir, 'b'))).toBe(true);
 		expect(fs.existsSync(path.join(blitz_dir, 'c'))).toBe(true);
@@ -610,27 +621,27 @@ describe('Sequential game creation', () => {
 		expect(man.game_exists(id0000000004)).toBe(false);
 		expect(man.game_exists(id0000000005)).toBe(true);
 
-		expect(aU.get_games('Blitz').length).toBe(1);
-		expect(bU.get_games('Blitz').length).toBe(1);
-		expect(cU.get_games('Blitz').length).toBe(0);
-		expect(dU.get_games('Blitz').length).toBe(0);
-		expect(eU.get_games('Blitz').length).toBe(0);
-		expect(fU.get_games('Blitz').length).toBe(0);
+		expect(aU.get_games(Blitz).length).toBe(1);
+		expect(bU.get_games(Blitz).length).toBe(1);
+		expect(cU.get_games(Blitz).length).toBe(0);
+		expect(dU.get_games(Blitz).length).toBe(0);
+		expect(eU.get_games(Blitz).length).toBe(0);
+		expect(fU.get_games(Blitz).length).toBe(0);
 
-		expect(aU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
-		expect(bU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
-		expect(cU.get_rating('Blitz').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
-		expect(dU.get_rating('Blitz').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
-		expect(eU.get_rating('Blitz').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
-		expect(fU.get_rating('Blitz').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+		expect(aU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
+		expect(bU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
+		expect(cU.get_rating(Blitz).num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+		expect(dU.get_rating(Blitz).num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+		expect(eU.get_rating(Blitz).num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+		expect(fU.get_rating(Blitz).num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
 
-		const blitz_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Blitz');
+		const blitz_dir = EnvironmentManager.get_instance().get_dir_games_time_control(Blitz);
 		expect(fs.existsSync(path.join(blitz_dir, '2025-01-19'))).toBe(true);
 	});
 
 	test('Check "Blitz" graph', () => {
 		const graphs_manager = GraphsManager.get_instance();
-		const g = graphs_manager.get_graph('Blitz') as Graph;
+		const g = graphs_manager.get_graph(Blitz) as Graph;
 
 		// white
 
@@ -708,7 +719,7 @@ describe('Sequential game creation', () => {
 		expect(g.get_data_as_black(f, d)).toEqual(undefined);
 		expect(g.get_data_as_black(f, e)).toEqual(undefined);
 
-		const blitz_dir = EnvironmentManager.get_instance().get_dir_graphs_time_control('Blitz');
+		const blitz_dir = EnvironmentManager.get_instance().get_dir_graphs_time_control(Blitz);
 		expect(fs.existsSync(path.join(blitz_dir, 'a'))).toBe(false);
 		expect(fs.existsSync(path.join(blitz_dir, 'b'))).toBe(true);
 		expect(fs.existsSync(path.join(blitz_dir, 'c'))).toBe(false);
@@ -725,27 +736,27 @@ describe('Sequential game creation', () => {
 		expect(man.game_exists(id0000000004)).toBe(false);
 		expect(man.game_exists(id0000000005)).toBe(false);
 
-		expect(aU.get_games('Blitz').length).toBe(0);
-		expect(bU.get_games('Blitz').length).toBe(0);
-		expect(cU.get_games('Blitz').length).toBe(0);
-		expect(dU.get_games('Blitz').length).toBe(0);
-		expect(eU.get_games('Blitz').length).toBe(0);
-		expect(fU.get_games('Blitz').length).toBe(0);
+		expect(aU.get_games(Blitz).length).toBe(0);
+		expect(bU.get_games(Blitz).length).toBe(0);
+		expect(cU.get_games(Blitz).length).toBe(0);
+		expect(dU.get_games(Blitz).length).toBe(0);
+		expect(eU.get_games(Blitz).length).toBe(0);
+		expect(fU.get_games(Blitz).length).toBe(0);
 
-		expect(aU.get_rating('Blitz').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
-		expect(bU.get_rating('Blitz').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
-		expect(cU.get_rating('Blitz').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
-		expect(dU.get_rating('Blitz').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
-		expect(eU.get_rating('Blitz').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
-		expect(fU.get_rating('Blitz').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+		expect(aU.get_rating(Blitz).num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+		expect(bU.get_rating(Blitz).num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+		expect(cU.get_rating(Blitz).num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+		expect(dU.get_rating(Blitz).num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+		expect(eU.get_rating(Blitz).num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+		expect(fU.get_rating(Blitz).num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
 
-		const blitz_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Blitz');
+		const blitz_dir = EnvironmentManager.get_instance().get_dir_games_time_control(Blitz);
 		expect(fs.existsSync(path.join(blitz_dir, '2025-01-19'))).toBe(false);
 	});
 
 	test('Check "Blitz" graph', () => {
 		const graphs_manager = GraphsManager.get_instance();
-		const g = graphs_manager.get_graph('Blitz') as Graph;
+		const g = graphs_manager.get_graph(Blitz) as Graph;
 
 		// white
 
@@ -823,7 +834,7 @@ describe('Sequential game creation', () => {
 		expect(g.get_data_as_black(f, d)).toEqual(undefined);
 		expect(g.get_data_as_black(f, e)).toEqual(undefined);
 
-		const blitz_dir = EnvironmentManager.get_instance().get_dir_graphs_time_control('Blitz');
+		const blitz_dir = EnvironmentManager.get_instance().get_dir_graphs_time_control(Blitz);
 		expect(fs.existsSync(path.join(blitz_dir, 'a'))).toBe(false);
 		expect(fs.existsSync(path.join(blitz_dir, 'b'))).toBe(false);
 		expect(fs.existsSync(path.join(blitz_dir, 'c'))).toBe(false);

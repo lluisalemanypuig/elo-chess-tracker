@@ -23,7 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { toPlayerPrivateId } from '@app/common/models/player';
+import { toPlayerPrivateId } from '@common/models/player';
 import { EdgeMetadata } from '@common/models/graph/edge_metadata';
 import { Graph } from '@common/models/graph/graph';
 

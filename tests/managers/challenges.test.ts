@@ -31,7 +31,7 @@ import { clear_server } from '@server/managers/memory/clear';
 import { server_init_from_data } from '@server/managers/memory/initialization';
 import { ADMIN, MEMBER, STUDENT } from '@common/models/user_role';
 import { user_add_new } from '@server/managers/users';
-import { ChallengesManager } from '@server/managers/challenges_manager';
+import { CHALLENGE_ID_LENGTH, ChallengesManager, numberToChallengeId } from '@server/managers/challenges_manager';
 import { GamesManager } from '@server/managers/games_manager';
 import {
 	challenge_accept,
@@ -49,12 +49,23 @@ import { challenge_from_string } from '@common/io/challenge';
 import { UsersManager } from '@server/managers/users_manager';
 import { Configuration } from '@common/models/configuration/configuration';
 import { PlayerPrivateId, toPlayerPrivateId } from '@common/models/player';
+import { toTimeControlId, toTimeControlName } from '@common/models/time_control';
 
 const webpage_dir = 'tests/webpage';
 const db_dir = path.join(webpage_dir, 'database');
 //const db_users_dir = path.join(db_dir, 'users');
 const db_challenges_dir = path.join(db_dir, 'challenges');
 const db_games_dir = path.join(db_dir, 'games');
+
+const Classical = toTimeControlId('Classical');
+const Classical90p30 = toTimeControlName('Classical (90 + 30)');
+
+const Rapid = toTimeControlId('Rapid');
+const Rapid12p5 = toTimeControlName('Rapid (12 + 5)');
+const Rapid10p0 = toTimeControlName('Rapid (10 + 0)');
+
+const Blitz = toTimeControlId('Blitz');
+const Blitz5p3 = toTimeControlName('Blitz (5 + 3)');
 
 const classical_rapid_blitz: Configuration = {
 	environment: {
@@ -84,20 +95,20 @@ const classical_rapid_blitz: Configuration = {
 	rating_system: 'Elo',
 	time_controls: [
 		{
-			id: 'Classical',
-			name: 'Classical (90 + 30)'
+			id: Classical,
+			name: Classical90p30
 		},
 		{
-			id: 'Rapid',
-			name: 'Rapid (12 + 5)'
+			id: Rapid,
+			name: Rapid12p5
 		},
 		{
-			id: 'Rapid',
-			name: 'Rapid (10 + 0)'
+			id: Rapid,
+			name: Rapid10p0
 		},
 		{
-			id: 'Blitz',
-			name: 'Blitz (5 + 3)'
+			id: Blitz,
+			name: Blitz5p3
 		}
 	],
 	behavior: {
@@ -131,11 +142,6 @@ function user_retrieve(username: PlayerPrivateId): User | undefined {
 	return UsersManager.get_instance().get_user_by_username(username);
 }
 
-function numberToChallengeId(n: number): ChallengeId {
-	const s = number_to_string(n);
-	return toChallengeId(s);
-}
-
 describe('Check initialization', () => {
 	test('In an empty server', async () => {
 		await run_command('./tests/initialize_empty.sh');
@@ -167,31 +173,10 @@ describe('Check challenge communication', () => {
 		const challenges = ChallengesManager.get_instance();
 		expect(challenges.get_max_challenge_id()).toBe(0);
 
-		const c_aa_bb = challenge_send_new(
-			'sample',
-			aa,
-			bb,
-			'Classical',
-			'Classical (90 + 30)',
-			'2025-01-10..20:38:12:000'
-		);
-		const c_aa_cc = challenge_send_new(
-			'sample',
-			aa,
-			cc,
-			'Classical',
-			'Classical (90 + 30)',
-			'2025-01-10..20:38:13:000'
-		);
-		const c_aa_dd = challenge_send_new('sample', aa, dd, 'Blitz', 'Blitz (5 + 3)', '2025-01-10..20:38:14:000');
-		const c_ee_ff = challenge_send_new(
-			'sample',
-			ee,
-			ff,
-			'Classical',
-			'Classical (90 + 30)',
-			'2025-01-10..20:38:15:000'
-		);
+		const c_aa_bb = challenge_send_new('sample', aa, bb, Classical, Classical90p30, '2025-01-10..20:38:12:000');
+		const c_aa_cc = challenge_send_new('sample', aa, cc, Classical, Classical90p30, '2025-01-10..20:38:13:000');
+		const c_aa_dd = challenge_send_new('sample', aa, dd, Blitz, Blitz5p3, '2025-01-10..20:38:14:000');
+		const c_ee_ff = challenge_send_new('sample', ee, ff, Classical, Classical90p30, '2025-01-10..20:38:15:000');
 
 		const c_aa_bb_id = numberToChallengeId(1);
 		const c_aa_cc_id = numberToChallengeId(2);
@@ -299,7 +284,7 @@ describe('Check challenge communication', () => {
 		expect(c.white).toEqual(aa);
 		expect(c.black).toEqual(dd);
 		expect(c.result).toEqual('white_wins');
-		expect(c.time_control_id).toEqual('Blitz');
+		expect(c.time_control_id).toEqual(Blitz);
 		expect(c.time_control_name).toEqual('Blitz (5 + 3)');
 
 		const challenge_file = path.join(db_challenges_dir, id);
@@ -322,7 +307,7 @@ describe('Check challenge communication', () => {
 		expect(c.white).toEqual(ee);
 		expect(c.black).toEqual(ff);
 		expect(c.result).toEqual('black_wins');
-		expect(c.time_control_id).toEqual('Classical');
+		expect(c.time_control_id).toEqual(Classical);
 		expect(c.time_control_name).toEqual('Classical (90 + 30)');
 
 		const challenge_file = path.join(db_challenges_dir, id);
@@ -344,29 +329,29 @@ describe('Check challenge communication', () => {
 		challenge_agree_result(c);
 
 		const aaUser = user_retrieve(aa) as User;
-		expect(aaUser.get_games('Classical').length).toBe(0);
-		expect(aaUser.get_games('Rapid').length).toBe(0);
-		expect(aaUser.get_games('Blitz').length).toBe(0);
+		expect(aaUser.get_games(Classical).length).toBe(0);
+		expect(aaUser.get_games(Rapid).length).toBe(0);
+		expect(aaUser.get_games(Blitz).length).toBe(0);
 		const bbUser = user_retrieve(bb) as User;
-		expect(bbUser.get_games('Classical').length).toBe(0);
-		expect(bbUser.get_games('Rapid').length).toBe(0);
-		expect(bbUser.get_games('Blitz').length).toBe(0);
+		expect(bbUser.get_games(Classical).length).toBe(0);
+		expect(bbUser.get_games(Rapid).length).toBe(0);
+		expect(bbUser.get_games(Blitz).length).toBe(0);
 		const ccUser = user_retrieve(cc) as User;
-		expect(ccUser.get_games('Classical').length).toBe(0);
-		expect(ccUser.get_games('Rapid').length).toBe(0);
-		expect(ccUser.get_games('Blitz').length).toBe(0);
+		expect(ccUser.get_games(Classical).length).toBe(0);
+		expect(ccUser.get_games(Rapid).length).toBe(0);
+		expect(ccUser.get_games(Blitz).length).toBe(0);
 		const ddUser = user_retrieve(dd) as User;
-		expect(ddUser.get_games('Classical').length).toBe(0);
-		expect(ddUser.get_games('Rapid').length).toBe(0);
-		expect(ddUser.get_games('Blitz').length).toBe(0);
+		expect(ddUser.get_games(Classical).length).toBe(0);
+		expect(ddUser.get_games(Rapid).length).toBe(0);
+		expect(ddUser.get_games(Blitz).length).toBe(0);
 		const eeUser = user_retrieve(ee) as User;
-		expect(eeUser.get_games('Classical').length).toBe(1);
-		expect(eeUser.get_games('Rapid').length).toBe(0);
-		expect(eeUser.get_games('Blitz').length).toBe(0);
+		expect(eeUser.get_games(Classical).length).toBe(1);
+		expect(eeUser.get_games(Rapid).length).toBe(0);
+		expect(eeUser.get_games(Blitz).length).toBe(0);
 		const ffUser = user_retrieve(ff) as User;
-		expect(ffUser.get_games('Classical').length).toBe(1);
-		expect(ffUser.get_games('Rapid').length).toBe(0);
-		expect(ffUser.get_games('Blitz').length).toBe(0);
+		expect(ffUser.get_games(Classical).length).toBe(1);
+		expect(ffUser.get_games(Rapid).length).toBe(0);
+		expect(ffUser.get_games(Blitz).length).toBe(0);
 
 		expect(challenges.get_challenge_by_id(numberToChallengeId(4))).toBe(undefined);
 
@@ -393,7 +378,7 @@ describe('Check challenge communication', () => {
 		expect(c.white).toEqual(undefined);
 		expect(c.black).toEqual(undefined);
 		expect(c.result).toEqual(undefined);
-		expect(c.time_control_id).toEqual('Blitz');
+		expect(c.time_control_id).toEqual(Blitz);
 		expect(c.time_control_name).toEqual('Blitz (5 + 3)');
 
 		const challenge_file = path.join(db_challenges_dir, id);
@@ -416,7 +401,7 @@ describe('Check challenge communication', () => {
 		expect(c.white).toEqual(dd);
 		expect(c.black).toEqual(aa);
 		expect(c.result).toEqual('black_wins');
-		expect(c.time_control_id).toEqual('Blitz');
+		expect(c.time_control_id).toEqual(Blitz);
 		expect(c.time_control_name).toEqual('Blitz (5 + 3)');
 
 		const challenge_file = path.join(db_challenges_dir, id);
@@ -448,29 +433,29 @@ describe('Check initialization and communication', () => {
 		challenge_agree_result(c);
 
 		const aaUser = user_retrieve(aa) as User;
-		expect(aaUser.get_games('Classical').length).toBe(0);
-		expect(aaUser.get_games('Rapid').length).toBe(0);
-		expect(aaUser.get_games('Blitz').length).toBe(1);
+		expect(aaUser.get_games(Classical).length).toBe(0);
+		expect(aaUser.get_games(Rapid).length).toBe(0);
+		expect(aaUser.get_games(Blitz).length).toBe(1);
 		const bbUser = user_retrieve(bb) as User;
-		expect(bbUser.get_games('Classical').length).toBe(0);
-		expect(bbUser.get_games('Rapid').length).toBe(0);
-		expect(bbUser.get_games('Blitz').length).toBe(0);
+		expect(bbUser.get_games(Classical).length).toBe(0);
+		expect(bbUser.get_games(Rapid).length).toBe(0);
+		expect(bbUser.get_games(Blitz).length).toBe(0);
 		const ccUser = user_retrieve(cc) as User;
-		expect(ccUser.get_games('Classical').length).toBe(0);
-		expect(ccUser.get_games('Rapid').length).toBe(0);
-		expect(ccUser.get_games('Blitz').length).toBe(0);
+		expect(ccUser.get_games(Classical).length).toBe(0);
+		expect(ccUser.get_games(Rapid).length).toBe(0);
+		expect(ccUser.get_games(Blitz).length).toBe(0);
 		const ddUser = user_retrieve(dd) as User;
-		expect(ddUser.get_games('Classical').length).toBe(0);
-		expect(ddUser.get_games('Rapid').length).toBe(0);
-		expect(ddUser.get_games('Blitz').length).toBe(1);
+		expect(ddUser.get_games(Classical).length).toBe(0);
+		expect(ddUser.get_games(Rapid).length).toBe(0);
+		expect(ddUser.get_games(Blitz).length).toBe(1);
 		const eeUser = user_retrieve(ee) as User;
-		expect(eeUser.get_games('Classical').length).toBe(1);
-		expect(eeUser.get_games('Rapid').length).toBe(0);
-		expect(eeUser.get_games('Blitz').length).toBe(0);
+		expect(eeUser.get_games(Classical).length).toBe(1);
+		expect(eeUser.get_games(Rapid).length).toBe(0);
+		expect(eeUser.get_games(Blitz).length).toBe(0);
 		const ffUser = user_retrieve(ff) as User;
-		expect(ffUser.get_games('Classical').length).toBe(1);
-		expect(ffUser.get_games('Rapid').length).toBe(0);
-		expect(ffUser.get_games('Blitz').length).toBe(0);
+		expect(ffUser.get_games(Classical).length).toBe(1);
+		expect(ffUser.get_games(Rapid).length).toBe(0);
+		expect(ffUser.get_games(Blitz).length).toBe(0);
 
 		expect(challenges.get_challenge_by_id(numberToChallengeId(4))).toBe(undefined);
 
@@ -488,7 +473,7 @@ describe('Check initialization and communication', () => {
 
 describe('Fast challenge communication', () => {
 	test('New challenge (Blitz) aa -- bb', () => {
-		const c_aa_bb = challenge_send_new('sample', aa, bb, 'Blitz', 'Blitz (5 + 3)', '2025-01-10..20:38:45:000');
+		const c_aa_bb = challenge_send_new('sample', aa, bb, Blitz, Blitz5p3, '2025-01-10..20:38:45:000');
 		challenge_accept(c_aa_bb);
 
 		expect(() => challenge_set_result(c_aa_bb, ee, '2025-01-10..20:39:15:000', aa, bb, 'black_wins')).toThrow();
@@ -499,40 +484,33 @@ describe('Fast challenge communication', () => {
 		challenge_agree_result(c_aa_bb);
 
 		const aaUser = user_retrieve(aa) as User;
-		expect(aaUser.get_games('Classical').length).toBe(0);
-		expect(aaUser.get_games('Rapid').length).toBe(0);
-		expect(aaUser.get_games('Blitz').length).toBe(1);
+		expect(aaUser.get_games(Classical).length).toBe(0);
+		expect(aaUser.get_games(Rapid).length).toBe(0);
+		expect(aaUser.get_games(Blitz).length).toBe(1);
 		const bbUser = user_retrieve(bb) as User;
-		expect(bbUser.get_games('Classical').length).toBe(0);
-		expect(bbUser.get_games('Rapid').length).toBe(0);
-		expect(bbUser.get_games('Blitz').length).toBe(1);
+		expect(bbUser.get_games(Classical).length).toBe(0);
+		expect(bbUser.get_games(Rapid).length).toBe(0);
+		expect(bbUser.get_games(Blitz).length).toBe(1);
 		const ccUser = user_retrieve(cc) as User;
-		expect(ccUser.get_games('Classical').length).toBe(0);
-		expect(ccUser.get_games('Rapid').length).toBe(0);
-		expect(ccUser.get_games('Blitz').length).toBe(0);
+		expect(ccUser.get_games(Classical).length).toBe(0);
+		expect(ccUser.get_games(Rapid).length).toBe(0);
+		expect(ccUser.get_games(Blitz).length).toBe(0);
 		const ddUser = user_retrieve(dd) as User;
-		expect(ddUser.get_games('Classical').length).toBe(0);
-		expect(ddUser.get_games('Rapid').length).toBe(0);
-		expect(ddUser.get_games('Blitz').length).toBe(1);
+		expect(ddUser.get_games(Classical).length).toBe(0);
+		expect(ddUser.get_games(Rapid).length).toBe(0);
+		expect(ddUser.get_games(Blitz).length).toBe(1);
 		const eeUser = user_retrieve(ee) as User;
-		expect(eeUser.get_games('Classical').length).toBe(1);
-		expect(eeUser.get_games('Rapid').length).toBe(0);
-		expect(eeUser.get_games('Blitz').length).toBe(0);
+		expect(eeUser.get_games(Classical).length).toBe(1);
+		expect(eeUser.get_games(Rapid).length).toBe(0);
+		expect(eeUser.get_games(Blitz).length).toBe(0);
 		const ffUser = user_retrieve(ff) as User;
-		expect(ffUser.get_games('Classical').length).toBe(1);
-		expect(ffUser.get_games('Rapid').length).toBe(0);
-		expect(ffUser.get_games('Blitz').length).toBe(0);
+		expect(ffUser.get_games(Classical).length).toBe(1);
+		expect(ffUser.get_games(Rapid).length).toBe(0);
+		expect(ffUser.get_games(Blitz).length).toBe(0);
 	});
 
 	test('New challenge (Classical) cc -- bb', () => {
-		const c_bb_cc = challenge_send_new(
-			'sample',
-			cc,
-			bb,
-			'Classical',
-			'Classical (90 + 30)',
-			'2025-01-10..20:40:00:000'
-		);
+		const c_bb_cc = challenge_send_new('sample', cc, bb, Classical, Classical90p30, '2025-01-10..20:40:00:000');
 		challenge_accept(c_bb_cc);
 
 		expect(() => challenge_set_result(c_bb_cc, aa, '2025-01-10..20:39:30:000', bb, cc, 'black_wins')).toThrow();
@@ -543,28 +521,28 @@ describe('Fast challenge communication', () => {
 		challenge_agree_result(c_bb_cc);
 
 		const aaUser = user_retrieve(aa) as User;
-		expect(aaUser.get_games('Classical').length).toBe(0);
-		expect(aaUser.get_games('Rapid').length).toBe(0);
-		expect(aaUser.get_games('Blitz').length).toBe(1);
+		expect(aaUser.get_games(Classical).length).toBe(0);
+		expect(aaUser.get_games(Rapid).length).toBe(0);
+		expect(aaUser.get_games(Blitz).length).toBe(1);
 		const bbUser = user_retrieve(bb) as User;
-		expect(bbUser.get_games('Classical').length).toBe(1);
-		expect(bbUser.get_games('Rapid').length).toBe(0);
-		expect(bbUser.get_games('Blitz').length).toBe(1);
+		expect(bbUser.get_games(Classical).length).toBe(1);
+		expect(bbUser.get_games(Rapid).length).toBe(0);
+		expect(bbUser.get_games(Blitz).length).toBe(1);
 		const ccUser = user_retrieve(cc) as User;
-		expect(ccUser.get_games('Classical').length).toBe(1);
-		expect(ccUser.get_games('Rapid').length).toBe(0);
-		expect(ccUser.get_games('Blitz').length).toBe(0);
+		expect(ccUser.get_games(Classical).length).toBe(1);
+		expect(ccUser.get_games(Rapid).length).toBe(0);
+		expect(ccUser.get_games(Blitz).length).toBe(0);
 		const ddUser = user_retrieve(dd) as User;
-		expect(ddUser.get_games('Classical').length).toBe(0);
-		expect(ddUser.get_games('Rapid').length).toBe(0);
-		expect(ddUser.get_games('Blitz').length).toBe(1);
+		expect(ddUser.get_games(Classical).length).toBe(0);
+		expect(ddUser.get_games(Rapid).length).toBe(0);
+		expect(ddUser.get_games(Blitz).length).toBe(1);
 		const eeUser = user_retrieve(ee) as User;
-		expect(eeUser.get_games('Classical').length).toBe(1);
-		expect(eeUser.get_games('Rapid').length).toBe(0);
-		expect(eeUser.get_games('Blitz').length).toBe(0);
+		expect(eeUser.get_games(Classical).length).toBe(1);
+		expect(eeUser.get_games(Rapid).length).toBe(0);
+		expect(eeUser.get_games(Blitz).length).toBe(0);
 		const ffUser = user_retrieve(ff) as User;
-		expect(ffUser.get_games('Classical').length).toBe(1);
-		expect(ffUser.get_games('Rapid').length).toBe(0);
-		expect(ffUser.get_games('Blitz').length).toBe(0);
+		expect(ffUser.get_games(Classical).length).toBe(1);
+		expect(ffUser.get_games(Rapid).length).toBe(0);
+		expect(ffUser.get_games(Blitz).length).toBe(0);
 	});
 });

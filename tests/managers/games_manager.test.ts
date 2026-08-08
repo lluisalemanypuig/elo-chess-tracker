@@ -23,8 +23,14 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { toGameId } from '@app/common/models/game';
+import { toTimeControlId } from '@common/models/time_control';
+import { toGameId } from '@common/models/game';
 import { GamesManager } from '@server/managers/games_manager';
+
+const Classical = toTimeControlId('classical');
+const Rapid = toTimeControlId('rapid');
+const Blitz = toTimeControlId('blitz');
+const Bullet = toTimeControlId('bullet');
 
 describe('Games Manager', () => {
 	test('Get some new game ids', () => {
@@ -90,13 +96,13 @@ describe('Games Manager', () => {
 		let games = GamesManager.get_instance();
 		games.clear();
 
-		games.add_game(games.new_game_id(), '2025-01-19', 'blitz');
+		games.add_game(games.new_game_id(), '2025-01-19', Blitz);
 		expect(games.num_games()).toBe(1);
-		games.add_game(games.new_game_id(), '2025-01-19', 'classical');
+		games.add_game(games.new_game_id(), '2025-01-19', Classical);
 		expect(games.num_games()).toBe(2);
-		games.add_game(games.new_game_id(), '2025-01-19', 'rapid');
+		games.add_game(games.new_game_id(), '2025-01-19', Rapid);
 		expect(games.num_games()).toBe(3);
-		games.add_game(games.new_game_id(), '2025-01-19', 'bullet');
+		games.add_game(games.new_game_id(), '2025-01-19', Bullet);
 		expect(games.num_games()).toBe(4);
 
 		expect(games.get_game_info(id0000000001)?.game_record).toBe('2025-01-19');

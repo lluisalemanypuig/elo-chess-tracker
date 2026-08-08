@@ -23,9 +23,13 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { toPlayerPrivateId } from '@app/common/models/player';
+import { toPlayerPrivateId } from '@common/models/player';
 import { Game, toGameId } from '@common/models/game';
 import { EloRating } from '@common/models/rating_framework/Elo/rating';
+import { toTimeControlId, toTimeControlName } from '@common/models/time_control';
+
+const Blitz = toTimeControlId('Blitz');
+const Blitz5p3 = toTimeControlName('Blitz (5 + 3)');
 
 describe('Setters and Getters -- Elo', () => {
 	test('Gets', () => {
@@ -39,8 +43,8 @@ describe('Setters and Getters -- Elo', () => {
 			toPlayerPrivateId('B'),
 			rB,
 			'white_wins',
-			'blitz',
-			'Blitz (5 + 3)',
+			Blitz,
+			Blitz5p3,
 			'2024-12-29..11:15:00'
 		);
 
@@ -48,8 +52,8 @@ describe('Setters and Getters -- Elo', () => {
 		expect(g.white).toEqual('W');
 		expect(g.black).toEqual('B');
 		expect(g.result).toEqual('white_wins');
-		expect(g.time_control_id).toEqual('blitz');
-		expect(g.time_control_name).toEqual('Blitz (5 + 3)');
+		expect(g.time_control_id).toEqual(Blitz);
+		expect(g.time_control_name).toEqual(Blitz5p3);
 		expect(g.when).toEqual('2024-12-29..11:15:00');
 		expect(g.is_user_involved(toPlayerPrivateId('W'))).toBe(true);
 		expect(g.is_user_involved(toPlayerPrivateId('B'))).toBe(true);
@@ -67,8 +71,8 @@ describe('Setters and Getters -- Elo', () => {
 			toPlayerPrivateId('B'),
 			rB,
 			'white_wins',
-			'blitz',
-			'Blitz (5 + 3)',
+			Blitz,
+			Blitz5p3,
 			'2024-12-29..11:15:00'
 		);
 

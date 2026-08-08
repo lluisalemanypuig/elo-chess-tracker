@@ -24,16 +24,21 @@ Contact:
 */
 
 import { toPlayerPrivateId } from '@common/models/player';
-import { new_challenge, set_result, unset_result, set_result_accepted } from '@common/models/challenge';
+import { new_challenge, set_result, unset_result, set_result_accepted, toChallengeId } from '@common/models/challenge';
+import { toTimeControlId, toTimeControlName } from '@common/models/time_control';
+
+const Blitz = toTimeControlId('Blitz');
+const Blitz5p3 = toTimeControlName('Blitz (5 + 3)');
 
 const A = toPlayerPrivateId('A');
 const a = toPlayerPrivateId('a');
 const B = toPlayerPrivateId('B');
 const b = toPlayerPrivateId('b');
+const id000x1 = toChallengeId('000x1');
 
 describe('Sets and gets', () => {
 	test('Constructor', () => {
-		const c = new_challenge('000x1', 'asdf', A, B, 'blitz', 'Blitz (5 + 3)', '2024-12-29..14:00:00');
+		const c = new_challenge(id000x1, 'asdf', A, B, Blitz, Blitz5p3, '2024-12-29..14:00:00');
 
 		expect(c.id).toBe('000x1');
 		expect(c.sent_by).toBe('A');
@@ -42,7 +47,7 @@ describe('Sets and gets', () => {
 	});
 
 	test('Set fields - 1', () => {
-		let c = new_challenge('000x1', 'asdf', A, B, 'blitz', 'Blitz (5 + 3)', '2024-12-29..14:00:00');
+		let c = new_challenge(id000x1, 'asdf', A, B, Blitz, Blitz5p3, '2024-12-29..14:00:00');
 
 		expect(c.id).toBe('000x1');
 		expect(c.sent_by).toBe('A');
@@ -64,7 +69,7 @@ describe('Sets and gets', () => {
 		expect(c.white).toBe('A');
 		expect(c.black).toBe('B');
 		expect(c.result).toBe('black_wins');
-		expect(c.time_control_id).toBe('blitz');
+		expect(c.time_control_id).toBe(Blitz);
 		expect(c.time_control_name).toBe('Blitz (5 + 3)');
 
 		expect(() => set_result_accepted(c, 'B', '2024-12-29..14:00:03')).not.toThrow();
@@ -75,7 +80,7 @@ describe('Sets and gets', () => {
 	});
 
 	test('Set fields - 2', () => {
-		let c = new_challenge('000x1', 'asdf', A, B, 'blitz', 'Blitz (5 + 3)', '2024-12-29..14:00:00');
+		let c = new_challenge(id000x1, 'asdf', A, B, Blitz, Blitz5p3, '2024-12-29..14:00:00');
 
 		expect(c.id).toBe('000x1');
 		expect(c.sent_by).toBe('A');
@@ -97,7 +102,7 @@ describe('Sets and gets', () => {
 		expect(c.white).toBe('B');
 		expect(c.black).toBe('A');
 		expect(c.result).toBe('draw');
-		expect(c.time_control_id).toBe('blitz');
+		expect(c.time_control_id).toBe(Blitz);
 		expect(c.time_control_name).toBe('Blitz (5 + 3)');
 
 		expect(() => set_result_accepted(c, 'B', '2024-12-29..14:00:03')).not.toThrow();
@@ -108,7 +113,7 @@ describe('Sets and gets', () => {
 	});
 
 	test('Set fields - 3', () => {
-		let c = new_challenge('000x1', 'asdf', A, B, 'blitz', 'Blitz (5 + 3)', '2024-12-29..14:00:00');
+		let c = new_challenge(id000x1, 'asdf', A, B, Blitz, Blitz5p3, '2024-12-29..14:00:00');
 
 		expect(c.id).toBe('000x1');
 		expect(c.sent_by).toBe('A');
@@ -130,7 +135,7 @@ describe('Sets and gets', () => {
 		expect(c.white).toBe('B');
 		expect(c.black).toBe('A');
 		expect(c.result).toBe('draw');
-		expect(c.time_control_id).toBe('blitz');
+		expect(c.time_control_id).toBe(Blitz);
 		expect(c.time_control_name).toBe('Blitz (5 + 3)');
 
 		expect(() => set_result_accepted(c, 'A', '2024-12-29..14:00:03')).toThrow();
@@ -140,7 +145,7 @@ describe('Sets and gets', () => {
 	});
 
 	test('Set fields - 4', () => {
-		let c = new_challenge('000x1', 'asdf', A, B, 'blitz', 'Blitz (5 + 3)', '2024-12-29..14:00:00');
+		let c = new_challenge(id000x1, 'asdf', A, B, Blitz, Blitz5p3, '2024-12-29..14:00:00');
 
 		expect(c.id).toBe('000x1');
 		expect(c.sent_by).toBe('A');
@@ -159,7 +164,7 @@ describe('Sets and gets', () => {
 	});
 
 	test('Set fields - 5', () => {
-		let c = new_challenge('000x1', 'asdf', A, B, 'blitz', 'Blitz (5 + 3)', '2024-12-29..14:00:00');
+		let c = new_challenge(id000x1, 'asdf', A, B, Blitz, Blitz5p3, '2024-12-29..14:00:00');
 
 		expect(c.id).toBe('000x1');
 		expect(c.sent_by).toBe('A');
@@ -187,12 +192,12 @@ describe('Sets and gets', () => {
 		expect(c.white).toBe(undefined);
 		expect(c.black).toBe(undefined);
 		expect(c.result).toBe(undefined);
-		expect(c.time_control_id).toBe('blitz');
+		expect(c.time_control_id).toBe(Blitz);
 		expect(c.time_control_name).toBe('Blitz (5 + 3)');
 	});
 
 	test('Set fields - 6', () => {
-		let c = new_challenge('000x1', 'asdf', A, B, 'blitz', 'Blitz (5 + 3)', '2024-12-29..14:00:00');
+		let c = new_challenge(id000x1, 'asdf', A, B, Blitz, Blitz5p3, '2024-12-29..14:00:00');
 
 		expect(c.id).toBe('000x1');
 		expect(c.sent_by).toBe('A');
@@ -214,7 +219,7 @@ describe('Sets and gets', () => {
 		expect(c.white).toBe('A');
 		expect(c.black).toBe('B');
 		expect(c.result).toBe('black_wins');
-		expect(c.time_control_id).toBe('blitz');
+		expect(c.time_control_id).toBe(Blitz);
 		expect(c.time_control_name).toBe('Blitz (5 + 3)');
 
 		unset_result(c);
@@ -225,7 +230,7 @@ describe('Sets and gets', () => {
 		expect(c.white).toBe(undefined);
 		expect(c.black).toBe(undefined);
 		expect(c.result).toBe(undefined);
-		expect(c.time_control_id).toBe('blitz');
+		expect(c.time_control_id).toBe(Blitz);
 		expect(c.time_control_name).toBe('Blitz (5 + 3)');
 	});
 });

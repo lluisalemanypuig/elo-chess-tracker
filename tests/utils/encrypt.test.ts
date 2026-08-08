@@ -23,6 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
+import { PlayerPrivateId, toPlayerPrivateId } from '@app/common/models/player';
 import {
 	decrypt_message,
 	encrypt_message,
@@ -66,6 +67,8 @@ function check_decrypt_good_password(msg: string, pass: string) {
 }
 
 describe('Encryption and decryption of messages with a (correct) plain password', () => {
+	const admin = toPlayerPrivateId('admin');
+
 	test('1', () => {
 		check_decrypt_good_password('', 'admin');
 	});
@@ -83,7 +86,7 @@ describe('Encryption and decryption of messages with a (correct) plain password'
 	});
 
 	test('5', () => {
-		check_decrypt_good_password('admin', '星');
+		check_decrypt_good_password(admin, '星');
 	});
 
 	test('6', () => {
@@ -134,60 +137,65 @@ describe('Encryption and decryption with a (wrong) plain password', () => {
 	});
 });
 
-function check_encrypt_user_password(user: string, pass: string) {
+function check_encrypt_user_password(user: PlayerPrivateId, pass: string) {
 	const [encrypted, iv] = encrypt_password_for_user(user, pass);
-	expect(is_password_of_user_correct(user, pass, encrypted, iv)).toBe(true);
+	expect(is_password_of_user_correct(user, pass, { encrypted, iv })).toBe(true);
 }
 
 describe('Encrypt password for users', () => {
+	const admin = toPlayerPrivateId('admin');
+
 	test('admin - pass', () => {
-		check_encrypt_user_password('admin', 'pass');
+		check_encrypt_user_password(admin, 'pass');
 	});
 
 	test('admin - admin', () => {
-		check_encrypt_user_password('admin', 'admin');
+		check_encrypt_user_password(admin, 'admin');
 	});
 
 	test('admin - QQQQQQQ', () => {
-		check_encrypt_user_password('admin', 'QQQQQQQ');
+		check_encrypt_user_password(admin, 'QQQQQQQ');
 	});
 
 	test('admin - Q', () => {
-		check_encrypt_user_password('admin', 'Q');
+		check_encrypt_user_password(admin, 'Q');
 	});
 
 	test('admin - ·', () => {
-		check_encrypt_user_password('admin', '·');
+		check_encrypt_user_password(admin, '·');
 	});
 
 	test('admin - a·', () => {
-		check_encrypt_user_password('admin', 'a·');
+		check_encrypt_user_password(admin, 'a·');
 	});
 
 	test('Several users', () => {
-		const user_array = ['a', 'asdf', 'qwer', 'admin', 'administrator', 'qwer ppp'];
+		const user_array = ['a', 'asdf', 'qwer', 'admin', 'administrator', 'qwer ppp'].map((s: string) =>
+			toPlayerPrivateId(s)
+		);
 		for (const user of user_array) {
 			check_encrypt_user_password(user, 'QQQQQQQ');
 		}
 	});
 
+	const yamada = toPlayerPrivateId('山田');
 	test('Use Kanji - 1', () => {
-		check_encrypt_user_password('山田', 'QQQQQQQ');
+		check_encrypt_user_password(yamada, 'QQQQQQQ');
 	});
 
 	test('Use Kanji - 2', () => {
-		check_encrypt_user_password('admin', '星');
+		check_encrypt_user_password(admin, '星');
 	});
 
 	test('Use Kanji - 3', () => {
-		check_encrypt_user_password('admin', '山田');
+		check_encrypt_user_password(admin, '山田');
 	});
 
 	test('Use Kanji - 4', () => {
-		check_encrypt_user_password('admin', '私は一番有名な人です');
+		check_encrypt_user_password(admin, '私は一番有名な人です');
 	});
 
 	test('Use Kanji - 5', () => {
-		check_encrypt_user_password('admin', '私');
+		check_encrypt_user_password(admin, '私');
 	});
 });

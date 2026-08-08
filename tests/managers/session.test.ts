@@ -39,6 +39,17 @@ import { run_command } from '@tests/exec_utils';
 import { Configuration } from '@common/models/configuration/configuration';
 import { toPlayerPrivateId } from '@common/models/player';
 import { toUserGivenName } from '@common/models/user';
+import { toTimeControlId, toTimeControlName } from '@common/models/time_control';
+
+const Classical = toTimeControlId('Classical');
+const Classical90p30 = toTimeControlName('Classical (90 + 30)');
+
+const Rapid = toTimeControlId('Rapid');
+const Rapid12p5 = toTimeControlName('Rapid (12 + 5)');
+const Rapid10p0 = toTimeControlName('Rapid (10 + 0)');
+
+const Blitz = toTimeControlId('Blitz');
+const Blitz5p3 = toTimeControlName('Blitz (5 + 3)');
 
 function makeSession(token: string, username: string) {
 	return { token, username: toPlayerPrivateId(username) };
@@ -71,20 +82,20 @@ const configuration: Configuration = {
 	rating_system: 'Elo',
 	time_controls: [
 		{
-			id: 'Classical',
-			name: 'Classical (90 + 30)'
+			id: Classical,
+			name: Classical90p30
 		},
 		{
-			id: 'Rapid',
-			name: 'Rapid (12 + 5)'
+			id: Rapid,
+			name: Rapid12p5
 		},
 		{
-			id: 'Rapid',
-			name: 'Rapid (10 + 0)'
+			id: Rapid,
+			name: Rapid10p0
 		},
 		{
-			id: 'Blitz',
-			name: 'Blitz (5 + 3)'
+			id: Blitz,
+			name: Blitz5p3
 		}
 	],
 	behavior: {

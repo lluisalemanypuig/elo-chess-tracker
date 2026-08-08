@@ -39,6 +39,7 @@ import { run_command } from '@tests/exec_utils';
 import { GraphsManager } from '@server/managers/graphs_manager';
 import { Graph } from '@common/models/graph/graph';
 import { Configuration } from '@common/models/configuration/configuration';
+import { toTimeControlId, toTimeControlName } from '@common/models/time_control';
 
 const webpage_dir = 'tests/webpage';
 const icons_dir = path.join(webpage_dir, 'icons');
@@ -50,6 +51,16 @@ const db_games_dir = path.join(db_dir, 'games');
 const db_games_Classical_dir = path.join(db_games_dir, 'Classical');
 const db_games_Rapid_dir = path.join(db_games_dir, 'Rapid');
 const db_games_Blitz_dir = path.join(db_games_dir, 'Blitz');
+
+const Classical = toTimeControlId('Classical');
+const Classical90p30 = toTimeControlName('Classical (90 + 30)');
+
+const Rapid = toTimeControlId('Rapid');
+const Rapid12p5 = toTimeControlName('Rapid (12 + 5)');
+const Rapid10p0 = toTimeControlName('Rapid (10 + 0)');
+
+const Blitz = toTimeControlId('Blitz');
+const Blitz5p3 = toTimeControlName('Blitz (5 + 3)');
 
 const configuration: Configuration = {
 	environment: {
@@ -80,20 +91,20 @@ const configuration: Configuration = {
 	rating_system: 'Elo',
 	time_controls: [
 		{
-			id: 'Classical',
-			name: 'Classical (90 + 30)'
+			id: Classical,
+			name: Classical90p30
 		},
 		{
-			id: 'Rapid',
-			name: 'Rapid (12 + 5)'
+			id: Rapid,
+			name: Rapid12p5
 		},
 		{
-			id: 'Rapid',
-			name: 'Rapid (10 + 0)'
+			id: Rapid,
+			name: Rapid10p0
 		},
 		{
-			id: 'Blitz',
-			name: 'Blitz (5 + 3)'
+			id: Blitz,
+			name: Blitz5p3
 		}
 	],
 	behavior: {
@@ -118,25 +129,25 @@ describe('Configure server', () => {
 	test('Check RatingSystemManager', () => {
 		const rating_system_manager = RatingSystemManager.get_instance();
 
-		expect(rating_system_manager.is_time_control_id_valid('Classical')).toBe(true);
-		expect(rating_system_manager.is_time_control_id_valid('classical')).toBe(false);
-		expect(rating_system_manager.is_time_control_id_valid('Rapid')).toBe(true);
-		expect(rating_system_manager.is_time_control_id_valid('rapid')).toBe(false);
-		expect(rating_system_manager.is_time_control_id_valid('Blitz')).toBe(true);
-		expect(rating_system_manager.is_time_control_id_valid('blitz')).toBe(false);
+		expect(rating_system_manager.is_time_control_id_valid(Classical)).toBe(true);
+		expect(rating_system_manager.is_time_control_id_valid(toTimeControlId('classical'))).toBe(false);
+		expect(rating_system_manager.is_time_control_id_valid(Rapid)).toBe(true);
+		expect(rating_system_manager.is_time_control_id_valid(toTimeControlId('rapid'))).toBe(false);
+		expect(rating_system_manager.is_time_control_id_valid(Blitz)).toBe(true);
+		expect(rating_system_manager.is_time_control_id_valid(toTimeControlId('blitz'))).toBe(false);
 
 		const unique_ids = rating_system_manager.get_unique_time_controls_ids();
 		expect(
 			unique_ids.find((val: string): boolean => {
-				return val == 'Rapid';
+				return val == Rapid;
 			})
-		).toEqual('Rapid');
+		).toEqual(Rapid);
 
 		expect(
 			unique_ids.find((val: string): boolean => {
-				return val == 'Blitz';
+				return val == Blitz;
 			})
-		).toEqual('Blitz');
+		).toEqual(Blitz);
 
 		expect(rating_system_manager.get_time_controls().length).toBe(4);
 		expect(rating_system_manager.get_unique_time_controls_ids().length).toBe(3);
@@ -174,9 +185,9 @@ describe('Configure server', () => {
 
 		expect(environment_manager.get_dir_database()).toEqual(db_dir);
 		expect(environment_manager.get_dir_games()).toEqual(db_games_dir);
-		expect(environment_manager.get_dir_games_time_control('Classical')).toEqual(db_games_Classical_dir);
-		expect(environment_manager.get_dir_games_time_control('Rapid')).toEqual(db_games_Rapid_dir);
-		expect(environment_manager.get_dir_games_time_control('Blitz')).toEqual(db_games_Blitz_dir);
+		expect(environment_manager.get_dir_games_time_control(Classical)).toEqual(db_games_Classical_dir);
+		expect(environment_manager.get_dir_games_time_control(Rapid)).toEqual(db_games_Rapid_dir);
+		expect(environment_manager.get_dir_games_time_control(Blitz)).toEqual(db_games_Blitz_dir);
 		expect(environment_manager.get_dir_users()).toEqual(db_users_dir);
 		expect(environment_manager.get_dir_challenges()).toEqual(db_challenges_dir);
 
@@ -200,9 +211,9 @@ describe('Configure server', () => {
 
 	test('Check GraphsManager', () => {
 		const graphs_manager = GraphsManager.get_instance();
-		expect(graphs_manager.get_graph('Blitz')).toEqual(new Graph());
-		expect(graphs_manager.get_graph('Rapid')).toEqual(new Graph());
-		expect(graphs_manager.get_graph('Classical')).toEqual(new Graph());
+		expect(graphs_manager.get_graph(Blitz)).toEqual(new Graph());
+		expect(graphs_manager.get_graph(Rapid)).toEqual(new Graph());
+		expect(graphs_manager.get_graph(Classical)).toEqual(new Graph());
 	});
 
 	test('Clear the server memory', () => {
@@ -212,23 +223,23 @@ describe('Configure server', () => {
 	test('Check RatingSystemManager', () => {
 		const rating_system_manager = RatingSystemManager.get_instance();
 
-		expect(rating_system_manager.is_time_control_id_valid('Classical')).toBe(false);
-		expect(rating_system_manager.is_time_control_id_valid('classical')).toBe(false);
-		expect(rating_system_manager.is_time_control_id_valid('Rapid')).toBe(false);
-		expect(rating_system_manager.is_time_control_id_valid('rapid')).toBe(false);
-		expect(rating_system_manager.is_time_control_id_valid('Blitz')).toBe(false);
-		expect(rating_system_manager.is_time_control_id_valid('blitz')).toBe(false);
+		expect(rating_system_manager.is_time_control_id_valid(Classical)).toBe(false);
+		expect(rating_system_manager.is_time_control_id_valid(Classical)).toBe(false);
+		expect(rating_system_manager.is_time_control_id_valid(Rapid)).toBe(false);
+		expect(rating_system_manager.is_time_control_id_valid(Rapid)).toBe(false);
+		expect(rating_system_manager.is_time_control_id_valid(Blitz)).toBe(false);
+		expect(rating_system_manager.is_time_control_id_valid(Blitz)).toBe(false);
 
 		const unique_ids = rating_system_manager.get_unique_time_controls_ids();
 		expect(
 			unique_ids.find((val: string): boolean => {
-				return val == 'Rapid';
+				return val == Rapid;
 			})
 		).toEqual(undefined);
 
 		expect(
 			unique_ids.find((val: string): boolean => {
-				return val == 'Blitz';
+				return val == Blitz;
 			})
 		).toEqual(undefined);
 
@@ -286,8 +297,8 @@ describe('Configure server', () => {
 
 	test('Check GraphsManager', () => {
 		const graphs_manager = GraphsManager.get_instance();
-		expect(graphs_manager.get_graph('Blitz')).toEqual(undefined);
-		expect(graphs_manager.get_graph('Rapid')).toEqual(undefined);
-		expect(graphs_manager.get_graph('Classical')).toEqual(undefined);
+		expect(graphs_manager.get_graph(Blitz)).toEqual(undefined);
+		expect(graphs_manager.get_graph(Rapid)).toEqual(undefined);
+		expect(graphs_manager.get_graph(Classical)).toEqual(undefined);
 	});
 });

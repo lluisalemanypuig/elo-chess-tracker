@@ -45,6 +45,20 @@ import { isNotDefined } from '@common/utils/is_defined';
 import { Configuration } from '@common/models/configuration/configuration';
 import { TimeControlRating } from '@common/models/time_control_rating';
 import { UserThin } from '@common/models/user_thin';
+import { toTimeControlId, toTimeControlName } from '@common/models/time_control';
+
+const Classical = toTimeControlId('Classical');
+const Classical90p30 = toTimeControlName('Classical (90 + 30)');
+
+const Rapid = toTimeControlId('Rapid');
+const Rapid12p5 = toTimeControlName('Rapid (12 + 5)');
+const Rapid10p0 = toTimeControlName('Rapid (10 + 0)');
+
+const Blitz = toTimeControlId('Blitz');
+const Blitz5p3 = toTimeControlName('Blitz (5 + 3)');
+
+const Bullet = toTimeControlId('Bullet');
+const Bullet2p1 = toTimeControlName('Bullet (2 + 1)');
 
 const webpage_dir = 'tests/webpage';
 const db_dir = path.join(webpage_dir, 'database');
@@ -77,20 +91,20 @@ const classical_rapid_blitz: Configuration = {
 	rating_system: 'Elo',
 	time_controls: [
 		{
-			id: 'Classical',
-			name: 'Classical (90 + 30)'
+			id: Classical,
+			name: Classical90p30
 		},
 		{
-			id: 'Rapid',
-			name: 'Rapid (12 + 5)'
+			id: Rapid,
+			name: Rapid12p5
 		},
 		{
-			id: 'Rapid',
-			name: 'Rapid (10 + 0)'
+			id: Rapid,
+			name: Rapid10p0
 		},
 		{
-			id: 'Blitz',
-			name: 'Blitz (5 + 3)'
+			id: Blitz,
+			name: Blitz5p3
 		}
 	],
 	behavior: {
@@ -133,24 +147,24 @@ const classical_rapid_blitz_bullet: Configuration = {
 	rating_system: 'Elo',
 	time_controls: [
 		{
-			id: 'Classical',
-			name: 'Classical (90 + 30)'
+			id: Classical,
+			name: Classical90p30
 		},
 		{
-			id: 'Rapid',
-			name: 'Rapid (12 + 5)'
+			id: Rapid,
+			name: Rapid12p5
 		},
 		{
-			id: 'Rapid',
-			name: 'Rapid (10 + 0)'
+			id: Rapid,
+			name: Rapid10p0
 		},
 		{
-			id: 'Blitz',
-			name: 'Blitz (5 + 3)'
+			id: Blitz,
+			name: Blitz5p3
 		},
 		{
-			id: 'Bulet',
-			name: 'Bullet (2 + 1)'
+			id: Bullet,
+			name: Bullet2p1
 		}
 	],
 	behavior: {
@@ -193,8 +207,8 @@ const classical: Configuration = {
 	rating_system: 'Elo',
 	time_controls: [
 		{
-			id: 'Classical',
-			name: 'Classical (90 + 30)'
+			id: Classical,
+			name: Classical90p30
 		}
 	],
 	behavior: {
@@ -448,31 +462,31 @@ describe('Modify existing users', () => {
 		test_user_add_new(ee, 'E', 'e', 'pass_e', [STUDENT]);
 		test_user_add_new(ff, 'F', 'f', 'pass_f', [STUDENT]);
 
-		const aa_Classical = new TimeControlRating('Classical', new EloRating(2000, 10, 10, 0, 0, 40, false));
-		const aa_Blitz = new TimeControlRating('Blitz', new EloRating(300, 100, 0, 0, 100, 40, false));
-		const aa_Rapid = new TimeControlRating('Rapid', new EloRating(1000, 100, 0, 50, 50, 40, false));
+		const aa_Classical = new TimeControlRating(Classical, new EloRating(2000, 10, 10, 0, 0, 40, false));
+		const aa_Blitz = new TimeControlRating(Blitz, new EloRating(300, 100, 0, 0, 100, 40, false));
+		const aa_Rapid = new TimeControlRating(Rapid, new EloRating(1000, 100, 0, 50, 50, 40, false));
 		const rating_aa = [aa_Classical, aa_Blitz, aa_Rapid];
 
-		const bb_Classical = new TimeControlRating('Classical', new EloRating(2500, 2000, 1999, 0, 1, 10, true));
-		const bb_Blitz = new TimeControlRating('Blitz', new EloRating(2000, 10, 10, 0, 0, 40, false));
-		const bb_Rapid = new TimeControlRating('Rapid', new EloRating(1000, 100, 0, 0, 100, 40, false));
+		const bb_Classical = new TimeControlRating(Classical, new EloRating(2500, 2000, 1999, 0, 1, 10, true));
+		const bb_Blitz = new TimeControlRating(Blitz, new EloRating(2000, 10, 10, 0, 0, 40, false));
+		const bb_Rapid = new TimeControlRating(Rapid, new EloRating(1000, 100, 0, 0, 100, 40, false));
 		const rating_bb = [bb_Classical, bb_Blitz, bb_Rapid];
 
-		const cc_Classical = new TimeControlRating('Classical', new EloRating(2000, 10, 10, 0, 0, 40, false));
-		const cc_Blitz = new TimeControlRating('Blitz', new EloRating(300, 100, 0, 0, 100, 40, false));
-		const cc_Rapid = new TimeControlRating('Rapid', new EloRating(2000, 10, 10, 0, 0, 40, false));
+		const cc_Classical = new TimeControlRating(Classical, new EloRating(2000, 10, 10, 0, 0, 40, false));
+		const cc_Blitz = new TimeControlRating(Blitz, new EloRating(300, 100, 0, 0, 100, 40, false));
+		const cc_Rapid = new TimeControlRating(Rapid, new EloRating(2000, 10, 10, 0, 0, 40, false));
 		const rating_cc = [cc_Classical, cc_Blitz, cc_Rapid];
 
-		const dd_Classical = new TimeControlRating('Classical', new EloRating(2500, 2000, 1999, 0, 1, 10, true));
-		const dd_Rapid = new TimeControlRating('Rapid', new EloRating(1000, 100, 0, 0, 100, 40, false));
+		const dd_Classical = new TimeControlRating(Classical, new EloRating(2500, 2000, 1999, 0, 1, 10, true));
+		const dd_Rapid = new TimeControlRating(Rapid, new EloRating(1000, 100, 0, 0, 100, 40, false));
 		const rating_dd = [dd_Classical, dd_Rapid];
 
-		const ee_Blitz = new TimeControlRating('Blitz', new EloRating(300, 100, 0, 0, 100, 40, false));
-		const ee_Rapid = new TimeControlRating('Rapid', new EloRating(2000, 10, 10, 0, 0, 40, false));
+		const ee_Blitz = new TimeControlRating(Blitz, new EloRating(300, 100, 0, 0, 100, 40, false));
+		const ee_Rapid = new TimeControlRating(Rapid, new EloRating(2000, 10, 10, 0, 0, 40, false));
 		const rating_ee = [ee_Blitz, ee_Rapid];
 
-		const ff_Classical = new TimeControlRating('Classical', new EloRating(2500, 2000, 1999, 0, 1, 10, true));
-		const ff_Blitz = new TimeControlRating('Blitz', new EloRating(2000, 10, 10, 0, 0, 40, false));
+		const ff_Classical = new TimeControlRating(Classical, new EloRating(2500, 2000, 1999, 0, 1, 10, true));
+		const ff_Blitz = new TimeControlRating(Blitz, new EloRating(2000, 10, 10, 0, 0, 40, false));
 		const rating_ff = [ff_Classical, ff_Blitz];
 
 		user_update_from_player_data([
@@ -485,9 +499,9 @@ describe('Modify existing users', () => {
 		]);
 
 		const user_aa = test_user_retrieve(aa) as User;
-		expect(user_aa.get_rating('Blitz')).toEqual(aa_Blitz.rating);
-		expect(user_aa.get_rating('Classical')).toEqual(aa_Classical.rating);
-		expect(user_aa.get_rating('Rapid')).toEqual(aa_Rapid.rating);
+		expect(user_aa.get_rating(Blitz)).toEqual(aa_Blitz.rating);
+		expect(user_aa.get_rating(Classical)).toEqual(aa_Classical.rating);
+		expect(user_aa.get_rating(Rapid)).toEqual(aa_Rapid.rating);
 		{
 			const user_file = path.join(db_users_dir, 'aa');
 			expect(fs.existsSync(user_file)).toBe(true);
@@ -496,15 +510,15 @@ describe('Modify existing users', () => {
 			if (isNotDefined(u)) {
 				return;
 			}
-			expect(u.get_rating('Blitz')).toEqual(aa_Blitz.rating);
-			expect(u.get_rating('Classical')).toEqual(aa_Classical.rating);
-			expect(u.get_rating('Rapid')).toEqual(aa_Rapid.rating);
+			expect(u.get_rating(Blitz)).toEqual(aa_Blitz.rating);
+			expect(u.get_rating(Classical)).toEqual(aa_Classical.rating);
+			expect(u.get_rating(Rapid)).toEqual(aa_Rapid.rating);
 		}
 
 		const user_bb = test_user_retrieve(bb) as User;
-		expect(user_bb.get_rating('Blitz')).toEqual(bb_Blitz.rating);
-		expect(user_bb.get_rating('Classical')).toEqual(bb_Classical.rating);
-		expect(user_bb.get_rating('Rapid')).toEqual(bb_Rapid.rating);
+		expect(user_bb.get_rating(Blitz)).toEqual(bb_Blitz.rating);
+		expect(user_bb.get_rating(Classical)).toEqual(bb_Classical.rating);
+		expect(user_bb.get_rating(Rapid)).toEqual(bb_Rapid.rating);
 		{
 			const user_file = path.join(db_users_dir, 'bb');
 			expect(fs.existsSync(user_file)).toBe(true);
@@ -513,15 +527,15 @@ describe('Modify existing users', () => {
 			if (isNotDefined(u)) {
 				return;
 			}
-			expect(u.get_rating('Blitz')).toEqual(bb_Blitz.rating);
-			expect(u.get_rating('Classical')).toEqual(bb_Classical.rating);
-			expect(u.get_rating('Rapid')).toEqual(bb_Rapid.rating);
+			expect(u.get_rating(Blitz)).toEqual(bb_Blitz.rating);
+			expect(u.get_rating(Classical)).toEqual(bb_Classical.rating);
+			expect(u.get_rating(Rapid)).toEqual(bb_Rapid.rating);
 		}
 
 		const user_cc = test_user_retrieve(cc) as User;
-		expect(user_cc.get_rating('Blitz')).toEqual(cc_Blitz.rating);
-		expect(user_cc.get_rating('Classical')).toEqual(cc_Classical.rating);
-		expect(user_cc.get_rating('Rapid')).toEqual(cc_Rapid.rating);
+		expect(user_cc.get_rating(Blitz)).toEqual(cc_Blitz.rating);
+		expect(user_cc.get_rating(Classical)).toEqual(cc_Classical.rating);
+		expect(user_cc.get_rating(Rapid)).toEqual(cc_Rapid.rating);
 		{
 			const user_file = path.join(db_users_dir, 'cc');
 			expect(fs.existsSync(user_file)).toBe(true);
@@ -530,14 +544,14 @@ describe('Modify existing users', () => {
 			if (isNotDefined(u)) {
 				return;
 			}
-			expect(u.get_rating('Blitz')).toEqual(cc_Blitz.rating);
-			expect(u.get_rating('Classical')).toEqual(cc_Classical.rating);
-			expect(u.get_rating('Rapid')).toEqual(cc_Rapid.rating);
+			expect(u.get_rating(Blitz)).toEqual(cc_Blitz.rating);
+			expect(u.get_rating(Classical)).toEqual(cc_Classical.rating);
+			expect(u.get_rating(Rapid)).toEqual(cc_Rapid.rating);
 		}
 
 		const user_dd = test_user_retrieve(dd) as User;
-		expect(user_dd.get_rating('Classical')).toEqual(dd_Classical.rating);
-		expect(user_dd.get_rating('Rapid')).toEqual(dd_Rapid.rating);
+		expect(user_dd.get_rating(Classical)).toEqual(dd_Classical.rating);
+		expect(user_dd.get_rating(Rapid)).toEqual(dd_Rapid.rating);
 		{
 			const user_file = path.join(db_users_dir, 'dd');
 			expect(fs.existsSync(user_file)).toBe(true);
@@ -546,13 +560,13 @@ describe('Modify existing users', () => {
 			if (isNotDefined(u)) {
 				return;
 			}
-			expect(u.get_rating('Classical')).toEqual(dd_Classical.rating);
-			expect(u.get_rating('Rapid')).toEqual(dd_Rapid.rating);
+			expect(u.get_rating(Classical)).toEqual(dd_Classical.rating);
+			expect(u.get_rating(Rapid)).toEqual(dd_Rapid.rating);
 		}
 
 		const user_ee = test_user_retrieve(ee) as User;
-		expect(user_ee.get_rating('Blitz')).toEqual(ee_Blitz.rating);
-		expect(user_ee.get_rating('Rapid')).toEqual(ee_Rapid.rating);
+		expect(user_ee.get_rating(Blitz)).toEqual(ee_Blitz.rating);
+		expect(user_ee.get_rating(Rapid)).toEqual(ee_Rapid.rating);
 		{
 			const user_file = path.join(db_users_dir, 'ee');
 			expect(fs.existsSync(user_file)).toBe(true);
@@ -561,13 +575,13 @@ describe('Modify existing users', () => {
 			if (isNotDefined(u)) {
 				return;
 			}
-			expect(u.get_rating('Blitz')).toEqual(ee_Blitz.rating);
-			expect(u.get_rating('Rapid')).toEqual(ee_Rapid.rating);
+			expect(u.get_rating(Blitz)).toEqual(ee_Blitz.rating);
+			expect(u.get_rating(Rapid)).toEqual(ee_Rapid.rating);
 		}
 
 		const user_ff = test_user_retrieve(ff) as User;
-		expect(user_ff.get_rating('Blitz')).toEqual(ff_Blitz.rating);
-		expect(user_ff.get_rating('Classical')).toEqual(ff_Classical.rating);
+		expect(user_ff.get_rating(Blitz)).toEqual(ff_Blitz.rating);
+		expect(user_ff.get_rating(Classical)).toEqual(ff_Classical.rating);
 		{
 			const user_file = path.join(db_users_dir, 'ff');
 			expect(fs.existsSync(user_file)).toBe(true);
@@ -576,8 +590,8 @@ describe('Modify existing users', () => {
 			if (isNotDefined(u)) {
 				return;
 			}
-			expect(u.get_rating('Blitz')).toEqual(ff_Blitz.rating);
-			expect(u.get_rating('Classical')).toEqual(ff_Classical.rating);
+			expect(u.get_rating(Blitz)).toEqual(ff_Blitz.rating);
+			expect(u.get_rating(Classical)).toEqual(ff_Classical.rating);
 		}
 	});
 });

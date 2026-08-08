@@ -47,6 +47,18 @@ import { graph_from_string } from '@common/io/graph/graph';
 import { recalculate_all_graphs } from '@server/managers/graphs';
 import { Configuration } from '@common/models/configuration/configuration';
 import { isNotDefined } from '@common/utils/is_defined';
+import { toTimeControlId, toTimeControlName } from '@common/models/time_control';
+
+const Classical = toTimeControlId('Classical');
+const Classical90p30 = toTimeControlName('Classical (90 + 30)');
+
+const Rapid = toTimeControlId('Rapid');
+const Rapid12p5 = toTimeControlName('Rapid (12 + 5)');
+const Rapid10p0 = toTimeControlName('Rapid (10 + 0)');
+
+const Blitz = toTimeControlId('Blitz');
+const Blitz5p3 = toTimeControlName('Blitz (5 + 3)');
+const Blitz5p0 = toTimeControlName('Blitz (5 + 0)');
 
 const configuration: Configuration = {
 	environment: {
@@ -75,20 +87,20 @@ const configuration: Configuration = {
 	rating_system: 'Elo',
 	time_controls: [
 		{
-			id: 'Classical',
-			name: 'Classical (90 + 30)'
+			id: Classical,
+			name: Classical90p30
 		},
 		{
-			id: 'Rapid',
-			name: 'Rapid (12 + 5)'
+			id: Rapid,
+			name: Rapid12p5
 		},
 		{
-			id: 'Rapid',
-			name: 'Rapid (10 + 0)'
+			id: Rapid,
+			name: Rapid10p0
 		},
 		{
-			id: 'Blitz',
-			name: 'Blitz (5 + 3)'
+			id: Blitz,
+			name: Blitz5p3
 		}
 	],
 	behavior: {
@@ -152,9 +164,9 @@ describe('Server setup', () => {
 
 describe('Sequential game creation', () => {
 	test('Add "Blitz" games', () => {
-		const blitz_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Blitz');
+		const blitz_dir = EnvironmentManager.get_instance().get_dir_games_time_control(Blitz);
 
-		game_add_new('sample', u('a'), u('b'), 'white_wins', 'Blitz', 'Blitz (5 + 3)', '2025-01-19', '17:06:00:000');
+		game_add_new('sample', u('a'), u('b'), 'white_wins', Blitz, Blitz5p3, '2025-01-19', '17:06:00:000');
 		{
 			const game_array = game_array_from_string(fs.readFileSync(path.join(blitz_dir, '2025-01-19'), 'utf8'));
 			expect(game_array).not.toBeNull();
@@ -167,38 +179,38 @@ describe('Sequential game creation', () => {
 			expect(game_array[0].white).toBe('a');
 			expect(game_array[0].black).toBe('b');
 			expect(game_array[0].result).toBe('white_wins');
-			expect(game_array[0].time_control_id).toBe('Blitz');
-			expect(game_array[0].time_control_name).toBe('Blitz (5 + 3)');
+			expect(game_array[0].time_control_id).toBe(Blitz);
+			expect(game_array[0].time_control_name).toBe(Blitz5p3);
 			expect(game_array[0].when).toBe('2025-01-19..17:06:00:000');
 
-			expect(aU.get_games('Blitz').length).toBe(1);
-			expect(bU.get_games('Blitz').length).toBe(1);
-			expect(cU.get_games('Blitz').length).toBe(0);
-			expect(dU.get_games('Blitz').length).toBe(0);
-			expect(eU.get_games('Blitz').length).toBe(0);
-			expect(fU.get_games('Blitz').length).toBe(0);
-			expect(aU.get_games('Classical').length).toBe(0);
-			expect(bU.get_games('Classical').length).toBe(0);
-			expect(cU.get_games('Classical').length).toBe(0);
-			expect(dU.get_games('Classical').length).toBe(0);
-			expect(eU.get_games('Classical').length).toBe(0);
-			expect(fU.get_games('Classical').length).toBe(0);
+			expect(aU.get_games(Blitz).length).toBe(1);
+			expect(bU.get_games(Blitz).length).toBe(1);
+			expect(cU.get_games(Blitz).length).toBe(0);
+			expect(dU.get_games(Blitz).length).toBe(0);
+			expect(eU.get_games(Blitz).length).toBe(0);
+			expect(fU.get_games(Blitz).length).toBe(0);
+			expect(aU.get_games(Classical).length).toBe(0);
+			expect(bU.get_games(Classical).length).toBe(0);
+			expect(cU.get_games(Classical).length).toBe(0);
+			expect(dU.get_games(Classical).length).toBe(0);
+			expect(eU.get_games(Classical).length).toBe(0);
+			expect(fU.get_games(Classical).length).toBe(0);
 
-			expect(aU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
-			expect(bU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
-			expect(cU.get_rating('Blitz').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
-			expect(dU.get_rating('Blitz').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
-			expect(eU.get_rating('Blitz').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
-			expect(fU.get_rating('Blitz').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
-			expect(aU.get_rating('Classical').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
-			expect(bU.get_rating('Classical').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
-			expect(cU.get_rating('Classical').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
-			expect(dU.get_rating('Classical').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
-			expect(eU.get_rating('Classical').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
-			expect(fU.get_rating('Classical').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+			expect(aU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
+			expect(bU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
+			expect(cU.get_rating(Blitz).num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+			expect(dU.get_rating(Blitz).num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+			expect(eU.get_rating(Blitz).num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+			expect(fU.get_rating(Blitz).num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+			expect(aU.get_rating(Classical).num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+			expect(bU.get_rating(Classical).num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+			expect(cU.get_rating(Classical).num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+			expect(dU.get_rating(Classical).num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+			expect(eU.get_rating(Classical).num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+			expect(fU.get_rating(Classical).num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
 		}
 
-		game_add_new('sample', u('c'), u('d'), 'black_wins', 'Blitz', 'Blitz (5 + 3)', '2025-01-19', '17:06:10:000');
+		game_add_new('sample', u('c'), u('d'), 'black_wins', Blitz, Blitz5p3, '2025-01-19', '17:06:10:000');
 		{
 			const game_array = game_array_from_string(fs.readFileSync(path.join(blitz_dir, '2025-01-19'), 'utf8'));
 			expect(game_array).not.toBeNull();
@@ -211,46 +223,46 @@ describe('Sequential game creation', () => {
 			expect(game_array[0].white).toBe('a');
 			expect(game_array[0].black).toBe('b');
 			expect(game_array[0].result).toBe('white_wins');
-			expect(game_array[0].time_control_id).toBe('Blitz');
-			expect(game_array[0].time_control_name).toBe('Blitz (5 + 3)');
+			expect(game_array[0].time_control_id).toBe(Blitz);
+			expect(game_array[0].time_control_name).toBe(Blitz5p3);
 			expect(game_array[0].when).toBe('2025-01-19..17:06:00:000');
 
 			expect(game_array[1].id).toBe('0000000002');
 			expect(game_array[1].white).toBe('c');
 			expect(game_array[1].black).toBe('d');
 			expect(game_array[1].result).toBe('black_wins');
-			expect(game_array[1].time_control_id).toBe('Blitz');
-			expect(game_array[1].time_control_name).toBe('Blitz (5 + 3)');
+			expect(game_array[1].time_control_id).toBe(Blitz);
+			expect(game_array[1].time_control_name).toBe(Blitz5p3);
 			expect(game_array[1].when).toBe('2025-01-19..17:06:10:000');
 
-			expect(aU.get_games('Blitz').length).toBe(1);
-			expect(bU.get_games('Blitz').length).toBe(1);
-			expect(cU.get_games('Blitz').length).toBe(1);
-			expect(dU.get_games('Blitz').length).toBe(1);
-			expect(eU.get_games('Blitz').length).toBe(0);
-			expect(fU.get_games('Blitz').length).toBe(0);
-			expect(aU.get_games('Classical').length).toBe(0);
-			expect(bU.get_games('Classical').length).toBe(0);
-			expect(cU.get_games('Classical').length).toBe(0);
-			expect(dU.get_games('Classical').length).toBe(0);
-			expect(eU.get_games('Classical').length).toBe(0);
-			expect(fU.get_games('Classical').length).toBe(0);
+			expect(aU.get_games(Blitz).length).toBe(1);
+			expect(bU.get_games(Blitz).length).toBe(1);
+			expect(cU.get_games(Blitz).length).toBe(1);
+			expect(dU.get_games(Blitz).length).toBe(1);
+			expect(eU.get_games(Blitz).length).toBe(0);
+			expect(fU.get_games(Blitz).length).toBe(0);
+			expect(aU.get_games(Classical).length).toBe(0);
+			expect(bU.get_games(Classical).length).toBe(0);
+			expect(cU.get_games(Classical).length).toBe(0);
+			expect(dU.get_games(Classical).length).toBe(0);
+			expect(eU.get_games(Classical).length).toBe(0);
+			expect(fU.get_games(Classical).length).toBe(0);
 
-			expect(aU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
-			expect(bU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
-			expect(cU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
-			expect(dU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
-			expect(eU.get_rating('Blitz').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
-			expect(fU.get_rating('Blitz').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
-			expect(aU.get_rating('Classical').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
-			expect(bU.get_rating('Classical').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
-			expect(cU.get_rating('Classical').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
-			expect(dU.get_rating('Classical').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
-			expect(eU.get_rating('Classical').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
-			expect(fU.get_rating('Classical').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+			expect(aU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
+			expect(bU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
+			expect(cU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
+			expect(dU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
+			expect(eU.get_rating(Blitz).num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+			expect(fU.get_rating(Blitz).num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+			expect(aU.get_rating(Classical).num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+			expect(bU.get_rating(Classical).num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+			expect(cU.get_rating(Classical).num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+			expect(dU.get_rating(Classical).num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+			expect(eU.get_rating(Classical).num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+			expect(fU.get_rating(Classical).num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
 		}
 
-		game_add_new('sample', u('e'), u('f'), 'draw', 'Blitz', 'Blitz (5 + 3)', '2025-01-19', '17:06:20:000');
+		game_add_new('sample', u('e'), u('f'), 'draw', Blitz, Blitz5p3, '2025-01-19', '17:06:20:000');
 		{
 			const game_array = game_array_from_string(fs.readFileSync(path.join(blitz_dir, '2025-01-19'), 'utf8'));
 			expect(game_array).not.toBeNull();
@@ -263,54 +275,54 @@ describe('Sequential game creation', () => {
 			expect(game_array[0].white).toBe('a');
 			expect(game_array[0].black).toBe('b');
 			expect(game_array[0].result).toBe('white_wins');
-			expect(game_array[0].time_control_id).toBe('Blitz');
-			expect(game_array[0].time_control_name).toBe('Blitz (5 + 3)');
+			expect(game_array[0].time_control_id).toBe(Blitz);
+			expect(game_array[0].time_control_name).toBe(Blitz5p3);
 			expect(game_array[0].when).toBe('2025-01-19..17:06:00:000');
 
 			expect(game_array[1].id).toBe('0000000002');
 			expect(game_array[1].white).toBe('c');
 			expect(game_array[1].black).toBe('d');
 			expect(game_array[1].result).toBe('black_wins');
-			expect(game_array[1].time_control_id).toBe('Blitz');
-			expect(game_array[1].time_control_name).toBe('Blitz (5 + 3)');
+			expect(game_array[1].time_control_id).toBe(Blitz);
+			expect(game_array[1].time_control_name).toBe(Blitz5p3);
 			expect(game_array[1].when).toBe('2025-01-19..17:06:10:000');
 
 			expect(game_array[2].id).toBe('0000000003');
 			expect(game_array[2].white).toBe('e');
 			expect(game_array[2].black).toBe('f');
 			expect(game_array[2].result).toBe('draw');
-			expect(game_array[2].time_control_id).toBe('Blitz');
-			expect(game_array[2].time_control_name).toBe('Blitz (5 + 3)');
+			expect(game_array[2].time_control_id).toBe(Blitz);
+			expect(game_array[2].time_control_name).toBe(Blitz5p3);
 			expect(game_array[2].when).toBe('2025-01-19..17:06:20:000');
 
-			expect(aU.get_games('Blitz').length).toBe(1);
-			expect(bU.get_games('Blitz').length).toBe(1);
-			expect(cU.get_games('Blitz').length).toBe(1);
-			expect(dU.get_games('Blitz').length).toBe(1);
-			expect(eU.get_games('Blitz').length).toBe(1);
-			expect(fU.get_games('Blitz').length).toBe(1);
-			expect(aU.get_games('Classical').length).toBe(0);
-			expect(bU.get_games('Classical').length).toBe(0);
-			expect(cU.get_games('Classical').length).toBe(0);
-			expect(dU.get_games('Classical').length).toBe(0);
-			expect(eU.get_games('Classical').length).toBe(0);
-			expect(fU.get_games('Classical').length).toBe(0);
+			expect(aU.get_games(Blitz).length).toBe(1);
+			expect(bU.get_games(Blitz).length).toBe(1);
+			expect(cU.get_games(Blitz).length).toBe(1);
+			expect(dU.get_games(Blitz).length).toBe(1);
+			expect(eU.get_games(Blitz).length).toBe(1);
+			expect(fU.get_games(Blitz).length).toBe(1);
+			expect(aU.get_games(Classical).length).toBe(0);
+			expect(bU.get_games(Classical).length).toBe(0);
+			expect(cU.get_games(Classical).length).toBe(0);
+			expect(dU.get_games(Classical).length).toBe(0);
+			expect(eU.get_games(Classical).length).toBe(0);
+			expect(fU.get_games(Classical).length).toBe(0);
 
-			expect(aU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
-			expect(bU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
-			expect(cU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
-			expect(dU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
-			expect(eU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 1, 0]);
-			expect(fU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 1, 0]);
-			expect(aU.get_rating('Classical').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
-			expect(bU.get_rating('Classical').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
-			expect(cU.get_rating('Classical').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
-			expect(dU.get_rating('Classical').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
-			expect(eU.get_rating('Classical').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
-			expect(fU.get_rating('Classical').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+			expect(aU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
+			expect(bU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
+			expect(cU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
+			expect(dU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
+			expect(eU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 0, 1, 0]);
+			expect(fU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 0, 1, 0]);
+			expect(aU.get_rating(Classical).num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+			expect(bU.get_rating(Classical).num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+			expect(cU.get_rating(Classical).num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+			expect(dU.get_rating(Classical).num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+			expect(eU.get_rating(Classical).num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+			expect(fU.get_rating(Classical).num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
 		}
 
-		game_add_new('sample', u('a'), u('f'), 'black_wins', 'Blitz', 'Blitz (5 + 3)', '2025-01-19', '17:06:30:000');
+		game_add_new('sample', u('a'), u('f'), 'black_wins', Blitz, Blitz5p3, '2025-01-19', '17:06:30:000');
 		{
 			const game_array = game_array_from_string(fs.readFileSync(path.join(blitz_dir, '2025-01-19'), 'utf8'));
 			expect(game_array).not.toBeNull();
@@ -323,75 +335,66 @@ describe('Sequential game creation', () => {
 			expect(game_array[0].white).toBe('a');
 			expect(game_array[0].black).toBe('b');
 			expect(game_array[0].result).toBe('white_wins');
-			expect(game_array[0].time_control_id).toBe('Blitz');
-			expect(game_array[0].time_control_name).toBe('Blitz (5 + 3)');
+			expect(game_array[0].time_control_id).toBe(Blitz);
+			expect(game_array[0].time_control_name).toBe(Blitz5p3);
 			expect(game_array[0].when).toBe('2025-01-19..17:06:00:000');
 
 			expect(game_array[1].id).toBe('0000000002');
 			expect(game_array[1].white).toBe('c');
 			expect(game_array[1].black).toBe('d');
 			expect(game_array[1].result).toBe('black_wins');
-			expect(game_array[1].time_control_id).toBe('Blitz');
-			expect(game_array[1].time_control_name).toBe('Blitz (5 + 3)');
+			expect(game_array[1].time_control_id).toBe(Blitz);
+			expect(game_array[1].time_control_name).toBe(Blitz5p3);
 			expect(game_array[1].when).toBe('2025-01-19..17:06:10:000');
 
 			expect(game_array[2].id).toBe('0000000003');
 			expect(game_array[2].white).toBe('e');
 			expect(game_array[2].black).toBe('f');
 			expect(game_array[2].result).toBe('draw');
-			expect(game_array[2].time_control_id).toBe('Blitz');
-			expect(game_array[2].time_control_name).toBe('Blitz (5 + 3)');
+			expect(game_array[2].time_control_id).toBe(Blitz);
+			expect(game_array[2].time_control_name).toBe(Blitz5p3);
 			expect(game_array[2].when).toBe('2025-01-19..17:06:20:000');
 
 			expect(game_array[3].id).toBe('0000000004');
 			expect(game_array[3].white).toBe('a');
 			expect(game_array[3].black).toBe('f');
 			expect(game_array[3].result).toBe('black_wins');
-			expect(game_array[3].time_control_id).toBe('Blitz');
-			expect(game_array[3].time_control_name).toBe('Blitz (5 + 3)');
+			expect(game_array[3].time_control_id).toBe(Blitz);
+			expect(game_array[3].time_control_name).toBe(Blitz5p3);
 			expect(game_array[3].when).toBe('2025-01-19..17:06:30:000');
 
-			expect(aU.get_games('Blitz').length).toBe(1);
-			expect(bU.get_games('Blitz').length).toBe(1);
-			expect(cU.get_games('Blitz').length).toBe(1);
-			expect(dU.get_games('Blitz').length).toBe(1);
-			expect(eU.get_games('Blitz').length).toBe(1);
-			expect(fU.get_games('Blitz').length).toBe(1);
-			expect(aU.get_games('Classical').length).toBe(0);
-			expect(bU.get_games('Classical').length).toBe(0);
-			expect(cU.get_games('Classical').length).toBe(0);
-			expect(dU.get_games('Classical').length).toBe(0);
-			expect(eU.get_games('Classical').length).toBe(0);
-			expect(fU.get_games('Classical').length).toBe(0);
+			expect(aU.get_games(Blitz).length).toBe(1);
+			expect(bU.get_games(Blitz).length).toBe(1);
+			expect(cU.get_games(Blitz).length).toBe(1);
+			expect(dU.get_games(Blitz).length).toBe(1);
+			expect(eU.get_games(Blitz).length).toBe(1);
+			expect(fU.get_games(Blitz).length).toBe(1);
+			expect(aU.get_games(Classical).length).toBe(0);
+			expect(bU.get_games(Classical).length).toBe(0);
+			expect(cU.get_games(Classical).length).toBe(0);
+			expect(dU.get_games(Classical).length).toBe(0);
+			expect(eU.get_games(Classical).length).toBe(0);
+			expect(fU.get_games(Classical).length).toBe(0);
 
-			expect(aU.get_rating('Blitz').num_won_drawn_lost()).toEqual([2, 1, 0, 1]);
-			expect(bU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
-			expect(cU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
-			expect(dU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
-			expect(eU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 1, 0]);
-			expect(fU.get_rating('Blitz').num_won_drawn_lost()).toEqual([2, 1, 1, 0]);
-			expect(aU.get_rating('Classical').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
-			expect(bU.get_rating('Classical').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
-			expect(cU.get_rating('Classical').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
-			expect(dU.get_rating('Classical').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
-			expect(eU.get_rating('Classical').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
-			expect(fU.get_rating('Classical').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+			expect(aU.get_rating(Blitz).num_won_drawn_lost()).toEqual([2, 1, 0, 1]);
+			expect(bU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
+			expect(cU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
+			expect(dU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
+			expect(eU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 0, 1, 0]);
+			expect(fU.get_rating(Blitz).num_won_drawn_lost()).toEqual([2, 1, 1, 0]);
+			expect(aU.get_rating(Classical).num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+			expect(bU.get_rating(Classical).num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+			expect(cU.get_rating(Classical).num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+			expect(dU.get_rating(Classical).num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+			expect(eU.get_rating(Classical).num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+			expect(fU.get_rating(Classical).num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
 		}
 	});
 
 	test('Add "Classical" games', () => {
-		const classical_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Classical');
+		const classical_dir = EnvironmentManager.get_instance().get_dir_games_time_control(Classical);
 
-		game_add_new(
-			'sample',
-			u('a'),
-			u('b'),
-			'white_wins',
-			'Classical',
-			'Classical (90 + 30)',
-			'2025-01-09',
-			'17:06:00:000'
-		);
+		game_add_new('sample', u('a'), u('b'), 'white_wins', Classical, Classical90p30, '2025-01-09', '17:06:00:000');
 		{
 			const game_array = game_array_from_string(fs.readFileSync(path.join(classical_dir, '2025-01-09'), 'utf8'));
 			expect(game_array).not.toBeNull();
@@ -404,47 +407,38 @@ describe('Sequential game creation', () => {
 			expect(game_array[0].white).toBe('a');
 			expect(game_array[0].black).toBe('b');
 			expect(game_array[0].result).toBe('white_wins');
-			expect(game_array[0].time_control_id).toBe('Classical');
-			expect(game_array[0].time_control_name).toBe('Classical (90 + 30)');
+			expect(game_array[0].time_control_id).toBe(Classical);
+			expect(game_array[0].time_control_name).toBe(Classical90p30);
 			expect(game_array[0].when).toBe('2025-01-09..17:06:00:000');
 
-			expect(aU.get_games('Blitz').length).toBe(1);
-			expect(bU.get_games('Blitz').length).toBe(1);
-			expect(cU.get_games('Blitz').length).toBe(1);
-			expect(dU.get_games('Blitz').length).toBe(1);
-			expect(eU.get_games('Blitz').length).toBe(1);
-			expect(fU.get_games('Blitz').length).toBe(1);
-			expect(aU.get_games('Classical').length).toBe(1);
-			expect(bU.get_games('Classical').length).toBe(1);
-			expect(cU.get_games('Classical').length).toBe(0);
-			expect(dU.get_games('Classical').length).toBe(0);
-			expect(eU.get_games('Classical').length).toBe(0);
-			expect(fU.get_games('Classical').length).toBe(0);
+			expect(aU.get_games(Blitz).length).toBe(1);
+			expect(bU.get_games(Blitz).length).toBe(1);
+			expect(cU.get_games(Blitz).length).toBe(1);
+			expect(dU.get_games(Blitz).length).toBe(1);
+			expect(eU.get_games(Blitz).length).toBe(1);
+			expect(fU.get_games(Blitz).length).toBe(1);
+			expect(aU.get_games(Classical).length).toBe(1);
+			expect(bU.get_games(Classical).length).toBe(1);
+			expect(cU.get_games(Classical).length).toBe(0);
+			expect(dU.get_games(Classical).length).toBe(0);
+			expect(eU.get_games(Classical).length).toBe(0);
+			expect(fU.get_games(Classical).length).toBe(0);
 
-			expect(aU.get_rating('Blitz').num_won_drawn_lost()).toEqual([2, 1, 0, 1]);
-			expect(bU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
-			expect(cU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
-			expect(dU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
-			expect(eU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 1, 0]);
-			expect(fU.get_rating('Blitz').num_won_drawn_lost()).toEqual([2, 1, 1, 0]);
-			expect(aU.get_rating('Classical').num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
-			expect(bU.get_rating('Classical').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
-			expect(cU.get_rating('Classical').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
-			expect(dU.get_rating('Classical').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
-			expect(eU.get_rating('Classical').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
-			expect(fU.get_rating('Classical').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+			expect(aU.get_rating(Blitz).num_won_drawn_lost()).toEqual([2, 1, 0, 1]);
+			expect(bU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
+			expect(cU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
+			expect(dU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
+			expect(eU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 0, 1, 0]);
+			expect(fU.get_rating(Blitz).num_won_drawn_lost()).toEqual([2, 1, 1, 0]);
+			expect(aU.get_rating(Classical).num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
+			expect(bU.get_rating(Classical).num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
+			expect(cU.get_rating(Classical).num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+			expect(dU.get_rating(Classical).num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+			expect(eU.get_rating(Classical).num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+			expect(fU.get_rating(Classical).num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
 		}
 
-		game_add_new(
-			'sample',
-			u('c'),
-			u('d'),
-			'black_wins',
-			'Classical',
-			'Classical (90 + 30)',
-			'2025-01-09',
-			'17:06:10:000'
-		);
+		game_add_new('sample', u('c'), u('d'), 'black_wins', Classical, Classical90p30, '2025-01-09', '17:06:10:000');
 		{
 			const game_array = game_array_from_string(fs.readFileSync(path.join(classical_dir, '2025-01-09'), 'utf8'));
 			expect(game_array).not.toBeNull();
@@ -457,55 +451,46 @@ describe('Sequential game creation', () => {
 			expect(game_array[0].white).toBe('a');
 			expect(game_array[0].black).toBe('b');
 			expect(game_array[0].result).toBe('white_wins');
-			expect(game_array[0].time_control_id).toBe('Classical');
-			expect(game_array[0].time_control_name).toBe('Classical (90 + 30)');
+			expect(game_array[0].time_control_id).toBe(Classical);
+			expect(game_array[0].time_control_name).toBe(Classical90p30);
 			expect(game_array[0].when).toBe('2025-01-09..17:06:00:000');
 
 			expect(game_array[1].id).toBe('0000000006');
 			expect(game_array[1].white).toBe('c');
 			expect(game_array[1].black).toBe('d');
 			expect(game_array[1].result).toBe('black_wins');
-			expect(game_array[1].time_control_id).toBe('Classical');
-			expect(game_array[1].time_control_name).toBe('Classical (90 + 30)');
+			expect(game_array[1].time_control_id).toBe(Classical);
+			expect(game_array[1].time_control_name).toBe(Classical90p30);
 			expect(game_array[1].when).toBe('2025-01-09..17:06:10:000');
 
-			expect(aU.get_games('Blitz').length).toBe(1);
-			expect(bU.get_games('Blitz').length).toBe(1);
-			expect(cU.get_games('Blitz').length).toBe(1);
-			expect(dU.get_games('Blitz').length).toBe(1);
-			expect(eU.get_games('Blitz').length).toBe(1);
-			expect(fU.get_games('Blitz').length).toBe(1);
-			expect(aU.get_games('Classical').length).toBe(1);
-			expect(bU.get_games('Classical').length).toBe(1);
-			expect(cU.get_games('Classical').length).toBe(1);
-			expect(dU.get_games('Classical').length).toBe(1);
-			expect(eU.get_games('Classical').length).toBe(0);
-			expect(fU.get_games('Classical').length).toBe(0);
+			expect(aU.get_games(Blitz).length).toBe(1);
+			expect(bU.get_games(Blitz).length).toBe(1);
+			expect(cU.get_games(Blitz).length).toBe(1);
+			expect(dU.get_games(Blitz).length).toBe(1);
+			expect(eU.get_games(Blitz).length).toBe(1);
+			expect(fU.get_games(Blitz).length).toBe(1);
+			expect(aU.get_games(Classical).length).toBe(1);
+			expect(bU.get_games(Classical).length).toBe(1);
+			expect(cU.get_games(Classical).length).toBe(1);
+			expect(dU.get_games(Classical).length).toBe(1);
+			expect(eU.get_games(Classical).length).toBe(0);
+			expect(fU.get_games(Classical).length).toBe(0);
 
-			expect(aU.get_rating('Blitz').num_won_drawn_lost()).toEqual([2, 1, 0, 1]);
-			expect(bU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
-			expect(cU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
-			expect(dU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
-			expect(eU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 1, 0]);
-			expect(fU.get_rating('Blitz').num_won_drawn_lost()).toEqual([2, 1, 1, 0]);
-			expect(aU.get_rating('Classical').num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
-			expect(bU.get_rating('Classical').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
-			expect(cU.get_rating('Classical').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
-			expect(dU.get_rating('Classical').num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
-			expect(eU.get_rating('Classical').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
-			expect(fU.get_rating('Classical').num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+			expect(aU.get_rating(Blitz).num_won_drawn_lost()).toEqual([2, 1, 0, 1]);
+			expect(bU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
+			expect(cU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
+			expect(dU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
+			expect(eU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 0, 1, 0]);
+			expect(fU.get_rating(Blitz).num_won_drawn_lost()).toEqual([2, 1, 1, 0]);
+			expect(aU.get_rating(Classical).num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
+			expect(bU.get_rating(Classical).num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
+			expect(cU.get_rating(Classical).num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
+			expect(dU.get_rating(Classical).num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
+			expect(eU.get_rating(Classical).num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
+			expect(fU.get_rating(Classical).num_won_drawn_lost()).toEqual([0, 0, 0, 0]);
 		}
 
-		game_add_new(
-			'sample',
-			u('e'),
-			u('f'),
-			'draw',
-			'Classical',
-			'Classical (90 + 30)',
-			'2025-01-09',
-			'17:06:20:000'
-		);
+		game_add_new('sample', u('e'), u('f'), 'draw', Classical, Classical90p30, '2025-01-09', '17:06:20:000');
 		{
 			const game_array = game_array_from_string(fs.readFileSync(path.join(classical_dir, '2025-01-09'), 'utf8'));
 			expect(game_array).not.toBeNull();
@@ -518,63 +503,54 @@ describe('Sequential game creation', () => {
 			expect(game_array[0].white).toBe('a');
 			expect(game_array[0].black).toBe('b');
 			expect(game_array[0].result).toBe('white_wins');
-			expect(game_array[0].time_control_id).toBe('Classical');
-			expect(game_array[0].time_control_name).toBe('Classical (90 + 30)');
+			expect(game_array[0].time_control_id).toBe(Classical);
+			expect(game_array[0].time_control_name).toBe(Classical90p30);
 			expect(game_array[0].when).toBe('2025-01-09..17:06:00:000');
 
 			expect(game_array[1].id).toBe('0000000006');
 			expect(game_array[1].white).toBe('c');
 			expect(game_array[1].black).toBe('d');
 			expect(game_array[1].result).toBe('black_wins');
-			expect(game_array[1].time_control_id).toBe('Classical');
-			expect(game_array[1].time_control_name).toBe('Classical (90 + 30)');
+			expect(game_array[1].time_control_id).toBe(Classical);
+			expect(game_array[1].time_control_name).toBe(Classical90p30);
 			expect(game_array[1].when).toBe('2025-01-09..17:06:10:000');
 
 			expect(game_array[2].id).toBe('0000000007');
 			expect(game_array[2].white).toBe('e');
 			expect(game_array[2].black).toBe('f');
 			expect(game_array[2].result).toBe('draw');
-			expect(game_array[2].time_control_id).toBe('Classical');
-			expect(game_array[2].time_control_name).toBe('Classical (90 + 30)');
+			expect(game_array[2].time_control_id).toBe(Classical);
+			expect(game_array[2].time_control_name).toBe(Classical90p30);
 			expect(game_array[2].when).toBe('2025-01-09..17:06:20:000');
 
-			expect(aU.get_games('Blitz').length).toBe(1);
-			expect(bU.get_games('Blitz').length).toBe(1);
-			expect(cU.get_games('Blitz').length).toBe(1);
-			expect(dU.get_games('Blitz').length).toBe(1);
-			expect(eU.get_games('Blitz').length).toBe(1);
-			expect(fU.get_games('Blitz').length).toBe(1);
-			expect(aU.get_games('Classical').length).toBe(1);
-			expect(bU.get_games('Classical').length).toBe(1);
-			expect(cU.get_games('Classical').length).toBe(1);
-			expect(dU.get_games('Classical').length).toBe(1);
-			expect(eU.get_games('Classical').length).toBe(1);
-			expect(fU.get_games('Classical').length).toBe(1);
+			expect(aU.get_games(Blitz).length).toBe(1);
+			expect(bU.get_games(Blitz).length).toBe(1);
+			expect(cU.get_games(Blitz).length).toBe(1);
+			expect(dU.get_games(Blitz).length).toBe(1);
+			expect(eU.get_games(Blitz).length).toBe(1);
+			expect(fU.get_games(Blitz).length).toBe(1);
+			expect(aU.get_games(Classical).length).toBe(1);
+			expect(bU.get_games(Classical).length).toBe(1);
+			expect(cU.get_games(Classical).length).toBe(1);
+			expect(dU.get_games(Classical).length).toBe(1);
+			expect(eU.get_games(Classical).length).toBe(1);
+			expect(fU.get_games(Classical).length).toBe(1);
 
-			expect(aU.get_rating('Blitz').num_won_drawn_lost()).toEqual([2, 1, 0, 1]);
-			expect(bU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
-			expect(cU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
-			expect(dU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
-			expect(eU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 1, 0]);
-			expect(fU.get_rating('Blitz').num_won_drawn_lost()).toEqual([2, 1, 1, 0]);
-			expect(aU.get_rating('Classical').num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
-			expect(bU.get_rating('Classical').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
-			expect(cU.get_rating('Classical').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
-			expect(dU.get_rating('Classical').num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
-			expect(eU.get_rating('Classical').num_won_drawn_lost()).toEqual([1, 0, 1, 0]);
-			expect(fU.get_rating('Classical').num_won_drawn_lost()).toEqual([1, 0, 1, 0]);
+			expect(aU.get_rating(Blitz).num_won_drawn_lost()).toEqual([2, 1, 0, 1]);
+			expect(bU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
+			expect(cU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
+			expect(dU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
+			expect(eU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 0, 1, 0]);
+			expect(fU.get_rating(Blitz).num_won_drawn_lost()).toEqual([2, 1, 1, 0]);
+			expect(aU.get_rating(Classical).num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
+			expect(bU.get_rating(Classical).num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
+			expect(cU.get_rating(Classical).num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
+			expect(dU.get_rating(Classical).num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
+			expect(eU.get_rating(Classical).num_won_drawn_lost()).toEqual([1, 0, 1, 0]);
+			expect(fU.get_rating(Classical).num_won_drawn_lost()).toEqual([1, 0, 1, 0]);
 		}
 
-		game_add_new(
-			'sample',
-			u('a'),
-			u('f'),
-			'black_wins',
-			'Classical',
-			'Classical (90 + 30)',
-			'2025-01-09',
-			'17:06:30:000'
-		);
+		game_add_new('sample', u('a'), u('f'), 'black_wins', Classical, Classical90p30, '2025-01-09', '17:06:30:000');
 		{
 			const game_array = game_array_from_string(fs.readFileSync(path.join(classical_dir, '2025-01-09'), 'utf8'));
 			expect(game_array).not.toBeNull();
@@ -587,68 +563,68 @@ describe('Sequential game creation', () => {
 			expect(game_array[0].white).toBe('a');
 			expect(game_array[0].black).toBe('b');
 			expect(game_array[0].result).toBe('white_wins');
-			expect(game_array[0].time_control_id).toBe('Classical');
-			expect(game_array[0].time_control_name).toBe('Classical (90 + 30)');
+			expect(game_array[0].time_control_id).toBe(Classical);
+			expect(game_array[0].time_control_name).toBe(Classical90p30);
 			expect(game_array[0].when).toBe('2025-01-09..17:06:00:000');
 
 			expect(game_array[1].id).toBe('0000000006');
 			expect(game_array[1].white).toBe('c');
 			expect(game_array[1].black).toBe('d');
 			expect(game_array[1].result).toBe('black_wins');
-			expect(game_array[1].time_control_id).toBe('Classical');
-			expect(game_array[1].time_control_name).toBe('Classical (90 + 30)');
+			expect(game_array[1].time_control_id).toBe(Classical);
+			expect(game_array[1].time_control_name).toBe(Classical90p30);
 			expect(game_array[1].when).toBe('2025-01-09..17:06:10:000');
 
 			expect(game_array[2].id).toBe('0000000007');
 			expect(game_array[2].white).toBe('e');
 			expect(game_array[2].black).toBe('f');
 			expect(game_array[2].result).toBe('draw');
-			expect(game_array[2].time_control_id).toBe('Classical');
-			expect(game_array[2].time_control_name).toBe('Classical (90 + 30)');
+			expect(game_array[2].time_control_id).toBe(Classical);
+			expect(game_array[2].time_control_name).toBe(Classical90p30);
 			expect(game_array[2].when).toBe('2025-01-09..17:06:20:000');
 
 			expect(game_array[3].id).toBe('0000000008');
 			expect(game_array[3].white).toBe('a');
 			expect(game_array[3].black).toBe('f');
 			expect(game_array[3].result).toBe('black_wins');
-			expect(game_array[3].time_control_id).toBe('Classical');
-			expect(game_array[3].time_control_name).toBe('Classical (90 + 30)');
+			expect(game_array[3].time_control_id).toBe(Classical);
+			expect(game_array[3].time_control_name).toBe(Classical90p30);
 			expect(game_array[3].when).toBe('2025-01-09..17:06:30:000');
 
-			expect(aU.get_games('Blitz').length).toBe(1);
-			expect(bU.get_games('Blitz').length).toBe(1);
-			expect(cU.get_games('Blitz').length).toBe(1);
-			expect(dU.get_games('Blitz').length).toBe(1);
-			expect(eU.get_games('Blitz').length).toBe(1);
-			expect(fU.get_games('Blitz').length).toBe(1);
-			expect(aU.get_games('Classical').length).toBe(1);
-			expect(bU.get_games('Classical').length).toBe(1);
-			expect(cU.get_games('Classical').length).toBe(1);
-			expect(dU.get_games('Classical').length).toBe(1);
-			expect(eU.get_games('Classical').length).toBe(1);
-			expect(fU.get_games('Classical').length).toBe(1);
+			expect(aU.get_games(Blitz).length).toBe(1);
+			expect(bU.get_games(Blitz).length).toBe(1);
+			expect(cU.get_games(Blitz).length).toBe(1);
+			expect(dU.get_games(Blitz).length).toBe(1);
+			expect(eU.get_games(Blitz).length).toBe(1);
+			expect(fU.get_games(Blitz).length).toBe(1);
+			expect(aU.get_games(Classical).length).toBe(1);
+			expect(bU.get_games(Classical).length).toBe(1);
+			expect(cU.get_games(Classical).length).toBe(1);
+			expect(dU.get_games(Classical).length).toBe(1);
+			expect(eU.get_games(Classical).length).toBe(1);
+			expect(fU.get_games(Classical).length).toBe(1);
 
-			expect(aU.get_rating('Blitz').num_won_drawn_lost()).toEqual([2, 1, 0, 1]);
-			expect(bU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
-			expect(cU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
-			expect(dU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
-			expect(eU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 1, 0]);
-			expect(fU.get_rating('Blitz').num_won_drawn_lost()).toEqual([2, 1, 1, 0]);
-			expect(aU.get_rating('Classical').num_won_drawn_lost()).toEqual([2, 1, 0, 1]);
-			expect(bU.get_rating('Classical').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
-			expect(cU.get_rating('Classical').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
-			expect(dU.get_rating('Classical').num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
-			expect(eU.get_rating('Classical').num_won_drawn_lost()).toEqual([1, 0, 1, 0]);
-			expect(fU.get_rating('Classical').num_won_drawn_lost()).toEqual([2, 1, 1, 0]);
+			expect(aU.get_rating(Blitz).num_won_drawn_lost()).toEqual([2, 1, 0, 1]);
+			expect(bU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
+			expect(cU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
+			expect(dU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
+			expect(eU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 0, 1, 0]);
+			expect(fU.get_rating(Blitz).num_won_drawn_lost()).toEqual([2, 1, 1, 0]);
+			expect(aU.get_rating(Classical).num_won_drawn_lost()).toEqual([2, 1, 0, 1]);
+			expect(bU.get_rating(Classical).num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
+			expect(cU.get_rating(Classical).num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
+			expect(dU.get_rating(Classical).num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
+			expect(eU.get_rating(Classical).num_won_drawn_lost()).toEqual([1, 0, 1, 0]);
+			expect(fU.get_rating(Classical).num_won_drawn_lost()).toEqual([2, 1, 1, 0]);
 		}
 	});
 });
 
 describe('Inverse game creation', () => {
 	test('Add "Blitz" games', () => {
-		const blitz_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Blitz');
+		const blitz_dir = EnvironmentManager.get_instance().get_dir_games_time_control(Blitz);
 
-		game_add_new('sample', u('a'), u('f'), 'draw', 'Blitz', 'Blitz (5 + 0)', '2025-01-20', '17:06:30:000');
+		game_add_new('sample', u('a'), u('f'), 'draw', Blitz, Blitz5p0, '2025-01-20', '17:06:30:000');
 		{
 			const game_array = game_array_from_string(fs.readFileSync(path.join(blitz_dir, '2025-01-20'), 'utf8'));
 			expect(game_array).not.toBeNull();
@@ -661,38 +637,38 @@ describe('Inverse game creation', () => {
 			expect(game_array[0].white).toBe('a');
 			expect(game_array[0].black).toBe('f');
 			expect(game_array[0].result).toBe('draw');
-			expect(game_array[0].time_control_id).toBe('Blitz');
-			expect(game_array[0].time_control_name).toBe('Blitz (5 + 0)');
+			expect(game_array[0].time_control_id).toBe(Blitz);
+			expect(game_array[0].time_control_name).toBe(Blitz5p0);
 			expect(game_array[0].when).toBe('2025-01-20..17:06:30:000');
 
-			expect(aU.get_games('Blitz').length).toBe(2);
-			expect(bU.get_games('Blitz').length).toBe(1);
-			expect(cU.get_games('Blitz').length).toBe(1);
-			expect(dU.get_games('Blitz').length).toBe(1);
-			expect(eU.get_games('Blitz').length).toBe(1);
-			expect(fU.get_games('Blitz').length).toBe(2);
-			expect(aU.get_games('Classical').length).toBe(1);
-			expect(bU.get_games('Classical').length).toBe(1);
-			expect(cU.get_games('Classical').length).toBe(1);
-			expect(dU.get_games('Classical').length).toBe(1);
-			expect(eU.get_games('Classical').length).toBe(1);
-			expect(fU.get_games('Classical').length).toBe(1);
+			expect(aU.get_games(Blitz).length).toBe(2);
+			expect(bU.get_games(Blitz).length).toBe(1);
+			expect(cU.get_games(Blitz).length).toBe(1);
+			expect(dU.get_games(Blitz).length).toBe(1);
+			expect(eU.get_games(Blitz).length).toBe(1);
+			expect(fU.get_games(Blitz).length).toBe(2);
+			expect(aU.get_games(Classical).length).toBe(1);
+			expect(bU.get_games(Classical).length).toBe(1);
+			expect(cU.get_games(Classical).length).toBe(1);
+			expect(dU.get_games(Classical).length).toBe(1);
+			expect(eU.get_games(Classical).length).toBe(1);
+			expect(fU.get_games(Classical).length).toBe(1);
 
-			expect(aU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 1, 1, 1]);
-			expect(bU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
-			expect(cU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
-			expect(dU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
-			expect(eU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 1, 0]);
-			expect(fU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 1, 2, 0]);
-			expect(aU.get_rating('Classical').num_won_drawn_lost()).toEqual([2, 1, 0, 1]);
-			expect(bU.get_rating('Classical').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
-			expect(cU.get_rating('Classical').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
-			expect(dU.get_rating('Classical').num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
-			expect(eU.get_rating('Classical').num_won_drawn_lost()).toEqual([1, 0, 1, 0]);
-			expect(fU.get_rating('Classical').num_won_drawn_lost()).toEqual([2, 1, 1, 0]);
+			expect(aU.get_rating(Blitz).num_won_drawn_lost()).toEqual([3, 1, 1, 1]);
+			expect(bU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
+			expect(cU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
+			expect(dU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
+			expect(eU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 0, 1, 0]);
+			expect(fU.get_rating(Blitz).num_won_drawn_lost()).toEqual([3, 1, 2, 0]);
+			expect(aU.get_rating(Classical).num_won_drawn_lost()).toEqual([2, 1, 0, 1]);
+			expect(bU.get_rating(Classical).num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
+			expect(cU.get_rating(Classical).num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
+			expect(dU.get_rating(Classical).num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
+			expect(eU.get_rating(Classical).num_won_drawn_lost()).toEqual([1, 0, 1, 0]);
+			expect(fU.get_rating(Classical).num_won_drawn_lost()).toEqual([2, 1, 1, 0]);
 		}
 
-		game_add_new('sample', u('e'), u('f'), 'draw', 'Blitz', 'Blitz (5 + 0)', '2025-01-20', '17:06:20:000');
+		game_add_new('sample', u('e'), u('f'), 'draw', Blitz, Blitz5p0, '2025-01-20', '17:06:20:000');
 		{
 			const game_array = game_array_from_string(fs.readFileSync(path.join(blitz_dir, '2025-01-20'), 'utf8'));
 			expect(game_array).not.toBeNull();
@@ -705,46 +681,46 @@ describe('Inverse game creation', () => {
 			expect(game_array[0].white).toBe('e');
 			expect(game_array[0].black).toBe('f');
 			expect(game_array[0].result).toBe('draw');
-			expect(game_array[0].time_control_id).toBe('Blitz');
-			expect(game_array[0].time_control_name).toBe('Blitz (5 + 0)');
+			expect(game_array[0].time_control_id).toBe(Blitz);
+			expect(game_array[0].time_control_name).toBe(Blitz5p0);
 			expect(game_array[0].when).toBe('2025-01-20..17:06:20:000');
 
 			expect(game_array[1].id).toBe('0000000009');
 			expect(game_array[1].white).toBe('a');
 			expect(game_array[1].black).toBe('f');
 			expect(game_array[1].result).toBe('draw');
-			expect(game_array[1].time_control_id).toBe('Blitz');
-			expect(game_array[1].time_control_name).toBe('Blitz (5 + 0)');
+			expect(game_array[1].time_control_id).toBe(Blitz);
+			expect(game_array[1].time_control_name).toBe(Blitz5p0);
 			expect(game_array[1].when).toBe('2025-01-20..17:06:30:000');
 
-			expect(aU.get_games('Blitz').length).toBe(2);
-			expect(bU.get_games('Blitz').length).toBe(1);
-			expect(cU.get_games('Blitz').length).toBe(1);
-			expect(dU.get_games('Blitz').length).toBe(1);
-			expect(eU.get_games('Blitz').length).toBe(2);
-			expect(fU.get_games('Blitz').length).toBe(2);
-			expect(aU.get_games('Classical').length).toBe(1);
-			expect(bU.get_games('Classical').length).toBe(1);
-			expect(cU.get_games('Classical').length).toBe(1);
-			expect(dU.get_games('Classical').length).toBe(1);
-			expect(eU.get_games('Classical').length).toBe(1);
-			expect(fU.get_games('Classical').length).toBe(1);
+			expect(aU.get_games(Blitz).length).toBe(2);
+			expect(bU.get_games(Blitz).length).toBe(1);
+			expect(cU.get_games(Blitz).length).toBe(1);
+			expect(dU.get_games(Blitz).length).toBe(1);
+			expect(eU.get_games(Blitz).length).toBe(2);
+			expect(fU.get_games(Blitz).length).toBe(2);
+			expect(aU.get_games(Classical).length).toBe(1);
+			expect(bU.get_games(Classical).length).toBe(1);
+			expect(cU.get_games(Classical).length).toBe(1);
+			expect(dU.get_games(Classical).length).toBe(1);
+			expect(eU.get_games(Classical).length).toBe(1);
+			expect(fU.get_games(Classical).length).toBe(1);
 
-			expect(aU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 1, 1, 1]);
-			expect(bU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
-			expect(cU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
-			expect(dU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
-			expect(eU.get_rating('Blitz').num_won_drawn_lost()).toEqual([2, 0, 2, 0]);
-			expect(fU.get_rating('Blitz').num_won_drawn_lost()).toEqual([4, 1, 3, 0]);
-			expect(aU.get_rating('Classical').num_won_drawn_lost()).toEqual([2, 1, 0, 1]);
-			expect(bU.get_rating('Classical').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
-			expect(cU.get_rating('Classical').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
-			expect(dU.get_rating('Classical').num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
-			expect(eU.get_rating('Classical').num_won_drawn_lost()).toEqual([1, 0, 1, 0]);
-			expect(fU.get_rating('Classical').num_won_drawn_lost()).toEqual([2, 1, 1, 0]);
+			expect(aU.get_rating(Blitz).num_won_drawn_lost()).toEqual([3, 1, 1, 1]);
+			expect(bU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
+			expect(cU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
+			expect(dU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
+			expect(eU.get_rating(Blitz).num_won_drawn_lost()).toEqual([2, 0, 2, 0]);
+			expect(fU.get_rating(Blitz).num_won_drawn_lost()).toEqual([4, 1, 3, 0]);
+			expect(aU.get_rating(Classical).num_won_drawn_lost()).toEqual([2, 1, 0, 1]);
+			expect(bU.get_rating(Classical).num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
+			expect(cU.get_rating(Classical).num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
+			expect(dU.get_rating(Classical).num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
+			expect(eU.get_rating(Classical).num_won_drawn_lost()).toEqual([1, 0, 1, 0]);
+			expect(fU.get_rating(Classical).num_won_drawn_lost()).toEqual([2, 1, 1, 0]);
 		}
 
-		game_add_new('sample', u('c'), u('d'), 'black_wins', 'Blitz', 'Blitz (5 + 3)', '2025-01-20', '17:06:10:000');
+		game_add_new('sample', u('c'), u('d'), 'black_wins', Blitz, Blitz5p3, '2025-01-20', '17:06:10:000');
 		{
 			const game_array = game_array_from_string(fs.readFileSync(path.join(blitz_dir, '2025-01-20'), 'utf8'));
 			expect(game_array).not.toBeNull();
@@ -757,54 +733,54 @@ describe('Inverse game creation', () => {
 			expect(game_array[0].white).toBe('c');
 			expect(game_array[0].black).toBe('d');
 			expect(game_array[0].result).toBe('black_wins');
-			expect(game_array[0].time_control_id).toBe('Blitz');
-			expect(game_array[0].time_control_name).toBe('Blitz (5 + 3)');
+			expect(game_array[0].time_control_id).toBe(Blitz);
+			expect(game_array[0].time_control_name).toBe(Blitz5p3);
 			expect(game_array[0].when).toBe('2025-01-20..17:06:10:000');
 
 			expect(game_array[1].id).toBe('0000000010');
 			expect(game_array[1].white).toBe('e');
 			expect(game_array[1].black).toBe('f');
 			expect(game_array[1].result).toBe('draw');
-			expect(game_array[1].time_control_id).toBe('Blitz');
-			expect(game_array[1].time_control_name).toBe('Blitz (5 + 0)');
+			expect(game_array[1].time_control_id).toBe(Blitz);
+			expect(game_array[1].time_control_name).toBe(Blitz5p0);
 			expect(game_array[1].when).toBe('2025-01-20..17:06:20:000');
 
 			expect(game_array[2].id).toBe('0000000009');
 			expect(game_array[2].white).toBe('a');
 			expect(game_array[2].black).toBe('f');
 			expect(game_array[2].result).toBe('draw');
-			expect(game_array[2].time_control_id).toBe('Blitz');
-			expect(game_array[2].time_control_name).toBe('Blitz (5 + 0)');
+			expect(game_array[2].time_control_id).toBe(Blitz);
+			expect(game_array[2].time_control_name).toBe(Blitz5p0);
 			expect(game_array[2].when).toBe('2025-01-20..17:06:30:000');
 
-			expect(aU.get_games('Blitz').length).toBe(2);
-			expect(bU.get_games('Blitz').length).toBe(1);
-			expect(cU.get_games('Blitz').length).toBe(2);
-			expect(dU.get_games('Blitz').length).toBe(2);
-			expect(eU.get_games('Blitz').length).toBe(2);
-			expect(fU.get_games('Blitz').length).toBe(2);
-			expect(aU.get_games('Classical').length).toBe(1);
-			expect(bU.get_games('Classical').length).toBe(1);
-			expect(cU.get_games('Classical').length).toBe(1);
-			expect(dU.get_games('Classical').length).toBe(1);
-			expect(eU.get_games('Classical').length).toBe(1);
-			expect(fU.get_games('Classical').length).toBe(1);
+			expect(aU.get_games(Blitz).length).toBe(2);
+			expect(bU.get_games(Blitz).length).toBe(1);
+			expect(cU.get_games(Blitz).length).toBe(2);
+			expect(dU.get_games(Blitz).length).toBe(2);
+			expect(eU.get_games(Blitz).length).toBe(2);
+			expect(fU.get_games(Blitz).length).toBe(2);
+			expect(aU.get_games(Classical).length).toBe(1);
+			expect(bU.get_games(Classical).length).toBe(1);
+			expect(cU.get_games(Classical).length).toBe(1);
+			expect(dU.get_games(Classical).length).toBe(1);
+			expect(eU.get_games(Classical).length).toBe(1);
+			expect(fU.get_games(Classical).length).toBe(1);
 
-			expect(aU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 1, 1, 1]);
-			expect(bU.get_rating('Blitz').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
-			expect(cU.get_rating('Blitz').num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
-			expect(dU.get_rating('Blitz').num_won_drawn_lost()).toEqual([2, 2, 0, 0]);
-			expect(eU.get_rating('Blitz').num_won_drawn_lost()).toEqual([2, 0, 2, 0]);
-			expect(fU.get_rating('Blitz').num_won_drawn_lost()).toEqual([4, 1, 3, 0]);
-			expect(aU.get_rating('Classical').num_won_drawn_lost()).toEqual([2, 1, 0, 1]);
-			expect(bU.get_rating('Classical').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
-			expect(cU.get_rating('Classical').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
-			expect(dU.get_rating('Classical').num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
-			expect(eU.get_rating('Classical').num_won_drawn_lost()).toEqual([1, 0, 1, 0]);
-			expect(fU.get_rating('Classical').num_won_drawn_lost()).toEqual([2, 1, 1, 0]);
+			expect(aU.get_rating(Blitz).num_won_drawn_lost()).toEqual([3, 1, 1, 1]);
+			expect(bU.get_rating(Blitz).num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
+			expect(cU.get_rating(Blitz).num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
+			expect(dU.get_rating(Blitz).num_won_drawn_lost()).toEqual([2, 2, 0, 0]);
+			expect(eU.get_rating(Blitz).num_won_drawn_lost()).toEqual([2, 0, 2, 0]);
+			expect(fU.get_rating(Blitz).num_won_drawn_lost()).toEqual([4, 1, 3, 0]);
+			expect(aU.get_rating(Classical).num_won_drawn_lost()).toEqual([2, 1, 0, 1]);
+			expect(bU.get_rating(Classical).num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
+			expect(cU.get_rating(Classical).num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
+			expect(dU.get_rating(Classical).num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
+			expect(eU.get_rating(Classical).num_won_drawn_lost()).toEqual([1, 0, 1, 0]);
+			expect(fU.get_rating(Classical).num_won_drawn_lost()).toEqual([2, 1, 1, 0]);
 		}
 
-		game_add_new('sample', u('a'), u('b'), 'white_wins', 'Blitz', 'Blitz (5 + 3)', '2025-01-20', '17:06:00:000');
+		game_add_new('sample', u('a'), u('b'), 'white_wins', Blitz, Blitz5p3, '2025-01-20', '17:06:00:000');
 		{
 			const game_array = game_array_from_string(fs.readFileSync(path.join(blitz_dir, '2025-01-20'), 'utf8'));
 			expect(game_array).not.toBeNull();
@@ -817,75 +793,66 @@ describe('Inverse game creation', () => {
 			expect(game_array[0].white).toBe('a');
 			expect(game_array[0].black).toBe('b');
 			expect(game_array[0].result).toBe('white_wins');
-			expect(game_array[0].time_control_id).toBe('Blitz');
-			expect(game_array[0].time_control_name).toBe('Blitz (5 + 3)');
+			expect(game_array[0].time_control_id).toBe(Blitz);
+			expect(game_array[0].time_control_name).toBe(Blitz5p3);
 			expect(game_array[0].when).toBe('2025-01-20..17:06:00:000');
 
 			expect(game_array[1].id).toBe('0000000011');
 			expect(game_array[1].white).toBe('c');
 			expect(game_array[1].black).toBe('d');
 			expect(game_array[1].result).toBe('black_wins');
-			expect(game_array[1].time_control_id).toBe('Blitz');
-			expect(game_array[1].time_control_name).toBe('Blitz (5 + 3)');
+			expect(game_array[1].time_control_id).toBe(Blitz);
+			expect(game_array[1].time_control_name).toBe(Blitz5p3);
 			expect(game_array[1].when).toBe('2025-01-20..17:06:10:000');
 
 			expect(game_array[2].id).toBe('0000000010');
 			expect(game_array[2].white).toBe('e');
 			expect(game_array[2].black).toBe('f');
 			expect(game_array[2].result).toBe('draw');
-			expect(game_array[2].time_control_id).toBe('Blitz');
-			expect(game_array[2].time_control_name).toBe('Blitz (5 + 0)');
+			expect(game_array[2].time_control_id).toBe(Blitz);
+			expect(game_array[2].time_control_name).toBe(Blitz5p0);
 			expect(game_array[2].when).toBe('2025-01-20..17:06:20:000');
 
 			expect(game_array[3].id).toBe('0000000009');
 			expect(game_array[3].white).toBe('a');
 			expect(game_array[3].black).toBe('f');
 			expect(game_array[3].result).toBe('draw');
-			expect(game_array[3].time_control_id).toBe('Blitz');
-			expect(game_array[3].time_control_name).toBe('Blitz (5 + 0)');
+			expect(game_array[3].time_control_id).toBe(Blitz);
+			expect(game_array[3].time_control_name).toBe(Blitz5p0);
 			expect(game_array[3].when).toBe('2025-01-20..17:06:30:000');
 
-			expect(aU.get_games('Blitz').length).toBe(2);
-			expect(bU.get_games('Blitz').length).toBe(2);
-			expect(cU.get_games('Blitz').length).toBe(2);
-			expect(dU.get_games('Blitz').length).toBe(2);
-			expect(eU.get_games('Blitz').length).toBe(2);
-			expect(fU.get_games('Blitz').length).toBe(2);
-			expect(aU.get_games('Classical').length).toBe(1);
-			expect(bU.get_games('Classical').length).toBe(1);
-			expect(cU.get_games('Classical').length).toBe(1);
-			expect(dU.get_games('Classical').length).toBe(1);
-			expect(eU.get_games('Classical').length).toBe(1);
-			expect(fU.get_games('Classical').length).toBe(1);
+			expect(aU.get_games(Blitz).length).toBe(2);
+			expect(bU.get_games(Blitz).length).toBe(2);
+			expect(cU.get_games(Blitz).length).toBe(2);
+			expect(dU.get_games(Blitz).length).toBe(2);
+			expect(eU.get_games(Blitz).length).toBe(2);
+			expect(fU.get_games(Blitz).length).toBe(2);
+			expect(aU.get_games(Classical).length).toBe(1);
+			expect(bU.get_games(Classical).length).toBe(1);
+			expect(cU.get_games(Classical).length).toBe(1);
+			expect(dU.get_games(Classical).length).toBe(1);
+			expect(eU.get_games(Classical).length).toBe(1);
+			expect(fU.get_games(Classical).length).toBe(1);
 
-			expect(aU.get_rating('Blitz').num_won_drawn_lost()).toEqual([4, 2, 1, 1]);
-			expect(bU.get_rating('Blitz').num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
-			expect(cU.get_rating('Blitz').num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
-			expect(dU.get_rating('Blitz').num_won_drawn_lost()).toEqual([2, 2, 0, 0]);
-			expect(eU.get_rating('Blitz').num_won_drawn_lost()).toEqual([2, 0, 2, 0]);
-			expect(fU.get_rating('Blitz').num_won_drawn_lost()).toEqual([4, 1, 3, 0]);
-			expect(aU.get_rating('Classical').num_won_drawn_lost()).toEqual([2, 1, 0, 1]);
-			expect(bU.get_rating('Classical').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
-			expect(cU.get_rating('Classical').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
-			expect(dU.get_rating('Classical').num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
-			expect(eU.get_rating('Classical').num_won_drawn_lost()).toEqual([1, 0, 1, 0]);
-			expect(fU.get_rating('Classical').num_won_drawn_lost()).toEqual([2, 1, 1, 0]);
+			expect(aU.get_rating(Blitz).num_won_drawn_lost()).toEqual([4, 2, 1, 1]);
+			expect(bU.get_rating(Blitz).num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
+			expect(cU.get_rating(Blitz).num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
+			expect(dU.get_rating(Blitz).num_won_drawn_lost()).toEqual([2, 2, 0, 0]);
+			expect(eU.get_rating(Blitz).num_won_drawn_lost()).toEqual([2, 0, 2, 0]);
+			expect(fU.get_rating(Blitz).num_won_drawn_lost()).toEqual([4, 1, 3, 0]);
+			expect(aU.get_rating(Classical).num_won_drawn_lost()).toEqual([2, 1, 0, 1]);
+			expect(bU.get_rating(Classical).num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
+			expect(cU.get_rating(Classical).num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
+			expect(dU.get_rating(Classical).num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
+			expect(eU.get_rating(Classical).num_won_drawn_lost()).toEqual([1, 0, 1, 0]);
+			expect(fU.get_rating(Classical).num_won_drawn_lost()).toEqual([2, 1, 1, 0]);
 		}
 	});
 
 	test('Add "Classical" games', () => {
-		const classical_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Classical');
+		const classical_dir = EnvironmentManager.get_instance().get_dir_games_time_control(Classical);
 
-		game_add_new(
-			'sample',
-			u('a'),
-			u('f'),
-			'draw',
-			'Classical',
-			'Classical (90 + 30)',
-			'2025-01-10',
-			'17:06:30:000'
-		);
+		game_add_new('sample', u('a'), u('f'), 'draw', Classical, Classical90p30, '2025-01-10', '17:06:30:000');
 		{
 			const game_array = game_array_from_string(fs.readFileSync(path.join(classical_dir, '2025-01-10'), 'utf8'));
 			expect(game_array).not.toBeNull();
@@ -898,47 +865,38 @@ describe('Inverse game creation', () => {
 			expect(game_array[0].white).toBe('a');
 			expect(game_array[0].black).toBe('f');
 			expect(game_array[0].result).toBe('draw');
-			expect(game_array[0].time_control_id).toBe('Classical');
-			expect(game_array[0].time_control_name).toBe('Classical (90 + 30)');
+			expect(game_array[0].time_control_id).toBe(Classical);
+			expect(game_array[0].time_control_name).toBe(Classical90p30);
 			expect(game_array[0].when).toBe('2025-01-10..17:06:30:000');
 
-			expect(aU.get_games('Blitz').length).toBe(2);
-			expect(bU.get_games('Blitz').length).toBe(2);
-			expect(cU.get_games('Blitz').length).toBe(2);
-			expect(dU.get_games('Blitz').length).toBe(2);
-			expect(eU.get_games('Blitz').length).toBe(2);
-			expect(fU.get_games('Blitz').length).toBe(2);
-			expect(aU.get_games('Classical').length).toBe(2);
-			expect(bU.get_games('Classical').length).toBe(1);
-			expect(cU.get_games('Classical').length).toBe(1);
-			expect(dU.get_games('Classical').length).toBe(1);
-			expect(eU.get_games('Classical').length).toBe(1);
-			expect(fU.get_games('Classical').length).toBe(2);
+			expect(aU.get_games(Blitz).length).toBe(2);
+			expect(bU.get_games(Blitz).length).toBe(2);
+			expect(cU.get_games(Blitz).length).toBe(2);
+			expect(dU.get_games(Blitz).length).toBe(2);
+			expect(eU.get_games(Blitz).length).toBe(2);
+			expect(fU.get_games(Blitz).length).toBe(2);
+			expect(aU.get_games(Classical).length).toBe(2);
+			expect(bU.get_games(Classical).length).toBe(1);
+			expect(cU.get_games(Classical).length).toBe(1);
+			expect(dU.get_games(Classical).length).toBe(1);
+			expect(eU.get_games(Classical).length).toBe(1);
+			expect(fU.get_games(Classical).length).toBe(2);
 
-			expect(aU.get_rating('Blitz').num_won_drawn_lost()).toEqual([4, 2, 1, 1]);
-			expect(bU.get_rating('Blitz').num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
-			expect(cU.get_rating('Blitz').num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
-			expect(dU.get_rating('Blitz').num_won_drawn_lost()).toEqual([2, 2, 0, 0]);
-			expect(eU.get_rating('Blitz').num_won_drawn_lost()).toEqual([2, 0, 2, 0]);
-			expect(fU.get_rating('Blitz').num_won_drawn_lost()).toEqual([4, 1, 3, 0]);
-			expect(aU.get_rating('Classical').num_won_drawn_lost()).toEqual([3, 1, 1, 1]);
-			expect(bU.get_rating('Classical').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
-			expect(cU.get_rating('Classical').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
-			expect(dU.get_rating('Classical').num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
-			expect(eU.get_rating('Classical').num_won_drawn_lost()).toEqual([1, 0, 1, 0]);
-			expect(fU.get_rating('Classical').num_won_drawn_lost()).toEqual([3, 1, 2, 0]);
+			expect(aU.get_rating(Blitz).num_won_drawn_lost()).toEqual([4, 2, 1, 1]);
+			expect(bU.get_rating(Blitz).num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
+			expect(cU.get_rating(Blitz).num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
+			expect(dU.get_rating(Blitz).num_won_drawn_lost()).toEqual([2, 2, 0, 0]);
+			expect(eU.get_rating(Blitz).num_won_drawn_lost()).toEqual([2, 0, 2, 0]);
+			expect(fU.get_rating(Blitz).num_won_drawn_lost()).toEqual([4, 1, 3, 0]);
+			expect(aU.get_rating(Classical).num_won_drawn_lost()).toEqual([3, 1, 1, 1]);
+			expect(bU.get_rating(Classical).num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
+			expect(cU.get_rating(Classical).num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
+			expect(dU.get_rating(Classical).num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
+			expect(eU.get_rating(Classical).num_won_drawn_lost()).toEqual([1, 0, 1, 0]);
+			expect(fU.get_rating(Classical).num_won_drawn_lost()).toEqual([3, 1, 2, 0]);
 		}
 
-		game_add_new(
-			'sample',
-			u('e'),
-			u('f'),
-			'draw',
-			'Classical',
-			'Classical (90 + 30)',
-			'2025-01-10',
-			'17:06:20:000'
-		);
+		game_add_new('sample', u('e'), u('f'), 'draw', Classical, Classical90p30, '2025-01-10', '17:06:20:000');
 		{
 			const game_array = game_array_from_string(fs.readFileSync(path.join(classical_dir, '2025-01-10'), 'utf8'));
 			expect(game_array).not.toBeNull();
@@ -951,55 +909,46 @@ describe('Inverse game creation', () => {
 			expect(game_array[0].white).toBe('e');
 			expect(game_array[0].black).toBe('f');
 			expect(game_array[0].result).toBe('draw');
-			expect(game_array[0].time_control_id).toBe('Classical');
-			expect(game_array[0].time_control_name).toBe('Classical (90 + 30)');
+			expect(game_array[0].time_control_id).toBe(Classical);
+			expect(game_array[0].time_control_name).toBe(Classical90p30);
 			expect(game_array[0].when).toBe('2025-01-10..17:06:20:000');
 
 			expect(game_array[1].id).toBe('0000000013');
 			expect(game_array[1].white).toBe('a');
 			expect(game_array[1].black).toBe('f');
 			expect(game_array[1].result).toBe('draw');
-			expect(game_array[1].time_control_id).toBe('Classical');
-			expect(game_array[1].time_control_name).toBe('Classical (90 + 30)');
+			expect(game_array[1].time_control_id).toBe(Classical);
+			expect(game_array[1].time_control_name).toBe(Classical90p30);
 			expect(game_array[1].when).toBe('2025-01-10..17:06:30:000');
 
-			expect(aU.get_games('Blitz').length).toBe(2);
-			expect(bU.get_games('Blitz').length).toBe(2);
-			expect(cU.get_games('Blitz').length).toBe(2);
-			expect(dU.get_games('Blitz').length).toBe(2);
-			expect(eU.get_games('Blitz').length).toBe(2);
-			expect(fU.get_games('Blitz').length).toBe(2);
-			expect(aU.get_games('Classical').length).toBe(2);
-			expect(bU.get_games('Classical').length).toBe(1);
-			expect(cU.get_games('Classical').length).toBe(1);
-			expect(dU.get_games('Classical').length).toBe(1);
-			expect(eU.get_games('Classical').length).toBe(2);
-			expect(fU.get_games('Classical').length).toBe(2);
+			expect(aU.get_games(Blitz).length).toBe(2);
+			expect(bU.get_games(Blitz).length).toBe(2);
+			expect(cU.get_games(Blitz).length).toBe(2);
+			expect(dU.get_games(Blitz).length).toBe(2);
+			expect(eU.get_games(Blitz).length).toBe(2);
+			expect(fU.get_games(Blitz).length).toBe(2);
+			expect(aU.get_games(Classical).length).toBe(2);
+			expect(bU.get_games(Classical).length).toBe(1);
+			expect(cU.get_games(Classical).length).toBe(1);
+			expect(dU.get_games(Classical).length).toBe(1);
+			expect(eU.get_games(Classical).length).toBe(2);
+			expect(fU.get_games(Classical).length).toBe(2);
 
-			expect(aU.get_rating('Blitz').num_won_drawn_lost()).toEqual([4, 2, 1, 1]);
-			expect(bU.get_rating('Blitz').num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
-			expect(cU.get_rating('Blitz').num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
-			expect(dU.get_rating('Blitz').num_won_drawn_lost()).toEqual([2, 2, 0, 0]);
-			expect(eU.get_rating('Blitz').num_won_drawn_lost()).toEqual([2, 0, 2, 0]);
-			expect(fU.get_rating('Blitz').num_won_drawn_lost()).toEqual([4, 1, 3, 0]);
-			expect(aU.get_rating('Classical').num_won_drawn_lost()).toEqual([3, 1, 1, 1]);
-			expect(bU.get_rating('Classical').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
-			expect(cU.get_rating('Classical').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
-			expect(dU.get_rating('Classical').num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
-			expect(eU.get_rating('Classical').num_won_drawn_lost()).toEqual([2, 0, 2, 0]);
-			expect(fU.get_rating('Classical').num_won_drawn_lost()).toEqual([4, 1, 3, 0]);
+			expect(aU.get_rating(Blitz).num_won_drawn_lost()).toEqual([4, 2, 1, 1]);
+			expect(bU.get_rating(Blitz).num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
+			expect(cU.get_rating(Blitz).num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
+			expect(dU.get_rating(Blitz).num_won_drawn_lost()).toEqual([2, 2, 0, 0]);
+			expect(eU.get_rating(Blitz).num_won_drawn_lost()).toEqual([2, 0, 2, 0]);
+			expect(fU.get_rating(Blitz).num_won_drawn_lost()).toEqual([4, 1, 3, 0]);
+			expect(aU.get_rating(Classical).num_won_drawn_lost()).toEqual([3, 1, 1, 1]);
+			expect(bU.get_rating(Classical).num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
+			expect(cU.get_rating(Classical).num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
+			expect(dU.get_rating(Classical).num_won_drawn_lost()).toEqual([1, 1, 0, 0]);
+			expect(eU.get_rating(Classical).num_won_drawn_lost()).toEqual([2, 0, 2, 0]);
+			expect(fU.get_rating(Classical).num_won_drawn_lost()).toEqual([4, 1, 3, 0]);
 		}
 
-		game_add_new(
-			'sample',
-			u('c'),
-			u('d'),
-			'black_wins',
-			'Classical',
-			'Classical (90 + 30)',
-			'2025-01-10',
-			'17:06:10:000'
-		);
+		game_add_new('sample', u('c'), u('d'), 'black_wins', Classical, Classical90p30, '2025-01-10', '17:06:10:000');
 		{
 			const game_array = game_array_from_string(fs.readFileSync(path.join(classical_dir, '2025-01-10'), 'utf8'));
 			expect(game_array).not.toBeNull();
@@ -1012,63 +961,54 @@ describe('Inverse game creation', () => {
 			expect(game_array[0].white).toBe('c');
 			expect(game_array[0].black).toBe('d');
 			expect(game_array[0].result).toBe('black_wins');
-			expect(game_array[0].time_control_id).toBe('Classical');
-			expect(game_array[0].time_control_name).toBe('Classical (90 + 30)');
+			expect(game_array[0].time_control_id).toBe(Classical);
+			expect(game_array[0].time_control_name).toBe(Classical90p30);
 			expect(game_array[0].when).toBe('2025-01-10..17:06:10:000');
 
 			expect(game_array[1].id).toBe('0000000014');
 			expect(game_array[1].white).toBe('e');
 			expect(game_array[1].black).toBe('f');
 			expect(game_array[1].result).toBe('draw');
-			expect(game_array[1].time_control_id).toBe('Classical');
-			expect(game_array[1].time_control_name).toBe('Classical (90 + 30)');
+			expect(game_array[1].time_control_id).toBe(Classical);
+			expect(game_array[1].time_control_name).toBe(Classical90p30);
 			expect(game_array[1].when).toBe('2025-01-10..17:06:20:000');
 
 			expect(game_array[2].id).toBe('0000000013');
 			expect(game_array[2].white).toBe('a');
 			expect(game_array[2].black).toBe('f');
 			expect(game_array[2].result).toBe('draw');
-			expect(game_array[2].time_control_id).toBe('Classical');
-			expect(game_array[2].time_control_name).toBe('Classical (90 + 30)');
+			expect(game_array[2].time_control_id).toBe(Classical);
+			expect(game_array[2].time_control_name).toBe(Classical90p30);
 			expect(game_array[2].when).toBe('2025-01-10..17:06:30:000');
 
-			expect(aU.get_games('Blitz').length).toBe(2);
-			expect(bU.get_games('Blitz').length).toBe(2);
-			expect(cU.get_games('Blitz').length).toBe(2);
-			expect(dU.get_games('Blitz').length).toBe(2);
-			expect(eU.get_games('Blitz').length).toBe(2);
-			expect(fU.get_games('Blitz').length).toBe(2);
-			expect(aU.get_games('Classical').length).toBe(2);
-			expect(bU.get_games('Classical').length).toBe(1);
-			expect(cU.get_games('Classical').length).toBe(2);
-			expect(dU.get_games('Classical').length).toBe(2);
-			expect(eU.get_games('Classical').length).toBe(2);
-			expect(fU.get_games('Classical').length).toBe(2);
+			expect(aU.get_games(Blitz).length).toBe(2);
+			expect(bU.get_games(Blitz).length).toBe(2);
+			expect(cU.get_games(Blitz).length).toBe(2);
+			expect(dU.get_games(Blitz).length).toBe(2);
+			expect(eU.get_games(Blitz).length).toBe(2);
+			expect(fU.get_games(Blitz).length).toBe(2);
+			expect(aU.get_games(Classical).length).toBe(2);
+			expect(bU.get_games(Classical).length).toBe(1);
+			expect(cU.get_games(Classical).length).toBe(2);
+			expect(dU.get_games(Classical).length).toBe(2);
+			expect(eU.get_games(Classical).length).toBe(2);
+			expect(fU.get_games(Classical).length).toBe(2);
 
-			expect(aU.get_rating('Blitz').num_won_drawn_lost()).toEqual([4, 2, 1, 1]);
-			expect(bU.get_rating('Blitz').num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
-			expect(cU.get_rating('Blitz').num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
-			expect(dU.get_rating('Blitz').num_won_drawn_lost()).toEqual([2, 2, 0, 0]);
-			expect(eU.get_rating('Blitz').num_won_drawn_lost()).toEqual([2, 0, 2, 0]);
-			expect(fU.get_rating('Blitz').num_won_drawn_lost()).toEqual([4, 1, 3, 0]);
-			expect(aU.get_rating('Classical').num_won_drawn_lost()).toEqual([3, 1, 1, 1]);
-			expect(bU.get_rating('Classical').num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
-			expect(cU.get_rating('Classical').num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
-			expect(dU.get_rating('Classical').num_won_drawn_lost()).toEqual([2, 2, 0, 0]);
-			expect(eU.get_rating('Classical').num_won_drawn_lost()).toEqual([2, 0, 2, 0]);
-			expect(fU.get_rating('Classical').num_won_drawn_lost()).toEqual([4, 1, 3, 0]);
+			expect(aU.get_rating(Blitz).num_won_drawn_lost()).toEqual([4, 2, 1, 1]);
+			expect(bU.get_rating(Blitz).num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
+			expect(cU.get_rating(Blitz).num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
+			expect(dU.get_rating(Blitz).num_won_drawn_lost()).toEqual([2, 2, 0, 0]);
+			expect(eU.get_rating(Blitz).num_won_drawn_lost()).toEqual([2, 0, 2, 0]);
+			expect(fU.get_rating(Blitz).num_won_drawn_lost()).toEqual([4, 1, 3, 0]);
+			expect(aU.get_rating(Classical).num_won_drawn_lost()).toEqual([3, 1, 1, 1]);
+			expect(bU.get_rating(Classical).num_won_drawn_lost()).toEqual([1, 0, 0, 1]);
+			expect(cU.get_rating(Classical).num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
+			expect(dU.get_rating(Classical).num_won_drawn_lost()).toEqual([2, 2, 0, 0]);
+			expect(eU.get_rating(Classical).num_won_drawn_lost()).toEqual([2, 0, 2, 0]);
+			expect(fU.get_rating(Classical).num_won_drawn_lost()).toEqual([4, 1, 3, 0]);
 		}
 
-		game_add_new(
-			'sample',
-			u('a'),
-			u('b'),
-			'white_wins',
-			'Classical',
-			'Classical (90 + 30)',
-			'2025-01-10',
-			'17:06:00:000'
-		);
+		game_add_new('sample', u('a'), u('b'), 'white_wins', Classical, Classical90p30, '2025-01-10', '17:06:00:000');
 		{
 			const game_array = game_array_from_string(fs.readFileSync(path.join(classical_dir, '2025-01-10'), 'utf8'));
 			expect(game_array).not.toBeNull();
@@ -1081,67 +1021,67 @@ describe('Inverse game creation', () => {
 			expect(game_array[0].white).toBe('a');
 			expect(game_array[0].black).toBe('b');
 			expect(game_array[0].result).toBe('white_wins');
-			expect(game_array[0].time_control_id).toBe('Classical');
-			expect(game_array[0].time_control_name).toBe('Classical (90 + 30)');
+			expect(game_array[0].time_control_id).toBe(Classical);
+			expect(game_array[0].time_control_name).toBe(Classical90p30);
 			expect(game_array[0].when).toBe('2025-01-10..17:06:00:000');
 
 			expect(game_array[1].id).toBe('0000000015');
 			expect(game_array[1].white).toBe('c');
 			expect(game_array[1].black).toBe('d');
 			expect(game_array[1].result).toBe('black_wins');
-			expect(game_array[1].time_control_id).toBe('Classical');
-			expect(game_array[1].time_control_name).toBe('Classical (90 + 30)');
+			expect(game_array[1].time_control_id).toBe(Classical);
+			expect(game_array[1].time_control_name).toBe(Classical90p30);
 			expect(game_array[1].when).toBe('2025-01-10..17:06:10:000');
 
 			expect(game_array[2].id).toBe('0000000014');
 			expect(game_array[2].white).toBe('e');
 			expect(game_array[2].black).toBe('f');
 			expect(game_array[2].result).toBe('draw');
-			expect(game_array[2].time_control_id).toBe('Classical');
-			expect(game_array[2].time_control_name).toBe('Classical (90 + 30)');
+			expect(game_array[2].time_control_id).toBe(Classical);
+			expect(game_array[2].time_control_name).toBe(Classical90p30);
 			expect(game_array[2].when).toBe('2025-01-10..17:06:20:000');
 
 			expect(game_array[3].id).toBe('0000000013');
 			expect(game_array[3].white).toBe('a');
 			expect(game_array[3].black).toBe('f');
 			expect(game_array[3].result).toBe('draw');
-			expect(game_array[3].time_control_id).toBe('Classical');
-			expect(game_array[3].time_control_name).toBe('Classical (90 + 30)');
+			expect(game_array[3].time_control_id).toBe(Classical);
+			expect(game_array[3].time_control_name).toBe(Classical90p30);
 			expect(game_array[3].when).toBe('2025-01-10..17:06:30:000');
 
-			expect(aU.get_games('Blitz').length).toBe(2);
-			expect(bU.get_games('Blitz').length).toBe(2);
-			expect(cU.get_games('Blitz').length).toBe(2);
-			expect(dU.get_games('Blitz').length).toBe(2);
-			expect(eU.get_games('Blitz').length).toBe(2);
-			expect(fU.get_games('Blitz').length).toBe(2);
-			expect(aU.get_games('Classical').length).toBe(2);
-			expect(bU.get_games('Classical').length).toBe(2);
-			expect(cU.get_games('Classical').length).toBe(2);
-			expect(dU.get_games('Classical').length).toBe(2);
-			expect(eU.get_games('Classical').length).toBe(2);
-			expect(fU.get_games('Classical').length).toBe(2);
+			expect(aU.get_games(Blitz).length).toBe(2);
+			expect(bU.get_games(Blitz).length).toBe(2);
+			expect(cU.get_games(Blitz).length).toBe(2);
+			expect(dU.get_games(Blitz).length).toBe(2);
+			expect(eU.get_games(Blitz).length).toBe(2);
+			expect(fU.get_games(Blitz).length).toBe(2);
+			expect(aU.get_games(Classical).length).toBe(2);
+			expect(bU.get_games(Classical).length).toBe(2);
+			expect(cU.get_games(Classical).length).toBe(2);
+			expect(dU.get_games(Classical).length).toBe(2);
+			expect(eU.get_games(Classical).length).toBe(2);
+			expect(fU.get_games(Classical).length).toBe(2);
 
-			expect(aU.get_rating('Blitz').num_won_drawn_lost()).toEqual([4, 2, 1, 1]);
-			expect(bU.get_rating('Blitz').num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
-			expect(cU.get_rating('Blitz').num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
-			expect(dU.get_rating('Blitz').num_won_drawn_lost()).toEqual([2, 2, 0, 0]);
-			expect(eU.get_rating('Blitz').num_won_drawn_lost()).toEqual([2, 0, 2, 0]);
-			expect(fU.get_rating('Blitz').num_won_drawn_lost()).toEqual([4, 1, 3, 0]);
-			expect(aU.get_rating('Classical').num_won_drawn_lost()).toEqual([4, 2, 1, 1]);
-			expect(bU.get_rating('Classical').num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
-			expect(cU.get_rating('Classical').num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
-			expect(dU.get_rating('Classical').num_won_drawn_lost()).toEqual([2, 2, 0, 0]);
-			expect(eU.get_rating('Classical').num_won_drawn_lost()).toEqual([2, 0, 2, 0]);
-			expect(fU.get_rating('Classical').num_won_drawn_lost()).toEqual([4, 1, 3, 0]);
+			expect(aU.get_rating(Blitz).num_won_drawn_lost()).toEqual([4, 2, 1, 1]);
+			expect(bU.get_rating(Blitz).num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
+			expect(cU.get_rating(Blitz).num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
+			expect(dU.get_rating(Blitz).num_won_drawn_lost()).toEqual([2, 2, 0, 0]);
+			expect(eU.get_rating(Blitz).num_won_drawn_lost()).toEqual([2, 0, 2, 0]);
+			expect(fU.get_rating(Blitz).num_won_drawn_lost()).toEqual([4, 1, 3, 0]);
+			expect(aU.get_rating(Classical).num_won_drawn_lost()).toEqual([4, 2, 1, 1]);
+			expect(bU.get_rating(Classical).num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
+			expect(cU.get_rating(Classical).num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
+			expect(dU.get_rating(Classical).num_won_drawn_lost()).toEqual([2, 2, 0, 0]);
+			expect(eU.get_rating(Classical).num_won_drawn_lost()).toEqual([2, 0, 2, 0]);
+			expect(fU.get_rating(Classical).num_won_drawn_lost()).toEqual([4, 1, 3, 0]);
 		}
 	});
 });
 
 describe('Zig-zag game creation', () => {
 	test('Add "Blitz" games', () => {
-		const blitz_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Blitz');
-		game_add_new('sample', u('a'), u('f'), 'draw', 'Blitz', 'Blitz (5 + 0)', '2025-01-20', '17:06:25:000');
+		const blitz_dir = EnvironmentManager.get_instance().get_dir_games_time_control(Blitz);
+		game_add_new('sample', u('a'), u('f'), 'draw', Blitz, Blitz5p0, '2025-01-20', '17:06:25:000');
 		{
 			const game_array = game_array_from_string(fs.readFileSync(path.join(blitz_dir, '2025-01-20'), 'utf8'));
 			expect(game_array).not.toBeNull();
@@ -1154,70 +1094,70 @@ describe('Zig-zag game creation', () => {
 			expect(game_array[0].white).toBe('a');
 			expect(game_array[0].black).toBe('b');
 			expect(game_array[0].result).toBe('white_wins');
-			expect(game_array[0].time_control_id).toBe('Blitz');
-			expect(game_array[0].time_control_name).toBe('Blitz (5 + 3)');
+			expect(game_array[0].time_control_id).toBe(Blitz);
+			expect(game_array[0].time_control_name).toBe(Blitz5p3);
 			expect(game_array[0].when).toBe('2025-01-20..17:06:00:000');
 
 			expect(game_array[1].id).toBe('0000000011');
 			expect(game_array[1].white).toBe('c');
 			expect(game_array[1].black).toBe('d');
 			expect(game_array[1].result).toBe('black_wins');
-			expect(game_array[1].time_control_id).toBe('Blitz');
-			expect(game_array[1].time_control_name).toBe('Blitz (5 + 3)');
+			expect(game_array[1].time_control_id).toBe(Blitz);
+			expect(game_array[1].time_control_name).toBe(Blitz5p3);
 			expect(game_array[1].when).toBe('2025-01-20..17:06:10:000');
 
 			expect(game_array[2].id).toBe('0000000010');
 			expect(game_array[2].white).toBe('e');
 			expect(game_array[2].black).toBe('f');
 			expect(game_array[2].result).toBe('draw');
-			expect(game_array[2].time_control_id).toBe('Blitz');
-			expect(game_array[2].time_control_name).toBe('Blitz (5 + 0)');
+			expect(game_array[2].time_control_id).toBe(Blitz);
+			expect(game_array[2].time_control_name).toBe(Blitz5p0);
 			expect(game_array[2].when).toBe('2025-01-20..17:06:20:000');
 
 			expect(game_array[3].id).toBe('0000000017');
 			expect(game_array[3].white).toBe('a');
 			expect(game_array[3].black).toBe('f');
 			expect(game_array[3].result).toBe('draw');
-			expect(game_array[3].time_control_id).toBe('Blitz');
-			expect(game_array[3].time_control_name).toBe('Blitz (5 + 0)');
+			expect(game_array[3].time_control_id).toBe(Blitz);
+			expect(game_array[3].time_control_name).toBe(Blitz5p0);
 			expect(game_array[3].when).toBe('2025-01-20..17:06:25:000');
 
 			expect(game_array[4].id).toBe('0000000009');
 			expect(game_array[4].white).toBe('a');
 			expect(game_array[4].black).toBe('f');
 			expect(game_array[4].result).toBe('draw');
-			expect(game_array[4].time_control_id).toBe('Blitz');
-			expect(game_array[4].time_control_name).toBe('Blitz (5 + 0)');
+			expect(game_array[4].time_control_id).toBe(Blitz);
+			expect(game_array[4].time_control_name).toBe(Blitz5p0);
 			expect(game_array[4].when).toBe('2025-01-20..17:06:30:000');
 
-			expect(aU.get_games('Blitz').length).toBe(2);
-			expect(bU.get_games('Blitz').length).toBe(2);
-			expect(cU.get_games('Blitz').length).toBe(2);
-			expect(dU.get_games('Blitz').length).toBe(2);
-			expect(eU.get_games('Blitz').length).toBe(2);
-			expect(fU.get_games('Blitz').length).toBe(2);
-			expect(aU.get_games('Classical').length).toBe(2);
-			expect(bU.get_games('Classical').length).toBe(2);
-			expect(cU.get_games('Classical').length).toBe(2);
-			expect(dU.get_games('Classical').length).toBe(2);
-			expect(eU.get_games('Classical').length).toBe(2);
-			expect(fU.get_games('Classical').length).toBe(2);
+			expect(aU.get_games(Blitz).length).toBe(2);
+			expect(bU.get_games(Blitz).length).toBe(2);
+			expect(cU.get_games(Blitz).length).toBe(2);
+			expect(dU.get_games(Blitz).length).toBe(2);
+			expect(eU.get_games(Blitz).length).toBe(2);
+			expect(fU.get_games(Blitz).length).toBe(2);
+			expect(aU.get_games(Classical).length).toBe(2);
+			expect(bU.get_games(Classical).length).toBe(2);
+			expect(cU.get_games(Classical).length).toBe(2);
+			expect(dU.get_games(Classical).length).toBe(2);
+			expect(eU.get_games(Classical).length).toBe(2);
+			expect(fU.get_games(Classical).length).toBe(2);
 
-			expect(aU.get_rating('Blitz').num_won_drawn_lost()).toEqual([5, 2, 2, 1]);
-			expect(bU.get_rating('Blitz').num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
-			expect(cU.get_rating('Blitz').num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
-			expect(dU.get_rating('Blitz').num_won_drawn_lost()).toEqual([2, 2, 0, 0]);
-			expect(eU.get_rating('Blitz').num_won_drawn_lost()).toEqual([2, 0, 2, 0]);
-			expect(fU.get_rating('Blitz').num_won_drawn_lost()).toEqual([5, 1, 4, 0]);
-			expect(aU.get_rating('Classical').num_won_drawn_lost()).toEqual([4, 2, 1, 1]);
-			expect(bU.get_rating('Classical').num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
-			expect(cU.get_rating('Classical').num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
-			expect(dU.get_rating('Classical').num_won_drawn_lost()).toEqual([2, 2, 0, 0]);
-			expect(eU.get_rating('Classical').num_won_drawn_lost()).toEqual([2, 0, 2, 0]);
-			expect(fU.get_rating('Classical').num_won_drawn_lost()).toEqual([4, 1, 3, 0]);
+			expect(aU.get_rating(Blitz).num_won_drawn_lost()).toEqual([5, 2, 2, 1]);
+			expect(bU.get_rating(Blitz).num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
+			expect(cU.get_rating(Blitz).num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
+			expect(dU.get_rating(Blitz).num_won_drawn_lost()).toEqual([2, 2, 0, 0]);
+			expect(eU.get_rating(Blitz).num_won_drawn_lost()).toEqual([2, 0, 2, 0]);
+			expect(fU.get_rating(Blitz).num_won_drawn_lost()).toEqual([5, 1, 4, 0]);
+			expect(aU.get_rating(Classical).num_won_drawn_lost()).toEqual([4, 2, 1, 1]);
+			expect(bU.get_rating(Classical).num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
+			expect(cU.get_rating(Classical).num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
+			expect(dU.get_rating(Classical).num_won_drawn_lost()).toEqual([2, 2, 0, 0]);
+			expect(eU.get_rating(Classical).num_won_drawn_lost()).toEqual([2, 0, 2, 0]);
+			expect(fU.get_rating(Classical).num_won_drawn_lost()).toEqual([4, 1, 3, 0]);
 		}
 
-		game_add_new('sample', u('e'), u('f'), 'draw', 'Blitz', 'Blitz (5 + 0)', '2025-01-20', '17:06:05:000');
+		game_add_new('sample', u('e'), u('f'), 'draw', Blitz, Blitz5p0, '2025-01-20', '17:06:05:000');
 		{
 			const game_array = game_array_from_string(fs.readFileSync(path.join(blitz_dir, '2025-01-20'), 'utf8'));
 			expect(game_array).not.toBeNull();
@@ -1230,78 +1170,78 @@ describe('Zig-zag game creation', () => {
 			expect(game_array[0].white).toBe('a');
 			expect(game_array[0].black).toBe('b');
 			expect(game_array[0].result).toBe('white_wins');
-			expect(game_array[0].time_control_id).toBe('Blitz');
-			expect(game_array[0].time_control_name).toBe('Blitz (5 + 3)');
+			expect(game_array[0].time_control_id).toBe(Blitz);
+			expect(game_array[0].time_control_name).toBe(Blitz5p3);
 			expect(game_array[0].when).toBe('2025-01-20..17:06:00:000');
 
 			expect(game_array[1].id).toBe('0000000018');
 			expect(game_array[1].white).toBe('e');
 			expect(game_array[1].black).toBe('f');
 			expect(game_array[1].result).toBe('draw');
-			expect(game_array[1].time_control_id).toBe('Blitz');
-			expect(game_array[1].time_control_name).toBe('Blitz (5 + 0)');
+			expect(game_array[1].time_control_id).toBe(Blitz);
+			expect(game_array[1].time_control_name).toBe(Blitz5p0);
 			expect(game_array[1].when).toBe('2025-01-20..17:06:05:000');
 
 			expect(game_array[2].id).toBe('0000000011');
 			expect(game_array[2].white).toBe('c');
 			expect(game_array[2].black).toBe('d');
 			expect(game_array[2].result).toBe('black_wins');
-			expect(game_array[2].time_control_id).toBe('Blitz');
-			expect(game_array[2].time_control_name).toBe('Blitz (5 + 3)');
+			expect(game_array[2].time_control_id).toBe(Blitz);
+			expect(game_array[2].time_control_name).toBe(Blitz5p3);
 			expect(game_array[2].when).toBe('2025-01-20..17:06:10:000');
 
 			expect(game_array[3].id).toBe('0000000010');
 			expect(game_array[3].white).toBe('e');
 			expect(game_array[3].black).toBe('f');
 			expect(game_array[3].result).toBe('draw');
-			expect(game_array[3].time_control_id).toBe('Blitz');
-			expect(game_array[3].time_control_name).toBe('Blitz (5 + 0)');
+			expect(game_array[3].time_control_id).toBe(Blitz);
+			expect(game_array[3].time_control_name).toBe(Blitz5p0);
 			expect(game_array[3].when).toBe('2025-01-20..17:06:20:000');
 
 			expect(game_array[4].id).toBe('0000000017');
 			expect(game_array[4].white).toBe('a');
 			expect(game_array[4].black).toBe('f');
 			expect(game_array[4].result).toBe('draw');
-			expect(game_array[4].time_control_id).toBe('Blitz');
-			expect(game_array[4].time_control_name).toBe('Blitz (5 + 0)');
+			expect(game_array[4].time_control_id).toBe(Blitz);
+			expect(game_array[4].time_control_name).toBe(Blitz5p0);
 			expect(game_array[4].when).toBe('2025-01-20..17:06:25:000');
 
 			expect(game_array[5].id).toBe('0000000009');
 			expect(game_array[5].white).toBe('a');
 			expect(game_array[5].black).toBe('f');
 			expect(game_array[5].result).toBe('draw');
-			expect(game_array[5].time_control_id).toBe('Blitz');
-			expect(game_array[5].time_control_name).toBe('Blitz (5 + 0)');
+			expect(game_array[5].time_control_id).toBe(Blitz);
+			expect(game_array[5].time_control_name).toBe(Blitz5p0);
 			expect(game_array[5].when).toBe('2025-01-20..17:06:30:000');
 
-			expect(aU.get_games('Blitz').length).toBe(2);
-			expect(bU.get_games('Blitz').length).toBe(2);
-			expect(cU.get_games('Blitz').length).toBe(2);
-			expect(dU.get_games('Blitz').length).toBe(2);
-			expect(eU.get_games('Blitz').length).toBe(2);
-			expect(fU.get_games('Blitz').length).toBe(2);
-			expect(aU.get_games('Classical').length).toBe(2);
-			expect(bU.get_games('Classical').length).toBe(2);
-			expect(cU.get_games('Classical').length).toBe(2);
-			expect(dU.get_games('Classical').length).toBe(2);
-			expect(eU.get_games('Classical').length).toBe(2);
-			expect(fU.get_games('Classical').length).toBe(2);
+			expect(aU.get_games(Blitz).length).toBe(2);
+			expect(bU.get_games(Blitz).length).toBe(2);
+			expect(cU.get_games(Blitz).length).toBe(2);
+			expect(dU.get_games(Blitz).length).toBe(2);
+			expect(eU.get_games(Blitz).length).toBe(2);
+			expect(fU.get_games(Blitz).length).toBe(2);
+			expect(aU.get_games(Classical).length).toBe(2);
+			expect(bU.get_games(Classical).length).toBe(2);
+			expect(cU.get_games(Classical).length).toBe(2);
+			expect(dU.get_games(Classical).length).toBe(2);
+			expect(eU.get_games(Classical).length).toBe(2);
+			expect(fU.get_games(Classical).length).toBe(2);
 
-			expect(aU.get_rating('Blitz').num_won_drawn_lost()).toEqual([5, 2, 2, 1]);
-			expect(bU.get_rating('Blitz').num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
-			expect(cU.get_rating('Blitz').num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
-			expect(dU.get_rating('Blitz').num_won_drawn_lost()).toEqual([2, 2, 0, 0]);
-			expect(eU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
-			expect(fU.get_rating('Blitz').num_won_drawn_lost()).toEqual([6, 1, 5, 0]);
-			expect(aU.get_rating('Classical').num_won_drawn_lost()).toEqual([4, 2, 1, 1]);
-			expect(bU.get_rating('Classical').num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
-			expect(cU.get_rating('Classical').num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
-			expect(dU.get_rating('Classical').num_won_drawn_lost()).toEqual([2, 2, 0, 0]);
-			expect(eU.get_rating('Classical').num_won_drawn_lost()).toEqual([2, 0, 2, 0]);
-			expect(fU.get_rating('Classical').num_won_drawn_lost()).toEqual([4, 1, 3, 0]);
+			expect(aU.get_rating(Blitz).num_won_drawn_lost()).toEqual([5, 2, 2, 1]);
+			expect(bU.get_rating(Blitz).num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
+			expect(cU.get_rating(Blitz).num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
+			expect(dU.get_rating(Blitz).num_won_drawn_lost()).toEqual([2, 2, 0, 0]);
+			expect(eU.get_rating(Blitz).num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
+			expect(fU.get_rating(Blitz).num_won_drawn_lost()).toEqual([6, 1, 5, 0]);
+			expect(aU.get_rating(Classical).num_won_drawn_lost()).toEqual([4, 2, 1, 1]);
+			expect(bU.get_rating(Classical).num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
+			expect(cU.get_rating(Classical).num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
+			expect(dU.get_rating(Classical).num_won_drawn_lost()).toEqual([2, 2, 0, 0]);
+			expect(eU.get_rating(Classical).num_won_drawn_lost()).toEqual([2, 0, 2, 0]);
+			expect(fU.get_rating(Classical).num_won_drawn_lost()).toEqual([4, 1, 3, 0]);
 		}
 
-		game_add_new('sample', u('c'), u('d'), 'white_wins', 'Blitz', 'Blitz (5 + 3)', '2025-01-20', '17:06:15:000');
+		game_add_new('sample', u('c'), u('d'), 'white_wins', Blitz, Blitz5p3, '2025-01-20', '17:06:15:000');
 		{
 			const game_array = game_array_from_string(fs.readFileSync(path.join(blitz_dir, '2025-01-20'), 'utf8'));
 			expect(game_array).not.toBeNull();
@@ -1314,86 +1254,86 @@ describe('Zig-zag game creation', () => {
 			expect(game_array[0].white).toBe('a');
 			expect(game_array[0].black).toBe('b');
 			expect(game_array[0].result).toBe('white_wins');
-			expect(game_array[0].time_control_id).toBe('Blitz');
-			expect(game_array[0].time_control_name).toBe('Blitz (5 + 3)');
+			expect(game_array[0].time_control_id).toBe(Blitz);
+			expect(game_array[0].time_control_name).toBe(Blitz5p3);
 			expect(game_array[0].when).toBe('2025-01-20..17:06:00:000');
 
 			expect(game_array[1].id).toBe('0000000018');
 			expect(game_array[1].white).toBe('e');
 			expect(game_array[1].black).toBe('f');
 			expect(game_array[1].result).toBe('draw');
-			expect(game_array[1].time_control_id).toBe('Blitz');
-			expect(game_array[1].time_control_name).toBe('Blitz (5 + 0)');
+			expect(game_array[1].time_control_id).toBe(Blitz);
+			expect(game_array[1].time_control_name).toBe(Blitz5p0);
 			expect(game_array[1].when).toBe('2025-01-20..17:06:05:000');
 
 			expect(game_array[2].id).toBe('0000000011');
 			expect(game_array[2].white).toBe('c');
 			expect(game_array[2].black).toBe('d');
 			expect(game_array[2].result).toBe('black_wins');
-			expect(game_array[2].time_control_id).toBe('Blitz');
-			expect(game_array[2].time_control_name).toBe('Blitz (5 + 3)');
+			expect(game_array[2].time_control_id).toBe(Blitz);
+			expect(game_array[2].time_control_name).toBe(Blitz5p3);
 			expect(game_array[2].when).toBe('2025-01-20..17:06:10:000');
 
 			expect(game_array[3].id).toBe('0000000019');
 			expect(game_array[3].white).toBe('c');
 			expect(game_array[3].black).toBe('d');
 			expect(game_array[3].result).toBe('white_wins');
-			expect(game_array[3].time_control_id).toBe('Blitz');
-			expect(game_array[3].time_control_name).toBe('Blitz (5 + 3)');
+			expect(game_array[3].time_control_id).toBe(Blitz);
+			expect(game_array[3].time_control_name).toBe(Blitz5p3);
 			expect(game_array[3].when).toBe('2025-01-20..17:06:15:000');
 
 			expect(game_array[4].id).toBe('0000000010');
 			expect(game_array[4].white).toBe('e');
 			expect(game_array[4].black).toBe('f');
 			expect(game_array[4].result).toBe('draw');
-			expect(game_array[4].time_control_id).toBe('Blitz');
-			expect(game_array[4].time_control_name).toBe('Blitz (5 + 0)');
+			expect(game_array[4].time_control_id).toBe(Blitz);
+			expect(game_array[4].time_control_name).toBe(Blitz5p0);
 			expect(game_array[4].when).toBe('2025-01-20..17:06:20:000');
 
 			expect(game_array[5].id).toBe('0000000017');
 			expect(game_array[5].white).toBe('a');
 			expect(game_array[5].black).toBe('f');
 			expect(game_array[5].result).toBe('draw');
-			expect(game_array[5].time_control_id).toBe('Blitz');
-			expect(game_array[5].time_control_name).toBe('Blitz (5 + 0)');
+			expect(game_array[5].time_control_id).toBe(Blitz);
+			expect(game_array[5].time_control_name).toBe(Blitz5p0);
 			expect(game_array[5].when).toBe('2025-01-20..17:06:25:000');
 
 			expect(game_array[6].id).toBe('0000000009');
 			expect(game_array[6].white).toBe('a');
 			expect(game_array[6].black).toBe('f');
 			expect(game_array[6].result).toBe('draw');
-			expect(game_array[6].time_control_id).toBe('Blitz');
-			expect(game_array[6].time_control_name).toBe('Blitz (5 + 0)');
+			expect(game_array[6].time_control_id).toBe(Blitz);
+			expect(game_array[6].time_control_name).toBe(Blitz5p0);
 			expect(game_array[6].when).toBe('2025-01-20..17:06:30:000');
 
-			expect(aU.get_games('Blitz').length).toBe(2);
-			expect(bU.get_games('Blitz').length).toBe(2);
-			expect(cU.get_games('Blitz').length).toBe(2);
-			expect(dU.get_games('Blitz').length).toBe(2);
-			expect(eU.get_games('Blitz').length).toBe(2);
-			expect(fU.get_games('Blitz').length).toBe(2);
-			expect(aU.get_games('Classical').length).toBe(2);
-			expect(bU.get_games('Classical').length).toBe(2);
-			expect(cU.get_games('Classical').length).toBe(2);
-			expect(dU.get_games('Classical').length).toBe(2);
-			expect(eU.get_games('Classical').length).toBe(2);
-			expect(fU.get_games('Classical').length).toBe(2);
+			expect(aU.get_games(Blitz).length).toBe(2);
+			expect(bU.get_games(Blitz).length).toBe(2);
+			expect(cU.get_games(Blitz).length).toBe(2);
+			expect(dU.get_games(Blitz).length).toBe(2);
+			expect(eU.get_games(Blitz).length).toBe(2);
+			expect(fU.get_games(Blitz).length).toBe(2);
+			expect(aU.get_games(Classical).length).toBe(2);
+			expect(bU.get_games(Classical).length).toBe(2);
+			expect(cU.get_games(Classical).length).toBe(2);
+			expect(dU.get_games(Classical).length).toBe(2);
+			expect(eU.get_games(Classical).length).toBe(2);
+			expect(fU.get_games(Classical).length).toBe(2);
 
-			expect(aU.get_rating('Blitz').num_won_drawn_lost()).toEqual([5, 2, 2, 1]);
-			expect(bU.get_rating('Blitz').num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
-			expect(cU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
-			expect(dU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 2, 0, 1]);
-			expect(eU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
-			expect(fU.get_rating('Blitz').num_won_drawn_lost()).toEqual([6, 1, 5, 0]);
-			expect(aU.get_rating('Classical').num_won_drawn_lost()).toEqual([4, 2, 1, 1]);
-			expect(bU.get_rating('Classical').num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
-			expect(cU.get_rating('Classical').num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
-			expect(dU.get_rating('Classical').num_won_drawn_lost()).toEqual([2, 2, 0, 0]);
-			expect(eU.get_rating('Classical').num_won_drawn_lost()).toEqual([2, 0, 2, 0]);
-			expect(fU.get_rating('Classical').num_won_drawn_lost()).toEqual([4, 1, 3, 0]);
+			expect(aU.get_rating(Blitz).num_won_drawn_lost()).toEqual([5, 2, 2, 1]);
+			expect(bU.get_rating(Blitz).num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
+			expect(cU.get_rating(Blitz).num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
+			expect(dU.get_rating(Blitz).num_won_drawn_lost()).toEqual([3, 2, 0, 1]);
+			expect(eU.get_rating(Blitz).num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
+			expect(fU.get_rating(Blitz).num_won_drawn_lost()).toEqual([6, 1, 5, 0]);
+			expect(aU.get_rating(Classical).num_won_drawn_lost()).toEqual([4, 2, 1, 1]);
+			expect(bU.get_rating(Classical).num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
+			expect(cU.get_rating(Classical).num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
+			expect(dU.get_rating(Classical).num_won_drawn_lost()).toEqual([2, 2, 0, 0]);
+			expect(eU.get_rating(Classical).num_won_drawn_lost()).toEqual([2, 0, 2, 0]);
+			expect(fU.get_rating(Classical).num_won_drawn_lost()).toEqual([4, 1, 3, 0]);
 		}
 
-		game_add_new('sample', u('a'), u('b'), 'black_wins', 'Blitz', 'Blitz (5 + 3)', '2025-01-20', '17:05:55:000');
+		game_add_new('sample', u('a'), u('b'), 'black_wins', Blitz, Blitz5p3, '2025-01-20', '17:05:55:000');
 		{
 			const game_array = game_array_from_string(fs.readFileSync(path.join(blitz_dir, '2025-01-20'), 'utf8'));
 			expect(game_array).not.toBeNull();
@@ -1406,106 +1346,97 @@ describe('Zig-zag game creation', () => {
 			expect(game_array[0].white).toBe('a');
 			expect(game_array[0].black).toBe('b');
 			expect(game_array[0].result).toBe('black_wins');
-			expect(game_array[0].time_control_id).toBe('Blitz');
-			expect(game_array[0].time_control_name).toBe('Blitz (5 + 3)');
+			expect(game_array[0].time_control_id).toBe(Blitz);
+			expect(game_array[0].time_control_name).toBe(Blitz5p3);
 			expect(game_array[0].when).toBe('2025-01-20..17:05:55:000');
 
 			expect(game_array[1].id).toBe('0000000012');
 			expect(game_array[1].white).toBe('a');
 			expect(game_array[1].black).toBe('b');
 			expect(game_array[1].result).toBe('white_wins');
-			expect(game_array[1].time_control_id).toBe('Blitz');
-			expect(game_array[1].time_control_name).toBe('Blitz (5 + 3)');
+			expect(game_array[1].time_control_id).toBe(Blitz);
+			expect(game_array[1].time_control_name).toBe(Blitz5p3);
 			expect(game_array[1].when).toBe('2025-01-20..17:06:00:000');
 
 			expect(game_array[2].id).toBe('0000000018');
 			expect(game_array[2].white).toBe('e');
 			expect(game_array[2].black).toBe('f');
 			expect(game_array[2].result).toBe('draw');
-			expect(game_array[2].time_control_id).toBe('Blitz');
-			expect(game_array[2].time_control_name).toBe('Blitz (5 + 0)');
+			expect(game_array[2].time_control_id).toBe(Blitz);
+			expect(game_array[2].time_control_name).toBe(Blitz5p0);
 			expect(game_array[2].when).toBe('2025-01-20..17:06:05:000');
 
 			expect(game_array[3].id).toBe('0000000011');
 			expect(game_array[3].white).toBe('c');
 			expect(game_array[3].black).toBe('d');
 			expect(game_array[3].result).toBe('black_wins');
-			expect(game_array[3].time_control_id).toBe('Blitz');
-			expect(game_array[3].time_control_name).toBe('Blitz (5 + 3)');
+			expect(game_array[3].time_control_id).toBe(Blitz);
+			expect(game_array[3].time_control_name).toBe(Blitz5p3);
 			expect(game_array[3].when).toBe('2025-01-20..17:06:10:000');
 
 			expect(game_array[4].id).toBe('0000000019');
 			expect(game_array[4].white).toBe('c');
 			expect(game_array[4].black).toBe('d');
 			expect(game_array[4].result).toBe('white_wins');
-			expect(game_array[4].time_control_id).toBe('Blitz');
-			expect(game_array[4].time_control_name).toBe('Blitz (5 + 3)');
+			expect(game_array[4].time_control_id).toBe(Blitz);
+			expect(game_array[4].time_control_name).toBe(Blitz5p3);
 			expect(game_array[4].when).toBe('2025-01-20..17:06:15:000');
 
 			expect(game_array[5].id).toBe('0000000010');
 			expect(game_array[5].white).toBe('e');
 			expect(game_array[5].black).toBe('f');
 			expect(game_array[5].result).toBe('draw');
-			expect(game_array[5].time_control_id).toBe('Blitz');
-			expect(game_array[5].time_control_name).toBe('Blitz (5 + 0)');
+			expect(game_array[5].time_control_id).toBe(Blitz);
+			expect(game_array[5].time_control_name).toBe(Blitz5p0);
 			expect(game_array[5].when).toBe('2025-01-20..17:06:20:000');
 
 			expect(game_array[6].id).toBe('0000000017');
 			expect(game_array[6].white).toBe('a');
 			expect(game_array[6].black).toBe('f');
 			expect(game_array[6].result).toBe('draw');
-			expect(game_array[6].time_control_id).toBe('Blitz');
-			expect(game_array[6].time_control_name).toBe('Blitz (5 + 0)');
+			expect(game_array[6].time_control_id).toBe(Blitz);
+			expect(game_array[6].time_control_name).toBe(Blitz5p0);
 			expect(game_array[6].when).toBe('2025-01-20..17:06:25:000');
 
 			expect(game_array[7].id).toBe('0000000009');
 			expect(game_array[7].white).toBe('a');
 			expect(game_array[7].black).toBe('f');
 			expect(game_array[7].result).toBe('draw');
-			expect(game_array[7].time_control_id).toBe('Blitz');
-			expect(game_array[7].time_control_name).toBe('Blitz (5 + 0)');
+			expect(game_array[7].time_control_id).toBe(Blitz);
+			expect(game_array[7].time_control_name).toBe(Blitz5p0);
 			expect(game_array[7].when).toBe('2025-01-20..17:06:30:000');
 
-			expect(aU.get_games('Blitz').length).toBe(2);
-			expect(bU.get_games('Blitz').length).toBe(2);
-			expect(cU.get_games('Blitz').length).toBe(2);
-			expect(dU.get_games('Blitz').length).toBe(2);
-			expect(eU.get_games('Blitz').length).toBe(2);
-			expect(fU.get_games('Blitz').length).toBe(2);
-			expect(aU.get_games('Classical').length).toBe(2);
-			expect(bU.get_games('Classical').length).toBe(2);
-			expect(cU.get_games('Classical').length).toBe(2);
-			expect(dU.get_games('Classical').length).toBe(2);
-			expect(eU.get_games('Classical').length).toBe(2);
-			expect(fU.get_games('Classical').length).toBe(2);
+			expect(aU.get_games(Blitz).length).toBe(2);
+			expect(bU.get_games(Blitz).length).toBe(2);
+			expect(cU.get_games(Blitz).length).toBe(2);
+			expect(dU.get_games(Blitz).length).toBe(2);
+			expect(eU.get_games(Blitz).length).toBe(2);
+			expect(fU.get_games(Blitz).length).toBe(2);
+			expect(aU.get_games(Classical).length).toBe(2);
+			expect(bU.get_games(Classical).length).toBe(2);
+			expect(cU.get_games(Classical).length).toBe(2);
+			expect(dU.get_games(Classical).length).toBe(2);
+			expect(eU.get_games(Classical).length).toBe(2);
+			expect(fU.get_games(Classical).length).toBe(2);
 
-			expect(aU.get_rating('Blitz').num_won_drawn_lost()).toEqual([6, 2, 2, 2]);
-			expect(bU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
-			expect(cU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
-			expect(dU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 2, 0, 1]);
-			expect(eU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
-			expect(fU.get_rating('Blitz').num_won_drawn_lost()).toEqual([6, 1, 5, 0]);
-			expect(aU.get_rating('Classical').num_won_drawn_lost()).toEqual([4, 2, 1, 1]);
-			expect(bU.get_rating('Classical').num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
-			expect(cU.get_rating('Classical').num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
-			expect(dU.get_rating('Classical').num_won_drawn_lost()).toEqual([2, 2, 0, 0]);
-			expect(eU.get_rating('Classical').num_won_drawn_lost()).toEqual([2, 0, 2, 0]);
-			expect(fU.get_rating('Classical').num_won_drawn_lost()).toEqual([4, 1, 3, 0]);
+			expect(aU.get_rating(Blitz).num_won_drawn_lost()).toEqual([6, 2, 2, 2]);
+			expect(bU.get_rating(Blitz).num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
+			expect(cU.get_rating(Blitz).num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
+			expect(dU.get_rating(Blitz).num_won_drawn_lost()).toEqual([3, 2, 0, 1]);
+			expect(eU.get_rating(Blitz).num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
+			expect(fU.get_rating(Blitz).num_won_drawn_lost()).toEqual([6, 1, 5, 0]);
+			expect(aU.get_rating(Classical).num_won_drawn_lost()).toEqual([4, 2, 1, 1]);
+			expect(bU.get_rating(Classical).num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
+			expect(cU.get_rating(Classical).num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
+			expect(dU.get_rating(Classical).num_won_drawn_lost()).toEqual([2, 2, 0, 0]);
+			expect(eU.get_rating(Classical).num_won_drawn_lost()).toEqual([2, 0, 2, 0]);
+			expect(fU.get_rating(Classical).num_won_drawn_lost()).toEqual([4, 1, 3, 0]);
 		}
 	});
 
 	test('Add "Classical" games', () => {
-		const blitz_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Classical');
-		game_add_new(
-			'sample',
-			u('a'),
-			u('f'),
-			'draw',
-			'Classical',
-			'Classical (90 + 30)',
-			'2025-01-10',
-			'17:06:25:000'
-		);
+		const blitz_dir = EnvironmentManager.get_instance().get_dir_games_time_control(Classical);
+		game_add_new('sample', u('a'), u('f'), 'draw', Classical, Classical90p30, '2025-01-10', '17:06:25:000');
 		{
 			const game_array = game_array_from_string(fs.readFileSync(path.join(blitz_dir, '2025-01-10'), 'utf8'));
 			expect(game_array).not.toBeNull();
@@ -1518,79 +1449,70 @@ describe('Zig-zag game creation', () => {
 			expect(game_array[0].white).toBe('a');
 			expect(game_array[0].black).toBe('b');
 			expect(game_array[0].result).toBe('white_wins');
-			expect(game_array[0].time_control_id).toBe('Classical');
-			expect(game_array[0].time_control_name).toBe('Classical (90 + 30)');
+			expect(game_array[0].time_control_id).toBe(Classical);
+			expect(game_array[0].time_control_name).toBe(Classical90p30);
 			expect(game_array[0].when).toBe('2025-01-10..17:06:00:000');
 
 			expect(game_array[1].id).toBe('0000000015');
 			expect(game_array[1].white).toBe('c');
 			expect(game_array[1].black).toBe('d');
 			expect(game_array[1].result).toBe('black_wins');
-			expect(game_array[1].time_control_id).toBe('Classical');
-			expect(game_array[1].time_control_name).toBe('Classical (90 + 30)');
+			expect(game_array[1].time_control_id).toBe(Classical);
+			expect(game_array[1].time_control_name).toBe(Classical90p30);
 			expect(game_array[1].when).toBe('2025-01-10..17:06:10:000');
 
 			expect(game_array[2].id).toBe('0000000014');
 			expect(game_array[2].white).toBe('e');
 			expect(game_array[2].black).toBe('f');
 			expect(game_array[2].result).toBe('draw');
-			expect(game_array[2].time_control_id).toBe('Classical');
-			expect(game_array[2].time_control_name).toBe('Classical (90 + 30)');
+			expect(game_array[2].time_control_id).toBe(Classical);
+			expect(game_array[2].time_control_name).toBe(Classical90p30);
 			expect(game_array[2].when).toBe('2025-01-10..17:06:20:000');
 
 			expect(game_array[3].id).toBe('0000000021');
 			expect(game_array[3].white).toBe('a');
 			expect(game_array[3].black).toBe('f');
 			expect(game_array[3].result).toBe('draw');
-			expect(game_array[3].time_control_id).toBe('Classical');
-			expect(game_array[3].time_control_name).toBe('Classical (90 + 30)');
+			expect(game_array[3].time_control_id).toBe(Classical);
+			expect(game_array[3].time_control_name).toBe(Classical90p30);
 			expect(game_array[3].when).toBe('2025-01-10..17:06:25:000');
 
 			expect(game_array[4].id).toBe('0000000013');
 			expect(game_array[4].white).toBe('a');
 			expect(game_array[4].black).toBe('f');
 			expect(game_array[4].result).toBe('draw');
-			expect(game_array[4].time_control_id).toBe('Classical');
-			expect(game_array[4].time_control_name).toBe('Classical (90 + 30)');
+			expect(game_array[4].time_control_id).toBe(Classical);
+			expect(game_array[4].time_control_name).toBe(Classical90p30);
 			expect(game_array[4].when).toBe('2025-01-10..17:06:30:000');
 
-			expect(aU.get_games('Classical').length).toBe(2);
-			expect(bU.get_games('Classical').length).toBe(2);
-			expect(cU.get_games('Classical').length).toBe(2);
-			expect(dU.get_games('Classical').length).toBe(2);
-			expect(eU.get_games('Classical').length).toBe(2);
-			expect(fU.get_games('Classical').length).toBe(2);
-			expect(aU.get_games('Classical').length).toBe(2);
-			expect(bU.get_games('Classical').length).toBe(2);
-			expect(cU.get_games('Classical').length).toBe(2);
-			expect(dU.get_games('Classical').length).toBe(2);
-			expect(eU.get_games('Classical').length).toBe(2);
-			expect(fU.get_games('Classical').length).toBe(2);
+			expect(aU.get_games(Classical).length).toBe(2);
+			expect(bU.get_games(Classical).length).toBe(2);
+			expect(cU.get_games(Classical).length).toBe(2);
+			expect(dU.get_games(Classical).length).toBe(2);
+			expect(eU.get_games(Classical).length).toBe(2);
+			expect(fU.get_games(Classical).length).toBe(2);
+			expect(aU.get_games(Classical).length).toBe(2);
+			expect(bU.get_games(Classical).length).toBe(2);
+			expect(cU.get_games(Classical).length).toBe(2);
+			expect(dU.get_games(Classical).length).toBe(2);
+			expect(eU.get_games(Classical).length).toBe(2);
+			expect(fU.get_games(Classical).length).toBe(2);
 
-			expect(aU.get_rating('Blitz').num_won_drawn_lost()).toEqual([6, 2, 2, 2]);
-			expect(bU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
-			expect(cU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
-			expect(dU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 2, 0, 1]);
-			expect(eU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
-			expect(fU.get_rating('Blitz').num_won_drawn_lost()).toEqual([6, 1, 5, 0]);
-			expect(aU.get_rating('Classical').num_won_drawn_lost()).toEqual([5, 2, 2, 1]);
-			expect(bU.get_rating('Classical').num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
-			expect(cU.get_rating('Classical').num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
-			expect(dU.get_rating('Classical').num_won_drawn_lost()).toEqual([2, 2, 0, 0]);
-			expect(eU.get_rating('Classical').num_won_drawn_lost()).toEqual([2, 0, 2, 0]);
-			expect(fU.get_rating('Classical').num_won_drawn_lost()).toEqual([5, 1, 4, 0]);
+			expect(aU.get_rating(Blitz).num_won_drawn_lost()).toEqual([6, 2, 2, 2]);
+			expect(bU.get_rating(Blitz).num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
+			expect(cU.get_rating(Blitz).num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
+			expect(dU.get_rating(Blitz).num_won_drawn_lost()).toEqual([3, 2, 0, 1]);
+			expect(eU.get_rating(Blitz).num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
+			expect(fU.get_rating(Blitz).num_won_drawn_lost()).toEqual([6, 1, 5, 0]);
+			expect(aU.get_rating(Classical).num_won_drawn_lost()).toEqual([5, 2, 2, 1]);
+			expect(bU.get_rating(Classical).num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
+			expect(cU.get_rating(Classical).num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
+			expect(dU.get_rating(Classical).num_won_drawn_lost()).toEqual([2, 2, 0, 0]);
+			expect(eU.get_rating(Classical).num_won_drawn_lost()).toEqual([2, 0, 2, 0]);
+			expect(fU.get_rating(Classical).num_won_drawn_lost()).toEqual([5, 1, 4, 0]);
 		}
 
-		game_add_new(
-			'sample',
-			u('e'),
-			u('f'),
-			'draw',
-			'Classical',
-			'Classical (90 + 30)',
-			'2025-01-10',
-			'17:06:05:000'
-		);
+		game_add_new('sample', u('e'), u('f'), 'draw', Classical, Classical90p30, '2025-01-10', '17:06:05:000');
 		{
 			const game_array = game_array_from_string(fs.readFileSync(path.join(blitz_dir, '2025-01-10'), 'utf8'));
 			expect(game_array).not.toBeNull();
@@ -1603,87 +1525,78 @@ describe('Zig-zag game creation', () => {
 			expect(game_array[0].white).toBe('a');
 			expect(game_array[0].black).toBe('b');
 			expect(game_array[0].result).toBe('white_wins');
-			expect(game_array[0].time_control_id).toBe('Classical');
-			expect(game_array[0].time_control_name).toBe('Classical (90 + 30)');
+			expect(game_array[0].time_control_id).toBe(Classical);
+			expect(game_array[0].time_control_name).toBe(Classical90p30);
 			expect(game_array[0].when).toBe('2025-01-10..17:06:00:000');
 
 			expect(game_array[1].id).toBe('0000000022');
 			expect(game_array[1].white).toBe('e');
 			expect(game_array[1].black).toBe('f');
 			expect(game_array[1].result).toBe('draw');
-			expect(game_array[1].time_control_id).toBe('Classical');
-			expect(game_array[1].time_control_name).toBe('Classical (90 + 30)');
+			expect(game_array[1].time_control_id).toBe(Classical);
+			expect(game_array[1].time_control_name).toBe(Classical90p30);
 			expect(game_array[1].when).toBe('2025-01-10..17:06:05:000');
 
 			expect(game_array[2].id).toBe('0000000015');
 			expect(game_array[2].white).toBe('c');
 			expect(game_array[2].black).toBe('d');
 			expect(game_array[2].result).toBe('black_wins');
-			expect(game_array[2].time_control_id).toBe('Classical');
-			expect(game_array[2].time_control_name).toBe('Classical (90 + 30)');
+			expect(game_array[2].time_control_id).toBe(Classical);
+			expect(game_array[2].time_control_name).toBe(Classical90p30);
 			expect(game_array[2].when).toBe('2025-01-10..17:06:10:000');
 
 			expect(game_array[3].id).toBe('0000000014');
 			expect(game_array[3].white).toBe('e');
 			expect(game_array[3].black).toBe('f');
 			expect(game_array[3].result).toBe('draw');
-			expect(game_array[3].time_control_id).toBe('Classical');
-			expect(game_array[3].time_control_name).toBe('Classical (90 + 30)');
+			expect(game_array[3].time_control_id).toBe(Classical);
+			expect(game_array[3].time_control_name).toBe(Classical90p30);
 			expect(game_array[3].when).toBe('2025-01-10..17:06:20:000');
 
 			expect(game_array[4].id).toBe('0000000021');
 			expect(game_array[4].white).toBe('a');
 			expect(game_array[4].black).toBe('f');
 			expect(game_array[4].result).toBe('draw');
-			expect(game_array[4].time_control_id).toBe('Classical');
-			expect(game_array[4].time_control_name).toBe('Classical (90 + 30)');
+			expect(game_array[4].time_control_id).toBe(Classical);
+			expect(game_array[4].time_control_name).toBe(Classical90p30);
 			expect(game_array[4].when).toBe('2025-01-10..17:06:25:000');
 
 			expect(game_array[5].id).toBe('0000000013');
 			expect(game_array[5].white).toBe('a');
 			expect(game_array[5].black).toBe('f');
 			expect(game_array[5].result).toBe('draw');
-			expect(game_array[5].time_control_id).toBe('Classical');
-			expect(game_array[5].time_control_name).toBe('Classical (90 + 30)');
+			expect(game_array[5].time_control_id).toBe(Classical);
+			expect(game_array[5].time_control_name).toBe(Classical90p30);
 			expect(game_array[5].when).toBe('2025-01-10..17:06:30:000');
 
-			expect(aU.get_games('Classical').length).toBe(2);
-			expect(bU.get_games('Classical').length).toBe(2);
-			expect(cU.get_games('Classical').length).toBe(2);
-			expect(dU.get_games('Classical').length).toBe(2);
-			expect(eU.get_games('Classical').length).toBe(2);
-			expect(fU.get_games('Classical').length).toBe(2);
-			expect(aU.get_games('Classical').length).toBe(2);
-			expect(bU.get_games('Classical').length).toBe(2);
-			expect(cU.get_games('Classical').length).toBe(2);
-			expect(dU.get_games('Classical').length).toBe(2);
-			expect(eU.get_games('Classical').length).toBe(2);
-			expect(fU.get_games('Classical').length).toBe(2);
+			expect(aU.get_games(Classical).length).toBe(2);
+			expect(bU.get_games(Classical).length).toBe(2);
+			expect(cU.get_games(Classical).length).toBe(2);
+			expect(dU.get_games(Classical).length).toBe(2);
+			expect(eU.get_games(Classical).length).toBe(2);
+			expect(fU.get_games(Classical).length).toBe(2);
+			expect(aU.get_games(Classical).length).toBe(2);
+			expect(bU.get_games(Classical).length).toBe(2);
+			expect(cU.get_games(Classical).length).toBe(2);
+			expect(dU.get_games(Classical).length).toBe(2);
+			expect(eU.get_games(Classical).length).toBe(2);
+			expect(fU.get_games(Classical).length).toBe(2);
 
-			expect(aU.get_rating('Blitz').num_won_drawn_lost()).toEqual([6, 2, 2, 2]);
-			expect(bU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
-			expect(cU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
-			expect(dU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 2, 0, 1]);
-			expect(eU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
-			expect(fU.get_rating('Blitz').num_won_drawn_lost()).toEqual([6, 1, 5, 0]);
-			expect(aU.get_rating('Classical').num_won_drawn_lost()).toEqual([5, 2, 2, 1]);
-			expect(bU.get_rating('Classical').num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
-			expect(cU.get_rating('Classical').num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
-			expect(dU.get_rating('Classical').num_won_drawn_lost()).toEqual([2, 2, 0, 0]);
-			expect(eU.get_rating('Classical').num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
-			expect(fU.get_rating('Classical').num_won_drawn_lost()).toEqual([6, 1, 5, 0]);
+			expect(aU.get_rating(Blitz).num_won_drawn_lost()).toEqual([6, 2, 2, 2]);
+			expect(bU.get_rating(Blitz).num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
+			expect(cU.get_rating(Blitz).num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
+			expect(dU.get_rating(Blitz).num_won_drawn_lost()).toEqual([3, 2, 0, 1]);
+			expect(eU.get_rating(Blitz).num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
+			expect(fU.get_rating(Blitz).num_won_drawn_lost()).toEqual([6, 1, 5, 0]);
+			expect(aU.get_rating(Classical).num_won_drawn_lost()).toEqual([5, 2, 2, 1]);
+			expect(bU.get_rating(Classical).num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
+			expect(cU.get_rating(Classical).num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
+			expect(dU.get_rating(Classical).num_won_drawn_lost()).toEqual([2, 2, 0, 0]);
+			expect(eU.get_rating(Classical).num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
+			expect(fU.get_rating(Classical).num_won_drawn_lost()).toEqual([6, 1, 5, 0]);
 		}
 
-		game_add_new(
-			'sample',
-			u('c'),
-			u('d'),
-			'white_wins',
-			'Classical',
-			'Classical (90 + 30)',
-			'2025-01-10',
-			'17:06:15:000'
-		);
+		game_add_new('sample', u('c'), u('d'), 'white_wins', Classical, Classical90p30, '2025-01-10', '17:06:15:000');
 		{
 			const game_array = game_array_from_string(fs.readFileSync(path.join(blitz_dir, '2025-01-10'), 'utf8'));
 			expect(game_array).not.toBeNull();
@@ -1696,95 +1609,86 @@ describe('Zig-zag game creation', () => {
 			expect(game_array[0].white).toBe('a');
 			expect(game_array[0].black).toBe('b');
 			expect(game_array[0].result).toBe('white_wins');
-			expect(game_array[0].time_control_id).toBe('Classical');
-			expect(game_array[0].time_control_name).toBe('Classical (90 + 30)');
+			expect(game_array[0].time_control_id).toBe(Classical);
+			expect(game_array[0].time_control_name).toBe(Classical90p30);
 			expect(game_array[0].when).toBe('2025-01-10..17:06:00:000');
 
 			expect(game_array[1].id).toBe('0000000022');
 			expect(game_array[1].white).toBe('e');
 			expect(game_array[1].black).toBe('f');
 			expect(game_array[1].result).toBe('draw');
-			expect(game_array[1].time_control_id).toBe('Classical');
-			expect(game_array[1].time_control_name).toBe('Classical (90 + 30)');
+			expect(game_array[1].time_control_id).toBe(Classical);
+			expect(game_array[1].time_control_name).toBe(Classical90p30);
 			expect(game_array[1].when).toBe('2025-01-10..17:06:05:000');
 
 			expect(game_array[2].id).toBe('0000000015');
 			expect(game_array[2].white).toBe('c');
 			expect(game_array[2].black).toBe('d');
 			expect(game_array[2].result).toBe('black_wins');
-			expect(game_array[2].time_control_id).toBe('Classical');
-			expect(game_array[2].time_control_name).toBe('Classical (90 + 30)');
+			expect(game_array[2].time_control_id).toBe(Classical);
+			expect(game_array[2].time_control_name).toBe(Classical90p30);
 			expect(game_array[2].when).toBe('2025-01-10..17:06:10:000');
 
 			expect(game_array[3].id).toBe('0000000023');
 			expect(game_array[3].white).toBe('c');
 			expect(game_array[3].black).toBe('d');
 			expect(game_array[3].result).toBe('white_wins');
-			expect(game_array[3].time_control_id).toBe('Classical');
-			expect(game_array[3].time_control_name).toBe('Classical (90 + 30)');
+			expect(game_array[3].time_control_id).toBe(Classical);
+			expect(game_array[3].time_control_name).toBe(Classical90p30);
 			expect(game_array[3].when).toBe('2025-01-10..17:06:15:000');
 
 			expect(game_array[4].id).toBe('0000000014');
 			expect(game_array[4].white).toBe('e');
 			expect(game_array[4].black).toBe('f');
 			expect(game_array[4].result).toBe('draw');
-			expect(game_array[4].time_control_id).toBe('Classical');
-			expect(game_array[4].time_control_name).toBe('Classical (90 + 30)');
+			expect(game_array[4].time_control_id).toBe(Classical);
+			expect(game_array[4].time_control_name).toBe(Classical90p30);
 			expect(game_array[4].when).toBe('2025-01-10..17:06:20:000');
 
 			expect(game_array[5].id).toBe('0000000021');
 			expect(game_array[5].white).toBe('a');
 			expect(game_array[5].black).toBe('f');
 			expect(game_array[5].result).toBe('draw');
-			expect(game_array[5].time_control_id).toBe('Classical');
-			expect(game_array[5].time_control_name).toBe('Classical (90 + 30)');
+			expect(game_array[5].time_control_id).toBe(Classical);
+			expect(game_array[5].time_control_name).toBe(Classical90p30);
 			expect(game_array[5].when).toBe('2025-01-10..17:06:25:000');
 
 			expect(game_array[6].id).toBe('0000000013');
 			expect(game_array[6].white).toBe('a');
 			expect(game_array[6].black).toBe('f');
 			expect(game_array[6].result).toBe('draw');
-			expect(game_array[6].time_control_id).toBe('Classical');
-			expect(game_array[6].time_control_name).toBe('Classical (90 + 30)');
+			expect(game_array[6].time_control_id).toBe(Classical);
+			expect(game_array[6].time_control_name).toBe(Classical90p30);
 			expect(game_array[6].when).toBe('2025-01-10..17:06:30:000');
 
-			expect(aU.get_games('Classical').length).toBe(2);
-			expect(bU.get_games('Classical').length).toBe(2);
-			expect(cU.get_games('Classical').length).toBe(2);
-			expect(dU.get_games('Classical').length).toBe(2);
-			expect(eU.get_games('Classical').length).toBe(2);
-			expect(fU.get_games('Classical').length).toBe(2);
-			expect(aU.get_games('Classical').length).toBe(2);
-			expect(bU.get_games('Classical').length).toBe(2);
-			expect(cU.get_games('Classical').length).toBe(2);
-			expect(dU.get_games('Classical').length).toBe(2);
-			expect(eU.get_games('Classical').length).toBe(2);
-			expect(fU.get_games('Classical').length).toBe(2);
+			expect(aU.get_games(Classical).length).toBe(2);
+			expect(bU.get_games(Classical).length).toBe(2);
+			expect(cU.get_games(Classical).length).toBe(2);
+			expect(dU.get_games(Classical).length).toBe(2);
+			expect(eU.get_games(Classical).length).toBe(2);
+			expect(fU.get_games(Classical).length).toBe(2);
+			expect(aU.get_games(Classical).length).toBe(2);
+			expect(bU.get_games(Classical).length).toBe(2);
+			expect(cU.get_games(Classical).length).toBe(2);
+			expect(dU.get_games(Classical).length).toBe(2);
+			expect(eU.get_games(Classical).length).toBe(2);
+			expect(fU.get_games(Classical).length).toBe(2);
 
-			expect(aU.get_rating('Blitz').num_won_drawn_lost()).toEqual([6, 2, 2, 2]);
-			expect(bU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
-			expect(cU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
-			expect(dU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 2, 0, 1]);
-			expect(eU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
-			expect(fU.get_rating('Blitz').num_won_drawn_lost()).toEqual([6, 1, 5, 0]);
-			expect(aU.get_rating('Classical').num_won_drawn_lost()).toEqual([5, 2, 2, 1]);
-			expect(bU.get_rating('Classical').num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
-			expect(cU.get_rating('Classical').num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
-			expect(dU.get_rating('Classical').num_won_drawn_lost()).toEqual([3, 2, 0, 1]);
-			expect(eU.get_rating('Classical').num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
-			expect(fU.get_rating('Classical').num_won_drawn_lost()).toEqual([6, 1, 5, 0]);
+			expect(aU.get_rating(Blitz).num_won_drawn_lost()).toEqual([6, 2, 2, 2]);
+			expect(bU.get_rating(Blitz).num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
+			expect(cU.get_rating(Blitz).num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
+			expect(dU.get_rating(Blitz).num_won_drawn_lost()).toEqual([3, 2, 0, 1]);
+			expect(eU.get_rating(Blitz).num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
+			expect(fU.get_rating(Blitz).num_won_drawn_lost()).toEqual([6, 1, 5, 0]);
+			expect(aU.get_rating(Classical).num_won_drawn_lost()).toEqual([5, 2, 2, 1]);
+			expect(bU.get_rating(Classical).num_won_drawn_lost()).toEqual([2, 0, 0, 2]);
+			expect(cU.get_rating(Classical).num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
+			expect(dU.get_rating(Classical).num_won_drawn_lost()).toEqual([3, 2, 0, 1]);
+			expect(eU.get_rating(Classical).num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
+			expect(fU.get_rating(Classical).num_won_drawn_lost()).toEqual([6, 1, 5, 0]);
 		}
 
-		game_add_new(
-			'sample',
-			u('a'),
-			u('b'),
-			'black_wins',
-			'Classical',
-			'Classical (90 + 30)',
-			'2025-01-10',
-			'17:05:55:000'
-		);
+		game_add_new('sample', u('a'), u('b'), 'black_wins', Classical, Classical90p30, '2025-01-10', '17:05:55:000');
 		{
 			const game_array = game_array_from_string(fs.readFileSync(path.join(blitz_dir, '2025-01-10'), 'utf8'));
 			expect(game_array).not.toBeNull();
@@ -1797,99 +1701,99 @@ describe('Zig-zag game creation', () => {
 			expect(game_array[0].white).toBe('a');
 			expect(game_array[0].black).toBe('b');
 			expect(game_array[0].result).toBe('black_wins');
-			expect(game_array[0].time_control_id).toBe('Classical');
-			expect(game_array[0].time_control_name).toBe('Classical (90 + 30)');
+			expect(game_array[0].time_control_id).toBe(Classical);
+			expect(game_array[0].time_control_name).toBe(Classical90p30);
 			expect(game_array[0].when).toBe('2025-01-10..17:05:55:000');
 
 			expect(game_array[1].id).toBe('0000000016');
 			expect(game_array[1].white).toBe('a');
 			expect(game_array[1].black).toBe('b');
 			expect(game_array[1].result).toBe('white_wins');
-			expect(game_array[1].time_control_id).toBe('Classical');
-			expect(game_array[1].time_control_name).toBe('Classical (90 + 30)');
+			expect(game_array[1].time_control_id).toBe(Classical);
+			expect(game_array[1].time_control_name).toBe(Classical90p30);
 			expect(game_array[1].when).toBe('2025-01-10..17:06:00:000');
 
 			expect(game_array[2].id).toBe('0000000022');
 			expect(game_array[2].white).toBe('e');
 			expect(game_array[2].black).toBe('f');
 			expect(game_array[2].result).toBe('draw');
-			expect(game_array[2].time_control_id).toBe('Classical');
-			expect(game_array[2].time_control_name).toBe('Classical (90 + 30)');
+			expect(game_array[2].time_control_id).toBe(Classical);
+			expect(game_array[2].time_control_name).toBe(Classical90p30);
 			expect(game_array[2].when).toBe('2025-01-10..17:06:05:000');
 
 			expect(game_array[3].id).toBe('0000000015');
 			expect(game_array[3].white).toBe('c');
 			expect(game_array[3].black).toBe('d');
 			expect(game_array[3].result).toBe('black_wins');
-			expect(game_array[3].time_control_id).toBe('Classical');
-			expect(game_array[3].time_control_name).toBe('Classical (90 + 30)');
+			expect(game_array[3].time_control_id).toBe(Classical);
+			expect(game_array[3].time_control_name).toBe(Classical90p30);
 			expect(game_array[3].when).toBe('2025-01-10..17:06:10:000');
 
 			expect(game_array[4].id).toBe('0000000023');
 			expect(game_array[4].white).toBe('c');
 			expect(game_array[4].black).toBe('d');
 			expect(game_array[4].result).toBe('white_wins');
-			expect(game_array[4].time_control_id).toBe('Classical');
-			expect(game_array[4].time_control_name).toBe('Classical (90 + 30)');
+			expect(game_array[4].time_control_id).toBe(Classical);
+			expect(game_array[4].time_control_name).toBe(Classical90p30);
 			expect(game_array[4].when).toBe('2025-01-10..17:06:15:000');
 
 			expect(game_array[5].id).toBe('0000000014');
 			expect(game_array[5].white).toBe('e');
 			expect(game_array[5].black).toBe('f');
 			expect(game_array[5].result).toBe('draw');
-			expect(game_array[5].time_control_id).toBe('Classical');
-			expect(game_array[5].time_control_name).toBe('Classical (90 + 30)');
+			expect(game_array[5].time_control_id).toBe(Classical);
+			expect(game_array[5].time_control_name).toBe(Classical90p30);
 			expect(game_array[5].when).toBe('2025-01-10..17:06:20:000');
 
 			expect(game_array[6].id).toBe('0000000021');
 			expect(game_array[6].white).toBe('a');
 			expect(game_array[6].black).toBe('f');
 			expect(game_array[6].result).toBe('draw');
-			expect(game_array[6].time_control_id).toBe('Classical');
-			expect(game_array[6].time_control_name).toBe('Classical (90 + 30)');
+			expect(game_array[6].time_control_id).toBe(Classical);
+			expect(game_array[6].time_control_name).toBe(Classical90p30);
 			expect(game_array[6].when).toBe('2025-01-10..17:06:25:000');
 
 			expect(game_array[7].id).toBe('0000000013');
 			expect(game_array[7].white).toBe('a');
 			expect(game_array[7].black).toBe('f');
 			expect(game_array[7].result).toBe('draw');
-			expect(game_array[7].time_control_id).toBe('Classical');
-			expect(game_array[7].time_control_name).toBe('Classical (90 + 30)');
+			expect(game_array[7].time_control_id).toBe(Classical);
+			expect(game_array[7].time_control_name).toBe(Classical90p30);
 			expect(game_array[7].when).toBe('2025-01-10..17:06:30:000');
 
-			expect(aU.get_games('Classical').length).toBe(2);
-			expect(bU.get_games('Classical').length).toBe(2);
-			expect(cU.get_games('Classical').length).toBe(2);
-			expect(dU.get_games('Classical').length).toBe(2);
-			expect(eU.get_games('Classical').length).toBe(2);
-			expect(fU.get_games('Classical').length).toBe(2);
-			expect(aU.get_games('Classical').length).toBe(2);
-			expect(bU.get_games('Classical').length).toBe(2);
-			expect(cU.get_games('Classical').length).toBe(2);
-			expect(dU.get_games('Classical').length).toBe(2);
-			expect(eU.get_games('Classical').length).toBe(2);
-			expect(fU.get_games('Classical').length).toBe(2);
+			expect(aU.get_games(Classical).length).toBe(2);
+			expect(bU.get_games(Classical).length).toBe(2);
+			expect(cU.get_games(Classical).length).toBe(2);
+			expect(dU.get_games(Classical).length).toBe(2);
+			expect(eU.get_games(Classical).length).toBe(2);
+			expect(fU.get_games(Classical).length).toBe(2);
+			expect(aU.get_games(Classical).length).toBe(2);
+			expect(bU.get_games(Classical).length).toBe(2);
+			expect(cU.get_games(Classical).length).toBe(2);
+			expect(dU.get_games(Classical).length).toBe(2);
+			expect(eU.get_games(Classical).length).toBe(2);
+			expect(fU.get_games(Classical).length).toBe(2);
 
-			expect(aU.get_rating('Blitz').num_won_drawn_lost()).toEqual([6, 2, 2, 2]);
-			expect(bU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
-			expect(cU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
-			expect(dU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 2, 0, 1]);
-			expect(eU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
-			expect(fU.get_rating('Blitz').num_won_drawn_lost()).toEqual([6, 1, 5, 0]);
-			expect(aU.get_rating('Classical').num_won_drawn_lost()).toEqual([6, 2, 2, 2]);
-			expect(bU.get_rating('Classical').num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
-			expect(cU.get_rating('Classical').num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
-			expect(dU.get_rating('Classical').num_won_drawn_lost()).toEqual([3, 2, 0, 1]);
-			expect(eU.get_rating('Classical').num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
-			expect(fU.get_rating('Classical').num_won_drawn_lost()).toEqual([6, 1, 5, 0]);
+			expect(aU.get_rating(Blitz).num_won_drawn_lost()).toEqual([6, 2, 2, 2]);
+			expect(bU.get_rating(Blitz).num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
+			expect(cU.get_rating(Blitz).num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
+			expect(dU.get_rating(Blitz).num_won_drawn_lost()).toEqual([3, 2, 0, 1]);
+			expect(eU.get_rating(Blitz).num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
+			expect(fU.get_rating(Blitz).num_won_drawn_lost()).toEqual([6, 1, 5, 0]);
+			expect(aU.get_rating(Classical).num_won_drawn_lost()).toEqual([6, 2, 2, 2]);
+			expect(bU.get_rating(Classical).num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
+			expect(cU.get_rating(Classical).num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
+			expect(dU.get_rating(Classical).num_won_drawn_lost()).toEqual([3, 2, 0, 1]);
+			expect(eU.get_rating(Classical).num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
+			expect(fU.get_rating(Classical).num_won_drawn_lost()).toEqual([6, 1, 5, 0]);
 		}
 	});
 });
 
 describe('Before-time inverse game creation', () => {
 	test('Add "Blitz" games', () => {
-		const blitz_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Blitz');
-		game_add_new('sample', u('a'), u('f'), 'draw', 'Blitz', 'Blitz (5 + 0)', '2023-01-20', '17:06:50:000');
+		const blitz_dir = EnvironmentManager.get_instance().get_dir_games_time_control(Blitz);
+		game_add_new('sample', u('a'), u('f'), 'draw', Blitz, Blitz5p0, '2023-01-20', '17:06:50:000');
 		{
 			const game_array = game_array_from_string(fs.readFileSync(path.join(blitz_dir, '2023-01-20'), 'utf8'));
 			expect(game_array).not.toBeNull();
@@ -1902,38 +1806,38 @@ describe('Before-time inverse game creation', () => {
 			expect(game_array[0].white).toBe('a');
 			expect(game_array[0].black).toBe('f');
 			expect(game_array[0].result).toBe('draw');
-			expect(game_array[0].time_control_id).toBe('Blitz');
-			expect(game_array[0].time_control_name).toBe('Blitz (5 + 0)');
+			expect(game_array[0].time_control_id).toBe(Blitz);
+			expect(game_array[0].time_control_name).toBe(Blitz5p0);
 			expect(game_array[0].when).toBe('2023-01-20..17:06:50:000');
 
-			expect(aU.get_games('Blitz').length).toBe(3);
-			expect(bU.get_games('Blitz').length).toBe(2);
-			expect(cU.get_games('Blitz').length).toBe(2);
-			expect(dU.get_games('Blitz').length).toBe(2);
-			expect(eU.get_games('Blitz').length).toBe(2);
-			expect(fU.get_games('Blitz').length).toBe(3);
-			expect(aU.get_games('Classical').length).toBe(2);
-			expect(bU.get_games('Classical').length).toBe(2);
-			expect(cU.get_games('Classical').length).toBe(2);
-			expect(dU.get_games('Classical').length).toBe(2);
-			expect(eU.get_games('Classical').length).toBe(2);
-			expect(fU.get_games('Classical').length).toBe(2);
+			expect(aU.get_games(Blitz).length).toBe(3);
+			expect(bU.get_games(Blitz).length).toBe(2);
+			expect(cU.get_games(Blitz).length).toBe(2);
+			expect(dU.get_games(Blitz).length).toBe(2);
+			expect(eU.get_games(Blitz).length).toBe(2);
+			expect(fU.get_games(Blitz).length).toBe(3);
+			expect(aU.get_games(Classical).length).toBe(2);
+			expect(bU.get_games(Classical).length).toBe(2);
+			expect(cU.get_games(Classical).length).toBe(2);
+			expect(dU.get_games(Classical).length).toBe(2);
+			expect(eU.get_games(Classical).length).toBe(2);
+			expect(fU.get_games(Classical).length).toBe(2);
 
-			expect(aU.get_rating('Blitz').num_won_drawn_lost()).toEqual([7, 2, 3, 2]);
-			expect(bU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
-			expect(cU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
-			expect(dU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 2, 0, 1]);
-			expect(eU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
-			expect(fU.get_rating('Blitz').num_won_drawn_lost()).toEqual([7, 1, 6, 0]);
-			expect(aU.get_rating('Classical').num_won_drawn_lost()).toEqual([6, 2, 2, 2]);
-			expect(bU.get_rating('Classical').num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
-			expect(cU.get_rating('Classical').num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
-			expect(dU.get_rating('Classical').num_won_drawn_lost()).toEqual([3, 2, 0, 1]);
-			expect(eU.get_rating('Classical').num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
-			expect(fU.get_rating('Classical').num_won_drawn_lost()).toEqual([6, 1, 5, 0]);
+			expect(aU.get_rating(Blitz).num_won_drawn_lost()).toEqual([7, 2, 3, 2]);
+			expect(bU.get_rating(Blitz).num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
+			expect(cU.get_rating(Blitz).num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
+			expect(dU.get_rating(Blitz).num_won_drawn_lost()).toEqual([3, 2, 0, 1]);
+			expect(eU.get_rating(Blitz).num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
+			expect(fU.get_rating(Blitz).num_won_drawn_lost()).toEqual([7, 1, 6, 0]);
+			expect(aU.get_rating(Classical).num_won_drawn_lost()).toEqual([6, 2, 2, 2]);
+			expect(bU.get_rating(Classical).num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
+			expect(cU.get_rating(Classical).num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
+			expect(dU.get_rating(Classical).num_won_drawn_lost()).toEqual([3, 2, 0, 1]);
+			expect(eU.get_rating(Classical).num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
+			expect(fU.get_rating(Classical).num_won_drawn_lost()).toEqual([6, 1, 5, 0]);
 		}
 
-		game_add_new('sample', u('a'), u('c'), 'draw', 'Blitz', 'Blitz (5 + 0)', '2023-01-10', '17:06:40:000');
+		game_add_new('sample', u('a'), u('c'), 'draw', Blitz, Blitz5p0, '2023-01-10', '17:06:40:000');
 		{
 			const game_array = game_array_from_string(fs.readFileSync(path.join(blitz_dir, '2023-01-10'), 'utf8'));
 			expect(game_array).not.toBeNull();
@@ -1946,35 +1850,35 @@ describe('Before-time inverse game creation', () => {
 			expect(game_array[0].white).toBe('a');
 			expect(game_array[0].black).toBe('c');
 			expect(game_array[0].result).toBe('draw');
-			expect(game_array[0].time_control_id).toBe('Blitz');
-			expect(game_array[0].time_control_name).toBe('Blitz (5 + 0)');
+			expect(game_array[0].time_control_id).toBe(Blitz);
+			expect(game_array[0].time_control_name).toBe(Blitz5p0);
 			expect(game_array[0].when).toBe('2023-01-10..17:06:40:000');
 
-			expect(aU.get_games('Blitz').length).toBe(4);
-			expect(bU.get_games('Blitz').length).toBe(2);
-			expect(cU.get_games('Blitz').length).toBe(3);
-			expect(dU.get_games('Blitz').length).toBe(2);
-			expect(eU.get_games('Blitz').length).toBe(2);
-			expect(fU.get_games('Blitz').length).toBe(3);
-			expect(aU.get_games('Classical').length).toBe(2);
-			expect(bU.get_games('Classical').length).toBe(2);
-			expect(cU.get_games('Classical').length).toBe(2);
-			expect(dU.get_games('Classical').length).toBe(2);
-			expect(eU.get_games('Classical').length).toBe(2);
-			expect(fU.get_games('Classical').length).toBe(2);
+			expect(aU.get_games(Blitz).length).toBe(4);
+			expect(bU.get_games(Blitz).length).toBe(2);
+			expect(cU.get_games(Blitz).length).toBe(3);
+			expect(dU.get_games(Blitz).length).toBe(2);
+			expect(eU.get_games(Blitz).length).toBe(2);
+			expect(fU.get_games(Blitz).length).toBe(3);
+			expect(aU.get_games(Classical).length).toBe(2);
+			expect(bU.get_games(Classical).length).toBe(2);
+			expect(cU.get_games(Classical).length).toBe(2);
+			expect(dU.get_games(Classical).length).toBe(2);
+			expect(eU.get_games(Classical).length).toBe(2);
+			expect(fU.get_games(Classical).length).toBe(2);
 
-			expect(aU.get_rating('Blitz').num_won_drawn_lost()).toEqual([8, 2, 4, 2]);
-			expect(bU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
-			expect(cU.get_rating('Blitz').num_won_drawn_lost()).toEqual([4, 1, 1, 2]);
-			expect(dU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 2, 0, 1]);
-			expect(eU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
-			expect(fU.get_rating('Blitz').num_won_drawn_lost()).toEqual([7, 1, 6, 0]);
-			expect(aU.get_rating('Classical').num_won_drawn_lost()).toEqual([6, 2, 2, 2]);
-			expect(bU.get_rating('Classical').num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
-			expect(cU.get_rating('Classical').num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
-			expect(dU.get_rating('Classical').num_won_drawn_lost()).toEqual([3, 2, 0, 1]);
-			expect(eU.get_rating('Classical').num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
-			expect(fU.get_rating('Classical').num_won_drawn_lost()).toEqual([6, 1, 5, 0]);
+			expect(aU.get_rating(Blitz).num_won_drawn_lost()).toEqual([8, 2, 4, 2]);
+			expect(bU.get_rating(Blitz).num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
+			expect(cU.get_rating(Blitz).num_won_drawn_lost()).toEqual([4, 1, 1, 2]);
+			expect(dU.get_rating(Blitz).num_won_drawn_lost()).toEqual([3, 2, 0, 1]);
+			expect(eU.get_rating(Blitz).num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
+			expect(fU.get_rating(Blitz).num_won_drawn_lost()).toEqual([7, 1, 6, 0]);
+			expect(aU.get_rating(Classical).num_won_drawn_lost()).toEqual([6, 2, 2, 2]);
+			expect(bU.get_rating(Classical).num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
+			expect(cU.get_rating(Classical).num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
+			expect(dU.get_rating(Classical).num_won_drawn_lost()).toEqual([3, 2, 0, 1]);
+			expect(eU.get_rating(Classical).num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
+			expect(fU.get_rating(Classical).num_won_drawn_lost()).toEqual([6, 1, 5, 0]);
 		}
 	});
 });
@@ -1982,7 +1886,7 @@ describe('Before-time inverse game creation', () => {
 describe('Test graphs metadata before edition', () => {
 	test('Check Blitz graph', () => {
 		const graphs_manager = GraphsManager.get_instance();
-		const g = graphs_manager.get_graph('Blitz') as Graph;
+		const g = graphs_manager.get_graph(Blitz) as Graph;
 		expect(g.get_data_as_white(a, b)).toEqual(new EdgeMetadata(2, 0, 1));
 		expect(g.get_data_as_white(a, c)).toEqual(new EdgeMetadata(0, 1, 0));
 		expect(g.get_data_as_white(a, d)).toEqual(undefined);
@@ -2058,7 +1962,7 @@ describe('Test graphs metadata before edition', () => {
 
 	test('Check Classical graph', () => {
 		const graphs_manager = GraphsManager.get_instance();
-		const g = graphs_manager.get_graph('Classical') as Graph;
+		const g = graphs_manager.get_graph(Classical) as Graph;
 		expect(g.get_data_as_white(a, b)).toEqual(new EdgeMetadata(2, 0, 1));
 		expect(g.get_data_as_white(a, c)).toEqual(undefined);
 		expect(g.get_data_as_white(a, d)).toEqual(undefined);
@@ -2148,125 +2052,125 @@ describe('Edition of game results', () => {
 	test('Edit some "Blitz" games', () => {
 		game_edit_result(id0000000001, 'black_wins');
 
-		expect(aU.get_rating('Blitz').num_won_drawn_lost()).toEqual([8, 1, 4, 3]);
-		expect(bU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 2, 0, 1]);
-		expect(cU.get_rating('Blitz').num_won_drawn_lost()).toEqual([4, 1, 1, 2]);
-		expect(dU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 2, 0, 1]);
-		expect(eU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
-		expect(fU.get_rating('Blitz').num_won_drawn_lost()).toEqual([7, 1, 6, 0]);
-		expect(aU.get_rating('Classical').num_won_drawn_lost()).toEqual([6, 2, 2, 2]);
-		expect(bU.get_rating('Classical').num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
-		expect(cU.get_rating('Classical').num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
-		expect(dU.get_rating('Classical').num_won_drawn_lost()).toEqual([3, 2, 0, 1]);
-		expect(eU.get_rating('Classical').num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
-		expect(fU.get_rating('Classical').num_won_drawn_lost()).toEqual([6, 1, 5, 0]);
+		expect(aU.get_rating(Blitz).num_won_drawn_lost()).toEqual([8, 1, 4, 3]);
+		expect(bU.get_rating(Blitz).num_won_drawn_lost()).toEqual([3, 2, 0, 1]);
+		expect(cU.get_rating(Blitz).num_won_drawn_lost()).toEqual([4, 1, 1, 2]);
+		expect(dU.get_rating(Blitz).num_won_drawn_lost()).toEqual([3, 2, 0, 1]);
+		expect(eU.get_rating(Blitz).num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
+		expect(fU.get_rating(Blitz).num_won_drawn_lost()).toEqual([7, 1, 6, 0]);
+		expect(aU.get_rating(Classical).num_won_drawn_lost()).toEqual([6, 2, 2, 2]);
+		expect(bU.get_rating(Classical).num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
+		expect(cU.get_rating(Classical).num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
+		expect(dU.get_rating(Classical).num_won_drawn_lost()).toEqual([3, 2, 0, 1]);
+		expect(eU.get_rating(Classical).num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
+		expect(fU.get_rating(Classical).num_won_drawn_lost()).toEqual([6, 1, 5, 0]);
 
 		game_edit_result(id0000000001, 'draw');
 
-		expect(aU.get_rating('Blitz').num_won_drawn_lost()).toEqual([8, 1, 5, 2]);
-		expect(bU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 1, 1, 1]);
-		expect(cU.get_rating('Blitz').num_won_drawn_lost()).toEqual([4, 1, 1, 2]);
-		expect(dU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 2, 0, 1]);
-		expect(eU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
-		expect(fU.get_rating('Blitz').num_won_drawn_lost()).toEqual([7, 1, 6, 0]);
-		expect(aU.get_rating('Classical').num_won_drawn_lost()).toEqual([6, 2, 2, 2]);
-		expect(bU.get_rating('Classical').num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
-		expect(cU.get_rating('Classical').num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
-		expect(dU.get_rating('Classical').num_won_drawn_lost()).toEqual([3, 2, 0, 1]);
-		expect(eU.get_rating('Classical').num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
-		expect(fU.get_rating('Classical').num_won_drawn_lost()).toEqual([6, 1, 5, 0]);
+		expect(aU.get_rating(Blitz).num_won_drawn_lost()).toEqual([8, 1, 5, 2]);
+		expect(bU.get_rating(Blitz).num_won_drawn_lost()).toEqual([3, 1, 1, 1]);
+		expect(cU.get_rating(Blitz).num_won_drawn_lost()).toEqual([4, 1, 1, 2]);
+		expect(dU.get_rating(Blitz).num_won_drawn_lost()).toEqual([3, 2, 0, 1]);
+		expect(eU.get_rating(Blitz).num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
+		expect(fU.get_rating(Blitz).num_won_drawn_lost()).toEqual([7, 1, 6, 0]);
+		expect(aU.get_rating(Classical).num_won_drawn_lost()).toEqual([6, 2, 2, 2]);
+		expect(bU.get_rating(Classical).num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
+		expect(cU.get_rating(Classical).num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
+		expect(dU.get_rating(Classical).num_won_drawn_lost()).toEqual([3, 2, 0, 1]);
+		expect(eU.get_rating(Classical).num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
+		expect(fU.get_rating(Classical).num_won_drawn_lost()).toEqual([6, 1, 5, 0]);
 
 		game_edit_result(id0000000001, 'draw');
 
-		expect(aU.get_rating('Blitz').num_won_drawn_lost()).toEqual([8, 1, 5, 2]);
-		expect(bU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 1, 1, 1]);
-		expect(cU.get_rating('Blitz').num_won_drawn_lost()).toEqual([4, 1, 1, 2]);
-		expect(dU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 2, 0, 1]);
-		expect(eU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
-		expect(fU.get_rating('Blitz').num_won_drawn_lost()).toEqual([7, 1, 6, 0]);
-		expect(aU.get_rating('Classical').num_won_drawn_lost()).toEqual([6, 2, 2, 2]);
-		expect(bU.get_rating('Classical').num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
-		expect(cU.get_rating('Classical').num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
-		expect(dU.get_rating('Classical').num_won_drawn_lost()).toEqual([3, 2, 0, 1]);
-		expect(eU.get_rating('Classical').num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
-		expect(fU.get_rating('Classical').num_won_drawn_lost()).toEqual([6, 1, 5, 0]);
+		expect(aU.get_rating(Blitz).num_won_drawn_lost()).toEqual([8, 1, 5, 2]);
+		expect(bU.get_rating(Blitz).num_won_drawn_lost()).toEqual([3, 1, 1, 1]);
+		expect(cU.get_rating(Blitz).num_won_drawn_lost()).toEqual([4, 1, 1, 2]);
+		expect(dU.get_rating(Blitz).num_won_drawn_lost()).toEqual([3, 2, 0, 1]);
+		expect(eU.get_rating(Blitz).num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
+		expect(fU.get_rating(Blitz).num_won_drawn_lost()).toEqual([7, 1, 6, 0]);
+		expect(aU.get_rating(Classical).num_won_drawn_lost()).toEqual([6, 2, 2, 2]);
+		expect(bU.get_rating(Classical).num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
+		expect(cU.get_rating(Classical).num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
+		expect(dU.get_rating(Classical).num_won_drawn_lost()).toEqual([3, 2, 0, 1]);
+		expect(eU.get_rating(Classical).num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
+		expect(fU.get_rating(Classical).num_won_drawn_lost()).toEqual([6, 1, 5, 0]);
 
 		game_edit_result(id0000000002, 'draw');
 
-		expect(aU.get_rating('Blitz').num_won_drawn_lost()).toEqual([8, 1, 5, 2]);
-		expect(bU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 1, 1, 1]);
-		expect(cU.get_rating('Blitz').num_won_drawn_lost()).toEqual([4, 1, 2, 1]);
-		expect(dU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 1, 1, 1]);
-		expect(eU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
-		expect(fU.get_rating('Blitz').num_won_drawn_lost()).toEqual([7, 1, 6, 0]);
-		expect(aU.get_rating('Classical').num_won_drawn_lost()).toEqual([6, 2, 2, 2]);
-		expect(bU.get_rating('Classical').num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
-		expect(cU.get_rating('Classical').num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
-		expect(dU.get_rating('Classical').num_won_drawn_lost()).toEqual([3, 2, 0, 1]);
-		expect(eU.get_rating('Classical').num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
-		expect(fU.get_rating('Classical').num_won_drawn_lost()).toEqual([6, 1, 5, 0]);
+		expect(aU.get_rating(Blitz).num_won_drawn_lost()).toEqual([8, 1, 5, 2]);
+		expect(bU.get_rating(Blitz).num_won_drawn_lost()).toEqual([3, 1, 1, 1]);
+		expect(cU.get_rating(Blitz).num_won_drawn_lost()).toEqual([4, 1, 2, 1]);
+		expect(dU.get_rating(Blitz).num_won_drawn_lost()).toEqual([3, 1, 1, 1]);
+		expect(eU.get_rating(Blitz).num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
+		expect(fU.get_rating(Blitz).num_won_drawn_lost()).toEqual([7, 1, 6, 0]);
+		expect(aU.get_rating(Classical).num_won_drawn_lost()).toEqual([6, 2, 2, 2]);
+		expect(bU.get_rating(Classical).num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
+		expect(cU.get_rating(Classical).num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
+		expect(dU.get_rating(Classical).num_won_drawn_lost()).toEqual([3, 2, 0, 1]);
+		expect(eU.get_rating(Classical).num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
+		expect(fU.get_rating(Classical).num_won_drawn_lost()).toEqual([6, 1, 5, 0]);
 	});
 
 	test('Edit some "Classical" games', () => {
 		game_edit_result(id0000000013, 'black_wins');
 
-		expect(aU.get_rating('Blitz').num_won_drawn_lost()).toEqual([8, 1, 5, 2]);
-		expect(bU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 1, 1, 1]);
-		expect(cU.get_rating('Blitz').num_won_drawn_lost()).toEqual([4, 1, 2, 1]);
-		expect(dU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 1, 1, 1]);
-		expect(eU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
-		expect(fU.get_rating('Blitz').num_won_drawn_lost()).toEqual([7, 1, 6, 0]);
-		expect(aU.get_rating('Classical').num_won_drawn_lost()).toEqual([6, 2, 1, 3]);
-		expect(bU.get_rating('Classical').num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
-		expect(cU.get_rating('Classical').num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
-		expect(dU.get_rating('Classical').num_won_drawn_lost()).toEqual([3, 2, 0, 1]);
-		expect(eU.get_rating('Classical').num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
-		expect(fU.get_rating('Classical').num_won_drawn_lost()).toEqual([6, 2, 4, 0]);
+		expect(aU.get_rating(Blitz).num_won_drawn_lost()).toEqual([8, 1, 5, 2]);
+		expect(bU.get_rating(Blitz).num_won_drawn_lost()).toEqual([3, 1, 1, 1]);
+		expect(cU.get_rating(Blitz).num_won_drawn_lost()).toEqual([4, 1, 2, 1]);
+		expect(dU.get_rating(Blitz).num_won_drawn_lost()).toEqual([3, 1, 1, 1]);
+		expect(eU.get_rating(Blitz).num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
+		expect(fU.get_rating(Blitz).num_won_drawn_lost()).toEqual([7, 1, 6, 0]);
+		expect(aU.get_rating(Classical).num_won_drawn_lost()).toEqual([6, 2, 1, 3]);
+		expect(bU.get_rating(Classical).num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
+		expect(cU.get_rating(Classical).num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
+		expect(dU.get_rating(Classical).num_won_drawn_lost()).toEqual([3, 2, 0, 1]);
+		expect(eU.get_rating(Classical).num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
+		expect(fU.get_rating(Classical).num_won_drawn_lost()).toEqual([6, 2, 4, 0]);
 
 		game_edit_result(id0000000013, 'white_wins');
 
-		expect(aU.get_rating('Blitz').num_won_drawn_lost()).toEqual([8, 1, 5, 2]);
-		expect(bU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 1, 1, 1]);
-		expect(cU.get_rating('Blitz').num_won_drawn_lost()).toEqual([4, 1, 2, 1]);
-		expect(dU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 1, 1, 1]);
-		expect(eU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
-		expect(fU.get_rating('Blitz').num_won_drawn_lost()).toEqual([7, 1, 6, 0]);
-		expect(aU.get_rating('Classical').num_won_drawn_lost()).toEqual([6, 3, 1, 2]);
-		expect(bU.get_rating('Classical').num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
-		expect(cU.get_rating('Classical').num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
-		expect(dU.get_rating('Classical').num_won_drawn_lost()).toEqual([3, 2, 0, 1]);
-		expect(eU.get_rating('Classical').num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
-		expect(fU.get_rating('Classical').num_won_drawn_lost()).toEqual([6, 1, 4, 1]);
+		expect(aU.get_rating(Blitz).num_won_drawn_lost()).toEqual([8, 1, 5, 2]);
+		expect(bU.get_rating(Blitz).num_won_drawn_lost()).toEqual([3, 1, 1, 1]);
+		expect(cU.get_rating(Blitz).num_won_drawn_lost()).toEqual([4, 1, 2, 1]);
+		expect(dU.get_rating(Blitz).num_won_drawn_lost()).toEqual([3, 1, 1, 1]);
+		expect(eU.get_rating(Blitz).num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
+		expect(fU.get_rating(Blitz).num_won_drawn_lost()).toEqual([7, 1, 6, 0]);
+		expect(aU.get_rating(Classical).num_won_drawn_lost()).toEqual([6, 3, 1, 2]);
+		expect(bU.get_rating(Classical).num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
+		expect(cU.get_rating(Classical).num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
+		expect(dU.get_rating(Classical).num_won_drawn_lost()).toEqual([3, 2, 0, 1]);
+		expect(eU.get_rating(Classical).num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
+		expect(fU.get_rating(Classical).num_won_drawn_lost()).toEqual([6, 1, 4, 1]);
 
 		game_edit_result(id0000000013, 'draw');
 
-		expect(aU.get_rating('Blitz').num_won_drawn_lost()).toEqual([8, 1, 5, 2]);
-		expect(bU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 1, 1, 1]);
-		expect(cU.get_rating('Blitz').num_won_drawn_lost()).toEqual([4, 1, 2, 1]);
-		expect(dU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 1, 1, 1]);
-		expect(eU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
-		expect(fU.get_rating('Blitz').num_won_drawn_lost()).toEqual([7, 1, 6, 0]);
-		expect(aU.get_rating('Classical').num_won_drawn_lost()).toEqual([6, 2, 2, 2]);
-		expect(bU.get_rating('Classical').num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
-		expect(cU.get_rating('Classical').num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
-		expect(dU.get_rating('Classical').num_won_drawn_lost()).toEqual([3, 2, 0, 1]);
-		expect(eU.get_rating('Classical').num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
-		expect(fU.get_rating('Classical').num_won_drawn_lost()).toEqual([6, 1, 5, 0]);
+		expect(aU.get_rating(Blitz).num_won_drawn_lost()).toEqual([8, 1, 5, 2]);
+		expect(bU.get_rating(Blitz).num_won_drawn_lost()).toEqual([3, 1, 1, 1]);
+		expect(cU.get_rating(Blitz).num_won_drawn_lost()).toEqual([4, 1, 2, 1]);
+		expect(dU.get_rating(Blitz).num_won_drawn_lost()).toEqual([3, 1, 1, 1]);
+		expect(eU.get_rating(Blitz).num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
+		expect(fU.get_rating(Blitz).num_won_drawn_lost()).toEqual([7, 1, 6, 0]);
+		expect(aU.get_rating(Classical).num_won_drawn_lost()).toEqual([6, 2, 2, 2]);
+		expect(bU.get_rating(Classical).num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
+		expect(cU.get_rating(Classical).num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
+		expect(dU.get_rating(Classical).num_won_drawn_lost()).toEqual([3, 2, 0, 1]);
+		expect(eU.get_rating(Classical).num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
+		expect(fU.get_rating(Classical).num_won_drawn_lost()).toEqual([6, 1, 5, 0]);
 
 		game_edit_result(id0000000021, 'black_wins');
 
-		expect(aU.get_rating('Blitz').num_won_drawn_lost()).toEqual([8, 1, 5, 2]);
-		expect(bU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 1, 1, 1]);
-		expect(cU.get_rating('Blitz').num_won_drawn_lost()).toEqual([4, 1, 2, 1]);
-		expect(dU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 1, 1, 1]);
-		expect(eU.get_rating('Blitz').num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
-		expect(fU.get_rating('Blitz').num_won_drawn_lost()).toEqual([7, 1, 6, 0]);
-		expect(aU.get_rating('Classical').num_won_drawn_lost()).toEqual([6, 2, 1, 3]);
-		expect(bU.get_rating('Classical').num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
-		expect(cU.get_rating('Classical').num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
-		expect(dU.get_rating('Classical').num_won_drawn_lost()).toEqual([3, 2, 0, 1]);
-		expect(eU.get_rating('Classical').num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
-		expect(fU.get_rating('Classical').num_won_drawn_lost()).toEqual([6, 2, 4, 0]);
+		expect(aU.get_rating(Blitz).num_won_drawn_lost()).toEqual([8, 1, 5, 2]);
+		expect(bU.get_rating(Blitz).num_won_drawn_lost()).toEqual([3, 1, 1, 1]);
+		expect(cU.get_rating(Blitz).num_won_drawn_lost()).toEqual([4, 1, 2, 1]);
+		expect(dU.get_rating(Blitz).num_won_drawn_lost()).toEqual([3, 1, 1, 1]);
+		expect(eU.get_rating(Blitz).num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
+		expect(fU.get_rating(Blitz).num_won_drawn_lost()).toEqual([7, 1, 6, 0]);
+		expect(aU.get_rating(Classical).num_won_drawn_lost()).toEqual([6, 2, 1, 3]);
+		expect(bU.get_rating(Classical).num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
+		expect(cU.get_rating(Classical).num_won_drawn_lost()).toEqual([3, 1, 0, 2]);
+		expect(dU.get_rating(Classical).num_won_drawn_lost()).toEqual([3, 2, 0, 1]);
+		expect(eU.get_rating(Classical).num_won_drawn_lost()).toEqual([3, 0, 3, 0]);
+		expect(fU.get_rating(Classical).num_won_drawn_lost()).toEqual([6, 2, 4, 0]);
 	});
 });
 
@@ -2275,7 +2179,7 @@ for (let i = 0; i < N; ++i) {
 	describe(`(${i}) Test graphs`, () => {
 		test('Check Blitz graph', () => {
 			const graphs_manager = GraphsManager.get_instance();
-			const g = graphs_manager.get_graph('Blitz') as Graph;
+			const g = graphs_manager.get_graph(Blitz) as Graph;
 			expect(g.get_black_opponents(a)).toEqual(['b', 'c', 'f']);
 			expect(g.get_black_opponents(b)).toEqual([]);
 			expect(g.get_black_opponents(c)).toEqual(['d']);
@@ -2293,7 +2197,7 @@ for (let i = 0; i < N; ++i) {
 
 		test('Check Classical graph', () => {
 			const graphs_manager = GraphsManager.get_instance();
-			const g = graphs_manager.get_graph('Classical') as Graph;
+			const g = graphs_manager.get_graph(Classical) as Graph;
 			expect(g.get_black_opponents(a)).toEqual(['b', 'f']);
 			expect(g.get_black_opponents(b)).toEqual([]);
 			expect(g.get_black_opponents(c)).toEqual(['d']);
@@ -2313,7 +2217,7 @@ for (let i = 0; i < N; ++i) {
 	describe(`(${i}) Test graphs metadata after edition`, () => {
 		test('Check Blitz graph', () => {
 			const graphs_manager = GraphsManager.get_instance();
-			const g = graphs_manager.get_graph('Blitz') as Graph;
+			const g = graphs_manager.get_graph(Blitz) as Graph;
 			expect(g.get_data_as_white(a, b)).toEqual(new EdgeMetadata(1, 1, 1));
 			expect(g.get_data_as_white(a, c)).toEqual(new EdgeMetadata(0, 1, 0));
 			expect(g.get_data_as_white(a, d)).toEqual(undefined);
@@ -2389,7 +2293,7 @@ for (let i = 0; i < N; ++i) {
 
 		test('Check Classical graph', () => {
 			const graphs_manager = GraphsManager.get_instance();
-			const g = graphs_manager.get_graph('Classical') as Graph;
+			const g = graphs_manager.get_graph(Classical) as Graph;
 			expect(g.get_data_as_white(a, b)).toEqual(new EdgeMetadata(2, 0, 1));
 			expect(g.get_data_as_white(a, c)).toEqual(undefined);
 			expect(g.get_data_as_white(a, d)).toEqual(undefined);
@@ -2474,8 +2378,8 @@ for (let i = 0; i < N; ++i) {
 				expect(game.white).toEqual('a');
 				expect(game.black).toEqual('b');
 				expect(game.result).toEqual('draw');
-				expect(game.time_control_id).toEqual('Blitz');
-				expect(game.time_control_name).toEqual('Blitz (5 + 3)');
+				expect(game.time_control_id).toEqual(Blitz);
+				expect(game.time_control_name).toEqual(Blitz5p3);
 			}
 
 			{
@@ -2486,8 +2390,8 @@ for (let i = 0; i < N; ++i) {
 				expect(game.white).toEqual('c');
 				expect(game.black).toEqual('d');
 				expect(game.result).toEqual('draw');
-				expect(game.time_control_id).toEqual('Blitz');
-				expect(game.time_control_name).toEqual('Blitz (5 + 3)');
+				expect(game.time_control_id).toEqual(Blitz);
+				expect(game.time_control_name).toEqual(Blitz5p3);
 			}
 
 			{
@@ -2498,8 +2402,8 @@ for (let i = 0; i < N; ++i) {
 				expect(game.white).toEqual('a');
 				expect(game.black).toEqual('b');
 				expect(game.result).toEqual('black_wins');
-				expect(game.time_control_id).toEqual('Blitz');
-				expect(game.time_control_name).toEqual('Blitz (5 + 3)');
+				expect(game.time_control_id).toEqual(Blitz);
+				expect(game.time_control_name).toEqual(Blitz5p3);
 			}
 		});
 
@@ -2512,8 +2416,8 @@ for (let i = 0; i < N; ++i) {
 				expect(game.white).toEqual('c');
 				expect(game.black).toEqual('d');
 				expect(game.result).toEqual('black_wins');
-				expect(game.time_control_id).toEqual('Classical');
-				expect(game.time_control_name).toEqual('Classical (90 + 30)');
+				expect(game.time_control_id).toEqual(Classical);
+				expect(game.time_control_name).toEqual(Classical90p30);
 			}
 
 			{
@@ -2524,8 +2428,8 @@ for (let i = 0; i < N; ++i) {
 				expect(game.white).toEqual('a');
 				expect(game.black).toEqual('f');
 				expect(game.result).toEqual('black_wins');
-				expect(game.time_control_id).toEqual('Classical');
-				expect(game.time_control_name).toEqual('Classical (90 + 30)');
+				expect(game.time_control_id).toEqual(Classical);
+				expect(game.time_control_name).toEqual(Classical90p30);
 			}
 
 			{
@@ -2536,8 +2440,8 @@ for (let i = 0; i < N; ++i) {
 				expect(game.white).toEqual('a');
 				expect(game.black).toEqual('f');
 				expect(game.result).toEqual('black_wins');
-				expect(game.time_control_id).toEqual('Classical');
-				expect(game.time_control_name).toEqual('Classical (90 + 30)');
+				expect(game.time_control_id).toEqual(Classical);
+				expect(game.time_control_name).toEqual(Classical90p30);
 			}
 		});
 
@@ -2560,9 +2464,9 @@ for (let i = 0; i < N; ++i) {
 	});
 
 	describe(`(${i}) Check all games are sorted by date`, () => {
-		test('Blitz', () => {
+		test(Blitz, () => {
 			let all_games: Game[] = [];
-			const game_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Blitz');
+			const game_dir = EnvironmentManager.get_instance().get_dir_games_time_control(Blitz);
 			let games_iter = new GamesIterator(game_dir);
 			while (!games_iter.end_record_list()) {
 				all_games = all_games.concat(games_iter.get_current_game_array());
@@ -2577,9 +2481,9 @@ for (let i = 0; i < N; ++i) {
 			}
 		});
 
-		test('Classical', () => {
+		test(Classical, () => {
 			let all_games: Game[] = [];
-			const game_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Classical');
+			const game_dir = EnvironmentManager.get_instance().get_dir_games_time_control(Classical);
 			let games_iter = new GamesIterator(game_dir);
 			while (!games_iter.end_record_list()) {
 				all_games = all_games.concat(games_iter.get_current_game_array());
@@ -2596,8 +2500,8 @@ for (let i = 0; i < N; ++i) {
 	});
 
 	describe(`(${i}) Check all games are located where they should be`, () => {
-		test('Blitz', () => {
-			const game_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Blitz');
+		test(Blitz, () => {
+			const game_dir = EnvironmentManager.get_instance().get_dir_games_time_control(Blitz);
 			let games_iter = new GamesIterator(game_dir);
 			while (!games_iter.end_record_list()) {
 				let current_games = games_iter.get_current_game_array();
@@ -2605,15 +2509,15 @@ for (let i = 0; i < N; ++i) {
 
 				for (let i = 0; i < current_games.length; ++i) {
 					const gi = current_games[i];
-					expect(gi.time_control_id).toEqual('Blitz');
+					expect(gi.time_control_id).toEqual(Blitz);
 					expect(long_date_to_short_date(gi.when)).toEqual(current_record);
 				}
 				games_iter.next_record();
 			}
 		});
 
-		test('Classical', () => {
-			const game_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Classical');
+		test(Classical, () => {
+			const game_dir = EnvironmentManager.get_instance().get_dir_games_time_control(Classical);
 			let games_iter = new GamesIterator(game_dir);
 			while (!games_iter.end_record_list()) {
 				let current_games = games_iter.get_current_game_array();
@@ -2621,7 +2525,7 @@ for (let i = 0; i < N; ++i) {
 
 				for (let i = 0; i < current_games.length; ++i) {
 					const gi = current_games[i];
-					expect(gi.time_control_id).toEqual('Classical');
+					expect(gi.time_control_id).toEqual(Classical);
 					expect(long_date_to_short_date(gi.when)).toEqual(current_record);
 				}
 				games_iter.next_record();
@@ -2634,7 +2538,7 @@ for (let i = 0; i < N; ++i) {
 		let classical: Game[] = [];
 
 		test('Read Blitz', () => {
-			const game_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Blitz');
+			const game_dir = EnvironmentManager.get_instance().get_dir_games_time_control(Blitz);
 			let games_iter = new GamesIterator(game_dir);
 			while (!games_iter.end_record_list()) {
 				blitz = blitz.concat(games_iter.get_current_game_array());
@@ -2642,7 +2546,7 @@ for (let i = 0; i < N; ++i) {
 			}
 		});
 		test('Read Classical', () => {
-			const game_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Classical');
+			const game_dir = EnvironmentManager.get_instance().get_dir_games_time_control(Classical);
 			let games_iter = new GamesIterator(game_dir);
 			while (!games_iter.end_record_list()) {
 				classical = classical.concat(games_iter.get_current_game_array());
@@ -2656,7 +2560,7 @@ for (let i = 0; i < N; ++i) {
 
 		test('Read Blitz and compare', () => {
 			let all_games: Game[] = [];
-			const game_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Blitz');
+			const game_dir = EnvironmentManager.get_instance().get_dir_games_time_control(Blitz);
 			let games_iter = new GamesIterator(game_dir);
 			while (!games_iter.end_record_list()) {
 				all_games = all_games.concat(games_iter.get_current_game_array());
@@ -2669,7 +2573,7 @@ for (let i = 0; i < N; ++i) {
 		});
 		test('Read Classical and compare', () => {
 			let all_games: Game[] = [];
-			const game_dir = EnvironmentManager.get_instance().get_dir_games_time_control('Classical');
+			const game_dir = EnvironmentManager.get_instance().get_dir_games_time_control(Classical);
 			let games_iter = new GamesIterator(game_dir);
 			while (!games_iter.end_record_list()) {
 				all_games = all_games.concat(games_iter.get_current_game_array());
@@ -2687,7 +2591,7 @@ for (let i = 0; i < N; ++i) {
 		let classical: Graph | null = null;
 
 		test('Read Blitz', () => {
-			const graph_dir = EnvironmentManager.get_instance().get_dir_graphs_time_control('Blitz');
+			const graph_dir = EnvironmentManager.get_instance().get_dir_graphs_time_control(Blitz);
 			blitz = graph_from_string(graph_dir);
 			expect(blitz).not.toBeNull();
 			if (isNotDefined(blitz)) {
@@ -2695,7 +2599,7 @@ for (let i = 0; i < N; ++i) {
 			}
 		});
 		test('Read Classical', () => {
-			const graph_dir = EnvironmentManager.get_instance().get_dir_graphs_time_control('Classical');
+			const graph_dir = EnvironmentManager.get_instance().get_dir_graphs_time_control(Classical);
 			classical = graph_from_string(graph_dir);
 			expect(classical).not.toBeNull();
 			if (isNotDefined(classical)) {
@@ -2708,12 +2612,12 @@ for (let i = 0; i < N; ++i) {
 		});
 
 		test('Read Blitz and compare', () => {
-			const graph_dir = EnvironmentManager.get_instance().get_dir_graphs_time_control('Blitz');
+			const graph_dir = EnvironmentManager.get_instance().get_dir_graphs_time_control(Blitz);
 			const blitz2 = graph_from_string(graph_dir);
 			expect(blitz).toEqual(blitz2);
 		});
 		test('Read Classical and compare', () => {
-			const graph_dir = EnvironmentManager.get_instance().get_dir_graphs_time_control('Classical');
+			const graph_dir = EnvironmentManager.get_instance().get_dir_graphs_time_control(Classical);
 			const classical2 = graph_from_string(graph_dir);
 			expect(classical).toEqual(classical2);
 		});
