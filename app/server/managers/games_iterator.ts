@@ -30,7 +30,7 @@ import path from 'path';
 import fs from 'fs';
 
 import { Game, GameId } from '@common/models/game';
-import { DateStringLongMillis, DateStringShort, log_now } from '@server/utils/time';
+import { DateLongMillis, DateShort, log_now } from '@server/utils/time';
 import { game_array_from_string } from '@common/io/game';
 import { search_by_key, where_should_be_inserted_by_key } from '@server/utils/searching';
 import { read_directory } from '@server/utils/read_directory';
@@ -50,7 +50,7 @@ import { isNotDefined } from '@common/utils/is_defined';
  */
 export class GamesIterator {
 	private directory: string = '';
-	private record_files_list: DateStringShort[] = [];
+	private record_files_list: DateShort[] = [];
 	private record_idx: number = 0;
 
 	private game_set: Game[] = [];
@@ -86,10 +86,10 @@ export class GamesIterator {
 	get_number_of_records(): number {
 		return this.record_files_list.length;
 	}
-	get_all_records(): DateStringShort[] {
+	get_all_records(): DateShort[] {
 		return this.record_files_list;
 	}
-	get_current_record_name(): DateStringShort {
+	get_current_record_name(): DateShort {
 		return this.record_files_list[this.record_idx];
 	}
 	get_current_record_index(): number {
@@ -178,8 +178,8 @@ export class GamesIterator {
 	}
 
 	/// Locate the record named 'record'
-	locate_record(record: DateStringShort): boolean {
-		const [idx, exists] = where_should_be_inserted_by_key(this.record_files_list, (s: DateStringShort): number => {
+	locate_record(record: DateShort): boolean {
+		const [idx, exists] = where_should_be_inserted_by_key(this.record_files_list, (s: DateShort): number => {
 			return record.localeCompare(s);
 		});
 		this.record_idx = idx;
@@ -204,10 +204,10 @@ export class GamesIterator {
 	 * @pre The iterator can be in any state prior to calling this function.
 	 * @post The iterator is left in an invalid state in case of failure.
 	 */
-	locate_first_game_after(record: DateStringShort, when: DateStringLongMillis): boolean {
+	locate_first_game_after(record: DateShort, when: DateLongMillis): boolean {
 		const [record_idx, record_exists] = where_should_be_inserted_by_key(
 			this.record_files_list,
-			(s: DateStringShort): number => {
+			(s: DateShort): number => {
 				return record.localeCompare(s);
 			}
 		);
@@ -238,8 +238,8 @@ export class GamesIterator {
 	 * @pre The iterator can be in any state prior to calling this function.
 	 * @post The iterator is left in an invalid state in case of failure.
 	 */
-	locate_game(record: DateStringShort, id: GameId): boolean {
-		this.record_idx = search_by_key(this.record_files_list, (s: DateStringShort): number => {
+	locate_game(record: DateShort, id: GameId): boolean {
+		this.record_idx = search_by_key(this.record_files_list, (s: DateShort): number => {
 			return record.localeCompare(s);
 		});
 		if (this.record_idx == -1) {

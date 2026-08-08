@@ -28,7 +28,7 @@ import path from 'path';
 import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:managers/challenges');
 
-import { DateStringLong, log_now, long_date_to_short_and_tiny_date } from '@server/utils/time';
+import { DateLong, log_now, long_date_to_short_and_tiny_date } from '@server/utils/time';
 import { ChallengesManager } from '@server/managers/challenges_manager';
 import { EnvironmentManager } from '@server/managers/environment_manager';
 import { Challenge, new_challenge, set_result, unset_result } from '@common/models/challenge';
@@ -74,7 +74,7 @@ export function challenge_send_new(
 	receiver: PlayerPrivateId,
 	time_control_id: TimeControlId,
 	time_control_name: TimeControlName,
-	when: DateStringLong
+	when: DateLong
 ): Challenge {
 	debug(log_now(), 'Adding a new challenge...');
 
@@ -136,7 +136,7 @@ export function challenge_decline(c: Challenge): void {
 export function challenge_set_result(
 	c: Challenge,
 	by: PlayerPrivateId,
-	when: DateStringLong,
+	when: DateLong,
 	white: PlayerPrivateId,
 	black: PlayerPrivateId,
 	result: GameResult

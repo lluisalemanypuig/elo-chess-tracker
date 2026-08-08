@@ -24,7 +24,7 @@ Contact:
 */
 
 import { z } from 'zod';
-import { DateStringLongMillis } from '@server/utils/time';
+import { DateLongMillis, DateLongMillisSchema } from '@server/utils/time';
 import { GameResult, GameResultSchema } from '@common/models/game';
 import {
 	TimeControlId,
@@ -61,19 +61,19 @@ export const ChallengeSchema = z
 		/// Time control of the challenge
 		time_control_name: TimeControlNameSchema,
 		/// Date when the challenge was sent
-		when_challenge_sent: z.string() as z.ZodType<DateStringLongMillis>,
+		when_challenge_sent: DateLongMillisSchema,
 		/// Date when the challenge was accepted
-		when_challenge_accepted: z.string().optional() as z.ZodType<DateStringLongMillis | undefined>,
+		when_challenge_accepted: DateLongMillisSchema.optional(),
 
 		/// Has the result been set at some point?
 		result_was_set: z.boolean().default(false),
 		/// Date when the result of the game was last modified
-		when_result_set: z.string().optional() as z.ZodType<DateStringLongMillis | undefined>,
+		when_result_set: DateLongMillisSchema.optional(),
 		/// Player who set the result
 		result_set_by: PlayerPrivateIdSchema.optional(),
 
 		/// Date when the result of the game was accepted.
-		when_result_accepted: z.string().optional() as z.ZodType<DateStringLongMillis | undefined>,
+		when_result_accepted: DateLongMillisSchema.optional(),
 		/// User that accepted the result
 		result_accepted_by: z.string().optional(),
 
@@ -102,7 +102,7 @@ export function new_challenge(
 	sent_to: PlayerPrivateId,
 	time_control_id: TimeControlId,
 	time_control_name: TimeControlName,
-	when_challenge_sent: DateStringLongMillis
+	when_challenge_sent: DateLongMillis
 ): Challenge {
 	return {
 		id: id,
@@ -126,7 +126,7 @@ export function new_challenge(
 
 interface Result {
 	by: PlayerPrivateId;
-	when: DateStringLongMillis;
+	when: DateLongMillis;
 	white: PlayerPrivateId;
 	black: PlayerPrivateId;
 	result: GameResult;
@@ -163,7 +163,7 @@ export function unset_result(c: Challenge): void {
 }
 
 /// Accepts the result
-export function set_result_accepted(c: Challenge, by: string, d: string) {
+export function set_result_accepted(c: Challenge, by: string, when: DateLongMillis) {
 	if (!c.result_was_set) {
 		throw new Error('Result must have been set previously');
 	}
@@ -172,5 +172,5 @@ export function set_result_accepted(c: Challenge, by: string, d: string) {
 	}
 
 	c.result_accepted_by = by;
-	c.when_result_accepted = d;
+	c.when_result_accepted = when;
 }

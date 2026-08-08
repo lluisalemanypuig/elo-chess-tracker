@@ -33,7 +33,6 @@ import { empty_session_id_cookie, make_session_id_cookie } from '@server/utils/c
 import { session_id_add, session_id_delete } from '@server/managers/session';
 import { SessionIDManager } from '@server/managers/session_id_manager';
 import { SessionIDTokenFieldName, SessionIDUsernameFieldName } from '@common/models/session_id';
-import { User } from '@common/models/user';
 import { UsersManager } from '@server/managers/users_manager';
 import { isNotDefined } from '@common/utils/is_defined';
 import { UserLoginInputSchema } from '@common/schemas/login_logout';
@@ -64,10 +63,10 @@ export async function post_user_login(req: Request, res: Response) {
 	}
 
 	// user exists
-	const pwd = (user_data as User).password;
+	const pwd = user_data.password;
 
 	// check if password is correct
-	const is_password_correct = is_password_of_user_correct(username, password_plain_text, pwd.encrypted, pwd.iv);
+	const is_password_correct = is_password_of_user_correct(username, password_plain_text, pwd);
 
 	// correct password
 	if (!is_password_correct) {

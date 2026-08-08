@@ -24,7 +24,7 @@ Contact:
 */
 
 import CryptoJS from 'crypto-js';
-import { interleave_strings } from '@app/server/utils/misc';
+import { interleave_strings } from '@server/utils/misc';
 import { PlayerPrivateId } from '@common/models/player';
 import { Password } from '@common/models/password';
 

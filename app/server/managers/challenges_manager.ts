@@ -24,7 +24,7 @@ Contact:
 */
 
 import { Challenge, ChallengeId, toChallengeId } from '@common/models/challenge';
-import { number_to_string } from '@app/server/utils/misc';
+import { number_to_string } from '@server/utils/misc';
 
 export const CHALLENGE_ID_LENGTH = 10;
 

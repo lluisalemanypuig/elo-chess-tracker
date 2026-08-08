@@ -27,7 +27,7 @@ import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:server_games');
 import { Request, Response } from 'express';
 
-import { DateStringShort, log_now } from '@server/utils/time';
+import { log_now } from '@server/utils/time';
 import { is_user_logged_in } from '@server/managers/session';
 import { GAMES_CREATE, GAMES_DELETE, GAMES_EDIT } from '@common/models/user_action';
 import {
@@ -38,9 +38,7 @@ import {
 	game_find_by_id,
 	recalculate_all_ratings
 } from '@server/managers/games';
-import { GameResult } from '@common/models/game';
 import { ADMIN } from '@common/models/user_role';
-import { TimeControlId } from '@common/models/time_control';
 import {
 	can_user_create_a_game,
 	can_user_delete_a_game,
@@ -160,11 +158,11 @@ export async function post_game_create(req: Request, res: Response) {
 	const white_rid = game_parse.data.white;
 	const black_rid = game_parse.data.black;
 	const game_title = game_parse.data.title;
-	const result: GameResult = game_parse.data.result;
-	const time_control_id: TimeControlId = game_parse.data.time_control_id;
+	const result = game_parse.data.result;
+	const time_control_id = game_parse.data.time_control_id;
 	const time_control_name = game_parse.data.time_control_name;
-	const game_date: DateStringShort = game_parse.data.d;
-	const game_time: string = game_parse.data.t; // HH:mm:ss:SSS
+	const game_date = game_parse.data.whenCreated;
+	const game_time = game_parse.data.timeCreated;
 
 	const mem = UsersManager.get_instance();
 

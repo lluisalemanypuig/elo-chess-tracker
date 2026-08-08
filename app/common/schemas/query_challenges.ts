@@ -28,6 +28,7 @@ import { PlayerPrivateIdSchema } from '@common/models/player';
 import { UserGivenNameSchema } from '@common/models/user';
 import { ChallengeIdSchema } from '@common/models/challenge';
 import { TimeControlNameSchema } from '@common/models/time_control';
+import { DateLongMillisSchema } from '@server/utils/time';
 
 // Routes.QUERY_CHALLENGE_RECEIVED
 
@@ -35,7 +36,7 @@ export const QueryChallengesReceivedOutputSingleSchema = z.object({
 	id: ChallengeIdSchema,
 	title: z.string(),
 	sent_by: UserGivenNameSchema,
-	sent_when: z.string(), // DateStringLongMillis
+	sent_when: DateLongMillisSchema,
 	time_control_name: TimeControlNameSchema,
 	can_be_declined: z.boolean()
 });
@@ -52,7 +53,7 @@ export const QueryChallengesSentOutputSingleSchema = z.object({
 	id: ChallengeIdSchema,
 	title: z.string(),
 	sent_to: UserGivenNameSchema,
-	sent_when: z.string(), // DateStringLongMillis
+	sent_when: DateLongMillisSchema,
 	time_control_name: TimeControlNameSchema,
 	can_be_declined: z.boolean()
 });
@@ -75,7 +76,7 @@ export const QueryChallengesPendingResultOutputSingleSchema = z.object({
 	/// TODO: use user public IDs
 	sent_to_username: PlayerPrivateIdSchema,
 	opponent: z.string(),
-	sent_when: z.string(), // DateStringLongMillis
+	sent_when: DateLongMillisSchema,
 	time_control_name: TimeControlNameSchema
 });
 
@@ -91,7 +92,7 @@ export const QueryChallengesConfirmResultOtherOutputSingleSchema = z.object({
 	id: ChallengeIdSchema,
 	title: z.string(),
 	opponent: UserGivenNameSchema,
-	sent_when: z.string(), // DateStringLongMillis
+	sent_when: DateLongMillisSchema,
 	white: UserGivenNameSchema,
 	black: UserGivenNameSchema,
 	result: z.string(),
@@ -114,7 +115,7 @@ export const QueryChallengesConfirmResultSelfOutputSingleSchema = z.object({
 	id: ChallengeIdSchema,
 	title: z.string(),
 	opponent: UserGivenNameSchema,
-	sent_when: z.string(), // DateStringLongMillis
+	sent_when: DateLongMillisSchema,
 	white: UserGivenNameSchema,
 	black: UserGivenNameSchema,
 	result: z.string(),

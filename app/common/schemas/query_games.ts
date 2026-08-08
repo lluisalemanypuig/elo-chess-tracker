@@ -27,6 +27,7 @@ import { z } from 'zod';
 import { UserGivenNameSchema } from '@common/models/user';
 import { TimeControlIdSchema, TimeControlNameSchema } from '@common/models/time_control';
 import { GameIdSchema } from '@common/models/game';
+import { DateLongMillisSchema } from '@server/utils/time';
 
 // Routes.QUERY_GAME_LIST_OWN
 
@@ -53,7 +54,7 @@ export const QueryGamesListOutputSingleSchema = z.object({
 	black: UserGivenNameSchema,
 	result: z.string(),
 	time_control_name: TimeControlNameSchema,
-	date: z.string(),
+	date: DateLongMillisSchema,
 	white_rating: z.string(),
 	black_rating: z.string(),
 	white_increment: z.string(),

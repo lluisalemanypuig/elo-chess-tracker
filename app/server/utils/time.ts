@@ -24,18 +24,59 @@ Contact:
 */
 
 import moment from 'moment';
+import { z } from 'zod';
 
-/// YYYY-MM-DD..HH:mm:ss:SSS
-export type DateStringLongMillis = string;
+/// DateLongMillis: YYYY-MM-DD..HH:mm:ss:SSS
 
-/// YYYY-MM-DD..HH:mm:ss
-export type DateStringLong = string;
+declare const DateLongMillisBrand: unique symbol;
+export type DateLongMillisLocal = number & {
+	readonly [DateLongMillisBrand]: 'DateLongMillis';
+};
+export const DateLongMillisSchema = z.string().brand<'DateLongMillisLocal'>();
+export type DateLongMillis = z.infer<typeof DateLongMillisSchema>;
 
-/// YYYY-MM-DD
-export type DateStringShort = string;
+export function toDateLongMillis(s: string): DateLongMillis {
+	return s as DateLongMillis;
+}
+
+/// DateLong: YYYY-MM-DD..HH:mm:ss
+
+declare const DateLongBrand: unique symbol;
+export type DateLongLocal = number & {
+	readonly [DateLongBrand]: 'DateLong';
+};
+export const DateLongSchema = z.string().brand<'DateLongLocal'>();
+export type DateLong = z.infer<typeof DateLongSchema>;
+
+export function toDateLong(s: string): DateLong {
+	return s as DateLong;
+}
+
+/// DateShort: YYYY-MM-DD
+
+declare const DateShortBrand: unique symbol;
+export type DateShortLocal = number & {
+	readonly [DateShortBrand]: 'DateShort';
+};
+export const DateShortSchema = z.string().brand<'DateShortLocal'>();
+export type DateShort = z.infer<typeof DateShortSchema>;
+
+export function toDateShort(s: string): DateShort {
+	return s as DateShort;
+}
 
 /// HH:mm:ss:SSS
-export type DateStringTiny = string;
+
+declare const DateTinyBrand: unique symbol;
+export type DateTinyLocal = number & {
+	readonly [DateTinyBrand]: 'DateTiny';
+};
+export const DateTinySchema = z.string().brand<'DateTinyLocal'>();
+export type DateTiny = z.infer<typeof DateTinySchema>;
+
+export function toDateTiny(s: string): DateTiny {
+	return s as DateTiny;
+}
 
 /**
  * @brief Formats a date into a string YYYY-MM-DD..HH:mm:ss:SSS
@@ -44,8 +85,8 @@ export type DateStringTiny = string;
  * @param date A Date object.
  * @returns A string.
  */
-export function date_to_string_long_millis(date: Date): DateStringLongMillis {
-	return moment.utc(date).local().format('YYYY-MM-DD..HH:mm:ss:SSS');
+export function date_to_string_long_millis(date: Date): DateLongMillis {
+	return toDateLongMillis(moment.utc(date).local().format('YYYY-MM-DD..HH:mm:ss:SSS'));
 }
 
 /**
@@ -53,8 +94,8 @@ export function date_to_string_long_millis(date: Date): DateStringLongMillis {
  * @param date A Date object.
  * @returns A string.
  */
-export function date_to_string_long(date: Date): DateStringLong {
-	return moment.utc(date).local().format('YYYY-MM-DD..HH:mm:ss');
+export function date_to_string_long(date: Date): DateLong {
+	return toDateLong(moment.utc(date).local().format('YYYY-MM-DD..HH:mm:ss'));
 }
 
 /**
@@ -63,8 +104,8 @@ export function date_to_string_long(date: Date): DateStringLong {
  * The part * can be anything.
  * @returns A string object containing a date formatted with YYYY-MM-DD.
  */
-export function long_date_to_short_date(date: DateStringLong | DateStringLongMillis): DateStringShort {
-	return date.split('..')[0];
+export function long_date_to_short_date(date: DateLong | DateLongMillis): DateShort {
+	return toDateShort(date.split('..')[0]);
 }
 
 /**
@@ -73,8 +114,8 @@ export function long_date_to_short_date(date: DateStringLong | DateStringLongMil
  * The part * can be anything.
  * @returns A string object containing a date formatted with HH:mm:ss*.
  */
-export function long_date_to_tiny_date(date: DateStringLongMillis): DateStringTiny {
-	return date.split('..')[1];
+export function long_date_to_tiny_date(date: DateLongMillis): DateTiny {
+	return toDateTiny(date.split('..')[1]);
 }
 
 /**
@@ -83,17 +124,17 @@ export function long_date_to_tiny_date(date: DateStringLongMillis): DateStringTi
  * The part * can be anything.
  * @returns A string object containing a date formatted with HH:mm:ss*.
  */
-export function long_date_to_short_and_tiny_date(date: DateStringLongMillis): [DateStringShort, DateStringTiny] {
+export function long_date_to_short_and_tiny_date(date: DateLongMillis): [DateShort, DateTiny] {
 	const s = date.split('..');
-	return [s[0], s[1]];
+	return [toDateShort(s[0]), toDateTiny(s[1])];
 }
 
 /// Returns the current date in string format "YYYY-MM-DD..HH:mm:ss"
-export function log_now(): DateStringLong {
+export function log_now(): DateLong {
 	return date_to_string_long(new Date());
 }
 
 /// Returns the current date in string format "YYYY-MM-DD..HH:mm:ss:SSS"
-export function log_now_millis(): DateStringLongMillis {
+export function log_now_millis(): DateLongMillis {
 	return date_to_string_long_millis(new Date());
 }

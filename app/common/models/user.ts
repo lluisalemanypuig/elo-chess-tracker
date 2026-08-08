@@ -31,13 +31,13 @@ import { UserAction } from '@common/models/user_action';
 import { UserRoleToUserAction } from '@server/managers/user_role_action';
 import { TimeControlRating } from '@common/models/time_control_rating';
 import { TimeControlId, TimeControlIdSchema } from '@common/models/time_control';
-import { copyarray } from '@app/server/utils/misc';
+import { copyarray } from '@server/utils/misc';
 import { search_by_key, search_linear_by_key, where_should_be_inserted_by_key } from '@server/utils/searching';
-import { DateStringShort } from '@server/utils/time';
+import { DateShort, DateShortSchema } from '@server/utils/time';
 
 export const GameNumberSchema = z
 	.object({
-		record: z.string() as z.ZodType<DateStringShort>,
+		record: DateShortSchema,
 		amount: z.number()
 	})
 	.strict();
@@ -153,7 +153,7 @@ export class User extends Player {
 	 * @param id Time control id of the game.
 	 * @param game_record New game record string.
 	 */
-	add_game(id: TimeControlId, game_record: DateStringShort): void {
+	add_game(id: TimeControlId, game_record: DateShort): void {
 		const idx = search_linear_by_key(this.games, (p: TimeControlGame): boolean => {
 			return p.time_control == id;
 		});
@@ -171,7 +171,7 @@ export class User extends Player {
 		}
 	}
 
-	delete_game(id: TimeControlId, game_record: DateStringShort): void {
+	delete_game(id: TimeControlId, game_record: DateShort): void {
 		const idx = search_linear_by_key(this.games, (p: TimeControlGame): boolean => {
 			return p.time_control == id;
 		});
