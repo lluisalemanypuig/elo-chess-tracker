@@ -8,6 +8,11 @@ function do_replace {
     whereto=$5
     echo $whereto
 
+    if [ ! -f $whereto ]; then
+        echo "    File '$whereto' does not exist"
+        exit 1
+    fi
+
     echo "    $title"
     if [ "$direction" == "1" ]; then
         echo "        $new_str"
