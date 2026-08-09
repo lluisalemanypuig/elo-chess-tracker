@@ -25,7 +25,7 @@ Contact:
 
 import { Rating } from '@common/models/rating-framework/rating';
 
-export const EloRatingKeys = ['rating', 'numGames', 'won', 'drawn', 'lost', 'K', 'surpassed2400'];
+export const ELO_RATING_KEYS = ['rating', 'numGames', 'won', 'drawn', 'lost', 'K', 'surpassed2400'] as const;
 
 /**
  * @brief Simple class to encode a rating.

@@ -24,7 +24,7 @@ Contact:
 */
 
 import { readJsonArrayString, readJsonObjectString } from '@common/io/generic';
-import { EloRating, EloRatingKeys } from '@common/models/rating-framework/Elo/rating';
+import { EloRating, ELO_RATING_KEYS } from '@common/models/rating-framework/Elo/rating';
 
 /**
  * @brief Parses a JSON string and returns a TimeControlRating object.
@@ -42,7 +42,7 @@ export function ratingFromJsonElo(json: any): EloRating {
  * @pre Value @str cannot start with '['.
  */
 export function ratingFromStringElo(str: string): EloRating | null {
-	return readJsonObjectString(str, EloRatingKeys, ratingFromJsonElo);
+	return readJsonObjectString(str, ELO_RATING_KEYS, ratingFromJsonElo);
 }
 
 /**
@@ -51,5 +51,5 @@ export function ratingFromStringElo(str: string): EloRating | null {
  * @returns An array of Player objects.
  */
 export function ratingArrayFromStringElo(str: string): EloRating[] | null {
-	return readJsonArrayString(str, EloRatingKeys, ratingFromJsonElo);
+	return readJsonArrayString(str, ELO_RATING_KEYS, ratingFromJsonElo);
 }

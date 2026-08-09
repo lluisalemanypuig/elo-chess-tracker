@@ -45,8 +45,8 @@ export function readSchema<T extends z.ZodTypeAny>(schema: T, str: string): z.ou
 	return res.data;
 }
 
-export function checkJsonKeys(json: any, expectedKeys: string[]): boolean {
-	let allKeys = [];
+export function checkJsonKeys<Key extends string>(json: any, expectedKeys: readonly Key[]): boolean {
+	let allKeys: Key[] = [];
 	for (const key of expectedKeys) {
 		allKeys.push(key);
 		if (!(key in json)) {
@@ -63,9 +63,9 @@ export function checkJsonKeys(json: any, expectedKeys: string[]): boolean {
 	return true;
 }
 
-export function readJsonObjectString<T>(
+export function readJsonObjectString<T, Key extends string>(
 	str: string,
-	expectedKeys: string[],
+	expectedKeys: readonly Key[],
 	conversion: (json: any) => T | null
 ): T | null {
 	let json: any;
@@ -90,9 +90,9 @@ export function readJsonObjectString<T>(
 	return conversion(json);
 }
 
-export function readJsonArrayString<T>(
+export function readJsonArrayString<T, Key extends string>(
 	str: string,
-	expectedKeys: string[],
+	expectedKeys: readonly Key[],
 	conversion: (json: any) => T | null
 ): T[] | null {
 	let json: any;
