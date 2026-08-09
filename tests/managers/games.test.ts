@@ -38,7 +38,7 @@ import { toUserGivenName, User } from '@common/models/user';
 import { UsersManager } from '@server/managers/users_manager';
 import { game_array_from_string } from '@common/io/game';
 import { GamesIterator } from '@server/managers/games_iterator';
-import { long_date_to_short_date, toDateHHmmssSSS, toDateYYYYMMDD } from '@app/common/utils/time';
+import { dateFullToMajor, toDateMinor, toDateMajor } from '@common/utils/time';
 import { clear_server } from '@server/managers/memory/clear';
 import { GraphsManager } from '@server/managers/graphs_manager';
 import { Graph } from '@common/models/graph/graph';
@@ -173,8 +173,8 @@ describe('Sequential game creation', () => {
 			'white_wins',
 			Blitz,
 			Blitz5p3,
-			toDateYYYYMMDD('2025-01-19'),
-			toDateHHmmssSSS('17:06:00:000')
+			toDateMajor('2025-01-19'),
+			toDateMinor('17:06:00:000')
 		);
 		{
 			const game_array = game_array_from_string(fs.readFileSync(path.join(blitz_dir, '2025-01-19'), 'utf8'));
@@ -226,8 +226,8 @@ describe('Sequential game creation', () => {
 			'black_wins',
 			Blitz,
 			Blitz5p3,
-			toDateYYYYMMDD('2025-01-19'),
-			toDateHHmmssSSS('17:06:10:000')
+			toDateMajor('2025-01-19'),
+			toDateMinor('17:06:10:000')
 		);
 		{
 			const game_array = game_array_from_string(fs.readFileSync(path.join(blitz_dir, '2025-01-19'), 'utf8'));
@@ -287,8 +287,8 @@ describe('Sequential game creation', () => {
 			'draw',
 			Blitz,
 			Blitz5p3,
-			toDateYYYYMMDD('2025-01-19'),
-			toDateHHmmssSSS('17:06:20:000')
+			toDateMajor('2025-01-19'),
+			toDateMinor('17:06:20:000')
 		);
 		{
 			const game_array = game_array_from_string(fs.readFileSync(path.join(blitz_dir, '2025-01-19'), 'utf8'));
@@ -356,8 +356,8 @@ describe('Sequential game creation', () => {
 			'black_wins',
 			Blitz,
 			Blitz5p3,
-			toDateYYYYMMDD('2025-01-19'),
-			toDateHHmmssSSS('17:06:30:000')
+			toDateMajor('2025-01-19'),
+			toDateMinor('17:06:30:000')
 		);
 		{
 			const game_array = game_array_from_string(fs.readFileSync(path.join(blitz_dir, '2025-01-19'), 'utf8'));
@@ -437,8 +437,8 @@ describe('Sequential game creation', () => {
 			'white_wins',
 			Classical,
 			Classical90p30,
-			toDateYYYYMMDD('2025-01-09'),
-			toDateHHmmssSSS('17:06:00:000')
+			toDateMajor('2025-01-09'),
+			toDateMinor('17:06:00:000')
 		);
 		{
 			const game_array = game_array_from_string(fs.readFileSync(path.join(classical_dir, '2025-01-09'), 'utf8'));
@@ -490,8 +490,8 @@ describe('Sequential game creation', () => {
 			'black_wins',
 			Classical,
 			Classical90p30,
-			toDateYYYYMMDD('2025-01-09'),
-			toDateHHmmssSSS('17:06:10:000')
+			toDateMajor('2025-01-09'),
+			toDateMinor('17:06:10:000')
 		);
 		{
 			const game_array = game_array_from_string(fs.readFileSync(path.join(classical_dir, '2025-01-09'), 'utf8'));
@@ -551,8 +551,8 @@ describe('Sequential game creation', () => {
 			'draw',
 			Classical,
 			Classical90p30,
-			toDateYYYYMMDD('2025-01-09'),
-			toDateHHmmssSSS('17:06:20:000')
+			toDateMajor('2025-01-09'),
+			toDateMinor('17:06:20:000')
 		);
 		{
 			const game_array = game_array_from_string(fs.readFileSync(path.join(classical_dir, '2025-01-09'), 'utf8'));
@@ -620,8 +620,8 @@ describe('Sequential game creation', () => {
 			'black_wins',
 			Classical,
 			Classical90p30,
-			toDateYYYYMMDD('2025-01-09'),
-			toDateHHmmssSSS('17:06:30:000')
+			toDateMajor('2025-01-09'),
+			toDateMinor('17:06:30:000')
 		);
 		{
 			const game_array = game_array_from_string(fs.readFileSync(path.join(classical_dir, '2025-01-09'), 'utf8'));
@@ -703,8 +703,8 @@ describe('Inverse game creation', () => {
 			'draw',
 			Blitz,
 			Blitz5p0,
-			toDateYYYYMMDD('2025-01-20'),
-			toDateHHmmssSSS('17:06:30:000')
+			toDateMajor('2025-01-20'),
+			toDateMinor('17:06:30:000')
 		);
 		{
 			const game_array = game_array_from_string(fs.readFileSync(path.join(blitz_dir, '2025-01-20'), 'utf8'));
@@ -756,8 +756,8 @@ describe('Inverse game creation', () => {
 			'draw',
 			Blitz,
 			Blitz5p0,
-			toDateYYYYMMDD('2025-01-20'),
-			toDateHHmmssSSS('17:06:20:000')
+			toDateMajor('2025-01-20'),
+			toDateMinor('17:06:20:000')
 		);
 		{
 			const game_array = game_array_from_string(fs.readFileSync(path.join(blitz_dir, '2025-01-20'), 'utf8'));
@@ -817,8 +817,8 @@ describe('Inverse game creation', () => {
 			'black_wins',
 			Blitz,
 			Blitz5p3,
-			toDateYYYYMMDD('2025-01-20'),
-			toDateHHmmssSSS('17:06:10:000')
+			toDateMajor('2025-01-20'),
+			toDateMinor('17:06:10:000')
 		);
 		{
 			const game_array = game_array_from_string(fs.readFileSync(path.join(blitz_dir, '2025-01-20'), 'utf8'));
@@ -886,8 +886,8 @@ describe('Inverse game creation', () => {
 			'white_wins',
 			Blitz,
 			Blitz5p3,
-			toDateYYYYMMDD('2025-01-20'),
-			toDateHHmmssSSS('17:06:00:000')
+			toDateMajor('2025-01-20'),
+			toDateMinor('17:06:00:000')
 		);
 		{
 			const game_array = game_array_from_string(fs.readFileSync(path.join(blitz_dir, '2025-01-20'), 'utf8'));
@@ -967,8 +967,8 @@ describe('Inverse game creation', () => {
 			'draw',
 			Classical,
 			Classical90p30,
-			toDateYYYYMMDD('2025-01-10'),
-			toDateHHmmssSSS('17:06:30:000')
+			toDateMajor('2025-01-10'),
+			toDateMinor('17:06:30:000')
 		);
 		{
 			const game_array = game_array_from_string(fs.readFileSync(path.join(classical_dir, '2025-01-10'), 'utf8'));
@@ -1020,8 +1020,8 @@ describe('Inverse game creation', () => {
 			'draw',
 			Classical,
 			Classical90p30,
-			toDateYYYYMMDD('2025-01-10'),
-			toDateHHmmssSSS('17:06:20:000')
+			toDateMajor('2025-01-10'),
+			toDateMinor('17:06:20:000')
 		);
 		{
 			const game_array = game_array_from_string(fs.readFileSync(path.join(classical_dir, '2025-01-10'), 'utf8'));
@@ -1081,8 +1081,8 @@ describe('Inverse game creation', () => {
 			'black_wins',
 			Classical,
 			Classical90p30,
-			toDateYYYYMMDD('2025-01-10'),
-			toDateHHmmssSSS('17:06:10:000')
+			toDateMajor('2025-01-10'),
+			toDateMinor('17:06:10:000')
 		);
 		{
 			const game_array = game_array_from_string(fs.readFileSync(path.join(classical_dir, '2025-01-10'), 'utf8'));
@@ -1150,8 +1150,8 @@ describe('Inverse game creation', () => {
 			'white_wins',
 			Classical,
 			Classical90p30,
-			toDateYYYYMMDD('2025-01-10'),
-			toDateHHmmssSSS('17:06:00:000')
+			toDateMajor('2025-01-10'),
+			toDateMinor('17:06:00:000')
 		);
 		{
 			const game_array = game_array_from_string(fs.readFileSync(path.join(classical_dir, '2025-01-10'), 'utf8'));
@@ -1232,8 +1232,8 @@ describe('Zig-zag game creation', () => {
 			'draw',
 			Blitz,
 			Blitz5p0,
-			toDateYYYYMMDD('2025-01-20'),
-			toDateHHmmssSSS('17:06:25:000')
+			toDateMajor('2025-01-20'),
+			toDateMinor('17:06:25:000')
 		);
 		{
 			const game_array = game_array_from_string(fs.readFileSync(path.join(blitz_dir, '2025-01-20'), 'utf8'));
@@ -1317,8 +1317,8 @@ describe('Zig-zag game creation', () => {
 			'draw',
 			Blitz,
 			Blitz5p0,
-			toDateYYYYMMDD('2025-01-20'),
-			toDateHHmmssSSS('17:06:05:000')
+			toDateMajor('2025-01-20'),
+			toDateMinor('17:06:05:000')
 		);
 		{
 			const game_array = game_array_from_string(fs.readFileSync(path.join(blitz_dir, '2025-01-20'), 'utf8'));
@@ -1410,8 +1410,8 @@ describe('Zig-zag game creation', () => {
 			'white_wins',
 			Blitz,
 			Blitz5p3,
-			toDateYYYYMMDD('2025-01-20'),
-			toDateHHmmssSSS('17:06:15:000')
+			toDateMajor('2025-01-20'),
+			toDateMinor('17:06:15:000')
 		);
 		{
 			const game_array = game_array_from_string(fs.readFileSync(path.join(blitz_dir, '2025-01-20'), 'utf8'));
@@ -1511,8 +1511,8 @@ describe('Zig-zag game creation', () => {
 			'black_wins',
 			Blitz,
 			Blitz5p3,
-			toDateYYYYMMDD('2025-01-20'),
-			toDateHHmmssSSS('17:05:55:000')
+			toDateMajor('2025-01-20'),
+			toDateMinor('17:05:55:000')
 		);
 		{
 			const game_array = game_array_from_string(fs.readFileSync(path.join(blitz_dir, '2025-01-20'), 'utf8'));
@@ -1623,8 +1623,8 @@ describe('Zig-zag game creation', () => {
 			'draw',
 			Classical,
 			Classical90p30,
-			toDateYYYYMMDD('2025-01-10'),
-			toDateHHmmssSSS('17:06:25:000')
+			toDateMajor('2025-01-10'),
+			toDateMinor('17:06:25:000')
 		);
 		{
 			const game_array = game_array_from_string(fs.readFileSync(path.join(blitz_dir, '2025-01-10'), 'utf8'));
@@ -1708,8 +1708,8 @@ describe('Zig-zag game creation', () => {
 			'draw',
 			Classical,
 			Classical90p30,
-			toDateYYYYMMDD('2025-01-10'),
-			toDateHHmmssSSS('17:06:05:000')
+			toDateMajor('2025-01-10'),
+			toDateMinor('17:06:05:000')
 		);
 		{
 			const game_array = game_array_from_string(fs.readFileSync(path.join(blitz_dir, '2025-01-10'), 'utf8'));
@@ -1801,8 +1801,8 @@ describe('Zig-zag game creation', () => {
 			'white_wins',
 			Classical,
 			Classical90p30,
-			toDateYYYYMMDD('2025-01-10'),
-			toDateHHmmssSSS('17:06:15:000')
+			toDateMajor('2025-01-10'),
+			toDateMinor('17:06:15:000')
 		);
 		{
 			const game_array = game_array_from_string(fs.readFileSync(path.join(blitz_dir, '2025-01-10'), 'utf8'));
@@ -1902,8 +1902,8 @@ describe('Zig-zag game creation', () => {
 			'black_wins',
 			Classical,
 			Classical90p30,
-			toDateYYYYMMDD('2025-01-10'),
-			toDateHHmmssSSS('17:05:55:000')
+			toDateMajor('2025-01-10'),
+			toDateMinor('17:05:55:000')
 		);
 		{
 			const game_array = game_array_from_string(fs.readFileSync(path.join(blitz_dir, '2025-01-10'), 'utf8'));
@@ -2016,8 +2016,8 @@ describe('Before-time inverse game creation', () => {
 			'draw',
 			Blitz,
 			Blitz5p0,
-			toDateYYYYMMDD('2023-01-20'),
-			toDateHHmmssSSS('17:06:50:000')
+			toDateMajor('2023-01-20'),
+			toDateMinor('17:06:50:000')
 		);
 		{
 			const game_array = game_array_from_string(fs.readFileSync(path.join(blitz_dir, '2023-01-20'), 'utf8'));
@@ -2069,8 +2069,8 @@ describe('Before-time inverse game creation', () => {
 			'draw',
 			Blitz,
 			Blitz5p0,
-			toDateYYYYMMDD('2023-01-10'),
-			toDateHHmmssSSS('17:06:40:000')
+			toDateMajor('2023-01-10'),
+			toDateMinor('17:06:40:000')
 		);
 		{
 			const game_array = game_array_from_string(fs.readFileSync(path.join(blitz_dir, '2023-01-10'), 'utf8'));
@@ -2744,7 +2744,7 @@ for (let i = 0; i < N; ++i) {
 				for (let i = 0; i < current_games.length; ++i) {
 					const gi = current_games[i];
 					expect(gi.time_control_id).toEqual(Blitz);
-					expect(long_date_to_short_date(gi.when)).toEqual(current_record);
+					expect(dateFullToMajor(gi.when)).toEqual(current_record);
 				}
 				games_iter.next_record();
 			}
@@ -2760,7 +2760,7 @@ for (let i = 0; i < N; ++i) {
 				for (let i = 0; i < current_games.length; ++i) {
 					const gi = current_games[i];
 					expect(gi.time_control_id).toEqual(Classical);
-					expect(long_date_to_short_date(gi.when)).toEqual(current_record);
+					expect(dateFullToMajor(gi.when)).toEqual(current_record);
 				}
 				games_iter.next_record();
 			}

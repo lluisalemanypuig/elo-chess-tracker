@@ -27,7 +27,7 @@ import { ADMIN, STUDENT } from '@common/models/user_role';
 import { initialize_rating_functions } from '@server/managers/rating_system';
 import { user_from_string } from '@common/io/user';
 import { isNotDefined } from '@common/utils/is_defined';
-import { toDateYYYYMMDD } from '@app/common/utils/time';
+import { toDateMajor } from '@common/utils/time';
 import { toTimeControlId } from '@common/models/time_control';
 
 const Classical = toTimeControlId('classical');
@@ -76,8 +76,8 @@ describe('IO conversion (Elo)', () => {
 		expect(u.password).toEqual({ encrypted: 'a', iv: 'b' });
 		expect(u.roles).toEqual([ADMIN]);
 		expect(u.is(ADMIN)).toEqual(true);
-		expect(u.get_games(Blitz)).toEqual([{ record: toDateYYYYMMDD('2024-12-31'), amount: 1 }]);
-		expect(u.get_games(Rapid)).toEqual([{ record: toDateYYYYMMDD('2025-01-01'), amount: 1 }]);
+		expect(u.get_games(Blitz)).toEqual([{ record: toDateMajor('2024-12-31'), amount: 1 }]);
+		expect(u.get_games(Rapid)).toEqual([{ record: toDateMajor('2025-01-01'), amount: 1 }]);
 		expect(u.ratings).toEqual([]);
 		expect(u.ratings.length).toBe(0);
 	});

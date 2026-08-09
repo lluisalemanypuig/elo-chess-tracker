@@ -28,14 +28,7 @@ import fs from 'fs';
 import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:managers/games');
 
-import {
-	DateYYYYMMDDHHmmssSSS,
-	DateYYYYMMDD,
-	DateHHmmssSSS,
-	log_now,
-	long_date_to_short_date,
-	toDateYYYYMMDDHHmmssSSS
-} from '@app/common/utils/time';
+import { DateFull, DateMajor, DateMinor, log_now, dateFullToMajor, toDateFull } from '@common/utils/time';
 import { Player, PlayerPrivateId } from '@common/models/player';
 import { Game, GameId, GameResult } from '@common/models/game';
 import { User } from '@common/models/user';
@@ -70,12 +63,12 @@ function game_compare_dates(g: Game): Function {
 function game_next_of_player(
 	username: PlayerPrivateId,
 	time_control_id: TimeControlId,
-	when: DateYYYYMMDDHHmmssSSS
+	when: DateFull
 ): Game | undefined {
 	const games_dir = EnvironmentManager.get_instance().get_dir_games_time_control(time_control_id);
 
 	// The file into which we have to add the new game.
-	const record_str = long_date_to_short_date(when);
+	const record_str = dateFullToMajor(when);
 
 	let games_iter = new GamesIterator(games_dir);
 	let found = games_iter.locate_first_game_after(record_str, when);
@@ -103,7 +96,7 @@ function game_new(
 	result: GameResult,
 	time_control_id: TimeControlId,
 	time_control_name: TimeControlName,
-	when: DateYYYYMMDDHHmmssSSS
+	when: DateFull
 ): Game {
 	// retrieve next id and increment maximum id
 	const id_str: GameId = GamesManager.get_instance().new_game_id();
@@ -252,7 +245,7 @@ function update_game_record(
  * @param record_id Game record id, the file into which we have to add the new game
  * @post Users in the server are update (both memory and user files)
  */
-function game_insert_in_history(g: Game, record_id: DateYYYYMMDD): void {
+function game_insert_in_history(g: Game, record_id: DateMajor): void {
 	let updated_players: Player[] = [];
 
 	const white_username = g.white;
@@ -346,10 +339,10 @@ export function game_add_new(
 	result: GameResult,
 	time_control_id: TimeControlId,
 	time_control_name: TimeControlName,
-	game_record: DateYYYYMMDD,
-	hhmmss: DateHHmmssSSS
+	game_record: DateMajor,
+	hhmmss: DateMinor
 ): void {
-	const when = toDateYYYYMMDDHHmmssSSS(game_record + '..' + hhmmss);
+	const when = toDateFull(game_record + '..' + hhmmss);
 	const white_username = white.username;
 	const black_username = black.username;
 	const g = game_new(title, white_username, black_username, result, time_control_id, time_control_name, when);

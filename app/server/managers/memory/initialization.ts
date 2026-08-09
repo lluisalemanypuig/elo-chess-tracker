@@ -28,7 +28,7 @@ import path from 'path';
 import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:managers/initialization');
 
-import { log_now } from '@app/common/utils/time';
+import { log_now } from '@common/utils/time';
 import { EnvironmentManager } from '@server/managers/environment_manager';
 import { ConfigurationManager } from '@server/managers/configuration_manager';
 import { ChallengesManager } from '@server/managers/challenges_manager';

@@ -27,7 +27,7 @@ import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:server_query_users');
 import { Request, Response } from 'express';
 
-import { log_now } from '@app/common/utils/time';
+import { log_now } from '@common/utils/time';
 import { user_get_all_name_public_id } from '@server/managers/users';
 import { is_user_logged_in } from '@server/managers/session';
 import { User } from '@common/models/user';

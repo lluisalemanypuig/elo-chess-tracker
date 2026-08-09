@@ -49,7 +49,7 @@ import { UsersManager } from '@server/managers/users_manager';
 import { Configuration } from '@common/models/configuration/configuration';
 import { PlayerPrivateId, toPlayerPrivateId } from '@common/models/player';
 import { toTimeControlId, toTimeControlName } from '@common/models/time_control';
-import { toDateYYYYMMDDHHmmssSSS } from '@app/common/utils/time';
+import { toDateFull } from '@common/utils/time';
 
 const webpage_dir = 'tests/webpage';
 const db_dir = path.join(webpage_dir, 'database');
@@ -179,7 +179,7 @@ describe('Check challenge communication', () => {
 			bb,
 			Classical,
 			Classical90p30,
-			toDateYYYYMMDDHHmmssSSS('2025-01-10..20:38:12:000')
+			toDateFull('2025-01-10..20:38:12:000')
 		);
 		const c_aa_cc = challenge_send_new(
 			'sample',
@@ -187,23 +187,16 @@ describe('Check challenge communication', () => {
 			cc,
 			Classical,
 			Classical90p30,
-			toDateYYYYMMDDHHmmssSSS('2025-01-10..20:38:13:000')
+			toDateFull('2025-01-10..20:38:13:000')
 		);
-		const c_aa_dd = challenge_send_new(
-			'sample',
-			aa,
-			dd,
-			Blitz,
-			Blitz5p3,
-			toDateYYYYMMDDHHmmssSSS('2025-01-10..20:38:14:000')
-		);
+		const c_aa_dd = challenge_send_new('sample', aa, dd, Blitz, Blitz5p3, toDateFull('2025-01-10..20:38:14:000'));
 		const c_ee_ff = challenge_send_new(
 			'sample',
 			ee,
 			ff,
 			Classical,
 			Classical90p30,
-			toDateYYYYMMDDHHmmssSSS('2025-01-10..20:38:15:000')
+			toDateFull('2025-01-10..20:38:15:000')
 		);
 
 		const c_aa_bb_id = numberToChallengeId(1);
@@ -306,7 +299,7 @@ describe('Check challenge communication', () => {
 		const id = numberToChallengeId(3);
 
 		let c = challenges.get_challenge_by_id(id) as Challenge;
-		challenge_set_result(c, aa, toDateYYYYMMDDHHmmssSSS('2025-01-10..20:32:11:000'), aa, dd, 'white_wins');
+		challenge_set_result(c, aa, toDateFull('2025-01-10..20:32:11:000'), aa, dd, 'white_wins');
 
 		expect(c.result_set_by).toEqual(aa);
 		expect(c.white).toEqual(aa);
@@ -329,7 +322,7 @@ describe('Check challenge communication', () => {
 		const id = numberToChallengeId(4);
 
 		let c = challenges.get_challenge_by_id(id) as Challenge;
-		challenge_set_result(c, ff, toDateYYYYMMDDHHmmssSSS('2025-01-10..20:37:35:000'), ee, ff, 'black_wins');
+		challenge_set_result(c, ff, toDateFull('2025-01-10..20:37:35:000'), ee, ff, 'black_wins');
 
 		expect(c.result_set_by).toEqual(ff);
 		expect(c.white).toEqual(ee);
@@ -423,7 +416,7 @@ describe('Check challenge communication', () => {
 		const id = numberToChallengeId(3);
 
 		let c = challenges.get_challenge_by_id(id) as Challenge;
-		challenge_set_result(c, aa, toDateYYYYMMDDHHmmssSSS('2025-01-10..20:38:45:000'), dd, aa, 'black_wins');
+		challenge_set_result(c, aa, toDateFull('2025-01-10..20:38:45:000'), dd, aa, 'black_wins');
 
 		expect(c.result_set_by).toEqual(aa);
 		expect(c.white).toEqual(dd);
@@ -501,27 +494,20 @@ describe('Check initialization and communication', () => {
 
 describe('Fast challenge communication', () => {
 	test('New challenge (Blitz) aa -- bb', () => {
-		const c_aa_bb = challenge_send_new(
-			'sample',
-			aa,
-			bb,
-			Blitz,
-			Blitz5p3,
-			toDateYYYYMMDDHHmmssSSS('2025-01-10..20:38:45:000')
-		);
+		const c_aa_bb = challenge_send_new('sample', aa, bb, Blitz, Blitz5p3, toDateFull('2025-01-10..20:38:45:000'));
 		challenge_accept(c_aa_bb);
 
 		expect(() =>
-			challenge_set_result(c_aa_bb, ee, toDateYYYYMMDDHHmmssSSS('2025-01-10..20:39:15:000'), aa, bb, 'black_wins')
+			challenge_set_result(c_aa_bb, ee, toDateFull('2025-01-10..20:39:15:000'), aa, bb, 'black_wins')
 		).toThrow();
 		expect(() =>
-			challenge_set_result(c_aa_bb, aa, toDateYYYYMMDDHHmmssSSS('2025-01-10..20:39:16:000'), dd, aa, 'black_wins')
+			challenge_set_result(c_aa_bb, aa, toDateFull('2025-01-10..20:39:16:000'), dd, aa, 'black_wins')
 		).toThrow();
 		expect(() =>
-			challenge_set_result(c_aa_bb, aa, toDateYYYYMMDDHHmmssSSS('2025-01-10..20:39:17:000'), aa, ee, 'black_wins')
+			challenge_set_result(c_aa_bb, aa, toDateFull('2025-01-10..20:39:17:000'), aa, ee, 'black_wins')
 		).toThrow();
 
-		challenge_set_result(c_aa_bb, aa, toDateYYYYMMDDHHmmssSSS('2025-01-10..20:39:20:000'), bb, aa, 'black_wins');
+		challenge_set_result(c_aa_bb, aa, toDateFull('2025-01-10..20:39:20:000'), bb, aa, 'black_wins');
 		challenge_agree_result(c_aa_bb);
 
 		const aaUser = user_retrieve(aa) as User;
@@ -557,21 +543,21 @@ describe('Fast challenge communication', () => {
 			bb,
 			Classical,
 			Classical90p30,
-			toDateYYYYMMDDHHmmssSSS('2025-01-10..20:40:00:000')
+			toDateFull('2025-01-10..20:40:00:000')
 		);
 		challenge_accept(c_bb_cc);
 
 		expect(() =>
-			challenge_set_result(c_bb_cc, aa, toDateYYYYMMDDHHmmssSSS('2025-01-10..20:39:30:000'), bb, cc, 'black_wins')
+			challenge_set_result(c_bb_cc, aa, toDateFull('2025-01-10..20:39:30:000'), bb, cc, 'black_wins')
 		).toThrow();
 		expect(() =>
-			challenge_set_result(c_bb_cc, bb, toDateYYYYMMDDHHmmssSSS('2025-01-10..20:39:31:000'), aa, cc, 'black_wins')
+			challenge_set_result(c_bb_cc, bb, toDateFull('2025-01-10..20:39:31:000'), aa, cc, 'black_wins')
 		).toThrow();
 		expect(() =>
-			challenge_set_result(c_bb_cc, bb, toDateYYYYMMDDHHmmssSSS('2025-01-10..20:39:32:000'), bb, aa, 'black_wins')
+			challenge_set_result(c_bb_cc, bb, toDateFull('2025-01-10..20:39:32:000'), bb, aa, 'black_wins')
 		).toThrow();
 
-		challenge_set_result(c_bb_cc, bb, toDateYYYYMMDDHHmmssSSS('2025-01-10..20:39:33:000'), bb, cc, 'black_wins');
+		challenge_set_result(c_bb_cc, bb, toDateFull('2025-01-10..20:39:33:000'), bb, cc, 'black_wins');
 		challenge_agree_result(c_bb_cc);
 
 		const aaUser = user_retrieve(aa) as User;

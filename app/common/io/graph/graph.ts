@@ -33,7 +33,7 @@ import { Neighborhood, Graph } from '@common/models/graph/graph';
 import { edge_array_from_string } from '@common/io/graph/edge';
 import { read_directory } from '@server/utils/read_directory';
 import { isNotDefined } from '@common/utils/is_defined';
-import { log_now } from '@app/common/utils/time';
+import { log_now } from '@common/utils/time';
 import { PlayerPrivateId, toPlayerPrivateId } from '@common/models/player';
 
 /**

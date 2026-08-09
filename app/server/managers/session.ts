@@ -25,7 +25,7 @@ Contact:
 
 import Debug from 'debug';
 
-import { log_now } from '@app/common/utils/time';
+import { log_now } from '@common/utils/time';
 import { User } from '@common/models/user';
 const debug = Debug('ELO_CHESS_TRACKER:managers/session');
 

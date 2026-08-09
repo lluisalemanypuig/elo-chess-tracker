@@ -26,56 +26,43 @@ Contact:
 import moment from 'moment';
 import { z } from 'zod';
 
-/// DateYYYYMMDDHHmmssSSS: YYYY-MM-DD..HH:mm:ss:SSS
+/// DateFull: YYYY-MM-DD..HH:mm:ss:SSS
 
-declare const DateYYYYMMDDHHmmssSSSBrand: unique symbol;
-export type DateYYYYMMDDHHmmssSSSLocal = number & {
-	readonly [DateYYYYMMDDHHmmssSSSBrand]: 'DateYYYYMMDDHHmmssSSS';
+declare const DateFullBrand: unique symbol;
+export type DateFullLocal = number & {
+	readonly [DateFullBrand]: 'DateFull';
 };
-export const DateYYYYMMDDHHmmssSSSSchema = z.string().brand<'DateYYYYMMDDHHmmssSSSLocal'>();
-export type DateYYYYMMDDHHmmssSSS = z.infer<typeof DateYYYYMMDDHHmmssSSSSchema>;
+export const DateFullSchema = z.string().brand<'DateFullLocal'>();
+export type DateFull = z.infer<typeof DateFullSchema>;
 
-export function toDateYYYYMMDDHHmmssSSS(s: string): DateYYYYMMDDHHmmssSSS {
-	return s as DateYYYYMMDDHHmmssSSS;
+export function toDateFull(s: string): DateFull {
+	return s as DateFull;
 }
 
-/// DateYYYYMMDDHHmmss: YYYY-MM-DD..HH:mm:ss
+/// DateMajor: YYYY-MM-DD
 
-declare const DateYYYYMMDDHHmmssBrand: unique symbol;
-export type DateYYYYMMDDHHmmssLocal = number & {
-	readonly [DateYYYYMMDDHHmmssBrand]: 'DateYYYYMMDDHHmmss';
+declare const DateMajorBrand: unique symbol;
+export type DateMajorLocal = number & {
+	readonly [DateMajorBrand]: 'DateMajor';
 };
-export const DateYYYYMMDDHHmmssSchema = z.string().brand<'DateYYYYMMDDHHmmssLocal'>();
-export type DateYYYYMMDDHHmmss = z.infer<typeof DateYYYYMMDDHHmmssSchema>;
+export const DateMajorSchema = z.string().brand<'DateMajorLocal'>();
+export type DateMajor = z.infer<typeof DateMajorSchema>;
 
-export function toDateYYYYMMDDHHmmss(s: string): DateYYYYMMDDHHmmss {
-	return s as DateYYYYMMDDHHmmss;
-}
-
-/// DateYYYYMMDD: YYYY-MM-DD
-
-declare const DateYYYYMMDDBrand: unique symbol;
-export type DateYYYYMMDDLocal = number & {
-	readonly [DateYYYYMMDDBrand]: 'DateYYYYMMDD';
-};
-export const DateYYYYMMDDSchema = z.string().brand<'DateYYYYMMDDLocal'>();
-export type DateYYYYMMDD = z.infer<typeof DateYYYYMMDDSchema>;
-
-export function toDateYYYYMMDD(s: string): DateYYYYMMDD {
-	return s as DateYYYYMMDD;
+export function toDateMajor(s: string): DateMajor {
+	return s as DateMajor;
 }
 
 /// HH:mm:ss:SSS
 
-declare const DateHHmmssSSSBrand: unique symbol;
-export type DateHHmmssSSSLocal = number & {
-	readonly [DateHHmmssSSSBrand]: 'DateHHmmssSSS';
+declare const DateMinorBrand: unique symbol;
+export type DateMinorLocal = number & {
+	readonly [DateMinorBrand]: 'DateMinor';
 };
-export const DateHHmmssSSSSchema = z.string().brand<'DateHHmmssSSSLocal'>();
-export type DateHHmmssSSS = z.infer<typeof DateHHmmssSSSSchema>;
+export const DateMinorSchema = z.string().brand<'DateMinorLocal'>();
+export type DateMinor = z.infer<typeof DateMinorSchema>;
 
-export function toDateHHmmssSSS(s: string): DateHHmmssSSS {
-	return s as DateHHmmssSSS;
+export function toDateMinor(s: string): DateMinor {
+	return s as DateMinor;
 }
 
 /**
@@ -85,17 +72,8 @@ export function toDateHHmmssSSS(s: string): DateHHmmssSSS {
  * @param date A Date object.
  * @returns A string.
  */
-export function date_to_string_long_millis(date: Date): DateYYYYMMDDHHmmssSSS {
-	return toDateYYYYMMDDHHmmssSSS(moment.utc(date).local().format('YYYY-MM-DD..HH:mm:ss:SSS'));
-}
-
-/**
- * @brief Formats a date into a string YYYY-MM-DD..HH:mm:ss
- * @param date A Date object.
- * @returns A string.
- */
-export function date_to_string_long(date: Date): DateYYYYMMDDHHmmss {
-	return toDateYYYYMMDDHHmmss(moment.utc(date).local().format('YYYY-MM-DD..HH:mm:ss'));
+export function dateToStringFull(date: Date): DateFull {
+	return toDateFull(moment.utc(date).local().format('YYYY-MM-DD..HH:mm:ss:SSS'));
 }
 
 /**
@@ -104,8 +82,8 @@ export function date_to_string_long(date: Date): DateYYYYMMDDHHmmss {
  * The part * can be anything.
  * @returns A string object containing a date formatted with YYYY-MM-DD.
  */
-export function long_date_to_short_date(date: DateYYYYMMDDHHmmss | DateYYYYMMDDHHmmssSSS): DateYYYYMMDD {
-	return toDateYYYYMMDD(date.split('..')[0]);
+export function dateFullToMajor(date: DateFull): DateMajor {
+	return toDateMajor(date.split('..')[0]);
 }
 
 /**
@@ -114,8 +92,8 @@ export function long_date_to_short_date(date: DateYYYYMMDDHHmmss | DateYYYYMMDDH
  * The part * can be anything.
  * @returns A string object containing a date formatted with HH:mm:ss*.
  */
-export function long_date_to_tiny_date(date: DateYYYYMMDDHHmmssSSS): DateHHmmssSSS {
-	return toDateHHmmssSSS(date.split('..')[1]);
+export function dateFullToMinor(date: DateFull): DateMinor {
+	return toDateMinor(date.split('..')[1]);
 }
 
 /**
@@ -124,17 +102,12 @@ export function long_date_to_tiny_date(date: DateYYYYMMDDHHmmssSSS): DateHHmmssS
  * The part * can be anything.
  * @returns A string object containing a date formatted with HH:mm:ss*.
  */
-export function long_date_to_short_and_tiny_date(date: DateYYYYMMDDHHmmssSSS): [DateYYYYMMDD, DateHHmmssSSS] {
+export function dateSplitMajorMinor(date: DateFull): [DateMajor, DateMinor] {
 	const s = date.split('..');
-	return [toDateYYYYMMDD(s[0]), toDateHHmmssSSS(s[1])];
-}
-
-/// Returns the current date in string format "YYYY-MM-DD..HH:mm:ss"
-export function log_now(): DateYYYYMMDDHHmmss {
-	return date_to_string_long(new Date());
+	return [toDateMajor(s[0]), toDateMinor(s[1])];
 }
 
 /// Returns the current date in string format "YYYY-MM-DD..HH:mm:ss:SSS"
-export function log_now_millis(): DateYYYYMMDDHHmmssSSS {
-	return date_to_string_long_millis(new Date());
+export function log_now(): DateFull {
+	return dateToStringFull(new Date());
 }

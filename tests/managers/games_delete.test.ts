@@ -41,7 +41,7 @@ import { Configuration } from '@common/models/configuration/configuration';
 import { toPlayerPrivateId } from '@common/models/player';
 import { toGameId } from '@common/models/game';
 import { toTimeControlId, toTimeControlName } from '@common/models/time_control';
-import { toDateYYYYMMDD, toDateHHmmssSSS } from '@app/common/utils/time';
+import { toDateMajor, toDateMinor } from '@common/utils/time';
 
 const Classical = toTimeControlId('Classical');
 const Classical90p30 = toTimeControlName('Classical (90 + 30)');
@@ -160,8 +160,8 @@ describe('Sequential game creation', () => {
 			'white_wins',
 			Blitz,
 			Blitz5p3,
-			toDateYYYYMMDD('2025-01-19'),
-			toDateHHmmssSSS('17:06:00:000')
+			toDateMajor('2025-01-19'),
+			toDateMinor('17:06:00:000')
 		);
 		game_add_new(
 			'sample',
@@ -170,19 +170,10 @@ describe('Sequential game creation', () => {
 			'black_wins',
 			Blitz,
 			Blitz5p3,
-			toDateYYYYMMDD('2025-01-19'),
-			toDateHHmmssSSS('17:06:10:000')
+			toDateMajor('2025-01-19'),
+			toDateMinor('17:06:10:000')
 		);
-		game_add_new(
-			'sample',
-			eU,
-			fU,
-			'draw',
-			Blitz,
-			Blitz5p3,
-			toDateYYYYMMDD('2025-01-19'),
-			toDateHHmmssSSS('17:06:20:000')
-		);
+		game_add_new('sample', eU, fU, 'draw', Blitz, Blitz5p3, toDateMajor('2025-01-19'), toDateMinor('17:06:20:000'));
 		game_add_new(
 			'sample',
 			aU,
@@ -190,8 +181,8 @@ describe('Sequential game creation', () => {
 			'black_wins',
 			Blitz,
 			Blitz5p3,
-			toDateYYYYMMDD('2025-01-19'),
-			toDateHHmmssSSS('17:06:30:000')
+			toDateMajor('2025-01-19'),
+			toDateMinor('17:06:30:000')
 		);
 		game_add_new(
 			'sample',
@@ -200,8 +191,8 @@ describe('Sequential game creation', () => {
 			'white_wins',
 			Blitz,
 			Blitz5p3,
-			toDateYYYYMMDD('2025-01-19'),
-			toDateHHmmssSSS('17:06:40:000')
+			toDateMajor('2025-01-19'),
+			toDateMinor('17:06:40:000')
 		);
 
 		expect(aU.get_games(Blitz).length).toBe(1);

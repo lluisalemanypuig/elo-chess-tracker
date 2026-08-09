@@ -27,7 +27,7 @@ import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:server_users_password_changes');
 import { Request, Response } from 'express';
 
-import { log_now } from '@app/common/utils/time';
+import { log_now } from '@common/utils/time';
 import { is_user_logged_in, session_user_delete_all } from '@server/managers/session';
 import { encrypt_password_for_user, is_password_of_user_correct } from '@server/utils/encrypt';
 import { user_overwrite } from '@server/managers/users';

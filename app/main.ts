@@ -33,7 +33,7 @@ import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:app_main');
 
 import fs from 'fs';
-import { log_now } from '@app/common/utils/time';
+import { log_now } from '@common/utils/time';
 
 import { server_init_from_parameters } from '@server/managers/memory/initialization';
 import { ConfigurationManager } from '@server/managers/configuration_manager';

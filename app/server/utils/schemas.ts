@@ -28,7 +28,7 @@ import { z } from 'zod';
 import { Request, Response } from 'express';
 
 import { isDefined, isNotDefined } from '@common/utils/is_defined';
-import { log_now } from '@app/common/utils/time';
+import { log_now } from '@common/utils/time';
 
 export type ParseResult = 'JsonDataNotProvided' | 'Error' | 'Success';
 

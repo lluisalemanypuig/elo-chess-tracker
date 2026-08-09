@@ -27,7 +27,7 @@ import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:server_challenges');
 import { Request, Response } from 'express';
 
-import { log_now } from '@app/common/utils/time';
+import { log_now } from '@common/utils/time';
 import { is_user_logged_in } from '@server/managers/session';
 import {
 	challenge_accept,

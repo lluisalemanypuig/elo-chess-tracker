@@ -59,7 +59,7 @@ import { initialize_permissions, UserRoleToUserAction } from '@server/managers/u
 import { EloRating } from '@common/models/rating_framework/Elo/rating';
 import { toPlayerPrivateId } from '@common/models/player';
 import { toTimeControlId } from '@common/models/time_control';
-import { toDateYYYYMMDD } from '@app/common/utils/time';
+import { toDateMajor } from '@common/utils/time';
 
 const Classical = toTimeControlId('Classical');
 const Rapid = toTimeControlId('Rapid');
@@ -79,8 +79,8 @@ describe('Elo', () => {
 			{ encrypted: 'asdf', iv: 'ivrandom' },
 			[ADMIN, TEACHER],
 			[
-				{ time_control: Blitz, records: [{ record: toDateYYYYMMDD('2024-12-24'), amount: 1 }] },
-				{ time_control: Rapid, records: [{ record: toDateYYYYMMDD('2024-12-25'), amount: 1 }] }
+				{ time_control: Blitz, records: [{ record: toDateMajor('2024-12-24'), amount: 1 }] },
+				{ time_control: Rapid, records: [{ record: toDateMajor('2024-12-25'), amount: 1 }] }
 			],
 			[new TimeControlRating(Blitz, blitz), new TimeControlRating(Classical, classical)]
 		);
@@ -96,8 +96,8 @@ describe('Elo', () => {
 		expect(u.first_name).toEqual('First');
 		expect(u.last_name).toEqual('Last');
 		expect(u.get_full_name()).toEqual('First Last');
-		expect(u.get_games(Blitz)).toEqual([{ record: toDateYYYYMMDD('2024-12-24'), amount: 1 }]);
-		expect(u.get_games(Rapid)).toEqual([{ record: toDateYYYYMMDD('2024-12-25'), amount: 1 }]);
+		expect(u.get_games(Blitz)).toEqual([{ record: toDateMajor('2024-12-24'), amount: 1 }]);
+		expect(u.get_games(Rapid)).toEqual([{ record: toDateMajor('2024-12-25'), amount: 1 }]);
 	});
 
 	test('basic sets', () => {
@@ -108,8 +108,8 @@ describe('Elo', () => {
 			{ encrypted: 'asdf', iv: 'ivrandom' },
 			[ADMIN, TEACHER],
 			[
-				{ time_control: Blitz, records: [{ record: toDateYYYYMMDD('2024-12-24'), amount: 1 }] },
-				{ time_control: Rapid, records: [{ record: toDateYYYYMMDD('2024-12-25'), amount: 1 }] }
+				{ time_control: Blitz, records: [{ record: toDateMajor('2024-12-24'), amount: 1 }] },
+				{ time_control: Rapid, records: [{ record: toDateMajor('2024-12-25'), amount: 1 }] }
 			],
 			[new TimeControlRating(Blitz, blitz), new TimeControlRating(Classical, classical)]
 		);
@@ -140,8 +140,8 @@ describe('Elo', () => {
 			{ encrypted: 'asdf', iv: 'ivrandom' },
 			[ADMIN, TEACHER],
 			[
-				{ time_control: Blitz, records: [{ record: toDateYYYYMMDD('2024-12-24'), amount: 1 }] },
-				{ time_control: Rapid, records: [{ record: toDateYYYYMMDD('2024-12-25'), amount: 1 }] }
+				{ time_control: Blitz, records: [{ record: toDateMajor('2024-12-24'), amount: 1 }] },
+				{ time_control: Rapid, records: [{ record: toDateMajor('2024-12-25'), amount: 1 }] }
 			],
 			[new TimeControlRating(Blitz, blitz), new TimeControlRating(Classical, classical)]
 		);
@@ -150,76 +150,76 @@ describe('Elo', () => {
 
 		expect(u.get_games(Blitz)).toEqual([{ record: '2024-12-24', amount: 1 }]);
 
-		u.add_game(Blitz, toDateYYYYMMDD('2024-12-31'));
+		u.add_game(Blitz, toDateMajor('2024-12-31'));
 		expect(u.get_games(Blitz)).toEqual([
-			{ record: toDateYYYYMMDD('2024-12-24'), amount: 1 },
-			{ record: toDateYYYYMMDD('2024-12-31'), amount: 1 }
+			{ record: toDateMajor('2024-12-24'), amount: 1 },
+			{ record: toDateMajor('2024-12-31'), amount: 1 }
 		]);
 
-		u.add_game(Blitz, toDateYYYYMMDD('2024-12-01'));
+		u.add_game(Blitz, toDateMajor('2024-12-01'));
 		expect(u.get_games(Blitz)).toEqual([
-			{ record: toDateYYYYMMDD('2024-12-01'), amount: 1 },
-			{ record: toDateYYYYMMDD('2024-12-24'), amount: 1 },
-			{ record: toDateYYYYMMDD('2024-12-31'), amount: 1 }
+			{ record: toDateMajor('2024-12-01'), amount: 1 },
+			{ record: toDateMajor('2024-12-24'), amount: 1 },
+			{ record: toDateMajor('2024-12-31'), amount: 1 }
 		]);
 
-		u.add_game(Blitz, toDateYYYYMMDD('2024-12-31'));
+		u.add_game(Blitz, toDateMajor('2024-12-31'));
 		expect(u.get_games(Blitz)).toEqual([
-			{ record: toDateYYYYMMDD('2024-12-01'), amount: 1 },
-			{ record: toDateYYYYMMDD('2024-12-24'), amount: 1 },
-			{ record: toDateYYYYMMDD('2024-12-31'), amount: 2 }
+			{ record: toDateMajor('2024-12-01'), amount: 1 },
+			{ record: toDateMajor('2024-12-24'), amount: 1 },
+			{ record: toDateMajor('2024-12-31'), amount: 2 }
 		]);
 
-		u.add_game(Blitz, toDateYYYYMMDD('2024-12-31'));
+		u.add_game(Blitz, toDateMajor('2024-12-31'));
 		expect(u.get_games(Blitz)).toEqual([
-			{ record: toDateYYYYMMDD('2024-12-01'), amount: 1 },
-			{ record: toDateYYYYMMDD('2024-12-24'), amount: 1 },
-			{ record: toDateYYYYMMDD('2024-12-31'), amount: 3 }
+			{ record: toDateMajor('2024-12-01'), amount: 1 },
+			{ record: toDateMajor('2024-12-24'), amount: 1 },
+			{ record: toDateMajor('2024-12-31'), amount: 3 }
 		]);
 
-		u.add_game(Blitz, toDateYYYYMMDD('2024-12-01'));
+		u.add_game(Blitz, toDateMajor('2024-12-01'));
 		expect(u.get_games(Blitz)).toEqual([
-			{ record: toDateYYYYMMDD('2024-12-01'), amount: 2 },
-			{ record: toDateYYYYMMDD('2024-12-24'), amount: 1 },
-			{ record: toDateYYYYMMDD('2024-12-31'), amount: 3 }
+			{ record: toDateMajor('2024-12-01'), amount: 2 },
+			{ record: toDateMajor('2024-12-24'), amount: 1 },
+			{ record: toDateMajor('2024-12-31'), amount: 3 }
 		]);
 
 		// rapid
 
 		expect(u.get_games(Rapid)).toEqual([{ record: '2024-12-25', amount: 1 }]);
 
-		u.add_game(Rapid, toDateYYYYMMDD('2024-12-28'));
+		u.add_game(Rapid, toDateMajor('2024-12-28'));
 		expect(u.get_games(Rapid)).toEqual([
-			{ record: toDateYYYYMMDD('2024-12-25'), amount: 1 },
-			{ record: toDateYYYYMMDD('2024-12-28'), amount: 1 }
+			{ record: toDateMajor('2024-12-25'), amount: 1 },
+			{ record: toDateMajor('2024-12-28'), amount: 1 }
 		]);
 
-		u.add_game(Rapid, toDateYYYYMMDD('2019-12-31'));
+		u.add_game(Rapid, toDateMajor('2019-12-31'));
 		expect(u.get_games(Rapid)).toEqual([
-			{ record: toDateYYYYMMDD('2019-12-31'), amount: 1 },
-			{ record: toDateYYYYMMDD('2024-12-25'), amount: 1 },
-			{ record: toDateYYYYMMDD('2024-12-28'), amount: 1 }
+			{ record: toDateMajor('2019-12-31'), amount: 1 },
+			{ record: toDateMajor('2024-12-25'), amount: 1 },
+			{ record: toDateMajor('2024-12-28'), amount: 1 }
 		]);
 
-		u.add_game(Rapid, toDateYYYYMMDD('2019-12-31'));
+		u.add_game(Rapid, toDateMajor('2019-12-31'));
 		expect(u.get_games(Rapid)).toEqual([
-			{ record: toDateYYYYMMDD('2019-12-31'), amount: 2 },
-			{ record: toDateYYYYMMDD('2024-12-25'), amount: 1 },
-			{ record: toDateYYYYMMDD('2024-12-28'), amount: 1 }
+			{ record: toDateMajor('2019-12-31'), amount: 2 },
+			{ record: toDateMajor('2024-12-25'), amount: 1 },
+			{ record: toDateMajor('2024-12-28'), amount: 1 }
 		]);
 
-		u.add_game(Rapid, toDateYYYYMMDD('2024-12-28'));
+		u.add_game(Rapid, toDateMajor('2024-12-28'));
 		expect(u.get_games(Rapid)).toEqual([
-			{ record: toDateYYYYMMDD('2019-12-31'), amount: 2 },
-			{ record: toDateYYYYMMDD('2024-12-25'), amount: 1 },
-			{ record: toDateYYYYMMDD('2024-12-28'), amount: 2 }
+			{ record: toDateMajor('2019-12-31'), amount: 2 },
+			{ record: toDateMajor('2024-12-25'), amount: 1 },
+			{ record: toDateMajor('2024-12-28'), amount: 2 }
 		]);
 
-		u.add_game(Rapid, toDateYYYYMMDD('2024-12-28'));
+		u.add_game(Rapid, toDateMajor('2024-12-28'));
 		expect(u.get_games(Rapid)).toEqual([
-			{ record: toDateYYYYMMDD('2019-12-31'), amount: 2 },
-			{ record: toDateYYYYMMDD('2024-12-25'), amount: 1 },
-			{ record: toDateYYYYMMDD('2024-12-28'), amount: 3 }
+			{ record: toDateMajor('2019-12-31'), amount: 2 },
+			{ record: toDateMajor('2024-12-25'), amount: 1 },
+			{ record: toDateMajor('2024-12-28'), amount: 3 }
 		]);
 	});
 });

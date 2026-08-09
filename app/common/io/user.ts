@@ -26,7 +26,7 @@ Contact:
 import Debug from 'debug';
 const debug = Debug(`ELO_CHESS_TRACKER:io`);
 
-import { log_now } from '@app/common/utils/time';
+import { log_now } from '@common/utils/time';
 import {
 	GameNumberSchema,
 	GameNumberArraySchema,

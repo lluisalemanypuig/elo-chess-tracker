@@ -27,7 +27,7 @@ import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:server_login_logout');
 import { Request, Response } from 'express';
 
-import { log_now } from '@app/common/utils/time';
+import { log_now } from '@common/utils/time';
 import { is_password_of_user_correct } from '@server/utils/encrypt';
 import { empty_session_id_cookie, make_session_id_cookie } from '@server/utils/cookies';
 import { session_id_add, session_id_delete } from '@server/managers/session';

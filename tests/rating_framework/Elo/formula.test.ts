@@ -28,11 +28,7 @@ import { toTimeControlId, toTimeControlName } from '@common/models/time_control'
 import { Game, toGameId } from '@common/models/game';
 import { EloRating } from '@common/models/rating_framework/Elo/rating';
 import { Elo_player_vs_player } from '@server/rating_framework/Elo/formula';
-import { toDateYYYYMMDDHHmmss, toDateYYYYMMDDHHmmssSSS } from '@app/common/utils/time';
-
-const Classical = toTimeControlId('Classical');
-
-const Rapid = toTimeControlId('Rapid');
+import { toDateFull } from '@common/utils/time';
 
 const Blitz = toTimeControlId('Blitz');
 const Blitz5p3 = toTimeControlName('Blitz (5 + 3)');
@@ -51,7 +47,7 @@ describe('Simple games', () => {
 			'white_wins',
 			Blitz,
 			Blitz5p3,
-			toDateYYYYMMDDHHmmssSSS('2024-12-28..16:41:00')
+			toDateFull('2024-12-28..16:41:00')
 		);
 
 		const [aW, aB] = Elo_player_vs_player(game);
@@ -84,7 +80,7 @@ describe('Simple games', () => {
 			'draw',
 			Blitz,
 			Blitz5p3,
-			toDateYYYYMMDDHHmmssSSS('2024-12-28..16:41:00')
+			toDateFull('2024-12-28..16:41:00')
 		);
 
 		const [aW, aB] = Elo_player_vs_player(game);
@@ -115,7 +111,7 @@ describe('Simple games', () => {
 			'black_wins',
 			Blitz,
 			Blitz5p3,
-			toDateYYYYMMDDHHmmssSSS('2024-12-28..16:41:00')
+			toDateFull('2024-12-28..16:41:00')
 		);
 
 		const [aW, aB] = Elo_player_vs_player(game);
@@ -152,7 +148,7 @@ describe('Series of games', () => {
 				'white_wins',
 				Blitz,
 				Blitz5p3,
-				toDateYYYYMMDDHHmmssSSS('2024-12-28..16:41:00')
+				toDateFull('2024-12-28..16:41:00')
 			);
 			[W, B] = Elo_player_vs_player(game);
 		}
@@ -168,7 +164,7 @@ describe('Series of games', () => {
 			'white_wins',
 			Blitz,
 			Blitz5p3,
-			toDateYYYYMMDDHHmmssSSS('2024-12-28..16:41:00')
+			toDateFull('2024-12-28..16:41:00')
 		);
 		[W, B] = Elo_player_vs_player(game);
 
@@ -190,7 +186,7 @@ describe('Series of games', () => {
 				'white_wins',
 				Blitz,
 				Blitz5p3,
-				toDateYYYYMMDDHHmmssSSS('2024-12-28..16:41:00')
+				toDateFull('2024-12-28..16:41:00')
 			);
 			[W, B] = Elo_player_vs_player(game);
 			B.rating = 2000;
@@ -210,7 +206,7 @@ describe('Series of games', () => {
 				'white_wins',
 				Blitz,
 				Blitz5p3,
-				toDateYYYYMMDDHHmmssSSS('2024-12-28..16:41:00')
+				toDateFull('2024-12-28..16:41:00')
 			);
 			[W, B] = Elo_player_vs_player(game);
 			B.rating = 2000;
@@ -232,7 +228,7 @@ describe('Series of games', () => {
 				'black_wins',
 				Blitz,
 				Blitz5p3,
-				toDateYYYYMMDDHHmmssSSS('2024-12-28..16:41:00')
+				toDateFull('2024-12-28..16:41:00')
 			);
 			[W, B] = Elo_player_vs_player(game);
 			B.rating = 2000;
@@ -254,7 +250,7 @@ describe('Series of games', () => {
 				'white_wins',
 				Blitz,
 				Blitz5p3,
-				toDateYYYYMMDDHHmmssSSS('2024-12-28..16:41:00')
+				toDateFull('2024-12-28..16:41:00')
 			);
 			[W, B] = Elo_player_vs_player(game);
 			B.rating = 2000;
@@ -274,7 +270,7 @@ describe('Series of games', () => {
 				'black_wins',
 				Blitz,
 				Blitz5p3,
-				toDateYYYYMMDDHHmmssSSS('2024-12-28..16:41:00')
+				toDateFull('2024-12-28..16:41:00')
 			);
 			[W, B] = Elo_player_vs_player(game);
 			B.rating = 2000;
