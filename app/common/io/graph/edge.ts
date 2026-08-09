@@ -24,23 +24,23 @@ Contact:
 */
 
 import { Edge, EdgeArraySchema, EdgeSchema } from '@common/models/graph/edge';
-import { read_schema } from '@common/io/generic';
-import { isNotDefined } from '@common/utils/is_defined';
-import { EdgeMetadata } from '@common/models/graph/edge_metadata';
+import { readSchema } from '@common/io/generic';
+import { isNotDefined } from '@common/utils/is-defined';
+import { EdgeMetadata } from '@common/models/graph/edge-metadata';
 
 /**
  * @brief Parses a JSON string and returns an Edge.
  * @param str A string with data of an Edge.
  * @returns A new Edge object.
  */
-export function edge_from_string(str: string): Edge | null {
-	const data = read_schema(EdgeSchema, str);
+export function edgeFromString(str: string): Edge | null {
+	const data = readSchema(EdgeSchema, str);
 	if (isNotDefined(data)) {
 		return null;
 	}
 	return new Edge(
 		data.neighbor,
-		new EdgeMetadata(data.metadata.num_games_won, data.metadata.num_games_drawn, data.metadata.num_games_lost)
+		new EdgeMetadata(data.metadata.numGamesWon, data.metadata.numGamesDrawn, data.metadata.numGamesLost)
 	);
 }
 
@@ -49,8 +49,8 @@ export function edge_from_string(str: string): Edge | null {
  * @param str A string with data of an Edge.
  * @returns A new Edge object.
  */
-export function edge_array_from_string(str: string): Edge[] | null {
-	const data = read_schema(EdgeArraySchema, str);
+export function edgeArrayFromString(str: string): Edge[] | null {
+	const data = readSchema(EdgeArraySchema, str);
 	if (isNotDefined(data)) {
 		return null;
 	}
@@ -60,11 +60,7 @@ export function edge_array_from_string(str: string): Edge[] | null {
 		edges.push(
 			new Edge(
 				edge.neighbor,
-				new EdgeMetadata(
-					edge.metadata.num_games_won,
-					edge.metadata.num_games_drawn,
-					edge.metadata.num_games_lost
-				)
+				new EdgeMetadata(edge.metadata.numGamesWon, edge.metadata.numGamesDrawn, edge.metadata.numGamesLost)
 			)
 		);
 	}

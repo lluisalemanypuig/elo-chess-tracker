@@ -31,7 +31,7 @@ import {
 	TimeControlIdSchema,
 	TimeControlName,
 	TimeControlNameSchema
-} from '@common/models/time_control';
+} from '@common/models/time-control';
 import { PlayerPrivateId, PlayerPrivateIdSchema } from '@common/models/player';
 
 // Challenge state
@@ -60,29 +60,29 @@ export const ChallengeSchema = z
 		// Name of the game that will result from this challenge
 		title: z.string(),
 		// Time control of the challenge
-		time_control_id: TimeControlIdSchema,
+		timeControlId: TimeControlIdSchema,
 		// Time control of the challenge
-		time_control_name: TimeControlNameSchema,
+		timeControlName: TimeControlNameSchema,
 
 		// The user sending the challenge
-		sent_by: PlayerPrivateIdSchema,
+		sentBy: PlayerPrivateIdSchema,
 		// The user receiving the challenge
-		sent_to: PlayerPrivateIdSchema,
+		sentTo: PlayerPrivateIdSchema,
 		// Date when the challenge was sent
-		when_challenge_sent: DateFullSchema,
+		whenChallengeSent: DateFullSchema,
 
 		// Date when the challenge was accepted
-		when_challenge_accepted: DateFullSchema.optional(),
+		whenChallengeAccepted: DateFullSchema.optional(),
 
 		// Date when the result of the game was last modified
-		when_result_set: DateFullSchema.optional(),
+		whenResultSet: DateFullSchema.optional(),
 		// Player who set the result
-		result_set_by: PlayerPrivateIdSchema.optional(),
+		resultSetBy: PlayerPrivateIdSchema.optional(),
 
 		// Date when the result of the game was accepted.
-		when_result_accepted: DateFullSchema.optional(),
+		whenResultAccepted: DateFullSchema.optional(),
 		// User that accepted the result
-		result_accepted_by: PlayerPrivateIdSchema.optional(),
+		resultAcceptedBy: PlayerPrivateIdSchema.optional(),
 
 		// The resulting game of the challenge
 		white: PlayerPrivateIdSchema.optional(),
@@ -117,16 +117,16 @@ export function newChallenge(
 	return {
 		id: id,
 		title: title,
-		time_control_id: timeControlId,
-		time_control_name: timeControlName,
-		sent_by: sentBy,
-		sent_to: sentTo,
-		when_challenge_sent: whenChallengeSent,
-		when_challenge_accepted: undefined,
-		when_result_set: undefined,
-		result_set_by: undefined,
-		when_result_accepted: undefined,
-		result_accepted_by: undefined,
+		timeControlId: timeControlId,
+		timeControlName: timeControlName,
+		sentBy: sentBy,
+		sentTo: sentTo,
+		whenChallengeSent: whenChallengeSent,
+		whenChallengeAccepted: undefined,
+		whenResultSet: undefined,
+		resultSetBy: undefined,
+		whenResultAccepted: undefined,
+		resultAcceptedBy: undefined,
 		white: undefined,
 		black: undefined,
 		result: undefined,
@@ -140,7 +140,7 @@ export interface ChallengeAccept {
 }
 
 export function accept(c: Challenge, { by: _by, when }: ChallengeAccept) {
-	c.when_challenge_accepted = when;
+	c.whenChallengeAccepted = when;
 	c.state = 'PENDING_RESULT';
 }
 
@@ -158,8 +158,8 @@ export interface ChallengeSetResult {
 
 // Set the result of a challenge. Checks integrity of input parameters.s
 export function setResult(c: Challenge, { by, when, white, black, result }: ChallengeSetResult): void {
-	c.result_set_by = by;
-	c.when_result_set = when;
+	c.resultSetBy = by;
+	c.whenResultSet = when;
 	c.white = white;
 	c.black = black;
 	c.result = result;
@@ -172,8 +172,8 @@ export interface ChallengeDisagreeResult {
 
 // Unset the previous result
 export function disagreeResult(c: Challenge): void {
-	c.result_set_by = undefined;
-	c.when_result_set = undefined;
+	c.resultSetBy = undefined;
+	c.whenResultSet = undefined;
 	c.white = undefined;
 	c.black = undefined;
 	c.result = undefined;
@@ -187,11 +187,11 @@ export interface ChallengeAgreeResult {
 
 // Accepts the result
 export function agreeResult(c: Challenge, { by, when }: ChallengeAgreeResult) {
-	c.result_accepted_by = by;
-	c.when_result_accepted = when;
+	c.resultAcceptedBy = by;
+	c.whenResultAccepted = when;
 	c.state = 'COMPLETED';
 }
 
 export function isPartOfChallenge(c: Challenge, by: PlayerPrivateId): boolean {
-	return by === c.sent_by || by === c.sent_to;
+	return by === c.sentBy || by === c.sentTo;
 }

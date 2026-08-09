@@ -24,30 +24,30 @@ Contact:
 */
 
 import Debug from 'debug';
-const debug = Debug('ELO_CHESS_TRACKER:server_graphs');
+const debug = Debug('ELO_CHESS_TRACKER:serverGraphs');
 import { Request, Response } from 'express';
 
-import { log_now } from '@common/utils/time';
-import { is_user_logged_in } from '@server/managers/session';
-import { GRAPHS_SEE_USER } from '@common/models/user_action';
-import { ADMIN } from '@common/models/user_role';
-import { recalculate_all_graphs } from '@server/managers/graphs';
-import { ConfigurationManager } from '@server/managers/configuration_manager';
-import { get_execution_directory } from '@server/managers/environment_manager';
-import { isNotDefined } from '@common/utils/is_defined';
-import { Routes } from '@common/routes';
-import { safe_parse_request_cookies } from '@server/utils/schemas';
+import { logNow } from '@common/utils/time';
+import { isUserLoggedIn } from '@server/managers/session';
+import { GRAPHS_SEE_USER } from '@common/models/user-action';
+import { ADMIN } from '@common/models/user-role';
+import { recalculateAllGraphs } from '@server/managers/graphs';
+import { ConfigurationManager } from '@server/managers/configuration-manager';
+import { getExecutionDirectory } from '@server/managers/environment-manager';
+import { isNotDefined } from '@common/utils/is-defined';
+import { ROUTES } from '@common/routes';
+import { safeParseRequestCookies } from '@server/utils/schemas';
 import { AuthenticationInputSchema } from '@common/schemas/authentication';
 
-export async function get_page_graph_own(req: Request, res: Response) {
-	debug(log_now(), `GET ${Routes.PAGE_GRAPH_OWN}...`);
+export async function getPageGraphOwn(req: Request, res: Response) {
+	debug(logNow(), `GET ${ROUTES.PAGE_GRAPH_OWN}...`);
 
-	const session_parse = safe_parse_request_cookies(req, AuthenticationInputSchema, res, debug);
-	if (session_parse.result === 'Exit') {
+	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	if (sessionParse.result === 'Exit') {
 		return;
 	}
-	const session = session_parse.data;
-	const r = is_user_logged_in(session);
+	const session = sessionParse.data;
+	const r = isUserLoggedIn(session);
 
 	if (isNotDefined(r[2])) {
 		res.status(401).send(r[1]);
@@ -55,21 +55,21 @@ export async function get_page_graph_own(req: Request, res: Response) {
 	}
 
 	res.status(200);
-	if (ConfigurationManager.should_cache_data()) {
+	if (ConfigurationManager.shouldCacheData()) {
 		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
 	}
-	res.sendFile(`${get_execution_directory()}/html/graph/own.html`);
+	res.sendFile(`${getExecutionDirectory()}/html/graph/own.html`);
 }
 
-export async function get_page_graph_full(req: Request, res: Response) {
-	debug(log_now(), `GET ${Routes.PAGE_GRAPH_FULL}...`);
+export async function getPageGraphFull(req: Request, res: Response) {
+	debug(logNow(), `GET ${ROUTES.PAGE_GRAPH_FULL}...`);
 
-	const session_parse = safe_parse_request_cookies(req, AuthenticationInputSchema, res, debug);
-	if (session_parse.result === 'Exit') {
+	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	if (sessionParse.result === 'Exit') {
 		return;
 	}
-	const session = session_parse.data;
-	const r = is_user_logged_in(session);
+	const session = sessionParse.data;
+	const r = isUserLoggedIn(session);
 
 	const user = r[2];
 	if (isNotDefined(user)) {
@@ -77,28 +77,28 @@ export async function get_page_graph_full(req: Request, res: Response) {
 		return;
 	}
 
-	if (!user.can_do(GRAPHS_SEE_USER)) {
-		debug(log_now(), `User '${session.username}' cannot see the whole graph.`);
+	if (!user.canDo(GRAPHS_SEE_USER)) {
+		debug(logNow(), `User '${session.username}' cannot see the whole graph.`);
 		res.status(403).send('You cannot see the whole graph.');
 		return;
 	}
 
 	res.status(200);
-	if (ConfigurationManager.should_cache_data()) {
+	if (ConfigurationManager.shouldCacheData()) {
 		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
 	}
-	res.sendFile(`${get_execution_directory()}/html/graph/full.html`);
+	res.sendFile(`${getExecutionDirectory()}/html/graph/full.html`);
 }
 
-export async function post_recalculate_graphs(req: Request, res: Response) {
-	debug(log_now(), `POST ${Routes.RECALCULATE_GRAPHS}...`);
+export async function postRecalculateGraphs(req: Request, res: Response) {
+	debug(logNow(), `POST ${ROUTES.RECALCULATE_GRAPHS}...`);
 
-	const session_parse = safe_parse_request_cookies(req, AuthenticationInputSchema, res, debug);
-	if (session_parse.result === 'Exit') {
+	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	if (sessionParse.result === 'Exit') {
 		return;
 	}
-	const session = session_parse.data;
-	const r = is_user_logged_in(session);
+	const session = sessionParse.data;
+	const r = isUserLoggedIn(session);
 
 	const user = r[2];
 	if (isNotDefined(user)) {
@@ -107,15 +107,15 @@ export async function post_recalculate_graphs(req: Request, res: Response) {
 	}
 
 	if (!user.is(ADMIN)) {
-		debug(log_now(), `User '${session.username}' cannot recalculate graphs.`);
+		debug(logNow(), `User '${session.username}' cannot recalculate graphs.`);
 		res.status(403).send('You cannot recalculate the graphs.');
 		return;
 	}
 
-	debug(log_now(), `Recalculating ratings...`);
+	debug(logNow(), `Recalculating ratings...`);
 
 	// actually recalculating ratings
-	recalculate_all_graphs();
+	recalculateAllGraphs();
 
 	res.status(200).send();
 }

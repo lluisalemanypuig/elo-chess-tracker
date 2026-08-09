@@ -24,7 +24,7 @@ Contact:
 */
 
 /// Convert a number to a string of d digits
-export function number_to_string(n: number, d: number): string {
+export function numberToString(n: number, d: number): string {
 	const str = Number(n).toString();
 	return '0'.repeat(d - str.length) + str;
 }
@@ -69,7 +69,7 @@ export function any<T>(arr: T[], F: (e1: T) => boolean): boolean {
  * @param s2 Second string
  * @returns A string containing @e s1 and @e s2 but interleaved.
  */
-export function interleave_strings(s1: string, s2: string): string {
+export function interleaveStrings(s1: string, s2: string): string {
 	let r: string = '';
 	let i = 0;
 	while (i < s1.length && i < s2.length) {

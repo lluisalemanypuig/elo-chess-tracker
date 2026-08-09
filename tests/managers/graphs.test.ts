@@ -23,18 +23,18 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { run_command } from '@tests/exec_utils';
+import { run_command } from '@tests/exec-utils';
 
-import { EdgeMetadata } from '@common/models/graph/edge_metadata';
-import { graph_modify_edge, graph_update } from '@server/managers/graphs';
-import { server_init_from_data } from '@server/managers/memory/initialization';
-import { clear_server } from '@server/managers/memory/clear';
-import { graph_from_string } from '@common/io/graph/graph';
-import { EnvironmentManager } from '@server/managers/environment_manager';
+import { EdgeMetadata } from '@common/models/graph/edge-metadata';
+import { graphModifyEdge, graphUpdate } from '@server/managers/graphs';
+import { serverInitFromData } from '@server/managers/memory/initialization';
+import { clearServer } from '@server/managers/memory/clear';
+import { graphFromString } from '@common/io/graph/graph';
+import { EnvironmentManager } from '@server/managers/environment-manager';
 import { Configuration } from '@common/models/configuration/configuration';
-import { isNotDefined } from '@common/utils/is_defined';
+import { isNotDefined } from '@common/utils/is-defined';
 import { toPlayerPrivateId } from '@common/models/player';
-import { toTimeControlId, toTimeControlName } from '@common/models/time_control';
+import { toTimeControlId, toTimeControlName } from '@common/models/time-control';
 
 const Classical = toTimeControlId('Classical');
 const Classical90p30 = toTimeControlName('Classical (90 + 30)');
@@ -48,30 +48,30 @@ const Blitz5p3 = toTimeControlName('Blitz (5 + 3)');
 
 const configuration: Configuration = {
 	environment: {
-		ssl_certificate: {
-			public_key_file: 'sadf',
-			private_key_file: 'qwer',
-			passphrase_file: 'kgj68'
+		sslCertificate: {
+			publicKeyFile: 'sadf',
+			privateKeyFile: 'qwer',
+			passphraseFile: 'kgj68'
 		},
 		favicon: 'favicon.png',
-		login_page: {
+		loginPage: {
 			title: 'Login title',
 			icon: 'login.png'
 		},
-		home_page: {
+		homePage: {
 			title: 'Home title',
 			icon: 'home.png'
 		}
 	},
 	server: {
-		domain_name: '',
+		domainName: '',
 		ports: {
 			http: '8080',
 			https: '8443'
 		}
 	},
-	rating_system: 'Elo',
-	time_controls: [
+	ratingSystem: 'Elo',
+	timeControls: [
 		{
 			id: Classical,
 			name: Classical90p30
@@ -91,7 +91,7 @@ const configuration: Configuration = {
 	],
 	behavior: {
 		challenges: {
-			higher_rated_player_can_decline_challenge_from_lower_rated_player: false
+			higherRatedPlayerCanDeclineChallengeFromLowerRatedPlayer: false
 		}
 	},
 	permissions: {
@@ -108,320 +108,320 @@ const C = toPlayerPrivateId('C');
 
 describe('Server setup', () => {
 	test('Load an empty server', async () => {
-		await run_command('./tests/initialize_empty.sh');
-		expect(() => server_init_from_data('tests/webpage', configuration)).not.toThrow();
+		await run_command('./tests/initialize-empty.sh');
+		expect(() => serverInitFromData('tests/webpage', configuration)).not.toThrow();
 	});
 });
 
 describe('Simple construction and query', () => {
 	test(Blitz, () => {
-		graph_update(A, B, 'white_wins', Blitz);
+		graphUpdate(A, B, 'white_wins', Blitz);
 		{
-			const g = graph_from_string(EnvironmentManager.get_instance().get_dir_graphs_time_control(Blitz));
+			const g = graphFromString(EnvironmentManager.getInstance().getDirGraphsTimeControl(Blitz));
 			expect(g).not.toBeNull();
 			if (isNotDefined(g)) {
 				return;
 			}
-			expect(g.get_data_as_white(A, B)).toEqual(new EdgeMetadata(1, 0, 0));
-			expect(g.get_data_as_black(A, B)).toEqual(undefined);
-			expect(g.get_out_degree(A)).toBe(1);
-			expect(g.get_in_degree(A)).toBe(0);
-			expect(g.get_black_opponents(A)).toEqual([B]);
-			expect(g.get_white_opponents(A)).toEqual([]);
-			expect(g.get_data_as_white(B, A)).toEqual(undefined);
-			expect(g.get_data_as_black(B, A)).toEqual(new EdgeMetadata(0, 0, 1));
-			expect(g.get_out_degree(B)).toBe(0);
-			expect(g.get_in_degree(B)).toBe(1);
-			expect(g.get_black_opponents(B)).toEqual([]);
-			expect(g.get_white_opponents(B)).toEqual([A]);
+			expect(g.getDataAsWhite(A, B)).toEqual(new EdgeMetadata(1, 0, 0));
+			expect(g.getDataAsBlack(A, B)).toEqual(undefined);
+			expect(g.getOutDegree(A)).toBe(1);
+			expect(g.getInDegree(A)).toBe(0);
+			expect(g.getBlackOpponents(A)).toEqual([B]);
+			expect(g.getWhiteOpponents(A)).toEqual([]);
+			expect(g.getDataAsWhite(B, A)).toEqual(undefined);
+			expect(g.getDataAsBlack(B, A)).toEqual(new EdgeMetadata(0, 0, 1));
+			expect(g.getOutDegree(B)).toBe(0);
+			expect(g.getInDegree(B)).toBe(1);
+			expect(g.getBlackOpponents(B)).toEqual([]);
+			expect(g.getWhiteOpponents(B)).toEqual([A]);
 		}
 
-		graph_update(A, B, 'white_wins', Blitz);
+		graphUpdate(A, B, 'white_wins', Blitz);
 		{
-			const g = graph_from_string(EnvironmentManager.get_instance().get_dir_graphs_time_control(Blitz));
+			const g = graphFromString(EnvironmentManager.getInstance().getDirGraphsTimeControl(Blitz));
 			expect(g).not.toBeNull();
 			if (isNotDefined(g)) {
 				return;
 			}
-			expect(g.get_data_as_white(A, B)).toEqual(new EdgeMetadata(2, 0, 0));
-			expect(g.get_data_as_black(A, B)).toEqual(undefined);
-			expect(g.get_out_degree(A)).toBe(1);
-			expect(g.get_in_degree(A)).toBe(0);
-			expect(g.get_black_opponents(A)).toEqual([B]);
-			expect(g.get_white_opponents(A)).toEqual([]);
-			expect(g.get_data_as_white(B, A)).toEqual(undefined);
-			expect(g.get_data_as_black(B, A)).toEqual(new EdgeMetadata(0, 0, 2));
-			expect(g.get_out_degree(B)).toBe(0);
-			expect(g.get_in_degree(B)).toBe(1);
-			expect(g.get_black_opponents(B)).toEqual([]);
-			expect(g.get_white_opponents(B)).toEqual([A]);
+			expect(g.getDataAsWhite(A, B)).toEqual(new EdgeMetadata(2, 0, 0));
+			expect(g.getDataAsBlack(A, B)).toEqual(undefined);
+			expect(g.getOutDegree(A)).toBe(1);
+			expect(g.getInDegree(A)).toBe(0);
+			expect(g.getBlackOpponents(A)).toEqual([B]);
+			expect(g.getWhiteOpponents(A)).toEqual([]);
+			expect(g.getDataAsWhite(B, A)).toEqual(undefined);
+			expect(g.getDataAsBlack(B, A)).toEqual(new EdgeMetadata(0, 0, 2));
+			expect(g.getOutDegree(B)).toBe(0);
+			expect(g.getInDegree(B)).toBe(1);
+			expect(g.getBlackOpponents(B)).toEqual([]);
+			expect(g.getWhiteOpponents(B)).toEqual([A]);
 		}
 
-		graph_update(A, B, 'white_wins', Blitz);
+		graphUpdate(A, B, 'white_wins', Blitz);
 		{
-			const g = graph_from_string(EnvironmentManager.get_instance().get_dir_graphs_time_control(Blitz));
+			const g = graphFromString(EnvironmentManager.getInstance().getDirGraphsTimeControl(Blitz));
 			expect(g).not.toBeNull();
 			if (isNotDefined(g)) {
 				return;
 			}
-			expect(g.get_data_as_white(A, B)).toEqual(new EdgeMetadata(3, 0, 0));
-			expect(g.get_data_as_black(A, B)).toEqual(undefined);
-			expect(g.get_out_degree(A)).toBe(1);
-			expect(g.get_in_degree(A)).toBe(0);
-			expect(g.get_black_opponents(A)).toEqual([B]);
-			expect(g.get_white_opponents(A)).toEqual([]);
-			expect(g.get_data_as_white(B, A)).toEqual(undefined);
-			expect(g.get_data_as_black(B, A)).toEqual(new EdgeMetadata(0, 0, 3));
-			expect(g.get_out_degree(B)).toBe(0);
-			expect(g.get_in_degree(B)).toBe(1);
-			expect(g.get_black_opponents(B)).toEqual([]);
-			expect(g.get_white_opponents(B)).toEqual([A]);
+			expect(g.getDataAsWhite(A, B)).toEqual(new EdgeMetadata(3, 0, 0));
+			expect(g.getDataAsBlack(A, B)).toEqual(undefined);
+			expect(g.getOutDegree(A)).toBe(1);
+			expect(g.getInDegree(A)).toBe(0);
+			expect(g.getBlackOpponents(A)).toEqual([B]);
+			expect(g.getWhiteOpponents(A)).toEqual([]);
+			expect(g.getDataAsWhite(B, A)).toEqual(undefined);
+			expect(g.getDataAsBlack(B, A)).toEqual(new EdgeMetadata(0, 0, 3));
+			expect(g.getOutDegree(B)).toBe(0);
+			expect(g.getInDegree(B)).toBe(1);
+			expect(g.getBlackOpponents(B)).toEqual([]);
+			expect(g.getWhiteOpponents(B)).toEqual([A]);
 		}
 	});
 
 	test(Classical, () => {
-		graph_update(A, B, 'white_wins', Classical);
+		graphUpdate(A, B, 'white_wins', Classical);
 		{
-			const g = graph_from_string(EnvironmentManager.get_instance().get_dir_graphs_time_control(Classical));
+			const g = graphFromString(EnvironmentManager.getInstance().getDirGraphsTimeControl(Classical));
 			expect(g).not.toBeNull();
 			if (isNotDefined(g)) {
 				return;
 			}
-			expect(g.get_data_as_white(A, B)).toEqual(new EdgeMetadata(1, 0, 0));
-			expect(g.get_data_as_black(A, B)).toEqual(undefined);
-			expect(g.get_out_degree(A)).toBe(1);
-			expect(g.get_in_degree(A)).toBe(0);
-			expect(g.get_black_opponents(A)).toEqual([B]);
-			expect(g.get_white_opponents(A)).toEqual([]);
-			expect(g.get_data_as_white(B, A)).toEqual(undefined);
-			expect(g.get_data_as_black(B, A)).toEqual(new EdgeMetadata(0, 0, 1));
-			expect(g.get_out_degree(B)).toBe(0);
-			expect(g.get_in_degree(B)).toBe(1);
-			expect(g.get_black_opponents(B)).toEqual([]);
-			expect(g.get_white_opponents(B)).toEqual([A]);
+			expect(g.getDataAsWhite(A, B)).toEqual(new EdgeMetadata(1, 0, 0));
+			expect(g.getDataAsBlack(A, B)).toEqual(undefined);
+			expect(g.getOutDegree(A)).toBe(1);
+			expect(g.getInDegree(A)).toBe(0);
+			expect(g.getBlackOpponents(A)).toEqual([B]);
+			expect(g.getWhiteOpponents(A)).toEqual([]);
+			expect(g.getDataAsWhite(B, A)).toEqual(undefined);
+			expect(g.getDataAsBlack(B, A)).toEqual(new EdgeMetadata(0, 0, 1));
+			expect(g.getOutDegree(B)).toBe(0);
+			expect(g.getInDegree(B)).toBe(1);
+			expect(g.getBlackOpponents(B)).toEqual([]);
+			expect(g.getWhiteOpponents(B)).toEqual([A]);
 		}
 
-		graph_update(A, B, 'black_wins', Classical);
+		graphUpdate(A, B, 'black_wins', Classical);
 		{
-			const g = graph_from_string(EnvironmentManager.get_instance().get_dir_graphs_time_control(Classical));
+			const g = graphFromString(EnvironmentManager.getInstance().getDirGraphsTimeControl(Classical));
 			expect(g).not.toBeNull();
 			if (isNotDefined(g)) {
 				return;
 			}
-			expect(g.get_data_as_white(A, B)).toEqual(new EdgeMetadata(1, 0, 1));
-			expect(g.get_data_as_black(A, B)).toEqual(undefined);
-			expect(g.get_out_degree(A)).toBe(1);
-			expect(g.get_in_degree(A)).toBe(0);
-			expect(g.get_black_opponents(A)).toEqual([B]);
-			expect(g.get_white_opponents(A)).toEqual([]);
-			expect(g.get_data_as_white(B, A)).toEqual(undefined);
-			expect(g.get_data_as_black(B, A)).toEqual(new EdgeMetadata(1, 0, 1));
-			expect(g.get_out_degree(B)).toBe(0);
-			expect(g.get_in_degree(B)).toBe(1);
-			expect(g.get_black_opponents(B)).toEqual([]);
-			expect(g.get_white_opponents(B)).toEqual([A]);
+			expect(g.getDataAsWhite(A, B)).toEqual(new EdgeMetadata(1, 0, 1));
+			expect(g.getDataAsBlack(A, B)).toEqual(undefined);
+			expect(g.getOutDegree(A)).toBe(1);
+			expect(g.getInDegree(A)).toBe(0);
+			expect(g.getBlackOpponents(A)).toEqual([B]);
+			expect(g.getWhiteOpponents(A)).toEqual([]);
+			expect(g.getDataAsWhite(B, A)).toEqual(undefined);
+			expect(g.getDataAsBlack(B, A)).toEqual(new EdgeMetadata(1, 0, 1));
+			expect(g.getOutDegree(B)).toBe(0);
+			expect(g.getInDegree(B)).toBe(1);
+			expect(g.getBlackOpponents(B)).toEqual([]);
+			expect(g.getWhiteOpponents(B)).toEqual([A]);
 		}
 
-		graph_update(A, B, 'draw', Classical);
+		graphUpdate(A, B, 'draw', Classical);
 		{
-			const g = graph_from_string(EnvironmentManager.get_instance().get_dir_graphs_time_control(Classical));
+			const g = graphFromString(EnvironmentManager.getInstance().getDirGraphsTimeControl(Classical));
 			expect(g).not.toBeNull();
 			if (isNotDefined(g)) {
 				return;
 			}
-			expect(g.get_data_as_white(A, B)).toEqual(new EdgeMetadata(1, 1, 1));
-			expect(g.get_data_as_black(A, B)).toEqual(undefined);
-			expect(g.get_out_degree(A)).toBe(1);
-			expect(g.get_in_degree(A)).toBe(0);
-			expect(g.get_black_opponents(A)).toEqual([B]);
-			expect(g.get_white_opponents(A)).toEqual([]);
-			expect(g.get_data_as_white(B, A)).toEqual(undefined);
-			expect(g.get_data_as_black(B, A)).toEqual(new EdgeMetadata(1, 1, 1));
-			expect(g.get_out_degree(B)).toBe(0);
-			expect(g.get_in_degree(B)).toBe(1);
-			expect(g.get_black_opponents(B)).toEqual([]);
-			expect(g.get_white_opponents(B)).toEqual([A]);
+			expect(g.getDataAsWhite(A, B)).toEqual(new EdgeMetadata(1, 1, 1));
+			expect(g.getDataAsBlack(A, B)).toEqual(undefined);
+			expect(g.getOutDegree(A)).toBe(1);
+			expect(g.getInDegree(A)).toBe(0);
+			expect(g.getBlackOpponents(A)).toEqual([B]);
+			expect(g.getWhiteOpponents(A)).toEqual([]);
+			expect(g.getDataAsWhite(B, A)).toEqual(undefined);
+			expect(g.getDataAsBlack(B, A)).toEqual(new EdgeMetadata(1, 1, 1));
+			expect(g.getOutDegree(B)).toBe(0);
+			expect(g.getInDegree(B)).toBe(1);
+			expect(g.getBlackOpponents(B)).toEqual([]);
+			expect(g.getWhiteOpponents(B)).toEqual([A]);
 		}
 	});
 });
 
 describe('Server reset', () => {
 	test('Clear and reload server', async () => {
-		clear_server();
-		await run_command('./tests/initialize_empty.sh');
-		server_init_from_data('tests/webpage', configuration);
+		clearServer();
+		await run_command('./tests/initialize-empty.sh');
+		serverInitFromData('tests/webpage', configuration);
 	});
 });
 
 describe('Edge update', () => {
 	test(Classical, () => {
-		graph_update(A, B, 'white_wins', Classical);
-		graph_modify_edge(A, B, 'white_wins', 'draw', Classical);
+		graphUpdate(A, B, 'white_wins', Classical);
+		graphModifyEdge(A, B, 'white_wins', 'draw', Classical);
 		{
-			const g = graph_from_string(EnvironmentManager.get_instance().get_dir_graphs_time_control(Classical));
+			const g = graphFromString(EnvironmentManager.getInstance().getDirGraphsTimeControl(Classical));
 			expect(g).not.toBeNull();
 			if (isNotDefined(g)) {
 				return;
 			}
-			expect(g.get_data_as_white(A, B)).toEqual(new EdgeMetadata(0, 1, 0));
-			expect(g.get_data_as_black(A, B)).toEqual(undefined);
-			expect(g.get_data_as_white(A, C)).toEqual(undefined);
-			expect(g.get_data_as_black(A, C)).toEqual(undefined);
-			expect(g.get_out_degree(A)).toBe(1);
-			expect(g.get_in_degree(A)).toBe(0);
-			expect(g.get_black_opponents(A)).toEqual([B]);
-			expect(g.get_white_opponents(A)).toEqual([]);
-			expect(g.get_data_as_white(B, A)).toEqual(undefined);
-			expect(g.get_data_as_black(B, A)).toEqual(new EdgeMetadata(0, 1, 0));
-			expect(g.get_data_as_white(B, C)).toEqual(undefined);
-			expect(g.get_data_as_black(B, C)).toEqual(undefined);
-			expect(g.get_out_degree(B)).toBe(0);
-			expect(g.get_in_degree(B)).toBe(1);
-			expect(g.get_black_opponents(B)).toEqual([]);
-			expect(g.get_white_opponents(B)).toEqual([A]);
-			expect(g.get_data_as_white(C, A)).toEqual(undefined);
-			expect(g.get_data_as_black(C, A)).toEqual(undefined);
-			expect(g.get_data_as_white(C, B)).toEqual(undefined);
-			expect(g.get_data_as_black(C, B)).toEqual(undefined);
-			expect(g.get_out_degree(C)).toBe(0);
-			expect(g.get_in_degree(C)).toBe(0);
-			expect(g.get_black_opponents(C)).toEqual([]);
-			expect(g.get_white_opponents(C)).toEqual([]);
+			expect(g.getDataAsWhite(A, B)).toEqual(new EdgeMetadata(0, 1, 0));
+			expect(g.getDataAsBlack(A, B)).toEqual(undefined);
+			expect(g.getDataAsWhite(A, C)).toEqual(undefined);
+			expect(g.getDataAsBlack(A, C)).toEqual(undefined);
+			expect(g.getOutDegree(A)).toBe(1);
+			expect(g.getInDegree(A)).toBe(0);
+			expect(g.getBlackOpponents(A)).toEqual([B]);
+			expect(g.getWhiteOpponents(A)).toEqual([]);
+			expect(g.getDataAsWhite(B, A)).toEqual(undefined);
+			expect(g.getDataAsBlack(B, A)).toEqual(new EdgeMetadata(0, 1, 0));
+			expect(g.getDataAsWhite(B, C)).toEqual(undefined);
+			expect(g.getDataAsBlack(B, C)).toEqual(undefined);
+			expect(g.getOutDegree(B)).toBe(0);
+			expect(g.getInDegree(B)).toBe(1);
+			expect(g.getBlackOpponents(B)).toEqual([]);
+			expect(g.getWhiteOpponents(B)).toEqual([A]);
+			expect(g.getDataAsWhite(C, A)).toEqual(undefined);
+			expect(g.getDataAsBlack(C, A)).toEqual(undefined);
+			expect(g.getDataAsWhite(C, B)).toEqual(undefined);
+			expect(g.getDataAsBlack(C, B)).toEqual(undefined);
+			expect(g.getOutDegree(C)).toBe(0);
+			expect(g.getInDegree(C)).toBe(0);
+			expect(g.getBlackOpponents(C)).toEqual([]);
+			expect(g.getWhiteOpponents(C)).toEqual([]);
 		}
 
-		graph_modify_edge(A, B, 'draw', 'black_wins', Classical);
+		graphModifyEdge(A, B, 'draw', 'black_wins', Classical);
 		{
-			const g = graph_from_string(EnvironmentManager.get_instance().get_dir_graphs_time_control(Classical));
+			const g = graphFromString(EnvironmentManager.getInstance().getDirGraphsTimeControl(Classical));
 			expect(g).not.toBeNull();
 			if (isNotDefined(g)) {
 				return;
 			}
-			expect(g.get_data_as_white(A, B)).toEqual(new EdgeMetadata(0, 0, 1));
-			expect(g.get_data_as_black(A, B)).toEqual(undefined);
-			expect(g.get_data_as_white(A, C)).toEqual(undefined);
-			expect(g.get_data_as_black(A, C)).toEqual(undefined);
-			expect(g.get_out_degree(A)).toBe(1);
-			expect(g.get_in_degree(A)).toBe(0);
-			expect(g.get_black_opponents(A)).toEqual([B]);
-			expect(g.get_white_opponents(A)).toEqual([]);
-			expect(g.get_data_as_white(B, A)).toEqual(undefined);
-			expect(g.get_data_as_black(B, A)).toEqual(new EdgeMetadata(1, 0, 0));
-			expect(g.get_data_as_white(B, C)).toEqual(undefined);
-			expect(g.get_data_as_black(B, C)).toEqual(undefined);
-			expect(g.get_out_degree(B)).toBe(0);
-			expect(g.get_in_degree(B)).toBe(1);
-			expect(g.get_black_opponents(B)).toEqual([]);
-			expect(g.get_white_opponents(B)).toEqual([A]);
-			expect(g.get_data_as_white(C, A)).toEqual(undefined);
-			expect(g.get_data_as_black(C, A)).toEqual(undefined);
-			expect(g.get_data_as_white(C, B)).toEqual(undefined);
-			expect(g.get_data_as_black(C, B)).toEqual(undefined);
-			expect(g.get_out_degree(C)).toBe(0);
-			expect(g.get_in_degree(C)).toBe(0);
-			expect(g.get_black_opponents(C)).toEqual([]);
-			expect(g.get_white_opponents(C)).toEqual([]);
+			expect(g.getDataAsWhite(A, B)).toEqual(new EdgeMetadata(0, 0, 1));
+			expect(g.getDataAsBlack(A, B)).toEqual(undefined);
+			expect(g.getDataAsWhite(A, C)).toEqual(undefined);
+			expect(g.getDataAsBlack(A, C)).toEqual(undefined);
+			expect(g.getOutDegree(A)).toBe(1);
+			expect(g.getInDegree(A)).toBe(0);
+			expect(g.getBlackOpponents(A)).toEqual([B]);
+			expect(g.getWhiteOpponents(A)).toEqual([]);
+			expect(g.getDataAsWhite(B, A)).toEqual(undefined);
+			expect(g.getDataAsBlack(B, A)).toEqual(new EdgeMetadata(1, 0, 0));
+			expect(g.getDataAsWhite(B, C)).toEqual(undefined);
+			expect(g.getDataAsBlack(B, C)).toEqual(undefined);
+			expect(g.getOutDegree(B)).toBe(0);
+			expect(g.getInDegree(B)).toBe(1);
+			expect(g.getBlackOpponents(B)).toEqual([]);
+			expect(g.getWhiteOpponents(B)).toEqual([A]);
+			expect(g.getDataAsWhite(C, A)).toEqual(undefined);
+			expect(g.getDataAsBlack(C, A)).toEqual(undefined);
+			expect(g.getDataAsWhite(C, B)).toEqual(undefined);
+			expect(g.getDataAsBlack(C, B)).toEqual(undefined);
+			expect(g.getOutDegree(C)).toBe(0);
+			expect(g.getInDegree(C)).toBe(0);
+			expect(g.getBlackOpponents(C)).toEqual([]);
+			expect(g.getWhiteOpponents(C)).toEqual([]);
 		}
 
-		graph_modify_edge(A, B, 'black_wins', 'draw', Classical);
+		graphModifyEdge(A, B, 'black_wins', 'draw', Classical);
 		{
-			const g = graph_from_string(EnvironmentManager.get_instance().get_dir_graphs_time_control(Classical));
+			const g = graphFromString(EnvironmentManager.getInstance().getDirGraphsTimeControl(Classical));
 			expect(g).not.toBeNull();
 			if (isNotDefined(g)) {
 				return;
 			}
-			expect(g.get_data_as_white(A, B)).toEqual(new EdgeMetadata(0, 1, 0));
-			expect(g.get_data_as_black(A, B)).toEqual(undefined);
-			expect(g.get_data_as_white(A, C)).toEqual(undefined);
-			expect(g.get_data_as_black(A, C)).toEqual(undefined);
-			expect(g.get_out_degree(A)).toBe(1);
-			expect(g.get_in_degree(A)).toBe(0);
-			expect(g.get_black_opponents(A)).toEqual([B]);
-			expect(g.get_white_opponents(A)).toEqual([]);
-			expect(g.get_data_as_white(B, A)).toEqual(undefined);
-			expect(g.get_data_as_black(B, A)).toEqual(new EdgeMetadata(0, 1, 0));
-			expect(g.get_data_as_white(B, C)).toEqual(undefined);
-			expect(g.get_data_as_black(B, C)).toEqual(undefined);
-			expect(g.get_out_degree(B)).toBe(0);
-			expect(g.get_in_degree(B)).toBe(1);
-			expect(g.get_black_opponents(B)).toEqual([]);
-			expect(g.get_white_opponents(B)).toEqual([A]);
-			expect(g.get_data_as_white(C, A)).toEqual(undefined);
-			expect(g.get_data_as_black(C, A)).toEqual(undefined);
-			expect(g.get_data_as_white(C, B)).toEqual(undefined);
-			expect(g.get_data_as_black(C, B)).toEqual(undefined);
-			expect(g.get_out_degree(C)).toBe(0);
-			expect(g.get_in_degree(C)).toBe(0);
-			expect(g.get_black_opponents(C)).toEqual([]);
-			expect(g.get_white_opponents(C)).toEqual([]);
+			expect(g.getDataAsWhite(A, B)).toEqual(new EdgeMetadata(0, 1, 0));
+			expect(g.getDataAsBlack(A, B)).toEqual(undefined);
+			expect(g.getDataAsWhite(A, C)).toEqual(undefined);
+			expect(g.getDataAsBlack(A, C)).toEqual(undefined);
+			expect(g.getOutDegree(A)).toBe(1);
+			expect(g.getInDegree(A)).toBe(0);
+			expect(g.getBlackOpponents(A)).toEqual([B]);
+			expect(g.getWhiteOpponents(A)).toEqual([]);
+			expect(g.getDataAsWhite(B, A)).toEqual(undefined);
+			expect(g.getDataAsBlack(B, A)).toEqual(new EdgeMetadata(0, 1, 0));
+			expect(g.getDataAsWhite(B, C)).toEqual(undefined);
+			expect(g.getDataAsBlack(B, C)).toEqual(undefined);
+			expect(g.getOutDegree(B)).toBe(0);
+			expect(g.getInDegree(B)).toBe(1);
+			expect(g.getBlackOpponents(B)).toEqual([]);
+			expect(g.getWhiteOpponents(B)).toEqual([A]);
+			expect(g.getDataAsWhite(C, A)).toEqual(undefined);
+			expect(g.getDataAsBlack(C, A)).toEqual(undefined);
+			expect(g.getDataAsWhite(C, B)).toEqual(undefined);
+			expect(g.getDataAsBlack(C, B)).toEqual(undefined);
+			expect(g.getOutDegree(C)).toBe(0);
+			expect(g.getInDegree(C)).toBe(0);
+			expect(g.getBlackOpponents(C)).toEqual([]);
+			expect(g.getWhiteOpponents(C)).toEqual([]);
 		}
 
-		graph_update(C, A, 'white_wins', Classical);
-		graph_update(C, B, 'black_wins', Classical);
+		graphUpdate(C, A, 'white_wins', Classical);
+		graphUpdate(C, B, 'black_wins', Classical);
 
-		graph_modify_edge(C, A, 'white_wins', 'draw', Classical);
+		graphModifyEdge(C, A, 'white_wins', 'draw', Classical);
 		{
-			const g = graph_from_string(EnvironmentManager.get_instance().get_dir_graphs_time_control(Classical));
+			const g = graphFromString(EnvironmentManager.getInstance().getDirGraphsTimeControl(Classical));
 			expect(g).not.toBeNull();
 			if (isNotDefined(g)) {
 				return;
 			}
-			expect(g.get_data_as_white(A, B)).toEqual(new EdgeMetadata(0, 1, 0));
-			expect(g.get_data_as_black(A, B)).toEqual(undefined);
-			expect(g.get_data_as_white(A, C)).toEqual(undefined);
-			expect(g.get_data_as_black(A, C)).toEqual(new EdgeMetadata(0, 1, 0));
-			expect(g.get_out_degree(A)).toBe(1);
-			expect(g.get_in_degree(A)).toBe(1);
-			expect(g.get_black_opponents(A)).toEqual([B]);
-			expect(g.get_white_opponents(A)).toEqual([C]);
-			expect(g.get_data_as_white(B, A)).toEqual(undefined);
-			expect(g.get_data_as_black(B, A)).toEqual(new EdgeMetadata(0, 1, 0));
-			expect(g.get_data_as_white(B, C)).toEqual(undefined);
-			expect(g.get_data_as_black(B, C)).toEqual(new EdgeMetadata(1, 0, 0));
-			expect(g.get_out_degree(B)).toBe(0);
-			expect(g.get_in_degree(B)).toBe(2);
-			expect(g.get_black_opponents(B)).toEqual([]);
-			expect(g.get_white_opponents(B)).toEqual([A, C]);
-			expect(g.get_data_as_white(C, A)).toEqual(new EdgeMetadata(0, 1, 0));
-			expect(g.get_data_as_black(C, A)).toEqual(undefined);
-			expect(g.get_data_as_white(C, B)).toEqual(new EdgeMetadata(0, 0, 1));
-			expect(g.get_data_as_black(C, B)).toEqual(undefined);
-			expect(g.get_out_degree(C)).toBe(2);
-			expect(g.get_in_degree(C)).toBe(0);
-			expect(g.get_black_opponents(C)).toEqual([A, B]);
-			expect(g.get_white_opponents(C)).toEqual([]);
+			expect(g.getDataAsWhite(A, B)).toEqual(new EdgeMetadata(0, 1, 0));
+			expect(g.getDataAsBlack(A, B)).toEqual(undefined);
+			expect(g.getDataAsWhite(A, C)).toEqual(undefined);
+			expect(g.getDataAsBlack(A, C)).toEqual(new EdgeMetadata(0, 1, 0));
+			expect(g.getOutDegree(A)).toBe(1);
+			expect(g.getInDegree(A)).toBe(1);
+			expect(g.getBlackOpponents(A)).toEqual([B]);
+			expect(g.getWhiteOpponents(A)).toEqual([C]);
+			expect(g.getDataAsWhite(B, A)).toEqual(undefined);
+			expect(g.getDataAsBlack(B, A)).toEqual(new EdgeMetadata(0, 1, 0));
+			expect(g.getDataAsWhite(B, C)).toEqual(undefined);
+			expect(g.getDataAsBlack(B, C)).toEqual(new EdgeMetadata(1, 0, 0));
+			expect(g.getOutDegree(B)).toBe(0);
+			expect(g.getInDegree(B)).toBe(2);
+			expect(g.getBlackOpponents(B)).toEqual([]);
+			expect(g.getWhiteOpponents(B)).toEqual([A, C]);
+			expect(g.getDataAsWhite(C, A)).toEqual(new EdgeMetadata(0, 1, 0));
+			expect(g.getDataAsBlack(C, A)).toEqual(undefined);
+			expect(g.getDataAsWhite(C, B)).toEqual(new EdgeMetadata(0, 0, 1));
+			expect(g.getDataAsBlack(C, B)).toEqual(undefined);
+			expect(g.getOutDegree(C)).toBe(2);
+			expect(g.getInDegree(C)).toBe(0);
+			expect(g.getBlackOpponents(C)).toEqual([A, B]);
+			expect(g.getWhiteOpponents(C)).toEqual([]);
 		}
 
-		graph_modify_edge(C, B, 'black_wins', 'draw', Classical);
+		graphModifyEdge(C, B, 'black_wins', 'draw', Classical);
 		{
-			const g = graph_from_string(EnvironmentManager.get_instance().get_dir_graphs_time_control(Classical));
+			const g = graphFromString(EnvironmentManager.getInstance().getDirGraphsTimeControl(Classical));
 			expect(g).not.toBeNull();
 			if (isNotDefined(g)) {
 				return;
 			}
-			expect(g.get_data_as_white(A, B)).toEqual(new EdgeMetadata(0, 1, 0));
-			expect(g.get_data_as_black(A, B)).toEqual(undefined);
-			expect(g.get_data_as_white(A, C)).toEqual(undefined);
-			expect(g.get_data_as_black(A, C)).toEqual(new EdgeMetadata(0, 1, 0));
-			expect(g.get_out_degree(A)).toBe(1);
-			expect(g.get_in_degree(A)).toBe(1);
-			expect(g.get_black_opponents(A)).toEqual([B]);
-			expect(g.get_white_opponents(A)).toEqual([C]);
-			expect(g.get_data_as_white(B, A)).toEqual(undefined);
-			expect(g.get_data_as_black(B, A)).toEqual(new EdgeMetadata(0, 1, 0));
-			expect(g.get_data_as_white(B, C)).toEqual(undefined);
-			expect(g.get_data_as_black(B, C)).toEqual(new EdgeMetadata(0, 1, 0));
-			expect(g.get_out_degree(B)).toBe(0);
-			expect(g.get_in_degree(B)).toBe(2);
-			expect(g.get_black_opponents(B)).toEqual([]);
-			expect(g.get_white_opponents(B)).toEqual([A, C]);
-			expect(g.get_data_as_white(C, A)).toEqual(new EdgeMetadata(0, 1, 0));
-			expect(g.get_data_as_black(C, A)).toEqual(undefined);
-			expect(g.get_data_as_white(C, B)).toEqual(new EdgeMetadata(0, 1, 0));
-			expect(g.get_data_as_black(C, B)).toEqual(undefined);
-			expect(g.get_out_degree(C)).toBe(2);
-			expect(g.get_in_degree(C)).toBe(0);
-			expect(g.get_black_opponents(C)).toEqual([A, B]);
-			expect(g.get_white_opponents(C)).toEqual([]);
+			expect(g.getDataAsWhite(A, B)).toEqual(new EdgeMetadata(0, 1, 0));
+			expect(g.getDataAsBlack(A, B)).toEqual(undefined);
+			expect(g.getDataAsWhite(A, C)).toEqual(undefined);
+			expect(g.getDataAsBlack(A, C)).toEqual(new EdgeMetadata(0, 1, 0));
+			expect(g.getOutDegree(A)).toBe(1);
+			expect(g.getInDegree(A)).toBe(1);
+			expect(g.getBlackOpponents(A)).toEqual([B]);
+			expect(g.getWhiteOpponents(A)).toEqual([C]);
+			expect(g.getDataAsWhite(B, A)).toEqual(undefined);
+			expect(g.getDataAsBlack(B, A)).toEqual(new EdgeMetadata(0, 1, 0));
+			expect(g.getDataAsWhite(B, C)).toEqual(undefined);
+			expect(g.getDataAsBlack(B, C)).toEqual(new EdgeMetadata(0, 1, 0));
+			expect(g.getOutDegree(B)).toBe(0);
+			expect(g.getInDegree(B)).toBe(2);
+			expect(g.getBlackOpponents(B)).toEqual([]);
+			expect(g.getWhiteOpponents(B)).toEqual([A, C]);
+			expect(g.getDataAsWhite(C, A)).toEqual(new EdgeMetadata(0, 1, 0));
+			expect(g.getDataAsBlack(C, A)).toEqual(undefined);
+			expect(g.getDataAsWhite(C, B)).toEqual(new EdgeMetadata(0, 1, 0));
+			expect(g.getDataAsBlack(C, B)).toEqual(undefined);
+			expect(g.getOutDegree(C)).toBe(2);
+			expect(g.getInDegree(C)).toBe(0);
+			expect(g.getBlackOpponents(C)).toEqual([A, B]);
+			expect(g.getWhiteOpponents(C)).toEqual([]);
 		}
 	});
 });

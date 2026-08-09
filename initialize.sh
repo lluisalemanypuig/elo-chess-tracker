@@ -7,7 +7,7 @@ function escape_string {
 	echo $replaceEscaped
 }
 
-function configure_ssl_certificate {
+function configure_sslCertificate {
 	echo "Generating SSL certificate..."
 
 	cd webpage/ssl
@@ -21,7 +21,7 @@ function configure_ssl_certificate {
 	sed -i "s/\$PUBLIC_PEM/$(escape_string "$server_certificate_filename")/g" configuration.json
 	sed -i "s/\$PRIVATE_PEM/$(escape_string "$server_key_filename")/g" configuration.json
 	sed -i "s/\$PASSPHRASE_TXT/$(escape_string "")/g" configuration.json
-	sed -i "s/\$DOMAIN_NAME/$(escape_string "$domain_name")/g" configuration.json
+	sed -i "s/\$DOMAIN_NAME/$(escape_string "$domainName")/g" configuration.json
 
 	cd ..
 }
@@ -46,7 +46,7 @@ function generate_admin_password {
 	cd ../../..
 }
 
-domain_name="localhost:8443"
+domainName="localhost:8443"
 
 admin_username="admin.admin"
 admin_firstname="Admin"
@@ -60,7 +60,7 @@ for i in "$@"; do
 	case $i in
 
 		--domain-name=*)
-		domain_name="${i#*=}"
+		domainName="${i#*=}"
 		shift
 		;;
 
@@ -105,7 +105,7 @@ mkdir webpage/database/games
 mkdir webpage/database/graphs
 mkdir webpage/ssl
 mkdir webpage/icons
-mv webpage/configuration_sample.json webpage/configuration.json
+mv webpage/configuration-sample.json webpage/configuration.json
 
-configure_ssl_certificate
+configure_sslCertificate
 generate_admin_password

@@ -23,31 +23,31 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { UserRoleToUserAction } from '@server/managers/user_role_action';
-import { EnvironmentManager } from '@server/managers/environment_manager';
-import { ConfigurationManager } from '@server/managers/configuration_manager';
-import { ChallengesManager } from '@server/managers/challenges_manager';
-import { GamesManager } from '@server/managers/games_manager';
-import { UsersManager } from '@server/managers/users_manager';
-import { SessionIDManager } from '@server/managers/session_id_manager';
-import { RatingSystemManager } from '@server/managers/rating_system_manager';
-import { GraphsManager } from '@server/managers/graphs_manager';
-import { UsersBehavior } from '@server/managers/users_behavior';
+import { UserRoleToUserAction } from '@server/managers/user-role-action';
+import { EnvironmentManager } from '@server/managers/environment-manager';
+import { ConfigurationManager } from '@server/managers/configuration-manager';
+import { ChallengesManager } from '@server/managers/challenges-manager';
+import { GamesManager } from '@server/managers/games-manager';
+import { UsersManager } from '@server/managers/users-manager';
+import { SessionIDManager } from '@server/managers/session-id-manager';
+import { RatingSystemManager } from '@server/managers/rating-system-manager';
+import { GraphsManager } from '@server/managers/graphs-manager';
+import { UsersBehavior } from '@server/managers/users-behavior';
 
 /**
  * @brief Clear the memory of the server
  *
  * That is, the RAM memory, not the disk memory.
  */
-export function clear_server(): void {
-	UsersManager.get_instance().clear();
-	UsersBehavior.get_instance().clear();
-	EnvironmentManager.get_instance().clear();
-	ConfigurationManager.get_instance().clear();
-	UserRoleToUserAction.get_instance().clear();
-	RatingSystemManager.get_instance().clear();
-	SessionIDManager.get_instance().clear();
-	ChallengesManager.get_instance().clear();
-	GamesManager.get_instance().clear();
-	GraphsManager.get_instance().clear();
+export function clearServer(): void {
+	UsersManager.getInstance().clear();
+	UsersBehavior.getInstance().clear();
+	EnvironmentManager.getInstance().clear();
+	ConfigurationManager.getInstance().clear();
+	UserRoleToUserAction.getInstance().clear();
+	RatingSystemManager.getInstance().clear();
+	SessionIDManager.getInstance().clear();
+	ChallengesManager.getInstance().clear();
+	GamesManager.getInstance().clear();
+	GraphsManager.getInstance().clear();
 }

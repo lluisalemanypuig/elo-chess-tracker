@@ -25,30 +25,30 @@ Contact:
 
 import { PlayerPrivateId, toPlayerPrivateId } from '@common/models/player';
 import {
-	decrypt_message,
-	encrypt_message,
-	encrypt_password_for_user,
-	is_password_of_user_correct,
-	normalize_string
+	decryptMessage,
+	encryptMessage,
+	encryptPasswordForUser,
+	isPasswordOfUserCorrect,
+	normalizeString
 } from '@server/utils/encrypt';
 
 describe('Password normalization', () => {
 	test('1', () => {
-		expect(normalize_string('q')).toBe('q$AL');
-		expect(normalize_string('qw')).toBe('qw$ALLOW');
-		expect(normalize_string('qwt')).toBe('qwt$ALLO');
-		expect(normalize_string('asdf')).toBe('asdf$ALL');
-		expect(normalize_string('AAAAA')).toBe('AAAAA$AL');
+		expect(normalizeString('q')).toBe('q$AL');
+		expect(normalizeString('qw')).toBe('qw$ALLOW');
+		expect(normalizeString('qwt')).toBe('qwt$ALLO');
+		expect(normalizeString('asdf')).toBe('asdf$ALL');
+		expect(normalizeString('AAAAA')).toBe('AAAAA$AL');
 	});
 
 	test('2', () => {
-		expect(normalize_string('12345678')).toBe('12345678$ALLOWED');
-		expect(normalize_string('1234567890123456')).toBe('1234567890123456$ALLOWED_SYMBOLS');
-		expect(normalize_string('1234567890123456789012345678901234567890123456789012345678901234')).toBe(
+		expect(normalizeString('12345678')).toBe('12345678$ALLOWED');
+		expect(normalizeString('1234567890123456')).toBe('1234567890123456$ALLOWED_SYMBOLS');
+		expect(normalizeString('1234567890123456789012345678901234567890123456789012345678901234')).toBe(
 			'1234567890123456789012345678901234567890123456789012345678901234$ALLOWED_SYMBOLS_ENCRYPT$ALLOWED_SYMBOLS_ENCRYPT$ALLOWED_SYMBOLS'
 		);
 		expect(
-			normalize_string(
+			normalizeString(
 				'12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678'
 			)
 		).toBe(
@@ -57,13 +57,13 @@ describe('Password normalization', () => {
 	});
 
 	test('3', () => {
-		expect(normalize_string('星星星星')).toBe('星星星星$ALL');
+		expect(normalizeString('星星星星')).toBe('星星星星$ALL');
 	});
 });
 
 function check_decrypt_good_password(msg: string, pass: string) {
-	const enc = encrypt_message(msg, pass);
-	expect(decrypt_message(enc, pass)).toBe(msg);
+	const enc = encryptMessage(msg, pass);
+	expect(decryptMessage(enc, pass)).toBe(msg);
 }
 
 describe('Encryption and decryption of messages with a (correct) plain password', () => {
@@ -99,16 +99,16 @@ describe('Encryption and decryption of messages with a (correct) plain password'
 });
 
 function check_decrypt_wrong_password(msg: string, pass1: string, pass2: string) {
-	const enc = encrypt_message(msg, pass1);
-	expect(decrypt_message(enc, pass2)).not.toBe(msg);
+	const enc = encryptMessage(msg, pass1);
+	expect(decryptMessage(enc, pass2)).not.toBe(msg);
 }
 
 describe('Encryption and decryption with a (wrong) plain password', () => {
 	test('1', () => {
-		const enc1 = encrypt_message('', 'admin');
+		const enc1 = encryptMessage('', 'admin');
 
-		expect(decrypt_message(enc1, 'admin!')).toBe('');
-		expect(decrypt_message(enc1, 'admi')).toBe('');
+		expect(decryptMessage(enc1, 'admin!')).toBe('');
+		expect(decryptMessage(enc1, 'admi')).toBe('');
 	});
 
 	test('2', () => {
@@ -138,8 +138,8 @@ describe('Encryption and decryption with a (wrong) plain password', () => {
 });
 
 function check_encrypt_user_password(user: PlayerPrivateId, pass: string) {
-	const [encrypted, iv] = encrypt_password_for_user(user, pass);
-	expect(is_password_of_user_correct(user, pass, { encrypted, iv })).toBe(true);
+	const [encrypted, iv] = encryptPasswordForUser(user, pass);
+	expect(isPasswordOfUserCorrect(user, pass, { encrypted, iv })).toBe(true);
 }
 
 describe('Encrypt password for users', () => {

@@ -26,13 +26,13 @@ Contact:
 import { z } from 'zod';
 import { Player, PlayerPrivateId } from '@common/models/player';
 import { Password } from '@common/models/password';
-import { UserRole } from '@common/models/user_role';
-import { UserAction } from '@common/models/user_action';
-import { UserRoleToUserAction } from '@server/managers/user_role_action';
-import { TimeControlRating } from '@common/models/time_control_rating';
-import { TimeControlId, TimeControlIdSchema } from '@common/models/time_control';
+import { UserRole } from '@common/models/user-role';
+import { UserAction } from '@common/models/user-action';
+import { UserRoleToUserAction } from '@server/managers/user-role-action';
+import { TimeControlRating } from '@common/models/time-control-rating';
+import { TimeControlId, TimeControlIdSchema } from '@common/models/time-control';
 import { copyarray } from '@server/utils/misc';
-import { search_by_key, search_linear_by_key, where_should_be_inserted_by_key } from '@server/utils/searching';
+import { searchByKey, searchLinearByKey, whereShouldBeInsertedByKey } from '@server/utils/searching';
 import { DateMajor, DateMajorSchema } from '@common/utils/time';
 
 export const GameNumberSchema = z
@@ -50,7 +50,7 @@ export type GameNumberArray = z.infer<typeof GameNumberArraySchema>;
 
 export const TimeControlGameSchema = z
 	.object({
-		time_control: TimeControlIdSchema,
+		timeControl: TimeControlIdSchema,
 		records: z.array(GameNumberSchema)
 	})
 	.strict();
@@ -61,7 +61,7 @@ export const TimeControlGameArraySchema = z.array(TimeControlGameSchema);
 
 export type TimeControlGameArray = z.infer<typeof TimeControlGameArraySchema>;
 
-export const UserKeys = ['username', 'first_name', 'last_name', 'password', 'roles', 'games', 'ratings'];
+export const UserKeys = ['username', 'firstName', 'lastName', 'password', 'roles', 'games', 'ratings'];
 
 // User name
 
@@ -84,9 +84,9 @@ export function toUserGivenName(s: string): UserGivenName {
  */
 export class User extends Player {
 	/// First name
-	public first_name: UserGivenName;
+	public firstName: UserGivenName;
 	/// Last name
-	public last_name: UserGivenName;
+	public lastName: UserGivenName;
 	/// Password
 	public password: Password;
 	/// Roles of this user
@@ -102,8 +102,8 @@ export class User extends Player {
 	/**
 	 * @brief Constructor
 	 * @param username User name of the player.
-	 * @param first_name First name of the player.
-	 * @param last_name Last name of the player.
+	 * @param firstName First name of the player.
+	 * @param lastName Last name of the player.
 	 * @param password Password of the user.
 	 * @param roles User roles.
 	 * @param games The set of games played.
@@ -111,24 +111,24 @@ export class User extends Player {
 	 */
 	constructor(
 		username: PlayerPrivateId,
-		first_name: UserGivenName,
-		last_name: UserGivenName,
+		firstName: UserGivenName,
+		lastName: UserGivenName,
 		password: Password,
 		roles: UserRole[],
 		games: TimeControlGame[],
 		ratings: TimeControlRating[]
 	) {
 		super(username, ratings);
-		this.first_name = first_name;
-		this.last_name = last_name;
+		this.firstName = firstName;
+		this.lastName = lastName;
 		this.password = password;
 		this.games = games;
 		this.roles = roles;
 	}
 
 	/// Returns the full name of this user
-	get_full_name(): UserGivenName {
-		return toUserGivenName(`${this.first_name} ${this.last_name}`);
+	getFullName(): UserGivenName {
+		return toUserGivenName(`${this.firstName} ${this.lastName}`);
 	}
 
 	/**
@@ -136,9 +136,9 @@ export class User extends Player {
 	 * @param id The time control id.
 	 * @returns A list of strings pointing to game records.
 	 */
-	get_games(id: TimeControlId): GameNumber[] {
-		const idx = search_linear_by_key(this.games, (v: TimeControlGame): boolean => {
-			return v.time_control == id;
+	getGames(id: TimeControlId): GameNumber[] {
+		const idx = searchLinearByKey(this.games, (v: TimeControlGame): boolean => {
+			return v.timeControl == id;
 		});
 		if (idx == -1) {
 			throw new Error(`Rating with id '${id}' does not exist!`);
@@ -151,40 +151,40 @@ export class User extends Player {
 	 *
 	 * If the record string already exists, does nothing.
 	 * @param id Time control id of the game.
-	 * @param game_record New game record string.
+	 * @param gameRecord New game record string.
 	 */
-	add_game(id: TimeControlId, game_record: DateMajor): void {
-		const idx = search_linear_by_key(this.games, (p: TimeControlGame): boolean => {
-			return p.time_control == id;
+	addGame(id: TimeControlId, gameRecord: DateMajor): void {
+		const idx = searchLinearByKey(this.games, (p: TimeControlGame): boolean => {
+			return p.timeControl == id;
 		});
 		if (idx == -1) {
 			throw new Error(`User does not have time control id '${id}'`);
 		}
 
-		const [index, exists] = where_should_be_inserted_by_key(this.games[idx].records, (s: GameNumber): number => {
-			return game_record.localeCompare(s.record);
+		const [index, exists] = whereShouldBeInsertedByKey(this.games[idx].records, (s: GameNumber): number => {
+			return gameRecord.localeCompare(s.record);
 		});
 		if (!exists) {
-			this.games[idx].records.splice(index, 0, { record: game_record, amount: 1 });
+			this.games[idx].records.splice(index, 0, { record: gameRecord, amount: 1 });
 		} else {
 			this.games[idx].records[index].amount += 1;
 		}
 	}
 
-	delete_game(id: TimeControlId, game_record: DateMajor): void {
-		const idx = search_linear_by_key(this.games, (p: TimeControlGame): boolean => {
-			return p.time_control == id;
+	deleteGame(id: TimeControlId, gameRecord: DateMajor): void {
+		const idx = searchLinearByKey(this.games, (p: TimeControlGame): boolean => {
+			return p.timeControl == id;
 		});
 		if (idx == -1) {
 			throw new Error(`User does not have time control id '${id}'`);
 		}
 
-		const index = search_by_key(this.games[idx].records, (s: GameNumber): number => {
-			return game_record.localeCompare(s.record);
+		const index = searchByKey(this.games[idx].records, (s: GameNumber): number => {
+			return gameRecord.localeCompare(s.record);
 		});
 		if (index == -1) {
 			throw new Error(
-				`User '${this.username}' does not have game record '${game_record}' in time control '${id}': '${this.games[idx].records}'.`
+				`User '${this.username}' does not have game record '${gameRecord}' in time control '${id}': '${this.games[idx].records}'.`
 			);
 		}
 
@@ -195,13 +195,13 @@ export class User extends Player {
 	}
 
 	/// Returns all actions this user
-	get_actions(): UserAction[] {
-		const role_to_action = UserRoleToUserAction.get_instance();
+	getActions(): UserAction[] {
+		const role_to_action = UserRoleToUserAction.getInstance();
 		const roles = this.roles;
 
 		let actions: UserAction[] = [];
 		for (const r of roles) {
-			const actions_from_role = role_to_action.get_actions_role(r);
+			const actions_from_role = role_to_action.getActionsRole(r);
 
 			for (const action of actions_from_role) {
 				if (actions.indexOf(action) == -1) {
@@ -214,11 +214,11 @@ export class User extends Player {
 	}
 
 	/// Can a user perform a certain action?
-	can_do(a: UserAction): boolean {
-		const user_role_to_action = UserRoleToUserAction.get_instance();
+	canDo(a: UserAction): boolean {
+		const user_role_to_action = UserRoleToUserAction.getInstance();
 
 		for (const role of this.roles) {
-			if (user_role_to_action.role_includes_action(role, a)) {
+			if (user_role_to_action.roleIncludesAction(role, a)) {
 				return true;
 			}
 		}
@@ -234,7 +234,7 @@ export class User extends Player {
 	 * @param p Input player.
 	 * @pre Usernames are equal
 	 */
-	copy_player_data(p: Player): void {
+	copyPlayerData(p: Player): void {
 		if (this.username != p.username) {
 			throw new Error(`Trying to dump data of user ${p.username} into a different player ${this.username}`);
 		}
@@ -247,8 +247,8 @@ export class User extends Player {
 	override clone(): User {
 		return new User(
 			this.username,
-			this.first_name,
-			this.last_name,
+			this.firstName,
+			this.lastName,
 			{ ...this.password },
 			copyarray(this.roles, (s: UserRole): UserRole => {
 				return s;
@@ -262,7 +262,7 @@ export class User extends Player {
 		);
 	}
 
-	clone_as_player(): Player {
+	cloneAsPlayer(): Player {
 		return new Player(
 			this.username,
 			copyarray(this.ratings, (tcr: TimeControlRating): TimeControlRating => {

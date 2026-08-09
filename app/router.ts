@@ -27,23 +27,23 @@ import express from 'express';
 import { Request, Response } from 'express';
 
 import Debug from 'debug';
-const debug = Debug('ELO_CHESS_TRACKER:app_router');
-import { log_now } from '@common/utils/time';
+const debug = Debug('ELO_CHESS_TRACKER:appRouter');
+import { logNow } from '@common/utils/time';
 
-import { EnvironmentManager, get_execution_directory } from '@server/managers/environment_manager';
-import { ConfigurationManager } from '@server/managers/configuration_manager';
-import { Routes } from '@common/routes';
+import { EnvironmentManager, getExecutionDirectory } from '@server/managers/environment-manager';
+import { ConfigurationManager } from '@server/managers/configuration-manager';
+import { ROUTES } from '@common/routes';
 
 let router = express.Router();
 
 // serve all *.css files
-router.get(Routes.CSS_ALL, (req: Request, res: Response) => {
-	debug(log_now(), 'GET css file...');
-	debug(log_now(), `    request: ${req.url}`);
-	const filepath = `${get_execution_directory()}/${req.url}`;
-	debug(log_now(), `    file to send: ${filepath}`);
+router.get(ROUTES.CSS_ALL, (req: Request, res: Response) => {
+	debug(logNow(), 'GET css file...');
+	debug(logNow(), `    request: ${req.url}`);
+	const filepath = `${getExecutionDirectory()}/${req.url}`;
+	debug(logNow(), `    file to send: ${filepath}`);
 	res.status(200);
-	if (ConfigurationManager.should_cache_data()) {
+	if (ConfigurationManager.shouldCacheData()) {
 		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
 	}
 	res.sendFile(filepath);
@@ -51,10 +51,10 @@ router.get(Routes.CSS_ALL, (req: Request, res: Response) => {
 
 /* ************************************************************************** */
 /* Version number */
-router.get(Routes.VERSION_NUMBER, (_req: Request, res: Response) => {
-	debug(log_now(), 'GET version_number...');
+router.get(ROUTES.VERSION_NUMBER, (_req: Request, res: Response) => {
+	debug(logNow(), `GET ${ROUTES.VERSION_NUMBER}...`);
 	res.status(200);
-	if (ConfigurationManager.should_cache_data()) {
+	if (ConfigurationManager.shouldCacheData()) {
 		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
 	}
 	res.send('xx.yy');
@@ -62,70 +62,70 @@ router.get(Routes.VERSION_NUMBER, (_req: Request, res: Response) => {
 
 /* ************************************************************************** */
 /* ICONS */
-router.get(Routes.FAVICON_ICO, (_req: Request, res: Response) => {
-	debug(log_now(), 'GET favicon.ico...');
-	const filepath = EnvironmentManager.get_instance().get_icon_favicon();
-	debug(log_now(), `    file to send: ${filepath}`);
+router.get(ROUTES.FAVICON_ICO, (_req: Request, res: Response) => {
+	debug(logNow(), `GET ${ROUTES.FAVICON_ICO}...`);
+	const filepath = EnvironmentManager.getInstance().getIconFavicon();
+	debug(logNow(), `    file to send: ${filepath}`);
 	res.status(200);
-	if (ConfigurationManager.should_cache_data()) {
+	if (ConfigurationManager.shouldCacheData()) {
 		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
 	}
 	res.sendFile(filepath);
 });
-router.get(Routes.ICON_LOGIN_PAGE, (_req: Request, res: Response) => {
-	debug(log_now(), 'GET /icon/login_page...');
-	const filepath = EnvironmentManager.get_instance().get_icon_login_page();
-	debug(log_now(), `    file to send: ${filepath}`);
+router.get(ROUTES.ICON_LOGIN_PAGE, (_req: Request, res: Response) => {
+	debug(logNow(), `GET ${ROUTES.ICON_LOGIN_PAGE}...`);
+	const filepath = EnvironmentManager.getInstance().getIconLoginPage();
+	debug(logNow(), `    file to send: ${filepath}`);
 	res.status(200);
-	if (ConfigurationManager.should_cache_data()) {
+	if (ConfigurationManager.shouldCacheData()) {
 		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
 	}
 	res.sendFile(filepath);
 });
-router.get(Routes.ICON_HOME_PAGE, (_req: Request, res: Response) => {
-	debug(log_now(), 'GET /icon/home_page...');
-	const filepath = EnvironmentManager.get_instance().get_icon_home_page();
-	debug(log_now(), `    file to send: ${filepath}`);
+router.get(ROUTES.ICON_HOME_PAGE, (_req: Request, res: Response) => {
+	debug(logNow(), `GET ${ROUTES.ICON_HOME_PAGE}...`);
+	const filepath = EnvironmentManager.getInstance().getIconHomePage();
+	debug(logNow(), `    file to send: ${filepath}`);
 	res.status(200);
-	if (ConfigurationManager.should_cache_data()) {
+	if (ConfigurationManager.shouldCacheData()) {
 		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
 	}
 	res.sendFile(filepath);
 });
 
 /* PAGE TITLES */
-router.get(Routes.TITLE_LOGIN_PAGE, (_req: Request, res: Response) => {
-	debug(log_now(), 'GET /title/login_page...');
+router.get(ROUTES.TITLE_LOGIN_PAGE, (_req: Request, res: Response) => {
+	debug(logNow(), `GET ${ROUTES.TITLE_LOGIN_PAGE}...`);
 	res.status(200);
-	if (ConfigurationManager.should_cache_data()) {
+	if (ConfigurationManager.shouldCacheData()) {
 		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
 	}
-	res.send(EnvironmentManager.get_instance().get_title_login_page());
+	res.send(EnvironmentManager.getInstance().getTitleLoginPage());
 });
-router.get(Routes.TITLE_HOME_PAGE, (_req: Request, res: Response) => {
-	debug(log_now(), 'GET /title/home_page...');
+router.get(ROUTES.TITLE_HOME_PAGE, (_req: Request, res: Response) => {
+	debug(logNow(), `GET ${ROUTES.TITLE_HOME_PAGE}...`);
 	res.status(200);
-	if (ConfigurationManager.should_cache_data()) {
+	if (ConfigurationManager.shouldCacheData()) {
 		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
 	}
-	res.send(EnvironmentManager.get_instance().get_title_home_page());
+	res.send(EnvironmentManager.getInstance().getTitleHomePage());
 });
 
 /* ************************************************************************** */
 
 // route the login page and the home page
-import { get_page_home, get_page_login } from '@server/home';
-router.get(Routes.ROOT, get_page_login);
-router.get(Routes.HOME, get_page_home);
+import { getPageHome, getPageLogin } from '@server/home';
+router.get(ROUTES.ROOT, getPageLogin);
+router.get(ROUTES.HOME, getPageHome);
 
 // serve all javascript files!
-router.get(Routes.JS_ALL, (req: Request, res: Response) => {
-	debug(log_now(), 'GET a file in js/');
-	debug(log_now(), `    request: ${req.url}`);
-	const filepath = `${get_execution_directory()}/${req.url}`;
-	debug(log_now(), `    file to send: ${filepath}`);
+router.get(ROUTES.JS_ALL, (req: Request, res: Response) => {
+	debug(logNow(), `GET ${ROUTES.JS_ALL}: file ${req.url}`);
+	debug(logNow(), `    request: ${req.url}`);
+	const filepath = `${getExecutionDirectory()}/${req.url}`;
+	debug(logNow(), `    file to send: ${filepath}`);
 	res.status(200);
-	if (ConfigurationManager.should_cache_data()) {
+	if (ConfigurationManager.shouldCacheData()) {
 		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
 		res.setHeader('Content-Type', 'text/javascript');
 	}
@@ -133,119 +133,119 @@ router.get(Routes.JS_ALL, (req: Request, res: Response) => {
 });
 
 import {
-	post_query_user_edit,
-	get_query_user_list,
-	get_query_user_home,
-	post_query_user_ranking,
-	get_query_html_user_list
-} from '@server/query_user';
-router.get(Routes.QUERY_USER_LIST, get_query_user_list);
-router.get(Routes.QUERY_HTML_USER_LIST, get_query_html_user_list);
-router.get(Routes.QUERY_USER_HOME, get_query_user_home);
+	postQueryUserEdit,
+	getQueryUserList,
+	getQueryUserHome,
+	postQueryUserRanking,
+	getQueryHtmlUserList
+} from '@server/query-user';
+router.get(ROUTES.QUERY_USER_LIST, getQueryUserList);
+router.get(ROUTES.QUERY_HTML_USER_LIST, getQueryHtmlUserList);
+router.get(ROUTES.QUERY_USER_HOME, getQueryUserHome);
 
 // these queries need to be 'post'-ed because we
 // need to send (post) information to the server
-router.post(Routes.QUERY_USER_EDIT, post_query_user_edit);
-router.post(Routes.QUERY_USER_RANKING, post_query_user_ranking);
+router.post(ROUTES.QUERY_USER_EDIT, postQueryUserEdit);
+router.post(ROUTES.QUERY_USER_RANKING, postQueryUserRanking);
 
 // sending, receiving, accepting, setting result of challenges
 import {
-	get_query_challenge_received,
-	get_query_challenge_sent,
-	get_query_challenge_pending_result,
-	get_query_challenge_confirm_result_other,
-	get_query_challenge_confirm_result_self
-} from '@server/query_challenges';
-router.get(Routes.QUERY_CHALLENGE_RECEIVED, get_query_challenge_received);
-router.get(Routes.QUERY_CHALLENGE_SENT, get_query_challenge_sent);
-router.get(Routes.QUERY_CHALLENGE_PENDING_RESULT, get_query_challenge_pending_result);
-router.get(Routes.QUERY_CHALLENGE_CONFIRM_RESULT_OTHER, get_query_challenge_confirm_result_other);
-router.get(Routes.QUERY_CHALLENGE_CONFIRM_RESULT_SELF, get_query_challenge_confirm_result_self);
+	getQueryChallengeReceived,
+	getQueryChallengeSent,
+	getQueryChallengePendingResult,
+	getQueryChallengeConfirmResultOther,
+	getQueryChallengeConfirmResultSelf
+} from '@server/query-challenges';
+router.get(ROUTES.QUERY_CHALLENGE_RECEIVED, getQueryChallengeReceived);
+router.get(ROUTES.QUERY_CHALLENGE_SENT, getQueryChallengeSent);
+router.get(ROUTES.QUERY_CHALLENGE_PENDING_RESULT, getQueryChallengePendingResult);
+router.get(ROUTES.QUERY_CHALLENGE_CONFIRM_RESULT_OTHER, getQueryChallengeConfirmResultOther);
+router.get(ROUTES.QUERY_CHALLENGE_CONFIRM_RESULT_SELF, getQueryChallengeConfirmResultSelf);
 
-import { post_query_game_list_own, post_query_game_list_all } from '@server/query_games';
-router.post(Routes.QUERY_GAME_LIST_OWN, post_query_game_list_own);
-router.post(Routes.QUERY_GAME_LIST_ALL, post_query_game_list_all);
+import { postQueryGameListOwn, postQueryGameListAll } from '@server/query-games';
+router.post(ROUTES.QUERY_GAME_LIST_OWN, postQueryGameListOwn);
+router.post(ROUTES.QUERY_GAME_LIST_ALL, postQueryGameListAll);
 
-import { post_query_graph_full, post_query_graph_own } from '@server/query_graphs';
-router.post(Routes.QUERY_GRAPH_OWN, post_query_graph_own);
-router.post(Routes.QUERY_GRAPH_FULL, post_query_graph_full);
+import { postQueryGraphFull, postQueryGraphOwn } from '@server/query-graphs';
+router.post(ROUTES.QUERY_GRAPH_OWN, postQueryGraphOwn);
+router.post(ROUTES.QUERY_GRAPH_FULL, postQueryGraphFull);
 
 // query time controls
-import { get_query_html_time_controls, get_query_html_time_controls_unique } from '@server/query_time_control';
-router.get(Routes.QUERY_HTML_TIME_CONTROLS, get_query_html_time_controls);
-router.get(Routes.QUERY_HTML_TIME_CONTROLS_UNIQUE, get_query_html_time_controls_unique);
+import { getQueryHtmlTimeControls, getQueryHtmlTimeControlsUnique } from '@server/query-time-control';
+router.get(ROUTES.QUERY_HTML_TIME_CONTROLS, getQueryHtmlTimeControls);
+router.get(ROUTES.QUERY_HTML_TIME_CONTROLS_UNIQUE, getQueryHtmlTimeControlsUnique);
 
 // user login and logout
-import { post_user_login, post_user_logout } from '@server/login_logout';
-router.post(Routes.USER_LOGIN, post_user_login);
-router.post(Routes.USER_LOGOUT, post_user_logout);
+import { postUserLogin, postUserLogout } from '@server/login-logout';
+router.post(ROUTES.USER_LOGIN, postUserLogin);
+router.post(ROUTES.USER_LOGOUT, postUserLogout);
 
 // creation of a new user
-import { post_user_create, get_page_user_create } from '@server/users_new';
-router.get(Routes.PAGE_USER_CREATE, get_page_user_create);
-router.post(Routes.USER_CREATE, post_user_create);
+import { postUserCreate, getPageUserCreate } from '@server/users-new';
+router.get(ROUTES.PAGE_USER_CREATE, getPageUserCreate);
+router.post(ROUTES.USER_CREATE, postUserCreate);
 
 // edition of an existing user
-import { post_user_edit, get_page_user_edit } from '@server/users_edit';
-router.get(Routes.PAGE_USER_EDIT, get_page_user_edit);
-router.post(Routes.USER_EDIT, post_user_edit);
+import { postUserEdit, getPageUserEdit } from '@server/users-edit';
+router.get(ROUTES.PAGE_USER_EDIT, getPageUserEdit);
+router.post(ROUTES.USER_EDIT, postUserEdit);
 
 // change of password
-import { get_page_user_password_change, post_user_password_change } from '@server/users_password_change';
-router.get(Routes.PAGE_USER_PASSWORD_CHANGE, get_page_user_password_change);
-router.post(Routes.USER_PASSWORD_CHANGE, post_user_password_change);
+import { getPageUserPasswordChange, postUserPasswordChange } from '@server/users-password-change';
+router.get(ROUTES.PAGE_USER_PASSWORD_CHANGE, getPageUserPasswordChange);
+router.post(ROUTES.USER_PASSWORD_CHANGE, postUserPasswordChange);
 
 // retrieve ranking of players
-import { get_page_user_ranking } from '@server/users_ranking';
-router.get(Routes.PAGE_USER_RANKING, get_page_user_ranking);
+import { getPageUserRanking } from '@server/users-ranking';
+router.get(ROUTES.PAGE_USER_RANKING, getPageUserRanking);
 
 // create a new game
-import { get_page_game_create, post_game_create } from '@server/games';
-router.get(Routes.PAGE_GAME_CREATE, get_page_game_create);
-router.post(Routes.GAME_CREATE, post_game_create);
+import { getPageGameCreate, postGameCreate } from '@server/games';
+router.get(ROUTES.PAGE_GAME_CREATE, getPageGameCreate);
+router.post(ROUTES.GAME_CREATE, postGameCreate);
 
 // delete a game
-import { post_game_delete } from '@server/games';
-router.post(Routes.GAME_DELETE, post_game_delete);
+import { postGameDelete } from '@server/games';
+router.post(ROUTES.GAME_DELETE, postGameDelete);
 
 // edit a game's title
-import { post_game_edit_title } from '@server/games';
-router.post(Routes.GAME_EDIT_TITLE, post_game_edit_title);
+import { postGameEditTitle } from '@server/games';
+router.post(ROUTES.GAME_EDIT_TITLE, postGameEditTitle);
 
 // editing a game's result
-import { post_game_edit_result } from '@server/games';
-router.post(Routes.GAME_EDIT_RESULT, post_game_edit_result);
+import { postGameEditResult } from '@server/games';
+router.post(ROUTES.GAME_EDIT_RESULT, postGameEditResult);
 
 // retrieve list of games
-import { get_page_game_list_all, get_page_game_list_own } from '@server/games';
-router.get(Routes.PAGE_GAME_LIST_OWN, get_page_game_list_own);
-router.get(Routes.PAGE_GAME_LIST_ALL, get_page_game_list_all);
+import { getPageGameListAll, getPageGameListOwn } from '@server/games';
+router.get(ROUTES.PAGE_GAME_LIST_OWN, getPageGameListOwn);
+router.get(ROUTES.PAGE_GAME_LIST_ALL, getPageGameListAll);
 
 // retrieve graphs of the webpage
-import { get_page_graph_own, get_page_graph_full } from '@server/graphs';
-router.get(Routes.PAGE_GRAPH_OWN, get_page_graph_own);
-router.get(Routes.PAGE_GRAPH_FULL, get_page_graph_full);
+import { getPageGraphOwn, getPageGraphFull } from '@server/graphs';
+router.get(ROUTES.PAGE_GRAPH_OWN, getPageGraphOwn);
+router.get(ROUTES.PAGE_GRAPH_FULL, getPageGraphFull);
 
 // challenges management
-import { get_page_challenge } from '@server/challenges';
-router.get(Routes.PAGE_CHALLENGE, get_page_challenge);
-import { post_challenge_send } from '@server/challenges';
-router.post(Routes.CHALLENGE_SEND, post_challenge_send);
-import { post_challenge_accept, post_challenge_decline } from '@server/challenges';
-router.post(Routes.CHALLENGE_ACCEPT, post_challenge_accept);
-router.post(Routes.CHALLENGE_DECLINE, post_challenge_decline);
-import { post_challenge_set_result } from '@server/challenges';
-router.post(Routes.CHALLENGE_SET_RESULT, post_challenge_set_result);
-import { post_challenge_agree, post_challenge_disagree } from '@server/challenges';
-router.post(Routes.CHALLENGE_AGREE, post_challenge_agree);
-router.post(Routes.CHALLENGE_DISAGREE, post_challenge_disagree);
+import { getPageChallenge } from '@server/challenges';
+router.get(ROUTES.PAGE_CHALLENGE, getPageChallenge);
+import { postChallengeSend } from '@server/challenges';
+router.post(ROUTES.CHALLENGE_SEND, postChallengeSend);
+import { postChallengeAccept, postChallengeDecline } from '@server/challenges';
+router.post(ROUTES.CHALLENGE_ACCEPT, postChallengeAccept);
+router.post(ROUTES.CHALLENGE_DECLINE, postChallengeDecline);
+import { postChallengeSetResult } from '@server/challenges';
+router.post(ROUTES.CHALLENGE_SET_RESULT, postChallengeSetResult);
+import { postChallengeAgree, postChallengeDisagree } from '@server/challenges';
+router.post(ROUTES.CHALLENGE_AGREE, postChallengeAgree);
+router.post(ROUTES.CHALLENGE_DISAGREE, postChallengeDisagree);
 
 // recalculation of all Elo ratings
-import { post_recalculate_ratings } from '@server/games';
-router.post(Routes.RECALCULATE_RATINGS, post_recalculate_ratings);
+import { postRecalculateRatings } from '@server/games';
+router.post(ROUTES.RECALCULATE_RATINGS, postRecalculateRatings);
 
 // recalculation of all graphs
-import { post_recalculate_graphs } from '@server/graphs';
-router.post(Routes.RECALCULATE_GRAPHS, post_recalculate_graphs);
+import { postRecalculateGraphs } from '@server/graphs';
+router.post(ROUTES.RECALCULATE_GRAPHS, postRecalculateGraphs);
 
 export { router };

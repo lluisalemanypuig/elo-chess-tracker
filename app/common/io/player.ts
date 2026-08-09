@@ -24,20 +24,20 @@ Contact:
 */
 
 import { Player, PlayerKeys } from '@common/models/player';
-import { read_json_array_string, read_json_object_string } from '@common/io/generic';
-import { RatingSystemManager } from '@server/managers/rating_system_manager';
-import { TimeControlRating } from '@common/models/time_control_rating';
+import { readJsonArrayString, readJsonObjectString } from '@common/io/generic';
+import { RatingSystemManager } from '@server/managers/rating-system-manager';
+import { TimeControlRating } from '@common/models/time-control-rating';
 
 /**
  * @brief Creates a Player object from a plain json object.
  * @param json A plain JSON object.
  * @returns A new Player object.
  */
-export function player_from_json(json: any): Player {
-	const manager = RatingSystemManager.get_instance();
+export function playerFromJson(json: any): Player {
+	const manager = RatingSystemManager.getInstance();
 	let ratings: TimeControlRating[] = [];
 	for (const r of json.ratings) {
-		const rating = new TimeControlRating(r.time_control, manager.get_rating_from_json(r.rating));
+		const rating = new TimeControlRating(r.timeControl, manager.getRatingFromJson(r.rating));
 		ratings.push(rating);
 	}
 
@@ -50,8 +50,8 @@ export function player_from_json(json: any): Player {
  * @returns A new Player object.
  * @pre The value @e str cannot start with '['.
  */
-export function player_from_string(str: string): Player | null {
-	return read_json_object_string(str, PlayerKeys, player_from_json);
+export function playerFromString(str: string): Player | null {
+	return readJsonObjectString(str, PlayerKeys, playerFromJson);
 }
 
 /**
@@ -59,6 +59,6 @@ export function player_from_string(str: string): Player | null {
  * @param str A JSON string with data of several Player.
  * @returns An array of Player objects.
  */
-export function player_array_from_json(str: string): Player[] | null {
-	return read_json_array_string(str, PlayerKeys, player_from_json);
+export function playerArrayFromJson(str: string): Player[] | null {
+	return readJsonArrayString(str, PlayerKeys, playerFromJson);
 }

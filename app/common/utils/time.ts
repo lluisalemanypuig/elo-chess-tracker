@@ -108,6 +108,6 @@ export function dateSplitMajorMinor(date: DateFull): [DateMajor, DateMinor] {
 }
 
 /// Returns the current date in string format "YYYY-MM-DD..HH:mm:ss:SSS"
-export function log_now(): DateFull {
+export function logNow(): DateFull {
 	return dateToStringFull(new Date());
 }

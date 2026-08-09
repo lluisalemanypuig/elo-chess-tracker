@@ -24,15 +24,15 @@ Contact:
 */
 
 import { Challenge, ChallengeArraySchema, ChallengeSchema } from '@common/models/challenge';
-import { read_schema } from '@common/io/generic';
+import { readSchema } from '@common/io/generic';
 
 /**
  * @brief Parses a JSON string and returns a Challenge.
  * @param str A string with data of a Challenge.
  * @returns A new Challenge object.
  */
-export function challenge_from_string(str: string): Challenge | null {
-	return read_schema(ChallengeSchema, str);
+export function challengeFromString(str: string): Challenge | null {
+	return readSchema(ChallengeSchema, str);
 }
 
 /**
@@ -40,6 +40,6 @@ export function challenge_from_string(str: string): Challenge | null {
  * @param str A string with data of several Challenge.
  * @returns An array of Challenge objects.
  */
-export function challenge_array_from_string(str: string): Challenge[] | null {
-	return read_schema(ChallengeArraySchema, str);
+export function challengeArrayFromString(str: string): Challenge[] | null {
+	return readSchema(ChallengeArraySchema, str);
 }

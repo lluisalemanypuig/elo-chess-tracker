@@ -23,35 +23,35 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { any, interleave_strings } from '@server/utils/misc';
+import { any, interleaveStrings } from '@server/utils/misc';
 
 describe('Interleave strings', () => {
 	test('Empty strings', () => {
-		expect(interleave_strings('', '')).toBe('');
+		expect(interleaveStrings('', '')).toBe('');
 	});
 
 	test('length(A) >= length(B)', () => {
-		expect(interleave_strings('asdf', 'qwer')).toBe('aqswdefr');
-		expect(interleave_strings('asdf', 'qwe')).toBe('aqswdef');
-		expect(interleave_strings('asdf', 'qw')).toBe('aqswdf');
-		expect(interleave_strings('asdf', 'q')).toBe('aqsdf');
-		expect(interleave_strings('asdf', '')).toBe('asdf');
+		expect(interleaveStrings('asdf', 'qwer')).toBe('aqswdefr');
+		expect(interleaveStrings('asdf', 'qwe')).toBe('aqswdef');
+		expect(interleaveStrings('asdf', 'qw')).toBe('aqswdf');
+		expect(interleaveStrings('asdf', 'q')).toBe('aqsdf');
+		expect(interleaveStrings('asdf', '')).toBe('asdf');
 
-		expect(interleave_strings('admin', '星')).toBe('a星dmin');
-		expect(interleave_strings('admin', '山田')).toBe('a山d田min');
-		expect(interleave_strings('私は一番有名な人です', '山田')).toBe('私山は田一番有名な人です');
+		expect(interleaveStrings('admin', '星')).toBe('a星dmin');
+		expect(interleaveStrings('admin', '山田')).toBe('a山d田min');
+		expect(interleaveStrings('私は一番有名な人です', '山田')).toBe('私山は田一番有名な人です');
 	});
 
 	test('length(A) <= length(B)', () => {
-		expect(interleave_strings('qwer', 'asdf')).toBe('qawsedrf');
-		expect(interleave_strings('qwe', 'asdf')).toBe('qawsedf');
-		expect(interleave_strings('qw', 'asdf')).toBe('qawsdf');
-		expect(interleave_strings('q', 'asdf')).toBe('qasdf');
-		expect(interleave_strings('', 'asdf')).toBe('asdf');
+		expect(interleaveStrings('qwer', 'asdf')).toBe('qawsedrf');
+		expect(interleaveStrings('qwe', 'asdf')).toBe('qawsedf');
+		expect(interleaveStrings('qw', 'asdf')).toBe('qawsdf');
+		expect(interleaveStrings('q', 'asdf')).toBe('qasdf');
+		expect(interleaveStrings('', 'asdf')).toBe('asdf');
 
-		expect(interleave_strings('星', 'admin')).toBe('星admin');
-		expect(interleave_strings('山田', 'admin')).toBe('山a田dmin');
-		expect(interleave_strings('山田', '私は一番有名な人です')).toBe('山私田は一番有名な人です');
+		expect(interleaveStrings('星', 'admin')).toBe('星admin');
+		expect(interleaveStrings('山田', 'admin')).toBe('山a田dmin');
+		expect(interleaveStrings('山田', '私は一番有名な人です')).toBe('山私田は一番有名な人です');
 	});
 });
 

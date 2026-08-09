@@ -24,11 +24,11 @@ Contact:
 */
 
 import { z } from 'zod';
-import { Rating } from '@common/models/rating_framework/rating';
+import { Rating } from '@common/models/rating-framework/rating';
 import { copyarray } from '@server/utils/misc';
-import { search_linear_by_key } from '@server/utils/searching';
-import { TimeControlId } from '@common/models/time_control';
-import { TimeControlRating } from '@common/models/time_control_rating';
+import { searchLinearByKey } from '@server/utils/searching';
+import { TimeControlId } from '@common/models/time-control';
+import { TimeControlRating } from '@common/models/time-control-rating';
 
 export const PlayerKeys = ['username', 'ratings'];
 
@@ -79,8 +79,8 @@ export class Player {
 	}
 
 	/// Returns whether the rating under the given time control id exists
-	has_rating(id: TimeControlId): boolean {
-		return this.index_time_control_id(id) != -1;
+	hasRating(id: TimeControlId): boolean {
+		return this.indexTimeControlId(id) != -1;
 	}
 
 	/**
@@ -89,13 +89,13 @@ export class Player {
 	 * @param rating Rating object
 	 * @pre Rating does not exist
 	 */
-	add_rating(id: TimeControlId, rating: Rating): void {
+	addRating(id: TimeControlId, rating: Rating): void {
 		this.ratings.push(new TimeControlRating(id, rating));
 	}
 
 	/// Returns the rating of the player under the given time control id
-	get_rating(id: TimeControlId): Rating {
-		const index = this.index_time_control_id(id);
+	getRating(id: TimeControlId): Rating {
+		const index = this.indexTimeControlId(id);
 		if (index == -1) {
 			throw new Error(`Rating with id '${id}' does not exist!`);
 		}
@@ -103,8 +103,8 @@ export class Player {
 	}
 
 	/// Sets the rating of the player
-	set_rating(id: TimeControlId, rating: Rating): void {
-		const index = this.index_time_control_id(id);
+	setRating(id: TimeControlId, rating: Rating): void {
+		const index = this.indexTimeControlId(id);
 		if (index == -1) {
 			throw new Error(`Rating with id '${id}' does not exist!`);
 		}
@@ -121,9 +121,9 @@ export class Player {
 		);
 	}
 
-	index_time_control_id(id: TimeControlId): number {
-		return search_linear_by_key(this.ratings, (v: TimeControlRating): boolean => {
-			return v.time_control == id;
+	indexTimeControlId(id: TimeControlId): number {
+		return searchLinearByKey(this.ratings, (v: TimeControlRating): boolean => {
+			return v.timeControl == id;
 		});
 	}
 }

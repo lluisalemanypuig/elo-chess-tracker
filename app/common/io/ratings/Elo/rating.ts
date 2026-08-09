@@ -23,16 +23,16 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { read_json_array_string, read_json_object_string } from '@common/io/generic';
-import { EloRating, EloRatingKeys } from '@common/models/rating_framework/Elo/rating';
+import { readJsonArrayString, readJsonObjectString } from '@common/io/generic';
+import { EloRating, ELO_RATING_KEYS } from '@common/models/rating-framework/Elo/rating';
 
 /**
  * @brief Parses a JSON string and returns a TimeControlRating object.
  * @param str A JSON string with data of a TimeControlRating object.
  * @returns A TimeControlRating object.
  */
-export function rating_from_json_Elo(json: any): EloRating {
-	return new EloRating(json.rating, json.num_games, json.won, json.drawn, json.lost, json.K, json.surpassed_2400);
+export function ratingFromJsonElo(json: any): EloRating {
+	return new EloRating(json.rating, json.numGames, json.won, json.drawn, json.lost, json.K, json.surpassed2400);
 }
 
 /**
@@ -41,8 +41,8 @@ export function rating_from_json_Elo(json: any): EloRating {
  * @returns A new Player object.
  * @pre Value @str cannot start with '['.
  */
-export function rating_from_string_Elo(str: string): EloRating | null {
-	return read_json_object_string(str, EloRatingKeys, rating_from_json_Elo);
+export function ratingFromStringElo(str: string): EloRating | null {
+	return readJsonObjectString(str, ELO_RATING_KEYS, ratingFromJsonElo);
 }
 
 /**
@@ -50,6 +50,6 @@ export function rating_from_string_Elo(str: string): EloRating | null {
  * @param str A JSON string with data of several Player.
  * @returns An array of Player objects.
  */
-export function rating_array_from_string_Elo(str: string): EloRating[] | null {
-	return read_json_array_string(str, EloRatingKeys, rating_from_json_Elo);
+export function ratingArrayFromStringElo(str: string): EloRating[] | null {
+	return readJsonArrayString(str, ELO_RATING_KEYS, ratingFromJsonElo);
 }

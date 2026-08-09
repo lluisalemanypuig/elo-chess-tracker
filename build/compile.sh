@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "Rendering CSS styles..."
-./build/render_styles.sh
+./build/render-styles.sh
 
 randomize_allowed_symbols=0
 production=0
@@ -21,12 +21,12 @@ for i in "$@"; do
 done
 
 echo "Setting configuration variables..."
-./build/configuration_variables.sh $production $caching
+./build/configuration-variables.sh $production $caching
 
 if [ $randomize_allowed_symbols -eq 1 ]; then
 	echo "Setting string for allowed symbols..."
-	./build/randomize_allowed_symbols.sh
+	./build/randomize-allowed-symbols.sh
 fi
 
 echo "Compiling front end code into javascript..."
-./build/compile_shallow.sh
+./build/compile-shallow.sh

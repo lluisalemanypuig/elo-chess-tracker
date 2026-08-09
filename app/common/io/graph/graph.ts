@@ -30,10 +30,10 @@ import fs from 'fs';
 import path from 'path';
 
 import { Neighborhood, Graph } from '@common/models/graph/graph';
-import { edge_array_from_string } from '@common/io/graph/edge';
-import { read_directory } from '@server/utils/read_directory';
-import { isNotDefined } from '@common/utils/is_defined';
-import { log_now } from '@common/utils/time';
+import { edgeArrayFromString } from '@common/io/graph/edge';
+import { readDirectory } from '@server/utils/read-directory';
+import { isNotDefined } from '@common/utils/is-defined';
+import { logNow } from '@common/utils/time';
 import { PlayerPrivateId, toPlayerPrivateId } from '@common/models/player';
 
 /**
@@ -45,7 +45,7 @@ import { PlayerPrivateId, toPlayerPrivateId } from '@common/models/player';
  * @param username The actual filename.
  * @param edges The information to save.
  */
-export function neighborhood_to_file(dir: string, username: PlayerPrivateId, edges: Neighborhood): void {
+export function neighborhoodToFile(dir: string, username: PlayerPrivateId, edges: Neighborhood): void {
 	const filename = path.join(dir, username);
 	fs.writeFileSync(filename, JSON.stringify(edges, null, 4));
 }
@@ -62,15 +62,15 @@ export function neighborhood_to_file(dir: string, username: PlayerPrivateId, edg
  * @param changes The users for which their portion graph is to be saved.
  * @param g The graph to be saved.
  */
-export function graph_to_file(dir: string, changes: PlayerPrivateId[], g: Graph): void {
+export function graphToFile(dir: string, changes: PlayerPrivateId[], g: Graph): void {
 	for (const username of changes) {
-		if (g.get_out_degree(username) > 0) {
-			const out = g.get_outgoing_edges(username);
+		if (g.getOutDegree(username) > 0) {
+			const out = g.getOutgoingEdges(username);
 			if (isNotDefined(out)) {
-				debug(log_now(), `Could not get niehgbors of user '${username}'`);
+				debug(logNow(), `Could not get niehgbors of user '${username}'`);
 				continue;
 			}
-			neighborhood_to_file(dir, username, out);
+			neighborhoodToFile(dir, username, out);
 		} else {
 			const filename = path.join(dir, username);
 			fs.rmSync(filename);
@@ -86,14 +86,14 @@ export function graph_to_file(dir: string, changes: PlayerPrivateId[], g: Graph)
  * @param dir The directory where to save the graph.
  * @param g The graph to be saved.
  */
-export function graph_full_to_file(dir: string, g: Graph): void {
-	for (const username of g.get_out_entries()) {
-		const out = g.get_outgoing_edges(username);
+export function graphFullToFile(dir: string, g: Graph): void {
+	for (const username of g.getOutEntries()) {
+		const out = g.getOutgoingEdges(username);
 		if (isNotDefined(out)) {
-			debug(log_now(), `Could not get niehgbors of user '${username}'`);
+			debug(logNow(), `Could not get niehgbors of user '${username}'`);
 			continue;
 		}
-		neighborhood_to_file(dir, username, out);
+		neighborhoodToFile(dir, username, out);
 	}
 }
 
@@ -102,12 +102,12 @@ export function graph_full_to_file(dir: string, g: Graph): void {
  * @param dir The directory where to read the graph from.
  * @returns A new Graph object.
  */
-export function graph_from_string(dir: string): Graph | null {
+export function graphFromString(dir: string): Graph | null {
 	let g = new Graph();
 
-	const files = read_directory(dir, false);
+	const files = readDirectory(dir, false);
 	if (!fs.existsSync(dir)) {
-		debug(log_now(), `Path '${dir}' does not exist.`);
+		debug(logNow(), `Path '${dir}' does not exist.`);
 		return null;
 	}
 
@@ -115,19 +115,19 @@ export function graph_from_string(dir: string): Graph | null {
 		const filename = path.join(dir, username);
 
 		if (!fs.existsSync(filename)) {
-			debug(log_now(), `Path '${filename}' does not exist.`);
+			debug(logNow(), `Path '${filename}' does not exist.`);
 			return null;
 		}
-		const edge_array = fs.readFileSync(filename, 'utf8');
-		const edge_set = edge_array_from_string(edge_array);
-		if (isNotDefined(edge_set)) {
-			debug(log_now(), `Could not read edge set at file '${filename}'.`);
+		const edgeArray = fs.readFileSync(filename, 'utf8');
+		const edgeSet = edgeArrayFromString(edgeArray);
+		if (isNotDefined(edgeSet)) {
+			debug(logNow(), `Could not read edge set at file '${filename}'.`);
 			return null;
 		}
 
 		const usernameId = toPlayerPrivateId(username);
-		for (const edge of edge_set) {
-			g.add_edge_raw(usernameId, edge.neighbor, edge);
+		for (const edge of edgeSet) {
+			g.addEdgeRaw(usernameId, edge.neighbor, edge);
 		}
 	}
 

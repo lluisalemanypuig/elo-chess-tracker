@@ -24,31 +24,31 @@ Contact:
 */
 
 import { Game, GameKeys, GameResultSchema } from '@common/models/game';
-import { read_json_array_string, read_json_object_string } from '@common/io/generic';
-import { RatingSystemManager } from '@server/managers/rating_system_manager';
+import { readJsonArrayString, readJsonObjectString } from '@common/io/generic';
+import { RatingSystemManager } from '@server/managers/rating-system-manager';
 
 /**
  * @brief Creates a Player object from a plain json object.
  * @param json A plain JSON object.
  * @returns A new Player object.
  */
-export function game_from_json(json: any): Game | null {
+export function gameFromJson(json: any): Game | null {
 	const result = GameResultSchema.safeParse(json.result);
 	if (!result.success) {
 		return null;
 	}
 
-	const manager = RatingSystemManager.get_instance();
+	const manager = RatingSystemManager.getInstance();
 	return new Game(
 		json.id,
 		json.title,
 		json.white,
-		manager.get_rating_from_json(json.white_rating),
+		manager.getRatingFromJson(json.whiteRating),
 		json.black,
-		manager.get_rating_from_json(json.black_rating),
+		manager.getRatingFromJson(json.blackRating),
 		result.data,
-		json.time_control_id,
-		json.time_control_name,
+		json.timeControlId,
+		json.timeControlName,
 		json.when
 	);
 }
@@ -58,8 +58,8 @@ export function game_from_json(json: any): Game | null {
  * @param str A string with data of a Game.
  * @returns A new Game object.
  */
-export function game_from_string(str: string): Game | null {
-	return read_json_object_string(str, GameKeys, game_from_json);
+export function gameFromString(str: string): Game | null {
+	return readJsonObjectString(str, GameKeys, gameFromJson);
 }
 
 /**
@@ -67,6 +67,6 @@ export function game_from_string(str: string): Game | null {
  * @param str A string with data of several Game.
  * @returns An array of Game objects.
  */
-export function game_array_from_string(str: string): Game[] | null {
-	return read_json_array_string(str, GameKeys, game_from_json);
+export function gameArrayFromString(str: string): Game[] | null {
+	return readJsonArrayString(str, GameKeys, gameFromJson);
 }

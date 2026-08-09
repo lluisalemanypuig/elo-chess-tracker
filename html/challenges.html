@@ -25,7 +25,7 @@ Full source code of elo-chess-tracker:
 		<meta charset="UTF-8" />
 		<title>Challenges</title>
 
-		<script type="module" src="/js/bdl__challenges.js"></script>
+		<script type="module" src="/js/bdl--challenges.js"></script>
 
 		<link rel="stylesheet" href="/css/main.css" />
 		<link rel="stylesheet" href="/css/challenges.css" />
@@ -44,9 +44,9 @@ Full source code of elo-chess-tracker:
 
 				<div class="label-and-input">
 					<label>Select a user:</label>
-					<input class="input-text" list="datalist_username" id="username_list" />
+					<input class="input-text" list="datalist-username" id="username-list" />
 					<datalist
-						id="datalist_username"
+						id="datalist-username"
 						hx-swap="innerHTML"
 						hx-get="/query/html/user/list"
 						hx-trigger="load"
@@ -56,7 +56,7 @@ Full source code of elo-chess-tracker:
 					<label class="label-basic">Time control:</label>
 					<select
 						class="select-basic"
-						id="select_time_control"
+						id="select-time-control"
 						hx-get="/query/html/time_controls"
 						hx-trigger="load"
 						hx-swap="beforeend"
@@ -66,37 +66,37 @@ Full source code of elo-chess-tracker:
 				</div>
 
 				<div class="label-and-input">
-					<label class="label-basic" for="input_game_title">Title:</label>
-					<input class="input-text" type="text" id="input_game_title" />
+					<label class="label-basic" for="input-game-title">Title:</label>
+					<input class="input-text" type="text" id="input-game-title" />
 				</div>
 
 				<br />
-				<button class="button-submit" type="button" id="send_challenge_button">Send challenge</button>
+				<button class="button-submit" type="button" id="send-challenge-button">Send challenge</button>
 
-				<div class="challenge-list" id="challenges_received">
+				<div class="challenge-list" id="challenges-received">
 					<h2 class="title2">Challenges received</h2>
 				</div>
 
-				<div class="challenge-list" id="challenges_sent">
+				<div class="challenge-list" id="challenges-sent">
 					<h2 class="title2">Challenges sent to others</h2>
 				</div>
 
-				<div class="challenge-list" id="challenges_pending_result">
+				<div class="challenge-list" id="challenges-pending-result">
 					<h2 class="title2">Set the result of a game</h2>
-					<div id="challenges_pending_result__list"></div>
+					<div id="challenges-pending-result--list"></div>
 				</div>
 
-				<div class="challenge-list" id="challenges_confirm_result_other">
+				<div class="challenge-list" id="challenges-confirm-result-other">
 					<h2 class="title2">Results to be confirmed</h2>
 				</div>
 
-				<div class="challenge-list" id="challenges_confirm_result_self">
+				<div class="challenge-list" id="challenges-confirm-result-self">
 					<h2 class="title2">Results I have to confirm</h2>
 				</div>
 			</div>
 
 			<footer class="footer-copyright-notice">
-				Elo chess tracker (v<i hx-get="/version_number" hx-trigger="load"></i>). Code
+				Elo chess tracker (v<i hx-get="/version-number" hx-trigger="load"></i>). Code
 				<a href="https://github.com/lluisalemanypuig/elo-chess-tracker">online at Github</a>.
 			</footer>
 		</div>

@@ -2,25 +2,25 @@ import * as esbuild from 'esbuild-wasm';
 
 await esbuild.initialize({});
 
-let files_to_bundle = [
+let filesToBundle = [
 	'login.js',
 	'home.js',
-	'users_new.js',
-	'users_edit.js',
-	'users_ranking.js',
-	'users_password_change.js',
+	'users-new.js',
+	'users-edit.js',
+	'users-ranking.js',
+	'users-password-change.js',
 	'challenges.js',
-	'games_list.js',
-	'games_create.js',
-	'graph_display.js'
+	'games-list.js',
+	'games-create.js',
+	'graph-display.js'
 ];
 
-for (let file of files_to_bundle) {
+for (let file of filesToBundle) {
 	console.log(`Bundling 'js/${file}'...`);
 	await esbuild.build({
 		entryPoints: ['js/' + file],
 		bundle: true,
-		outfile: 'js/bdl__' + file,
+		outfile: 'js/bdl--' + file,
 		format: 'esm',
 		minify: true
 	});

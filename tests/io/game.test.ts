@@ -23,16 +23,16 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { initialize_rating_functions } from '@server/managers/rating_system';
-import { game_from_string } from '@common/io/game';
-import { isNotDefined } from '@common/utils/is_defined';
+import { initializeRatingFunctions } from '@server/managers/rating-system';
+import { gameFromString } from '@common/io/game';
+import { isNotDefined } from '@common/utils/is-defined';
 
 describe('IO conversion -- Elo', () => {
-	initialize_rating_functions('Elo');
+	initializeRatingFunctions('Elo');
 
 	test('string', () => {
-		const g = game_from_string(
-			'{ "id": "0001", "title": "asdf", "white": "W", "white_rating": {"rating": 1500.43, "num_games": 100, "won": 50, "drawn": 20, "lost": 30, "K": 40, "surpassed_2400": true}, "black": "B", "black_rating" : {"rating": 1500.43, "num_games": 100, "won": 50, "drawn": 20, "lost": 30, "K": 40, "surpassed_2400": false}, "result": "black_wins", "time_control_id": "blitz", "time_control_name": "Blitz (5 + 3)", "when": "2024-12-29..12:24:00"}'
+		const g = gameFromString(
+			'{ "id": "0001", "title": "asdf", "white": "W", "whiteRating": {"rating": 1500.43, "numGames": 100, "won": 50, "drawn": 20, "lost": 30, "K": 40, "surpassed2400": true}, "black": "B", "blackRating" : {"rating": 1500.43, "numGames": 100, "won": 50, "drawn": 20, "lost": 30, "K": 40, "surpassed2400": false}, "result": "black_wins", "timeControlId": "blitz", "timeControlName": "Blitz (5 + 3)", "when": "2024-12-29..12:24:00"}'
 		);
 		expect(g).not.toBeNull();
 		if (isNotDefined(g)) {
@@ -41,28 +41,28 @@ describe('IO conversion -- Elo', () => {
 		expect(g.id).toEqual('0001');
 		expect(g.title).toEqual('asdf');
 		expect(g.white).toEqual('W');
-		expect(g.white_rating).toEqual({
+		expect(g.whiteRating).toEqual({
 			rating: 1500.43,
-			num_games: 100,
+			numGames: 100,
 			won: 50,
 			drawn: 20,
 			lost: 30,
 			K: 40,
-			surpassed_2400: true
+			surpassed2400: true
 		});
 		expect(g.black).toEqual('B');
-		expect(g.black_rating).toEqual({
+		expect(g.blackRating).toEqual({
 			rating: 1500.43,
-			num_games: 100,
+			numGames: 100,
 			won: 50,
 			drawn: 20,
 			lost: 30,
 			K: 40,
-			surpassed_2400: false
+			surpassed2400: false
 		});
 		expect(g.result).toEqual('black_wins');
-		expect(g.time_control_id).toEqual('blitz');
-		expect(g.time_control_name).toEqual('Blitz (5 + 3)');
+		expect(g.timeControlId).toEqual('blitz');
+		expect(g.timeControlName).toEqual('Blitz (5 + 3)');
 		expect(g.when).toEqual('2024-12-29..12:24:00');
 	});
 });

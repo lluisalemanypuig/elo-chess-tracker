@@ -28,25 +28,25 @@ import fs from 'fs';
 import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:managers/games');
 
-import { DateFull, DateMajor, DateMinor, log_now, dateFullToMajor, toDateFull } from '@common/utils/time';
+import { DateFull, DateMajor, DateMinor, logNow, dateFullToMajor, toDateFull } from '@common/utils/time';
 import { Player, PlayerPrivateId } from '@common/models/player';
 import { Game, GameId, GameResult } from '@common/models/game';
 import { User } from '@common/models/user';
-import { where_should_be_inserted_by_key } from '@server/utils/searching';
-import { GamesManager } from '@server/managers/games_manager';
-import { UsersManager } from '@server/managers/users_manager';
-import { RatingSystemManager } from '@server/managers/rating_system_manager';
-import { EnvironmentManager } from '@server/managers/environment_manager';
-import { user_update_from_player_data } from '@server/managers/users';
-import { Rating } from '@common/models/rating_framework/rating';
-import { TimeControlId, TimeControlName } from '@common/models/time_control';
-import { graph_delete_edge, graph_modify_edge, graph_update } from '@server/managers/graphs';
-import { GamesIterator } from '@server/managers/games_iterator';
-import { TimeControlRating } from '@common/models/time_control_rating';
-import { isDefined, isNotDefined } from '@common/utils/is_defined';
+import { whereShouldBeInsertedByKey } from '@server/utils/searching';
+import { GamesManager } from '@server/managers/games-manager';
+import { UsersManager } from '@server/managers/users-manager';
+import { RatingSystemManager } from '@server/managers/rating-system-manager';
+import { EnvironmentManager } from '@server/managers/environment-manager';
+import { userUpdateFromPlayerData } from '@server/managers/users';
+import { Rating } from '@common/models/rating-framework/rating';
+import { TimeControlId, TimeControlName } from '@common/models/time-control';
+import { graphDeleteEdge, graphModifyEdge, graphUpdate } from '@server/managers/graphs';
+import { GamesIterator } from '@server/managers/games-iterator';
+import { TimeControlRating } from '@common/models/time-control-rating';
+import { isDefined, isNotDefined } from '@common/utils/is-defined';
 
 /// Returns g1 < g2 using dates
-function game_compare_dates(g: Game): Function {
+function gameCompareDates(g: Game): Function {
 	return (g2: Game): number => {
 		if (g.when < g2.when) {
 			return -1;
@@ -60,368 +60,361 @@ function game_compare_dates(g: Game): Function {
 
 /// Return the game where player 'username' is involved with
 /// date after later than date 'when'.
-function game_next_of_player(
-	username: PlayerPrivateId,
-	time_control_id: TimeControlId,
-	when: DateFull
-): Game | undefined {
-	const games_dir = EnvironmentManager.get_instance().get_dir_games_time_control(time_control_id);
+function gameNextOfPlayer(username: PlayerPrivateId, timeControlId: TimeControlId, when: DateFull): Game | undefined {
+	const gamesDir = EnvironmentManager.getInstance().getDirGamesTimeControl(timeControlId);
 
 	// The file into which we have to add the new game.
-	const record_str = dateFullToMajor(when);
+	const recordStr = dateFullToMajor(when);
 
-	let games_iter = new GamesIterator(games_dir);
-	let found = games_iter.locate_first_game_after(record_str, when);
+	let gamesIter = new GamesIterator(gamesDir);
+	let found = gamesIter.locateFirstGameAfter(recordStr, when);
 	if (!found) {
 		return undefined;
 	}
 
 	// TODO: optimize this function to only iterate over record files present in
 	// the user's data.
-	while (!games_iter.end_record_list()) {
-		const g = games_iter.get_current_game();
-		if (g.is_user_involved(username)) {
+	while (!gamesIter.endRecordList()) {
+		const g = gamesIter.getCurrentGame();
+		if (g.isUserInvolved(username)) {
 			return g;
 		}
-		games_iter.next_game();
+		gamesIter.nextGame();
 	}
 	return undefined;
 }
 
 /// Creates a new game with no players using the parameters given
-function game_new(
+function gameNew(
 	title: string,
 	white: PlayerPrivateId,
 	black: PlayerPrivateId,
 	result: GameResult,
-	time_control_id: TimeControlId,
-	time_control_name: TimeControlName,
+	timeControlId: TimeControlId,
+	timeControlName: TimeControlName,
 	when: DateFull
 ): Game {
 	// retrieve next id and increment maximum id
-	const id_str: GameId = GamesManager.get_instance().new_game_id();
-	debug(log_now(), `ID for new game: ${id_str}`);
+	const idStr: GameId = GamesManager.getInstance().newGameId();
+	debug(logNow(), `ID for new game: ${idStr}`);
 
-	let white_to_assign: Rating;
-	let black_to_assign: Rating;
+	let whiteToAssign: Rating;
+	let blackToAssign: Rating;
 
 	{
 		// get white's next game in the history
-		let next = game_next_of_player(white, time_control_id, when);
+		let next = gameNextOfPlayer(white, timeControlId, when);
 		if (next != null) {
 			if (next.white == white) {
 				// white in this game is also white in the next game
-				white_to_assign = next.white_rating.clone();
+				whiteToAssign = next.whiteRating.clone();
 			} else {
 				// white in this game is black in the next game
-				white_to_assign = next.black_rating.clone();
+				whiteToAssign = next.blackRating.clone();
 			}
 		} else {
 			// there is no next game for white
-			const white_user = UsersManager.get_instance().get_user_by_username(white);
-			if (isNotDefined(white_user)) {
+			const whiteUser = UsersManager.getInstance().getUserByUsername(white);
+			if (isNotDefined(whiteUser)) {
 				throw new Error(`White user '${white}' is not in the users database`);
 			}
-			white_to_assign = white_user.get_rating(time_control_id).clone();
+			whiteToAssign = whiteUser.getRating(timeControlId).clone();
 		}
 	}
 
 	{
 		// get black's next game in the history
-		let next = game_next_of_player(black, time_control_id, when);
+		let next = gameNextOfPlayer(black, timeControlId, when);
 		if (next != null) {
 			if (next.white == black) {
 				// white in this game is white in the next game
-				black_to_assign = next.white_rating.clone();
+				blackToAssign = next.whiteRating.clone();
 			} else {
 				// black in this game is also black in the next game
-				black_to_assign = next.black_rating.clone();
+				blackToAssign = next.blackRating.clone();
 			}
 		} else {
-			const black_user = UsersManager.get_instance().get_user_by_username(black);
-			if (isNotDefined(black_user)) {
+			const blackUser = UsersManager.getInstance().getUserByUsername(black);
+			if (isNotDefined(blackUser)) {
 				throw new Error(`Black user '${black}' is not in the users database`);
 			}
-			black_to_assign = black_user.get_rating(time_control_id).clone();
+			blackToAssign = blackUser.getRating(timeControlId).clone();
 		}
 	}
 
 	return new Game(
-		id_str,
+		idStr,
 		title,
 		white,
-		white_to_assign,
+		whiteToAssign,
 		black,
-		black_to_assign,
+		blackToAssign,
 		result,
-		time_control_id,
-		time_control_name,
+		timeControlId,
+		timeControlName,
 		when
 	);
 }
 
-function rating_into_player(time_control_id: TimeControlId, player: PlayerPrivateId, rating: Rating): Player {
-	return new Player(player, [new TimeControlRating(time_control_id, rating.clone())]);
+function ratingIntoPlayer(timeControlId: TimeControlId, player: PlayerPrivateId, rating: Rating): Player {
+	return new Player(player, [new TimeControlRating(timeControlId, rating.clone())]);
 }
 
 /// Updates the given game record
-function update_game_record(
-	games_iter: GamesIterator,
-	time_control_id: TimeControlId,
-	updated_players: Player[],
-	player_to_index: Map<string, number>
+function updateGameRecord(
+	gamesIter: GamesIterator,
+	timeControlId: TimeControlId,
+	updatedPlayers: Player[],
+	playerToIndex: Map<string, number>
 ): void {
-	debug(log_now(), `    Updating '${games_iter.get_current_record_name()}'...`);
-	debug(log_now(), `    Before update:`);
-	for (const player of updated_players) {
-		debug(log_now(), `        ${player.username}.`);
-		debug(log_now(), `            ${player.get_rating(time_control_id).num_games}.`);
-		debug(log_now(), `            ${player.get_rating(time_control_id).won}.`);
-		debug(log_now(), `            ${player.get_rating(time_control_id).drawn}.`);
-		debug(log_now(), `            ${player.get_rating(time_control_id).lost}.`);
+	debug(logNow(), `    Updating '${gamesIter.getCurrentRecordName()}'...`);
+	debug(logNow(), `    Before update:`);
+	for (const player of updatedPlayers) {
+		debug(logNow(), `        ${player.username}.`);
+		debug(logNow(), `            ${player.getRating(timeControlId).numGames}.`);
+		debug(logNow(), `            ${player.getRating(timeControlId).won}.`);
+		debug(logNow(), `            ${player.getRating(timeControlId).drawn}.`);
+		debug(logNow(), `            ${player.getRating(timeControlId).lost}.`);
 	}
 
 	let i: number = 0;
-	while (!games_iter.end_record_single()) {
-		debug(log_now(), `        Updating game ${i}/${games_iter.get_current_game_array().length}.`);
+	while (!gamesIter.endRecordSingle()) {
+		debug(logNow(), `        Updating game ${i}/${gamesIter.getCurrentGameArray().length}.`);
 
-		let g = games_iter.get_current_game();
+		let g = gamesIter.getCurrentGame();
 
 		const white = g.white;
 		const black = g.black;
 
-		const white_idx = player_to_index.get(white);
-		const black_idx = player_to_index.get(black);
+		const whiteIdx = playerToIndex.get(white);
+		const blackIdx = playerToIndex.get(black);
 
-		const white_was_updated = isDefined(white_idx);
-		const black_was_updated = isDefined(black_idx);
+		const whiteWasUpdated = isDefined(whiteIdx);
+		const blackWasUpdated = isDefined(blackIdx);
 
-		if (white_was_updated || black_was_updated) {
+		if (whiteWasUpdated || blackWasUpdated) {
 			// set the player information in the game to the most updated version
-			if (white_was_updated) {
-				g.white_rating = updated_players[white_idx].get_rating(time_control_id).clone();
+			if (whiteWasUpdated) {
+				g.whiteRating = updatedPlayers[whiteIdx].getRating(timeControlId).clone();
 			}
-			if (black_was_updated) {
-				g.black_rating = updated_players[black_idx].get_rating(time_control_id).clone();
+			if (blackWasUpdated) {
+				g.blackRating = updatedPlayers[blackIdx].getRating(timeControlId).clone();
 			}
 
 			// calculate result of game
-			const [rating_white_after, rating_black_after] =
-				RatingSystemManager.get_instance().apply_rating_function(g);
+			const [ratingWhiteAfter, ratingBlackAfter] = RatingSystemManager.getInstance().applyRatingFunction(g);
 
-			if (white_was_updated) {
-				updated_players[white_idx].set_rating(time_control_id, rating_white_after);
+			if (whiteWasUpdated) {
+				updatedPlayers[whiteIdx].setRating(timeControlId, ratingWhiteAfter);
 			} else {
-				updated_players.push(rating_into_player(time_control_id, white, rating_white_after));
-				player_to_index.set(white, updated_players.length - 1);
+				updatedPlayers.push(ratingIntoPlayer(timeControlId, white, ratingWhiteAfter));
+				playerToIndex.set(white, updatedPlayers.length - 1);
 			}
 
-			if (black_was_updated) {
-				updated_players[black_idx].set_rating(time_control_id, rating_black_after);
+			if (blackWasUpdated) {
+				updatedPlayers[blackIdx].setRating(timeControlId, ratingBlackAfter);
 			} else {
-				updated_players.push(rating_into_player(time_control_id, black, rating_black_after));
-				player_to_index.set(black, updated_players.length - 1);
+				updatedPlayers.push(ratingIntoPlayer(timeControlId, black, ratingBlackAfter));
+				playerToIndex.set(black, updatedPlayers.length - 1);
 			}
 		}
 
-		games_iter.next_game_record();
+		gamesIter.nextGameRecord();
 		++i;
 	}
 
-	debug(log_now(), `    Updating '${games_iter.get_current_record_name()}'...`);
-	debug(log_now(), `    Before update:`);
-	for (const player of updated_players) {
-		debug(log_now(), `        ${player.username}.`);
-		debug(log_now(), `            ${player.get_rating(time_control_id).num_games}.`);
-		debug(log_now(), `            ${player.get_rating(time_control_id).won}.`);
-		debug(log_now(), `            ${player.get_rating(time_control_id).drawn}.`);
-		debug(log_now(), `            ${player.get_rating(time_control_id).lost}.`);
+	debug(logNow(), `    Updating '${gamesIter.getCurrentRecordName()}'...`);
+	debug(logNow(), `    Before update:`);
+	for (const player of updatedPlayers) {
+		debug(logNow(), `        ${player.username}.`);
+		debug(logNow(), `            ${player.getRating(timeControlId).numGames}.`);
+		debug(logNow(), `            ${player.getRating(timeControlId).won}.`);
+		debug(logNow(), `            ${player.getRating(timeControlId).drawn}.`);
+		debug(logNow(), `            ${player.getRating(timeControlId).lost}.`);
 	}
 }
 
 /**
  * @brief Inserts a game into the entire history
  * @param g Game to be inserted
- * @param record_id Game record id, the file into which we have to add the new game
+ * @param recordId Game record id, the file into which we have to add the new game
  * @post Users in the server are update (both memory and user files)
  */
-function game_insert_in_history(g: Game, record_id: DateMajor): void {
-	let updated_players: Player[] = [];
+function gameInsertInHistory(g: Game, recordId: DateMajor): void {
+	let updatedPlayers: Player[] = [];
 
-	const white_username = g.white;
-	const black_username = g.black;
-	const time_control_id = g.time_control_id;
+	const whiteUsername = g.white;
+	const blackUsername = g.black;
+	const timeControlId = g.timeControlId;
 
 	{
-		let [white_rating_after, black_rating_after] = RatingSystemManager.get_instance().apply_rating_function(g);
-		updated_players.push(rating_into_player(time_control_id, white_username, white_rating_after));
-		updated_players.push(rating_into_player(time_control_id, black_username, black_rating_after));
+		let [whiteRatingAfter, blackRatingAfter] = RatingSystemManager.getInstance().applyRatingFunction(g);
+		updatedPlayers.push(ratingIntoPlayer(timeControlId, whiteUsername, whiteRatingAfter));
+		updatedPlayers.push(ratingIntoPlayer(timeControlId, blackUsername, blackRatingAfter));
 	}
 
-	const games_dir = EnvironmentManager.get_instance().get_dir_games_time_control(time_control_id);
-	const game_record_file = path.join(games_dir, record_id);
+	const gamesDir = EnvironmentManager.getInstance().getDirGamesTimeControl(timeControlId);
+	const gameRecordFile = path.join(gamesDir, recordId);
 
-	let games_iter = new GamesIterator(games_dir);
+	let gamesIter = new GamesIterator(gamesDir);
 
 	// the directory is completely empty
-	if (games_iter.get_all_records().length == 0) {
-		debug(log_now(), `There are no game record files for time control '${time_control_id}'.`);
+	if (gamesIter.getAllRecords().length == 0) {
+		debug(logNow(), `There are no game record files for time control '${timeControlId}'.`);
 
-		fs.writeFileSync(game_record_file, JSON.stringify([g], null, 4));
-		user_update_from_player_data(updated_players);
+		fs.writeFileSync(gameRecordFile, JSON.stringify([g], null, 4));
+		userUpdateFromPlayerData(updatedPlayers);
 		return;
 	}
 
 	// there are some files in the directory
-	const record_exists = games_iter.locate_record(record_id);
-	if (!record_exists) {
-		debug(log_now(), `The game record for game '${g.id}' does not exist.`);
+	const recordExists = gamesIter.locateRecord(recordId);
+	if (!recordExists) {
+		debug(logNow(), `The game record for game '${g.id}' does not exist.`);
 
-		fs.writeFileSync(game_record_file, JSON.stringify([g], null, 4));
-		if (games_iter.end_record_list()) {
-			debug(log_now(), `The new game record file is beyond every other game record.`);
+		fs.writeFileSync(gameRecordFile, JSON.stringify([g], null, 4));
+		if (gamesIter.endRecordList()) {
+			debug(logNow(), `The new game record file is beyond every other game record.`);
 
-			user_update_from_player_data(updated_players);
+			userUpdateFromPlayerData(updatedPlayers);
 			return;
 		}
 	}
 
-	debug(log_now(), `There is some game record file beyond the current game record -- those have to be updated.`);
+	debug(logNow(), `There is some game record file beyond the current game record -- those have to be updated.`);
 
-	let player_to_index: Map<string, number> = new Map();
-	player_to_index.set(white_username, 0);
-	player_to_index.set(black_username, 1);
+	let playerToIndex: Map<string, number> = new Map();
+	playerToIndex.set(whiteUsername, 0);
+	playerToIndex.set(blackUsername, 1);
 
-	if (record_exists) {
-		debug(log_now(), `The game record for game '${g.id}' exists.`);
+	if (recordExists) {
+		debug(logNow(), `The game record for game '${g.id}' exists.`);
 
-		let game_set = games_iter.get_current_game_array();
+		let gameSet = gamesIter.getCurrentGameArray();
 
-		const [game_idx, game_exists] = where_should_be_inserted_by_key(game_set, game_compare_dates(g));
-		if (game_exists) {
+		const [gameIdx, gameExists] = whereShouldBeInsertedByKey(gameSet, gameCompareDates(g));
+		if (gameExists) {
 			throw new Error(`Game of the exact same date field '${g.when}' already exists`);
 		}
 
-		game_set.splice(game_idx, 0, g);
+		gameSet.splice(gameIdx, 0, g);
 
-		games_iter.set_to_game(game_idx + 1);
-		update_game_record(games_iter, time_control_id, updated_players, player_to_index);
-		fs.writeFileSync(game_record_file, JSON.stringify(game_set, null, 4));
+		gamesIter.setToGame(gameIdx + 1);
+		updateGameRecord(gamesIter, timeControlId, updatedPlayers, playerToIndex);
+		fs.writeFileSync(gameRecordFile, JSON.stringify(gameSet, null, 4));
 
-		games_iter.next_record();
+		gamesIter.nextRecord();
 	}
 
-	debug(log_now(), `The game record for game '${g.id}' has been created/updated.`);
-	debug(log_now(), `Going to update the next game records.`);
+	debug(logNow(), `The game record for game '${g.id}' has been created/updated.`);
+	debug(logNow(), `Going to update the next game records.`);
 
-	while (!games_iter.end_record_list()) {
-		update_game_record(games_iter, time_control_id, updated_players, player_to_index);
+	while (!gamesIter.endRecordList()) {
+		updateGameRecord(gamesIter, timeControlId, updatedPlayers, playerToIndex);
 
 		fs.writeFileSync(
-			path.join(games_dir, games_iter.get_current_record_name()),
-			JSON.stringify(games_iter.get_current_game_array(), null, 4)
+			path.join(gamesDir, gamesIter.getCurrentRecordName()),
+			JSON.stringify(gamesIter.getCurrentGameArray(), null, 4)
 		);
 
-		games_iter.next_record();
+		gamesIter.nextRecord();
 	}
 
-	user_update_from_player_data(updated_players);
+	userUpdateFromPlayerData(updatedPlayers);
 }
 
 /**
  * @brief Add a game to the server
  * @param g Game
  */
-export function game_add_new(
+export function gameAddNew(
 	title: string,
 	white: User,
 	black: User,
 	result: GameResult,
-	time_control_id: TimeControlId,
-	time_control_name: TimeControlName,
-	game_record: DateMajor,
+	timeControlId: TimeControlId,
+	timeControlName: TimeControlName,
+	gameRecord: DateMajor,
 	hhmmss: DateMinor
 ): void {
-	const when = toDateFull(game_record + '..' + hhmmss);
-	const white_username = white.username;
-	const black_username = black.username;
-	const g = game_new(title, white_username, black_username, result, time_control_id, time_control_name, when);
+	const when = toDateFull(gameRecord + '..' + hhmmss);
+	const whiteUsername = white.username;
+	const blackUsername = black.username;
+	const g = gameNew(title, whiteUsername, blackUsername, result, timeControlId, timeControlName, when);
 
-	white.add_game(time_control_id, game_record);
-	black.add_game(time_control_id, game_record);
+	white.addGame(timeControlId, gameRecord);
+	black.addGame(timeControlId, gameRecord);
 
-	game_insert_in_history(g, game_record);
+	gameInsertInHistory(g, gameRecord);
 
-	GamesManager.get_instance().add_game(g.id, game_record, time_control_id);
-	graph_update(white_username, black_username, result, time_control_id);
+	GamesManager.getInstance().addGame(g.id, gameRecord, timeControlId);
+	graphUpdate(whiteUsername, blackUsername, result, timeControlId);
 }
 
 /**
- * @brief Looks for the game of identifier @e game_id.
- * @param game_id The game G to be returned.
- * @returns The game object that has identifier equal to @e game_id.
+ * @brief Looks for the game of identifier @e gameId.
+ * @param gameId The game G to be returned.
+ * @returns The game object that has identifier equal to @e gameId.
  */
-export function game_find_by_id(game_id: GameId): Game | undefined {
-	const info = GamesManager.get_instance().get_game_info(game_id);
+export function gameFindById(gameId: GameId): Game | undefined {
+	const info = GamesManager.getInstance().getGameInfo(gameId);
 
-	// game_id does not exist
+	// gameId does not exist
 	if (isNotDefined(info)) {
 		return undefined;
 	}
 
-	const time_control_id = info.time_control_id;
-	const game_record = info.game_record;
-	const games_dir = EnvironmentManager.get_instance().get_dir_games_time_control(time_control_id);
+	const timeControlId = info.timeControlId;
+	const gameRecord = info.gameRecord;
+	const gamesDir = EnvironmentManager.getInstance().getDirGamesTimeControl(timeControlId);
 
-	let games_iter = new GamesIterator(games_dir);
-	if (games_iter.get_number_of_records() == 0) {
-		throw new Error(`There are no game records in database for time control ${time_control_id}.`);
+	let gamesIter = new GamesIterator(gamesDir);
+	if (gamesIter.getNumberOfRecords() == 0) {
+		throw new Error(`There are no game records in database for time control ${timeControlId}.`);
 	}
 
-	const res = games_iter.locate_record(game_record);
+	const res = gamesIter.locateRecord(gameRecord);
 	if (!res) {
-		throw new Error(
-			`There is no game record '${game_record}' in the database for time control ${time_control_id}.`
-		);
+		throw new Error(`There is no game record '${gameRecord}' in the database for time control ${timeControlId}.`);
 	}
 
-	while (!games_iter.end_record_single() && games_iter.get_current_game().id != game_id) {
-		games_iter.next_game_record();
+	while (!gamesIter.endRecordSingle() && gamesIter.getCurrentGame().id != gameId) {
+		gamesIter.nextGameRecord();
 	}
-	if (games_iter.end_record_single()) {
+	if (gamesIter.endRecordSingle()) {
 		return undefined;
 	}
-	return games_iter.get_current_game();
+	return gamesIter.getCurrentGame();
 }
 
 /**
  * @brief Edit a game's result.
- * @param game_id The ID of the game to edit
- * @param new_result The (new) result of the game
+ * @param gameId The ID of the game to edit
+ * @param newResult The (new) result of the game
  */
-export function game_edit_result(game_id: GameId, new_result: GameResult): void {
-	const info = GamesManager.get_instance().get_game_info(game_id);
+export function gameEditResult(gameId: GameId, newResult: GameResult): void {
+	const info = GamesManager.getInstance().getGameInfo(gameId);
 
-	// game_id does not exist
+	// gameId does not exist
 	if (isNotDefined(info)) {
-		throw new Error(`Game id '${game_id}' does not exist in the Games Manager`);
+		throw new Error(`Game id '${gameId}' does not exist in the Games Manager`);
 	}
 
-	const time_control_id = info.time_control_id;
-	const game_record = info.game_record;
-	const games_dir = EnvironmentManager.get_instance().get_dir_games_time_control(time_control_id);
+	const timeControlId = info.timeControlId;
+	const gameRecord = info.gameRecord;
+	const gamesDir = EnvironmentManager.getInstance().getDirGamesTimeControl(timeControlId);
 
-	let games_iter = new GamesIterator(games_dir);
-	const found = games_iter.locate_game(game_record, game_id);
+	let gamesIter = new GamesIterator(gamesDir);
+	const found = gamesIter.locateGame(gameRecord, gameId);
 	if (!found) {
-		throw new Error(`Could not find game '${game_id}'.`);
+		throw new Error(`Could not find game '${gameId}'.`);
 	}
 
-	let game = games_iter.get_current_game();
-	const old_result = game.result;
+	let game = gamesIter.getCurrentGame();
+	const oldResult = game.result;
 
 	// avoid unnecessary work
-	if (old_result == new_result) {
+	if (oldResult == newResult) {
 		return;
 	}
 
@@ -430,98 +423,98 @@ export function game_edit_result(game_id: GameId, new_result: GameResult): void 
 
 	/* Update the graphs */
 
-	graph_modify_edge(white, black, old_result, new_result, time_control_id);
+	graphModifyEdge(white, black, oldResult, newResult, timeControlId);
 
 	/* Update the game files */
 
-	game.result = new_result;
+	game.result = newResult;
 
-	let updated_players: Player[] = [];
+	let updatedPlayers: Player[] = [];
 	{
-		let [white_after, black_after] = RatingSystemManager.get_instance().apply_rating_function(game);
-		updated_players.push(rating_into_player(time_control_id, white, white_after));
-		updated_players.push(rating_into_player(time_control_id, black, black_after));
+		let [whiteAfter, blackAfter] = RatingSystemManager.getInstance().applyRatingFunction(game);
+		updatedPlayers.push(ratingIntoPlayer(timeControlId, white, whiteAfter));
+		updatedPlayers.push(ratingIntoPlayer(timeControlId, black, blackAfter));
 	}
 
-	let player_to_index: Map<string, number> = new Map();
-	player_to_index.set(white, 0);
-	player_to_index.set(black, 1);
+	let playerToIndex: Map<string, number> = new Map();
+	playerToIndex.set(white, 0);
+	playerToIndex.set(black, 1);
 
 	// update record of the current game
-	games_iter.next_game_record();
+	gamesIter.nextGameRecord();
 
-	while (!games_iter.end_record_list()) {
-		update_game_record(games_iter, time_control_id, updated_players, player_to_index);
+	while (!gamesIter.endRecordList()) {
+		updateGameRecord(gamesIter, timeControlId, updatedPlayers, playerToIndex);
 
 		fs.writeFileSync(
-			path.join(games_dir, games_iter.get_current_record_name()),
-			JSON.stringify(games_iter.get_current_game_array(), null, 4)
+			path.join(gamesDir, gamesIter.getCurrentRecordName()),
+			JSON.stringify(gamesIter.getCurrentGameArray(), null, 4)
 		);
 
-		games_iter.next_record();
+		gamesIter.nextRecord();
 	}
 
-	user_update_from_player_data(updated_players);
+	userUpdateFromPlayerData(updatedPlayers);
 }
 
 /**
  * @brief Edit a game's title
- * @param game_id The ID of the game to edit
- * @param new_result The (new) result of the game
+ * @param gameId The ID of the game to edit
+ * @param newResult The (new) result of the game
  */
-export function game_edit_title(game_id: GameId, new_title: string): void {
-	const info = GamesManager.get_instance().get_game_info(game_id);
+export function gameEditTitle(gameId: GameId, newTitle: string): void {
+	const info = GamesManager.getInstance().getGameInfo(gameId);
 
-	// game_id does not exist
+	// gameId does not exist
 	if (isNotDefined(info)) {
-		throw new Error(`Game id '${game_id}' does not exist in the Games Manager`);
+		throw new Error(`Game id '${gameId}' does not exist in the Games Manager`);
 	}
 
-	const time_control_id = info.time_control_id;
-	const game_record = info.game_record;
-	const games_dir = EnvironmentManager.get_instance().get_dir_games_time_control(time_control_id);
+	const timeControlId = info.timeControlId;
+	const gameRecord = info.gameRecord;
+	const gamesDir = EnvironmentManager.getInstance().getDirGamesTimeControl(timeControlId);
 
-	let games_iter = new GamesIterator(games_dir);
-	const found = games_iter.locate_game(game_record, game_id);
+	let gamesIter = new GamesIterator(gamesDir);
+	const found = gamesIter.locateGame(gameRecord, gameId);
 	if (!found) {
-		throw new Error(`Could not find game '${game_id}'.`);
+		throw new Error(`Could not find game '${gameId}'.`);
 	}
 
-	let game = games_iter.get_current_game();
+	let game = gamesIter.getCurrentGame();
 
 	// avoid unnecessary work
-	if (game.title == new_title) {
+	if (game.title == newTitle) {
 		return;
 	}
 
-	game.title = new_title;
+	game.title = newTitle;
 
-	const game_record_file = path.join(games_dir, game_record);
+	const gameRecordFile = path.join(gamesDir, gameRecord);
 
-	let game_set = games_iter.get_current_game_array();
-	fs.writeFileSync(game_record_file, JSON.stringify(game_set, null, 4));
+	let gameSet = gamesIter.getCurrentGameArray();
+	fs.writeFileSync(gameRecordFile, JSON.stringify(gameSet, null, 4));
 }
 
-export function game_delete(game_id: GameId): void {
-	let games_manager = GamesManager.get_instance();
-	const info = games_manager.get_game_info(game_id);
+export function gameDelete(gameId: GameId): void {
+	let gamesManager = GamesManager.getInstance();
+	const info = gamesManager.getGameInfo(gameId);
 
-	// game_id does not exist
+	// gameId does not exist
 	if (isNotDefined(info)) {
-		throw new Error(`Game id '${game_id}' does not exist in the Games Manager`);
+		throw new Error(`Game id '${gameId}' does not exist in the Games Manager`);
 	}
 
-	const time_control_id = info.time_control_id;
-	const game_record = info.game_record;
-	const games_dir = EnvironmentManager.get_instance().get_dir_games_time_control(time_control_id);
+	const timeControlId = info.timeControlId;
+	const gameRecord = info.gameRecord;
+	const gamesDir = EnvironmentManager.getInstance().getDirGamesTimeControl(timeControlId);
 
-	let games_iter = new GamesIterator(games_dir);
-	const found = games_iter.locate_game(game_record, game_id);
+	let gamesIter = new GamesIterator(gamesDir);
+	const found = gamesIter.locateGame(gameRecord, gameId);
 	if (!found) {
-		throw new Error(`Could not find game '${game_id}'.`);
+		throw new Error(`Could not find game '${gameId}'.`);
 	}
 
-	let game = games_iter.get_current_game();
+	let game = gamesIter.getCurrentGame();
 
 	const result = game.result;
 	const white = game.white;
@@ -529,103 +522,103 @@ export function game_delete(game_id: GameId): void {
 
 	/* Update the graphs */
 
-	graph_delete_edge(white, black, result, time_control_id);
+	graphDeleteEdge(white, black, result, timeControlId);
 
 	/* Update the game files */
 
-	let updated_players: Player[] = [];
+	let updatedPlayers: Player[] = [];
 	{
-		const white_before = game.white_rating;
-		const black_before = game.black_rating;
-		updated_players.push(rating_into_player(time_control_id, white, white_before));
-		updated_players.push(rating_into_player(time_control_id, black, black_before));
+		const whiteBefore = game.whiteRating;
+		const blackBefore = game.blackRating;
+		updatedPlayers.push(ratingIntoPlayer(timeControlId, white, whiteBefore));
+		updatedPlayers.push(ratingIntoPlayer(timeControlId, black, blackBefore));
 	}
 
-	let player_to_index: Map<string, number> = new Map();
-	player_to_index.set(white, 0);
-	player_to_index.set(black, 1);
+	let playerToIndex: Map<string, number> = new Map();
+	playerToIndex.set(white, 0);
+	playerToIndex.set(black, 1);
 
 	// delete the current game in the record
-	games_iter.delete_current_game();
-	const record_is_empty = games_iter.get_current_game_array().length == 0;
+	gamesIter.deleteCurrentGame();
+	const recordIsEmpty = gamesIter.getCurrentGameArray().length == 0;
 
-	while (!games_iter.end_record_list()) {
-		update_game_record(games_iter, time_control_id, updated_players, player_to_index);
+	while (!gamesIter.endRecordList()) {
+		updateGameRecord(gamesIter, timeControlId, updatedPlayers, playerToIndex);
 
 		fs.writeFileSync(
-			path.join(games_dir, games_iter.get_current_record_name()),
-			JSON.stringify(games_iter.get_current_game_array(), null, 4)
+			path.join(gamesDir, gamesIter.getCurrentRecordName()),
+			JSON.stringify(gamesIter.getCurrentGameArray(), null, 4)
 		);
 
-		games_iter.next_record();
+		gamesIter.nextRecord();
 	}
 
-	if (record_is_empty) {
-		const filename = path.join(games_dir, game_record);
+	if (recordIsEmpty) {
+		const filename = path.join(gamesDir, gameRecord);
 		fs.rmSync(filename);
 	}
 
 	/* Update games manager */
 
-	games_manager.delete_game_id(game_id);
+	gamesManager.deleteGameId(gameId);
 
 	/* Update all user instances */
 
-	let users_manager = UsersManager.get_instance();
+	let usersManager = UsersManager.getInstance();
 
-	let w = users_manager.get_user_by_username(white);
+	let w = usersManager.getUserByUsername(white);
 	if (isNotDefined(w)) {
-		debug(log_now(), `User ${white} could not be found`);
+		debug(logNow(), `User ${white} could not be found`);
 		return;
 	}
-	w.delete_game(time_control_id, game_record);
+	w.deleteGame(timeControlId, gameRecord);
 
-	let b = users_manager.get_user_by_username(black);
+	let b = usersManager.getUserByUsername(black);
 	if (isNotDefined(b)) {
-		debug(log_now(), `User ${black} could not be found`);
+		debug(logNow(), `User ${black} could not be found`);
 		return;
 	}
-	b.delete_game(time_control_id, game_record);
+	b.deleteGame(timeControlId, gameRecord);
 
-	user_update_from_player_data(updated_players);
+	userUpdateFromPlayerData(updatedPlayers);
 }
 
-export function recalculate_all_ratings() {
-	const rating_system = RatingSystemManager.get_instance();
-	const all_time_controls = rating_system.get_unique_time_controls_ids();
+export function recalculateAllRatings() {
+	const ratingSystem = RatingSystemManager.getInstance();
+	const allTimeControls = ratingSystem.getUniqueTimeControlsIds();
 
-	let mem = UsersManager.get_instance();
+	let mem = UsersManager.getInstance();
 
 	// initialize all players to a freshly created player
-	let updated_players: Player[] = [];
-	let player_to_index: Map<string, number> = new Map();
+	let updatedPlayers: Player[] = [];
+	let playerToIndex: Map<string, number> = new Map();
 
-	for (let i = 0; i < mem.num_users(); ++i) {
-		const username = (mem.get_user_at(i) as User).username;
+	for (let i = 0; i < mem.numUsers(); ++i) {
+		const username = (mem.getUserAt(i) as User).username;
 
 		let p = new Player(username, []);
-		for (const tc of all_time_controls) {
-			p.add_rating(tc, rating_system.get_new_rating());
+		for (const tc of allTimeControls) {
+			p.addRating(tc, ratingSystem.getNewRating());
 		}
 
-		updated_players.push(p);
-		player_to_index.set(username, i);
+		updatedPlayers.push(p);
+		playerToIndex.set(username, i);
 	}
 
-	for (const time_control of all_time_controls) {
-		const games_dir = EnvironmentManager.get_instance().get_dir_games_time_control(time_control);
+	for (const timeControl of allTimeControls) {
+		const gamesDir = EnvironmentManager.getInstance().getDirGamesTimeControl(timeControl);
 
-		let games_iter = new GamesIterator(games_dir);
-		while (!games_iter.end_record_list()) {
-			update_game_record(games_iter, time_control, updated_players, player_to_index);
+		let gamesIter = new GamesIterator(gamesDir);
+		while (!gamesIter.endRecordList()) {
+			updateGameRecord(gamesIter, timeControl, updatedPlayers, playerToIndex);
 
 			fs.writeFileSync(
-				path.join(games_dir, games_iter.get_current_record_name()),
-				JSON.stringify(games_iter.get_current_game_array(), null, 4)
+				path.join(gamesDir, gamesIter.getCurrentRecordName()),
+				JSON.stringify(gamesIter.getCurrentGameArray(), null, 4)
 			);
-			games_iter.next_record();
+			gamesIter.nextRecord();
 		}
 	}
 
-	user_update_from_player_data(updated_players);
+	userUpdateFromPlayerData(updatedPlayers);
 }

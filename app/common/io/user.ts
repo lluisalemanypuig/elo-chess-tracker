@@ -26,7 +26,7 @@ Contact:
 import Debug from 'debug';
 const debug = Debug(`ELO_CHESS_TRACKER:io`);
 
-import { log_now } from '@common/utils/time';
+import { logNow } from '@common/utils/time';
 import {
 	GameNumberSchema,
 	GameNumberArraySchema,
@@ -37,10 +37,10 @@ import {
 	UserKeys
 } from '@common/models/user';
 import { TimeControlGame } from '@common/models/user';
-import { read_json_array_string, read_json_object_string, read_schema } from '@common/io/generic';
-import { RatingSystemManager } from '@server/managers/rating_system_manager';
-import { TimeControlRating } from '@common/models/time_control_rating';
-import { UserRoleArraySchema } from '@common/models/user_role';
+import { readJsonArrayString, readJsonObjectString, readSchema } from '@common/io/generic';
+import { RatingSystemManager } from '@server/managers/rating-system-manager';
+import { TimeControlRating } from '@common/models/time-control-rating';
+import { UserRoleArraySchema } from '@common/models/user-role';
 import { PasswordSchema } from '@common/models/password';
 
 /**
@@ -48,8 +48,8 @@ import { PasswordSchema } from '@common/models/password';
  * @param str A string with data of a GameNumber.
  * @returns A new TimeControlGames object.
  */
-export function games_number_from_string(str: string): GameNumber | null {
-	return read_schema(GameNumberSchema, str);
+export function gamesNumberFromString(str: string): GameNumber | null {
+	return readSchema(GameNumberSchema, str);
 }
 
 /**
@@ -57,8 +57,8 @@ export function games_number_from_string(str: string): GameNumber | null {
  * @param str A string with data of a GameNumber.
  * @returns A new TimeControlGames object.
  */
-export function games_number_array_from_string(str: string): GameNumber[] | null {
-	return read_schema(GameNumberArraySchema, str);
+export function gamesNumberArrayFromString(str: string): GameNumber[] | null {
+	return readSchema(GameNumberArraySchema, str);
 }
 
 /**
@@ -66,8 +66,8 @@ export function games_number_array_from_string(str: string): GameNumber[] | null
  * @param str A string with data of a TimeControlGames.
  * @returns A new TimeControlGames object.
  */
-export function time_control_game_from_string(str: string): TimeControlGame | null {
-	return read_schema(TimeControlGameSchema, str);
+export function timeControlGameFromString(str: string): TimeControlGame | null {
+	return readSchema(TimeControlGameSchema, str);
 }
 
 /**
@@ -75,8 +75,8 @@ export function time_control_game_from_string(str: string): TimeControlGame | nu
  * @param str A string with data of several TimeControlGames.
  * @returns An array of TimeControlGames objects.
  */
-export function time_control_games_array_from_string(str: string): TimeControlGame[] | null {
-	return read_schema(TimeControlGameArraySchema, str);
+export function timeControlGamesArrayFromString(str: string): TimeControlGame[] | null {
+	return readSchema(TimeControlGameArraySchema, str);
 }
 
 /**
@@ -84,33 +84,33 @@ export function time_control_games_array_from_string(str: string): TimeControlGa
  * @param json A plain JSON object.
  * @returns A new User object.
  */
-export function user_from_json(json: any): User | null {
+export function userFromJson(json: any): User | null {
 	const password = PasswordSchema.safeParse(json.password);
 	if (!password.success) {
-		debug(log_now(), `Could not parse password`);
+		debug(logNow(), `Could not parse password`);
 		return null;
 	}
 
 	const roles = UserRoleArraySchema.safeParse(json.roles);
 	if (!roles.success) {
-		debug(log_now(), `Could not parse roles array`);
+		debug(logNow(), `Could not parse roles array`);
 		return null;
 	}
 
 	const games = TimeControlGameArraySchema.safeParse(json.games);
 	if (!games.success) {
-		debug(log_now(), `Could not parse game records`);
+		debug(logNow(), `Could not parse game records`);
 		return null;
 	}
 
-	const manager = RatingSystemManager.get_instance();
+	const manager = RatingSystemManager.getInstance();
 	let ratings: TimeControlRating[] = [];
 	for (const r of json.ratings) {
-		const rating = new TimeControlRating(r.time_control, manager.get_rating_from_json(r.rating));
+		const rating = new TimeControlRating(r.timeControl, manager.getRatingFromJson(r.rating));
 		ratings.push(rating);
 	}
 
-	return new User(json.username, json.first_name, json.last_name, password.data, roles.data, games.data, ratings);
+	return new User(json.username, json.firstName, json.lastName, password.data, roles.data, games.data, ratings);
 }
 
 /**
@@ -118,8 +118,8 @@ export function user_from_json(json: any): User | null {
  * @param str A string with data of a User.
  * @returns A new User object.
  */
-export function user_from_string(str: string): User | null {
-	return read_json_object_string(str, UserKeys, user_from_json);
+export function userFromString(str: string): User | null {
+	return readJsonObjectString(str, UserKeys, userFromJson);
 }
 
 /**
@@ -127,6 +127,6 @@ export function user_from_string(str: string): User | null {
  * @param str A string with data of several User.
  * @returns An array of User objects.
  */
-export function user_array_from_string(str: string): User[] | null {
-	return read_json_array_string(str, UserKeys, user_from_json);
+export function userArrayFromString(str: string): User[] | null {
+	return readJsonArrayString(str, UserKeys, userFromJson);
 }

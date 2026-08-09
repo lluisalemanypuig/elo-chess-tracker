@@ -1,0 +1,104 @@
+{
+	"environment": {
+		"sslCertificate": {
+			"publicKeyFile": "$PUBLIC_PEM",
+			"privateKeyFile": "$PRIVATE_PEM",
+			"passphraseFile": "$PASSPHRASE_TXT"
+		},
+		"favicon": "favicon.png",
+		"loginPage": {
+			"title": "Login into My Chess Club",
+			"icon": "login.png"
+		},
+		"homePage": {
+			"title": "My Chess Club",
+			"icon": "home.png"
+		}
+	},
+
+	"server": {
+		"domainName": "$DOMAIN_NAME",
+		"ports": {
+			"http": "8080",
+			"https": "8443"
+		}
+	},
+
+	"ratingSystem": "Elo",
+
+	"timeControls": [
+		{
+			"id": "Classical",
+			"name": "Classical (90 + 30)"
+		},
+		{
+			"id": "Rapid",
+			"name": "Rapid (12 + 5)"
+		},
+		{
+			"id": "Rapid",
+			"name": "Rapid (10 + 0)"
+		},
+		{
+			"id": "Blitz",
+			"name": "Blitz (5 + 3)"
+		}
+	],
+
+	"behavior": {
+		"challenges": {
+			"higherRatedPlayerCanDeclineChallengeFromLowerRatedPlayer": false
+		}
+	},
+
+	"permissions": {
+		"admin": [
+			"create_user",
+
+			"assign_role_admin",
+			"assign_role_teacher",
+			"assign_role_member",
+			"assign_role_student",
+
+			"create_games_admin",
+			"create_games_teacher",
+			"create_games_member",
+			"create_games_student",
+			"delete_games_admin",
+			"delete_games_teacher",
+			"delete_games_member",
+			"delete_games_student",
+			"see_games_admin",
+			"see_games_teacher",
+			"see_games_member",
+			"see_games_student",
+			"edit_games_admin",
+			"edit_games_teacher",
+			"edit_games_member",
+			"edit_games_student",
+
+			"edit_admin",
+			"edit_teacher",
+			"edit_member",
+			"edit_student",
+			"challenge_admin",
+			"challenge_member",
+			"challenge_teacher",
+			"challenge_student"
+		],
+		"teacher": [
+			"create_user",
+			"assign_role_student",
+
+			"edit_student",
+			"edit_games_student",
+			"see_games_student",
+			"challenge_admin",
+			"challenge_member",
+			"challenge_teacher",
+			"challenge_student"
+		],
+		"member": ["challenge_admin", "challenge_member", "challenge_teacher"],
+		"student": ["challenge_admin", "challenge_member", "challenge_teacher", "challenge_student"]
+	}
+}

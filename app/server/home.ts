@@ -24,76 +24,76 @@ Contact:
 */
 
 import Debug from 'debug';
-const debug = Debug('ELO_CHESS_TRACKER:server_home');
+const debug = Debug('ELO_CHESS_TRACKER:serverHome');
 import { Request, Response } from 'express';
 
-import { log_now } from '@common/utils/time';
-import { is_user_logged_in } from '@server/managers/session';
-import { ConfigurationManager } from '@server/managers/configuration_manager';
-import { get_execution_directory } from '@server/managers/environment_manager';
-import { isDefined, isNotDefined } from '@common/utils/is_defined';
-import { Routes } from '@common/routes';
-import { safe_parse_request_cookies, parse_schema } from '@server/utils/schemas';
+import { logNow } from '@common/utils/time';
+import { isUserLoggedIn } from '@server/managers/session';
+import { ConfigurationManager } from '@server/managers/configuration-manager';
+import { getExecutionDirectory } from '@server/managers/environment-manager';
+import { isDefined, isNotDefined } from '@common/utils/is-defined';
+import { ROUTES } from '@common/routes';
+import { safeParseRequestCookies, parseSchema } from '@server/utils/schemas';
 import { AuthenticationInputSchema } from '@common/schemas/authentication';
 
-export async function get_page_login(req: Request, res: Response) {
-	let send_home: boolean;
-	debug(log_now(), `GET ${Routes.ROOT}`);
+export async function getPageLogin(req: Request, res: Response) {
+	let sendHome: boolean;
+	debug(logNow(), `GET ${ROUTES.ROOT}`);
 
-	const session_parse = parse_schema(req.cookies, AuthenticationInputSchema, debug);
-	if (session_parse.result === 'Error') {
+	const sessionParse = parseSchema(req.cookies, AuthenticationInputSchema, debug);
+	if (sessionParse.result === 'Error') {
 		console.log('asdf');
 		return;
 	}
-	const session = session_parse.data;
+	const session = sessionParse.data;
 
 	if (isDefined(session)) {
-		debug(log_now(), 'There is a username key in the cookies received.');
-		debug(log_now(), `    Value: ${session.username}`);
+		debug(logNow(), 'There is a username key in the cookies received.');
+		debug(logNow(), `    Value: ${session.username}`);
 
-		const r = is_user_logged_in(session);
-		send_home = r[0];
+		const r = isUserLoggedIn(session);
+		sendHome = r[0];
 
-		if (send_home) {
-			debug(log_now(), `    Session id for user '${session.username}' exists. Please, come in.`);
+		if (sendHome) {
+			debug(logNow(), `    Session id for user '${session.username}' exists. Please, come in.`);
 		}
 	} else {
-		debug(log_now(), 'There is no user key in the cookies received.');
-		send_home = false;
+		debug(logNow(), 'There is no user key in the cookies received.');
+		sendHome = false;
 	}
 
 	res.status(200);
-	if (ConfigurationManager.should_cache_data()) {
+	if (ConfigurationManager.shouldCacheData()) {
 		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
 	}
-	if (send_home) {
-		debug(log_now(), 'send /home since the user is logged in');
-		res.sendFile(`${get_execution_directory()}/html/home.html`);
+	if (sendHome) {
+		debug(logNow(), 'send /home since the user is logged in');
+		res.sendFile(`${getExecutionDirectory()}/html/home.html`);
 	} else {
-		debug(log_now(), 'send /login_screen since the user is not logged in');
-		res.sendFile(`${get_execution_directory()}/html/login_screen.html`);
+		debug(logNow(), 'send /loginScreen since the user is not logged in');
+		res.sendFile(`${getExecutionDirectory()}/html/login-screen.html`);
 	}
 }
 
-export async function get_page_home(req: Request, res: Response) {
-	debug(log_now(), `GET ${Routes.HOME}`);
+export async function getPageHome(req: Request, res: Response) {
+	debug(logNow(), `GET ${ROUTES.HOME}`);
 
-	const session_parse = safe_parse_request_cookies(req, AuthenticationInputSchema, res, debug);
-	if (session_parse.result === 'Exit') {
+	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	if (sessionParse.result === 'Exit') {
 		return;
 	}
-	const session = session_parse.data;
-	const r = is_user_logged_in(session);
+	const session = sessionParse.data;
+	const r = isUserLoggedIn(session);
 	if (isNotDefined(r[2])) {
-		debug(log_now(), `    User ${session.username} is not logged in.`);
+		debug(logNow(), `    User ${session.username} is not logged in.`);
 		res.status(401).send(r[1]);
 		return;
 	}
 
-	debug(log_now(), `    User ${session.username} is logged in. Access granted.`);
+	debug(logNow(), `    User ${session.username} is logged in. Access granted.`);
 	res.status(200);
-	if (ConfigurationManager.should_cache_data()) {
+	if (ConfigurationManager.shouldCacheData()) {
 		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
 	}
-	res.sendFile(`${get_execution_directory()}/html/home.html`);
+	res.sendFile(`${getExecutionDirectory()}/html/home.html`);
 }
