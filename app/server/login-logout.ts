@@ -38,7 +38,6 @@ import { isNotDefined } from '@common/utils/is-defined';
 import { UserLoginInputSchema } from '@common/schemas/login-logout';
 import { ROUTES } from '@common/routes';
 import { safeParseRequestBody, safeParseRequestCookies } from '@server/utils/schemas';
-import { AuthenticationInputSchema } from '@common/schemas/authentication';
 
 export async function postUserLogin(req: Request, res: Response) {
 	debug(logNow(), `POST ${ROUTES.USER_LOGIN}`);
