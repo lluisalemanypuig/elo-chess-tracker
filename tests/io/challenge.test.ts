@@ -38,14 +38,14 @@ describe('IO conversion', () => {
 				"time_control_name": "Blitz (5 + 3)",\
 				"when_challenge_sent": "2024-12-29..17:10:00",\
 				"when_challenge_accepted": "2024-12-29..17:10:01",\
-				"result_was_set": true,\
 				"when_result_set": "2024-12-29..17:10:02",\
 				"result_set_by": "A",\
 				"when_result_accepted": "2024-12-30..17:10:02",\
 				"result_accepted_by": "B",\
 				"white": "A",\
 				"black": "B",\
-				"result": "draw"\
+				"result": "draw",\
+				"state": "PENDING_ACCEPT"\
 			}'
 		);
 		expect(c).not.toBeNull();
@@ -60,7 +60,6 @@ describe('IO conversion', () => {
 		expect(c.time_control_name).toBe('Blitz (5 + 3)');
 		expect(c.when_challenge_sent).toBe('2024-12-29..17:10:00');
 		expect(c.when_challenge_accepted).toBe('2024-12-29..17:10:01');
-		expect(c.result_was_set).toBe(true);
 		expect(c.when_result_set).toBe('2024-12-29..17:10:02');
 		expect(c.result_set_by).toBe('A');
 		expect(c.when_result_accepted).toBe('2024-12-30..17:10:02');
@@ -68,5 +67,6 @@ describe('IO conversion', () => {
 		expect(c.white).toBe('A');
 		expect(c.black).toBe('B');
 		expect(c.result).toBe('draw');
+		expect(c.state).toBe('PENDING_ACCEPT');
 	});
 });

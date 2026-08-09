@@ -30,7 +30,7 @@ import { Request, Response } from 'express';
 import { log_now } from '@common/utils/time';
 import { is_user_logged_in } from '@server/managers/session';
 import { UserGivenName, User } from '@common/models/user';
-import { challenge_set_retrieve } from '@server/managers/challenges';
+import { getChallengesBy } from '@server/managers/challenges';
 import { Challenge } from '@common/models/challenge';
 import { UsersManager } from '@server/managers/users_manager';
 import { can_user_decline_challenge } from '@server/managers/user_relationships';
@@ -64,7 +64,7 @@ export async function get_query_challenge_received(req: Request, res: Response) 
 	}
 
 	// challenges to be returned
-	const to_return = challenge_set_retrieve((c: Challenge): boolean => {
+	const to_return = getChallengesBy((c: Challenge): boolean => {
 		if (c.sent_to != session.username) {
 			return false;
 		}
@@ -119,7 +119,7 @@ export async function get_query_challenge_sent(req: Request, res: Response) {
 	}
 
 	// challenges to be returned
-	const to_return = challenge_set_retrieve((c: Challenge): boolean => {
+	const to_return = getChallengesBy((c: Challenge): boolean => {
 		if (c.sent_by != session.username) {
 			return false;
 		}
@@ -179,7 +179,7 @@ export async function get_query_challenge_pending_result(req: Request, res: Resp
 	}
 
 	// challenges to be returned
-	const to_return = challenge_set_retrieve((c: Challenge): boolean => {
+	const to_return = getChallengesBy((c: Challenge): boolean => {
 		// this user must be involved in the challenge
 		if (c.sent_by != session.username && c.sent_to != session.username) {
 			return false;
@@ -256,7 +256,7 @@ export async function get_query_challenge_confirm_result_other(req: Request, res
 	}
 
 	// challenges to be returned
-	const to_return = challenge_set_retrieve((c: Challenge): boolean => {
+	const to_return = getChallengesBy((c: Challenge): boolean => {
 		// this user must be involved in the challenge
 		if (c.sent_by != session.username && c.sent_to != session.username) {
 			return false;
@@ -352,7 +352,7 @@ export async function get_query_challenge_confirm_result_self(req: Request, res:
 	}
 
 	// challenges to be returned
-	const to_return = challenge_set_retrieve((c: Challenge): boolean => {
+	const to_return = getChallengesBy((c: Challenge): boolean => {
 		// this user must be involved in the challenge
 		if (c.sent_by != session.username && c.sent_to != session.username) {
 			return false;

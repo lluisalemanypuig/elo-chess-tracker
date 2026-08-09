@@ -28,11 +28,23 @@ import path from 'path';
 import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:managers/challenges');
 
-import { DateFull, log_now, dateSplitMajorMinor, toDateFull, toDateMinor } from '@common/utils/time';
+import { DateFull, log_now, dateSplitMajorMinor, toDateMinor } from '@common/utils/time';
 import { ChallengesManager } from '@server/managers/challenges_manager';
 import { EnvironmentManager } from '@server/managers/environment_manager';
-import { Challenge, new_challenge, set_result, unset_result } from '@common/models/challenge';
-import { GameResult } from '@common/models/game';
+import {
+	Challenge,
+	newChallenge,
+	setResult,
+	disagreeResult as disagreeResult,
+	ChallengeAccept,
+	accept,
+	ChallengeDecline,
+	ChallengeSetResult,
+	ChallengeAgreeResult,
+	agreeResult,
+	ChallengeDisagreeResult,
+	isPartOfChallenge
+} from '@common/models/challenge';
 import { game_add_new } from '@server/managers/games';
 import { TimeControlId, TimeControlName } from '@common/models/time_control';
 import { UsersManager } from '@server/managers/users_manager';
@@ -45,7 +57,7 @@ import { PlayerPrivateId } from '@common/models/player';
  * @param by Function to filter. Returns true if a challenge is to be returned.
  * @returns an array of challenges according to function @e by.
  */
-export function challenge_set_retrieve(
+export function getChallengesBy(
 	by: Function = (_c: Challenge): boolean => {
 		return true;
 	}
@@ -68,20 +80,25 @@ export function challenge_set_retrieve(
  * @param when Timestamp
  * @returns The id of the challenge
  */
-export function challenge_send_new(
+export function challengeSendNew(
 	title: string,
 	sender: PlayerPrivateId,
 	receiver: PlayerPrivateId,
-	time_control_id: TimeControlId,
-	time_control_name: TimeControlName,
+	timeControlId: TimeControlId,
+	timeControlName: TimeControlName,
 	when: DateFull
 ): Challenge {
 	debug(log_now(), 'Adding a new challenge...');
 
+	if (receiver === sender) {
+		debug(log_now(), `A challenge cannot be sent to oneself.`);
+		throw new Error('You cannot challenge yourself.');
+	}
+
 	let mem = ChallengesManager.get_instance();
 	const new_id = mem.new_challenge_id();
 
-	const c = new_challenge(new_id, title, sender, receiver, time_control_id, time_control_name, when);
+	const c = newChallenge(new_id, title, sender, receiver, timeControlId, timeControlName, when);
 
 	mem.add_challenge(c);
 
@@ -99,10 +116,21 @@ export function challenge_send_new(
  * @pre The accepter must be either a priviledged user or the receiver
  * of the challenge.
  */
-export function challenge_accept(c: Challenge): void {
+export function challengeAccept(c: Challenge, { by, when }: ChallengeAccept): void {
 	debug(log_now(), `Accepting challenge '${c.id}'`);
 
-	c.when_challenge_accepted = toDateFull(log_now());
+	if (c.state !== 'PENDING_ACCEPT') {
+		throw new Error(`The challenge cannot be accepted since its state is ${c.state}.`);
+	}
+	if (!isPartOfChallenge(c, by)) {
+		debug(log_now(), `Player '${by}' is not part of this challenge.`);
+		throw new Error(`You cannot disagree to this result.`);
+	}
+	if (by != c.sent_to) {
+		throw new Error('You cannot accept this challenge');
+	}
+
+	accept(c, { by, when });
 
 	const challenge_dir = EnvironmentManager.get_instance().get_dir_challenges();
 	const challenge_file = path.join(challenge_dir, c.id);
@@ -116,8 +144,19 @@ export function challenge_accept(c: Challenge): void {
  * @pre The 'decliner' must be either a priviledged user or the receiver
  * of the challenge.
  */
-export function challenge_decline(c: Challenge): void {
+export function challengeDecline(c: Challenge, { by }: ChallengeDecline): void {
 	debug(log_now(), `Declining challenge '${c.id}'`);
+
+	if (c.state !== 'PENDING_ACCEPT') {
+		throw new Error(`This challenge cannot be declined because its state is ${c.state}`);
+	}
+	if (!isPartOfChallenge(c, by)) {
+		debug(log_now(), `Player '${by}' is not part of this challenge.`);
+		throw new Error(`You cannot disagree to this result.`);
+	}
+	if (by != c.sent_to) {
+		throw new Error('You cannot decline this challenge');
+	}
 
 	ChallengesManager.get_instance().remove_challenge(c);
 
@@ -133,17 +172,39 @@ export function challenge_decline(c: Challenge): void {
  * @param g The game encoding the result of the game. The players in the game contain
  * their rating as specified in the system at the conclusion of the game.
  */
-export function challenge_set_result(
-	c: Challenge,
-	by: PlayerPrivateId,
-	when: DateFull,
-	white: PlayerPrivateId,
-	black: PlayerPrivateId,
-	result: GameResult
-): void {
+export function challengeSetResult(c: Challenge, { by, when, white, black, result }: ChallengeSetResult): void {
 	debug(log_now(), `Set the result of the challenge '${c.id}'`);
 
-	set_result(c, { by, when, white, black, result });
+	if (c.state !== 'PENDING_RESULT') {
+		throw new Error(`The result to the challenge cannot be set since its state is ${c.state}.`);
+	}
+	if (!isPartOfChallenge(c, by)) {
+		debug(log_now(), `Player '${by}' is not part of this challenge.`);
+		throw new Error(`You cannot disagree to this result.`);
+	}
+	const original_setter = c.result_set_by;
+	if (original_setter != undefined && original_setter != by) {
+		debug(
+			log_now(),
+			`User '${by}' is trying to override the result of challenge '${c.id}' which was set by '${original_setter} on '${c.when_result_set}'`
+		);
+		throw new Error('The result of this challenge has to be set by the original setter, which you are not.');
+	}
+
+	if (white === black) {
+		debug(log_now(), `White '${white}' and Black '${black}' cannot be the same player.`);
+		throw new Error('White and Black cannot be the same players.');
+	}
+	if (white != c.sent_by && white != c.sent_to) {
+		debug(log_now(), `White '${white}' is not part of challenge '${c.id}'.`);
+		throw new Error(`Wrong player data.`);
+	}
+	if (black != c.sent_by && black != c.sent_to) {
+		debug(log_now(), `Black '${black}' is not part of challenge '${c.id}'.`);
+		throw new Error(`Wrong player data.`);
+	}
+
+	setResult(c, { by, when, white, black, result });
 
 	const challenge_dir = EnvironmentManager.get_instance().get_dir_challenges();
 	const challenge_file = path.join(challenge_dir, c.id);
@@ -156,9 +217,16 @@ export function challenge_set_result(
  * @param id Identifier string
  * @pre The accepter must be the receiver of the challenge.
  */
-export function challenge_agree_result(c: Challenge): void {
+export function challengeAgreeResult(c: Challenge, { by, when }: ChallengeAgreeResult): void {
 	debug(log_now(), `Agree to result of challenge '${c.id}'...`);
 
+	if (c.state !== 'PENDING_RESULT_AGREE') {
+		throw new Error(`The result to the challenge cannot be agreed to since its state is ${c.state}.`);
+	}
+	if (!isPartOfChallenge(c, by)) {
+		debug(log_now(), `Player '${by}' is not part of this challenge.`);
+		throw new Error(`You cannot disagree to this result.`);
+	}
 	if (isNotDefined(c.when_result_set)) {
 		debug(log_now(), `Date 'when_result_set' is not defined`);
 		return;
@@ -169,14 +237,19 @@ export function challenge_agree_result(c: Challenge): void {
 		debug(log_now(), `    Black: '${c.black}'.`);
 		return;
 	}
-	if (isNotDefined(c.result) || !c.result_was_set) {
+	if (isNotDefined(c.result)) {
 		debug(log_now(), `Result is not set.`);
 		return;
 	}
-	if (isNotDefined(c.result) || !c.result_was_set) {
+	if (isNotDefined(c.result)) {
 		debug(log_now(), `Result is not set.`);
 		return;
 	}
+	if (by === c.result_set_by) {
+		throw new Error('The accepter of the result cannot be the same person who set the result');
+	}
+
+	agreeResult(c, { by, when });
 
 	{
 		const challenge_dir = EnvironmentManager.get_instance().get_dir_challenges();
@@ -210,10 +283,22 @@ export function challenge_agree_result(c: Challenge): void {
  * @param g The game encoding the result of the game. The players in the game
  * contain their rating as specified in the system at the conclusion of the game.
  */
-export function challenge_unset_result(c: Challenge): void {
+export function challengeDisagreeResult(c: Challenge, { by }: ChallengeDisagreeResult): void {
 	debug(log_now(), `Disagree to the result of the challenge '${c.id}'`);
 
-	unset_result(c);
+	if (c.state !== 'PENDING_RESULT_AGREE') {
+		throw new Error(`Challenge's result cannot be disagreed to since its state is ${c.state}`);
+	}
+	if (!isPartOfChallenge(c, by)) {
+		debug(log_now(), `Player '${by}' is not part of this challenge.`);
+		throw new Error(`You cannot disagree to this result.`);
+	}
+	if (c.result_set_by === by) {
+		debug(log_now(), `Player '${by}' set the result of the challenge and cannot disagree to it.`);
+		throw new Error(`You cannot disagree to this result.`);
+	}
+
+	disagreeResult(c);
 
 	const challenge_dir = EnvironmentManager.get_instance().get_dir_challenges();
 	const challenge_file = path.join(challenge_dir, c.id);
