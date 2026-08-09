@@ -30,7 +30,6 @@ import { Request, Response } from 'express';
 import { logNow } from '@common/utils/time';
 import { userGetAllNamePublicId } from '@server/managers/users';
 import { isUserLoggedIn } from '@server/managers/session';
-import { User } from '@common/models/user';
 import { UsersManager } from '@server/managers/users-manager';
 import { TimeControlRating } from '@common/models/time-control-rating';
 import { isNotDefined } from '@common/utils/is-defined';
@@ -157,21 +156,21 @@ export async function postQueryUserEdit(req: Request, res: Response) {
 		return;
 	}
 
-	const toEditRid = userQuery.data.u;
+	const toEditPublicId = userQuery.data.u;
 
 	const mem = UsersManager.getInstance();
 
-	const toEdit = mem.getUserByPublicId(toEditRid);
+	const toEdit = mem.getAllUserDataByPublicId(toEditPublicId);
 	if (isNotDefined(toEdit)) {
-		debug(logNow(), `Random id '${toEditRid}' for edited user is not valid.`);
+		debug(logNow(), `Random id '${toEditPublicId}' for edited user is not valid.`);
 		res.status(404).send('Invalid user');
 		return;
 	}
 
 	const output: QueryUserEditOutput = {
-		firstName: toEdit.firstName,
-		lastName: toEdit.lastName,
-		roles: toEdit.roles
+		firstName: toEdit.user.firstName,
+		lastName: toEdit.user.lastName,
+		roles: toEdit.user.roles
 	};
 	res.status(200).send(output);
 }
@@ -203,7 +202,8 @@ export async function postQueryUserRanking(req: Request, res: Response) {
 	{
 		const mem = UsersManager.getInstance();
 		for (let i = 0; i < mem.numUsers(); ++i) {
-			const user = mem.getUserAt(i) as User;
+			const user = mem.getAllUserDataAtSafeIdx(i).user;
+
 			if (user.getRating(timeControlId).numGames > 0) {
 				usersWithGames.push({
 					name: user.getFullName(),

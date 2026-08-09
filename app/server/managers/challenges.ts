@@ -48,9 +48,12 @@ import {
 import { gameAddNew } from '@server/managers/games';
 import { TimeControlId, TimeControlName } from '@common/models/time-control';
 import { UsersManager } from '@server/managers/users-manager';
-import { User } from '@common/models/user';
 import { isNotDefined } from '@common/utils/is-defined';
 import { PlayerPrivateId } from '@common/models/player';
+
+export function writeChallengeToFile(filename: string, c: Challenge) {
+	fs.writeFileSync(filename, JSON.stringify(c, null, 4));
+}
 
 /**
  * @brief Filters the set of challenges that are accepted by the filter function @e by.
@@ -101,7 +104,7 @@ export function challengeSendNew(
 	const challengeDir = EnvironmentManager.getInstance().getDirChallenges();
 	const challengeFile = path.join(challengeDir, newId);
 	debug(logNow(), `    writing challenge into file '${challengeFile}'`);
-	fs.writeFileSync(challengeFile, JSON.stringify(c, null, 4));
+	writeChallengeToFile(challengeFile, c);
 
 	return c;
 }
@@ -131,7 +134,7 @@ export function challengeAccept(c: Challenge, { by, when }: ChallengeAccept): vo
 	const challengeDir = EnvironmentManager.getInstance().getDirChallenges();
 	const challengeFile = path.join(challengeDir, c.id);
 	debug(logNow(), `    Writing challenge into file '${challengeFile}'`);
-	fs.writeFileSync(challengeFile, JSON.stringify(c, null, 4));
+	writeChallengeToFile(challengeFile, c);
 }
 
 /**
@@ -205,7 +208,7 @@ export function challengeSetResult(c: Challenge, { by, when, white, black, resul
 	const challengeDir = EnvironmentManager.getInstance().getDirChallenges();
 	const challengeFile = path.join(challengeDir, c.id);
 	debug(logNow(), `    Writing challenge into file '${challengeFile}'`);
-	fs.writeFileSync(challengeFile, JSON.stringify(c, null, 4));
+	writeChallengeToFile(challengeFile, c);
 }
 
 /**
@@ -258,14 +261,17 @@ export function challengeAgreeResult(c: Challenge, { by, when }: ChallengeAgreeR
 	const split = dateSplitMajorMinor(c.whenResultSet);
 
 	const mem = UsersManager.getInstance();
-	const white = mem.getUserByUsername(c.white) as User;
-	const black = mem.getUserByUsername(c.black) as User;
+	const white = mem.getAllUserDataByPrivateId(c.white);
+	const black = mem.getAllUserDataByPrivateId(c.black);
+	if (isNotDefined(white) || isNotDefined(black)) {
+		throw new Error('In challenge, either the white or black player do not exist.');
+	}
 
 	const randMilli = `${Math.floor(Math.random() * 999)}`;
 	const date = toDateMinor(
 		split[1] + ':' + (randMilli.length === 1 ? '00' : randMilli.length === 2 ? '0' : '') + randMilli
 	);
-	gameAddNew(c.title, white, black, c.result, c.timeControlId, c.timeControlName, split[0], date);
+	gameAddNew(c.title, white.user, black.user, c.result, c.timeControlId, c.timeControlName, split[0], date);
 
 	{
 		debug(logNow(), `    Deleting the challenge from the memory...`);
@@ -299,5 +305,5 @@ export function challengeDisagreeResult(c: Challenge, { by }: ChallengeDisagreeR
 	const challengeDir = EnvironmentManager.getInstance().getDirChallenges();
 	const challengeFile = path.join(challengeDir, c.id);
 	debug(logNow(), `    Writing challenge into file '${challengeFile}'`);
-	fs.writeFileSync(challengeFile, JSON.stringify(c, null, 4));
+	writeChallengeToFile(challengeFile, c);
 }

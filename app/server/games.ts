@@ -151,8 +151,8 @@ export async function postGameCreate(req: Request, res: Response) {
 		return;
 	}
 
-	const whiteRid = gameParse.data.white;
-	const blackRid = gameParse.data.black;
+	const whitePublicId = gameParse.data.white;
+	const blackPublicId = gameParse.data.black;
 	const gameTitle = gameParse.data.title;
 	const result = gameParse.data.result;
 	const timeControlId = gameParse.data.timeControlId;
@@ -162,21 +162,21 @@ export async function postGameCreate(req: Request, res: Response) {
 
 	const mem = UsersManager.getInstance();
 
-	const white = mem.getUserByPublicId(whiteRid);
+	const white = mem.getAllUserDataByPublicId(whitePublicId);
 	if (isNotDefined(white)) {
-		debug(logNow(), `Random id '${whiteRid}' for White is not valid.`);
+		debug(logNow(), `Random id '${whitePublicId}' for White is not valid.`);
 		res.status(500).send('Invalid white user sent to the server.');
 		return;
 	}
 
-	const black = mem.getUserByPublicId(blackRid);
+	const black = mem.getAllUserDataByPublicId(blackPublicId);
 	if (isNotDefined(black)) {
-		debug(logNow(), `Random id '${blackRid}' for Black is not valid.`);
+		debug(logNow(), `Random id '${blackPublicId}' for Black is not valid.`);
 		res.status(500).send('Invalid black user sent to the server.');
 		return;
 	}
 
-	if (white.username === black.username) {
+	if (white.user.username === black.user.username) {
 		res.status(500).send('The players cannot be the same.');
 		return;
 	}
@@ -190,15 +190,15 @@ export async function postGameCreate(req: Request, res: Response) {
 		return;
 	}
 
-	if (!canUserCreateGame(creator, white, black)) {
+	if (!canUserCreateGame(creator, white.user, black.user)) {
 		debug(logNow(), `User cannot create this game.`);
 		res.status(403).send('You cannot create this game.');
 		return;
 	}
 
 	debug(logNow(), `    Title: '${gameTitle}'`);
-	debug(logNow(), `    White: '${white.username}'`);
-	debug(logNow(), `    Black: '${black.username}'`);
+	debug(logNow(), `    White: '${white.user.username}'`);
+	debug(logNow(), `    Black: '${black.user.username}'`);
 	debug(logNow(), `    Result: '${result}'`);
 	debug(logNow(), `    Time control id: '${timeControlId}'`);
 	debug(logNow(), `    Time control name: '${timeControlName}'`);
@@ -207,7 +207,7 @@ export async function postGameCreate(req: Request, res: Response) {
 
 	debug(logNow(), `Adding the new game`);
 
-	gameAddNew(gameTitle, white, black, result, timeControlId, timeControlName, gameDate, gameTime);
+	gameAddNew(gameTitle, white.user, black.user, result, timeControlId, timeControlName, gameDate, gameTime);
 
 	res.status(201).send();
 }
@@ -253,21 +253,21 @@ export async function postGameEditResult(req: Request, res: Response) {
 
 	const manager = UsersManager.getInstance();
 
-	const white = manager.getUserByUsername(game.white);
+	const white = manager.getAllUserDataByPrivateId(game.white);
 	if (isNotDefined(white)) {
 		debug(logNow(), `Random id '${white}' for White is not valid.`);
 		res.status(500).send('Invalid white user sent to the server.');
 		return;
 	}
 
-	const black = manager.getUserByUsername(game.black);
+	const black = manager.getAllUserDataByPrivateId(game.black);
 	if (isNotDefined(black)) {
 		debug(logNow(), `Random id '${black}' for Black is not valid.`);
 		res.status(500).send('Invalid black user sent to the server.');
 		return;
 	}
 
-	const isEditable = canUserEditGame(user, white, black);
+	const isEditable = canUserEditGame(user, white.user, black.user);
 	if (!isEditable) {
 		res.status(403).send(`You lack permissions to edit this game.`);
 		return;
@@ -322,21 +322,21 @@ export async function postGameEditTitle(req: Request, res: Response) {
 
 	const manager = UsersManager.getInstance();
 
-	const white = manager.getUserByUsername(game.white);
+	const white = manager.getAllUserDataByPrivateId(game.white);
 	if (isNotDefined(white)) {
 		debug(logNow(), `Random id '${white}' for White is not valid.`);
 		res.status(500).send('Invalid white user sent to the server.');
 		return;
 	}
 
-	const black = manager.getUserByUsername(game.black);
+	const black = manager.getAllUserDataByPrivateId(game.black);
 	if (isNotDefined(black)) {
 		debug(logNow(), `Random id '${black}' for Black is not valid.`);
 		res.status(500).send('Invalid black user sent to the server.');
 		return;
 	}
 
-	const isEditable = canUserEditGame(user, white, black);
+	const isEditable = canUserEditGame(user, white.user, black.user);
 	if (!isEditable) {
 		res.status(403).send(`You lack permissions to edit this game.`);
 		return;
@@ -389,21 +389,21 @@ export async function postGameDelete(req: Request, res: Response) {
 
 	const manager = UsersManager.getInstance();
 
-	const white = manager.getUserByUsername(game.white);
+	const white = manager.getAllUserDataByPrivateId(game.white);
 	if (isNotDefined(white)) {
 		debug(logNow(), `Random id '${white}' for White is not valid.`);
 		res.status(500).send('Invalid white user sent to the server.');
 		return;
 	}
 
-	const black = manager.getUserByUsername(game.black);
+	const black = manager.getAllUserDataByPrivateId(game.black);
 	if (isNotDefined(black)) {
 		debug(logNow(), `Random id '${black}' for Black is not valid.`);
 		res.status(500).send('Invalid black user sent to the server.');
 		return;
 	}
 
-	const isDeleteable = canUserDeleteGame(user, white, black);
+	const isDeleteable = canUserDeleteGame(user, white.user, black.user);
 	if (!isDeleteable) {
 		res.status(403).send(`You lack permissions to delete this game.`);
 		return;

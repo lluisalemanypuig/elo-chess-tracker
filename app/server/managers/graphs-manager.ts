@@ -27,6 +27,11 @@ import { Graph } from '@common/models/graph/graph';
 import { TimeControlId } from '@common/models/time-control';
 import { searchLinearByKey } from '@server/utils/searching';
 
+interface GraphData {
+	timeControlId: TimeControlId;
+	graph: Graph;
+}
+
 /**
  * @brief Graphs Manager singleton class
  *
@@ -48,15 +53,15 @@ export class GraphsManager {
 		return GraphsManager.instance;
 	}
 
-	private graphList: { timeControlId: TimeControlId; graph: Graph }[] = [];
+	private graphList: GraphData[] = [];
 
 	clear(): void {
 		this.graphList = [];
 	}
 
 	addGraph(id: TimeControlId, g: Graph): void {
-		const idx = searchLinearByKey(this.graphList, (pair: [TimeControlId, Graph]): boolean => {
-			return pair[0] === id;
+		const idx = searchLinearByKey(this.graphList, (pair: GraphData): boolean => {
+			return pair.timeControlId === id;
 		});
 		if (idx === -1) {
 			this.graphList.push({ timeControlId: id, graph: g });
@@ -64,8 +69,8 @@ export class GraphsManager {
 	}
 
 	getGraph(id: TimeControlId): Graph | undefined {
-		const idx = searchLinearByKey(this.graphList, (pair: [TimeControlId, Graph]): boolean => {
-			return pair[0] === id;
+		const idx = searchLinearByKey(this.graphList, (pair: GraphData): boolean => {
+			return pair.timeControlId === id;
 		});
 		return idx !== -1 ? this.graphList[idx].graph : undefined;
 	}

@@ -29,7 +29,7 @@ import { Request, Response } from 'express';
 
 import { logNow } from '@common/utils/time';
 import { isUserLoggedIn } from '@server/managers/session';
-import { UserGivenName, User } from '@common/models/user';
+import { UserGivenName } from '@common/models/user';
 import { getChallengesBy } from '@server/managers/challenges';
 import { Challenge } from '@common/models/challenge';
 import { UsersManager } from '@server/managers/users-manager';
@@ -78,22 +78,21 @@ export async function getQueryChallengeReceived(req: Request, res: Response) {
 
 	let allChallengesReceived: QueryChallengesReceivedOutput = [];
 	for (const c of toReturn) {
-		const sentBy = manager.getUserByUsername(c.sentBy);
+		const sentBy = manager.getAllUserDataByPrivateId(c.sentBy);
 		if (isNotDefined(sentBy)) {
 			debug(logNow(), `User '${c.sentBy}' does not exist.`);
 			res.status(500).send();
 			return;
 		}
-		const name = sentBy.getFullName();
 
 		// return only basic information
 		allChallengesReceived.push({
 			id: c.id,
 			title: c.title,
-			sentBy: name,
+			sentBy: sentBy.user.getFullName(),
 			sentWhen: c.whenChallengeSent,
 			timeControlName: c.timeControlName,
-			canBeDeclined: canUserDeclineChallenge(sentTo, sentBy, c.timeControlId)
+			canBeDeclined: canUserDeclineChallenge(sentTo, sentBy.user, c.timeControlId)
 		});
 	}
 
@@ -130,7 +129,7 @@ export async function getQueryChallengeSent(req: Request, res: Response) {
 	});
 
 	let manager = UsersManager.getInstance();
-	const sentBy = manager.getUserByUsername(session.username);
+	const sentBy = manager.getAllUserDataByPrivateId(session.username);
 	if (isNotDefined(sentBy)) {
 		debug(logNow(), `User '${session.username}' does not exist.`);
 		res.status(500).send();
@@ -139,7 +138,7 @@ export async function getQueryChallengeSent(req: Request, res: Response) {
 
 	let allChallenges: QueryChallengesSentOutput = [];
 	for (const c of toReturn) {
-		const sentTo = manager.getUserByUsername(c.sentTo);
+		const sentTo = manager.getAllUserDataByPrivateId(c.sentTo);
 		if (isNotDefined(sentTo)) {
 			debug(logNow(), `User '${c.sentTo}' does not exist.`);
 			res.status(500).send();
@@ -150,10 +149,10 @@ export async function getQueryChallengeSent(req: Request, res: Response) {
 		allChallenges.push({
 			id: c.id,
 			title: c.title,
-			sentTo: sentTo.getFullName(),
+			sentTo: sentTo.user.getFullName(),
 			sentWhen: c.whenChallengeSent,
 			timeControlName: c.timeControlName,
-			canBeDeclined: canUserDeclineChallenge(sentTo, sentBy, c.timeControlId)
+			canBeDeclined: canUserDeclineChallenge(sentTo.user, sentBy.user, c.timeControlId)
 		});
 	}
 
@@ -199,14 +198,14 @@ export async function getQueryChallengePendingResult(req: Request, res: Response
 
 	let allChallenges: QueryChallengesPendingResultOutput = [];
 	for (const c of toReturn) {
-		const userSentTo = manager.getUserByUsername(c.sentTo);
+		const userSentTo = manager.getAllUserDataByPrivateId(c.sentTo);
 		if (isNotDefined(userSentTo)) {
 			debug(logNow(), `User '${c.sentTo}' does not exist.`);
 			res.status(500).send();
 			return;
 		}
 
-		const userSentBy = manager.getUserByUsername(c.sentBy);
+		const userSentBy = manager.getAllUserDataByPrivateId(c.sentBy);
 		if (isNotDefined(userSentBy)) {
 			debug(logNow(), `User '${c.sentBy}' does not exist.`);
 			res.status(500).send();
@@ -214,20 +213,20 @@ export async function getQueryChallengePendingResult(req: Request, res: Response
 		}
 
 		const opponent = ((): UserGivenName => {
-			if (userSentBy.username === session.username) {
-				return userSentTo.getFullName();
+			if (userSentBy.user.username === session.username) {
+				return userSentTo.user.getFullName();
 			}
-			return userSentBy.getFullName();
+			return userSentBy.user.getFullName();
 		})();
 
 		// return only basic information
 		allChallenges.push({
 			id: c.id,
 			title: c.title,
-			sentByName: userSentBy.getFullName(),
-			sentByUsername: userSentBy.username,
-			sentToName: userSentTo.getFullName(),
-			sentToUsername: userSentTo.username,
+			sentByName: userSentBy.user.getFullName(),
+			sentByUsername: userSentBy.user.username,
+			sentToName: userSentTo.user.getFullName(),
+			sentToUsername: userSentTo.user.username,
 			opponent: opponent,
 			sentWhen: c.whenChallengeSent,
 			timeControlName: c.timeControlName
@@ -280,15 +279,15 @@ export async function getQueryChallengeConfirmResultOther(req: Request, res: Res
 
 	let allChallenges: QueryChallengesConfirmResultOtherOutput = [];
 	for (const c of toReturn) {
-		const userSentTo = manager.getUserByUsername(c.sentTo);
-		if (isNotDefined(userSentTo)) {
+		const sentTo = manager.getAllUserDataByPrivateId(c.sentTo);
+		if (isNotDefined(sentTo)) {
 			debug(logNow(), `User '${c.sentTo}' does not exist.`);
 			res.status(500).send();
 			return;
 		}
 
-		const userSentBy = manager.getUserByUsername(c.sentBy);
-		if (isNotDefined(userSentBy)) {
+		const sentBy = manager.getAllUserDataByPrivateId(c.sentBy);
+		if (isNotDefined(sentBy)) {
 			debug(logNow(), `User '${c.sentBy}' does not exist.`);
 			res.status(500).send();
 			return;
@@ -300,11 +299,18 @@ export async function getQueryChallengeConfirmResultOther(req: Request, res: Res
 			return;
 		}
 
-		const opponent = ((): UserGivenName => {
-			if (userSentBy.username === session.username) {
-				return userSentTo.getFullName();
+		const [whiteFullName, blackFullName] = (() => {
+			if (sentTo.user.username === c.white) {
+				return [sentTo.user.getFullName(), sentBy.user.getFullName()];
 			}
-			return userSentBy.getFullName();
+			return [sentBy.user.getFullName(), sentTo.user.getFullName()];
+		})();
+
+		const opponent = ((): UserGivenName => {
+			if (sentBy.user.username === session.username) {
+				return sentTo.user.getFullName();
+			}
+			return sentBy.user.getFullName();
 		})();
 
 		const niceResult: string = ((): string => {
@@ -323,8 +329,8 @@ export async function getQueryChallengeConfirmResultOther(req: Request, res: Res
 			title: c.title,
 			opponent: opponent,
 			sentWhen: c.whenChallengeSent,
-			white: (manager.getUserByUsername(c.white) as User).getFullName(),
-			black: (manager.getUserByUsername(c.black) as User).getFullName(),
+			white: whiteFullName,
+			black: blackFullName,
 			result: niceResult,
 			timeControlName: c.timeControlName
 		});
@@ -376,15 +382,15 @@ export async function getQueryChallengeConfirmResultSelf(req: Request, res: Resp
 
 	let allChallenges: QueryChallengesConfirmResultSelfOutput = [];
 	for (const c of toReturn) {
-		const userSentTo = manager.getUserByUsername(c.sentTo);
-		if (isNotDefined(userSentTo)) {
+		const sentTo = manager.getAllUserDataByPrivateId(c.sentTo);
+		if (isNotDefined(sentTo)) {
 			debug(logNow(), `User '${c.sentTo}' does not exist.`);
 			res.status(500).send();
 			return;
 		}
 
-		const userSentBy = manager.getUserByUsername(c.sentBy);
-		if (isNotDefined(userSentBy)) {
+		const sentBy = manager.getAllUserDataByPrivateId(c.sentBy);
+		if (isNotDefined(sentBy)) {
 			debug(logNow(), `User '${c.sentBy}' does not exist.`);
 			res.status(500).send();
 			return;
@@ -396,11 +402,18 @@ export async function getQueryChallengeConfirmResultSelf(req: Request, res: Resp
 			return;
 		}
 
-		const opponent = ((): UserGivenName => {
-			if (userSentBy.username === session.username) {
-				return userSentTo.getFullName();
+		const [whiteFullName, blackFullName] = (() => {
+			if (sentTo.user.username === c.white) {
+				return [sentTo.user.getFullName(), sentBy.user.getFullName()];
 			}
-			return userSentBy.getFullName();
+			return [sentBy.user.getFullName(), sentTo.user.getFullName()];
+		})();
+
+		const opponent = ((): UserGivenName => {
+			if (sentBy.user.username === session.username) {
+				return sentTo.user.getFullName();
+			}
+			return sentBy.user.getFullName();
 		})();
 
 		const niceResult: string = ((): string => {
@@ -419,8 +432,8 @@ export async function getQueryChallengeConfirmResultSelf(req: Request, res: Resp
 			title: c.title,
 			opponent: opponent,
 			sentWhen: c.whenChallengeSent,
-			white: (manager.getUserByUsername(c.white) as User).getFullName(),
-			black: (manager.getUserByUsername(c.black) as User).getFullName(),
+			white: whiteFullName,
+			black: blackFullName,
 			result: niceResult,
 			timeControlName: c.timeControlName
 		});

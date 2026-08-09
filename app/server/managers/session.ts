@@ -109,7 +109,7 @@ export function sessionUserDeleteAll(username: PlayerPrivateId): void {
  * Checks that a user logged in or not using the cookies.
  */
 export function isUserLoggedIn(session: SessionId): [boolean, string, User | undefined] {
-	const user = UsersManager.getInstance().getUserByUsername(session.username);
+	const user = UsersManager.getInstance().getAllUserDataByPrivateId(session.username);
 	if (isNotDefined(user)) {
 		debug(logNow(), `User '${session.username}' does not exist.`);
 		return [false, 'Forbidden access. <a href="/">Go home</a>.', undefined];
@@ -127,5 +127,5 @@ export function isUserLoggedIn(session: SessionId): [boolean, string, User | und
 	} else {
 		debug(logNow(), `    Valid session ID received for user '${session.username}'.`);
 	}
-	return [true, '', user as User];
+	return [true, '', user.user];
 }

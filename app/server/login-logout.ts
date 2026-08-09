@@ -53,7 +53,7 @@ export async function postUserLogin(req: Request, res: Response) {
 
 	debug(logNow(), `    Username '${username}'`);
 
-	const userData = UsersManager.getInstance().getUserByUsername(username);
+	const userData = UsersManager.getInstance().getAllUserDataByPrivateId(username);
 
 	// nonexistent user
 	if (isNotDefined(userData)) {
@@ -63,7 +63,7 @@ export async function postUserLogin(req: Request, res: Response) {
 	}
 
 	// user exists
-	const pwd = userData.password;
+	const pwd = userData.user.password;
 
 	// check if password is correct
 	const isPasswordCorrect = isPasswordOfUserCorrect(username, passwordPlainText, pwd);

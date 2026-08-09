@@ -91,23 +91,23 @@ export async function postUserEdit(req: Request, res: Response) {
 		return;
 	}
 
-	const editedRid = userParse.data.u;
+	const editedPublicId = userParse.data.u;
 	const firstName = userParse.data.f;
 	const lastName = userParse.data.l;
 	const roles = userParse.data.r;
 
 	const mem = UsersManager.getInstance();
 
-	const edited = mem.getUserByPublicId(editedRid);
+	const edited = mem.getAllUserDataByPublicId(editedPublicId);
 	if (isNotDefined(edited)) {
-		debug(logNow(), `Random id '${editedRid}' for user is not valid.`);
+		debug(logNow(), `Random id '${editedPublicId}' for user is not valid.`);
 		res.status(404).send('Invalid user');
 		return;
 	}
 
-	debug(logNow(), `User '${editor.username}' is trying to modify user '${edited.username}'`);
+	debug(logNow(), `User '${editor.username}' is trying to modify user '${edited.user.username}'`);
 
-	if (!canUserEdit(editor, edited)) {
+	if (!canUserEdit(editor, edited.user)) {
 		res.status(403).send('You do not have enough permissions to edit this user.');
 		return;
 	}
@@ -126,7 +126,7 @@ export async function postUserEdit(req: Request, res: Response) {
 		}
 	}
 
-	userRenameAndReassignRoles(edited.username, firstName, lastName, roles);
+	userRenameAndReassignRoles(edited.user.username, firstName, lastName, roles);
 
 	res.status(200).send();
 }

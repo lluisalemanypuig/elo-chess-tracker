@@ -41,11 +41,15 @@ import { UserThin } from '@common/models/user-thin';
 import { isNotDefined } from '@common/utils/is-defined';
 import { TimeControlId } from '@common/models/time-control';
 
+export function writeUserToFile(filename: string, u: User) {
+	fs.writeFileSync(filename, JSON.stringify(u, null, 4));
+}
+
 /// Dump the data in user @e u into its corresponding file.
 export function userOverwrite(user: User): void {
-	const user_dir = EnvironmentManager.getInstance().getDirUsers();
-	const user_file = path.join(user_dir, user.username);
-	fs.writeFileSync(user_file, JSON.stringify(user, null, 4));
+	const userDir = EnvironmentManager.getInstance().getDirUsers();
+	const userFile = path.join(userDir, user.username);
+	writeUserToFile(userFile, user);
 }
 
 /// Overwrites user data
@@ -55,7 +59,11 @@ export function userRenameAndReassignRoles(
 	lastName: UserGivenName,
 	roles: UserRole[]
 ): User {
-	let user = UsersManager.getInstance().getUserByUsername(username) as User;
+	const userData = UsersManager.getInstance().getAllUserDataByPrivateId(username);
+	if (isNotDefined(userData)) {
+		throw new Error(`Incorrect username`);
+	}
+	const user = userData.user;
 	user.firstName = firstName;
 	user.lastName = lastName;
 	user.roles = roles;
@@ -103,10 +111,10 @@ export function userAddNew(
 		ratings
 	);
 
-	const user_dir = EnvironmentManager.getInstance().getDirUsers();
-	const user_file = path.join(user_dir, user.username);
+	const userDir = EnvironmentManager.getInstance().getDirUsers();
+	const userFile = path.join(userDir, user.username);
 
-	fs.writeFileSync(user_file, JSON.stringify(user, null, 4));
+	writeUserToFile(userFile, user);
 
 	UsersManager.getInstance().addUser(user);
 
@@ -119,12 +127,8 @@ export function userGetAllNamePublicId(): UserThin[] {
 
 	const mem = UsersManager.getInstance();
 	for (let i = 0; i < mem.numUsers(); ++i) {
-		const user = mem.getUserAt(i) as User;
-		const random_id = mem.getUserPublicIdAt(i);
-		if (isNotDefined(random_id)) {
-			throw new Error(`Public id for user is not defined.`);
-		}
-		res.push({ name: user.getFullName(), id: random_id });
+		const userData = mem.getAllUserDataAtSafeIdx(i);
+		res.push({ name: userData.user.getFullName(), id: userData.publicId });
 	}
 	return res;
 }
@@ -143,23 +147,25 @@ export function userUpdateFromPlayerData(players: Player[]): void {
 	for (const player of players) {
 		const username = player.username;
 
-		let u: User = manager.getUserByUsername(username) as User;
+		const u = manager.getAllUserDataByPrivateId(username);
+		if (isNotDefined(u)) {
+			throw new Error(`Username is not correct`);
+		}
 
 		const ratings_player = player.ratings;
 		for (const rating of ratings_player) {
-			u.setRating(rating.timeControl, rating.rating);
+			u.user.setRating(rating.timeControl, rating.rating);
 		}
 
-		const user_filename = path.join(users_directory, username);
+		const userFile = path.join(users_directory, username);
 
 		// update player file
-		debug(logNow(), `    User file '${user_filename}'...`);
-		fs.writeFileSync(user_filename, JSON.stringify(u, null, 4));
-		debug(logNow(), `        User file '${user_filename}' written.`);
+		debug(logNow(), `    User file '${userFile}'...`);
+		writeUserToFile(userFile, u.user);
+		debug(logNow(), `        User file '${userFile}' written.`);
 
 		debug(logNow(), '    Server memory...');
-		const u_idx = mem.getUserIndex(u) as number;
-		debug(logNow(), `        User '${u.username}' is at index '${u_idx}'`);
-		mem.replace_user(u, u_idx);
+		debug(logNow(), `        User '${u.user.username}' is at index '${u.index}'`);
+		mem.replaceUser(u.user, u.index);
 	}
 }

@@ -56,6 +56,7 @@ import { Ports, ServerConfiguration } from '@common/models/configuration/server'
 import { UserPermissions } from '@common/models/configuration/permissions';
 import { clearServer } from '@server/managers/memory/clear';
 import { initializePermissions } from '@server/managers/user-role-action';
+import { writeUserToFile } from '../users';
 
 function initEnvironmentDirectories(baseDirectory: string, executionDirectory: string): void {
 	let serverEnv = EnvironmentManager.getInstance();
@@ -186,16 +187,15 @@ function initUsers(): void {
 		const user = userFromString(userStr);
 		if (isNotDefined(user)) {
 			throw new Error(`Could not parse user at index '${i}', at file '${userFile}'.`);
-			continue;
 		}
 		debug(logNow(), `        User '${user.username}' is at index '${i}'`);
 
 		// maybe the file the user was read from has to be updated
 		let updateUserFile: boolean = false;
 		// make sure that all users have a rating for every time control
-		for (let i = 0; i < uniqueTimeControlsIds.length; ++i) {
-			if (!user.hasRating(uniqueTimeControlsIds[i])) {
-				user.addRating(uniqueTimeControlsIds[i], newRating.clone());
+		for (const timeControlId of uniqueTimeControlsIds) {
+			if (!user.hasRating(timeControlId)) {
+				user.addRating(timeControlId, newRating.clone());
 				updateUserFile = true;
 			}
 		}
@@ -203,7 +203,7 @@ function initUsers(): void {
 		userManager.addUser(user);
 		if (updateUserFile) {
 			debug(logNow(), `Overwriting file '${userFile}' of user '${user.username}'`);
-			fs.writeFileSync(userFile, JSON.stringify(user, null, 4));
+			writeUserToFile(userFile, user);
 		}
 	}
 	debug(logNow(), `    Found ${userManager.numUsers()} users.`);
@@ -288,19 +288,19 @@ function initGraphs(): void {
 	const ratings = RatingSystemManager.getInstance();
 	let graphManager = GraphsManager.getInstance();
 
-	for (const id of ratings.getUniqueTimeControlsIds()) {
-		const graphsDir = EnvironmentManager.getInstance().getDirGraphsTimeControl(id);
+	for (const timeControlId of ratings.getUniqueTimeControlsIds()) {
+		const graphsDir = EnvironmentManager.getInstance().getDirGraphsTimeControl(timeControlId);
 
 		if (!fs.existsSync(graphsDir)) {
 			fs.mkdirSync(graphsDir);
-			graphManager.addGraph(id, new Graph());
+			graphManager.addGraph(timeControlId, new Graph());
 		} else {
 			debug(logNow(), `    Found directory ${graphsDir}`);
-			const gId = graphFromString(graphsDir);
-			if (isNotDefined(gId)) {
+			const graph = graphFromString(graphsDir);
+			if (isNotDefined(graph)) {
 				throw new Error(`Could not read graph from directory '${graphsDir}'.`);
 			}
-			graphManager.addGraph(id, gId);
+			graphManager.addGraph(timeControlId, graph);
 		}
 	}
 }

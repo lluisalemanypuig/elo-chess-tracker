@@ -23,10 +23,16 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { isDefined } from '@common/utils/is-defined';
+import { isDefined, isNotDefined } from '@common/utils/is-defined';
 import { User } from '@common/models/user';
 import { searchLinearByKey } from '@server/utils/searching';
 import { PlayerPrivateId, PlayerPublicId, toPlayerPublicId } from '@common/models/player';
+
+interface UserBundle {
+	user: User;
+	publicId: PlayerPublicId;
+	index: number;
+}
 
 /**
  * @brief Users Manager singleton class
@@ -52,7 +58,7 @@ export class UsersManager {
 	/// The list of users in the database
 	private users: User[] = [];
 	/// The list of random user IDS for every user.
-	private public_ids: PlayerPublicId[] = [];
+	private publicIds: PlayerPublicId[] = [];
 
 	all(): User[] {
 		return this.users;
@@ -60,24 +66,24 @@ export class UsersManager {
 
 	clear(): void {
 		this.users = [];
-		this.public_ids = [];
+		this.publicIds = [];
 	}
 
 	exists(username: PlayerPrivateId): boolean {
-		return isDefined(this.getUserByUsername(username));
+		return isDefined(this.getIndexByPrivateId(username));
 	}
 
 	addUser(u: User): void {
 		this.users.push(u);
 
 		// stupid and slow way of generating a unique random id
-		let new_randid = Math.floor(Math.random() * 10_000_000);
-		while (new_randid in this.public_ids) {
-			new_randid = Math.floor(Math.random() * 10_000_000);
+		let publicId = Math.floor(Math.random() * 10_000_000);
+		while (publicId in this.publicIds) {
+			publicId = Math.floor(Math.random() * 10_000_000);
 		}
-		this.public_ids.push(toPlayerPublicId(new_randid));
+		this.publicIds.push(toPlayerPublicId(publicId));
 	}
-	replace_user(u: User, idx: number): void {
+	replaceUser(u: User, idx: number): void {
 		if (!(0 <= idx && idx < this.users.length)) {
 			throw new Error('Index out of bounds');
 		}
@@ -85,34 +91,45 @@ export class UsersManager {
 		this.users[idx] = u;
 	}
 
-	getUserByUsername(username: PlayerPrivateId): User | undefined {
-		const idx = searchLinearByKey(this.users, (u: User): boolean => {
-			return u.username === username;
-		});
-		return idx !== -1 ? this.getUserAt(idx) : undefined;
-	}
-	getUserByPublicId(rid: PlayerPublicId): User | undefined {
-		const idx = searchLinearByKey(this.public_ids, (id: PlayerPublicId): boolean => {
-			return id === rid;
-		});
-		return idx !== -1 ? this.getUserAt(idx) : undefined;
-	}
-
-	getUserAt(idx: number): User | undefined {
-		return 0 <= idx && idx < this.users.length ? this.users[idx] : undefined;
-	}
-	getUserPublicIdAt(idx: number): PlayerPublicId | undefined {
-		return 0 <= idx && idx < this.public_ids.length ? this.public_ids[idx] : undefined;
-	}
-
-	getUserIndex(u: User): number | undefined {
-		return this.getUserIndexByUsername(u.username);
-	}
-	getUserIndexByUsername(username: PlayerPrivateId): number | undefined {
+	getIndexByPrivateId(username: PlayerPrivateId): number | undefined {
 		const idx = searchLinearByKey(this.users, (u: User): boolean => {
 			return u.username === username;
 		});
 		return idx !== -1 ? idx : undefined;
+	}
+	getIndexByPublicId(publicId: PlayerPublicId): number | undefined {
+		const idx = searchLinearByKey(this.publicIds, (n: number): boolean => {
+			return n === publicId;
+		});
+		return idx !== -1 ? idx : undefined;
+	}
+
+	getAllUserDataByPublicId(publicId: PlayerPublicId): UserBundle | undefined {
+		const idx = this.getIndexByPublicId(publicId);
+		if (isNotDefined(idx)) {
+			return undefined;
+		}
+		return this.getAllUserDataAtSafeIdx(idx);
+	}
+	getAllUserDataByPrivateId(username: PlayerPrivateId): UserBundle | undefined {
+		const idx = this.getIndexByPrivateId(username);
+		if (isNotDefined(idx)) {
+			return undefined;
+		}
+		return this.getAllUserDataAtSafeIdx(idx);
+	}
+	getAllUserDataAtIdx(idx: number): UserBundle | undefined {
+		if (!(0 <= idx && idx < this.publicIds.length)) {
+			return undefined;
+		}
+		return this.getAllUserDataAtSafeIdx(idx);
+	}
+	getAllUserDataAtSafeIdx(idx: number): UserBundle {
+		return {
+			user: this.users[idx],
+			publicId: this.publicIds[idx],
+			index: idx
+		};
 	}
 
 	numUsers(): number {

@@ -108,7 +108,7 @@ export async function postChallengeSend(req: Request, res: Response) {
 
 	debug(logNow(), `Trying to send challenge from '${session.username}' to '${receiverPublicId}'.`);
 
-	const receiver = UsersManager.getInstance().getUserByPublicId(receiverPublicId);
+	const receiver = UsersManager.getInstance().getAllUserDataByPublicId(receiverPublicId);
 
 	if (isNotDefined(receiver)) {
 		debug(logNow(), `User receiver of the challenge '${receiverPublicId}' does not exist.`);
@@ -116,8 +116,8 @@ export async function postChallengeSend(req: Request, res: Response) {
 		return;
 	}
 
-	if (!canUserSendChallenge(sender, receiver)) {
-		debug(logNow(), `Sender '${sender.username}' cannot challenge user '${receiver.username}'.`);
+	if (!canUserSendChallenge(sender, receiver.user)) {
+		debug(logNow(), `Sender '${sender.username}' cannot challenge user '${receiver.user.username}'.`);
 		res.status(403).send('You cannot challenge this user.');
 		return;
 	}
@@ -142,10 +142,10 @@ export async function postChallengeSend(req: Request, res: Response) {
 		return;
 	}
 
-	debug(logNow(), `Send challenge from '${sender.username}' to '${receiver.username}'`);
+	debug(logNow(), `Send challenge from '${sender.username}' to '${receiver.user.username}'`);
 
 	try {
-		challengeSendNew(title, sender.username, receiver.username, timeControlId, timeControlName, logNow());
+		challengeSendNew(title, sender.username, receiver.user.username, timeControlId, timeControlName, logNow());
 	} catch (e: unknown) {
 		res.status(403).send((e as Error).message);
 		return;

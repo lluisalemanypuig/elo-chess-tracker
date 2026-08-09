@@ -119,25 +119,25 @@ function filterGameList(
 				return '1/2 - 1/2';
 			})();
 
-			const white = manager.getUserByUsername(g.white);
+			const white = manager.getAllUserDataByPrivateId(g.white);
 			if (isNotDefined(white)) {
 				debug(logNow(), `User with username '${g.white}' could not be found.`);
 				return [];
 			}
-			const black = manager.getUserByUsername(g.black);
+			const black = manager.getAllUserDataByPrivateId(g.black);
 			if (isNotDefined(black)) {
 				debug(logNow(), `User with username '${g.black}' could not be found.`);
 				return [];
 			}
 
-			const isEditable: boolean = canUserEditGame(user, white, black);
-			const isDeleteable: boolean = canUserDeleteGame(user, white, black);
+			const isEditable: boolean = canUserEditGame(user, white.user, black.user);
+			const isDeleteable: boolean = canUserDeleteGame(user, white.user, black.user);
 
 			dataToReturn.push({
 				id: g.id,
 				title: g.title,
-				white: white.getFullName(),
-				black: black.getFullName(),
+				white: white.user.getFullName(),
+				black: black.user.getFullName(),
 				result: result,
 				timeControlName: g.timeControlName,
 				date: g.when,
@@ -287,19 +287,19 @@ export async function postQueryGameListAll(req: Request, res: Response) {
 				return true;
 			},
 			(g: Game): boolean => {
-				const white = manager.getUserByUsername(g.white);
+				const white = manager.getAllUserDataByPrivateId(g.white);
 				if (isNotDefined(white)) {
 					debug(logNow(), `User with username '${g.white}' could not be found.`);
 					res.status(500).send('Invalid white user sent to the server.');
 					return false;
 				}
-				const black = manager.getUserByUsername(g.black);
+				const black = manager.getAllUserDataByPrivateId(g.black);
 				if (isNotDefined(black)) {
 					debug(logNow(), `User with username '${g.black}' could not be found.`);
 					res.status(500).send('Invalid black user sent to the server.');
 					return false;
 				}
-				return canUserSeeGame(user, white, black);
+				return canUserSeeGame(user, white.user, black.user);
 			}
 		);
 	} else {
@@ -312,17 +312,17 @@ export async function postQueryGameListAll(req: Request, res: Response) {
 					return true;
 				},
 				(g: Game): boolean => {
-					const white = manager.getUserByUsername(g.white);
+					const white = manager.getAllUserDataByPrivateId(g.white);
 					if (isNotDefined(white)) {
 						debug(logNow(), `User with username '${g.white}' could not be found.`);
 						return false;
 					}
-					const black = manager.getUserByUsername(g.black);
+					const black = manager.getAllUserDataByPrivateId(g.black);
 					if (isNotDefined(black)) {
 						debug(logNow(), `User with username '${g.black}' could not be found.`);
 						return false;
 					}
-					return canUserSeeGame(user, white, black);
+					return canUserSeeGame(user, white.user, black.user);
 				}
 			);
 			dataToReturn = mergeByDate(dataToReturn, data);

@@ -43,27 +43,18 @@ import { inputSchemaOf } from '@common/api/schemas';
 import { safeParseRequestBody, safeParseRequestCookies } from '@server/utils/schemas';
 import { AuthenticationInputSchema } from '@common/schemas/authentication';
 import { EdgeInfo, NodeInfo, QueryGraphOutput } from '@common/schemas/query-graphs';
-import { PlayerPrivateId, PlayerPublicId } from '@common/models/player';
+import { PlayerPrivateId } from '@common/models/player';
 
 function retrieveGraphUser(username: PlayerPrivateId, timeControlId: TimeControlId): QueryGraphOutput {
 	const users = UsersManager.getInstance();
 	const graphs = GraphsManager.getInstance();
 
-	const thisUserIdx = users.getUserIndexByUsername(username);
-	if (isNotDefined(thisUserIdx)) {
+	const thisUser = users.getAllUserDataByPrivateId(username);
+	if (isNotDefined(thisUser)) {
 		debug(logNow(), `Index for user '${username}' could not be found.`);
 		return { nodes: [], edges: [] };
 	}
-	const thisUserRandId = users.getUserPublicIdAt(thisUserIdx);
-	if (isNotDefined(thisUserRandId)) {
-		debug(logNow(), `Random id for user '${username}' could not be found.`);
-		return { nodes: [], edges: [] };
-	}
-	const thisUser = users.getUserAt(thisUserIdx);
-	if (isNotDefined(thisUser)) {
-		debug(logNow(), `User '${username}' could not be found.`);
-		return { nodes: [], edges: [] };
-	}
+
 	const G = graphs.getGraph(timeControlId);
 	if (isNotDefined(G)) {
 		debug(logNow(), `Graph for '${timeControlId}' could not be found.`);
@@ -73,10 +64,10 @@ function retrieveGraphUser(username: PlayerPrivateId, timeControlId: TimeControl
 	let listNodes: NodeInfo[];
 	{
 		const node: NodeInfo = {
-			id: thisUserRandId,
-			fullName: thisUser.getFullName(),
+			id: thisUser.publicId,
+			fullName: thisUser.user.getFullName(),
 			weight: {
-				rating: thisUser.getRating(timeControlId).rating
+				rating: thisUser.user.getRating(timeControlId).rating
 			}
 		};
 		listNodes = [node];
@@ -84,22 +75,24 @@ function retrieveGraphUser(username: PlayerPrivateId, timeControlId: TimeControl
 	let listEdges: EdgeInfo[] = [];
 
 	G.getOutgoingEdges(username)?.forEach((e: Edge) => {
-		const edgeUserIdx = users.getUserIndexByUsername(e.neighbor) as number;
-		const edgeUserPublicId = users.getUserPublicIdAt(edgeUserIdx) as PlayerPublicId;
-		const edgeUser = users.getUserAt(edgeUserIdx) as User;
+		const neighbor = users.getAllUserDataByPrivateId(e.neighbor);
+		if (isNotDefined(neighbor)) {
+			debug(logNow(), `Could not find user ${e.neighbor}.`);
+			throw new Error(`Internal error when querying a graph.`);
+		}
 
 		const node: NodeInfo = {
-			id: edgeUserPublicId,
-			fullName: edgeUser.getFullName(),
+			id: neighbor.publicId,
+			fullName: neighbor.user.getFullName(),
 			weight: {
-				rating: edgeUser.getRating(timeControlId).rating
+				rating: neighbor.user.getRating(timeControlId).rating
 			}
 		};
 		listNodes.push(node);
 
 		const edge: EdgeInfo = {
-			source: thisUserRandId,
-			target: edgeUserPublicId,
+			source: thisUser.publicId,
+			target: neighbor.publicId,
 			label: e.metadata.toString(),
 			weight: {
 				wins: e.metadata.numGamesWon,
@@ -110,29 +103,30 @@ function retrieveGraphUser(username: PlayerPrivateId, timeControlId: TimeControl
 		listEdges.push(edge);
 	});
 	G.getIncomingEdges(username)?.forEach((e: Edge) => {
-		const neighborIdx = users.getUserIndexByUsername(e.neighbor) as number;
-		const neighborPublicId = users.getUserPublicIdAt(neighborIdx) as PlayerPublicId;
+		const neighbor = users.getAllUserDataByPrivateId(e.neighbor);
+		if (isNotDefined(neighbor)) {
+			debug(logNow(), `Could not find user ${e.neighbor}.`);
+			throw new Error(`Internal error when querying a graph.`);
+		}
 
 		const idx = searchLinearByKey(listNodes, (i: NodeInfo): boolean => {
-			return i.id === neighborPublicId;
+			return i.id === neighbor.publicId;
 		});
 
 		if (idx === -1) {
-			const edgeUser = users.getUserAt(neighborIdx) as User;
-
 			const node: NodeInfo = {
-				id: neighborPublicId,
-				fullName: edgeUser.getFullName(),
+				id: neighbor.publicId,
+				fullName: neighbor.user.getFullName(),
 				weight: {
-					rating: edgeUser.getRating(timeControlId).rating
+					rating: neighbor.user.getRating(timeControlId).rating
 				}
 			};
 			listNodes.push(node);
 		}
 
 		const edge: EdgeInfo = {
-			source: neighborPublicId,
-			target: thisUserRandId,
+			source: neighbor.publicId,
+			target: thisUser.publicId,
 			label: e.metadata.clone().reverse().toString(),
 			weight: {
 				wins: e.metadata.numGamesLost,
@@ -160,39 +154,25 @@ function retrieveGraphFull(querier: User, timeControlId: TimeControlId): QueryGr
 	let listEdges: EdgeInfo[] = [];
 
 	for (let idx = 0; idx < users.numUsers(); ++idx) {
-		const thisUser = users.getUserAt(idx);
-		if (isNotDefined(thisUser)) {
-			debug(logNow(), `User at index '${idx}' could not be found.`);
-			return { nodes: [], edges: [] };
-		}
-		if (!canUserSeeGraph(querier, thisUser)) {
+		const currentUser = users.getAllUserDataAtSafeIdx(idx);
+		if (!canUserSeeGraph(querier, currentUser.user)) {
 			continue;
 		}
 
-		const username = thisUser.username;
-		const thisUserPublicId = users.getUserPublicIdAt(idx) as PlayerPublicId;
-
 		let outDegree = 0;
-		G.getOutgoingEdges(username)?.forEach((e: Edge) => {
-			const edgeUserIdx = users.getUserIndexByUsername(e.neighbor);
-			if (isNotDefined(edgeUserIdx)) {
+		G.getOutgoingEdges(currentUser.user.username)?.forEach((e: Edge) => {
+			const neighbor = users.getAllUserDataByPrivateId(e.neighbor);
+			if (isNotDefined(neighbor)) {
 				debug(logNow(), `Index of user '${e.neighbor}' does not exist`);
 				return;
 			}
-			const edgeUser = users.getUserAt(edgeUserIdx);
-			if (isNotDefined(edgeUser)) {
-				debug(logNow(), `User at index '${edgeUserIdx}' does not exist`);
+			if (!canUserSeeGraph(querier, neighbor.user)) {
 				return;
 			}
-			if (!canUserSeeGraph(querier, edgeUser)) {
-				return;
-			}
-
-			const edgeUserRandId = users.getUserPublicIdAt(edgeUserIdx) as number;
 
 			const edge: EdgeInfo = {
-				source: thisUserPublicId,
-				target: edgeUserRandId,
+				source: currentUser.publicId,
+				target: neighbor.publicId,
 				label: e.metadata.toString(),
 				weight: {
 					wins: e.metadata.numGamesWon,
@@ -204,14 +184,13 @@ function retrieveGraphFull(querier: User, timeControlId: TimeControlId): QueryGr
 			++outDegree;
 		});
 
-		const degree = G.getInDegree(username) + outDegree;
+		const degree = G.getInDegree(currentUser.user.username) + outDegree;
 		if (degree > 0) {
-			const publicId = users.getUserPublicIdAt(idx) as PlayerPublicId;
 			const node: NodeInfo = {
-				id: publicId,
-				fullName: thisUser.getFullName(),
+				id: currentUser.publicId,
+				fullName: currentUser.user.getFullName(),
 				weight: {
-					rating: thisUser.getRating(timeControlId).rating
+					rating: currentUser.user.getRating(timeControlId).rating
 				}
 			};
 			listNodes.push(node);

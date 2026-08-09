@@ -45,6 +45,10 @@ import { GamesIterator } from '@server/managers/games-iterator';
 import { TimeControlRating } from '@common/models/time-control-rating';
 import { isDefined, isNotDefined } from '@common/utils/is-defined';
 
+function writeGameArrayToFile(filename: string, gs: Game[]) {
+	fs.writeFileSync(filename, JSON.stringify(gs, null, 4));
+}
+
 /// Returns g1 < g2 using dates
 function gameCompareDates(g: Game): Function {
 	return (g2: Game): number => {
@@ -101,45 +105,39 @@ function gameNew(
 	let whiteToAssign: Rating;
 	let blackToAssign: Rating;
 
-	{
-		// get white's next game in the history
-		let next = gameNextOfPlayer(white, timeControlId, when);
-		if (next !== null) {
-			if (next.white === white) {
-				// white in this game is also white in the next game
-				whiteToAssign = next.whiteRating.clone();
-			} else {
-				// white in this game is black in the next game
-				whiteToAssign = next.blackRating.clone();
-			}
+	let nextWhiteGame = gameNextOfPlayer(white, timeControlId, when);
+	if (isDefined(nextWhiteGame)) {
+		if (nextWhiteGame.white === white) {
+			// white in this game is also white in the next game
+			whiteToAssign = nextWhiteGame.whiteRating.clone();
 		} else {
-			// there is no next game for white
-			const whiteUser = UsersManager.getInstance().getUserByUsername(white);
-			if (isNotDefined(whiteUser)) {
-				throw new Error(`White user '${white}' is not in the users database`);
-			}
-			whiteToAssign = whiteUser.getRating(timeControlId).clone();
+			// white in this game is black in the next game
+			whiteToAssign = nextWhiteGame.blackRating.clone();
 		}
+	} else {
+		// there is no next game for white
+		const whiteData = UsersManager.getInstance().getAllUserDataByPrivateId(white);
+		if (isNotDefined(whiteData)) {
+			throw new Error(`White user '${white}' is not in the users database`);
+		}
+		whiteToAssign = whiteData.user.getRating(timeControlId).clone();
 	}
 
-	{
-		// get black's next game in the history
-		let next = gameNextOfPlayer(black, timeControlId, when);
-		if (next !== null) {
-			if (next.white === black) {
-				// white in this game is white in the next game
-				blackToAssign = next.whiteRating.clone();
-			} else {
-				// black in this game is also black in the next game
-				blackToAssign = next.blackRating.clone();
-			}
+	let nextBlackGame = gameNextOfPlayer(black, timeControlId, when);
+	if (isDefined(nextBlackGame)) {
+		if (nextBlackGame.white === black) {
+			// white in this game is white in the next game
+			blackToAssign = nextBlackGame.whiteRating.clone();
 		} else {
-			const blackUser = UsersManager.getInstance().getUserByUsername(black);
-			if (isNotDefined(blackUser)) {
-				throw new Error(`Black user '${black}' is not in the users database`);
-			}
-			blackToAssign = blackUser.getRating(timeControlId).clone();
+			// black in this game is also black in the next game
+			blackToAssign = nextBlackGame.blackRating.clone();
 		}
+	} else {
+		const blackData = UsersManager.getInstance().getAllUserDataByPrivateId(black);
+		if (isNotDefined(blackData)) {
+			throw new Error(`Black user '${black}' is not in the users database`);
+		}
+		blackToAssign = blackData.user.getRating(timeControlId).clone();
 	}
 
 	return new Game(
@@ -262,7 +260,7 @@ function gameInsertInHistory(g: Game, recordId: DateMajor): void {
 	if (gamesIter.getAllRecords().length === 0) {
 		debug(logNow(), `There are no game record files for time control '${timeControlId}'.`);
 
-		fs.writeFileSync(gameRecordFile, JSON.stringify([g], null, 4));
+		writeGameArrayToFile(gameRecordFile, [g]);
 		userUpdateFromPlayerData(updatedPlayers);
 		return;
 	}
@@ -272,7 +270,7 @@ function gameInsertInHistory(g: Game, recordId: DateMajor): void {
 	if (!recordExists) {
 		debug(logNow(), `The game record for game '${g.id}' does not exist.`);
 
-		fs.writeFileSync(gameRecordFile, JSON.stringify([g], null, 4));
+		writeGameArrayToFile(gameRecordFile, [g]);
 		if (gamesIter.endRecordList()) {
 			debug(logNow(), `The new game record file is beyond every other game record.`);
 
@@ -301,7 +299,7 @@ function gameInsertInHistory(g: Game, recordId: DateMajor): void {
 
 		gamesIter.setToGame(gameIdx + 1);
 		updateGameRecord(gamesIter, timeControlId, updatedPlayers, playerToIndex);
-		fs.writeFileSync(gameRecordFile, JSON.stringify(gameSet, null, 4));
+		writeGameArrayToFile(gameRecordFile, gameSet);
 
 		gamesIter.nextRecord();
 	}
@@ -312,10 +310,7 @@ function gameInsertInHistory(g: Game, recordId: DateMajor): void {
 	while (!gamesIter.endRecordList()) {
 		updateGameRecord(gamesIter, timeControlId, updatedPlayers, playerToIndex);
 
-		fs.writeFileSync(
-			path.join(gamesDir, gamesIter.getCurrentRecordName()),
-			JSON.stringify(gamesIter.getCurrentGameArray(), null, 4)
-		);
+		writeGameArrayToFile(path.join(gamesDir, gamesIter.getCurrentRecordName()), gamesIter.getCurrentGameArray());
 
 		gamesIter.nextRecord();
 	}
@@ -338,9 +333,7 @@ export function gameAddNew(
 	hhmmss: DateMinor
 ): void {
 	const when = toDateFull(gameRecord + '..' + hhmmss);
-	const whiteUsername = white.username;
-	const blackUsername = black.username;
-	const g = gameNew(title, whiteUsername, blackUsername, result, timeControlId, timeControlName, when);
+	const g = gameNew(title, white.username, black.username, result, timeControlId, timeControlName, when);
 
 	white.addGame(timeControlId, gameRecord);
 	black.addGame(timeControlId, gameRecord);
@@ -348,7 +341,7 @@ export function gameAddNew(
 	gameInsertInHistory(g, gameRecord);
 
 	GamesManager.getInstance().addGame(g.id, gameRecord, timeControlId);
-	graphUpdate(whiteUsername, blackUsername, result, timeControlId);
+	graphUpdate(white.username, black.username, result, timeControlId);
 }
 
 /**
@@ -446,10 +439,7 @@ export function gameEditResult(gameId: GameId, newResult: GameResult): void {
 	while (!gamesIter.endRecordList()) {
 		updateGameRecord(gamesIter, timeControlId, updatedPlayers, playerToIndex);
 
-		fs.writeFileSync(
-			path.join(gamesDir, gamesIter.getCurrentRecordName()),
-			JSON.stringify(gamesIter.getCurrentGameArray(), null, 4)
-		);
+		writeGameArrayToFile(path.join(gamesDir, gamesIter.getCurrentRecordName()), gamesIter.getCurrentGameArray());
 
 		gamesIter.nextRecord();
 	}
@@ -492,7 +482,7 @@ export function gameEditTitle(gameId: GameId, newTitle: string): void {
 	const gameRecordFile = path.join(gamesDir, gameRecord);
 
 	let gameSet = gamesIter.getCurrentGameArray();
-	fs.writeFileSync(gameRecordFile, JSON.stringify(gameSet, null, 4));
+	writeGameArrayToFile(gameRecordFile, gameSet);
 }
 
 export function gameDelete(gameId: GameId): void {
@@ -545,10 +535,7 @@ export function gameDelete(gameId: GameId): void {
 	while (!gamesIter.endRecordList()) {
 		updateGameRecord(gamesIter, timeControlId, updatedPlayers, playerToIndex);
 
-		fs.writeFileSync(
-			path.join(gamesDir, gamesIter.getCurrentRecordName()),
-			JSON.stringify(gamesIter.getCurrentGameArray(), null, 4)
-		);
+		writeGameArrayToFile(path.join(gamesDir, gamesIter.getCurrentRecordName()), gamesIter.getCurrentGameArray());
 
 		gamesIter.nextRecord();
 	}
@@ -564,21 +551,21 @@ export function gameDelete(gameId: GameId): void {
 
 	/* Update all user instances */
 
-	let usersManager = UsersManager.getInstance();
+	const mem = UsersManager.getInstance();
 
-	let w = usersManager.getUserByUsername(white);
+	const w = mem.getAllUserDataByPrivateId(white);
 	if (isNotDefined(w)) {
 		debug(logNow(), `User ${white} could not be found`);
 		return;
 	}
-	w.deleteGame(timeControlId, gameRecord);
+	w.user.deleteGame(timeControlId, gameRecord);
 
-	let b = usersManager.getUserByUsername(black);
+	const b = mem.getAllUserDataByPrivateId(black);
 	if (isNotDefined(b)) {
 		debug(logNow(), `User ${black} could not be found`);
 		return;
 	}
-	b.deleteGame(timeControlId, gameRecord);
+	b.user.deleteGame(timeControlId, gameRecord);
 
 	userUpdateFromPlayerData(updatedPlayers);
 }
@@ -594,7 +581,7 @@ export function recalculateAllRatings() {
 	let playerToIndex: Map<string, number> = new Map();
 
 	for (let i = 0; i < mem.numUsers(); ++i) {
-		const username = (mem.getUserAt(i) as User).username;
+		const username = mem.getAllUserDataAtSafeIdx(i).user.username;
 
 		let p = new Player(username, []);
 		for (const tc of allTimeControls) {
@@ -612,10 +599,11 @@ export function recalculateAllRatings() {
 		while (!gamesIter.endRecordList()) {
 			updateGameRecord(gamesIter, timeControl, updatedPlayers, playerToIndex);
 
-			fs.writeFileSync(
+			writeGameArrayToFile(
 				path.join(gamesDir, gamesIter.getCurrentRecordName()),
-				JSON.stringify(gamesIter.getCurrentGameArray(), null, 4)
+				gamesIter.getCurrentGameArray()
 			);
+
 			gamesIter.nextRecord();
 		}
 	}
