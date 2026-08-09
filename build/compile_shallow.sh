@@ -1,10 +1,9 @@
 #!/bin/bash
 
 echo "Compiling..."
+rm -rf js
 mkdir -p js
-cd js
-rm -rf *
-cd ..
+
 bunx tsc -p tsconfig.build.json
 
 if [ "$?" != "0" ]; then
@@ -14,9 +13,6 @@ fi
 
 echo "Flatten js/ directory..."
 ./build/flatten_js_source.sh
-
-#echo "Fix imports..."
-#./build/fix_imports.sh
 
 echo "esbuild..."
 ./build/esbuild.sh
