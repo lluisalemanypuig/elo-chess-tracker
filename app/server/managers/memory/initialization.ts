@@ -26,7 +26,7 @@ Contact:
 import fs from 'fs';
 import path from 'path';
 import Debug from 'debug';
-const debug = Debug('ELOCHESSTRACKER:managers/initialization');
+const debug = Debug('ELO_CHESS_TRACKER:managers/initialization');
 
 import { logNow, toDateMajor } from '@common/utils/time';
 import { EnvironmentManager } from '@app/server/managers/environment-manager';

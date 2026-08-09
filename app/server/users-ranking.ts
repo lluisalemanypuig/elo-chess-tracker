@@ -24,7 +24,7 @@ Contact:
 */
 
 import Debug from 'debug';
-const debug = Debug('ELOCHESSTRACKER:serverUsersRanking');
+const debug = Debug('ELO_CHESS_TRACKER:serverUsersRanking');
 import { Request, Response } from 'express';
 
 import { logNow } from '@common/utils/time';

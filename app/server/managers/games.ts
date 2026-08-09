@@ -26,7 +26,7 @@ Contact:
 import path from 'path';
 import fs from 'fs';
 import Debug from 'debug';
-const debug = Debug('ELOCHESSTRACKER:managers/games');
+const debug = Debug('ELO_CHESS_TRACKER:managers/games');
 
 import { DateFull, DateMajor, DateMinor, logNow, dateFullToMajor, toDateFull } from '@common/utils/time';
 import { Player, PlayerPrivateId } from '@common/models/player';

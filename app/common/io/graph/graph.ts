@@ -24,7 +24,7 @@ Contact:
 */
 
 import Debug from 'debug';
-const debug = Debug('ELOCHESSTRACKER:io');
+const debug = Debug('ELO_CHESS_TRACKER:io');
 
 import fs from 'fs';
 import path from 'path';

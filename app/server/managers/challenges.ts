@@ -26,7 +26,7 @@ Contact:
 import fs from 'fs';
 import path from 'path';
 import Debug from 'debug';
-const debug = Debug('ELOCHESSTRACKER:managers/challenges');
+const debug = Debug('ELO_CHESS_TRACKER:managers/challenges');
 
 import { DateFull, logNow, dateSplitMajorMinor, toDateMinor } from '@common/utils/time';
 import { ChallengesManager } from '@app/server/managers/challenges-manager';

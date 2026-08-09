@@ -24,7 +24,7 @@ Contact:
 */
 
 import Debug from 'debug';
-const debug = Debug('ELOCHESSTRACKER:serverQueryUsers');
+const debug = Debug('ELO_CHESS_TRACKER:serverQueryUsers');
 import { Request, Response } from 'express';
 
 import { logNow } from '@common/utils/time';

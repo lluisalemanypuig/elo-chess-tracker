@@ -27,7 +27,7 @@ import Debug from 'debug';
 
 import { logNow } from '@common/utils/time';
 import { User } from '@common/models/user';
-const debug = Debug('ELOCHESSTRACKER:managers/session');
+const debug = Debug('ELO_CHESS_TRACKER:managers/session');
 
 import { SessionIDManager } from '@app/server/managers/session-id-manager';
 import { SessionId } from '@common/models/session-id';
@@ -45,7 +45,7 @@ import { PlayerPrivateId } from '@common/models/player';
 
 // This string is randomized by the build script which the administrator must
 // use in order to configure the webpage in their machine.
-const characterSamples: string = '$ALLOWEDSYMBOLSCOOKIES';
+const characterSamples: string = '$ALLOWED_SYMBOLS_COOKIES';
 
 /// Makes a random session id from a starting string.
 function randomSessionId(str: string): string {

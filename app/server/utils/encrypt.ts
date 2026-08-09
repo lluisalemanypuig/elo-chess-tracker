@@ -37,7 +37,7 @@ import { Password } from '@common/models/password';
 
 // This string is randomized by the build script which the administrator must
 // use in order to configure the webpage in their machine.
-const allowedSymbols: string = '$ALLOWEDSYMBOLSENCRYPT'.normalize('NFC');
+const allowedSymbols: string = '$ALLOWED_SYMBOLS_ENCRYPT'.normalize('NFC');
 
 /// Logarithm of 'x' in base 'base'
 function logBase(x: number, base: number): number {

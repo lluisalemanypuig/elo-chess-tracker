@@ -32,7 +32,7 @@ import helmet from 'helmet';
 import { Request, Response } from 'express';
 
 import Debug from 'debug';
-const debug = Debug('ELOCHESSTRACKER:appBuild');
+const debug = Debug('ELO_CHESS_TRACKER:appBuild');
 import { logNow } from '@common/utils/time';
 
 debug(logNow(), 'Create app object');
