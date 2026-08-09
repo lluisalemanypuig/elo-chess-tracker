@@ -48,7 +48,7 @@ export class GraphsManager {
 		return GraphsManager.instance;
 	}
 
-	private graphList: [TimeControlId, Graph][] = [];
+	private graphList: { timeControlId: TimeControlId; graph: Graph }[] = [];
 
 	clear(): void {
 		this.graphList = [];
@@ -59,7 +59,7 @@ export class GraphsManager {
 			return pair[0] === id;
 		});
 		if (idx === -1) {
-			this.graphList.push([id, g]);
+			this.graphList.push({ timeControlId: id, graph: g });
 		}
 	}
 
@@ -67,6 +67,6 @@ export class GraphsManager {
 		const idx = searchLinearByKey(this.graphList, (pair: [TimeControlId, Graph]): boolean => {
 			return pair[0] === id;
 		});
-		return idx !== -1 ? this.graphList[idx][1] : undefined;
+		return idx !== -1 ? this.graphList[idx].graph : undefined;
 	}
 }
