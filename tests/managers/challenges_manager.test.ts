@@ -24,7 +24,7 @@ Contact:
 */
 
 import { ChallengesManager, numberToChallengeId } from '@server/managers/challenges_manager';
-import { new_challenge, toChallengeId } from '@common/models/challenge';
+import { newChallenge, toChallengeId } from '@common/models/challenge';
 import { toPlayerPrivateId } from '@common/models/player';
 import { toTimeControlId, toTimeControlName } from '@common/models/time_control';
 import { toDateFull } from '@common/utils/time';
@@ -43,7 +43,7 @@ describe('Challenges Manager', () => {
 		expect(challenges.get_max_challenge_id()).toBe(0);
 		expect(challenges.num_challenges()).toBe(0);
 
-		const c = new_challenge(
+		const c = newChallenge(
 			id00001,
 			'sample',
 			toPlayerPrivateId('a'),
@@ -78,7 +78,7 @@ describe('Challenges Manager', () => {
 
 		const yesterday_id = challenges.new_challenge_id();
 		expect(yesterday_id).toBe(numberToChallengeId(1));
-		const yesterday = new_challenge(
+		const yesterday = newChallenge(
 			yesterday_id,
 			'sample',
 			toPlayerPrivateId('a'),
@@ -90,7 +90,7 @@ describe('Challenges Manager', () => {
 
 		const today_id = challenges.new_challenge_id();
 		expect(today_id).toBe(numberToChallengeId(2));
-		const today = new_challenge(
+		const today = newChallenge(
 			today_id,
 			'sample',
 			toPlayerPrivateId('a'),
@@ -102,7 +102,7 @@ describe('Challenges Manager', () => {
 
 		const tomorrow_id = challenges.new_challenge_id();
 		expect(tomorrow_id).toBe(numberToChallengeId(3));
-		const tomorrow = new_challenge(
+		const tomorrow = newChallenge(
 			tomorrow_id,
 			'sample',
 			toPlayerPrivateId('a'),
@@ -141,7 +141,7 @@ describe('Challenges Manager', () => {
 
 		const yesterday_id = challenges.new_challenge_id();
 		expect(yesterday_id).toBe(numberToChallengeId(1));
-		const yesterday = new_challenge(
+		const yesterday = newChallenge(
 			yesterday_id,
 			'sample',
 			toPlayerPrivateId('a'),
@@ -153,7 +153,7 @@ describe('Challenges Manager', () => {
 
 		const today_id = challenges.new_challenge_id();
 		expect(today_id).toBe(numberToChallengeId(2));
-		const today = new_challenge(
+		const today = newChallenge(
 			today_id,
 			'sample',
 			toPlayerPrivateId('a'),
@@ -165,7 +165,7 @@ describe('Challenges Manager', () => {
 
 		const tomorrow_id = challenges.new_challenge_id();
 		expect(tomorrow_id).toBe(numberToChallengeId(3));
-		const tomorrow = new_challenge(
+		const tomorrow = newChallenge(
 			tomorrow_id,
 			'sample',
 			toPlayerPrivateId('a'),
@@ -177,7 +177,7 @@ describe('Challenges Manager', () => {
 
 		const day_after_tomorrow_id = challenges.new_challenge_id();
 		expect(day_after_tomorrow_id).toBe(numberToChallengeId(4));
-		const day_after_tomorrow = new_challenge(
+		const day_after_tomorrow = newChallenge(
 			day_after_tomorrow_id,
 			'sample',
 			toPlayerPrivateId('a'),
