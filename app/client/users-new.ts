@@ -30,7 +30,7 @@ import { toUserGivenName } from '@common/models/user';
 
 async function submitNewUserClicked(_event: any) {
 	// username box
-	const UsernameBox = document.getElementById('usernameBox');
+	const UsernameBox = document.getElementById('username-box');
 	if (isNotDefined(UsernameBox)) {
 		console.log("Element 'usernameBox' does not exist.");
 		return;
@@ -38,7 +38,7 @@ async function submitNewUserClicked(_event: any) {
 	const usernameBox = UsernameBox as HTMLInputElement;
 
 	// firstName box
-	const BoxFirstName = document.getElementById('boxFirstName');
+	const BoxFirstName = document.getElementById('box-first-name');
 	if (isNotDefined(BoxFirstName)) {
 		console.log("Element 'boxFirstName' does not exist.");
 		return;
@@ -46,7 +46,7 @@ async function submitNewUserClicked(_event: any) {
 	const boxFirstName = BoxFirstName as HTMLInputElement;
 
 	// lastName box
-	const BoxLastName = document.getElementById('boxLastName');
+	const BoxLastName = document.getElementById('box-last-name');
 	if (isNotDefined(BoxLastName)) {
 		console.log("Element 'boxLastName' does not exist.");
 		return;
@@ -54,7 +54,7 @@ async function submitNewUserClicked(_event: any) {
 	const boxLastName = BoxLastName as HTMLInputElement;
 
 	// password box
-	const PasswordBox = document.getElementById('passwordBox');
+	const PasswordBox = document.getElementById('password-box');
 	if (isNotDefined(PasswordBox)) {
 		console.log("Element 'passwordBox' does not exist.");
 		return;
@@ -134,13 +134,13 @@ window.onload = function () {
 	};
 
 	// fill in select role dropdown with values
-	let roleDiv = document.getElementById('divRoleCheckboxes') as HTMLDivElement;
+	let roleDiv = document.getElementById('div-role-checkboxes') as HTMLDivElement;
 	ALL_USER_ROLES.forEach(function (str: string) {
 		addCheckbox(roleDiv, USER_ROLE_TO_STRING[str as UserRole], str);
 	});
 	roleDiv.appendChild(document.createElement('br'));
 
 	// link button click with function
-	let submitNewUser = document.getElementById('submitNewUserButton') as HTMLLinkElement;
+	let submitNewUser = document.getElementById('submit-new-user-button') as HTMLLinkElement;
 	submitNewUser.onclick = submitNewUserClicked;
 };

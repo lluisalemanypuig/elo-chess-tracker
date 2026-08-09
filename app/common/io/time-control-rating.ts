@@ -23,7 +23,7 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { RatingSystemManager } from '@app/server/managers/rating-system-manager';
+import { RatingSystemManager } from '@server/managers/rating-system-manager';
 import { TimeControlRating, TimeControlRatingKeys } from '@common/models/time-control-rating';
 import { readJsonArrayString, readJsonObjectString } from '@common/io/generic';
 

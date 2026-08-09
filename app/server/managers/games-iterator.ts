@@ -33,7 +33,7 @@ import { Game, GameId } from '@common/models/game';
 import { DateFull, DateMajor, logNow, toDateMajor } from '@common/utils/time';
 import { gameArrayFromString } from '@common/io/game';
 import { searchByKey, whereShouldBeInsertedByKey } from '@server/utils/searching';
-import { readDirectory } from '@app/server/utils/read-directory';
+import { readDirectory } from '@server/utils/read-directory';
 import { isNotDefined } from '@common/utils/is-defined';
 
 /* TODO: add a function that iterates only through those game records

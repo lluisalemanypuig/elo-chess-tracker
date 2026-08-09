@@ -43,7 +43,7 @@ export async function logoutLinkClicked(_event: any) {
 }
 
 function fillActionLinks(userActions: string[], userRoles: string[]) {
-	let actionLinks = document.getElementById('specialActionLinks') as HTMLDivElement;
+	let actionLinks = document.getElementById('special-action-links') as HTMLDivElement;
 
 	if (userActions.includes(CREATE_USER)) {
 		let userCreateLink = document.createElement('a') as HTMLAnchorElement;
@@ -131,7 +131,7 @@ async function fillOwnInfo() {
 	}
 
 	{
-		let table = document.getElementById('userRatingsTable') as HTMLTableElement;
+		let table = document.getElementById('user-ratings-table') as HTMLTableElement;
 
 		const ratings = data.ratings as any[];
 		for (const r of ratings) {

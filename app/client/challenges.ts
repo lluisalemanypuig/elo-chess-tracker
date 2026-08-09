@@ -46,16 +46,16 @@ function formatDate(date: string) {
 }
 
 async function sendChallengeButtonClicked(_event: any) {
-	const usernameListInput = document.getElementById('usernameList') as HTMLInputElement;
+	const usernameListInput = document.getElementById('username-list') as HTMLInputElement;
 	const usernameOption = document.querySelector('option[value="' + usernameListInput.value + '"]');
 
 	if (usernameOption != null) {
 		const publicUserId = Number(usernameOption.id) as PlayerPublicId;
 
-		const selectTimeControl = document.getElementById('selectTimeControl') as HTMLSelectElement;
+		const selectTimeControl = document.getElementById('select-time-control') as HTMLSelectElement;
 		const timeControlId = selectTimeControl.options[selectTimeControl.selectedIndex].value as TimeControlId;
 		const timeControlName = selectTimeControl.options[selectTimeControl.selectedIndex].text as TimeControlName;
-		const gameTitleText = document.getElementById('inputGameTitle') as HTMLSelectElement;
+		const gameTitleText = document.getElementById('input-game-title') as HTMLSelectElement;
 		const gameTitle = gameTitleText.textContent;
 
 		// "query" the server
@@ -102,9 +102,9 @@ async function submitResultChallengeButtonClicked(event: any) {
 	let buttonClicked = event.target;
 	let challengeId = buttonClicked.id;
 
-	const whiteSelect = document.getElementById('whiteSelect_' + challengeId) as HTMLSelectElement;
-	const blackSelect = document.getElementById('blackSelect_' + challengeId) as HTMLSelectElement;
-	const selectResultGame = document.getElementById('selectResultGame_' + challengeId) as HTMLSelectElement;
+	const whiteSelect = document.getElementById('white-select-' + challengeId) as HTMLSelectElement;
+	const blackSelect = document.getElementById('black-select-' + challengeId) as HTMLSelectElement;
+	const selectResultGame = document.getElementById('select-result-game-' + challengeId) as HTMLSelectElement;
 
 	const whiteUsername = whiteSelect.options[whiteSelect.selectedIndex].value as PlayerPrivateId;
 	const blackUsername = blackSelect.options[blackSelect.selectedIndex].value as PlayerPrivateId;
@@ -248,7 +248,7 @@ async function fillChallengesReceived() {
 	});
 
 	if (data.length > 0) {
-		(document.getElementById('challengesReceived') as HTMLDivElement).appendChild(challengeList);
+		(document.getElementById('challenges-received') as HTMLDivElement).appendChild(challengeList);
 	}
 }
 
@@ -295,7 +295,7 @@ async function fillChallengesSent() {
 	});
 
 	if (data.length > 0) {
-		(document.getElementById('challengesSent') as HTMLDivElement).appendChild(challengeList);
+		(document.getElementById('challenges-sent') as HTMLDivElement).appendChild(challengeList);
 	}
 }
 
@@ -307,7 +307,7 @@ async function fillChallengesPendingResult() {
 	}
 	const challengeData = response.value;
 
-	let allChallengesList = document.getElementById('challengesPendingResult_List') as HTMLDivElement;
+	let allChallengesList = document.getElementById('challenges-pending-result--list') as HTMLDivElement;
 	challengeData.forEach(function (elem: QueryChallengesPendingResultOutputSingle, index: number) {
 		{
 			let header = document.createElement('ul') as HTMLUListElement;
@@ -434,7 +434,7 @@ async function fillChallengesPendingResult() {
 			allChallengesList.appendChild(submitResultButton);
 		}
 
-		(document.getElementById('challengesPendingResult') as HTMLDivElement).appendChild(allChallengesList);
+		(document.getElementById('challenges-pending-result') as HTMLDivElement).appendChild(allChallengesList);
 	});
 }
 
@@ -486,7 +486,7 @@ async function fillChallengesConfirmResultOther() {
 	});
 
 	if (challengeData.length > 0) {
-		(document.getElementById('challengesConfirmResultOther') as HTMLDivElement).appendChild(challengeList);
+		(document.getElementById('challenges-confirm-result-other') as HTMLDivElement).appendChild(challengeList);
 	}
 }
 
@@ -574,13 +574,13 @@ async function fillChallengesConfirmResultSelf() {
 	});
 
 	if (challengeData.length > 0) {
-		(document.getElementById('challengesConfirmResultSelf') as HTMLDivElement).appendChild(challengeList);
+		(document.getElementById('challenges-confirm-result-self') as HTMLDivElement).appendChild(challengeList);
 	}
 }
 
 window.onload = function () {
 	// link button 'button-submit-challenge' click behaviour
-	let sendChallengeButton = document.getElementById('sendChallengeButton') as HTMLButtonElement;
+	let sendChallengeButton = document.getElementById('send-challenge-button') as HTMLButtonElement;
 	sendChallengeButton.onclick = sendChallengeButtonClicked;
 
 	// add list of challenges

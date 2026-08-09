@@ -39,10 +39,10 @@ import {
 	recalculateAllRatings
 } from '@server/managers/games';
 import { ADMIN } from '@common/models/user-role';
-import { canUserCreateGame, canUserDeleteGame, canUserEditGame } from '@app/server/managers/user-relationships';
-import { UsersManager } from '@app/server/managers/users-manager';
-import { ConfigurationManager } from '@app/server/managers/configuration-manager';
-import { getExecutionDirectory } from '@app/server/managers/environment-manager';
+import { canUserCreateGame, canUserDeleteGame, canUserEditGame } from '@server/managers/user-relationships';
+import { UsersManager } from '@server/managers/users-manager';
+import { ConfigurationManager } from '@server/managers/configuration-manager';
+import { getExecutionDirectory } from '@server/managers/environment-manager';
 import { isNotDefined } from '@common/utils/is-defined';
 import { ROUTES } from '@common/routes';
 import { inputSchemaOf } from '@common/api/schemas';

@@ -63,7 +63,7 @@ import {
 	GAMES_DELETE
 } from '@common/models/user-action';
 import { ADMIN, MEMBER, STUDENT, TEACHER, UserRole } from '@common/models/user-role';
-import { UsersBehavior } from '@app/server/managers/users-behavior';
+import { UsersBehavior } from '@server/managers/users-behavior';
 
 /// Can a user (@e editor) edit another user (@e edited)?
 export function canUserEdit(editor: User, edited: User): boolean {

@@ -31,7 +31,7 @@ import path from 'path';
 
 import { Neighborhood, Graph } from '@common/models/graph/graph';
 import { edgeArrayFromString } from '@common/io/graph/edge';
-import { readDirectory } from '@app/server/utils/read-directory';
+import { readDirectory } from '@server/utils/read-directory';
 import { isNotDefined } from '@common/utils/is-defined';
 import { logNow } from '@common/utils/time';
 import { PlayerPrivateId, toPlayerPrivateId } from '@common/models/player';

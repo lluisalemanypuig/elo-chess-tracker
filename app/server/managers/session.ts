@@ -29,10 +29,10 @@ import { logNow } from '@common/utils/time';
 import { User } from '@common/models/user';
 const debug = Debug('ELO_CHESS_TRACKER:managers/session');
 
-import { SessionIDManager } from '@app/server/managers/session-id-manager';
+import { SessionIDManager } from '@server/managers/session-id-manager';
 import { SessionId } from '@common/models/session-id';
-import { shuffle } from '@app/server/utils/shuffle-random';
-import { UsersManager } from '@app/server/managers/users-manager';
+import { shuffle } from '@server/utils/shuffle-random';
+import { UsersManager } from '@server/managers/users-manager';
 import { isNotDefined } from '@common/utils/is-defined';
 import { PlayerPrivateId } from '@common/models/player';
 

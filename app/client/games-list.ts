@@ -106,7 +106,7 @@ function newCellSelectResult(originalResult: string, gameId: string) {
 async function buttonDeleteGameOnClick(event: any) {
 	const button = event.target;
 
-	let selectTimeControl = document.getElementById('selectTimeControl') as HTMLSelectElement;
+	let selectTimeControl = document.getElementById('select-time-control') as HTMLSelectElement;
 	let previousTimeControlId = selectTimeControl.options[selectTimeControl.selectedIndex].value as TimeControlId;
 
 	const gameId = button.getAttribute('gameId');
@@ -259,7 +259,7 @@ async function fillGamesListTimeControl(timeControlId: TimeControlId) {
 }
 
 async function fillGamesList(_event: any) {
-	const selectTimeControl = document.getElementById('selectTimeControl') as HTMLSelectElement;
+	const selectTimeControl = document.getElementById('select-time-control') as HTMLSelectElement;
 	const timeControlId = selectTimeControl.options[selectTimeControl.selectedIndex].value as TimeControlId;
 	fillGamesListTimeControl(timeControlId);
 }
@@ -267,6 +267,6 @@ async function fillGamesList(_event: any) {
 window.onload = async function () {
 	fillGamesListTimeControl('' as TimeControlId);
 
-	let timeControl = document.getElementById('selectTimeControl') as HTMLSelectElement;
+	let timeControl = document.getElementById('select-time-control') as HTMLSelectElement;
 	timeControl.onchange = fillGamesList;
 };

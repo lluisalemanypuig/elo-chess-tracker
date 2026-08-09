@@ -79,7 +79,7 @@ function initializeSigma() {
 }
 
 async function loadGraph() {
-	const selectTimeControl = document.getElementById('selectTimeControl') as HTMLSelectElement;
+	const selectTimeControl = document.getElementById('select-time-control') as HTMLSelectElement;
 	const timeControlId = selectTimeControl.options[selectTimeControl.selectedIndex].value as TimeControlId;
 
 	if (timeControlId == '') {
@@ -155,9 +155,9 @@ function colorPickerNodeChanged(_event: any) {
 		return;
 	}
 
-	const selectNodeColor = document.getElementById('selectNodeColor') as HTMLSelectElement;
+	const selectNodeColor = document.getElementById('select-node-color') as HTMLSelectElement;
 	const option = selectNodeColor.options[selectNodeColor.selectedIndex].value;
-	const colorPickerNode = document.getElementById('colorPickerNode') as HTMLInputElement;
+	const colorPickerNode = document.getElementById('color-picker-node') as HTMLInputElement;
 
 	if (option == 'fixed') {
 		for (const node of graphData.nodes) {
@@ -193,9 +193,9 @@ function colorPickerEdgeChanged(_event: any) {
 		return;
 	}
 
-	const selectNodeColor = document.getElementById('selectEdgeColor') as HTMLSelectElement;
+	const selectNodeColor = document.getElementById('select-edge-color') as HTMLSelectElement;
 	const option = selectNodeColor.options[selectNodeColor.selectedIndex].value;
-	const colorPickerNode = document.getElementById('colorPickerEdge') as HTMLInputElement;
+	const colorPickerNode = document.getElementById('color-picker-edge') as HTMLInputElement;
 
 	if (option == 'fixed') {
 		const color = colorPickerNode.value;
@@ -252,9 +252,9 @@ function sizePickerNodeChanged(_event: any) {
 		return;
 	}
 
-	const selectNodeSize = document.getElementById('selectNodeSize') as HTMLSelectElement;
+	const selectNodeSize = document.getElementById('select-node-size') as HTMLSelectElement;
 	const option = selectNodeSize.options[selectNodeSize.selectedIndex].value;
-	const sizePickerNode = document.getElementById('sizePickerNode') as HTMLInputElement;
+	const sizePickerNode = document.getElementById('size-picker-node') as HTMLInputElement;
 
 	if (option == 'fixed') {
 		for (const node of graphData.nodes) {
@@ -284,9 +284,9 @@ function sizePickerEdgeChanged(_event: any) {
 		return;
 	}
 
-	const selectNodeSize = document.getElementById('selectEdgeSize') as HTMLSelectElement;
+	const selectNodeSize = document.getElementById('select-edge-size') as HTMLSelectElement;
 	const option = selectNodeSize.options[selectNodeSize.selectedIndex].value;
-	const sizePickerNode = document.getElementById('sizePickerEdge') as HTMLInputElement;
+	const sizePickerNode = document.getElementById('size-picker-edge') as HTMLInputElement;
 	const M = parseInt(sizePickerNode.value);
 
 	if (option == 'fixed') {
@@ -366,26 +366,26 @@ window.onload = async function () {
 	resizeViewer();
 	initializeSigma();
 
-	let selectTimeControl = document.getElementById('selectTimeControl') as HTMLSelectElement;
+	let selectTimeControl = document.getElementById('select-time-control') as HTMLSelectElement;
 	selectTimeControl.onchange = loadAndDisplay;
 
-	let selectNodeColor = document.getElementById('selectNodeColor') as HTMLSelectElement;
+	let selectNodeColor = document.getElementById('select-node-color') as HTMLSelectElement;
 	selectNodeColor.onchange = selectNodeColorChanged;
-	let colorPickerNode = document.getElementById('colorPickerNode') as HTMLInputElement;
+	let colorPickerNode = document.getElementById('color-picker-node') as HTMLInputElement;
 	colorPickerNode.onchange = colorPickerNodeChanged;
 
-	let selectEdgeColor = document.getElementById('selectEdgeColor') as HTMLSelectElement;
+	let selectEdgeColor = document.getElementById('select-edge-color') as HTMLSelectElement;
 	selectEdgeColor.onchange = selectEdgeColorChanged;
-	let colorPickerEdge = document.getElementById('colorPickerEdge') as HTMLInputElement;
+	let colorPickerEdge = document.getElementById('color-picker-edge') as HTMLInputElement;
 	colorPickerEdge.onchange = colorPickerEdgeChanged;
 
-	let selectNodeSize = document.getElementById('selectNodeSize') as HTMLSelectElement;
+	let selectNodeSize = document.getElementById('select-node-size') as HTMLSelectElement;
 	selectNodeSize.onchange = selectNodeSizeChanged;
-	let sizePickerNode = document.getElementById('sizePickerNode') as HTMLInputElement;
+	let sizePickerNode = document.getElementById('size-picker-node') as HTMLInputElement;
 	sizePickerNode.onchange = sizePickerNodeChanged;
 
-	let selectEdgeSize = document.getElementById('selectEdgeSize') as HTMLSelectElement;
+	let selectEdgeSize = document.getElementById('select-edge-size') as HTMLSelectElement;
 	selectEdgeSize.onchange = selectEdgeSizeChanged;
-	let sizePickerEdge = document.getElementById('sizePickerEdge') as HTMLInputElement;
+	let sizePickerEdge = document.getElementById('size-picker-edge') as HTMLInputElement;
 	sizePickerEdge.onchange = sizePickerEdgeChanged;
 };

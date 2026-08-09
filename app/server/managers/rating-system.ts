@@ -24,9 +24,9 @@ Contact:
 */
 
 import { TimeControl } from '@common/models/time-control';
-import { EloPlayerVsPlayer } from '@app/server/rating-framework/Elo/formula';
+import { EloPlayerVsPlayer } from '@server/rating-framework/Elo/formula';
 import { newRatingElo } from '@common/models/rating-framework/Elo/rating';
-import { RatingSystemManager } from '@app/server/managers/rating-system-manager';
+import { RatingSystemManager } from '@server/managers/rating-system-manager';
 import { ratingFromStringElo, ratingFromJsonElo } from '@common/io/ratings/Elo/rating';
 import { RatingFrameworkType } from '@common/models/rating-framework/rating-framework-type';
 

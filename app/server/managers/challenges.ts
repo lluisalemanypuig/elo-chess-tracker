@@ -29,8 +29,8 @@ import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:managers/challenges');
 
 import { DateFull, logNow, dateSplitMajorMinor, toDateMinor } from '@common/utils/time';
-import { ChallengesManager } from '@app/server/managers/challenges-manager';
-import { EnvironmentManager } from '@app/server/managers/environment-manager';
+import { ChallengesManager } from '@server/managers/challenges-manager';
+import { EnvironmentManager } from '@server/managers/environment-manager';
 import {
 	Challenge,
 	newChallenge,
@@ -47,7 +47,7 @@ import {
 } from '@common/models/challenge';
 import { gameAddNew } from '@server/managers/games';
 import { TimeControlId, TimeControlName } from '@common/models/time-control';
-import { UsersManager } from '@app/server/managers/users-manager';
+import { UsersManager } from '@server/managers/users-manager';
 import { User } from '@common/models/user';
 import { isNotDefined } from '@common/utils/is-defined';
 import { PlayerPrivateId } from '@common/models/player';

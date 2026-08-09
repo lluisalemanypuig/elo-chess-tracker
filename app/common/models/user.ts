@@ -28,7 +28,7 @@ import { Player, PlayerPrivateId } from '@common/models/player';
 import { Password } from '@common/models/password';
 import { UserRole } from '@common/models/user-role';
 import { UserAction } from '@common/models/user-action';
-import { UserRoleToUserAction } from '@app/server/managers/user-role-action';
+import { UserRoleToUserAction } from '@server/managers/user-role-action';
 import { TimeControlRating } from '@common/models/time-control-rating';
 import { TimeControlId, TimeControlIdSchema } from '@common/models/time-control';
 import { copyarray } from '@server/utils/misc';

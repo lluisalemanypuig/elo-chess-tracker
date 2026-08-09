@@ -36,15 +36,15 @@ import { toUserGivenName } from '@common/models/user';
 
 async function userWasChanged(_event: any) {
 	ALL_USER_ROLES.forEach(function (role: string) {
-		let checkboxRole = document.getElementById('checkbox_' + role) as HTMLInputElement;
+		let checkboxRole = document.getElementById('checkbox-' + role) as HTMLInputElement;
 		checkboxRole.checked = false;
 	});
-	let boxFirstName = document.getElementById('boxFirstName') as HTMLInputElement;
-	let boxLastName = document.getElementById('boxLastName') as HTMLInputElement;
+	let boxFirstName = document.getElementById('box-first-name') as HTMLInputElement;
+	let boxLastName = document.getElementById('box-last-name') as HTMLInputElement;
 	boxFirstName.value = '';
 	boxLastName.value = '';
 
-	let usernameListInput = document.getElementById('usernameList') as HTMLInputElement;
+	let usernameListInput = document.getElementById('username-list') as HTMLInputElement;
 	const usernameOption = document.querySelector('option[value="' + usernameListInput.value + '"]');
 
 	if (usernameOption != null) {
@@ -60,7 +60,7 @@ async function userWasChanged(_event: any) {
 		boxLastName.value = data.lastName;
 
 		ALL_USER_ROLES.forEach(function (role: string) {
-			let checkboxRole = document.getElementById('checkbox_' + role) as HTMLInputElement;
+			let checkboxRole = document.getElementById('checkbox-' + role) as HTMLInputElement;
 			const properRole = stringToRole(role);
 			if (isNotDefined(properRole)) {
 				console.log(`Role '${role}' could not be converted to a proper role.`);
@@ -75,17 +75,17 @@ async function userWasChanged(_event: any) {
 
 async function submitWasClicked(_event: any) {
 	// username
-	let usernameListInput = document.getElementById('usernameList') as HTMLInputElement;
+	let usernameListInput = document.getElementById('username-list') as HTMLInputElement;
 	const userRid = (document.querySelector('option[value="' + usernameListInput.value + '"]') as HTMLOptionElement).id;
 
 	// first and last name
-	const firstName = (document.getElementById('boxFirstName') as HTMLInputElement).value;
-	const lastName = (document.getElementById('boxLastName') as HTMLInputElement).value;
+	const firstName = (document.getElementById('box-first-name') as HTMLInputElement).value;
+	const lastName = (document.getElementById('box-last-name') as HTMLInputElement).value;
 
 	// retrieve selected role
 	let selectedRolesStr: string[] = [];
 	ALL_USER_ROLES.forEach(function (role: string) {
-		let checkboxRole = document.getElementById('checkbox_' + role) as HTMLInputElement;
+		let checkboxRole = document.getElementById('checkbox-' + role) as HTMLInputElement;
 		if (checkboxRole.checked) {
 			selectedRolesStr.push(role);
 		}
@@ -111,18 +111,18 @@ async function submitWasClicked(_event: any) {
 
 window.onload = function () {
 	// imlement behaviour of data list
-	let datalistUsernameInput = document.getElementById('usernameList') as HTMLInputElement;
+	let datalistUsernameInput = document.getElementById('username-list') as HTMLInputElement;
 	datalistUsernameInput.onselectionchange = userWasChanged;
 
 	// imlement behaviour of submit button
-	let submitChangesButton = document.getElementById('submitChangesButton') as HTMLButtonElement;
+	let submitChangesButton = document.getElementById('submit-changes-button') as HTMLButtonElement;
 	submitChangesButton.onclick = submitWasClicked;
 
 	// fill in role checkboxes with values
 	let addCheckbox = function (div: HTMLDivElement, show: string, value: string) {
 		let checkbox = document.createElement('input');
 		checkbox.type = 'checkbox';
-		checkbox.id = 'checkbox_' + value;
+		checkbox.id = 'checkbox-' + value;
 		div.appendChild(checkbox);
 
 		let checkboxLabel = document.createElement('label');
@@ -130,7 +130,7 @@ window.onload = function () {
 		div.appendChild(checkboxLabel);
 		div.appendChild(document.createElement('br'));
 	};
-	let roleDiv = document.getElementById('divRoleCheckboxes') as HTMLDivElement;
+	let roleDiv = document.getElementById('div-role-checkboxes') as HTMLDivElement;
 	ALL_USER_ROLES.forEach(function (role: string) {
 		addCheckbox(roleDiv, USER_ROLE_TO_STRING[role as UserRole], role);
 	});

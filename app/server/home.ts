@@ -29,8 +29,8 @@ import { Request, Response } from 'express';
 
 import { logNow } from '@common/utils/time';
 import { isUserLoggedIn } from '@server/managers/session';
-import { ConfigurationManager } from '@app/server/managers/configuration-manager';
-import { getExecutionDirectory } from '@app/server/managers/environment-manager';
+import { ConfigurationManager } from '@server/managers/configuration-manager';
+import { getExecutionDirectory } from '@server/managers/environment-manager';
 import { isDefined, isNotDefined } from '@common/utils/is-defined';
 import { ROUTES } from '@common/routes';
 import { safeParseRequestCookies, parseSchema } from '@server/utils/schemas';

@@ -29,7 +29,7 @@ import { Request, Response } from 'express';
 
 import { logNow } from '@common/utils/time';
 import { isUserLoggedIn } from '@server/managers/session';
-import { RatingSystemManager } from '@app/server/managers/rating-system-manager';
+import { RatingSystemManager } from '@server/managers/rating-system-manager';
 import { isNotDefined } from '@common/utils/is-defined';
 import { ROUTES } from '@common/routes';
 import { safeParseRequestCookies } from '@server/utils/schemas';

@@ -25,9 +25,9 @@ import { messageFromResponse, serverCall } from '@client/action';
 import { ROUTES } from '@common/routes';
 
 async function buttonSubmitClicked() {
-	let boxOldPassword = document.getElementById('boxOldPassword') as HTMLInputElement;
-	let boxNewPassword = document.getElementById('boxNewPassword') as HTMLInputElement;
-	let boxRepeatPassword = document.getElementById('boxRepeatPassword') as HTMLInputElement;
+	let boxOldPassword = document.getElementById('box-old-password') as HTMLInputElement;
+	let boxNewPassword = document.getElementById('box-new-password') as HTMLInputElement;
+	let boxRepeatPassword = document.getElementById('box-repeat-password') as HTMLInputElement;
 
 	if (boxNewPassword.value != boxRepeatPassword.value) {
 		alert('The passwords must coincide');
@@ -48,6 +48,6 @@ async function buttonSubmitClicked() {
 }
 
 window.onload = function () {
-	let buttonSubmit = document.getElementById('buttonSubmit') as HTMLButtonElement;
+	let buttonSubmit = document.getElementById('button-submit') as HTMLButtonElement;
 	buttonSubmit.onclick = buttonSubmitClicked;
 };

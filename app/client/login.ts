@@ -27,21 +27,21 @@ import { PlayerPrivateId } from '@common/models/player';
 
 async function logIntoWebpage(_event: any) {
 	// username box
-	const UsernameBox = document.getElementById('usernameBox');
-	if (UsernameBox == null) {
-		console.log("Element 'usernameBox' does not exist.");
+	const usernameBox = document.getElementById('username-box');
+	if (usernameBox == null) {
+		console.log("Element 'username-box' does not exist.");
 		return;
 	}
 
 	// password box
-	const PasswordBox = document.getElementById('passwordBox');
-	if (PasswordBox == null) {
-		console.log("Element 'passwordBox' does not exist.");
+	const passwordBox = document.getElementById('password-box');
+	if (passwordBox == null) {
+		console.log("Element 'password-box' does not exist.");
 		return;
 	}
 
-	const username = (UsernameBox as HTMLInputElement).value as PlayerPrivateId;
-	const password = (PasswordBox as HTMLInputElement).value as PlayerPrivateId;
+	const username = (usernameBox as HTMLInputElement).value as PlayerPrivateId;
+	const password = (passwordBox as HTMLInputElement).value as PlayerPrivateId;
 
 	if (username == '' || password == '') {
 		return;
@@ -66,15 +66,15 @@ async function logIntoWebpage(_event: any) {
 
 async function passwordBoxKeyDown(event: any) {
 	if (event.key == 'Enter') {
-		logIntoWebpage(Event);
+		logIntoWebpage(event);
 	}
 }
 
 window.onload = function () {
 	// define behaviour of login button
-	let loginButton = document.getElementById('loginButton') as HTMLButtonElement;
+	let loginButton = document.getElementById('login-button') as HTMLButtonElement;
 	loginButton.onclick = logIntoWebpage;
 
-	let passwordBox = document.getElementById('passwordBox') as HTMLInputElement;
+	let passwordBox = document.getElementById('password-box') as HTMLInputElement;
 	passwordBox.onkeydown = passwordBoxKeyDown;
 };

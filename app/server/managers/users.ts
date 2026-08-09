@@ -30,11 +30,11 @@ const debug = Debug('ELO_CHESS_TRACKER:managers/users');
 
 import { Player, PlayerPrivateId } from '@common/models/player';
 import { UserGivenName, TimeControlGame, User } from '@common/models/user';
-import { EnvironmentManager } from '@app/server/managers/environment-manager';
-import { UsersManager } from '@app/server/managers/users-manager';
+import { EnvironmentManager } from '@server/managers/environment-manager';
+import { UsersManager } from '@server/managers/users-manager';
 import { UserRole } from '@common/models/user-role';
 import { encryptPasswordForUser } from '@server/utils/encrypt';
-import { RatingSystemManager } from '@app/server/managers/rating-system-manager';
+import { RatingSystemManager } from '@server/managers/rating-system-manager';
 import { TimeControlRating } from '@common/models/time-control-rating';
 import { logNow } from '@common/utils/time';
 import { UserThin } from '@common/models/user-thin';

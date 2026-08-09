@@ -26,7 +26,7 @@ import { ROUTES } from '@common/routes';
 import { TimeControlId } from '@common/models/time-control';
 
 async function fillRanking(_event: any) {
-	const selectTimeControl = document.getElementById('selectTimeControl') as HTMLSelectElement;
+	const selectTimeControl = document.getElementById('select-time-control') as HTMLSelectElement;
 	const timeControlId = selectTimeControl.options[selectTimeControl.selectedIndex].value as TimeControlId;
 
 	if (timeControlId == '') {
@@ -49,7 +49,7 @@ async function fillRanking(_event: any) {
 	const listOfUsers = response.value;
 
 	{
-		let table = document.getElementById('usersTableWithGames') as HTMLTableElement;
+		let table = document.getElementById('users-table-with-games') as HTMLTableElement;
 		let oldTbody = table.getElementsByTagName('tbody')[0];
 		let newTbody = document.createElement('tbody');
 
@@ -71,7 +71,7 @@ async function fillRanking(_event: any) {
 	}
 
 	{
-		let table = document.getElementById('usersTableWithoutGames') as HTMLTableElement;
+		let table = document.getElementById('users-table-without-games') as HTMLTableElement;
 		let oldTbody = table.getElementsByTagName('tbody')[0];
 		let newTbody = document.createElement('tbody');
 
@@ -94,6 +94,6 @@ async function fillRanking(_event: any) {
 }
 
 window.onload = async function () {
-	let selectTimeControl = document.getElementById('selectTimeControl') as HTMLSelectElement;
+	let selectTimeControl = document.getElementById('select-time-control') as HTMLSelectElement;
 	selectTimeControl.onchange = fillRanking;
 };

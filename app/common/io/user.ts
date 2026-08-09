@@ -38,7 +38,7 @@ import {
 } from '@common/models/user';
 import { TimeControlGame } from '@common/models/user';
 import { readJsonArrayString, readJsonObjectString, readSchema } from '@common/io/generic';
-import { RatingSystemManager } from '@app/server/managers/rating-system-manager';
+import { RatingSystemManager } from '@server/managers/rating-system-manager';
 import { TimeControlRating } from '@common/models/time-control-rating';
 import { UserRoleArraySchema } from '@common/models/user-role';
 import { PasswordSchema } from '@common/models/password';

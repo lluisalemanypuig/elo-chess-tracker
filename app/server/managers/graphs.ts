@@ -28,10 +28,10 @@ import { graphFullToFile, graphToFile } from '@common/io/graph/graph';
 import { GameResult } from '@common/models/game';
 import { Graph } from '@common/models/graph/graph';
 import { TimeControlId } from '@common/models/time-control';
-import { EnvironmentManager } from '@app/server/managers/environment-manager';
-import { GamesIterator } from '@app/server/managers/games-iterator';
-import { GraphsManager } from '@app/server/managers/graphs-manager';
-import { RatingSystemManager } from '@app/server/managers/rating-system-manager';
+import { EnvironmentManager } from '@server/managers/environment-manager';
+import { GamesIterator } from '@server/managers/games-iterator';
+import { GraphsManager } from '@server/managers/graphs-manager';
+import { RatingSystemManager } from '@server/managers/rating-system-manager';
 import { PlayerPrivateId } from '@common/models/player';
 
 export function graphUpdate(w: PlayerPrivateId, b: PlayerPrivateId, result: GameResult, id: TimeControlId): void {

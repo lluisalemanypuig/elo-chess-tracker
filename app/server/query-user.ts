@@ -31,7 +31,7 @@ import { logNow } from '@common/utils/time';
 import { userGetAllNamePublicId } from '@server/managers/users';
 import { isUserLoggedIn } from '@server/managers/session';
 import { User } from '@common/models/user';
-import { UsersManager } from '@app/server/managers/users-manager';
+import { UsersManager } from '@server/managers/users-manager';
 import { TimeControlRating } from '@common/models/time-control-rating';
 import { isNotDefined } from '@common/utils/is-defined';
 import { ROUTES } from '@common/routes';

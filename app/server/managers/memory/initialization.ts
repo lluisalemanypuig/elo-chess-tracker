@@ -29,23 +29,23 @@ import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:managers/initialization');
 
 import { logNow, toDateMajor } from '@common/utils/time';
-import { EnvironmentManager } from '@app/server/managers/environment-manager';
-import { ConfigurationManager } from '@app/server/managers/configuration-manager';
-import { ChallengesManager } from '@app/server/managers/challenges-manager';
-import { GamesManager } from '@app/server/managers/games-manager';
-import { UsersManager } from '@app/server/managers/users-manager';
-import { initializeRatingTimeControls, initializeRatingFunctions } from '@app/server/managers/rating-system';
-import { RatingSystemManager } from '@app/server/managers/rating-system-manager';
+import { EnvironmentManager } from '@server/managers/environment-manager';
+import { ConfigurationManager } from '@server/managers/configuration-manager';
+import { ChallengesManager } from '@server/managers/challenges-manager';
+import { GamesManager } from '@server/managers/games-manager';
+import { UsersManager } from '@server/managers/users-manager';
+import { initializeRatingTimeControls, initializeRatingFunctions } from '@server/managers/rating-system';
+import { RatingSystemManager } from '@server/managers/rating-system-manager';
 import { Game, toGameId } from '@common/models/game';
 import { TimeControl, TimeControlArray } from '@common/models/time-control';
 import { Graph } from '@common/models/graph/graph';
-import { GraphsManager } from '@app/server/managers/graphs-manager';
+import { GraphsManager } from '@server/managers/graphs-manager';
 import { gameArrayFromString } from '@common/io/game';
 import { challengeFromString } from '@common/io/challenge';
 import { userFromString } from '@common/io/user';
 import { graphFromString } from '@common/io/graph/graph';
-import { UsersBehavior } from '@app/server/managers/users-behavior';
-import { readDirectory } from '@app/server/utils/read-directory';
+import { UsersBehavior } from '@server/managers/users-behavior';
+import { readDirectory } from '@server/utils/read-directory';
 import { isNotDefined } from '@common/utils/is-defined';
 import { RatingFrameworkType } from '@common/models/rating-framework/rating-framework-type';
 import { configurationFromString } from '@common/io/configuration';
@@ -55,7 +55,7 @@ import { Environment, SSLCertificate } from '@common/models/configuration/enviro
 import { Ports, ServerConfiguration } from '@common/models/configuration/server';
 import { UserPermissions } from '@common/models/configuration/permissions';
 import { clearServer } from '@server/managers/memory/clear';
-import { initializePermissions } from '@app/server/managers/user-role-action';
+import { initializePermissions } from '@server/managers/user-role-action';
 
 function initEnvironmentDirectories(baseDirectory: string, executionDirectory: string): void {
 	let serverEnv = EnvironmentManager.getInstance();

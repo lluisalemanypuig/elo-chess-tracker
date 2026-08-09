@@ -30,8 +30,8 @@ import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:appRouter');
 import { logNow } from '@common/utils/time';
 
-import { EnvironmentManager, getExecutionDirectory } from '@app/server/managers/environment-manager';
-import { ConfigurationManager } from '@app/server/managers/configuration-manager';
+import { EnvironmentManager, getExecutionDirectory } from '@server/managers/environment-manager';
+import { ConfigurationManager } from '@server/managers/configuration-manager';
 import { ROUTES } from '@common/routes';
 
 let router = express.Router();
@@ -52,7 +52,7 @@ router.get(ROUTES.CSS_ALL, (req: Request, res: Response) => {
 /* ************************************************************************** */
 /* Version number */
 router.get(ROUTES.VERSION_NUMBER, (_req: Request, res: Response) => {
-	debug(logNow(), 'GET versionNumber...');
+	debug(logNow(), `GET ${ROUTES.VERSION_NUMBER}...`);
 	res.status(200);
 	if (ConfigurationManager.shouldCacheData()) {
 		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
@@ -63,7 +63,7 @@ router.get(ROUTES.VERSION_NUMBER, (_req: Request, res: Response) => {
 /* ************************************************************************** */
 /* ICONS */
 router.get(ROUTES.FAVICON_ICO, (_req: Request, res: Response) => {
-	debug(logNow(), 'GET favicon.ico...');
+	debug(logNow(), `GET ${ROUTES.FAVICON_ICO}...`);
 	const filepath = EnvironmentManager.getInstance().getIconFavicon();
 	debug(logNow(), `    file to send: ${filepath}`);
 	res.status(200);
@@ -73,7 +73,7 @@ router.get(ROUTES.FAVICON_ICO, (_req: Request, res: Response) => {
 	res.sendFile(filepath);
 });
 router.get(ROUTES.ICON_LOGIN_PAGE, (_req: Request, res: Response) => {
-	debug(logNow(), 'GET /icon/loginPage...');
+	debug(logNow(), `GET ${ROUTES.ICON_LOGIN_PAGE}...`);
 	const filepath = EnvironmentManager.getInstance().getIconLoginPage();
 	debug(logNow(), `    file to send: ${filepath}`);
 	res.status(200);
@@ -83,7 +83,7 @@ router.get(ROUTES.ICON_LOGIN_PAGE, (_req: Request, res: Response) => {
 	res.sendFile(filepath);
 });
 router.get(ROUTES.ICON_HOME_PAGE, (_req: Request, res: Response) => {
-	debug(logNow(), 'GET /icon/homePage...');
+	debug(logNow(), `GET ${ROUTES.ICON_HOME_PAGE}...`);
 	const filepath = EnvironmentManager.getInstance().getIconHomePage();
 	debug(logNow(), `    file to send: ${filepath}`);
 	res.status(200);
@@ -95,7 +95,7 @@ router.get(ROUTES.ICON_HOME_PAGE, (_req: Request, res: Response) => {
 
 /* PAGE TITLES */
 router.get(ROUTES.TITLE_LOGIN_PAGE, (_req: Request, res: Response) => {
-	debug(logNow(), 'GET /title/loginPage...');
+	debug(logNow(), `GET ${ROUTES.TITLE_LOGIN_PAGE}...`);
 	res.status(200);
 	if (ConfigurationManager.shouldCacheData()) {
 		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
@@ -103,7 +103,7 @@ router.get(ROUTES.TITLE_LOGIN_PAGE, (_req: Request, res: Response) => {
 	res.send(EnvironmentManager.getInstance().getTitleLoginPage());
 });
 router.get(ROUTES.TITLE_HOME_PAGE, (_req: Request, res: Response) => {
-	debug(logNow(), 'GET /title/homePage...');
+	debug(logNow(), `GET ${ROUTES.TITLE_HOME_PAGE}...`);
 	res.status(200);
 	if (ConfigurationManager.shouldCacheData()) {
 		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
@@ -120,7 +120,7 @@ router.get(ROUTES.HOME, getPageHome);
 
 // serve all javascript files!
 router.get(ROUTES.JS_ALL, (req: Request, res: Response) => {
-	debug(logNow(), 'GET a file in js/');
+	debug(logNow(), `GET ${ROUTES.JS_ALL}: file ${req.url}`);
 	debug(logNow(), `    request: ${req.url}`);
 	const filepath = `${getExecutionDirectory()}/${req.url}`;
 	debug(logNow(), `    file to send: ${filepath}`);
@@ -138,7 +138,7 @@ import {
 	getQueryUserHome,
 	postQueryUserRanking,
 	getQueryHtmlUserList
-} from '@app/server/query-user';
+} from '@server/query-user';
 router.get(ROUTES.QUERY_USER_LIST, getQueryUserList);
 router.get(ROUTES.QUERY_HTML_USER_LIST, getQueryHtmlUserList);
 router.get(ROUTES.QUERY_USER_HOME, getQueryUserHome);
@@ -155,48 +155,48 @@ import {
 	getQueryChallengePendingResult,
 	getQueryChallengeConfirmResultOther,
 	getQueryChallengeConfirmResultSelf
-} from '@app/server/query-challenges';
+} from '@server/query-challenges';
 router.get(ROUTES.QUERY_CHALLENGE_RECEIVED, getQueryChallengeReceived);
 router.get(ROUTES.QUERY_CHALLENGE_SENT, getQueryChallengeSent);
 router.get(ROUTES.QUERY_CHALLENGE_PENDING_RESULT, getQueryChallengePendingResult);
 router.get(ROUTES.QUERY_CHALLENGE_CONFIRM_RESULT_OTHER, getQueryChallengeConfirmResultOther);
 router.get(ROUTES.QUERY_CHALLENGE_CONFIRM_RESULT_SELF, getQueryChallengeConfirmResultSelf);
 
-import { postQueryGameListOwn, postQueryGameListAll } from '@app/server/query-games';
+import { postQueryGameListOwn, postQueryGameListAll } from '@server/query-games';
 router.post(ROUTES.QUERY_GAME_LIST_OWN, postQueryGameListOwn);
 router.post(ROUTES.QUERY_GAME_LIST_ALL, postQueryGameListAll);
 
-import { postQueryGraphFull, postQueryGraphOwn } from '@app/server/query-graphs';
+import { postQueryGraphFull, postQueryGraphOwn } from '@server/query-graphs';
 router.post(ROUTES.QUERY_GRAPH_OWN, postQueryGraphOwn);
 router.post(ROUTES.QUERY_GRAPH_FULL, postQueryGraphFull);
 
 // query time controls
-import { getQueryHtmlTimeControls, getQueryHtmlTimeControlsUnique } from '@app/server/query-time-control';
+import { getQueryHtmlTimeControls, getQueryHtmlTimeControlsUnique } from '@server/query-time-control';
 router.get(ROUTES.QUERY_HTML_TIME_CONTROLS, getQueryHtmlTimeControls);
 router.get(ROUTES.QUERY_HTML_TIME_CONTROLS_UNIQUE, getQueryHtmlTimeControlsUnique);
 
 // user login and logout
-import { postUserLogin, postUserLogout } from '@app/server/login-logout';
+import { postUserLogin, postUserLogout } from '@server/login-logout';
 router.post(ROUTES.USER_LOGIN, postUserLogin);
 router.post(ROUTES.USER_LOGOUT, postUserLogout);
 
 // creation of a new user
-import { postUserCreate, getPageUserCreate } from '@app/server/users-new';
+import { postUserCreate, getPageUserCreate } from '@server/users-new';
 router.get(ROUTES.PAGE_USER_CREATE, getPageUserCreate);
 router.post(ROUTES.USER_CREATE, postUserCreate);
 
 // edition of an existing user
-import { postUserEdit, getPageUserEdit } from '@app/server/users-edit';
+import { postUserEdit, getPageUserEdit } from '@server/users-edit';
 router.get(ROUTES.PAGE_USER_EDIT, getPageUserEdit);
 router.post(ROUTES.USER_EDIT, postUserEdit);
 
 // change of password
-import { getPageUserPasswordChange, postUserPasswordChange } from '@app/server/users-password-change';
+import { getPageUserPasswordChange, postUserPasswordChange } from '@server/users-password-change';
 router.get(ROUTES.PAGE_USER_PASSWORD_CHANGE, getPageUserPasswordChange);
 router.post(ROUTES.USER_PASSWORD_CHANGE, postUserPasswordChange);
 
 // retrieve ranking of players
-import { getPageUserRanking } from '@app/server/users-ranking';
+import { getPageUserRanking } from '@server/users-ranking';
 router.get(ROUTES.PAGE_USER_RANKING, getPageUserRanking);
 
 // create a new game

@@ -36,7 +36,7 @@ import fs from 'fs';
 import { logNow } from '@common/utils/time';
 
 import { serverInitFromParameters } from '@server/managers/memory/initialization';
-import { ConfigurationManager } from '@app/server/managers/configuration-manager';
+import { ConfigurationManager } from '@server/managers/configuration-manager';
 
 debug(logNow(), 'Initialize server memory...');
 
@@ -51,7 +51,7 @@ debug(logNow(), '    Imported!');
 import http from 'http';
 import https from 'https';
 import { AddressInfo } from 'net';
-import { EnvironmentManager } from '@app/server/managers/environment-manager';
+import { EnvironmentManager } from '@server/managers/environment-manager';
 
 // Normalize a port into a number, string, or false.
 function normalizePort(val: any): any {
