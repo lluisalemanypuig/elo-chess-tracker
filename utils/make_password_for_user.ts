@@ -23,6 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
+import { PlayerPrivateId } from '@common/models/player';
 import { encrypt_password_for_user } from '@server/utils/encrypt';
 
 const args = process.argv.slice(2);
@@ -39,7 +40,7 @@ if (password_index == -1) {
 	process.exit(1);
 }
 
-const username = args[username_index + 1];
+const username = args[username_index + 1] as PlayerPrivateId;
 const password = args[password_index + 1];
 
 console.log(`Username: '${username}'`);
