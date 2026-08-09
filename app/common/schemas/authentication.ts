@@ -23,8 +23,20 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { SessionId, SessionIdLenientSchema } from '@common/models/session-id';
+import { z } from 'zod';
+import { SessionId } from '@common/models/session-id';
+import { toPlayerPublicId } from '@common/models/player';
 
-export const AuthenticationInputSchema = SessionIdLenientSchema.strict();
+export const AuthenticationInputSchema = z.object({
+	token: z.string(),
+	publicId: z.string()
+});
 
-export type AuthenticationInput = SessionId;
+export type AuthenticationInput = z.infer<typeof AuthenticationInputSchema>;
+
+export function authenticationInputSchemaToSessionId(id: AuthenticationInput): SessionId {
+	return {
+		token: id.token,
+		publicId: toPlayerPublicId(Number(id.publicId))
+	};
+}

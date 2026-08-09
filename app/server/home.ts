@@ -34,7 +34,7 @@ import { getExecutionDirectory } from '@server/managers/environment-manager';
 import { isDefined, isNotDefined } from '@common/utils/is-defined';
 import { ROUTES } from '@common/routes';
 import { safeParseRequestCookies, parseSchema } from '@server/utils/schemas';
-import { AuthenticationInputSchema } from '@common/schemas/authentication';
+import { AuthenticationInputSchema, authenticationInputSchemaToSessionId } from '@common/schemas/authentication';
 
 export async function getPageLogin(req: Request, res: Response) {
 	let sendHome: boolean;
@@ -42,20 +42,21 @@ export async function getPageLogin(req: Request, res: Response) {
 
 	const sessionParse = parseSchema(req.cookies, AuthenticationInputSchema, debug);
 	if (sessionParse.result === 'Error') {
-		console.log('asdf');
+		debug(logNow(), req.cookies);
 		return;
 	}
-	const session = sessionParse.data;
 
-	if (isDefined(session)) {
+	if (isDefined(sessionParse.data)) {
+		const session = authenticationInputSchemaToSessionId(sessionParse.data);
+
 		debug(logNow(), 'There is a username key in the cookies received.');
-		debug(logNow(), `    Value: ${session.username}`);
+		debug(logNow(), `    Value: ${session.publicId}`);
 
 		const r = isUserLoggedIn(session);
 		sendHome = r[0];
 
 		if (sendHome) {
-			debug(logNow(), `    Session id for user '${session.username}' exists. Please, come in.`);
+			debug(logNow(), `    Session id for user '${session.publicId}' exists. Please, come in.`);
 		}
 	} else {
 		debug(logNow(), 'There is no user key in the cookies received.');
@@ -78,19 +79,21 @@ export async function getPageLogin(req: Request, res: Response) {
 export async function getPageHome(req: Request, res: Response) {
 	debug(logNow(), `GET ${ROUTES.HOME}`);
 
-	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	const sessionParse = safeParseRequestCookies(req, res, debug);
 	if (sessionParse.result === 'Exit') {
+		debug(logNow(), req.cookies);
+		debug(logNow(), 'asdf');
 		return;
 	}
 	const session = sessionParse.data;
 	const r = isUserLoggedIn(session);
 	if (isNotDefined(r[2])) {
-		debug(logNow(), `    User ${session.username} is not logged in.`);
+		debug(logNow(), `    User ${session.publicId} is not logged in.`);
 		res.status(401).send(r[1]);
 		return;
 	}
 
-	debug(logNow(), `    User ${session.username} is logged in. Access granted.`);
+	debug(logNow(), `    User ${session.publicId} is logged in. Access granted.`);
 	res.status(200);
 	if (ConfigurationManager.shouldCacheData()) {
 		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');

@@ -38,7 +38,7 @@ import { AuthenticationInputSchema } from '@common/schemas/authentication';
 export async function getQueryHtmlTimeControls(req: Request, res: Response) {
 	debug(logNow(), `GET ${ROUTES.QUERY_HTML_TIME_CONTROLS}...`);
 
-	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	const sessionParse = safeParseRequestCookies(req, res, debug);
 	if (sessionParse.result === 'Exit') {
 		return;
 	}
@@ -61,7 +61,7 @@ export async function getQueryHtmlTimeControls(req: Request, res: Response) {
 export async function getQueryHtmlTimeControlsUnique(req: Request, res: Response) {
 	debug(logNow(), `GET ${ROUTES.QUERY_HTML_TIME_CONTROLS_UNIQUE}...`);
 
-	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	const sessionParse = safeParseRequestCookies(req, res, debug);
 	if (sessionParse.result === 'Exit') {
 		return;
 	}

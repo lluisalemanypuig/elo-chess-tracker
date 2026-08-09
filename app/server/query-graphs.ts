@@ -203,14 +203,14 @@ function retrieveGraphFull(querier: User, timeControlId: TimeControlId): QueryGr
 export async function postQueryGraphOwn(req: Request, res: Response) {
 	debug(logNow(), `POST ${ROUTES.QUERY_GRAPH_OWN}...`);
 
-	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	const sessionParse = safeParseRequestCookies(req, res, debug);
 	if (sessionParse.result === 'Exit') {
 		return;
 	}
 	const session = sessionParse.data;
 	const r = isUserLoggedIn(session);
-
-	if (isNotDefined(r[2])) {
+	const user = r[2];
+	if (isNotDefined(user)) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -221,22 +221,21 @@ export async function postQueryGraphOwn(req: Request, res: Response) {
 	}
 	const timeControlId = graphParse.data.timeControlId;
 
-	debug(logNow(), `User ${session.username} is querying their own graph of time control ${timeControlId}.`);
+	debug(logNow(), `User ${user.username} is querying their own graph of time control ${timeControlId}.`);
 
-	const graph = retrieveGraphUser(session.username, timeControlId);
+	const graph = retrieveGraphUser(user.username, timeControlId);
 	res.status(200).send(graph);
 }
 
 export async function postQueryGraphFull(req: Request, res: Response) {
 	debug(logNow(), `POST ${ROUTES.QUERY_GRAPH_FULL}...`);
 
-	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	const sessionParse = safeParseRequestCookies(req, res, debug);
 	if (sessionParse.result === 'Exit') {
 		return;
 	}
 	const session = sessionParse.data;
 	const r = isUserLoggedIn(session);
-
 	const user = r[2];
 	if (isNotDefined(user)) {
 		res.status(401).send(r[1]);
@@ -256,7 +255,7 @@ export async function postQueryGraphFull(req: Request, res: Response) {
 
 	debug(
 		logNow(),
-		`User ${session.username} is querying the graph of the entire server of time control ${timeControlId}.`
+		`User ${user.username} is querying the graph of the entire server of time control ${timeControlId}.`
 	);
 
 	const graph = retrieveGraphFull(user, timeControlId);

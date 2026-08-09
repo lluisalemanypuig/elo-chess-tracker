@@ -24,21 +24,18 @@ Contact:
 */
 
 import { z } from 'zod';
-import { PlayerPrivateIdSchema } from '@common/models/player';
+import { PlayerPublicIdSchema } from '@common/models/player';
 
-export const SessionIdLenientSchema = z.object({
-	token: z.string(),
-	username: PlayerPrivateIdSchema
-});
+export const SessionIdSchema = z
+	.object({
+		token: z.string(),
+		publicId: PlayerPublicIdSchema
+	})
+	.strict()
+	.readonly();
 
-export const SessionIdSchema = SessionIdLenientSchema.strict().readonly();
-
-/**
- * @brief A structure that encodes a session.
- *
- * It consists of an identifier string and a username
- */
+// A structure that encodes a session
 export type SessionId = z.infer<typeof SessionIdSchema>;
 
 export const SessionIdTokenFieldName = 'token';
-export const SessionIdUsernameFieldName = 'username';
+export const SessionIdPublicIdFieldName = 'publicId';

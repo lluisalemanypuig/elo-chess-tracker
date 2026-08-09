@@ -44,13 +44,12 @@ import { AuthenticationInputSchema } from '@common/schemas/authentication';
 export async function getPageUserEdit(req: Request, res: Response) {
 	debug(logNow(), `GET ${ROUTES.PAGE_USER_EDIT}...`);
 
-	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	const sessionParse = safeParseRequestCookies(req, res, debug);
 	if (sessionParse.result === 'Exit') {
 		return;
 	}
 	const session = sessionParse.data;
 	const r = isUserLoggedIn(session);
-
 	const user = r[2];
 	if (isNotDefined(user)) {
 		res.status(401).send(r[1]);
@@ -58,7 +57,7 @@ export async function getPageUserEdit(req: Request, res: Response) {
 	}
 
 	if (!user.canDo(USER_EDIT)) {
-		debug(logNow(), `    User '${session.username}' does not have sufficient permissions.`);
+		debug(logNow(), `    User '${user.username}' does not have sufficient permissions.`);
 		res.status(403).send('You cannot edit users');
 		return;
 	}
@@ -73,7 +72,7 @@ export async function getPageUserEdit(req: Request, res: Response) {
 export async function postUserEdit(req: Request, res: Response) {
 	debug(logNow(), `POST ${ROUTES.USER_EDIT}...`);
 
-	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	const sessionParse = safeParseRequestCookies(req, res, debug);
 	if (sessionParse.result === 'Exit') {
 		return;
 	}

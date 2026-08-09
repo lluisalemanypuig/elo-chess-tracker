@@ -42,14 +42,14 @@ import { AuthenticationInputSchema } from '@common/schemas/authentication';
 export async function getPageGraphOwn(req: Request, res: Response) {
 	debug(logNow(), `GET ${ROUTES.PAGE_GRAPH_OWN}...`);
 
-	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	const sessionParse = safeParseRequestCookies(req, res, debug);
 	if (sessionParse.result === 'Exit') {
 		return;
 	}
 	const session = sessionParse.data;
 	const r = isUserLoggedIn(session);
-
-	if (isNotDefined(r[2])) {
+	const user = r[2];
+	if (isNotDefined(user)) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -64,13 +64,12 @@ export async function getPageGraphOwn(req: Request, res: Response) {
 export async function getPageGraphFull(req: Request, res: Response) {
 	debug(logNow(), `GET ${ROUTES.PAGE_GRAPH_FULL}...`);
 
-	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	const sessionParse = safeParseRequestCookies(req, res, debug);
 	if (sessionParse.result === 'Exit') {
 		return;
 	}
 	const session = sessionParse.data;
 	const r = isUserLoggedIn(session);
-
 	const user = r[2];
 	if (isNotDefined(user)) {
 		res.status(401).send(r[1]);
@@ -78,7 +77,7 @@ export async function getPageGraphFull(req: Request, res: Response) {
 	}
 
 	if (!user.canDo(GRAPHS_SEE_USER)) {
-		debug(logNow(), `User '${session.username}' cannot see the whole graph.`);
+		debug(logNow(), `User '${user.username}' cannot see the whole graph.`);
 		res.status(403).send('You cannot see the whole graph.');
 		return;
 	}
@@ -93,13 +92,12 @@ export async function getPageGraphFull(req: Request, res: Response) {
 export async function postRecalculateGraphs(req: Request, res: Response) {
 	debug(logNow(), `POST ${ROUTES.RECALCULATE_GRAPHS}...`);
 
-	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	const sessionParse = safeParseRequestCookies(req, res, debug);
 	if (sessionParse.result === 'Exit') {
 		return;
 	}
 	const session = sessionParse.data;
 	const r = isUserLoggedIn(session);
-
 	const user = r[2];
 	if (isNotDefined(user)) {
 		res.status(401).send(r[1]);
@@ -107,7 +105,7 @@ export async function postRecalculateGraphs(req: Request, res: Response) {
 	}
 
 	if (!user.is(ADMIN)) {
-		debug(logNow(), `User '${session.username}' cannot recalculate graphs.`);
+		debug(logNow(), `User '${user.username}' cannot recalculate graphs.`);
 		res.status(403).send('You cannot recalculate the graphs.');
 		return;
 	}

@@ -42,7 +42,7 @@ import { AuthenticationInputSchema } from '@common/schemas/authentication';
 export async function getPageUserPasswordChange(req: Request, res: Response) {
 	debug(logNow(), `GET ${ROUTES.PAGE_USER_PASSWORD_CHANGE}...`);
 
-	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	const sessionParse = safeParseRequestCookies(req, res, debug);
 	if (sessionParse.result === 'Exit') {
 		return;
 	}
@@ -64,7 +64,7 @@ export async function getPageUserPasswordChange(req: Request, res: Response) {
 export async function postUserPasswordChange(req: Request, res: Response) {
 	debug(logNow(), `POST ${ROUTES.USER_PASSWORD_CHANGE}...`);
 
-	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	const sessionParse = safeParseRequestCookies(req, res, debug);
 	if (sessionParse.result === 'Exit') {
 		return;
 	}
@@ -80,7 +80,6 @@ export async function postUserPasswordChange(req: Request, res: Response) {
 
 	const r = isUserLoggedIn(session);
 	const user = r[2];
-
 	if (isNotDefined(user)) {
 		res.status(200).send(r[1]);
 		return;
@@ -88,20 +87,20 @@ export async function postUserPasswordChange(req: Request, res: Response) {
 
 	// check if password is correct
 	const oldPwd = user.password;
-	const isPasswordCorrect = isPasswordOfUserCorrect(session.username, oldPassword, oldPwd);
+	const isPasswordCorrect = isPasswordOfUserCorrect(user.username, oldPassword, oldPwd);
 
 	// is the password correct?
 	if (!isPasswordCorrect) {
-		debug(logNow(), `    Password for '${session.username}' is incorrect`);
+		debug(logNow(), `    Password for '${user.username}' is incorrect`);
 		res.status(500).send('Old password is not correct.');
 		return;
 	}
 
 	// delete all session ids of this user
-	sessionUserDeleteAll(session.username);
+	sessionUserDeleteAll(session);
 
 	// make new password
-	const pass = encryptPasswordForUser(session.username, newPassword);
+	const pass = encryptPasswordForUser(user.username, newPassword);
 	user.password = { encrypted: pass[0], iv: pass[1] };
 
 	// overwrite user data

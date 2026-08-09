@@ -39,7 +39,7 @@ import { AuthenticationInputSchema } from '@common/schemas/authentication';
 export async function getPageUserRanking(req: Request, res: Response) {
 	debug(logNow(), `GET ${ROUTES.PAGE_USER_RANKING}...`);
 
-	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	const sessionParse = safeParseRequestCookies(req, res, debug);
 	if (sessionParse.result === 'Exit') {
 		return;
 	}

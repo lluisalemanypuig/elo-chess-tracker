@@ -51,7 +51,7 @@ import {
 export async function getQueryUserList(req: Request, res: Response) {
 	debug(logNow(), `GET ${ROUTES.QUERY_USER_LIST}...`);
 
-	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	const sessionParse = safeParseRequestCookies(req, res, debug);
 	if (sessionParse.result === 'Exit') {
 		return;
 	}
@@ -74,7 +74,7 @@ export async function getQueryUserList(req: Request, res: Response) {
 export async function getQueryHtmlUserList(req: Request, res: Response) {
 	debug(logNow(), `GET ${ROUTES.QUERY_HTML_USER_LIST}...`);
 
-	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	const sessionParse = safeParseRequestCookies(req, res, debug);
 	if (sessionParse.result === 'Exit') {
 		return;
 	}
@@ -101,7 +101,7 @@ export async function getQueryHtmlUserList(req: Request, res: Response) {
 export async function getQueryUserHome(req: Request, res: Response) {
 	debug(logNow(), `GET ${ROUTES.QUERY_USER_HOME}...`);
 
-	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	const sessionParse = safeParseRequestCookies(req, res, debug);
 	if (sessionParse.result === 'Exit') {
 		return;
 	}
@@ -139,7 +139,7 @@ export async function getQueryUserHome(req: Request, res: Response) {
 export async function postQueryUserEdit(req: Request, res: Response) {
 	debug(logNow(), `POST ${ROUTES.QUERY_USER_EDIT}...`);
 
-	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	const sessionParse = safeParseRequestCookies(req, res, debug);
 	if (sessionParse.result === 'Exit') {
 		return;
 	}
@@ -178,7 +178,7 @@ export async function postQueryUserEdit(req: Request, res: Response) {
 export async function postQueryUserRanking(req: Request, res: Response) {
 	debug(logNow(), `POST ${ROUTES.QUERY_USER_RANKING}...`);
 
-	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	const sessionParse = safeParseRequestCookies(req, res, debug);
 	if (sessionParse.result === 'Exit') {
 		return;
 	}
