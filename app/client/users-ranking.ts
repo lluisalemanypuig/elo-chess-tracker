@@ -24,6 +24,7 @@ import 'htmx.org';
 import { messageFromResponse, serverCall } from '@client/action';
 import { ROUTES } from '@common/routes';
 import { TimeControlId } from '@common/models/time-control';
+import { isDefined } from '@app/common/utils/is-defined';
 
 async function fillRanking(_event: any) {
 	const selectTimeControl = document.getElementById('select-time-control') as HTMLSelectElement;
@@ -65,7 +66,7 @@ async function fillRanking(_event: any) {
 			newTbody.appendChild(row);
 		}
 
-		if (oldTbody.parentNode !== undefined) {
+		if (isDefined(oldTbody.parentNode)) {
 			oldTbody.parentNode.replaceChild(newTbody, oldTbody);
 		}
 	}
@@ -87,7 +88,7 @@ async function fillRanking(_event: any) {
 			newTbody.appendChild(row);
 		}
 
-		if (oldTbody.parentNode !== undefined) {
+		if (isDefined(oldTbody.parentNode)) {
 			oldTbody.parentNode.replaceChild(newTbody, oldTbody);
 		}
 	}
