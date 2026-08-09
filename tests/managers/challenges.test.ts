@@ -50,6 +50,7 @@ import { Configuration } from '@common/models/configuration/configuration';
 import { PlayerPrivateId, toPlayerPrivateId } from '@common/models/player';
 import { toTimeControlId, toTimeControlName } from '@common/models/time-control';
 import { toDateFull } from '@common/utils/time';
+import { isNotDefined } from '@app/common/utils/is-defined';
 
 const webpage_dir = 'tests/webpage';
 const db_dir = path.join(webpage_dir, 'database');
@@ -139,7 +140,11 @@ const E = toUserGivenName('E');
 const F = toUserGivenName('F');
 
 function user_retrieve(username: PlayerPrivateId): User | undefined {
-	return UsersManager.getInstance().getUserByUsername(username);
+	const d = UsersManager.getInstance().getAllUserDataByPrivateId(username);
+	if (isNotDefined(d)) {
+		return undefined;
+	}
+	return d.user;
 }
 
 describe('Check initialization', () => {

@@ -145,7 +145,11 @@ const ee = toUserGivenName('ee');
 const ff = toUserGivenName('ff');
 
 function u(username: string): User {
-	return UsersManager.getInstance().getUserByUsername(toPlayerPrivateId(username)) as User;
+	const d = UsersManager.getInstance().getAllUserDataByPrivateId(toPlayerPrivateId(username));
+	if (isNotDefined(d)) {
+		throw new Error(`Error in tests`);
+	}
+	return d.user;
 }
 
 describe('Server setup', () => {

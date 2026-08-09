@@ -26,6 +26,7 @@ Contact:
 import { UsersManager } from '@server/managers/users-manager';
 import { toUserGivenName, User } from '@common/models/user';
 import { toPlayerPrivateId } from '@common/models/player';
+import { isNotDefined } from '@app/common/utils/is-defined';
 
 const a = toPlayerPrivateId('a');
 const b = toPlayerPrivateId('b');
@@ -67,18 +68,18 @@ describe('Users Manager', () => {
 		users.addUser(cU);
 		expect(users.numUsers()).toBe(3);
 
-		expect(users.getUserAt(0)).toEqual(aU);
-		expect(users.getUserAt(1)).toEqual(bU);
-		expect(users.getUserAt(2)).toEqual(cU);
+		expect(users.getAllUserDataAtSafeIdx(0).user).toEqual(aU);
+		expect(users.getAllUserDataAtSafeIdx(1).user).toEqual(bU);
+		expect(users.getAllUserDataAtSafeIdx(2).user).toEqual(cU);
 
-		expect(users.getUserIndexByUsername(a)).toBe(0);
-		expect(users.getUserIndex(aU)).toBe(0);
+		expect(users.getIndexByPrivateId(a)).toBe(0);
+		expect(users.getIndexByPrivateId(aU.username)).toBe(0);
 
-		expect(users.getUserIndexByUsername(b)).toBe(1);
-		expect(users.getUserIndex(bU)).toBe(1);
+		expect(users.getIndexByPrivateId(b)).toBe(1);
+		expect(users.getIndexByPrivateId(bU.username)).toBe(1);
 
-		expect(users.getUserIndexByUsername(c)).toBe(2);
-		expect(users.getUserIndex(cU)).toBe(2);
+		expect(users.getIndexByPrivateId(c)).toBe(2);
+		expect(users.getIndexByPrivateId(cU.username)).toBe(2);
 	});
 
 	test('Replace some users', () => {
@@ -95,26 +96,31 @@ describe('Users Manager', () => {
 
 		const dU = new User(d, DD, dd, { encrypted: 'p', iv: 'w' }, [], [], []);
 
-		users.replace_user(dU, users.getUserIndex(bU) as number);
+		const idx = users.getIndexByPrivateId(bU.username);
+		expect(idx).not.toBeNull();
+		if (isNotDefined(idx)) {
+			throw new Error(`Error in test`);
+		}
+		users.replaceUser(dU, idx);
 
-		expect(() => users.replace_user(bU, 500)).toThrow();
+		expect(() => users.replaceUser(bU, 500)).toThrow();
 
 		expect(users.numUsers()).toBe(3);
 
-		expect(users.getUserAt(0)).toEqual(aU);
-		expect(users.getUserAt(1)).toEqual(dU);
-		expect(users.getUserAt(2)).toEqual(cU);
+		expect(users.getAllUserDataAtSafeIdx(0).user).toEqual(aU);
+		expect(users.getAllUserDataAtSafeIdx(1).user).toEqual(dU);
+		expect(users.getAllUserDataAtSafeIdx(2).user).toEqual(cU);
 
-		expect(users.getUserIndexByUsername(a)).toBe(0);
-		expect(users.getUserIndex(aU)).toBe(0);
+		expect(users.getIndexByPrivateId(a)).toBe(0);
+		expect(users.getIndexByPrivateId(aU.username)).toBe(0);
 
-		expect(users.getUserIndexByUsername(b)).toBe(undefined);
-		expect(users.getUserIndex(bU)).toBe(undefined);
+		expect(users.getIndexByPrivateId(b)).toBe(undefined);
+		expect(users.getIndexByPrivateId(bU.username)).toBe(undefined);
 
-		expect(users.getUserIndexByUsername(d)).toBe(1);
-		expect(users.getUserIndex(dU)).toBe(1);
+		expect(users.getIndexByPrivateId(d)).toBe(1);
+		expect(users.getIndexByPrivateId(dU.username)).toBe(1);
 
-		expect(users.getUserIndexByUsername(c)).toBe(2);
-		expect(users.getUserIndex(cU)).toBe(2);
+		expect(users.getIndexByPrivateId(c)).toBe(2);
+		expect(users.getIndexByPrivateId(cU.username)).toBe(2);
 	});
 });

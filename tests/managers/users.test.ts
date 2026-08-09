@@ -229,7 +229,11 @@ function testUserExists(username: string): boolean {
 }
 
 function testUserRetrieve(username: string): User | undefined {
-	return UsersManager.getInstance().getUserByUsername(toPlayerPrivateId(username));
+	const d = UsersManager.getInstance().getAllUserDataByPrivateId(toPlayerPrivateId(username));
+	if (isNotDefined(d)) {
+		return undefined;
+	}
+	return d.user;
 }
 
 function testUserGetAll(): User[] {
