@@ -108,7 +108,7 @@ const C = toPlayerPrivateId('C');
 
 describe('Server setup', () => {
 	test('Load an empty server', async () => {
-		await run_command('./tests/initialize_empty.sh');
+		await run_command('./tests/initialize-empty.sh');
 		expect(() => serverInitFromData('tests/webpage', configuration)).not.toThrow();
 	});
 });
@@ -248,7 +248,7 @@ describe('Simple construction and query', () => {
 describe('Server reset', () => {
 	test('Clear and reload server', async () => {
 		clearServer();
-		await run_command('./tests/initialize_empty.sh');
+		await run_command('./tests/initialize-empty.sh');
 		serverInitFromData('tests/webpage', configuration);
 	});
 });

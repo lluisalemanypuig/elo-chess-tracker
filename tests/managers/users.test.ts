@@ -264,7 +264,7 @@ const ff = toPlayerPrivateId('ff');
 
 describe('Create users', () => {
 	test('In an empty server', async () => {
-		await run_command('./tests/initialize_empty.sh');
+		await run_command('./tests/initialize-empty.sh');
 		clearServer();
 		serverInitFromData('tests/webpage/', classical_rapid_blitz);
 
@@ -385,7 +385,7 @@ describe('Create users', () => {
 
 describe('Modify existing users', () => {
 	test('Newly created user', async () => {
-		await run_command('./tests/initialize_empty.sh');
+		await run_command('./tests/initialize-empty.sh');
 
 		clearServer();
 		serverInitFromData('tests/webpage/', classical_rapid_blitz);

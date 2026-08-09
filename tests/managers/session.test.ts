@@ -129,7 +129,7 @@ const f = toUserGivenName('f');
 
 describe('Session management via functions', () => {
 	test('Load an empty server', async () => {
-		await run_command('./tests/initialize_empty.sh');
+		await run_command('./tests/initialize-empty.sh');
 		clearServer();
 		expect(() => serverInitFromData('tests/webpage', configuration)).not.toThrow();
 

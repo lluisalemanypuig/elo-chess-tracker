@@ -150,7 +150,7 @@ function u(username: string): User {
 
 describe('Server setup', () => {
 	test('Fill an empty server', async () => {
-		await run_command('./tests/initialize_empty.sh');
+		await run_command('./tests/initialize-empty.sh');
 		expect(() => serverInitFromData('tests/webpage', configuration)).not.toThrow();
 
 		aU = userAddNew(a, A, aa, 'aaaa', [ADMIN]);

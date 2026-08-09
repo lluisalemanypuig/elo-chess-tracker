@@ -122,7 +122,7 @@ const configuration: Configuration = {
 
 describe('Configure server', () => {
 	test('Load an empty server', async () => {
-		await run_command('./tests/initialize_empty.sh');
+		await run_command('./tests/initialize-empty.sh');
 		expect(() => serverInitFromData('tests/webpage', configuration)).not.toThrow();
 	});
 

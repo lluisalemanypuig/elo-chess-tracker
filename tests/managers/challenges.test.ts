@@ -144,7 +144,7 @@ function user_retrieve(username: PlayerPrivateId): User | undefined {
 
 describe('Check initialization', () => {
 	test('In an empty server', async () => {
-		await run_command('./tests/initialize_empty.sh');
+		await run_command('./tests/initialize-empty.sh');
 		clearServer();
 		serverInitFromData('tests/webpage/', classical_rapid_blitz);
 
