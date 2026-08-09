@@ -29,7 +29,7 @@ import { ratingFromStringElo } from '@common/io/ratings/Elo/rating';
 describe('JSON conversion', () => {
 	test('from string to rating', () => {
 		const elo = ratingFromStringElo(
-			'{"rating": 1500.43, "numGames": 100, "won": 50, "drawn": 20, "lost": 30, "K": 40, "surpassed_2400": true}'
+			'{"rating": 1500.43, "numGames": 100, "won": 50, "drawn": 20, "lost": 30, "K": 40, "surpassed2400": true}'
 		);
 		expect(elo).toEqual({
 			rating: 1500.43,
@@ -38,7 +38,7 @@ describe('JSON conversion', () => {
 			drawn: 20,
 			lost: 30,
 			K: 40,
-			surpassed_2400: true
+			surpassed2400: true
 		});
 	});
 });
@@ -52,7 +52,7 @@ describe('Initial rating', () => {
 		expect(elo.drawn).toBe(0);
 		expect(elo.lost).toBe(0);
 		expect(elo.K).toBe(40);
-		expect(elo.surpassed_2400).toBe(false);
+		expect(elo.surpassed2400).toBe(false);
 	});
 });
 
@@ -65,7 +65,7 @@ describe('Clone', () => {
 			drawn: 20,
 			lost: 30,
 			K: 40,
-			surpassed_2400: true
+			surpassed2400: true
 		};
 		const rc = { ...r };
 
@@ -75,6 +75,6 @@ describe('Clone', () => {
 		expect(rc.drawn).toBe(r.drawn);
 		expect(rc.lost).toBe(r.lost);
 		expect(rc.K).toBe(r.K);
-		expect(rc.surpassed_2400).toBe(r.surpassed_2400);
+		expect(rc.surpassed2400).toBe(r.surpassed2400);
 	});
 });

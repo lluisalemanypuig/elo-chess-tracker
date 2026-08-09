@@ -25,7 +25,7 @@ Contact:
 
 import { Rating } from '@common/models/rating-framework/rating';
 
-export const EloRatingKeys = ['rating', 'numGames', 'won', 'drawn', 'lost', 'K', 'surpassed_2400'];
+export const EloRatingKeys = ['rating', 'numGames', 'won', 'drawn', 'lost', 'K', 'surpassed2400'];
 
 /**
  * @brief Simple class to encode a rating.
@@ -34,7 +34,7 @@ export class EloRating extends Rating {
 	/// Constant
 	public K: number;
 	// Ever surpassed 2400
-	public surpassed_2400: boolean;
+	public surpassed2400: boolean;
 
 	/**
 	 * @brief Constructor
@@ -44,7 +44,7 @@ export class EloRating extends Rating {
 	 * @param drawn Number of drawn games
 	 * @param lost Number of lost games
 	 * @param K Constant
-	 * @param surpassed_2400 Has the 2400 threshold rating ever been surpassed?
+	 * @param surpassed2400 Has the 2400 threshold rating ever been surpassed?
 	 */
 	constructor(
 		rating: number,
@@ -53,16 +53,16 @@ export class EloRating extends Rating {
 		drawn: number,
 		lost: number,
 		K: number,
-		surpassed_2400: boolean
+		surpassed2400: boolean
 	) {
 		super(rating, numGames, won, drawn, lost);
 		this.K = K;
-		this.surpassed_2400 = surpassed_2400;
+		this.surpassed2400 = surpassed2400;
 	}
 
 	/// Clones the object.
 	override clone(): EloRating {
-		return new EloRating(this.rating, this.numGames, this.won, this.drawn, this.lost, this.K, this.surpassed_2400);
+		return new EloRating(this.rating, this.numGames, this.won, this.drawn, this.lost, this.K, this.surpassed2400);
 	}
 }
 

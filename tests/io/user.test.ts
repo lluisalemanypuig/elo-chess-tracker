@@ -131,7 +131,7 @@ describe('IO conversion (Elo)', () => {
 
 	test('string (3)', () => {
 		const u = userFromString(
-			'{ "username": "u", "firstName": "f", "lastName": "l", "password": { "encrypted": "a", "iv": "b" }, "roles": ["student", "admin"], "games": [ {"timeControl": "blitz", "records": [{ "record": "2024-12-31", "amount": 1 }]}, {"timeControl": "rapid", "records": [{ "record": "2025-01-01", "amount": 1 }]} ], "ratings": [ { "timeControl": "blitz", "rating": { "rating": 1500, "numGames": 0, "won": 0, "drawn": 0, "lost": 0, "K": 40, "surpassed_2400": false } }, { "timeControl": "classical", "rating": { "rating": 1700, "numGames": 0, "won": 0, "drawn": 0, "lost": 0, "K": 40, "surpassed_2400": false } } ] }'
+			'{ "username": "u", "firstName": "f", "lastName": "l", "password": { "encrypted": "a", "iv": "b" }, "roles": ["student", "admin"], "games": [ {"timeControl": "blitz", "records": [{ "record": "2024-12-31", "amount": 1 }]}, {"timeControl": "rapid", "records": [{ "record": "2025-01-01", "amount": 1 }]} ], "ratings": [ { "timeControl": "blitz", "rating": { "rating": 1500, "numGames": 0, "won": 0, "drawn": 0, "lost": 0, "K": 40, "surpassed2400": false } }, { "timeControl": "classical", "rating": { "rating": 1700, "numGames": 0, "won": 0, "drawn": 0, "lost": 0, "K": 40, "surpassed2400": false } } ] }'
 		);
 		expect(u).not.toBeNull();
 		if (isNotDefined(u)) {

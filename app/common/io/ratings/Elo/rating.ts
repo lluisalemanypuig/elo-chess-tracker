@@ -32,7 +32,7 @@ import { EloRating, EloRatingKeys } from '@common/models/rating-framework/Elo/ra
  * @returns A TimeControlRating object.
  */
 export function ratingFromJsonElo(json: any): EloRating {
-	return new EloRating(json.rating, json.numGames, json.won, json.drawn, json.lost, json.K, json.surpassed_2400);
+	return new EloRating(json.rating, json.numGames, json.won, json.drawn, json.lost, json.K, json.surpassed2400);
 }
 
 /**

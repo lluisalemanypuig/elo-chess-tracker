@@ -69,12 +69,14 @@ export class Rating {
 	}
 }
 
-export const RatingSchema = z.object({
-	rating: z.number(),
-	numGames: z.number(),
-	won: z.number(),
-	drawn: z.number(),
-	lost: z.number()
-});
+export const RatingSchema = z
+	.object({
+		rating: z.number(),
+		numGames: z.number(),
+		won: z.number(),
+		drawn: z.number(),
+		lost: z.number()
+	})
+	.strict();
 
 export const RatingArraySchema = z.array(RatingSchema);

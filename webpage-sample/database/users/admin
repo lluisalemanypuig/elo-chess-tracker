@@ -19,7 +19,7 @@
 				"drawn": 0,
 				"lost": 0,
 				"K": 40,
-				"surpassed_2400": false
+				"surpassed2400": false
 			}
 		},
 		{
@@ -31,7 +31,7 @@
 				"drawn": 0,
 				"lost": 0,
 				"K": 40,
-				"surpassed_2400": false
+				"surpassed2400": false
 			}
 		},
 		{
@@ -43,7 +43,7 @@
 				"drawn": 0,
 				"lost": 0,
 				"K": 40,
-				"surpassed_2400": false
+				"surpassed2400": false
 			}
 		}
 	],

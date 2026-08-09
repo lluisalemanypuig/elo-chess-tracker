@@ -32,7 +32,7 @@ describe('IO conversion -- Elo', () => {
 
 	test('string', () => {
 		const g = gameFromString(
-			'{ "id": "0001", "title": "asdf", "white": "W", "whiteRating": {"rating": 1500.43, "numGames": 100, "won": 50, "drawn": 20, "lost": 30, "K": 40, "surpassed_2400": true}, "black": "B", "blackRating" : {"rating": 1500.43, "numGames": 100, "won": 50, "drawn": 20, "lost": 30, "K": 40, "surpassed_2400": false}, "result": "black_wins", "timeControlId": "blitz", "timeControlName": "Blitz (5 + 3)", "when": "2024-12-29..12:24:00"}'
+			'{ "id": "0001", "title": "asdf", "white": "W", "whiteRating": {"rating": 1500.43, "numGames": 100, "won": 50, "drawn": 20, "lost": 30, "K": 40, "surpassed2400": true}, "black": "B", "blackRating" : {"rating": 1500.43, "numGames": 100, "won": 50, "drawn": 20, "lost": 30, "K": 40, "surpassed2400": false}, "result": "black_wins", "timeControlId": "blitz", "timeControlName": "Blitz (5 + 3)", "when": "2024-12-29..12:24:00"}'
 		);
 		expect(g).not.toBeNull();
 		if (isNotDefined(g)) {
@@ -48,7 +48,7 @@ describe('IO conversion -- Elo', () => {
 			drawn: 20,
 			lost: 30,
 			K: 40,
-			surpassed_2400: true
+			surpassed2400: true
 		});
 		expect(g.black).toEqual('B');
 		expect(g.blackRating).toEqual({
@@ -58,7 +58,7 @@ describe('IO conversion -- Elo', () => {
 			drawn: 20,
 			lost: 30,
 			K: 40,
-			surpassed_2400: false
+			surpassed2400: false
 		});
 		expect(g.result).toEqual('black_wins');
 		expect(g.timeControlId).toEqual('blitz');

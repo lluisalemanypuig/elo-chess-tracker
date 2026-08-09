@@ -67,7 +67,7 @@ REGULATIONS IN THIS WAY
 
 function updateConstantK(elo: EloRating): void {
 	// the constant should not be changed and stay at 10.
-	if (elo.surpassed_2400) {
+	if (elo.surpassed2400) {
 		return;
 	}
 
@@ -78,7 +78,7 @@ function updateConstantK(elo: EloRating): void {
 			elo.K = 20;
 		} else {
 			elo.K = 10;
-			elo.surpassed_2400 = true;
+			elo.surpassed2400 = true;
 		}
 	}
 }

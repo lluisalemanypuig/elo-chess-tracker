@@ -213,7 +213,7 @@ describe('Series of games', () => {
 		}
 
 		expect(W.rating).toBeGreaterThanOrEqual(2400);
-		expect(W.surpassed_2400).toBe(true);
+		expect(W.surpassed2400).toBe(true);
 		expect(W.K).toBe(10);
 		expect(W.numGames).toBeGreaterThanOrEqual(30);
 
@@ -256,7 +256,7 @@ describe('Series of games', () => {
 			B.rating = 2000;
 		}
 
-		expect(W.surpassed_2400).toBe(true);
+		expect(W.surpassed2400).toBe(true);
 		expect(W.K).toBe(10);
 
 		while (W.rating > 2200) {
@@ -276,7 +276,7 @@ describe('Series of games', () => {
 			B.rating = 2000;
 		}
 
-		expect(W.surpassed_2400).toBe(true);
+		expect(W.surpassed2400).toBe(true);
 		expect(W.rating).toBeLessThan(2400);
 		expect(W.K).toBe(10);
 	});
