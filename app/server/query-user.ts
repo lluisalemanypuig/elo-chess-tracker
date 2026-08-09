@@ -116,9 +116,16 @@ export async function getQueryUserHome(req: Request, res: Response) {
 	}
 
 	const ratingsUser = user.ratings.map((value: TimeControlRating): TimeControlAndRating => {
-		let R = value.rating.clone();
-		R.rating = Math.round(R.rating);
-		return { timeControlId: value.timeControl, rating: R };
+		return {
+			timeControlId: value.timeControl,
+			rating: {
+				rating: Math.round(value.rating.rating),
+				numGames: value.rating.numGames,
+				won: value.rating.won,
+				drawn: value.rating.drawn,
+				lost: value.rating.lost
+			}
+		};
 	});
 
 	const output: QueryUserHomeOutput = {
