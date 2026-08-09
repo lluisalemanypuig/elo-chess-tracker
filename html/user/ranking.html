@@ -45,8 +45,8 @@ Full source code of elo-chess-tracker:
 					<label class="label-basic">Time control:</label>
 					<select
 						class="select-basic"
-						id="select_time_control"
-						hx-get="/query/html/time_controls_unique"
+						id="select-time-control"
+						hx-get="/query/html/time-controls-unique"
 						hx-trigger="load"
 						hx-swap="beforeend"
 					>
@@ -55,7 +55,7 @@ Full source code of elo-chess-tracker:
 				</div>
 
 				<div>
-					<table class="table-users" id="users_table_with_games">
+					<table class="table-users" id="users-table-with-games">
 						<thead>
 							<tr>
 								<th>Player</th>
@@ -71,7 +71,7 @@ Full source code of elo-chess-tracker:
 				</div>
 
 				<div>
-					<table class="table-users" id="users_table_without_games">
+					<table class="table-users" id="users-table-without-games">
 						<thead>
 							<tr>
 								<th>Player</th>
@@ -88,7 +88,7 @@ Full source code of elo-chess-tracker:
 			</div>
 
 			<footer class="footer-copyright-notice">
-				Elo chess tracker (v<i hx-get="/version_number" hx-trigger="load"></i>). Code
+				Elo chess tracker (v<i hx-get="/version-number" hx-trigger="load"></i>). Code
 				<a href="https://github.com/lluisalemanypuig/elo-chess-tracker">online at Github</a>.
 			</footer>
 		</div>

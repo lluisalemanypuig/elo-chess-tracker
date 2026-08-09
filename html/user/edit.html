@@ -42,10 +42,10 @@ Full source code of elo-chess-tracker:
 				<h2 class="title2">Edit an existing user</h2>
 
 				<div class="label-and-input">
-					<label class="label-basic" for="datalist_username">Select user:</label>
-					<input class="input-text" list="datalist_username" id="username_list" />
+					<label class="label-basic" for="datalist-username">Select user:</label>
+					<input class="input-text" list="datalist-username" id="username-list" />
 					<datalist
-						id="datalist_username"
+						id="datalist-username"
 						hx-swap="innerHTML"
 						hx-get="/query/html/user/list"
 						hx-trigger="load"
@@ -54,25 +54,25 @@ Full source code of elo-chess-tracker:
 				</div>
 
 				<div class="label-and-input">
-					<label class="label-basic" for="box_firstName">First name:</label>
-					<input class="input-text" type="text" id="box_firstName" />
+					<label class="label-basic" for="box-first-name">First name:</label>
+					<input class="input-text" type="text" id="box-first-name" />
 				</div>
 
 				<div class="label-and-input">
-					<label class="label-basic" for="box_lastName">Last name:</label>
-					<input class="input-text" type="text" id="box_lastName" />
+					<label class="label-basic" for="box-last-name">Last name:</label>
+					<input class="input-text" type="text" id="box-last-name" />
 				</div>
 
 				<br />
 				<label class="title3">Role:</label>
-				<div id="div_role_checkboxes"></div>
+				<div id="div-role-checkboxes"></div>
 
 				<br />
-				<button class="button-submit" type="button" id="submit_changes_button">Submit</button>
+				<button class="button-submit" type="button" id="submit-changes-button">Submit</button>
 			</div>
 
 			<footer class="footer-copyright-notice">
-				Elo chess tracker (v<i hx-get="/version_number" hx-trigger="load"></i>). Code
+				Elo chess tracker (v<i hx-get="/version-number" hx-trigger="load"></i>). Code
 				<a href="https://github.com/lluisalemanypuig/elo-chess-tracker">online at Github</a>.
 			</footer>
 		</div>

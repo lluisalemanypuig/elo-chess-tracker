@@ -44,14 +44,14 @@ Full source code of elo-chess-tracker:
 				<br />
 				<div class="label-and-input">
 					<label class="label-basic">White:</label>
-					<input class="input-select" list="datalist_white_users" id="list_white_users" />
-					<datalist id="datalist_white_users"></datalist>
+					<input class="input-select" list="datalist-white-users" id="list-white-users" />
+					<datalist id="datalist-white-users"></datalist>
 				</div>
 
 				<div class="label-and-input">
 					<label class="label-basic">Black:</label>
-					<input class="input-select" list="datalist_black_users" id="list_black_users" />
-					<datalist id="datalist_black_users"></datalist>
+					<input class="input-select" list="datalist-black-users" id="list-black-users" />
+					<datalist id="datalist-black-users"></datalist>
 				</div>
 
 				<div class="label-and-select">
@@ -65,10 +65,10 @@ Full source code of elo-chess-tracker:
 				</div>
 
 				<div class="label-and-select">
-					<label class="label-basic" for="select_time_control">Time control:</label>
+					<label class="label-basic" for="select-time-control">Time control:</label>
 					<select
 						class="select-basic"
-						id="select_time_control"
+						id="select-time-control"
 						hx-get="/query/html/time_controls"
 						hx-trigger="load"
 						hx-swap="beforeend"
@@ -78,26 +78,26 @@ Full source code of elo-chess-tracker:
 				</div>
 
 				<div class="label-and-input">
-					<label class="label-basic" for="input_game_date">Date:</label>
-					<input class="input-date" type="date" id="input_game_date" />
+					<label class="label-basic" for="input-game-date">Date:</label>
+					<input class="input-date" type="date" id="input-game-date" />
 				</div>
 
 				<div class="label-and-input">
-					<label class="label-basic" for="input_game_time">Time:</label>
-					<input class="input-time" type="time" id="input_game_time" />
+					<label class="label-basic" for="input-game-time">Time:</label>
+					<input class="input-time" type="time" id="input-game-time" />
 				</div>
 
 				<div class="label-and-input">
-					<label class="label-basic" for="input_game_title">Title:</label>
-					<input class="input-text" type="text" id="input_game_title" />
+					<label class="label-basic" for="input-game-title">Title:</label>
+					<input class="input-text" type="text" id="input-game-title" />
 				</div>
 
 				<br />
-				<button class="button-submit" type="button" id="submit_new_game_button">Submit</button>
+				<button class="button-submit" type="button" id="submit-new-game-button">Submit</button>
 			</div>
 
 			<footer class="footer-copyright-notice">
-				Elo chess tracker (v<i hx-get="/version_number" hx-trigger="load"></i>). Code
+				Elo chess tracker (v<i hx-get="/version-number" hx-trigger="load"></i>). Code
 				<a href="https://github.com/lluisalemanypuig/elo-chess-tracker">online at Github</a>.
 			</footer>
 		</div>
