@@ -32,8 +32,11 @@ import { Password } from '@common/models/password';
 // a!b·c$d%e&f/g(h)i=j?k¿l|m@n#o~p¬qr\'s[¡]t{u}v/w*x-y+zºAªB"C,D.E;F:G_HIJKLMNOPQRSTUVWXYZ0123456789
 
 // In case of accidental overwrite, use:
-// '$ALLOWED_SYMBOLS_ENCRYPT'.normalize('NFC');
+// '$ALLOWED-SYMBOLS-ENCRYPT'.normalize('NFC');
+// (replace the dashes '-' with underscores '_')
 
+// This string is randomized by the build script which the administrator must
+// use in order to configure the webpage in their machine.
 const allowed_symbols: string = '$ALLOWED_SYMBOLS_ENCRYPT'.normalize('NFC');
 
 /// Logarithm of 'x' in base 'base'

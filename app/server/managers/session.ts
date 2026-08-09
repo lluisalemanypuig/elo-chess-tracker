@@ -39,10 +39,13 @@ import { PlayerPrivateId } from '@common/models/player';
 // The original string was
 // "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+-*/ª!·$%&/()=?¿¡'º|@#~€¬^{},;.:_";
 
-/// This string is randomized by the build script which the administrator must
-/// use in order to configure the webpage in their machine.
-const character_samples: string =
-	'@a6XKzQdcW·¬Rg"+¡vD*;Fj}G,_NJSxTZ&ª=k/VAOuiw.C?4Eq-r1m57)B~$:º2/YU[]I!P|n8betsyH%( 9#{l0fhoL3pM¿';
+// In case of accidental overwrite, use:
+// '$ALLOWED-SYMBOLS-COOKIES'.normalize('NFC');
+// (replace the dashes '-' with underscores '_')
+
+// This string is randomized by the build script which the administrator must
+// use in order to configure the webpage in their machine.
+const character_samples: string = '$ALLOWED_SYMBOLS_COOKIES';
 
 /// Makes a random session id from a starting string.
 function random_session_id(str: string): string {
