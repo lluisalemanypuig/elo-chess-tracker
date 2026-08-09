@@ -31,15 +31,15 @@ import {
 	session_id_delete,
 	session_user_delete_all
 } from '@server/managers/session';
-import { SessionIDManager } from '@server/managers/session_id_manager';
+import { SessionIDManager } from '@app/server/managers/session-id-manager';
 import { user_add_new } from '@server/managers/users';
-import { SessionID } from '@common/models/session_id';
-import { ADMIN, MEMBER, STUDENT } from '@common/models/user_role';
+import { SessionID } from '@app/common/models/session-id';
+import { ADMIN, MEMBER, STUDENT } from '@app/common/models/user-role';
 import { run_command } from '@tests/exec_utils';
 import { Configuration } from '@common/models/configuration/configuration';
 import { toPlayerPrivateId } from '@common/models/player';
 import { toUserGivenName } from '@common/models/user';
-import { toTimeControlId, toTimeControlName } from '@common/models/time_control';
+import { toTimeControlId, toTimeControlName } from '@app/common/models/time-control';
 
 const Classical = toTimeControlId('Classical');
 const Classical90p30 = toTimeControlName('Classical (90 + 30)');

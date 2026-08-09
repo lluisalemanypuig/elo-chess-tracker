@@ -33,25 +33,25 @@ import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:app_main');
 
 import fs from 'fs';
-import { log_now } from '@common/utils/time';
+import { logNow } from '@common/utils/time';
 
 import { server_init_from_parameters } from '@server/managers/memory/initialization';
-import { ConfigurationManager } from '@server/managers/configuration_manager';
+import { ConfigurationManager } from '@app/server/managers/configuration-manager';
 
-debug(log_now(), 'Initialize server memory...');
+debug(logNow(), 'Initialize server memory...');
 
 server_init_from_parameters(process.argv.slice(2));
 
-debug(log_now(), 'Import app...');
+debug(logNow(), 'Import app...');
 
 import { app } from '@app/build';
 
-debug(log_now(), '    Imported!');
+debug(logNow(), '    Imported!');
 
 import http from 'http';
 import https from 'https';
 import { AddressInfo } from 'net';
-import { EnvironmentManager } from '@server/managers/environment_manager';
+import { EnvironmentManager } from '@app/server/managers/environment-manager';
 
 // Normalize a port into a number, string, or false.
 function normalizePort(val: any): any {
@@ -77,7 +77,7 @@ let server_configuration = ConfigurationManager.get_instance();
 if (server_environment.is_SSL_info_valid()) {
 	const port_https = server_configuration.get_port_https();
 
-	debug(log_now(), `Create https server at port '${port_https}'`);
+	debug(logNow(), `Create https server at port '${port_https}'`);
 
 	// Get port from environment and store in Express.
 	let port = normalizePort(process.env['PORT'] || port_https);
@@ -88,7 +88,7 @@ if (server_environment.is_SSL_info_valid()) {
 		const certificate = fs.readFileSync(server_environment.get_ssl_public_key_file(), 'utf8');
 
 		if (server_environment.get_ssl_passphrase_file() != '') {
-			debug(log_now(), 'Passphrase file found...');
+			debug(logNow(), 'Passphrase file found...');
 			let passphrase = fs.readFileSync(server_environment.get_ssl_passphrase_file(), 'utf8');
 			return https.createServer(
 				{
@@ -100,14 +100,14 @@ if (server_environment.is_SSL_info_valid()) {
 			);
 		}
 
-		debug(log_now(), 'No passphrase file given...');
+		debug(logNow(), 'No passphrase file given...');
 		return https.createServer({ key: private_key, cert: certificate }, app);
 	})();
 
 	function https_on_listening(): void {
 		let addr = https_server.address();
 		let bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + (addr as AddressInfo).port;
-		debug(log_now(), 'Listening on ' + bind);
+		debug(logNow(), 'Listening on ' + bind);
 	}
 	function https_on_error(error: any): void {
 		if (error.syscall !== 'listen') {
@@ -139,7 +139,7 @@ if (server_environment.is_SSL_info_valid()) {
 // Create HTTP server
 const port_http = server_configuration.get_port_http();
 
-debug(log_now(), `Create http server at port '${port_http}'`);
+debug(logNow(), `Create http server at port '${port_http}'`);
 
 // Get port from environment and store in Express.
 let port = normalizePort(process.env['PORT'] || port_http);
@@ -172,7 +172,7 @@ function http_on_error(error: any): void {
 function http_on_listening(): void {
 	let addr = http_server.address();
 	let bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + (addr as AddressInfo).port;
-	debug(log_now(), 'Listening on ' + bind);
+	debug(logNow(), 'Listening on ' + bind);
 }
 
 let http_server = http.createServer(app);

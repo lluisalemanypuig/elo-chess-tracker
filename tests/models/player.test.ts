@@ -24,9 +24,9 @@ Contact:
 */
 
 import { Player, toPlayerPrivateId } from '@common/models/player';
-import { TimeControlRating } from '@common/models/time_control_rating';
+import { TimeControlRating } from '@app/common/models/time-control-rating';
 import { EloRating } from '@common/models/rating_framework/Elo/rating';
-import { toTimeControlId } from '@common/models/time_control';
+import { toTimeControlId } from '@app/common/models/time-control';
 
 const Classical = toTimeControlId('Classical');
 const Rapid = toTimeControlId('Rapid');

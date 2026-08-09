@@ -23,7 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { isDefined } from '@common/utils/is_defined';
+import { isDefined } from '@app/common/utils/is-defined';
 
 type SameSite = 'Lax';
 

@@ -27,8 +27,8 @@ import { z } from 'zod';
 import { Rating } from '@common/models/rating_framework/rating';
 import { copyarray } from '@server/utils/misc';
 import { search_linear_by_key } from '@server/utils/searching';
-import { TimeControlId } from '@common/models/time_control';
-import { TimeControlRating } from '@common/models/time_control_rating';
+import { TimeControlId } from '@app/common/models/time-control';
+import { TimeControlRating } from '@app/common/models/time-control-rating';
 
 export const PlayerKeys = ['username', 'ratings'];
 

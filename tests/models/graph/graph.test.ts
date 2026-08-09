@@ -24,7 +24,7 @@ Contact:
 */
 
 import { toPlayerPrivateId } from '@common/models/player';
-import { EdgeMetadata } from '@common/models/graph/edge_metadata';
+import { EdgeMetadata } from '@app/common/models/graph/edge-metadata';
 import { Graph } from '@common/models/graph/graph';
 
 const A = toPlayerPrivateId('A');

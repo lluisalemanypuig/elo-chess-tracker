@@ -24,11 +24,11 @@ Contact:
 */
 
 import { z } from 'zod';
-import { EdgeMetadata } from '@common/models/graph/edge_metadata';
+import { EdgeMetadata } from '@app/common/models/graph/edge-metadata';
 import { EdgeSchema, Edge } from '@common/models/graph/edge';
 import { search_by_key, where_should_be_inserted_by_key } from '@server/utils/searching';
 import { GameResult, opposite_result } from '@common/models/game';
-import { isDefined, isNotDefined } from '@common/utils/is_defined';
+import { isDefined, isNotDefined } from '@app/common/utils/is-defined';
 import { PlayerPrivateId } from '@common/models/player';
 
 export const NeighborhoodSchema = z.array(EdgeSchema);

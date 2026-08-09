@@ -23,7 +23,7 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { isNotDefined } from '@common/utils/is_defined';
+import { isNotDefined } from '@app/common/utils/is-defined';
 import { challenge_from_string } from '@common/io/challenge';
 
 describe('IO conversion', () => {

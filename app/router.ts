@@ -28,20 +28,20 @@ import { Request, Response } from 'express';
 
 import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:app_router');
-import { log_now } from '@common/utils/time';
+import { logNow } from '@common/utils/time';
 
-import { EnvironmentManager, get_execution_directory } from '@server/managers/environment_manager';
-import { ConfigurationManager } from '@server/managers/configuration_manager';
+import { EnvironmentManager, get_execution_directory } from '@app/server/managers/environment-manager';
+import { ConfigurationManager } from '@app/server/managers/configuration-manager';
 import { Routes } from '@common/routes';
 
 let router = express.Router();
 
 // serve all *.css files
 router.get(Routes.CSS_ALL, (req: Request, res: Response) => {
-	debug(log_now(), 'GET css file...');
-	debug(log_now(), `    request: ${req.url}`);
+	debug(logNow(), 'GET css file...');
+	debug(logNow(), `    request: ${req.url}`);
 	const filepath = `${get_execution_directory()}/${req.url}`;
-	debug(log_now(), `    file to send: ${filepath}`);
+	debug(logNow(), `    file to send: ${filepath}`);
 	res.status(200);
 	if (ConfigurationManager.should_cache_data()) {
 		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
@@ -52,7 +52,7 @@ router.get(Routes.CSS_ALL, (req: Request, res: Response) => {
 /* ************************************************************************** */
 /* Version number */
 router.get(Routes.VERSION_NUMBER, (_req: Request, res: Response) => {
-	debug(log_now(), 'GET version_number...');
+	debug(logNow(), 'GET version_number...');
 	res.status(200);
 	if (ConfigurationManager.should_cache_data()) {
 		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
@@ -63,9 +63,9 @@ router.get(Routes.VERSION_NUMBER, (_req: Request, res: Response) => {
 /* ************************************************************************** */
 /* ICONS */
 router.get(Routes.FAVICON_ICO, (_req: Request, res: Response) => {
-	debug(log_now(), 'GET favicon.ico...');
+	debug(logNow(), 'GET favicon.ico...');
 	const filepath = EnvironmentManager.get_instance().get_icon_favicon();
-	debug(log_now(), `    file to send: ${filepath}`);
+	debug(logNow(), `    file to send: ${filepath}`);
 	res.status(200);
 	if (ConfigurationManager.should_cache_data()) {
 		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
@@ -73,9 +73,9 @@ router.get(Routes.FAVICON_ICO, (_req: Request, res: Response) => {
 	res.sendFile(filepath);
 });
 router.get(Routes.ICON_LOGIN_PAGE, (_req: Request, res: Response) => {
-	debug(log_now(), 'GET /icon/login_page...');
+	debug(logNow(), 'GET /icon/login_page...');
 	const filepath = EnvironmentManager.get_instance().get_icon_login_page();
-	debug(log_now(), `    file to send: ${filepath}`);
+	debug(logNow(), `    file to send: ${filepath}`);
 	res.status(200);
 	if (ConfigurationManager.should_cache_data()) {
 		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
@@ -83,9 +83,9 @@ router.get(Routes.ICON_LOGIN_PAGE, (_req: Request, res: Response) => {
 	res.sendFile(filepath);
 });
 router.get(Routes.ICON_HOME_PAGE, (_req: Request, res: Response) => {
-	debug(log_now(), 'GET /icon/home_page...');
+	debug(logNow(), 'GET /icon/home_page...');
 	const filepath = EnvironmentManager.get_instance().get_icon_home_page();
-	debug(log_now(), `    file to send: ${filepath}`);
+	debug(logNow(), `    file to send: ${filepath}`);
 	res.status(200);
 	if (ConfigurationManager.should_cache_data()) {
 		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
@@ -95,7 +95,7 @@ router.get(Routes.ICON_HOME_PAGE, (_req: Request, res: Response) => {
 
 /* PAGE TITLES */
 router.get(Routes.TITLE_LOGIN_PAGE, (_req: Request, res: Response) => {
-	debug(log_now(), 'GET /title/login_page...');
+	debug(logNow(), 'GET /title/login_page...');
 	res.status(200);
 	if (ConfigurationManager.should_cache_data()) {
 		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
@@ -103,7 +103,7 @@ router.get(Routes.TITLE_LOGIN_PAGE, (_req: Request, res: Response) => {
 	res.send(EnvironmentManager.get_instance().get_title_login_page());
 });
 router.get(Routes.TITLE_HOME_PAGE, (_req: Request, res: Response) => {
-	debug(log_now(), 'GET /title/home_page...');
+	debug(logNow(), 'GET /title/home_page...');
 	res.status(200);
 	if (ConfigurationManager.should_cache_data()) {
 		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
@@ -120,10 +120,10 @@ router.get(Routes.HOME, get_page_home);
 
 // serve all javascript files!
 router.get(Routes.JS_ALL, (req: Request, res: Response) => {
-	debug(log_now(), 'GET a file in js/');
-	debug(log_now(), `    request: ${req.url}`);
+	debug(logNow(), 'GET a file in js/');
+	debug(logNow(), `    request: ${req.url}`);
 	const filepath = `${get_execution_directory()}/${req.url}`;
-	debug(log_now(), `    file to send: ${filepath}`);
+	debug(logNow(), `    file to send: ${filepath}`);
 	res.status(200);
 	if (ConfigurationManager.should_cache_data()) {
 		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');

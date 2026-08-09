@@ -40,17 +40,17 @@ import {
 	GameEditTitleInputSchema
 } from '@common/schemas/games';
 import { Route, Routes } from '@common/routes';
-import { UserLoginInputSchema, UserLoginOutputSchema, UserLogoutOutputSchema } from '@common/schemas/login_logout';
+import { UserLoginInputSchema, UserLoginOutputSchema, UserLogoutOutputSchema } from '@app/common/schemas/login-logout';
 import {
 	QueryGamesListAllInputSchema,
 	QueryGamesListOutputSchema,
 	QueryGamesListOwnInputSchema
-} from '@common/schemas/query_games';
+} from '@app/common/schemas/query-games';
 import {
 	QueryGraphInputFullSchema,
 	QueryGraphInputOwnSchema,
 	QueryGraphOutputSchema
-} from '@common/schemas/query_graphs';
+} from '@app/common/schemas/query-graphs';
 import {
 	QueryUserEditInputSchema,
 	QueryUserEditOutputSchema,
@@ -58,7 +58,7 @@ import {
 	QueryUserListOutputSchema,
 	QueryUserRankingInputSchema,
 	QueryUserRankingOutputSchema
-} from '@common/schemas/query_user';
+} from '@app/common/schemas/query-user';
 import { UserCreateInputSchema, UserEditInputSchema, UserPasswordChangeInputSchema } from '@common/schemas/user';
 import {
 	QueryChallengesConfirmResultOtherOutputSchema,
@@ -66,7 +66,7 @@ import {
 	QueryChallengesPendingResultOutputSchema,
 	QueryChallengesReceivedOutputSchema,
 	QueryChallengesSentOutputSchema
-} from '@common/schemas/query_challenges';
+} from '@app/common/schemas/query-challenges';
 
 export const EmptySchema = z.object({}).strict();
 export const StringSchema = z.string();

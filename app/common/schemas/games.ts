@@ -26,7 +26,7 @@ Contact:
 import { z } from 'zod';
 import { GameIdSchema, GameResultSchema } from '@common/models/game';
 import { PlayerPublicIdSchema } from '@common/models/player';
-import { TimeControlIdSchema, TimeControlNameSchema } from '@common/models/time_control';
+import { TimeControlIdSchema, TimeControlNameSchema } from '@app/common/models/time-control';
 import { DateMajorSchema, DateMinorSchema } from '@common/utils/time';
 
 // Routes.GAME_CREATE

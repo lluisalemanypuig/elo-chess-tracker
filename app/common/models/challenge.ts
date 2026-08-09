@@ -31,7 +31,7 @@ import {
 	TimeControlIdSchema,
 	TimeControlName,
 	TimeControlNameSchema
-} from '@common/models/time_control';
+} from '@app/common/models/time-control';
 import { PlayerPrivateId, PlayerPrivateIdSchema } from '@common/models/player';
 
 // Challenge state

@@ -21,16 +21,16 @@ Full source code of elo-chess-tracker:
 
 import 'htmx.org';
 
-import { message_from_response, server_call } from '@client/action';
-import { ADMIN, user_role_to_string, UserRole } from '@common/models/user_role';
-import { GAMES_CREATE, CREATE_USER, USER_EDIT, GAMES_SEE, GRAPHS_SEE_USER } from '@common/models/user_action';
+import { messageFromResponse, serverCall } from '@client/action';
+import { ADMIN, user_role_to_string, UserRole } from '@app/common/models/user-role';
+import { GAMES_CREATE, CREATE_USER, USER_EDIT, GAMES_SEE, GRAPHS_SEE_USER } from '@app/common/models/user-action';
 import { Routes } from '@common/routes';
 
 export async function logout_link_clicked(_event: any) {
 	// "query" the server
-	const response = await server_call(Routes.USER_LOGOUT, null);
+	const response = await serverCall(Routes.USER_LOGOUT, null);
 	if (response.status === 'Error') {
-		alert(message_from_response(response));
+		alert(messageFromResponse(response));
 		return;
 	}
 
@@ -81,9 +81,9 @@ function fill_action_links(user_actions: string[], user_roles: string[]) {
 		recalculate_ratings_link.id = 'recalculate-ratings-link';
 		recalculate_ratings_link.textContent = 'Recalculate ratings';
 		recalculate_ratings_link.onclick = async function () {
-			const response = await server_call(Routes.RECALCULATE_RATINGS, null);
+			const response = await serverCall(Routes.RECALCULATE_RATINGS, null);
 			if (response.status === 'Error') {
-				alert(message_from_response(response));
+				alert(messageFromResponse(response));
 				return;
 			}
 		};
@@ -93,9 +93,9 @@ function fill_action_links(user_actions: string[], user_roles: string[]) {
 		recalculate_graphs_link.id = 'recalculate-graphs';
 		recalculate_graphs_link.textContent = 'Recalculate graphs';
 		recalculate_graphs_link.onclick = async function () {
-			const response = await server_call(Routes.RECALCULATE_GRAPHS, null);
+			const response = await serverCall(Routes.RECALCULATE_GRAPHS, null);
 			if (response.status === 'Error') {
-				alert(message_from_response(response));
+				alert(messageFromResponse(response));
 				return;
 			}
 		};
@@ -105,9 +105,9 @@ function fill_action_links(user_actions: string[], user_roles: string[]) {
 
 async function fill_own_info() {
 	// "query" the server
-	const response = await server_call(Routes.QUERY_USER_HOME, null);
+	const response = await serverCall(Routes.QUERY_USER_HOME, null);
 	if (response.status === 'Error') {
-		alert(message_from_response(response));
+		alert(messageFromResponse(response));
 		return;
 	}
 

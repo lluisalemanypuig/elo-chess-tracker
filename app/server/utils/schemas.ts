@@ -27,8 +27,8 @@ import Debug from 'debug';
 import { z } from 'zod';
 import { Request, Response } from 'express';
 
-import { isDefined, isNotDefined } from '@common/utils/is_defined';
-import { log_now } from '@common/utils/time';
+import { isDefined, isNotDefined } from '@app/common/utils/is-defined';
+import { logNow } from '@common/utils/time';
 
 export type ParseResult = 'JsonDataNotProvided' | 'Error' | 'Success';
 
@@ -61,7 +61,7 @@ export function parse_schema<S extends z.ZodTypeAny>(
 	}
 	const parse = schema_obj.safeParse(json);
 	if (!parse.success) {
-		debug(log_now(), `Failed to parse schema: ${schema_obj.constructor.name}`);
+		debug(logNow(), `Failed to parse schema: ${schema_obj.constructor.name}`);
 		return {
 			result: 'Error',
 			data: undefined

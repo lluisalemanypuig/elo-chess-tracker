@@ -105,7 +105,7 @@ mkdir webpage/database/games
 mkdir webpage/database/graphs
 mkdir webpage/ssl
 mkdir webpage/icons
-mv webpage/configuration_sample.json webpage/configuration.json
+mv webpage/configuration-sample.json webpage/configuration.json
 
 configure_ssl_certificate
 generate_admin_password

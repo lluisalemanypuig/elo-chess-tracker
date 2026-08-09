@@ -34,18 +34,18 @@ import {
 	user_update_from_player_data
 } from '@server/managers/users';
 import { toUserGivenName, User } from '@common/models/user';
-import { ADMIN, MEMBER, STUDENT, TEACHER, UserRole } from '@common/models/user_role';
+import { ADMIN, MEMBER, STUDENT, TEACHER, UserRole } from '@app/common/models/user-role';
 import { clear_server } from '@server/managers/memory/clear';
 import { run_command } from '@tests/exec_utils';
 import { Player, toPlayerPrivateId } from '@common/models/player';
 import { EloRating } from '@common/models/rating_framework/Elo/rating';
 import { user_from_string } from '@common/io/user';
-import { UsersManager } from '@server/managers/users_manager';
-import { isNotDefined } from '@common/utils/is_defined';
+import { UsersManager } from '@app/server/managers/users-manager';
+import { isNotDefined } from '@app/common/utils/is-defined';
 import { Configuration } from '@common/models/configuration/configuration';
-import { TimeControlRating } from '@common/models/time_control_rating';
-import { UserThin } from '@common/models/user_thin';
-import { toTimeControlId, toTimeControlName } from '@common/models/time_control';
+import { TimeControlRating } from '@app/common/models/time-control-rating';
+import { UserThin } from '@app/common/models/user-thin';
+import { toTimeControlId, toTimeControlName } from '@app/common/models/time-control';
 
 const Classical = toTimeControlId('Classical');
 const Classical90p30 = toTimeControlName('Classical (90 + 30)');

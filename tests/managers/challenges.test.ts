@@ -29,10 +29,10 @@ import fs from 'fs';
 import { run_command } from '@tests/exec_utils';
 import { clear_server } from '@server/managers/memory/clear';
 import { server_init_from_data } from '@server/managers/memory/initialization';
-import { ADMIN, MEMBER, STUDENT } from '@common/models/user_role';
+import { ADMIN, MEMBER, STUDENT } from '@app/common/models/user-role';
 import { user_add_new } from '@server/managers/users';
-import { ChallengesManager, numberToChallengeId } from '@server/managers/challenges_manager';
-import { GamesManager } from '@server/managers/games_manager';
+import { ChallengesManager, numberToChallengeId } from '@app/server/managers/challenges-manager';
+import { GamesManager } from '@app/server/managers/games-manager';
 import {
 	challengeAccept,
 	challengeAgreeResult,
@@ -45,10 +45,10 @@ import {
 import { Challenge } from '@common/models/challenge';
 import { toUserGivenName, User } from '@common/models/user';
 import { challenge_from_string } from '@common/io/challenge';
-import { UsersManager } from '@server/managers/users_manager';
+import { UsersManager } from '@app/server/managers/users-manager';
 import { Configuration } from '@common/models/configuration/configuration';
 import { PlayerPrivateId, toPlayerPrivateId } from '@common/models/player';
-import { toTimeControlId, toTimeControlName } from '@common/models/time_control';
+import { toTimeControlId, toTimeControlName } from '@app/common/models/time-control';
 import { toDateFull } from '@common/utils/time';
 
 const webpage_dir = 'tests/webpage';

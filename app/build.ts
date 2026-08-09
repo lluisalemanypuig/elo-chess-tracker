@@ -33,19 +33,19 @@ import { Request, Response } from 'express';
 
 import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:app_build');
-import { log_now } from '@common/utils/time';
+import { logNow } from '@common/utils/time';
 
-debug(log_now(), 'Create app object');
+debug(logNow(), 'Create app object');
 
 let app = express();
 
-debug(log_now(), 'Building app...');
+debug(logNow(), 'Building app...');
 
 /* connect POST and GET queries with actual code */
 //let indexRouter = require('../js/routes/index');
 //app.use('/', indexRouter);
 
-debug(log_now(), '    Set stuff...');
+debug(logNow(), '    Set stuff...');
 
 // view engine setup
 app.set('views', './views');
@@ -59,12 +59,12 @@ app.use(cookieParser());
 app.use(helmet());
 app.use(compression()); // Compress all routes
 
-debug(log_now(), '    GETs and POSTs...');
+debug(logNow(), '    GETs and POSTs...');
 
 import { router } from '@app/router';
 app.use('/', router);
 
-debug(log_now(), '    Error handlers...');
+debug(logNow(), '    Error handlers...');
 
 // catch 404 and forward to error handler
 app.use(function (_req: any, _res: any, next: Function) {
@@ -72,16 +72,16 @@ app.use(function (_req: any, _res: any, next: Function) {
 });
 // error handler
 app.use(function (err: any, req: Request, res: Response, _next: Function) {
-	debug(log_now(), 'The request could not be served');
-	debug(log_now(), `    method: ${req.method}`);
-	debug(log_now(), `    body: ${JSON.stringify(req.body, null, '    ')}`);
-	debug(log_now(), `    url: ${req.url}`);
+	debug(logNow(), 'The request could not be served');
+	debug(logNow(), `    method: ${req.method}`);
+	debug(logNow(), `    body: ${JSON.stringify(req.body, null, '    ')}`);
+	debug(logNow(), `    url: ${req.url}`);
 
 	// render the error page
 	res.status(err.status || 500);
 	res.render('error');
 });
 
-debug(log_now(), '    Done!');
+debug(logNow(), '    Done!');
 
 export { app };

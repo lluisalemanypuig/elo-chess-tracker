@@ -26,20 +26,20 @@ Contact:
 import Debug from 'debug';
 const debug = Debug(`ELO_CHESS_TRACKER:io`);
 
-import { log_now } from '@common/utils/time';
+import { logNow } from '@common/utils/time';
 import { z } from 'zod';
-import { isNotDefined } from '@common/utils/is_defined';
+import { isNotDefined } from '@app/common/utils/is-defined';
 
 export function read_schema<T extends z.ZodTypeAny>(schema: T, str: string): z.output<T> | null {
 	const parse = JSON.parse(str);
 	if (isNotDefined(parse)) {
-		debug(log_now(), `JSON Failed to parse schema.`);
+		debug(logNow(), `JSON Failed to parse schema.`);
 		return null;
 	}
 	const res = schema.safeParse(parse);
 	if (!res.success) {
-		debug(log_now(), `safeParse Failed to parse schema schema.`);
-		debug(log_now(), `    errors: ${res.error}.`);
+		debug(logNow(), `safeParse Failed to parse schema schema.`);
+		debug(logNow(), `    errors: ${res.error}.`);
 		return null;
 	}
 	return res.data;
@@ -50,13 +50,13 @@ export function check_json_keys(json: any, expected_keys: string[]): boolean {
 	for (const key of expected_keys) {
 		all_keys.push(key);
 		if (!(key in json)) {
-			debug(log_now(), `JSON is missing required key '${key}''.`);
+			debug(logNow(), `JSON is missing required key '${key}''.`);
 			return false;
 		}
 	}
 
 	if (all_keys.length != expected_keys.length) {
-		debug(log_now(), `Expected '${expected_keys.length}'; found '${all_keys.length}' instead.`);
+		debug(logNow(), `Expected '${expected_keys.length}'; found '${all_keys.length}' instead.`);
 		return false;
 	}
 
@@ -73,17 +73,17 @@ export function read_json_object_string<T>(
 	try {
 		json = JSON.parse(str);
 	} catch (error) {
-		debug(log_now(), `Invalid JSON string`);
+		debug(logNow(), `Invalid JSON string`);
 		return null;
 	}
 
 	if (!json || typeof json !== `object` || Array.isArray(json)) {
-		debug(log_now(), `JSON string must be an object`);
+		debug(logNow(), `JSON string must be an object`);
 		return null;
 	}
 
 	if (!check_json_keys(json, expected_keys)) {
-		debug(log_now(), `JSON object does not have the right keys`);
+		debug(logNow(), `JSON object does not have the right keys`);
 		return null;
 	}
 
@@ -100,25 +100,25 @@ export function read_json_array_string<T>(
 	try {
 		json = JSON.parse(str);
 	} catch (error) {
-		debug(log_now(), `Invalid JSON string`);
+		debug(logNow(), `Invalid JSON string`);
 		return null;
 	}
 
 	if (!json || typeof json !== `object` || !Array.isArray(json)) {
-		debug(log_now(), `JSON string must be an array`);
+		debug(logNow(), `JSON string must be an array`);
 		return null;
 	}
 
 	let array: T[] = [];
 	for (const obj of json) {
 		if (!check_json_keys(obj, expected_keys)) {
-			debug(log_now(), `JSON object does not have the right keys`);
+			debug(logNow(), `JSON object does not have the right keys`);
 			return null;
 		}
 
 		const conv = conversion(obj);
 		if (isNotDefined(conv)) {
-			debug(log_now(), `JSON object could not be converted to object of type T`);
+			debug(logNow(), `JSON object could not be converted to object of type T`);
 			return null;
 		}
 		array.push(conv);

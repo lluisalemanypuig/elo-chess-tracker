@@ -1,0 +1,53 @@
+/*
+Elo rating for a Chess Club
+Copyright (C) 2023 - 2026  Lluís Alemany Puig
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published
+by the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+Full source code of elo-chess-tracker:
+    https://github.com/lluisalemanypuig/elo-chess-tracker
+
+Contact:
+    Lluís Alemany Puig
+    https://github.com/lluisalemanypuig
+*/
+
+import { TimeControl } from '@app/common/models/time-control';
+import { Elo_player_vs_player } from '@app/server/rating-framework/Elo/formula';
+import { new_rating_Elo } from '@common/models/rating_framework/Elo/rating';
+import { RatingSystemManager } from '@app/server/managers/rating-system-manager';
+import { rating_from_string_Elo, rating_from_json_Elo } from '@common/io/ratings/Elo/rating';
+import { RatingFrameworkType } from '@common/models/rating_framework/rating_framework_type';
+
+/**
+ * @brief Initializes the class @ref RatingSystem based on the system in @e name.
+ * @param name Name of the rating system.
+ * @returns True if the name is valid; false if otherwise.
+ */
+export function initialize_rating_functions(name: RatingFrameworkType): void {
+	let rating_system = RatingSystemManager.get_instance();
+	if (name == 'Elo') {
+		rating_system.set_functions(Elo_player_vs_player, new_rating_Elo, rating_from_string_Elo, rating_from_json_Elo);
+	}
+}
+
+/**
+ * @brief Initialize the time controls in the @ref RatingSystem.
+ * @param all_time_controls The list of time controls for the system.
+ * @pre The RatingSystem must have been initialized via @ref initialize_rating_system.
+ */
+export function initialize_rating_time_controls(all_time_controls: TimeControl[]): void {
+	let rating_system = RatingSystemManager.get_instance();
+	rating_system.set_time_controls(all_time_controls);
+}

@@ -25,8 +25,8 @@ Contact:
 
 import { Edge, EdgeArraySchema, EdgeSchema } from '@common/models/graph/edge';
 import { read_schema } from '@common/io/generic';
-import { isNotDefined } from '@common/utils/is_defined';
-import { EdgeMetadata } from '@common/models/graph/edge_metadata';
+import { isNotDefined } from '@app/common/utils/is-defined';
+import { EdgeMetadata } from '@app/common/models/graph/edge-metadata';
 
 /**
  * @brief Parses a JSON string and returns an Edge.

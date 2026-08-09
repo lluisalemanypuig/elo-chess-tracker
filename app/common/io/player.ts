@@ -25,8 +25,8 @@ Contact:
 
 import { Player, PlayerKeys } from '@common/models/player';
 import { read_json_array_string, read_json_object_string } from '@common/io/generic';
-import { RatingSystemManager } from '@server/managers/rating_system_manager';
-import { TimeControlRating } from '@common/models/time_control_rating';
+import { RatingSystemManager } from '@app/server/managers/rating-system-manager';
+import { TimeControlRating } from '@app/common/models/time-control-rating';
 
 /**
  * @brief Creates a Player object from a plain json object.

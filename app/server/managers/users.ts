@@ -30,16 +30,16 @@ const debug = Debug('ELO_CHESS_TRACKER:managers/users');
 
 import { Player, PlayerPrivateId } from '@common/models/player';
 import { UserGivenName, TimeControlGame, User } from '@common/models/user';
-import { EnvironmentManager } from '@server/managers/environment_manager';
-import { UsersManager } from '@server/managers/users_manager';
-import { UserRole } from '@common/models/user_role';
+import { EnvironmentManager } from '@app/server/managers/environment-manager';
+import { UsersManager } from '@app/server/managers/users-manager';
+import { UserRole } from '@app/common/models/user-role';
 import { encrypt_password_for_user } from '@server/utils/encrypt';
-import { RatingSystemManager } from '@server/managers/rating_system_manager';
-import { TimeControlRating } from '@common/models/time_control_rating';
-import { log_now } from '@common/utils/time';
-import { UserThin } from '@common/models/user_thin';
-import { isNotDefined } from '@common/utils/is_defined';
-import { TimeControlId } from '@common/models/time_control';
+import { RatingSystemManager } from '@app/server/managers/rating-system-manager';
+import { TimeControlRating } from '@app/common/models/time-control-rating';
+import { logNow } from '@common/utils/time';
+import { UserThin } from '@app/common/models/user-thin';
+import { isNotDefined } from '@app/common/utils/is-defined';
+import { TimeControlId } from '@app/common/models/time-control';
 
 /// Dump the data in user @e u into its corresponding file.
 export function user_overwrite(user: User): void {
@@ -139,7 +139,7 @@ export function user_update_from_player_data(players: Player[]): void {
 	let manager = UsersManager.get_instance();
 	let mem = UsersManager.get_instance();
 
-	debug(log_now(), 'Updating users...');
+	debug(logNow(), 'Updating users...');
 	for (const player of players) {
 		const username = player.username;
 
@@ -153,13 +153,13 @@ export function user_update_from_player_data(players: Player[]): void {
 		const user_filename = path.join(users_directory, username);
 
 		// update player file
-		debug(log_now(), `    User file '${user_filename}'...`);
+		debug(logNow(), `    User file '${user_filename}'...`);
 		fs.writeFileSync(user_filename, JSON.stringify(u, null, 4));
-		debug(log_now(), `        User file '${user_filename}' written.`);
+		debug(logNow(), `        User file '${user_filename}' written.`);
 
-		debug(log_now(), '    Server memory...');
+		debug(logNow(), '    Server memory...');
 		const u_idx = mem.get_user_index(u) as number;
-		debug(log_now(), `        User '${u.username}' is at index '${u_idx}'`);
+		debug(logNow(), `        User '${u.username}' is at index '${u_idx}'`);
 		mem.replace_user(u, u_idx);
 	}
 }

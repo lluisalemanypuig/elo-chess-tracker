@@ -24,7 +24,7 @@ Contact:
 */
 
 import { z } from 'zod';
-import { EdgeMetadataSchema, EdgeMetadata } from '@common/models/graph/edge_metadata';
+import { EdgeMetadataSchema, EdgeMetadata } from '@app/common/models/graph/edge-metadata';
 import { PlayerPrivateId, PlayerPrivateIdSchema } from '@common/models/player';
 
 export const EdgeSchema = z

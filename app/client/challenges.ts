@@ -22,7 +22,7 @@ Full source code of elo-chess-tracker:
 import 'htmx.org';
 
 import { GameResult } from '@common/models/game';
-import { message_from_response, server_call } from '@client/action';
+import { messageFromResponse, serverCall } from '@client/action';
 import { Routes } from '@common/routes';
 import {
 	QueryChallengesConfirmResultOtherOutputSingle,
@@ -30,18 +30,18 @@ import {
 	QueryChallengesPendingResultOutputSingle,
 	QueryChallengesReceivedOutputSingle,
 	QueryChallengesSentOutputSingle
-} from '@common/schemas/query_challenges';
+} from '@app/common/schemas/query-challenges';
 import { PlayerPrivateId, PlayerPublicId } from '@common/models/player';
-import { TimeControlId, TimeControlName } from '@common/models/time_control';
+import { TimeControlId, TimeControlName } from '@app/common/models/time-control';
 
-function create_label_text(text: string): HTMLLabelElement {
+function createLabelText(text: string): HTMLLabelElement {
 	let label = document.createElement('label') as HTMLLabelElement;
 	label.textContent = text;
 	label.className = 'label';
 	return label;
 }
 
-function format_date(date: string) {
+function formatDate(date: string) {
 	return date.replace('..', ', ').replace('-', '/').replace('-', '/');
 }
 
@@ -60,14 +60,14 @@ async function send_challenge_button_clicked(_event: any) {
 		const game_title = game_title_text.textContent;
 
 		// "query" the server
-		const response = await server_call(Routes.CHALLENGE_SEND, {
+		const response = await serverCall(Routes.CHALLENGE_SEND, {
 			to: public_user_id,
 			title: game_title,
 			time_control_id: time_control_id,
 			time_control_name: time_control_name
 		});
 		if (response.status === 'Error') {
-			alert(message_from_response(response));
+			alert(messageFromResponse(response));
 			return;
 		}
 
@@ -79,9 +79,9 @@ async function accept_challenge_button_clicked(event: any) {
 	let tag_clicked = event.target;
 	let challenge_id = tag_clicked.id;
 
-	const response = await server_call(Routes.CHALLENGE_ACCEPT, { id: challenge_id });
+	const response = await serverCall(Routes.CHALLENGE_ACCEPT, { id: challenge_id });
 	if (response.status === 'Error') {
-		alert(message_from_response(response));
+		alert(messageFromResponse(response));
 		return;
 	}
 	window.location.href = '/page/challenge';
@@ -91,9 +91,9 @@ async function decline_challenge_tag_clicked(event: any) {
 	let tag_clicked = event.target;
 	let challenge_id = tag_clicked.id;
 
-	const response = await server_call(Routes.CHALLENGE_DECLINE, { id: challenge_id });
+	const response = await serverCall(Routes.CHALLENGE_DECLINE, { id: challenge_id });
 	if (response.status === 'Error') {
-		alert(message_from_response(response));
+		alert(messageFromResponse(response));
 		return;
 	}
 	window.location.href = '/page/challenge';
@@ -123,14 +123,14 @@ async function submit_result_challenge_button_clicked(event: any) {
 	}
 
 	// "query" the server
-	const response = await server_call(Routes.CHALLENGE_SET_RESULT, {
+	const response = await serverCall(Routes.CHALLENGE_SET_RESULT, {
 		id: challenge_id,
 		white: white_username,
 		black: black_username,
 		result: result
 	});
 	if (response.status === 'Error') {
-		alert(message_from_response(response));
+		alert(messageFromResponse(response));
 		return;
 	}
 
@@ -141,10 +141,10 @@ async function agree_challenge_result_button_clicked(event: any) {
 	let tag_clicked = event.target;
 	let challenge_id = tag_clicked.id;
 
-	const response = await server_call(Routes.CHALLENGE_AGREE, { id: challenge_id });
+	const response = await serverCall(Routes.CHALLENGE_AGREE, { id: challenge_id });
 
 	if (response.status === 'Error') {
-		alert(message_from_response(response));
+		alert(messageFromResponse(response));
 		return;
 	}
 
@@ -155,9 +155,9 @@ async function disagree_challenge_result_button_clicked(event: any) {
 	let tag_clicked = event.target;
 	let challenge_id = tag_clicked.id;
 
-	const response = await server_call(Routes.CHALLENGE_DISAGREE, { id: challenge_id });
+	const response = await serverCall(Routes.CHALLENGE_DISAGREE, { id: challenge_id });
 	if (response.status === 'Error') {
-		alert(message_from_response(response));
+		alert(messageFromResponse(response));
 		return;
 	}
 
@@ -165,9 +165,9 @@ async function disagree_challenge_result_button_clicked(event: any) {
 }
 
 async function fill_challenges_received() {
-	const response = await server_call(Routes.QUERY_CHALLENGE_RECEIVED, null);
+	const response = await serverCall(Routes.QUERY_CHALLENGE_RECEIVED, null);
 	if (response.status === 'Error') {
-		alert(message_from_response(response));
+		alert(messageFromResponse(response));
 		return;
 	}
 	const data = response.value;
@@ -200,7 +200,7 @@ async function fill_challenges_received() {
 			//
 			li = document.createElement('li') as HTMLLIElement;
 			li.className = 'challenge-items-nobullet';
-			li.textContent = `Sent on ${format_date(elem.sent_when)}.`;
+			li.textContent = `Sent on ${formatDate(elem.sent_when)}.`;
 			challenge_div.appendChild(li);
 			//
 			let can_cannot = elem.can_be_declined ? 'can' : 'cannot';
@@ -254,9 +254,9 @@ async function fill_challenges_received() {
 }
 
 async function fill_challenges_sent() {
-	const response = await server_call(Routes.QUERY_CHALLENGE_SENT, null);
+	const response = await serverCall(Routes.QUERY_CHALLENGE_SENT, null);
 	if (response.status === 'Error') {
-		alert(message_from_response(response));
+		alert(messageFromResponse(response));
 		return;
 	}
 	const data = response.value;
@@ -285,7 +285,7 @@ async function fill_challenges_sent() {
 		//
 		li = document.createElement('li') as HTMLLIElement;
 		li.className = 'challenge-items-nobullet';
-		li.textContent = `Sent on ${format_date(elem.sent_when)}.`;
+		li.textContent = `Sent on ${formatDate(elem.sent_when)}.`;
 		challenge_list.appendChild(li);
 		//
 		let can_cannot = elem.can_be_declined ? 'can' : 'cannot';
@@ -301,9 +301,9 @@ async function fill_challenges_sent() {
 }
 
 async function fill_challenges_pending_result() {
-	const response = await server_call(Routes.QUERY_CHALLENGE_PENDING_RESULT, null);
+	const response = await serverCall(Routes.QUERY_CHALLENGE_PENDING_RESULT, null);
 	if (response.status === 'Error') {
-		alert(message_from_response(response));
+		alert(messageFromResponse(response));
 		return;
 	}
 	const challenge_data = response.value;
@@ -334,7 +334,7 @@ async function fill_challenges_pending_result() {
 				}
 				li = document.createElement('li') as HTMLLIElement;
 				li.className = 'challenge-items-nobullet';
-				li.textContent = `Sent on ${format_date(elem.sent_when)}.`;
+				li.textContent = `Sent on ${formatDate(elem.sent_when)}.`;
 				header.appendChild(li);
 			}
 			all_challenges_list.appendChild(header);
@@ -347,7 +347,7 @@ async function fill_challenges_pending_result() {
 			let div = document.createElement('div') as HTMLDivElement;
 			div.className = 'label-and-select';
 
-			div.appendChild(create_label_text('White:'));
+			div.appendChild(createLabelText('White:'));
 
 			let select = document.createElement('select');
 			select.id = 'white_select_' + elem.id;
@@ -371,7 +371,7 @@ async function fill_challenges_pending_result() {
 			let div = document.createElement('div') as HTMLDivElement;
 			div.className = 'label-and-select';
 
-			div.appendChild(create_label_text('Black:'));
+			div.appendChild(createLabelText('Black:'));
 
 			let select = document.createElement('select');
 			select.id = 'black_select_' + elem.id;
@@ -395,7 +395,7 @@ async function fill_challenges_pending_result() {
 			let div = document.createElement('div') as HTMLDivElement;
 			div.className = 'label-and-select';
 
-			div.appendChild(create_label_text('Result:'));
+			div.appendChild(createLabelText('Result:'));
 
 			let select = document.createElement('select');
 			select.id = 'select_result_game_' + elem.id;
@@ -440,9 +440,9 @@ async function fill_challenges_pending_result() {
 }
 
 async function fill_challenges_confirm_result_other() {
-	const response = await server_call(Routes.QUERY_CHALLENGE_CONFIRM_RESULT_OTHER, null);
+	const response = await serverCall(Routes.QUERY_CHALLENGE_CONFIRM_RESULT_OTHER, null);
 	if (response.status === 'Error') {
-		alert(message_from_response(response));
+		alert(messageFromResponse(response));
 		return;
 	}
 
@@ -454,7 +454,7 @@ async function fill_challenges_confirm_result_other() {
 		{
 			let li = document.createElement('li') as HTMLLIElement;
 			li.className = 'challenge-items-bullet';
-			li.textContent = `On ${format_date(elem.sent_when)}.`;
+			li.textContent = `On ${formatDate(elem.sent_when)}.`;
 			challenge_list.appendChild(li);
 			//
 			li = document.createElement('li') as HTMLLIElement;
@@ -492,9 +492,9 @@ async function fill_challenges_confirm_result_other() {
 }
 
 async function fill_challenges_confirm_result_self() {
-	const response = await server_call(Routes.QUERY_CHALLENGE_CONFIRM_RESULT_SELF, null);
+	const response = await serverCall(Routes.QUERY_CHALLENGE_CONFIRM_RESULT_SELF, null);
 	if (response.status === 'Error') {
-		alert(message_from_response(response));
+		alert(messageFromResponse(response));
 		return;
 	}
 
@@ -507,7 +507,7 @@ async function fill_challenges_confirm_result_self() {
 		{
 			let li = document.createElement('li') as HTMLLIElement;
 			li.className = 'challenge-items-bullet';
-			li.textContent = `On ${format_date(elem.sent_when)}.`;
+			li.textContent = `On ${formatDate(elem.sent_when)}.`;
 			confirmation_div.appendChild(li);
 			//
 			li = document.createElement('li') as HTMLLIElement;

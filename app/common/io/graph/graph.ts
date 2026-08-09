@@ -31,9 +31,9 @@ import path from 'path';
 
 import { Neighborhood, Graph } from '@common/models/graph/graph';
 import { edge_array_from_string } from '@common/io/graph/edge';
-import { read_directory } from '@server/utils/read_directory';
-import { isNotDefined } from '@common/utils/is_defined';
-import { log_now } from '@common/utils/time';
+import { read_directory } from '@app/server/utils/read-directory';
+import { isNotDefined } from '@app/common/utils/is-defined';
+import { logNow } from '@common/utils/time';
 import { PlayerPrivateId, toPlayerPrivateId } from '@common/models/player';
 
 /**
@@ -67,7 +67,7 @@ export function graph_to_file(dir: string, changes: PlayerPrivateId[], g: Graph)
 		if (g.get_out_degree(username) > 0) {
 			const out = g.get_outgoing_edges(username);
 			if (isNotDefined(out)) {
-				debug(log_now(), `Could not get niehgbors of user '${username}'`);
+				debug(logNow(), `Could not get niehgbors of user '${username}'`);
 				continue;
 			}
 			neighborhood_to_file(dir, username, out);
@@ -90,7 +90,7 @@ export function graph_full_to_file(dir: string, g: Graph): void {
 	for (const username of g.get_out_entries()) {
 		const out = g.get_outgoing_edges(username);
 		if (isNotDefined(out)) {
-			debug(log_now(), `Could not get niehgbors of user '${username}'`);
+			debug(logNow(), `Could not get niehgbors of user '${username}'`);
 			continue;
 		}
 		neighborhood_to_file(dir, username, out);
@@ -107,7 +107,7 @@ export function graph_from_string(dir: string): Graph | null {
 
 	const files = read_directory(dir, false);
 	if (!fs.existsSync(dir)) {
-		debug(log_now(), `Path '${dir}' does not exist.`);
+		debug(logNow(), `Path '${dir}' does not exist.`);
 		return null;
 	}
 
@@ -115,13 +115,13 @@ export function graph_from_string(dir: string): Graph | null {
 		const filename = path.join(dir, username);
 
 		if (!fs.existsSync(filename)) {
-			debug(log_now(), `Path '${filename}' does not exist.`);
+			debug(logNow(), `Path '${filename}' does not exist.`);
 			return null;
 		}
 		const edge_array = fs.readFileSync(filename, 'utf8');
 		const edge_set = edge_array_from_string(edge_array);
 		if (isNotDefined(edge_set)) {
-			debug(log_now(), `Could not read edge set at file '${filename}'.`);
+			debug(logNow(), `Could not read edge set at file '${filename}'.`);
 			return null;
 		}
 

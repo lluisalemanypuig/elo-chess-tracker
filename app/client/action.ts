@@ -26,7 +26,7 @@ Contact:
 import { MethodTypeOf, OutputSchemaOf } from '@common/api/schemas';
 import { InputTypeOf, OutputTypeOf } from '@common/api/types';
 import { Route } from '@common/routes';
-import { isNotDefined } from '@common/utils/is_defined';
+import { isNotDefined } from '@app/common/utils/is-defined';
 
 type ResponseResultError = {
 	message: string;
@@ -41,7 +41,7 @@ type ResponseResult<T> =
 			status: 'Success';
 	  };
 
-export async function server_call<T extends Route>(
+export async function serverCall<T extends Route>(
 	route: T,
 	body: InputTypeOf<T> | undefined | null
 ): Promise<ResponseResult<OutputTypeOf<T>>> {
@@ -70,13 +70,13 @@ export async function server_call<T extends Route>(
 		};
 	}
 
-	const schema_object = OutputSchemaOf(route);
-	const json_text = await response.json();
-	const parse = schema_object.safeParse(json_text);
+	const schemaObject = OutputSchemaOf(route);
+	const jsonText = await response.json();
+	const parse = schemaObject.safeParse(jsonText);
 	if (!parse.success) {
-		console.log(JSON.stringify(json_text, null, '  '));
+		console.log(JSON.stringify(jsonText, null, '  '));
 		return {
-			message: `Failed to parse schema '${schema_object.constructor.name}', at route '${route}'. Reason: ${parse.error}`,
+			message: `Failed to parse schema '${schemaObject.constructor.name}', at route '${route}'. Reason: ${parse.error}`,
 			statusCode: 900,
 			status: 'Error'
 		};
@@ -89,6 +89,6 @@ export async function server_call<T extends Route>(
 	};
 }
 
-export function message_from_response(response: ResponseResultError): string {
+export function messageFromResponse(response: ResponseResultError): string {
 	return `${response.status} -- ${response.statusCode}\nMessage: '${response.message}'`;
 }

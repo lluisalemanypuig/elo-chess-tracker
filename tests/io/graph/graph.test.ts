@@ -25,11 +25,11 @@ Contact:
 
 import fs from 'fs';
 
-import { EdgeMetadata } from '@common/models/graph/edge_metadata';
+import { EdgeMetadata } from '@app/common/models/graph/edge-metadata';
 import { Graph } from '@common/models/graph/graph';
 
 import { graph_from_string, graph_full_to_file } from '@common/io/graph/graph';
-import { isNotDefined } from '@common/utils/is_defined';
+import { isNotDefined } from '@app/common/utils/is-defined';
 import { toPlayerPrivateId } from '@common/models/player';
 
 const A = toPlayerPrivateId('A');

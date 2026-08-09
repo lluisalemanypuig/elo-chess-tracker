@@ -23,12 +23,12 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { ADMIN, STUDENT } from '@common/models/user_role';
-import { initialize_rating_functions } from '@server/managers/rating_system';
+import { ADMIN, STUDENT } from '@app/common/models/user-role';
+import { initialize_rating_functions } from '@app/server/managers/rating-system';
 import { user_from_string } from '@common/io/user';
-import { isNotDefined } from '@common/utils/is_defined';
+import { isNotDefined } from '@app/common/utils/is-defined';
 import { toDateMajor } from '@common/utils/time';
-import { toTimeControlId } from '@common/models/time_control';
+import { toTimeControlId } from '@app/common/models/time-control';
 
 const Classical = toTimeControlId('classical');
 const Rapid = toTimeControlId('rapid');

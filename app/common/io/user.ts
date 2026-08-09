@@ -26,7 +26,7 @@ Contact:
 import Debug from 'debug';
 const debug = Debug(`ELO_CHESS_TRACKER:io`);
 
-import { log_now } from '@common/utils/time';
+import { logNow } from '@common/utils/time';
 import {
 	GameNumberSchema,
 	GameNumberArraySchema,
@@ -38,9 +38,9 @@ import {
 } from '@common/models/user';
 import { TimeControlGame } from '@common/models/user';
 import { read_json_array_string, read_json_object_string, read_schema } from '@common/io/generic';
-import { RatingSystemManager } from '@server/managers/rating_system_manager';
-import { TimeControlRating } from '@common/models/time_control_rating';
-import { UserRoleArraySchema } from '@common/models/user_role';
+import { RatingSystemManager } from '@app/server/managers/rating-system-manager';
+import { TimeControlRating } from '@app/common/models/time-control-rating';
+import { UserRoleArraySchema } from '@app/common/models/user-role';
 import { PasswordSchema } from '@common/models/password';
 
 /**
@@ -87,19 +87,19 @@ export function time_control_games_array_from_string(str: string): TimeControlGa
 export function user_from_json(json: any): User | null {
 	const password = PasswordSchema.safeParse(json.password);
 	if (!password.success) {
-		debug(log_now(), `Could not parse password`);
+		debug(logNow(), `Could not parse password`);
 		return null;
 	}
 
 	const roles = UserRoleArraySchema.safeParse(json.roles);
 	if (!roles.success) {
-		debug(log_now(), `Could not parse roles array`);
+		debug(logNow(), `Could not parse roles array`);
 		return null;
 	}
 
 	const games = TimeControlGameArraySchema.safeParse(json.games);
 	if (!games.success) {
-		debug(log_now(), `Could not parse game records`);
+		debug(logNow(), `Could not parse game records`);
 		return null;
 	}
 

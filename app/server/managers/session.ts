@@ -25,15 +25,15 @@ Contact:
 
 import Debug from 'debug';
 
-import { log_now } from '@common/utils/time';
+import { logNow } from '@common/utils/time';
 import { User } from '@common/models/user';
 const debug = Debug('ELO_CHESS_TRACKER:managers/session');
 
-import { SessionIDManager } from '@server/managers/session_id_manager';
-import { SessionID } from '@common/models/session_id';
+import { SessionIDManager } from '@app/server/managers/session-id-manager';
+import { SessionID } from '@app/common/models/session-id';
 import { shuffle } from '@server/utils/shuffle_random';
-import { UsersManager } from '@server/managers/users_manager';
-import { isNotDefined } from '@common/utils/is_defined';
+import { UsersManager } from '@app/server/managers/users-manager';
+import { isNotDefined } from '@app/common/utils/is-defined';
 import { PlayerPrivateId } from '@common/models/player';
 
 // The original string was
@@ -80,27 +80,27 @@ export function session_id_add(username: PlayerPrivateId): string {
 export function session_id_delete(session: SessionID): void {
 	let mem = SessionIDManager.get_instance();
 
-	debug(log_now(), `Before deleting, '${mem.num_session_ids()}' sessions`);
+	debug(logNow(), `Before deleting, '${mem.num_session_ids()}' sessions`);
 	const idx = mem.index_session_id(session);
 	if (idx != -1) {
-		debug(log_now(), `    Session of user '${session.username}' was found. Deleting...`);
+		debug(logNow(), `    Session of user '${session.username}' was found. Deleting...`);
 		mem.remove_session_id(idx);
 	} else {
-		debug(log_now(), `    Session of user '${session.username}' was not found.`);
+		debug(logNow(), `    Session of user '${session.username}' was not found.`);
 	}
 
-	debug(log_now(), `Currently, '${mem.num_session_ids()}' sessions`);
+	debug(logNow(), `Currently, '${mem.num_session_ids()}' sessions`);
 }
 
 /// Deletes a session id.
 export function session_user_delete_all(username: PlayerPrivateId): void {
 	let mem = SessionIDManager.get_instance();
 
-	debug(log_now(), `Before deleting, '${mem.num_session_ids()}' sessions`);
+	debug(logNow(), `Before deleting, '${mem.num_session_ids()}' sessions`);
 
 	mem.remove_user_sessions(username);
 
-	debug(log_now(), `Currently, '${mem.num_session_ids()}' sessions`);
+	debug(logNow(), `Currently, '${mem.num_session_ids()}' sessions`);
 }
 
 /**
@@ -111,21 +111,21 @@ export function session_user_delete_all(username: PlayerPrivateId): void {
 export function is_user_logged_in(session: SessionID): [boolean, string, User | undefined] {
 	const user = UsersManager.get_instance().get_user_by_username(session.username);
 	if (isNotDefined(user)) {
-		debug(log_now(), `User '${session.username}' does not exist.`);
+		debug(logNow(), `User '${session.username}' does not exist.`);
 		return [false, 'Forbidden access. <a href="/">Go home</a>.', undefined];
 	}
 
-	debug(log_now(), `User '${session.username}' exists and is trying to access the page.`);
-	debug(log_now(), `Checking now if the user has a valid session ID.`);
+	debug(logNow(), `User '${session.username}' exists and is trying to access the page.`);
+	debug(logNow(), `Checking now if the user has a valid session ID.`);
 
 	// at this point, the user exists --> check if the session id received exists
 	if (!SessionIDManager.get_instance().has_session_id(session)) {
-		debug(log_now(), `    The session ID received for user '${session.username}' does not exist.`);
-		debug(log_now(), '    This means that the user is not logged into the web in');
-		debug(log_now(), '    the device they are trying to access the web from.');
+		debug(logNow(), `    The session ID received for user '${session.username}' does not exist.`);
+		debug(logNow(), '    This means that the user is not logged into the web in');
+		debug(logNow(), '    the device they are trying to access the web from.');
 		return [false, 'Forbidden access. <a href="/">Go home</a>.', undefined];
 	} else {
-		debug(log_now(), `    Valid session ID received for user '${session.username}'.`);
+		debug(logNow(), `    Valid session ID received for user '${session.username}'.`);
 	}
 	return [true, '', user as User];
 }

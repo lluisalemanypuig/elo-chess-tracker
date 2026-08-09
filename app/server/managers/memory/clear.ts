@@ -23,16 +23,16 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { UserRoleToUserAction } from '@server/managers/user_role_action';
-import { EnvironmentManager } from '@server/managers/environment_manager';
-import { ConfigurationManager } from '@server/managers/configuration_manager';
-import { ChallengesManager } from '@server/managers/challenges_manager';
-import { GamesManager } from '@server/managers/games_manager';
-import { UsersManager } from '@server/managers/users_manager';
-import { SessionIDManager } from '@server/managers/session_id_manager';
-import { RatingSystemManager } from '@server/managers/rating_system_manager';
-import { GraphsManager } from '@server/managers/graphs_manager';
-import { UsersBehavior } from '@server/managers/users_behavior';
+import { UserRoleToUserAction } from '@app/server/managers/user-role-action';
+import { EnvironmentManager } from '@app/server/managers/environment-manager';
+import { ConfigurationManager } from '@app/server/managers/configuration-manager';
+import { ChallengesManager } from '@app/server/managers/challenges-manager';
+import { GamesManager } from '@app/server/managers/games-manager';
+import { UsersManager } from '@app/server/managers/users-manager';
+import { SessionIDManager } from '@app/server/managers/session-id-manager';
+import { RatingSystemManager } from '@app/server/managers/rating-system-manager';
+import { GraphsManager } from '@app/server/managers/graphs-manager';
+import { UsersBehavior } from '@app/server/managers/users-behavior';
 
 /**
  * @brief Clear the memory of the server

@@ -25,7 +25,7 @@ Contact:
 
 import { Game, GameKeys, GameResultSchema } from '@common/models/game';
 import { read_json_array_string, read_json_object_string } from '@common/io/generic';
-import { RatingSystemManager } from '@server/managers/rating_system_manager';
+import { RatingSystemManager } from '@app/server/managers/rating-system-manager';
 
 /**
  * @brief Creates a Player object from a plain json object.

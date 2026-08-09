@@ -26,7 +26,7 @@ Contact:
 import { toPlayerPrivateId } from '@common/models/player';
 import { Game, toGameId } from '@common/models/game';
 import { EloRating } from '@common/models/rating_framework/Elo/rating';
-import { toTimeControlId, toTimeControlName } from '@common/models/time_control';
+import { toTimeControlId, toTimeControlName } from '@app/common/models/time-control';
 import { toDateFull } from '@common/utils/time';
 
 const Blitz = toTimeControlId('Blitz');

@@ -1,0 +1,140 @@
+/*
+Elo rating for a Chess Club
+Copyright (C) 2023 - 2026  Lluís Alemany Puig
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published
+by the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+Full source code of elo-chess-tracker:
+    https://github.com/lluisalemanypuig/elo-chess-tracker
+
+Contact:
+    Lluís Alemany Puig
+    https://github.com/lluisalemanypuig
+*/
+
+import { toTimeControlId } from '@app/common/models/time-control';
+import { toGameId } from '@common/models/game';
+import { GamesManager } from '@app/server/managers/games-manager';
+import { toDateMajor } from '@common/utils/time';
+
+const Classical = toTimeControlId('classical');
+const Rapid = toTimeControlId('rapid');
+const Blitz = toTimeControlId('blitz');
+const Bullet = toTimeControlId('bullet');
+
+describe('Games Manager', () => {
+	test('Get some new game ids', () => {
+		let games = GamesManager.get_instance();
+		games.clear();
+
+		expect(games.get_max_game_id()).toBe('0000000000');
+		expect(games.new_game_id()).toBe('0000000001');
+		expect(games.get_max_game_id()).toBe('0000000001');
+		expect(games.new_game_id()).toBe('0000000002');
+		expect(games.get_max_game_id()).toBe('0000000002');
+		expect(games.new_game_id()).toBe('0000000003');
+		expect(games.get_max_game_id()).toBe('0000000003');
+		expect(games.new_game_id()).toBe('0000000004');
+		expect(games.get_max_game_id()).toBe('0000000004');
+		expect(games.new_game_id()).toBe('0000000005');
+		expect(games.get_max_game_id()).toBe('0000000005');
+		expect(games.num_games()).toBe(0);
+		games.clear();
+
+		expect(games.get_max_game_id()).toBe('0000000000');
+		expect(games.new_game_id()).toBe('0000000001');
+		expect(games.get_max_game_id()).toBe('0000000001');
+		expect(games.new_game_id()).toBe('0000000002');
+		expect(games.get_max_game_id()).toBe('0000000002');
+		expect(games.new_game_id()).toBe('0000000003');
+		expect(games.get_max_game_id()).toBe('0000000003');
+		expect(games.new_game_id()).toBe('0000000004');
+		expect(games.get_max_game_id()).toBe('0000000004');
+		expect(games.new_game_id()).toBe('0000000005');
+		expect(games.get_max_game_id()).toBe('0000000005');
+		expect(games.num_games()).toBe(0);
+	});
+
+	test('Start at an arbitrary id', () => {
+		let games = GamesManager.get_instance();
+		games.clear();
+
+		games.set_max_game_id(100);
+		expect(games.get_max_game_id()).toBe('0000000100');
+		expect(games.new_game_id()).toBe('0000000101');
+		expect(games.get_max_game_id()).toBe('0000000101');
+		expect(games.new_game_id()).toBe('0000000102');
+		expect(games.get_max_game_id()).toBe('0000000102');
+		expect(games.new_game_id()).toBe('0000000103');
+		expect(games.get_max_game_id()).toBe('0000000103');
+		expect(games.new_game_id()).toBe('0000000104');
+		expect(games.get_max_game_id()).toBe('0000000104');
+		expect(games.new_game_id()).toBe('0000000105');
+		expect(games.get_max_game_id()).toBe('0000000105');
+		expect(games.num_games()).toBe(0);
+	});
+
+	const id0000000000 = toGameId('0000000000');
+	const id0000000001 = toGameId('0000000001');
+	const id0000000002 = toGameId('0000000002');
+	const id0000000003 = toGameId('0000000003');
+	const id0000000004 = toGameId('0000000004');
+	const id0000000005 = toGameId('0000000005');
+	const id0000000006 = toGameId('0000000006');
+
+	test('Add some games', () => {
+		let games = GamesManager.get_instance();
+		games.clear();
+
+		games.add_game(games.new_game_id(), toDateMajor('2025-01-19'), Blitz);
+		expect(games.num_games()).toBe(1);
+		games.add_game(games.new_game_id(), toDateMajor('2025-01-19'), Classical);
+		expect(games.num_games()).toBe(2);
+		games.add_game(games.new_game_id(), toDateMajor('2025-01-19'), Rapid);
+		expect(games.num_games()).toBe(3);
+		games.add_game(games.new_game_id(), toDateMajor('2025-01-19'), Bullet);
+		expect(games.num_games()).toBe(4);
+
+		expect(games.get_game_info(id0000000001)?.game_record).toBe('2025-01-19');
+		expect(games.get_game_info(id0000000002)?.game_record).toBe('2025-01-19');
+		expect(games.get_game_info(id0000000003)?.game_record).toBe('2025-01-19');
+		expect(games.get_game_info(id0000000004)?.game_record).toBe('2025-01-19');
+
+		expect(games.get_game_info(id0000000001)?.time_control_id).toBe('blitz');
+		expect(games.get_game_info(id0000000002)?.time_control_id).toBe('classical');
+		expect(games.get_game_info(id0000000003)?.time_control_id).toBe('rapid');
+		expect(games.get_game_info(id0000000004)?.time_control_id).toBe('bullet');
+
+		expect(games.game_exists(id0000000000)).toBe(false);
+		expect(games.game_exists(id0000000001)).toBe(true);
+		expect(games.game_exists(id0000000002)).toBe(true);
+		expect(games.game_exists(id0000000003)).toBe(true);
+		expect(games.game_exists(id0000000004)).toBe(true);
+		expect(games.game_exists(id0000000005)).toBe(false);
+		expect(games.game_exists(id0000000006)).toBe(false);
+
+		expect(games.get_game_info(id0000000005)).toBe(undefined);
+		expect(games.get_game_info(id0000000006)).toBe(undefined);
+	});
+
+	test('Clear and check', () => {
+		let games = GamesManager.get_instance();
+		games.clear();
+		expect(games.num_games()).toBe(0);
+		expect(games.get_game_info(id0000000001)).toBe(undefined);
+		expect(games.get_game_info(id0000000002)).toBe(undefined);
+		expect(games.get_game_info(id0000000003)).toBe(undefined);
+		expect(games.get_game_info(id0000000004)).toBe(undefined);
+	});
+});

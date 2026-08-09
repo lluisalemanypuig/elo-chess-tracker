@@ -1,0 +1,320 @@
+/*
+Elo rating for a Chess Club
+Copyright (C) 2023 - 2026  Lluís Alemany Puig
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published
+by the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+Full source code of elo-chess-tracker:
+	https://github.com/lluisalemanypuig/elo-chess-tracker
+
+Contact:
+	Lluís Alemany Puig
+	https://github.com/lluisalemanypuig
+*/
+
+import { ChallengesManager, numberToChallengeId } from '@app/server/managers/challenges-manager';
+import { newChallenge, toChallengeId } from '@common/models/challenge';
+import { toPlayerPrivateId } from '@common/models/player';
+import { toTimeControlId, toTimeControlName } from '@app/common/models/time-control';
+import { toDateFull } from '@common/utils/time';
+
+const Classical = toTimeControlId('Classical');
+const Classical90p30 = toTimeControlName('Classical (90 + 30)');
+
+describe('Challenges Manager', () => {
+	test('Empty manager', () => {
+		let challenges = ChallengesManager.get_instance();
+		challenges.clear();
+
+		const id00001 = toChallengeId('00001');
+		const id00002 = toChallengeId('00002');
+
+		expect(challenges.get_max_challenge_id()).toBe(0);
+		expect(challenges.num_challenges()).toBe(0);
+
+		const c = newChallenge(
+			id00001,
+			'sample',
+			toPlayerPrivateId('a'),
+			toPlayerPrivateId('b'),
+			Classical,
+			Classical90p30,
+			toDateFull('2025-01-07..17:49:20:000')
+		);
+		expect(challenges.get_challenge_index(c)).toBe(-1);
+		expect(challenges.get_challenge_index_by_id(id00001)).toBe(-1);
+		expect(challenges.get_challenge_index_by_id(id00002)).toBe(-1);
+		expect(challenges.get_challenge_by_id(id00001)).toBe(undefined);
+		expect(challenges.get_challenge_by_id(id00002)).toBe(undefined);
+		expect(challenges.get_challenge_at(0)).toBe(undefined);
+		expect(challenges.get_challenge_at(1)).toBe(undefined);
+	});
+
+	test('Set maximum challenge id', () => {
+		let challenges = ChallengesManager.get_instance();
+		challenges.clear();
+
+		challenges.set_max_challenge_id(3);
+		expect(challenges.get_max_challenge_id()).toBe(3);
+
+		challenges.new_challenge_id();
+		expect(challenges.get_max_challenge_id()).toBe(4);
+	});
+
+	test('Add some challenges', () => {
+		let challenges = ChallengesManager.get_instance();
+		challenges.clear();
+
+		const yesterday_id = challenges.new_challenge_id();
+		expect(yesterday_id).toBe(numberToChallengeId(1));
+		const yesterday = newChallenge(
+			yesterday_id,
+			'sample',
+			toPlayerPrivateId('a'),
+			toPlayerPrivateId('b'),
+			Classical,
+			Classical90p30,
+			toDateFull('yesterday')
+		);
+
+		const today_id = challenges.new_challenge_id();
+		expect(today_id).toBe(numberToChallengeId(2));
+		const today = newChallenge(
+			today_id,
+			'sample',
+			toPlayerPrivateId('a'),
+			toPlayerPrivateId('b'),
+			Classical,
+			Classical90p30,
+			toDateFull('today')
+		);
+
+		const tomorrow_id = challenges.new_challenge_id();
+		expect(tomorrow_id).toBe(numberToChallengeId(3));
+		const tomorrow = newChallenge(
+			tomorrow_id,
+			'sample',
+			toPlayerPrivateId('a'),
+			toPlayerPrivateId('b'),
+			Classical,
+			Classical90p30,
+			toDateFull('tomorrow')
+		);
+
+		challenges.add_challenge(yesterday);
+		expect(challenges.num_challenges()).toBe(1);
+		challenges.add_challenge(today);
+		expect(challenges.num_challenges()).toBe(2);
+		challenges.add_challenge(tomorrow);
+		expect(challenges.num_challenges()).toBe(3);
+
+		expect(challenges.get_challenge_index(yesterday)).toBe(0);
+		expect(challenges.get_challenge_index_by_id(yesterday.id)).toBe(0);
+		expect(challenges.get_challenge_by_id(yesterday.id)).toEqual(yesterday);
+		expect(challenges.get_challenge_at(0)).toEqual(yesterday);
+
+		expect(challenges.get_challenge_index(today)).toBe(1);
+		expect(challenges.get_challenge_index_by_id(today.id)).toBe(1);
+		expect(challenges.get_challenge_by_id(today.id)).toEqual(today);
+		expect(challenges.get_challenge_at(1)).toEqual(today);
+
+		expect(challenges.get_challenge_index(tomorrow)).toBe(2);
+		expect(challenges.get_challenge_index_by_id(tomorrow.id)).toBe(2);
+		expect(challenges.get_challenge_by_id(tomorrow.id)).toEqual(tomorrow);
+		expect(challenges.get_challenge_at(2)).toEqual(tomorrow);
+	});
+
+	test('Remove some challenges', () => {
+		let challenges = ChallengesManager.get_instance();
+		challenges.clear();
+
+		const yesterday_id = challenges.new_challenge_id();
+		expect(yesterday_id).toBe(numberToChallengeId(1));
+		const yesterday = newChallenge(
+			yesterday_id,
+			'sample',
+			toPlayerPrivateId('a'),
+			toPlayerPrivateId('b'),
+			Classical,
+			Classical90p30,
+			toDateFull('yesterday')
+		);
+
+		const today_id = challenges.new_challenge_id();
+		expect(today_id).toBe(numberToChallengeId(2));
+		const today = newChallenge(
+			today_id,
+			'sample',
+			toPlayerPrivateId('a'),
+			toPlayerPrivateId('b'),
+			Classical,
+			Classical90p30,
+			toDateFull('today')
+		);
+
+		const tomorrow_id = challenges.new_challenge_id();
+		expect(tomorrow_id).toBe(numberToChallengeId(3));
+		const tomorrow = newChallenge(
+			tomorrow_id,
+			'sample',
+			toPlayerPrivateId('a'),
+			toPlayerPrivateId('b'),
+			Classical,
+			Classical90p30,
+			toDateFull('tomorrow')
+		);
+
+		const day_after_tomorrow_id = challenges.new_challenge_id();
+		expect(day_after_tomorrow_id).toBe(numberToChallengeId(4));
+		const day_after_tomorrow = newChallenge(
+			day_after_tomorrow_id,
+			'sample',
+			toPlayerPrivateId('a'),
+			toPlayerPrivateId('b'),
+			Classical,
+			Classical90p30,
+			toDateFull('day_after_tomorrow')
+		);
+
+		challenges.add_challenge(yesterday);
+		challenges.add_challenge(today);
+		challenges.add_challenge(tomorrow);
+
+		// ------------------------------------------------------------------------
+		challenges.remove_challenge(yesterday);
+		expect(challenges.num_challenges()).toBe(2);
+		expect(challenges.get_max_challenge_id()).toBe(4);
+
+		expect(challenges.get_challenge_index(yesterday)).toBe(-1);
+		expect(challenges.get_challenge_index_by_id(yesterday.id)).toBe(-1);
+		expect(challenges.get_challenge_by_id(yesterday.id)).toEqual(undefined);
+
+		expect(challenges.get_challenge_index(today)).toBe(0);
+		expect(challenges.get_challenge_index_by_id(today.id)).toBe(0);
+		expect(challenges.get_challenge_by_id(today.id)).toEqual(today);
+
+		expect(challenges.get_challenge_index(tomorrow)).toBe(1);
+		expect(challenges.get_challenge_index_by_id(tomorrow.id)).toBe(1);
+		expect(challenges.get_challenge_by_id(tomorrow.id)).toEqual(tomorrow);
+
+		expect(challenges.get_challenge_at(0)).toEqual(today);
+		expect(challenges.get_challenge_at(1)).toEqual(tomorrow);
+		expect(challenges.get_challenge_at(2)).toEqual(undefined);
+		expect(challenges.get_challenge_at(3)).toEqual(undefined);
+
+		// ------------------------------------------------------------------------
+		challenges.add_challenge(day_after_tomorrow);
+		expect(challenges.num_challenges()).toBe(3);
+		expect(challenges.get_max_challenge_id()).toBe(4);
+
+		expect(challenges.get_challenge_index(yesterday)).toBe(-1);
+		expect(challenges.get_challenge_index_by_id(yesterday.id)).toBe(-1);
+		expect(challenges.get_challenge_by_id(yesterday.id)).toEqual(undefined);
+
+		expect(challenges.get_challenge_index(today)).toBe(0);
+		expect(challenges.get_challenge_index_by_id(today.id)).toBe(0);
+		expect(challenges.get_challenge_by_id(today.id)).toEqual(today);
+
+		expect(challenges.get_challenge_index(tomorrow)).toBe(1);
+		expect(challenges.get_challenge_index_by_id(tomorrow.id)).toBe(1);
+		expect(challenges.get_challenge_by_id(tomorrow.id)).toEqual(tomorrow);
+
+		expect(challenges.get_challenge_index(day_after_tomorrow)).toBe(2);
+		expect(challenges.get_challenge_index_by_id(day_after_tomorrow.id)).toBe(2);
+		expect(challenges.get_challenge_by_id(day_after_tomorrow.id)).toEqual(day_after_tomorrow);
+
+		expect(challenges.get_challenge_at(0)).toEqual(today);
+		expect(challenges.get_challenge_at(1)).toEqual(tomorrow);
+		expect(challenges.get_challenge_at(2)).toEqual(day_after_tomorrow);
+		expect(challenges.get_challenge_at(3)).toEqual(undefined);
+
+		// ------------------------------------------------------------------------
+		challenges.remove_challenge(tomorrow);
+		expect(challenges.num_challenges()).toBe(2);
+		expect(challenges.get_max_challenge_id()).toBe(4);
+
+		expect(challenges.get_challenge_index(yesterday)).toBe(-1);
+		expect(challenges.get_challenge_index_by_id(yesterday.id)).toBe(-1);
+		expect(challenges.get_challenge_by_id(yesterday.id)).toEqual(undefined);
+
+		expect(challenges.get_challenge_index(today)).toBe(0);
+		expect(challenges.get_challenge_index_by_id(today.id)).toBe(0);
+		expect(challenges.get_challenge_by_id(today.id)).toEqual(today);
+
+		expect(challenges.get_challenge_index(tomorrow)).toBe(-1);
+		expect(challenges.get_challenge_index_by_id(tomorrow.id)).toBe(-1);
+		expect(challenges.get_challenge_by_id(tomorrow.id)).toEqual(undefined);
+
+		expect(challenges.get_challenge_index(day_after_tomorrow)).toBe(1);
+		expect(challenges.get_challenge_index_by_id(day_after_tomorrow.id)).toBe(1);
+		expect(challenges.get_challenge_by_id(day_after_tomorrow.id)).toEqual(day_after_tomorrow);
+
+		expect(challenges.get_challenge_at(0)).toEqual(today);
+		expect(challenges.get_challenge_at(1)).toEqual(day_after_tomorrow);
+		expect(challenges.get_challenge_at(2)).toEqual(undefined);
+		expect(challenges.get_challenge_at(3)).toEqual(undefined);
+
+		// ------------------------------------------------------------------------
+		challenges.remove_challenge(today);
+		expect(challenges.num_challenges()).toBe(1);
+		expect(challenges.get_max_challenge_id()).toBe(4);
+
+		expect(challenges.get_challenge_index(yesterday)).toBe(-1);
+		expect(challenges.get_challenge_index_by_id(yesterday.id)).toBe(-1);
+		expect(challenges.get_challenge_by_id(yesterday.id)).toEqual(undefined);
+
+		expect(challenges.get_challenge_index(today)).toBe(-1);
+		expect(challenges.get_challenge_index_by_id(today.id)).toBe(-1);
+		expect(challenges.get_challenge_by_id(today.id)).toEqual(undefined);
+
+		expect(challenges.get_challenge_index(tomorrow)).toBe(-1);
+		expect(challenges.get_challenge_index_by_id(tomorrow.id)).toBe(-1);
+		expect(challenges.get_challenge_by_id(tomorrow.id)).toEqual(undefined);
+
+		expect(challenges.get_challenge_index(day_after_tomorrow)).toBe(0);
+		expect(challenges.get_challenge_index_by_id(day_after_tomorrow.id)).toBe(0);
+		expect(challenges.get_challenge_by_id(day_after_tomorrow.id)).toEqual(day_after_tomorrow);
+
+		expect(challenges.get_challenge_at(0)).toEqual(day_after_tomorrow);
+		expect(challenges.get_challenge_at(1)).toEqual(undefined);
+		expect(challenges.get_challenge_at(2)).toEqual(undefined);
+		expect(challenges.get_challenge_at(3)).toEqual(undefined);
+
+		// ------------------------------------------------------------------------
+		challenges.remove_challenge(day_after_tomorrow);
+		expect(challenges.num_challenges()).toBe(0);
+		expect(challenges.get_max_challenge_id()).toBe(0);
+
+		expect(challenges.get_challenge_index(yesterday)).toBe(-1);
+		expect(challenges.get_challenge_index_by_id(yesterday.id)).toBe(-1);
+		expect(challenges.get_challenge_by_id(yesterday.id)).toEqual(undefined);
+
+		expect(challenges.get_challenge_index(today)).toBe(-1);
+		expect(challenges.get_challenge_index_by_id(today.id)).toBe(-1);
+		expect(challenges.get_challenge_by_id(today.id)).toEqual(undefined);
+
+		expect(challenges.get_challenge_index(tomorrow)).toBe(-1);
+		expect(challenges.get_challenge_index_by_id(tomorrow.id)).toBe(-1);
+		expect(challenges.get_challenge_by_id(tomorrow.id)).toEqual(undefined);
+
+		expect(challenges.get_challenge_index(day_after_tomorrow)).toBe(-1);
+		expect(challenges.get_challenge_index_by_id(day_after_tomorrow.id)).toBe(-1);
+		expect(challenges.get_challenge_by_id(day_after_tomorrow.id)).toEqual(undefined);
+
+		expect(challenges.get_challenge_at(0)).toEqual(undefined);
+		expect(challenges.get_challenge_at(1)).toEqual(undefined);
+		expect(challenges.get_challenge_at(2)).toEqual(undefined);
+		expect(challenges.get_challenge_at(3)).toEqual(undefined);
+	});
+});

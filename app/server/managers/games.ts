@@ -28,22 +28,22 @@ import fs from 'fs';
 import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:managers/games');
 
-import { DateFull, DateMajor, DateMinor, log_now, dateFullToMajor, toDateFull } from '@common/utils/time';
+import { DateFull, DateMajor, DateMinor, logNow, dateFullToMajor, toDateFull } from '@common/utils/time';
 import { Player, PlayerPrivateId } from '@common/models/player';
 import { Game, GameId, GameResult } from '@common/models/game';
 import { User } from '@common/models/user';
 import { where_should_be_inserted_by_key } from '@server/utils/searching';
-import { GamesManager } from '@server/managers/games_manager';
-import { UsersManager } from '@server/managers/users_manager';
-import { RatingSystemManager } from '@server/managers/rating_system_manager';
-import { EnvironmentManager } from '@server/managers/environment_manager';
+import { GamesManager } from '@app/server/managers/games-manager';
+import { UsersManager } from '@app/server/managers/users-manager';
+import { RatingSystemManager } from '@app/server/managers/rating-system-manager';
+import { EnvironmentManager } from '@app/server/managers/environment-manager';
 import { user_update_from_player_data } from '@server/managers/users';
 import { Rating } from '@common/models/rating_framework/rating';
-import { TimeControlId, TimeControlName } from '@common/models/time_control';
+import { TimeControlId, TimeControlName } from '@app/common/models/time-control';
 import { graph_delete_edge, graph_modify_edge, graph_update } from '@server/managers/graphs';
-import { GamesIterator } from '@server/managers/games_iterator';
-import { TimeControlRating } from '@common/models/time_control_rating';
-import { isDefined, isNotDefined } from '@common/utils/is_defined';
+import { GamesIterator } from '@app/server/managers/games-iterator';
+import { TimeControlRating } from '@app/common/models/time-control-rating';
+import { isDefined, isNotDefined } from '@app/common/utils/is-defined';
 
 /// Returns g1 < g2 using dates
 function game_compare_dates(g: Game): Function {
@@ -100,7 +100,7 @@ function game_new(
 ): Game {
 	// retrieve next id and increment maximum id
 	const id_str: GameId = GamesManager.get_instance().new_game_id();
-	debug(log_now(), `ID for new game: ${id_str}`);
+	debug(logNow(), `ID for new game: ${id_str}`);
 
 	let white_to_assign: Rating;
 	let black_to_assign: Rating;
@@ -171,19 +171,19 @@ function update_game_record(
 	updated_players: Player[],
 	player_to_index: Map<string, number>
 ): void {
-	debug(log_now(), `    Updating '${games_iter.get_current_record_name()}'...`);
-	debug(log_now(), `    Before update:`);
+	debug(logNow(), `    Updating '${games_iter.get_current_record_name()}'...`);
+	debug(logNow(), `    Before update:`);
 	for (const player of updated_players) {
-		debug(log_now(), `        ${player.username}.`);
-		debug(log_now(), `            ${player.get_rating(time_control_id).num_games}.`);
-		debug(log_now(), `            ${player.get_rating(time_control_id).won}.`);
-		debug(log_now(), `            ${player.get_rating(time_control_id).drawn}.`);
-		debug(log_now(), `            ${player.get_rating(time_control_id).lost}.`);
+		debug(logNow(), `        ${player.username}.`);
+		debug(logNow(), `            ${player.get_rating(time_control_id).num_games}.`);
+		debug(logNow(), `            ${player.get_rating(time_control_id).won}.`);
+		debug(logNow(), `            ${player.get_rating(time_control_id).drawn}.`);
+		debug(logNow(), `            ${player.get_rating(time_control_id).lost}.`);
 	}
 
 	let i: number = 0;
 	while (!games_iter.end_record_single()) {
-		debug(log_now(), `        Updating game ${i}/${games_iter.get_current_game_array().length}.`);
+		debug(logNow(), `        Updating game ${i}/${games_iter.get_current_game_array().length}.`);
 
 		let g = games_iter.get_current_game();
 
@@ -228,14 +228,14 @@ function update_game_record(
 		++i;
 	}
 
-	debug(log_now(), `    Updating '${games_iter.get_current_record_name()}'...`);
-	debug(log_now(), `    Before update:`);
+	debug(logNow(), `    Updating '${games_iter.get_current_record_name()}'...`);
+	debug(logNow(), `    Before update:`);
 	for (const player of updated_players) {
-		debug(log_now(), `        ${player.username}.`);
-		debug(log_now(), `            ${player.get_rating(time_control_id).num_games}.`);
-		debug(log_now(), `            ${player.get_rating(time_control_id).won}.`);
-		debug(log_now(), `            ${player.get_rating(time_control_id).drawn}.`);
-		debug(log_now(), `            ${player.get_rating(time_control_id).lost}.`);
+		debug(logNow(), `        ${player.username}.`);
+		debug(logNow(), `            ${player.get_rating(time_control_id).num_games}.`);
+		debug(logNow(), `            ${player.get_rating(time_control_id).won}.`);
+		debug(logNow(), `            ${player.get_rating(time_control_id).drawn}.`);
+		debug(logNow(), `            ${player.get_rating(time_control_id).lost}.`);
 	}
 }
 
@@ -265,7 +265,7 @@ function game_insert_in_history(g: Game, record_id: DateMajor): void {
 
 	// the directory is completely empty
 	if (games_iter.get_all_records().length == 0) {
-		debug(log_now(), `There are no game record files for time control '${time_control_id}'.`);
+		debug(logNow(), `There are no game record files for time control '${time_control_id}'.`);
 
 		fs.writeFileSync(game_record_file, JSON.stringify([g], null, 4));
 		user_update_from_player_data(updated_players);
@@ -275,25 +275,25 @@ function game_insert_in_history(g: Game, record_id: DateMajor): void {
 	// there are some files in the directory
 	const record_exists = games_iter.locate_record(record_id);
 	if (!record_exists) {
-		debug(log_now(), `The game record for game '${g.id}' does not exist.`);
+		debug(logNow(), `The game record for game '${g.id}' does not exist.`);
 
 		fs.writeFileSync(game_record_file, JSON.stringify([g], null, 4));
 		if (games_iter.end_record_list()) {
-			debug(log_now(), `The new game record file is beyond every other game record.`);
+			debug(logNow(), `The new game record file is beyond every other game record.`);
 
 			user_update_from_player_data(updated_players);
 			return;
 		}
 	}
 
-	debug(log_now(), `There is some game record file beyond the current game record -- those have to be updated.`);
+	debug(logNow(), `There is some game record file beyond the current game record -- those have to be updated.`);
 
 	let player_to_index: Map<string, number> = new Map();
 	player_to_index.set(white_username, 0);
 	player_to_index.set(black_username, 1);
 
 	if (record_exists) {
-		debug(log_now(), `The game record for game '${g.id}' exists.`);
+		debug(logNow(), `The game record for game '${g.id}' exists.`);
 
 		let game_set = games_iter.get_current_game_array();
 
@@ -311,8 +311,8 @@ function game_insert_in_history(g: Game, record_id: DateMajor): void {
 		games_iter.next_record();
 	}
 
-	debug(log_now(), `The game record for game '${g.id}' has been created/updated.`);
-	debug(log_now(), `Going to update the next game records.`);
+	debug(logNow(), `The game record for game '${g.id}' has been created/updated.`);
+	debug(logNow(), `Going to update the next game records.`);
 
 	while (!games_iter.end_record_list()) {
 		update_game_record(games_iter, time_control_id, updated_players, player_to_index);
@@ -575,14 +575,14 @@ export function game_delete(game_id: GameId): void {
 
 	let w = users_manager.get_user_by_username(white);
 	if (isNotDefined(w)) {
-		debug(log_now(), `User ${white} could not be found`);
+		debug(logNow(), `User ${white} could not be found`);
 		return;
 	}
 	w.delete_game(time_control_id, game_record);
 
 	let b = users_manager.get_user_by_username(black);
 	if (isNotDefined(b)) {
-		debug(log_now(), `User ${black} could not be found`);
+		debug(logNow(), `User ${black} could not be found`);
 		return;
 	}
 	b.delete_game(time_control_id, game_record);

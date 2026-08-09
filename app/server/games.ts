@@ -27,9 +27,9 @@ import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:server_games');
 import { Request, Response } from 'express';
 
-import { log_now } from '@common/utils/time';
+import { logNow } from '@common/utils/time';
 import { is_user_logged_in } from '@server/managers/session';
-import { GAMES_CREATE, GAMES_DELETE, GAMES_EDIT } from '@common/models/user_action';
+import { GAMES_CREATE, GAMES_DELETE, GAMES_EDIT } from '@app/common/models/user-action';
 import {
 	game_add_new,
 	game_delete,
@@ -38,23 +38,23 @@ import {
 	game_find_by_id,
 	recalculate_all_ratings
 } from '@server/managers/games';
-import { ADMIN } from '@common/models/user_role';
+import { ADMIN } from '@app/common/models/user-role';
 import {
 	can_user_create_a_game,
 	can_user_delete_a_game,
 	can_user_edit_a_game
-} from '@server/managers/user_relationships';
-import { UsersManager } from '@server/managers/users_manager';
-import { ConfigurationManager } from '@server/managers/configuration_manager';
-import { get_execution_directory } from '@server/managers/environment_manager';
-import { isNotDefined } from '@common/utils/is_defined';
+} from '@app/server/managers/user-relationships';
+import { UsersManager } from '@app/server/managers/users-manager';
+import { ConfigurationManager } from '@app/server/managers/configuration-manager';
+import { get_execution_directory } from '@app/server/managers/environment-manager';
+import { isNotDefined } from '@app/common/utils/is-defined';
 import { Routes } from '@common/routes';
 import { InputSchemaOf } from '@common/api/schemas';
 import { safe_parse_request_cookies, safe_parse_request_body } from '@server/utils/schemas';
 import { AuthenticationInputSchema } from '@common/schemas/authentication';
 
 export async function get_page_game_list_own(req: Request, res: Response) {
-	debug(log_now(), `GET ${Routes.PAGE_GAME_LIST_OWN}...`);
+	debug(logNow(), `GET ${Routes.PAGE_GAME_LIST_OWN}...`);
 
 	const session_parse = safe_parse_request_cookies(req, AuthenticationInputSchema, res, debug);
 	if (session_parse.result === 'Exit') {
@@ -77,7 +77,7 @@ export async function get_page_game_list_own(req: Request, res: Response) {
 }
 
 export async function get_page_game_list_all(req: Request, res: Response) {
-	debug(log_now(), `GET ${Routes.PAGE_GAME_LIST_ALL}...`);
+	debug(logNow(), `GET ${Routes.PAGE_GAME_LIST_ALL}...`);
 
 	const session_parse = safe_parse_request_cookies(req, AuthenticationInputSchema, res, debug);
 	if (session_parse.result === 'Exit') {
@@ -100,7 +100,7 @@ export async function get_page_game_list_all(req: Request, res: Response) {
 }
 
 export async function get_page_game_create(req: Request, res: Response) {
-	debug(log_now(), `GET ${Routes.PAGE_GAME_CREATE}...`);
+	debug(logNow(), `GET ${Routes.PAGE_GAME_CREATE}...`);
 
 	const session_parse = safe_parse_request_cookies(req, AuthenticationInputSchema, res, debug);
 	if (session_parse.result === 'Exit') {
@@ -116,7 +116,7 @@ export async function get_page_game_create(req: Request, res: Response) {
 	}
 
 	if (!user.can_do(GAMES_CREATE)) {
-		debug(log_now(), `User '${session.username}' cannot create games.`);
+		debug(logNow(), `User '${session.username}' cannot create games.`);
 		res.status(403).send('You cannot create games.');
 		return;
 	}
@@ -129,7 +129,7 @@ export async function get_page_game_create(req: Request, res: Response) {
 }
 
 export async function post_game_create(req: Request, res: Response) {
-	debug(log_now(), `POST ${Routes.GAME_CREATE}...`);
+	debug(logNow(), `POST ${Routes.GAME_CREATE}...`);
 
 	const session_parse = safe_parse_request_cookies(req, AuthenticationInputSchema, res, debug);
 	if (session_parse.result === 'Exit') {
@@ -145,7 +145,7 @@ export async function post_game_create(req: Request, res: Response) {
 	}
 
 	if (!creator.can_do(GAMES_CREATE)) {
-		debug(log_now(), `User '${session.username}' cannot create users.`);
+		debug(logNow(), `User '${session.username}' cannot create users.`);
 		res.status(403).send('You cannot create games');
 		return;
 	}
@@ -168,14 +168,14 @@ export async function post_game_create(req: Request, res: Response) {
 
 	const white = mem.get_user_by_public_id(white_rid);
 	if (isNotDefined(white)) {
-		debug(log_now(), `Random id '${white_rid}' for White is not valid.`);
+		debug(logNow(), `Random id '${white_rid}' for White is not valid.`);
 		res.status(500).send('Invalid white user sent to the server.');
 		return;
 	}
 
 	const black = mem.get_user_by_public_id(black_rid);
 	if (isNotDefined(black)) {
-		debug(log_now(), `Random id '${black_rid}' for Black is not valid.`);
+		debug(logNow(), `Random id '${black_rid}' for Black is not valid.`);
 		res.status(500).send('Invalid black user sent to the server.');
 		return;
 	}
@@ -195,21 +195,21 @@ export async function post_game_create(req: Request, res: Response) {
 	}
 
 	if (!can_user_create_a_game(creator, white, black)) {
-		debug(log_now(), `User cannot create this game.`);
+		debug(logNow(), `User cannot create this game.`);
 		res.status(403).send('You cannot create this game.');
 		return;
 	}
 
-	debug(log_now(), `    Title: '${game_title}'`);
-	debug(log_now(), `    White: '${white.username}'`);
-	debug(log_now(), `    Black: '${black.username}'`);
-	debug(log_now(), `    Result: '${result}'`);
-	debug(log_now(), `    Time control id: '${time_control_id}'`);
-	debug(log_now(), `    Time control name: '${time_control_name}'`);
-	debug(log_now(), `    Date of game: '${game_date}'`);
-	debug(log_now(), `    Time of game: '${game_time}'`);
+	debug(logNow(), `    Title: '${game_title}'`);
+	debug(logNow(), `    White: '${white.username}'`);
+	debug(logNow(), `    Black: '${black.username}'`);
+	debug(logNow(), `    Result: '${result}'`);
+	debug(logNow(), `    Time control id: '${time_control_id}'`);
+	debug(logNow(), `    Time control name: '${time_control_name}'`);
+	debug(logNow(), `    Date of game: '${game_date}'`);
+	debug(logNow(), `    Time of game: '${game_time}'`);
 
-	debug(log_now(), `Adding the new game`);
+	debug(logNow(), `Adding the new game`);
 
 	game_add_new(game_title, white, black, result, time_control_id, time_control_name, game_date, game_time);
 
@@ -217,7 +217,7 @@ export async function post_game_create(req: Request, res: Response) {
 }
 
 export async function post_game_edit_result(req: Request, res: Response) {
-	debug(log_now(), `POST ${Routes.GAME_EDIT_RESULT}...`);
+	debug(logNow(), `POST ${Routes.GAME_EDIT_RESULT}...`);
 
 	const session_parse = safe_parse_request_cookies(req, AuthenticationInputSchema, res, debug);
 	if (session_parse.result === 'Exit') {
@@ -233,7 +233,7 @@ export async function post_game_edit_result(req: Request, res: Response) {
 	}
 
 	if (!user.can_do(GAMES_EDIT)) {
-		debug(log_now(), `User '${session.username}' cannot edit games.`);
+		debug(logNow(), `User '${session.username}' cannot edit games.`);
 		res.status(403).send('You cannot edit games');
 		return;
 	}
@@ -246,8 +246,8 @@ export async function post_game_edit_result(req: Request, res: Response) {
 	const game_id = game_parse.data.id;
 	const new_result = game_parse.data.new_result;
 
-	debug(log_now(), `    Game ID: '${game_id}'`);
-	debug(log_now(), `    New result: '${new_result}'`);
+	debug(logNow(), `    Game ID: '${game_id}'`);
+	debug(logNow(), `    New result: '${new_result}'`);
 
 	const game = game_find_by_id(game_id);
 	if (isNotDefined(game)) {
@@ -259,14 +259,14 @@ export async function post_game_edit_result(req: Request, res: Response) {
 
 	const white = manager.get_user_by_username(game.white);
 	if (isNotDefined(white)) {
-		debug(log_now(), `Random id '${white}' for White is not valid.`);
+		debug(logNow(), `Random id '${white}' for White is not valid.`);
 		res.status(500).send('Invalid white user sent to the server.');
 		return;
 	}
 
 	const black = manager.get_user_by_username(game.black);
 	if (isNotDefined(black)) {
-		debug(log_now(), `Random id '${black}' for Black is not valid.`);
+		debug(logNow(), `Random id '${black}' for Black is not valid.`);
 		res.status(500).send('Invalid black user sent to the server.');
 		return;
 	}
@@ -277,7 +277,7 @@ export async function post_game_edit_result(req: Request, res: Response) {
 		return;
 	}
 
-	debug(log_now(), `Editing game...`);
+	debug(logNow(), `Editing game...`);
 
 	// actually edit the game now
 	game_edit_result(game_id, new_result);
@@ -286,7 +286,7 @@ export async function post_game_edit_result(req: Request, res: Response) {
 }
 
 export async function post_game_edit_title(req: Request, res: Response) {
-	debug(log_now(), `POST ${Routes.GAME_EDIT_TITLE}...`);
+	debug(logNow(), `POST ${Routes.GAME_EDIT_TITLE}...`);
 
 	const session_parse = safe_parse_request_cookies(req, AuthenticationInputSchema, res, debug);
 	if (session_parse.result === 'Exit') {
@@ -302,7 +302,7 @@ export async function post_game_edit_title(req: Request, res: Response) {
 	}
 
 	if (!user.can_do(GAMES_EDIT)) {
-		debug(log_now(), `User '${session.username}' cannot edit games.`);
+		debug(logNow(), `User '${session.username}' cannot edit games.`);
 		res.status(403).send('You cannot edit games');
 		return;
 	}
@@ -315,8 +315,8 @@ export async function post_game_edit_title(req: Request, res: Response) {
 	const game_id = game_parse.data.id;
 	const title = game_parse.data.title;
 
-	debug(log_now(), `    Game ID: '${game_id}'`);
-	debug(log_now(), `    New title: '${title}'`);
+	debug(logNow(), `    Game ID: '${game_id}'`);
+	debug(logNow(), `    New title: '${title}'`);
 
 	const game = game_find_by_id(game_id);
 	if (isNotDefined(game)) {
@@ -328,14 +328,14 @@ export async function post_game_edit_title(req: Request, res: Response) {
 
 	const white = manager.get_user_by_username(game.white);
 	if (isNotDefined(white)) {
-		debug(log_now(), `Random id '${white}' for White is not valid.`);
+		debug(logNow(), `Random id '${white}' for White is not valid.`);
 		res.status(500).send('Invalid white user sent to the server.');
 		return;
 	}
 
 	const black = manager.get_user_by_username(game.black);
 	if (isNotDefined(black)) {
-		debug(log_now(), `Random id '${black}' for Black is not valid.`);
+		debug(logNow(), `Random id '${black}' for Black is not valid.`);
 		res.status(500).send('Invalid black user sent to the server.');
 		return;
 	}
@@ -346,7 +346,7 @@ export async function post_game_edit_title(req: Request, res: Response) {
 		return;
 	}
 
-	debug(log_now(), `Editing game...`);
+	debug(logNow(), `Editing game...`);
 
 	// actually edit the game now
 	game_edit_title(game_id, title);
@@ -355,7 +355,7 @@ export async function post_game_edit_title(req: Request, res: Response) {
 }
 
 export async function post_game_delete(req: Request, res: Response) {
-	debug(log_now(), `POST ${Routes.GAME_DELETE}...`);
+	debug(logNow(), `POST ${Routes.GAME_DELETE}...`);
 
 	const session_parse = safe_parse_request_cookies(req, AuthenticationInputSchema, res, debug);
 	if (session_parse.result === 'Exit') {
@@ -371,7 +371,7 @@ export async function post_game_delete(req: Request, res: Response) {
 	}
 
 	if (!user.can_do(GAMES_DELETE)) {
-		debug(log_now(), `User '${session.username}' cannot delete games.`);
+		debug(logNow(), `User '${session.username}' cannot delete games.`);
 		res.status(403).send('You cannot delete games');
 		return;
 	}
@@ -383,7 +383,7 @@ export async function post_game_delete(req: Request, res: Response) {
 
 	const game_id = game_parse.data.id;
 
-	debug(log_now(), `    Game ID: '${game_id}'`);
+	debug(logNow(), `    Game ID: '${game_id}'`);
 
 	const game = game_find_by_id(game_id);
 	if (isNotDefined(game)) {
@@ -395,14 +395,14 @@ export async function post_game_delete(req: Request, res: Response) {
 
 	const white = manager.get_user_by_username(game.white);
 	if (isNotDefined(white)) {
-		debug(log_now(), `Random id '${white}' for White is not valid.`);
+		debug(logNow(), `Random id '${white}' for White is not valid.`);
 		res.status(500).send('Invalid white user sent to the server.');
 		return;
 	}
 
 	const black = manager.get_user_by_username(game.black);
 	if (isNotDefined(black)) {
-		debug(log_now(), `Random id '${black}' for Black is not valid.`);
+		debug(logNow(), `Random id '${black}' for Black is not valid.`);
 		res.status(500).send('Invalid black user sent to the server.');
 		return;
 	}
@@ -413,7 +413,7 @@ export async function post_game_delete(req: Request, res: Response) {
 		return;
 	}
 
-	debug(log_now(), `Deleting game...`);
+	debug(logNow(), `Deleting game...`);
 
 	game_delete(game_id);
 
@@ -421,7 +421,7 @@ export async function post_game_delete(req: Request, res: Response) {
 }
 
 export async function post_recalculate_ratings(req: Request, res: Response) {
-	debug(log_now(), `POST ${Routes.RECALCULATE_RATINGS}...`);
+	debug(logNow(), `POST ${Routes.RECALCULATE_RATINGS}...`);
 
 	const session_parse = safe_parse_request_cookies(req, AuthenticationInputSchema, res, debug);
 	if (session_parse.result === 'Exit') {
@@ -437,12 +437,12 @@ export async function post_recalculate_ratings(req: Request, res: Response) {
 	}
 
 	if (!user.is(ADMIN)) {
-		debug(log_now(), `User '${session.username}' cannot recalculate ratings.`);
+		debug(logNow(), `User '${session.username}' cannot recalculate ratings.`);
 		res.status(403).send('You cannot recalculate ratings.');
 		return;
 	}
 
-	debug(log_now(), `Recalculating ratings...`);
+	debug(logNow(), `Recalculating ratings...`);
 
 	// actually recalculating ratings
 	recalculate_all_ratings();

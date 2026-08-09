@@ -27,7 +27,7 @@ import { z } from 'zod';
 import { GameResultSchema } from '@common/models/game';
 import { PlayerPrivateIdSchema, PlayerPublicIdSchema } from '@common/models/player';
 import { ChallengeIdSchema } from '@common/models/challenge';
-import { TimeControlIdSchema, TimeControlNameSchema } from '@common/models/time_control';
+import { TimeControlIdSchema, TimeControlNameSchema } from '@app/common/models/time-control';
 
 // Routes.CHALLENGE_SEND
 

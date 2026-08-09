@@ -26,10 +26,10 @@ Contact:
 import { z } from 'zod';
 import { EnvironmentSchema } from '@common/models/configuration/environment';
 import { ServerConfigurationSchema } from '@common/models/configuration/server';
-import { TimeControlArraySchema } from '@common/models/configuration/time_controls';
+import { TimeControlArraySchema } from '@app/common/models/configuration/time-controls';
 import { BehaviorSchema } from '@common/models/configuration/behavior';
 import { UserPermissionsSchema } from '@common/models/configuration/permissions';
-import { RatingFrameworkTypeSchema } from '@common/models/rating_framework/rating_framework_type';
+import { RatingFrameworkTypeSchema } from '@common/models/rating-framework/rating-framework-type';
 
 export const ConfigurationSchema = z
 	.object({

@@ -28,25 +28,25 @@ import path from 'path';
 import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:managers/initialization');
 
-import { log_now, toDateMajor } from '@common/utils/time';
-import { EnvironmentManager } from '@server/managers/environment_manager';
-import { ConfigurationManager } from '@server/managers/configuration_manager';
-import { ChallengesManager } from '@server/managers/challenges_manager';
-import { GamesManager } from '@server/managers/games_manager';
-import { UsersManager } from '@server/managers/users_manager';
-import { initialize_rating_time_controls, initialize_rating_functions } from '@server/managers/rating_system';
-import { RatingSystemManager } from '@server/managers/rating_system_manager';
+import { logNow, toDateMajor } from '@common/utils/time';
+import { EnvironmentManager } from '@app/server/managers/environment-manager';
+import { ConfigurationManager } from '@app/server/managers/configuration-manager';
+import { ChallengesManager } from '@app/server/managers/challenges-manager';
+import { GamesManager } from '@app/server/managers/games-manager';
+import { UsersManager } from '@app/server/managers/users-manager';
+import { initialize_rating_time_controls, initialize_rating_functions } from '@app/server/managers/rating-system';
+import { RatingSystemManager } from '@app/server/managers/rating-system-manager';
 import { Game, toGameId } from '@common/models/game';
-import { TimeControl, TimeControlArray } from '@common/models/time_control';
+import { TimeControl, TimeControlArray } from '@app/common/models/time-control';
 import { Graph } from '@common/models/graph/graph';
-import { GraphsManager } from '@server/managers/graphs_manager';
+import { GraphsManager } from '@app/server/managers/graphs-manager';
 import { game_array_from_string } from '@common/io/game';
 import { challenge_from_string } from '@common/io/challenge';
 import { user_from_string } from '@common/io/user';
 import { graph_from_string } from '@common/io/graph/graph';
-import { UsersBehavior } from '@server/managers/users_behavior';
-import { read_directory } from '@server/utils/read_directory';
-import { isNotDefined } from '@common/utils/is_defined';
+import { UsersBehavior } from '@app/server/managers/users-behavior';
+import { read_directory } from '@app/server/utils/read-directory';
+import { isNotDefined } from '@app/common/utils/is-defined';
 import { RatingFrameworkType } from '@common/models/rating_framework/rating_framework_type';
 import { configuration_from_string } from '@common/io/configuration';
 import { Configuration } from '@common/models/configuration/configuration';
@@ -55,16 +55,16 @@ import { Environment, SSLCertificate } from '@common/models/configuration/enviro
 import { Ports, ServerConfiguration } from '@common/models/configuration/server';
 import { UserPermissions } from '@common/models/configuration/permissions';
 import { clear_server } from '@server/managers/memory/clear';
-import { initialize_permissions } from '@server/managers/user_role_action';
+import { initialize_permissions } from '@app/server/managers/user-role-action';
 
 function init_environment_directories(base_directory: string, execution_directory: string): void {
 	let server_env = EnvironmentManager.get_instance();
 	server_env.set_database_base_directory(path.join(base_directory, '/database'));
-	debug(log_now(), `    Database directory: '${server_env.get_dir_database()}'`);
-	debug(log_now(), `        Games directory: '${server_env.get_dir_games()}'`);
-	debug(log_now(), `        Users directory: '${server_env.get_dir_users()}'`);
-	debug(log_now(), `        Challenges directory: '${server_env.get_dir_challenges()}'`);
-	debug(log_now(), `        Graphs directory: '${server_env.get_dir_graphs()}'`);
+	debug(logNow(), `    Database directory: '${server_env.get_dir_database()}'`);
+	debug(logNow(), `        Games directory: '${server_env.get_dir_games()}'`);
+	debug(logNow(), `        Users directory: '${server_env.get_dir_users()}'`);
+	debug(logNow(), `        Challenges directory: '${server_env.get_dir_challenges()}'`);
+	debug(logNow(), `        Graphs directory: '${server_env.get_dir_graphs()}'`);
 
 	server_env.set_execution_environment(execution_directory);
 }
@@ -72,10 +72,10 @@ function init_environment_directories(base_directory: string, execution_director
 function init_environment_SSL(base_directory: string, ssl: SSLCertificate): void {
 	let env = EnvironmentManager.get_instance();
 	env.set_SSL_info(path.join(base_directory, '/ssl'), ssl);
-	debug(log_now(), `    SSL base directory: '${env.get_dir_ssl()}'`);
-	debug(log_now(), `        Public key file: '${env.get_ssl_public_key_file()}'`);
-	debug(log_now(), `        Private key file: '${env.get_ssl_private_key_file()}'`);
-	debug(log_now(), `        Passphrase: '${env.get_ssl_passphrase_file()}'`);
+	debug(logNow(), `    SSL base directory: '${env.get_dir_ssl()}'`);
+	debug(logNow(), `        Public key file: '${env.get_ssl_public_key_file()}'`);
+	debug(logNow(), `        Private key file: '${env.get_ssl_private_key_file()}'`);
+	debug(logNow(), `        Passphrase: '${env.get_ssl_passphrase_file()}'`);
 }
 
 function init_environment_icon_file_paths(base_directory: string, env: Environment): void {
@@ -98,43 +98,43 @@ function init_server_ports(ports: Ports): void {
 	let server_conf = ConfigurationManager.get_instance();
 	server_conf.set_port_http(ports.http);
 	server_conf.set_port_https(ports.https);
-	debug(log_now(), `    Configuration parameters:`);
-	debug(log_now(), `        HTTP : ${server_conf.get_port_http()}`);
-	debug(log_now(), `        HTTPS: ${server_conf.get_port_https()}`);
+	debug(logNow(), `    Configuration parameters:`);
+	debug(logNow(), `        HTTP : ${server_conf.get_port_http()}`);
+	debug(logNow(), `        HTTPS: ${server_conf.get_port_https()}`);
 }
 
 function init_server(conf: ServerConfiguration): void {
 	let server_conf = ConfigurationManager.get_instance();
 
 	server_conf.set_domain_name(conf.domain_name);
-	debug(log_now(), `        Domain name: ${server_conf.get_domain_name()}`);
+	debug(logNow(), `        Domain name: ${server_conf.get_domain_name()}`);
 
 	init_server_ports(conf.ports);
 }
 
 function init_user_permissions(permissions: UserPermissions): void {
-	debug(log_now(), 'Initialize permissions...');
+	debug(logNow(), 'Initialize permissions...');
 
 	initialize_permissions(permissions);
 }
 
 function init_rating_framework(rating_type: RatingFrameworkType): void {
-	debug(log_now(), `    Rating system: '${rating_type}'`);
+	debug(logNow(), `    Rating system: '${rating_type}'`);
 
 	initialize_rating_functions(rating_type);
 }
 
 function init_time_controls(time_controls: TimeControlArray): void {
-	debug(log_now(), 'Initialize time controls...');
+	debug(logNow(), 'Initialize time controls...');
 
-	debug(log_now(), `    Found '${time_controls.length}' rating types:`);
+	debug(logNow(), `    Found '${time_controls.length}' rating types:`);
 
 	let all_time_controls: TimeControl[] = [];
 	for (let tc of time_controls) {
 		all_time_controls.push({ id: tc.id, name: tc.name });
 
-		debug(log_now(), `        * Id '${tc.id}'`);
-		debug(log_now(), `          Name '${tc.name}'`);
+		debug(logNow(), `        * Id '${tc.id}'`);
+		debug(logNow(), `          Name '${tc.name}'`);
 	}
 
 	initialize_rating_time_controls(all_time_controls);
@@ -157,17 +157,17 @@ function init_behavior_challenges(challenges: ChallengesBehavior): void {
 }
 
 function init_behavior(behavior: Behavior): void {
-	debug(log_now(), 'Initialize behaviours...');
+	debug(logNow(), 'Initialize behaviours...');
 
 	init_behavior_challenges(behavior.challenges);
 }
 
 function init_user_session_ids(): void {
-	debug(log_now(), 'Initialize sessions...');
+	debug(logNow(), 'Initialize sessions...');
 }
 
 function init_users(): void {
-	debug(log_now(), 'Initialize users...');
+	debug(logNow(), 'Initialize users...');
 
 	const rating_system = RatingSystemManager.get_instance();
 	const unique_time_controls_ids = rating_system.get_unique_time_controls_ids();
@@ -175,20 +175,20 @@ function init_users(): void {
 	const users_dir = EnvironmentManager.get_instance().get_dir_users();
 	let user_manager = UsersManager.get_instance();
 
-	debug(log_now(), `    Reading directory '${users_dir}'`);
+	debug(logNow(), `    Reading directory '${users_dir}'`);
 	const all_user_files = read_directory(users_dir);
 
 	for (let i = 0; i < all_user_files.length; ++i) {
 		const user_file = path.join(users_dir, all_user_files[i]);
 
-		debug(log_now(), `        Reading file '${user_file}'`);
+		debug(logNow(), `        Reading file '${user_file}'`);
 		const user_str = fs.readFileSync(user_file, 'utf8');
 		const user = user_from_string(user_str);
 		if (isNotDefined(user)) {
 			throw new Error(`Could not parse user at index '${i}', at file '${user_file}'.`);
 			continue;
 		}
-		debug(log_now(), `        User '${user.username}' is at index '${i}'`);
+		debug(logNow(), `        User '${user.username}' is at index '${i}'`);
 
 		// maybe the file the user was read from has to be updated
 		let update_user_file: boolean = false;
@@ -202,27 +202,27 @@ function init_users(): void {
 
 		user_manager.add_user(user);
 		if (update_user_file) {
-			debug(log_now(), `Overwriting file '${user_file}' of user '${user.username}'`);
+			debug(logNow(), `Overwriting file '${user_file}' of user '${user.username}'`);
 			fs.writeFileSync(user_file, JSON.stringify(user, null, 4));
 		}
 	}
-	debug(log_now(), `    Found ${user_manager.num_users()} users.`);
+	debug(logNow(), `    Found ${user_manager.num_users()} users.`);
 }
 
 function init_challenges(): void {
-	debug(log_now(), 'Initialize challenges...');
+	debug(logNow(), 'Initialize challenges...');
 
 	const challenges_dir = EnvironmentManager.get_instance().get_dir_challenges();
 	let challenges = ChallengesManager.get_instance();
 	let max_challenge_id: string = '0';
 
-	debug(log_now(), `    Reading directory '${challenges_dir}'`);
+	debug(logNow(), `    Reading directory '${challenges_dir}'`);
 	const all_challenges_files = read_directory(challenges_dir);
 
 	for (let i = 0; i < all_challenges_files.length; ++i) {
 		const challenge_file = path.join(challenges_dir, all_challenges_files[i]);
 
-		debug(log_now(), `        Reading file '${challenge_file}'`);
+		debug(logNow(), `        Reading file '${challenge_file}'`);
 		const challenge_data = fs.readFileSync(challenge_file, 'utf8');
 		const c = challenge_from_string(challenge_data);
 		if (isNotDefined(c)) {
@@ -236,12 +236,12 @@ function init_challenges(): void {
 
 	challenges.set_max_challenge_id(parseInt(max_challenge_id));
 
-	debug(log_now(), `    Found ${challenges.num_challenges()} challenges.`);
-	debug(log_now(), `    Maximum challenge id ${max_challenge_id}.`);
+	debug(logNow(), `    Found ${challenges.num_challenges()} challenges.`);
+	debug(logNow(), `    Maximum challenge id ${max_challenge_id}.`);
 }
 
 function init_games(): void {
-	debug(log_now(), 'Initialize games...');
+	debug(logNow(), 'Initialize games...');
 
 	const ratings = RatingSystemManager.get_instance();
 	let games = GamesManager.get_instance();
@@ -251,13 +251,13 @@ function init_games(): void {
 	for (const id of ratings.get_unique_time_controls_ids()) {
 		const games_dir = EnvironmentManager.get_instance().get_dir_games_time_control(id);
 
-		debug(log_now(), `    Reading directory '${games_dir}'`);
+		debug(logNow(), `    Reading directory '${games_dir}'`);
 		const all_date_record_files = read_directory(games_dir).map(toDateMajor);
 
 		for (let i = 0; i < all_date_record_files.length; ++i) {
 			const game_record_file = path.join(games_dir, all_date_record_files[i]);
 
-			debug(log_now(), `        Reading file '${game_record_file}'`);
+			debug(logNow(), `        Reading file '${game_record_file}'`);
 			const game_record_data = fs.readFileSync(game_record_file, 'utf8');
 			const game_set = game_array_from_string(game_record_data);
 			if (isNotDefined(game_set)) {
@@ -278,12 +278,12 @@ function init_games(): void {
 
 	games.set_max_game_id(parseInt(max_game_id));
 
-	debug(log_now(), `    Found ${num_games} games.`);
-	debug(log_now(), `    Maximum game id ${max_game_id}.`);
+	debug(logNow(), `    Found ${num_games} games.`);
+	debug(logNow(), `    Maximum game id ${max_game_id}.`);
 }
 
 function init_graphs(): void {
-	debug(log_now(), 'Initialize graphs...');
+	debug(logNow(), 'Initialize graphs...');
 
 	const ratings = RatingSystemManager.get_instance();
 	let graph_manager = GraphsManager.get_instance();
@@ -295,7 +295,7 @@ function init_graphs(): void {
 			fs.mkdirSync(graphs_dir);
 			graph_manager.add_graph(id, new Graph());
 		} else {
-			debug(log_now(), `    Found directory ${graphs_dir}`);
+			debug(logNow(), `    Found directory ${graphs_dir}`);
 			const g_id = graph_from_string(graphs_dir);
 			if (isNotDefined(g_id)) {
 				throw new Error(`Could not read graph from directory '${graphs_dir}'.`);
@@ -306,7 +306,7 @@ function init_graphs(): void {
 }
 
 export function server_init_from_data(base_directory: string, configuration: Configuration): void {
-	debug(log_now(), `    Webpage base directory: '${base_directory}'`);
+	debug(logNow(), `    Webpage base directory: '${base_directory}'`);
 
 	clear_server();
 
@@ -327,12 +327,12 @@ export function server_init_from_data(base_directory: string, configuration: Con
 
 /// Initializes the server memory
 export function server_init_from_configuration_file(configuration_file: string): void {
-	debug(log_now(), `Reading configuration file '${configuration_file}'`);
+	debug(logNow(), `Reading configuration file '${configuration_file}'`);
 
 	const data = fs.readFileSync(configuration_file, 'utf8');
 	const configuration = configuration_from_string(data);
 	if (isNotDefined(configuration)) {
-		debug(log_now(), `Configuration file '${configuration_file}' not found.`);
+		debug(logNow(), `Configuration file '${configuration_file}' not found.`);
 		return;
 	}
 
@@ -347,12 +347,12 @@ export function server_init_from_parameters(args: string[]): void {
 			configuration_file = args[i + 1];
 			++i;
 		} else {
-			debug(log_now(), "Error: invalid option '" + configuration_file + "'.");
+			debug(logNow(), "Error: invalid option '" + configuration_file + "'.");
 		}
 	}
 
 	if (configuration_file == '') {
-		debug(log_now(), 'Error: configuration file parameter is missing');
+		debug(logNow(), 'Error: configuration file parameter is missing');
 		return;
 	}
 

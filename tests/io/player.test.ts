@@ -23,10 +23,10 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { initialize_rating_functions } from '@server/managers/rating_system';
+import { initialize_rating_functions } from '@app/server/managers/rating-system';
 import { player_from_string } from '@common/io/player';
-import { isNotDefined } from '@common/utils/is_defined';
-import { toTimeControlId } from '@common/models/time_control';
+import { isNotDefined } from '@app/common/utils/is-defined';
+import { toTimeControlId } from '@app/common/models/time-control';
 
 const Classical = toTimeControlId('classical');
 const Blitz = toTimeControlId('blitz');

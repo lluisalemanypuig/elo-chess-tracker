@@ -23,7 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { TimeControlRating } from '@common/models/time_control_rating';
+import { TimeControlRating } from '@app/common/models/time-control-rating';
 import { toUserGivenName, User } from '@common/models/user';
 import {
 	USER_ROLE_ASSIGN_ADMIN,
@@ -53,12 +53,12 @@ import {
 	GAMES_SEE_STUDENT,
 	GAMES_SEE_TEACHER,
 	GAMES_SEE
-} from '@common/models/user_action';
-import { ADMIN, MEMBER, STUDENT, TEACHER } from '@common/models/user_role';
-import { initialize_permissions, UserRoleToUserAction } from '@server/managers/user_role_action';
+} from '@app/common/models/user-action';
+import { ADMIN, MEMBER, STUDENT, TEACHER } from '@app/common/models/user-role';
+import { initialize_permissions, UserRoleToUserAction } from '@app/server/managers/user-role-action';
 import { EloRating } from '@common/models/rating_framework/Elo/rating';
 import { toPlayerPrivateId } from '@common/models/player';
-import { toTimeControlId } from '@common/models/time_control';
+import { toTimeControlId } from '@app/common/models/time-control';
 import { toDateMajor } from '@common/utils/time';
 
 const Classical = toTimeControlId('Classical');

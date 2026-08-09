@@ -27,20 +27,20 @@ import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:server_graphs');
 import { Request, Response } from 'express';
 
-import { log_now } from '@common/utils/time';
+import { logNow } from '@common/utils/time';
 import { is_user_logged_in } from '@server/managers/session';
-import { GRAPHS_SEE_USER } from '@common/models/user_action';
-import { ADMIN } from '@common/models/user_role';
+import { GRAPHS_SEE_USER } from '@app/common/models/user-action';
+import { ADMIN } from '@app/common/models/user-role';
 import { recalculate_all_graphs } from '@server/managers/graphs';
-import { ConfigurationManager } from '@server/managers/configuration_manager';
-import { get_execution_directory } from '@server/managers/environment_manager';
-import { isNotDefined } from '@common/utils/is_defined';
+import { ConfigurationManager } from '@app/server/managers/configuration-manager';
+import { get_execution_directory } from '@app/server/managers/environment-manager';
+import { isNotDefined } from '@app/common/utils/is-defined';
 import { Routes } from '@common/routes';
 import { safe_parse_request_cookies } from '@server/utils/schemas';
 import { AuthenticationInputSchema } from '@common/schemas/authentication';
 
 export async function get_page_graph_own(req: Request, res: Response) {
-	debug(log_now(), `GET ${Routes.PAGE_GRAPH_OWN}...`);
+	debug(logNow(), `GET ${Routes.PAGE_GRAPH_OWN}...`);
 
 	const session_parse = safe_parse_request_cookies(req, AuthenticationInputSchema, res, debug);
 	if (session_parse.result === 'Exit') {
@@ -62,7 +62,7 @@ export async function get_page_graph_own(req: Request, res: Response) {
 }
 
 export async function get_page_graph_full(req: Request, res: Response) {
-	debug(log_now(), `GET ${Routes.PAGE_GRAPH_FULL}...`);
+	debug(logNow(), `GET ${Routes.PAGE_GRAPH_FULL}...`);
 
 	const session_parse = safe_parse_request_cookies(req, AuthenticationInputSchema, res, debug);
 	if (session_parse.result === 'Exit') {
@@ -78,7 +78,7 @@ export async function get_page_graph_full(req: Request, res: Response) {
 	}
 
 	if (!user.can_do(GRAPHS_SEE_USER)) {
-		debug(log_now(), `User '${session.username}' cannot see the whole graph.`);
+		debug(logNow(), `User '${session.username}' cannot see the whole graph.`);
 		res.status(403).send('You cannot see the whole graph.');
 		return;
 	}
@@ -91,7 +91,7 @@ export async function get_page_graph_full(req: Request, res: Response) {
 }
 
 export async function post_recalculate_graphs(req: Request, res: Response) {
-	debug(log_now(), `POST ${Routes.RECALCULATE_GRAPHS}...`);
+	debug(logNow(), `POST ${Routes.RECALCULATE_GRAPHS}...`);
 
 	const session_parse = safe_parse_request_cookies(req, AuthenticationInputSchema, res, debug);
 	if (session_parse.result === 'Exit') {
@@ -107,12 +107,12 @@ export async function post_recalculate_graphs(req: Request, res: Response) {
 	}
 
 	if (!user.is(ADMIN)) {
-		debug(log_now(), `User '${session.username}' cannot recalculate graphs.`);
+		debug(logNow(), `User '${session.username}' cannot recalculate graphs.`);
 		res.status(403).send('You cannot recalculate the graphs.');
 		return;
 	}
 
-	debug(log_now(), `Recalculating ratings...`);
+	debug(logNow(), `Recalculating ratings...`);
 
 	// actually recalculating ratings
 	recalculate_all_graphs();

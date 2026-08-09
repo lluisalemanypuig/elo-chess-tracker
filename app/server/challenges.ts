@@ -27,7 +27,7 @@ import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:server_challenges');
 import { Request, Response } from 'express';
 
-import { log_now } from '@common/utils/time';
+import { logNow } from '@common/utils/time';
 import { is_user_logged_in } from '@server/managers/session';
 import {
 	challengeAccept,
@@ -39,22 +39,22 @@ import {
 } from '@server/managers/challenges';
 
 import { ChallengeId } from '@common/models/challenge';
-import { USER_CHALLENGE } from '@common/models/user_action';
-import { can_user_send_challenge } from '@server/managers/user_relationships';
-import { ChallengesManager } from '@server/managers/challenges_manager';
+import { USER_CHALLENGE } from '@app/common/models/user-action';
+import { can_user_send_challenge } from '@app/server/managers/user-relationships';
+import { ChallengesManager } from '@app/server/managers/challenges-manager';
 import { GameResult } from '@common/models/game';
-import { UsersManager } from '@server/managers/users_manager';
-import { ConfigurationManager } from '@server/managers/configuration_manager';
-import { RatingSystemManager } from '@server/managers/rating_system_manager';
-import { get_execution_directory } from '@server/managers/environment_manager';
-import { isNotDefined } from '@common/utils/is_defined';
+import { UsersManager } from '@app/server/managers/users-manager';
+import { ConfigurationManager } from '@app/server/managers/configuration-manager';
+import { RatingSystemManager } from '@app/server/managers/rating-system-manager';
+import { get_execution_directory } from '@app/server/managers/environment-manager';
+import { isNotDefined } from '@app/common/utils/is-defined';
 import { Routes } from '@common/routes';
 import { InputSchemaOf } from '@common/api/schemas';
 import { safe_parse_request_body, safe_parse_request_cookies } from '@server/utils/schemas';
 import { AuthenticationInputSchema } from '@common/schemas/authentication';
 
 export async function get_page_challenge(req: Request, res: Response) {
-	debug(log_now(), `GET ${Routes.PAGE_CHALLENGE}...`);
+	debug(logNow(), `GET ${Routes.PAGE_CHALLENGE}...`);
 
 	const session_parse = safe_parse_request_cookies(req, AuthenticationInputSchema, res, debug);
 	if (session_parse.result === 'Exit') {
@@ -76,7 +76,7 @@ export async function get_page_challenge(req: Request, res: Response) {
 }
 
 export async function post_challenge_send(req: Request, res: Response) {
-	debug(log_now(), `POST ${Routes.CHALLENGE_SEND}...`);
+	debug(logNow(), `POST ${Routes.CHALLENGE_SEND}...`);
 
 	const session_parse = safe_parse_request_cookies(req, AuthenticationInputSchema, res, debug);
 	if (session_parse.result === 'Exit') {
@@ -101,30 +101,30 @@ export async function post_challenge_send(req: Request, res: Response) {
 	}
 
 	if (!sender.can_do(USER_CHALLENGE)) {
-		debug(log_now(), `User '${session.username}' cannot challenge other users.`);
+		debug(logNow(), `User '${session.username}' cannot challenge other users.`);
 		res.status(403).send('You cannot challenge other users');
 		return;
 	}
 
-	debug(log_now(), `Trying to send challenge from '${session.username}' to '${receiverPublicId}'.`);
+	debug(logNow(), `Trying to send challenge from '${session.username}' to '${receiverPublicId}'.`);
 
 	const receiver = UsersManager.get_instance().get_user_by_public_id(receiverPublicId);
 
 	if (isNotDefined(receiver)) {
-		debug(log_now(), `User receiver of the challenge '${receiverPublicId}' does not exist.`);
+		debug(logNow(), `User receiver of the challenge '${receiverPublicId}' does not exist.`);
 		res.status(404).send('User receiver of the challenge does not exist');
 		return;
 	}
 
 	if (!can_user_send_challenge(sender, receiver)) {
-		debug(log_now(), `Sender '${sender.username}' cannot challenge user '${receiver.username}'.`);
+		debug(logNow(), `Sender '${sender.username}' cannot challenge user '${receiver.username}'.`);
 		res.status(403).send('You cannot challenge this user.');
 		return;
 	}
 
 	const ratsys = RatingSystemManager.get_instance();
 	if (!ratsys.is_time_control_id_valid(timeControlId)) {
-		debug(log_now(), `Time control id ${timeControlId} is not valid.`);
+		debug(logNow(), `Time control id ${timeControlId} is not valid.`);
 		res.status(500).send('The chosen time control id is not valid.');
 		return;
 	}
@@ -137,15 +137,15 @@ export async function post_challenge_send(req: Request, res: Response) {
 		}
 	}
 	if (!match) {
-		debug(log_now(), `Time control id ${timeControlId} is not valid.`);
+		debug(logNow(), `Time control id ${timeControlId} is not valid.`);
 		res.status(500).send('The chosen time control name does not correspond to the given time control id.');
 		return;
 	}
 
-	debug(log_now(), `Send challenge from '${sender.username}' to '${receiver.username}'`);
+	debug(logNow(), `Send challenge from '${sender.username}' to '${receiver.username}'`);
 
 	try {
-		challengeSendNew(title, sender.username, receiver.username, timeControlId, timeControlName, log_now());
+		challengeSendNew(title, sender.username, receiver.username, timeControlId, timeControlName, logNow());
 	} catch (e: unknown) {
 		res.status(403).send((e as Error).message);
 		return;
@@ -155,7 +155,7 @@ export async function post_challenge_send(req: Request, res: Response) {
 }
 
 export async function post_challenge_accept(req: Request, res: Response) {
-	debug(log_now(), `POST ${Routes.CHALLENGE_ACCEPT}...`);
+	debug(logNow(), `POST ${Routes.CHALLENGE_ACCEPT}...`);
 
 	const session_parse = safe_parse_request_cookies(req, AuthenticationInputSchema, res, debug);
 	if (session_parse.result === 'Exit') {
@@ -175,7 +175,7 @@ export async function post_challenge_accept(req: Request, res: Response) {
 	}
 	const challenge_id = challenge_parse.data.id;
 
-	debug(log_now(), `User '${session.username}' wants to accept challenge '${challenge_parse}'`);
+	debug(logNow(), `User '${session.username}' wants to accept challenge '${challenge_parse}'`);
 
 	const c = ChallengesManager.get_instance().get_challenge_by_id(challenge_id);
 	if (isNotDefined(c)) {
@@ -183,10 +183,10 @@ export async function post_challenge_accept(req: Request, res: Response) {
 		return;
 	}
 
-	debug(log_now(), `Challenge '${challenge_id}' involves players '${c.sent_by}' and '${c.sent_to}'`);
+	debug(logNow(), `Challenge '${challenge_id}' involves players '${c.sent_by}' and '${c.sent_to}'`);
 
 	try {
-		challengeAccept(c, { by: session.username, when: log_now() });
+		challengeAccept(c, { by: session.username, when: logNow() });
 	} catch (e: unknown) {
 		res.status(403).send((e as Error).message);
 		return;
@@ -196,7 +196,7 @@ export async function post_challenge_accept(req: Request, res: Response) {
 }
 
 export async function post_challenge_decline(req: Request, res: Response) {
-	debug(log_now(), `POST ${Routes.CHALLENGE_DECLINE}...`);
+	debug(logNow(), `POST ${Routes.CHALLENGE_DECLINE}...`);
 
 	const session_parse = safe_parse_request_cookies(req, AuthenticationInputSchema, res, debug);
 	if (session_parse.result === 'Exit') {
@@ -216,7 +216,7 @@ export async function post_challenge_decline(req: Request, res: Response) {
 	}
 	const challenge_id = challenge_parse.data.id;
 
-	debug(log_now(), `User '${session.username}' wants to decline challenge '${challenge_id}'`);
+	debug(logNow(), `User '${session.username}' wants to decline challenge '${challenge_id}'`);
 
 	const c = ChallengesManager.get_instance().get_challenge_by_id(challenge_id);
 	if (isNotDefined(c)) {
@@ -224,7 +224,7 @@ export async function post_challenge_decline(req: Request, res: Response) {
 		return;
 	}
 
-	debug(log_now(), `Challenge '${challenge_id}' involves players '${c.sent_by}' and '${c.sent_to}'`);
+	debug(logNow(), `Challenge '${challenge_id}' involves players '${c.sent_by}' and '${c.sent_to}'`);
 
 	try {
 		challengeDecline(c, { by: session.username });
@@ -237,7 +237,7 @@ export async function post_challenge_decline(req: Request, res: Response) {
 }
 
 export async function post_challenge_set_result(req: Request, res: Response) {
-	debug(log_now(), `POST ${Routes.CHALLENGE_SET_RESULT}...`);
+	debug(logNow(), `POST ${Routes.CHALLENGE_SET_RESULT}...`);
 
 	const session_parse = safe_parse_request_cookies(req, AuthenticationInputSchema, res, debug);
 	if (session_parse.result === 'Exit') {
@@ -261,11 +261,11 @@ export async function post_challenge_set_result(req: Request, res: Response) {
 	const black_username = challenge_parse.data.black;
 	const result: GameResult = challenge_parse.data.result;
 
-	debug(log_now(), `User '${setter_user}' is trying to set the result of a challenge`);
-	debug(log_now(), `    Challenge id: '${challenge_id}'`);
-	debug(log_now(), `    White: '${white_username}'`);
-	debug(log_now(), `    Black: '${black_username}'`);
-	debug(log_now(), `    Result: '${result}'`);
+	debug(logNow(), `User '${setter_user}' is trying to set the result of a challenge`);
+	debug(logNow(), `    Challenge id: '${challenge_id}'`);
+	debug(logNow(), `    White: '${white_username}'`);
+	debug(logNow(), `    Black: '${black_username}'`);
+	debug(logNow(), `    Result: '${result}'`);
 
 	const manager = UsersManager.get_instance();
 	if (!manager.exists(white_username)) {
@@ -286,7 +286,7 @@ export async function post_challenge_set_result(req: Request, res: Response) {
 	try {
 		challengeSetResult(c, {
 			by: setter_user,
-			when: log_now(),
+			when: logNow(),
 			white: white_username,
 			black: black_username,
 			result
@@ -300,7 +300,7 @@ export async function post_challenge_set_result(req: Request, res: Response) {
 }
 
 export async function post_challenge_agree(req: Request, res: Response) {
-	debug(log_now(), `POST ${Routes.CHALLENGE_AGREE}...`);
+	debug(logNow(), `POST ${Routes.CHALLENGE_AGREE}...`);
 
 	const session_parse = safe_parse_request_cookies(req, AuthenticationInputSchema, res, debug);
 	if (session_parse.result === 'Exit') {
@@ -327,7 +327,7 @@ export async function post_challenge_agree(req: Request, res: Response) {
 	}
 
 	try {
-		challengeAgreeResult(c, { by: session.username, when: log_now() });
+		challengeAgreeResult(c, { by: session.username, when: logNow() });
 	} catch (e: unknown) {
 		res.status(403).send((e as Error).message);
 		return;
@@ -337,7 +337,7 @@ export async function post_challenge_agree(req: Request, res: Response) {
 }
 
 export async function post_challenge_disagree(req: Request, res: Response) {
-	debug(log_now(), `POST ${Routes.CHALLENGE_DISAGREE}...`);
+	debug(logNow(), `POST ${Routes.CHALLENGE_DISAGREE}...`);
 
 	const session_parse = safe_parse_request_cookies(req, AuthenticationInputSchema, res, debug);
 	if (session_parse.result === 'Exit') {
