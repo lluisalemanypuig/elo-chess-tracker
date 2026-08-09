@@ -23,31 +23,31 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { TimeControl } from '@app/common/models/time-control';
-import { Elo_player_vs_player } from '@app/server/rating-framework/Elo/formula';
-import { new_rating_Elo } from '@common/models/rating_framework/Elo/rating';
+import { TimeControl } from '@common/models/time-control';
+import { EloPlayerVsPlayer } from '@app/server/rating-framework/Elo/formula';
+import { newRatingElo } from '@common/models/rating-framework/Elo/rating';
 import { RatingSystemManager } from '@app/server/managers/rating-system-manager';
-import { rating_from_string_Elo, rating_from_json_Elo } from '@common/io/ratings/Elo/rating';
-import { RatingFrameworkType } from '@common/models/rating_framework/rating_framework_type';
+import { ratingFromStringElo, ratingFromJsonElo } from '@common/io/ratings/Elo/rating';
+import { RatingFrameworkType } from '@common/models/rating-framework/rating-framework-type';
 
 /**
  * @brief Initializes the class @ref RatingSystem based on the system in @e name.
  * @param name Name of the rating system.
  * @returns True if the name is valid; false if otherwise.
  */
-export function initialize_rating_functions(name: RatingFrameworkType): void {
-	let rating_system = RatingSystemManager.get_instance();
+export function initializeRatingFunctions(name: RatingFrameworkType): void {
+	let ratingSystem = RatingSystemManager.getInstance();
 	if (name == 'Elo') {
-		rating_system.set_functions(Elo_player_vs_player, new_rating_Elo, rating_from_string_Elo, rating_from_json_Elo);
+		ratingSystem.setFunctions(EloPlayerVsPlayer, newRatingElo, ratingFromStringElo, ratingFromJsonElo);
 	}
 }
 
 /**
  * @brief Initialize the time controls in the @ref RatingSystem.
- * @param all_time_controls The list of time controls for the system.
- * @pre The RatingSystem must have been initialized via @ref initialize_rating_system.
+ * @param allTimeControls The list of time controls for the system.
+ * @pre The RatingSystem must have been initialized via @ref initializeRatingSystem.
  */
-export function initialize_rating_time_controls(all_time_controls: TimeControl[]): void {
-	let rating_system = RatingSystemManager.get_instance();
-	rating_system.set_time_controls(all_time_controls);
+export function initializeRatingTimeControls(allTimeControls: TimeControl[]): void {
+	let ratingSystem = RatingSystemManager.getInstance();
+	ratingSystem.setTimeControls(allTimeControls);
 }

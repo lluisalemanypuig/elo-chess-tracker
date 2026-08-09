@@ -30,24 +30,24 @@ import { scaleLinear } from 'd3-scale';
 import { interpolateRgb } from 'd3-interpolate';
 
 import { messageFromResponse, serverCall } from '@client/action';
-import { Route, Routes } from '@common/routes';
-import { QueryGraphOutput } from '@app/common/schemas/query-graphs';
-import { TimeControlId } from '@app/common/models/time-control';
+import { Route, ROUTES } from '@common/routes';
+import { QueryGraphOutput } from '@common/schemas/query-graphs';
+import { TimeControlId } from '@common/models/time-control';
 
 let s: Sigma;
-let graph_data: QueryGraphOutput;
-let server_graph: Graph;
-let graph_loaded: boolean = false;
+let graphData: QueryGraphOutput;
+let serverGraph: Graph;
+let graphLoaded: boolean = false;
 
-let min_rating: number;
-let max_rating: number;
+let minRating: number;
+let maxRating: number;
 
-let min_games: number;
-let max_games: number;
-let min_edge_weight: number;
-let max_edge_weight: number;
+let minGames: number;
+let maxGames: number;
+let minEdgeWeight: number;
+let maxEdgeWeight: number;
 
-function weight_edge(weight: any): number {
+function weightEdge(weight: any): number {
 	return 10 * weight.wins + 5 * weight.draws + weight.losses;
 }
 
@@ -58,14 +58,14 @@ function normalize(v: number, min: number, max: number): number {
 	return (v - min) / (max - min);
 }
 
-function resize_viewer() {
-	const viewport_height = window.innerHeight;
+function resizeViewer() {
+	const viewportHeight = window.innerHeight;
 	let viewer = document.getElementById('graph-viewer') as HTMLDivElement;
-	const new_height = viewport_height - 20 - 20;
-	viewer.setAttribute('style', `width: 100%; height: ${new_height}px`);
+	const newHeight = viewportHeight - 20 - 20;
+	viewer.setAttribute('style', `width: 100%; height: ${newHeight}px`);
 }
 
-function initialize_sigma() {
+function initializeSigma() {
 	const container = document.getElementById('graph-viewer') as HTMLElement;
 	s = new Sigma(new Graph(), container, {
 		allowInvalidContainer: true,
@@ -78,280 +78,280 @@ function initialize_sigma() {
 	});
 }
 
-async function load_graph() {
-	const select_time_control = document.getElementById('select_time_control') as HTMLSelectElement;
-	const time_control_id = select_time_control.options[select_time_control.selectedIndex].value as TimeControlId;
+async function loadGraph() {
+	const selectTimeControl = document.getElementById('selectTimeControl') as HTMLSelectElement;
+	const timeControlId = selectTimeControl.options[selectTimeControl.selectedIndex].value as TimeControlId;
 
-	if (time_control_id == '') {
+	if (timeControlId == '') {
 		return;
 	}
 
 	const val = document.getElementById('graph-viewer')?.getAttribute('value');
-	const query_to_server: Route = (() => {
+	const queryToServer: Route = (() => {
 		if (val == 'full') {
-			return Routes.QUERY_GRAPH_FULL;
+			return ROUTES.QUERY_GRAPH_FULL;
 		}
 		if (val == 'own') {
-			return Routes.QUERY_GRAPH_OWN;
+			return ROUTES.QUERY_GRAPH_OWN;
 		}
 		throw new Error(`Wrong value for page configuration ${val}`);
 	})();
 
 	// "query" the server
-	const response = await serverCall(query_to_server, { time_control_id: time_control_id });
+	const response = await serverCall(queryToServer, { timeControlId: timeControlId });
 	if (response.status === 'Error') {
 		alert(messageFromResponse(response));
 		return;
 	}
 
-	graph_data = response.value;
+	graphData = response.value;
 
-	if (graph_loaded) {
-		server_graph.clear();
+	if (graphLoaded) {
+		serverGraph.clear();
 	}
-	server_graph = new Graph({ type: 'directed' });
+	serverGraph = new Graph({ type: 'directed' });
 
-	min_rating = 99999;
-	max_rating = 0;
-	for (const node of graph_data.nodes) {
-		server_graph.addNode(node.id, { label: node.full_name });
+	minRating = 99999;
+	maxRating = 0;
+	for (const node of graphData.nodes) {
+		serverGraph.addNode(node.id, { label: node.fullName });
 
 		const r = node.weight.rating;
-		min_rating = r < min_rating ? r : min_rating;
-		max_rating = r > max_rating ? r : max_rating;
+		minRating = r < minRating ? r : minRating;
+		maxRating = r > maxRating ? r : maxRating;
 	}
 
-	min_games = 9999;
-	max_games = 0;
-	min_edge_weight = 9999;
-	max_edge_weight = 0;
-	for (const edge of graph_data.edges) {
-		server_graph.addEdge(edge.source, edge.target, { label: edge.label });
+	minGames = 9999;
+	maxGames = 0;
+	minEdgeWeight = 9999;
+	maxEdgeWeight = 0;
+	for (const edge of graphData.edges) {
+		serverGraph.addEdge(edge.source, edge.target, { label: edge.label });
 
-		const num_games = edge.weight.wins + edge.weight.draws + edge.weight.losses;
-		min_games = num_games < min_games ? num_games : min_games;
-		max_games = num_games > max_games ? num_games : max_games;
+		const numGames = edge.weight.wins + edge.weight.draws + edge.weight.losses;
+		minGames = numGames < minGames ? numGames : minGames;
+		maxGames = numGames > maxGames ? numGames : maxGames;
 
-		const edge_w = weight_edge(edge.weight);
-		min_edge_weight = edge_w < min_edge_weight ? edge_w : min_edge_weight;
-		max_edge_weight = edge_w > max_edge_weight ? edge_w : max_edge_weight;
+		const edgeW = weightEdge(edge.weight);
+		minEdgeWeight = edgeW < minEdgeWeight ? edgeW : minEdgeWeight;
+		maxEdgeWeight = edgeW > maxEdgeWeight ? edgeW : maxEdgeWeight;
 	}
 
-	for (const u of server_graph.nodeEntries()) {
-		for (const v of server_graph.outNeighborEntries(u.node)) {
-			const found = server_graph.hasDirectedEdge(v.neighbor, u.node);
+	for (const u of serverGraph.nodeEntries()) {
+		for (const v of serverGraph.outNeighborEntries(u.node)) {
+			const found = serverGraph.hasDirectedEdge(v.neighbor, u.node);
 			if (found) {
-				server_graph.setEdgeAttribute(u.node, v.neighbor, 'type', 'curvedArrow');
-				server_graph.setEdgeAttribute(u.node, v.neighbor, 'curvature', 0.25);
+				serverGraph.setEdgeAttribute(u.node, v.neighbor, 'type', 'curvedArrow');
+				serverGraph.setEdgeAttribute(u.node, v.neighbor, 'curvature', 0.25);
 			}
 		}
 	}
 
-	graph_loaded = true;
+	graphLoaded = true;
 }
 
-function color_picker_node_changed(_event: any) {
-	if (!graph_loaded) {
+function colorPickerNodeChanged(_event: any) {
+	if (!graphLoaded) {
 		return;
 	}
 
-	const select_node_color = document.getElementById('select_node_color') as HTMLSelectElement;
-	const option = select_node_color.options[select_node_color.selectedIndex].value;
-	const color_picker_node = document.getElementById('color_picker_node') as HTMLInputElement;
+	const selectNodeColor = document.getElementById('selectNodeColor') as HTMLSelectElement;
+	const option = selectNodeColor.options[selectNodeColor.selectedIndex].value;
+	const colorPickerNode = document.getElementById('colorPickerNode') as HTMLInputElement;
 
 	if (option == 'fixed') {
-		for (const node of graph_data.nodes) {
-			server_graph.setNodeAttribute(node.id, 'color', color_picker_node.value);
+		for (const node of graphData.nodes) {
+			serverGraph.setNodeAttribute(node.id, 'color', colorPickerNode.value);
 		}
-	} else if (option == 'dynamic_rating') {
-		const color_interpolator = scaleLinear<string>()
+	} else if (option == 'dynamicRating') {
+		const colorInterpolator = scaleLinear<string>()
 			.domain([0, 1])
 			.interpolate(interpolateRgb)
-			.range(['#F6F5F4', color_picker_node.value]);
+			.range(['#F6F5F4', colorPickerNode.value]);
 
-		console.log('min_rating', min_rating);
-		console.log('max_rating', max_rating);
-		for (const node of graph_data.nodes) {
-			const k = (node.weight.rating - min_rating) / (max_rating - min_rating);
-			server_graph.setNodeAttribute(node.id, 'color', color_interpolator(k));
+		console.log('minRating', minRating);
+		console.log('maxRating', maxRating);
+		for (const node of graphData.nodes) {
+			const k = (node.weight.rating - minRating) / (maxRating - minRating);
+			serverGraph.setNodeAttribute(node.id, 'color', colorInterpolator(k));
 		}
 	}
 
-	display_graph();
+	displayGraph();
 }
 
-function select_node_color_changed(_event: any) {
-	if (!graph_loaded) {
+function selectNodeColorChanged(_event: any) {
+	if (!graphLoaded) {
 		return;
 	}
 
-	color_picker_node_changed(null);
+	colorPickerNodeChanged(null);
 }
 
-function color_picker_edge_changed(_event: any) {
-	if (!graph_loaded) {
+function colorPickerEdgeChanged(_event: any) {
+	if (!graphLoaded) {
 		return;
 	}
 
-	const select_node_color = document.getElementById('select_edge_color') as HTMLSelectElement;
-	const option = select_node_color.options[select_node_color.selectedIndex].value;
-	const color_picker_node = document.getElementById('color_picker_edge') as HTMLInputElement;
+	const selectNodeColor = document.getElementById('selectEdgeColor') as HTMLSelectElement;
+	const option = selectNodeColor.options[selectNodeColor.selectedIndex].value;
+	const colorPickerNode = document.getElementById('colorPickerEdge') as HTMLInputElement;
 
 	if (option == 'fixed') {
-		const color = color_picker_node.value;
-		for (const edge of graph_data.edges) {
-			server_graph.setEdgeAttribute(edge.source, edge.target, 'color', color);
+		const color = colorPickerNode.value;
+		for (const edge of graphData.edges) {
+			serverGraph.setEdgeAttribute(edge.source, edge.target, 'color', color);
 		}
-	} else if (option == 'dynamic_games') {
-		const color_interpolator = scaleLinear<string>()
+	} else if (option == 'dynamicGames') {
+		const colorInterpolator = scaleLinear<string>()
 			.domain([0, 1])
 			.interpolate(interpolateRgb)
-			.range(['#F6F5F4', color_picker_node.value]);
+			.range(['#F6F5F4', colorPickerNode.value]);
 
-		for (const edge of graph_data.edges) {
-			const num_games = edge.weight.wins + edge.weight.draws + edge.weight.losses;
+		for (const edge of graphData.edges) {
+			const numGames = edge.weight.wins + edge.weight.draws + edge.weight.losses;
 			let k: number;
-			if (num_games == min_games && num_games == max_games) {
+			if (numGames == minGames && numGames == maxGames) {
 				k = 1;
 			} else {
-				k = normalize(num_games, min_games, max_games);
+				k = normalize(numGames, minGames, maxGames);
 			}
-			server_graph.setEdgeAttribute(edge.source, edge.target, 'color', color_interpolator(k));
+			serverGraph.setEdgeAttribute(edge.source, edge.target, 'color', colorInterpolator(k));
 		}
-	} else if (option == 'dynamic_results') {
-		const color_interpolator = scaleLinear<string>()
+	} else if (option == 'dynamicResults') {
+		const colorInterpolator = scaleLinear<string>()
 			.domain([0, 1])
 			.interpolate(interpolateRgb)
-			.range(['#F6F5F4', color_picker_node.value]);
+			.range(['#F6F5F4', colorPickerNode.value]);
 
-		for (const edge of graph_data.edges) {
-			const edge_w = weight_edge(edge.weight);
+		for (const edge of graphData.edges) {
+			const edgeW = weightEdge(edge.weight);
 			let k: number;
-			if (edge_w == min_edge_weight && edge_w == max_edge_weight) {
+			if (edgeW == minEdgeWeight && edgeW == maxEdgeWeight) {
 				k = 1;
 			} else {
-				k = normalize(edge_w, min_edge_weight, max_edge_weight);
+				k = normalize(edgeW, minEdgeWeight, maxEdgeWeight);
 			}
-			server_graph.setEdgeAttribute(edge.source, edge.target, 'color', color_interpolator(k));
+			serverGraph.setEdgeAttribute(edge.source, edge.target, 'color', colorInterpolator(k));
 		}
 	}
 
-	display_graph();
+	displayGraph();
 }
 
-function select_edge_color_changed(_event: any) {
-	if (!graph_loaded) {
+function selectEdgeColorChanged(_event: any) {
+	if (!graphLoaded) {
 		return;
 	}
 
-	color_picker_edge_changed(null);
+	colorPickerEdgeChanged(null);
 }
 
-function size_picker_node_changed(_event: any) {
-	if (!graph_loaded) {
+function sizePickerNodeChanged(_event: any) {
+	if (!graphLoaded) {
 		return;
 	}
 
-	const select_node_size = document.getElementById('select_node_size') as HTMLSelectElement;
-	const option = select_node_size.options[select_node_size.selectedIndex].value;
-	const size_picker_node = document.getElementById('size_picker_node') as HTMLInputElement;
+	const selectNodeSize = document.getElementById('selectNodeSize') as HTMLSelectElement;
+	const option = selectNodeSize.options[selectNodeSize.selectedIndex].value;
+	const sizePickerNode = document.getElementById('sizePickerNode') as HTMLInputElement;
 
 	if (option == 'fixed') {
-		for (const node of graph_data.nodes) {
-			server_graph.setNodeAttribute(node.id, 'size', size_picker_node.value);
+		for (const node of graphData.nodes) {
+			serverGraph.setNodeAttribute(node.id, 'size', sizePickerNode.value);
 		}
-	} else if (option == 'dynamic_rating') {
-		const M = parseInt(size_picker_node.value);
-		for (const node of graph_data.nodes) {
+	} else if (option == 'dynamicRating') {
+		const M = parseInt(sizePickerNode.value);
+		for (const node of graphData.nodes) {
 			const r = node.weight.rating;
-			const k = M * (1 + normalize(r, min_rating, max_rating));
-			server_graph.setNodeAttribute(node.id, 'size', k);
+			const k = M * (1 + normalize(r, minRating, maxRating));
+			serverGraph.setNodeAttribute(node.id, 'size', k);
 		}
 	}
-	display_graph();
+	displayGraph();
 }
 
-function select_node_size_changed(_event: any) {
-	if (!graph_loaded) {
+function selectNodeSizeChanged(_event: any) {
+	if (!graphLoaded) {
 		return;
 	}
 
-	size_picker_node_changed(null);
+	sizePickerNodeChanged(null);
 }
 
-function size_picker_edge_changed(_event: any) {
-	if (!graph_loaded) {
+function sizePickerEdgeChanged(_event: any) {
+	if (!graphLoaded) {
 		return;
 	}
 
-	const select_node_size = document.getElementById('select_edge_size') as HTMLSelectElement;
-	const option = select_node_size.options[select_node_size.selectedIndex].value;
-	const size_picker_node = document.getElementById('size_picker_edge') as HTMLInputElement;
-	const M = parseInt(size_picker_node.value);
+	const selectNodeSize = document.getElementById('selectEdgeSize') as HTMLSelectElement;
+	const option = selectNodeSize.options[selectNodeSize.selectedIndex].value;
+	const sizePickerNode = document.getElementById('sizePickerEdge') as HTMLInputElement;
+	const M = parseInt(sizePickerNode.value);
 
 	if (option == 'fixed') {
-		for (const edge of graph_data.edges) {
-			server_graph.setEdgeAttribute(edge.source, edge.target, 'size', size_picker_node.value);
+		for (const edge of graphData.edges) {
+			serverGraph.setEdgeAttribute(edge.source, edge.target, 'size', sizePickerNode.value);
 		}
-	} else if (option == 'dynamic_games') {
-		for (const edge of graph_data.edges) {
-			const num_games = edge.weight.wins + edge.weight.draws + edge.weight.losses;
-			const k = M * (1 + normalize(num_games, min_games, max_games));
-			server_graph.setEdgeAttribute(edge.source, edge.target, 'size', k);
+	} else if (option == 'dynamicGames') {
+		for (const edge of graphData.edges) {
+			const numGames = edge.weight.wins + edge.weight.draws + edge.weight.losses;
+			const k = M * (1 + normalize(numGames, minGames, maxGames));
+			serverGraph.setEdgeAttribute(edge.source, edge.target, 'size', k);
 		}
-	} else if (option == 'dynamic_results') {
-		for (const edge of graph_data.edges) {
-			const edge_w = weight_edge(edge.weight);
-			const k: number = M * (1 + normalize(edge_w, min_edge_weight, max_edge_weight));
-			server_graph.setEdgeAttribute(edge.source, edge.target, 'size', k);
+	} else if (option == 'dynamicResults') {
+		for (const edge of graphData.edges) {
+			const edgeW = weightEdge(edge.weight);
+			const k: number = M * (1 + normalize(edgeW, minEdgeWeight, maxEdgeWeight));
+			serverGraph.setEdgeAttribute(edge.source, edge.target, 'size', k);
 		}
 	}
 
-	display_graph();
+	displayGraph();
 }
 
-function select_edge_size_changed(_event: any) {
-	if (!graph_loaded) {
+function selectEdgeSizeChanged(_event: any) {
+	if (!graphLoaded) {
 		return;
 	}
 
-	size_picker_edge_changed(null);
+	sizePickerEdgeChanged(null);
 }
 
-function compute_coordinates() {
-	if (!graph_loaded) {
+function computeCoordinates() {
+	if (!graphLoaded) {
 		return;
 	}
 
 	let i = 0;
-	for (const node of server_graph.nodes()) {
-		server_graph.setNodeAttribute(node, 'x', i);
-		server_graph.setNodeAttribute(node, 'y', i * i - i);
+	for (const node of serverGraph.nodes()) {
+		serverGraph.setNodeAttribute(node, 'x', i);
+		serverGraph.setNodeAttribute(node, 'y', i * i - i);
 		++i;
 	}
-	const res = forceAtlas2(server_graph, { iterations: 100 });
-	for (const node of server_graph.nodes()) {
-		server_graph.setNodeAttribute(node, 'x', res[node]['x']);
-		server_graph.setNodeAttribute(node, 'y', res[node]['y']);
+	const res = forceAtlas2(serverGraph, { iterations: 100 });
+	for (const node of serverGraph.nodes()) {
+		serverGraph.setNodeAttribute(node, 'x', res[node]['x']);
+		serverGraph.setNodeAttribute(node, 'y', res[node]['y']);
 	}
 }
 
-function display_graph() {
-	compute_coordinates();
+function displayGraph() {
+	computeCoordinates();
 	s.clear();
-	s.setGraph(server_graph);
+	s.setGraph(serverGraph);
 }
 
-async function load_and_display(_event: any) {
-	await load_graph();
-	size_picker_node_changed(null);
-	color_picker_node_changed(null);
-	size_picker_edge_changed(null);
-	color_picker_edge_changed(null);
-	display_graph();
+async function loadAndDisplay(_event: any) {
+	await loadGraph();
+	sizePickerNodeChanged(null);
+	colorPickerNodeChanged(null);
+	sizePickerEdgeChanged(null);
+	colorPickerEdgeChanged(null);
+	displayGraph();
 }
 
-window.onresize = resize_viewer;
+window.onresize = resizeViewer;
 
 window.onload = async function () {
 	const menu = document.getElementById('side-menu') as HTMLDivElement;
@@ -363,29 +363,29 @@ window.onload = async function () {
 		arrow.innerHTML = isHidden ? '>' : '<';
 	});
 
-	resize_viewer();
-	initialize_sigma();
+	resizeViewer();
+	initializeSigma();
 
-	let select_time_control = document.getElementById('select_time_control') as HTMLSelectElement;
-	select_time_control.onchange = load_and_display;
+	let selectTimeControl = document.getElementById('selectTimeControl') as HTMLSelectElement;
+	selectTimeControl.onchange = loadAndDisplay;
 
-	let select_node_color = document.getElementById('select_node_color') as HTMLSelectElement;
-	select_node_color.onchange = select_node_color_changed;
-	let color_picker_node = document.getElementById('color_picker_node') as HTMLInputElement;
-	color_picker_node.onchange = color_picker_node_changed;
+	let selectNodeColor = document.getElementById('selectNodeColor') as HTMLSelectElement;
+	selectNodeColor.onchange = selectNodeColorChanged;
+	let colorPickerNode = document.getElementById('colorPickerNode') as HTMLInputElement;
+	colorPickerNode.onchange = colorPickerNodeChanged;
 
-	let select_edge_color = document.getElementById('select_edge_color') as HTMLSelectElement;
-	select_edge_color.onchange = select_edge_color_changed;
-	let color_picker_edge = document.getElementById('color_picker_edge') as HTMLInputElement;
-	color_picker_edge.onchange = color_picker_edge_changed;
+	let selectEdgeColor = document.getElementById('selectEdgeColor') as HTMLSelectElement;
+	selectEdgeColor.onchange = selectEdgeColorChanged;
+	let colorPickerEdge = document.getElementById('colorPickerEdge') as HTMLInputElement;
+	colorPickerEdge.onchange = colorPickerEdgeChanged;
 
-	let select_node_size = document.getElementById('select_node_size') as HTMLSelectElement;
-	select_node_size.onchange = select_node_size_changed;
-	let size_picker_node = document.getElementById('size_picker_node') as HTMLInputElement;
-	size_picker_node.onchange = size_picker_node_changed;
+	let selectNodeSize = document.getElementById('selectNodeSize') as HTMLSelectElement;
+	selectNodeSize.onchange = selectNodeSizeChanged;
+	let sizePickerNode = document.getElementById('sizePickerNode') as HTMLInputElement;
+	sizePickerNode.onchange = sizePickerNodeChanged;
 
-	let select_edge_size = document.getElementById('select_edge_size') as HTMLSelectElement;
-	select_edge_size.onchange = select_edge_size_changed;
-	let size_picker_edge = document.getElementById('size_picker_edge') as HTMLInputElement;
-	size_picker_edge.onchange = size_picker_edge_changed;
+	let selectEdgeSize = document.getElementById('selectEdgeSize') as HTMLSelectElement;
+	selectEdgeSize.onchange = selectEdgeSizeChanged;
+	let sizePickerEdge = document.getElementById('sizePickerEdge') as HTMLInputElement;
+	sizePickerEdge.onchange = sizePickerEdgeChanged;
 };

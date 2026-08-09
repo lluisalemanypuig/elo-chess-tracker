@@ -24,13 +24,13 @@ Contact:
 */
 
 import { Game } from '@common/models/game';
-import { EloRating } from '@common/models/rating_framework/Elo/rating';
+import { EloRating } from '@common/models/rating-framework/Elo/rating';
 
-function get_exp_score(Ra: number, Rb: number): number {
+function getExpScore(Ra: number, Rb: number): number {
 	return 1.0 / (1 + 10 ** ((Rb - Ra) / 400));
 }
 
-function rating_adjustment(k: number, score: number, exp_score: number): number {
+function ratingAdjustment(k: number, score: number, exp_score: number): number {
 	return k * (score - exp_score);
 }
 
@@ -65,15 +65,15 @@ REGULATIONS IN THIS WAY
 
 */
 
-function update_constant_K(elo: EloRating): void {
+function updateConstantK(elo: EloRating): void {
 	// the constant should not be changed and stay at 10.
 	if (elo.surpassed_2400) {
 		return;
 	}
 
-	if (elo.num_games < 30) {
+	if (elo.numGames < 30) {
 		elo.K = 40;
-	} else if (elo.num_games >= 30) {
+	} else if (elo.numGames >= 30) {
 		if (elo.rating < 2400) {
 			elo.K = 20;
 		} else {
@@ -83,37 +83,37 @@ function update_constant_K(elo: EloRating): void {
 	}
 }
 
-export function Elo_player_vs_player(game: Game): [EloRating, EloRating] {
-	let white_rating = game.white_rating.clone() as EloRating;
-	let black_rating = game.black_rating.clone() as EloRating;
+export function EloPlayerVsPlayer(game: Game): [EloRating, EloRating] {
+	let whiteRating = game.whiteRating.clone() as EloRating;
+	let blackRating = game.blackRating.clone() as EloRating;
 	const result = game.result;
 
-	let exp_score_a = get_exp_score(white_rating.rating, black_rating.rating);
+	let exp_score_a = getExpScore(whiteRating.rating, blackRating.rating);
 	if (result == 'white_wins') {
-		white_rating.rating += rating_adjustment(white_rating.K, 1, exp_score_a);
-		black_rating.rating += rating_adjustment(black_rating.K, 0, 1 - exp_score_a);
+		whiteRating.rating += ratingAdjustment(whiteRating.K, 1, exp_score_a);
+		blackRating.rating += ratingAdjustment(blackRating.K, 0, 1 - exp_score_a);
 
-		white_rating.won += 1;
-		black_rating.lost += 1;
+		whiteRating.won += 1;
+		blackRating.lost += 1;
 	} else if (result == 'black_wins') {
-		white_rating.rating += rating_adjustment(white_rating.K, 0, exp_score_a);
-		black_rating.rating += rating_adjustment(black_rating.K, 1, 1 - exp_score_a);
+		whiteRating.rating += ratingAdjustment(whiteRating.K, 0, exp_score_a);
+		blackRating.rating += ratingAdjustment(blackRating.K, 1, 1 - exp_score_a);
 
-		white_rating.lost += 1;
-		black_rating.won += 1;
+		whiteRating.lost += 1;
+		blackRating.won += 1;
 	} else if (result == 'draw') {
-		white_rating.rating += rating_adjustment(white_rating.K, 0.5, exp_score_a);
-		black_rating.rating += rating_adjustment(black_rating.K, 0.5, 1 - exp_score_a);
+		whiteRating.rating += ratingAdjustment(whiteRating.K, 0.5, exp_score_a);
+		blackRating.rating += ratingAdjustment(blackRating.K, 0.5, 1 - exp_score_a);
 
-		white_rating.drawn += 1;
-		black_rating.drawn += 1;
+		whiteRating.drawn += 1;
+		blackRating.drawn += 1;
 	}
 
-	++white_rating.num_games;
-	++black_rating.num_games;
+	++whiteRating.numGames;
+	++blackRating.numGames;
 
-	update_constant_K(white_rating);
-	update_constant_K(black_rating);
+	updateConstantK(whiteRating);
+	updateConstantK(blackRating);
 
-	return [white_rating, black_rating];
+	return [whiteRating, blackRating];
 }

@@ -23,14 +23,14 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { UserRole, ADMIN, TEACHER, MEMBER, STUDENT, all_user_roles } from '@app/common/models/user-role';
+import { UserRole, ADMIN, TEACHER, MEMBER, STUDENT, ALL_USER_ROLES } from '@common/models/user-role';
 import {
-	all_action_ids,
-	get_generic_role_action_name,
-	get_role_action_name,
+	ALL_ACTION_IDS,
+	getGenericRoleActionName,
+	getRoleActionName,
 	UserAction,
 	UserActionID
-} from '@app/common/models/user-action';
+} from '@common/models/user-action';
 import { UserPermissions } from '@common/models/configuration/permissions';
 
 /// Relate each user role to a readable string
@@ -52,7 +52,7 @@ export class UserRoleToUserAction {
 	 * @returns The only instance of this class
 	 * @pre Method @ref initialize must have been called before
 	 */
-	static get_instance(): UserRoleToUserAction {
+	static getInstance(): UserRoleToUserAction {
 		UserRoleToUserAction.instance = UserRoleToUserAction.instance || new UserRoleToUserAction();
 		return UserRoleToUserAction.instance;
 	}
@@ -66,34 +66,34 @@ export class UserRoleToUserAction {
 	};
 
 	/// Add action 'action' to role 'role'
-	add_to_role(role: UserRole, action: UserAction): void {
+	addToRole(role: UserRole, action: UserAction): void {
 		this.relate[role].push(action);
 	}
 
 	/// Return all actions for role 'role'
-	get_actions_role(role: UserRole): UserAction[] {
+	getActionsRole(role: UserRole): UserAction[] {
 		return this.relate[role];
 	}
 
-	role_includes_action(role: UserRole, action: UserAction): boolean {
+	roleIncludesAction(role: UserRole, action: UserAction): boolean {
 		return this.relate[role].includes(action);
 	}
 
-	role_can_do(role: UserRole, action: UserActionID): boolean {
-		for (const other_roles of all_user_roles) {
-			const user_action = get_role_action_name(action, other_roles);
-			if (this.role_includes_action(role, user_action)) {
+	roleCanDo(role: UserRole, action: UserActionID): boolean {
+		for (const other_roles of ALL_USER_ROLES) {
+			const user_action = getRoleActionName(action, other_roles);
+			if (this.roleIncludesAction(role, user_action)) {
 				return true;
 			}
 		}
 		return false;
 	}
 
-	add_missing_generic_actions(role: UserRole): void {
-		for (const action_id of all_action_ids) {
-			if (this.role_can_do(role, action_id)) {
-				const generic_action_name = get_generic_role_action_name(action_id);
-				this.add_to_role(role, generic_action_name);
+	addMissingGenericActions(role: UserRole): void {
+		for (const action_id of ALL_ACTION_IDS) {
+			if (this.roleCanDo(role, action_id)) {
+				const genericActionName = getGenericRoleActionName(action_id);
+				this.addToRole(role, genericActionName);
 			}
 		}
 	}
@@ -120,30 +120,30 @@ export class UserRoleToUserAction {
 	}
  * where each "[...]" is a vector of UserAction.
  */
-export function initialize_permissions(permissions: UserPermissions): void {
-	let actions = UserRoleToUserAction.get_instance();
+export function initializePermissions(permissions: UserPermissions): void {
+	let actions = UserRoleToUserAction.getInstance();
 
 	// ADMIN
 	for (const permission of permissions.admin) {
-		actions.add_to_role(ADMIN, permission);
+		actions.addToRole(ADMIN, permission);
 	}
-	actions.add_missing_generic_actions(ADMIN);
+	actions.addMissingGenericActions(ADMIN);
 
 	// TEACHER
 	for (const permission of permissions.teacher) {
-		actions.add_to_role(TEACHER, permission);
+		actions.addToRole(TEACHER, permission);
 	}
-	actions.add_missing_generic_actions(TEACHER);
+	actions.addMissingGenericActions(TEACHER);
 
 	// MEMBER
 	for (const permission of permissions.member) {
-		actions.add_to_role(MEMBER, permission);
+		actions.addToRole(MEMBER, permission);
 	}
-	actions.add_missing_generic_actions(MEMBER);
+	actions.addMissingGenericActions(MEMBER);
 
 	// STUDENT
 	for (const permission of permissions.student) {
-		actions.add_to_role(STUDENT, permission);
+		actions.addToRole(STUDENT, permission);
 	}
-	actions.add_missing_generic_actions(STUDENT);
+	actions.addMissingGenericActions(STUDENT);
 }

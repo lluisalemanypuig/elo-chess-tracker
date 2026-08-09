@@ -44,17 +44,17 @@ import {
 	GRAPHS_SEE_ADMIN,
 	GRAPHS_SEE_STUDENT,
 	GRAPHS_SEE_MEMBER
-} from '@app/common/models/user-action';
-import { ADMIN, MEMBER, STUDENT, TEACHER } from '@app/common/models/user-role';
+} from '@common/models/user-action';
+import { ADMIN, MEMBER, STUDENT, TEACHER } from '@common/models/user-role';
 import { UserRoleToUserAction } from '@app/server/managers/user-role-action';
-import { initialize_permissions } from '@app/server/managers/user-role-action';
+import { initializePermissions } from '@app/server/managers/user-role-action';
 import {
-	can_user_edit,
-	can_user_edit_a_game,
-	can_user_create_a_game,
-	can_user_see_a_game,
-	can_user_send_challenge,
-	can_user_see_graph
+	canUserEdit,
+	canUserEditGame,
+	canUserCreateGame,
+	canUserSeeGame,
+	canUserSendChallenge,
+	canUserSeeGraph
 } from '@app/server/managers/user-relationships';
 import { toPlayerPrivateId } from '@common/models/player';
 
@@ -74,131 +74,131 @@ describe('Edition', () => {
 	const edited_student = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, [STUDENT], [], []);
 
 	test('Admin -> Teacher', () => {
-		let rel = UserRoleToUserAction.get_instance();
+		let rel = UserRoleToUserAction.getInstance();
 		rel.clear();
-		initialize_permissions({
+		initializePermissions({
 			admin: [USER_EDIT_TEACHER],
 			teacher: [],
 			student: [],
 			member: []
 		});
 
-		expect(can_user_edit(editor_admin, edited_admin)).toBe(false);
-		expect(can_user_edit(editor_admin, edited_teacher)).toBe(true);
-		expect(can_user_edit(editor_admin, edited_member)).toBe(false);
-		expect(can_user_edit(editor_admin, edited_student)).toBe(false);
+		expect(canUserEdit(editor_admin, edited_admin)).toBe(false);
+		expect(canUserEdit(editor_admin, edited_teacher)).toBe(true);
+		expect(canUserEdit(editor_admin, edited_member)).toBe(false);
+		expect(canUserEdit(editor_admin, edited_student)).toBe(false);
 	});
 
 	test('Admin -> Teacher + Student', () => {
-		let rel = UserRoleToUserAction.get_instance();
+		let rel = UserRoleToUserAction.getInstance();
 		rel.clear();
-		initialize_permissions({
+		initializePermissions({
 			admin: [USER_EDIT_TEACHER, USER_EDIT_STUDENT],
 			teacher: [],
 			student: [],
 			member: []
 		});
 
-		expect(can_user_edit(editor_admin, edited_admin)).toBe(false);
-		expect(can_user_edit(editor_admin, edited_teacher)).toBe(true);
-		expect(can_user_edit(editor_admin, edited_member)).toBe(false);
-		expect(can_user_edit(editor_admin, edited_student)).toBe(true);
+		expect(canUserEdit(editor_admin, edited_admin)).toBe(false);
+		expect(canUserEdit(editor_admin, edited_teacher)).toBe(true);
+		expect(canUserEdit(editor_admin, edited_member)).toBe(false);
+		expect(canUserEdit(editor_admin, edited_student)).toBe(true);
 	});
 
 	test('Teacher -> Teacher', () => {
-		let rel = UserRoleToUserAction.get_instance();
+		let rel = UserRoleToUserAction.getInstance();
 		rel.clear();
-		initialize_permissions({
+		initializePermissions({
 			admin: [],
 			teacher: [USER_EDIT_TEACHER],
 			student: [],
 			member: []
 		});
 
-		expect(can_user_edit(editor_teacher, edited_admin)).toBe(false);
-		expect(can_user_edit(editor_teacher, edited_teacher)).toBe(true);
-		expect(can_user_edit(editor_teacher, edited_member)).toBe(false);
-		expect(can_user_edit(editor_teacher, edited_student)).toBe(false);
+		expect(canUserEdit(editor_teacher, edited_admin)).toBe(false);
+		expect(canUserEdit(editor_teacher, edited_teacher)).toBe(true);
+		expect(canUserEdit(editor_teacher, edited_member)).toBe(false);
+		expect(canUserEdit(editor_teacher, edited_student)).toBe(false);
 	});
 
 	test('Teacher -> Teacher + Student', () => {
-		let rel = UserRoleToUserAction.get_instance();
+		let rel = UserRoleToUserAction.getInstance();
 		rel.clear();
-		initialize_permissions({
+		initializePermissions({
 			admin: [],
 			teacher: [USER_EDIT_TEACHER, USER_EDIT_STUDENT],
 			student: [],
 			member: []
 		});
 
-		expect(can_user_edit(editor_teacher, edited_admin)).toBe(false);
-		expect(can_user_edit(editor_teacher, edited_teacher)).toBe(true);
-		expect(can_user_edit(editor_teacher, edited_member)).toBe(false);
-		expect(can_user_edit(editor_teacher, edited_student)).toBe(true);
+		expect(canUserEdit(editor_teacher, edited_admin)).toBe(false);
+		expect(canUserEdit(editor_teacher, edited_teacher)).toBe(true);
+		expect(canUserEdit(editor_teacher, edited_member)).toBe(false);
+		expect(canUserEdit(editor_teacher, edited_student)).toBe(true);
 	});
 
 	test('Student -> Teacher', () => {
-		let rel = UserRoleToUserAction.get_instance();
+		let rel = UserRoleToUserAction.getInstance();
 		rel.clear();
-		initialize_permissions({
+		initializePermissions({
 			admin: [],
 			teacher: [],
 			student: [USER_EDIT_TEACHER],
 			member: []
 		});
 
-		expect(can_user_edit(editor_student, edited_admin)).toBe(false);
-		expect(can_user_edit(editor_student, edited_teacher)).toBe(true);
-		expect(can_user_edit(editor_student, edited_member)).toBe(false);
-		expect(can_user_edit(editor_student, edited_student)).toBe(false);
+		expect(canUserEdit(editor_student, edited_admin)).toBe(false);
+		expect(canUserEdit(editor_student, edited_teacher)).toBe(true);
+		expect(canUserEdit(editor_student, edited_member)).toBe(false);
+		expect(canUserEdit(editor_student, edited_student)).toBe(false);
 	});
 
 	test('Student -> Teacher + Student', () => {
-		let rel = UserRoleToUserAction.get_instance();
+		let rel = UserRoleToUserAction.getInstance();
 		rel.clear();
-		initialize_permissions({
+		initializePermissions({
 			admin: [],
 			teacher: [],
 			student: [USER_EDIT_TEACHER, USER_EDIT_STUDENT],
 			member: []
 		});
 
-		expect(can_user_edit(editor_student, edited_admin)).toBe(false);
-		expect(can_user_edit(editor_student, edited_teacher)).toBe(true);
-		expect(can_user_edit(editor_student, edited_member)).toBe(false);
-		expect(can_user_edit(editor_student, edited_student)).toBe(true);
+		expect(canUserEdit(editor_student, edited_admin)).toBe(false);
+		expect(canUserEdit(editor_student, edited_teacher)).toBe(true);
+		expect(canUserEdit(editor_student, edited_member)).toBe(false);
+		expect(canUserEdit(editor_student, edited_student)).toBe(true);
 	});
 
 	test('Member -> Teacher', () => {
-		let rel = UserRoleToUserAction.get_instance();
+		let rel = UserRoleToUserAction.getInstance();
 		rel.clear();
-		initialize_permissions({
+		initializePermissions({
 			admin: [],
 			teacher: [],
 			student: [],
 			member: [USER_EDIT_TEACHER]
 		});
 
-		expect(can_user_edit(editor_member, edited_admin)).toBe(false);
-		expect(can_user_edit(editor_member, edited_teacher)).toBe(true);
-		expect(can_user_edit(editor_member, edited_member)).toBe(false);
-		expect(can_user_edit(editor_member, edited_student)).toBe(false);
+		expect(canUserEdit(editor_member, edited_admin)).toBe(false);
+		expect(canUserEdit(editor_member, edited_teacher)).toBe(true);
+		expect(canUserEdit(editor_member, edited_member)).toBe(false);
+		expect(canUserEdit(editor_member, edited_student)).toBe(false);
 	});
 
 	test('Member -> Teacher + Student', () => {
-		let rel = UserRoleToUserAction.get_instance();
+		let rel = UserRoleToUserAction.getInstance();
 		rel.clear();
-		initialize_permissions({
+		initializePermissions({
 			admin: [],
 			teacher: [],
 			student: [],
 			member: [USER_EDIT_TEACHER, USER_EDIT_STUDENT]
 		});
 
-		expect(can_user_edit(editor_member, edited_admin)).toBe(false);
-		expect(can_user_edit(editor_member, edited_teacher)).toBe(true);
-		expect(can_user_edit(editor_member, edited_member)).toBe(false);
-		expect(can_user_edit(editor_member, edited_student)).toBe(true);
+		expect(canUserEdit(editor_member, edited_admin)).toBe(false);
+		expect(canUserEdit(editor_member, edited_teacher)).toBe(true);
+		expect(canUserEdit(editor_member, edited_member)).toBe(false);
+		expect(canUserEdit(editor_member, edited_student)).toBe(true);
 	});
 });
 
@@ -209,35 +209,35 @@ describe('Can a user see a game?', () => {
 	const student = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, [STUDENT], [], []);
 
 	test('Admin', () => {
-		let rel = UserRoleToUserAction.get_instance();
+		let rel = UserRoleToUserAction.getInstance();
 		rel.clear();
-		initialize_permissions({
+		initializePermissions({
 			admin: [GAMES_SEE_ADMIN, GAMES_SEE_MEMBER],
 			teacher: [],
 			student: [],
 			member: []
 		});
 
-		expect(can_user_see_a_game(admin, teacher, member)).toBe(true);
-		expect(can_user_see_a_game(admin, teacher, student)).toBe(false);
-		expect(can_user_see_a_game(admin, student, member)).toBe(true);
-		expect(can_user_see_a_game(admin, admin, member)).toBe(true);
+		expect(canUserSeeGame(admin, teacher, member)).toBe(true);
+		expect(canUserSeeGame(admin, teacher, student)).toBe(false);
+		expect(canUserSeeGame(admin, student, member)).toBe(true);
+		expect(canUserSeeGame(admin, admin, member)).toBe(true);
 	});
 
 	test('Teacher', () => {
-		let rel = UserRoleToUserAction.get_instance();
+		let rel = UserRoleToUserAction.getInstance();
 		rel.clear();
-		initialize_permissions({
+		initializePermissions({
 			admin: [],
 			teacher: [GAMES_SEE_ADMIN, GAMES_SEE_STUDENT],
 			student: [],
 			member: []
 		});
 
-		expect(can_user_see_a_game(teacher, teacher, member)).toBe(false);
-		expect(can_user_see_a_game(teacher, teacher, student)).toBe(true);
-		expect(can_user_see_a_game(teacher, student, member)).toBe(true);
-		expect(can_user_see_a_game(teacher, admin, member)).toBe(true);
+		expect(canUserSeeGame(teacher, teacher, member)).toBe(false);
+		expect(canUserSeeGame(teacher, teacher, student)).toBe(true);
+		expect(canUserSeeGame(teacher, student, member)).toBe(true);
+		expect(canUserSeeGame(teacher, admin, member)).toBe(true);
 	});
 });
 
@@ -248,51 +248,51 @@ describe('Can a user edit a game?', () => {
 	const student = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, [STUDENT], [], []);
 
 	test('Admin', () => {
-		let rel = UserRoleToUserAction.get_instance();
+		let rel = UserRoleToUserAction.getInstance();
 		rel.clear();
-		initialize_permissions({
+		initializePermissions({
 			admin: [GAMES_EDIT_ADMIN, GAMES_EDIT_MEMBER],
 			teacher: [],
 			student: [],
 			member: []
 		});
 
-		expect(can_user_edit_a_game(admin, teacher, member)).toBe(true);
-		expect(can_user_edit_a_game(admin, teacher, student)).toBe(false);
-		expect(can_user_edit_a_game(admin, student, member)).toBe(true);
-		expect(can_user_edit_a_game(admin, admin, member)).toBe(true);
+		expect(canUserEditGame(admin, teacher, member)).toBe(true);
+		expect(canUserEditGame(admin, teacher, student)).toBe(false);
+		expect(canUserEditGame(admin, student, member)).toBe(true);
+		expect(canUserEditGame(admin, admin, member)).toBe(true);
 	});
 
 	test('Teacher (1)', () => {
-		let rel = UserRoleToUserAction.get_instance();
+		let rel = UserRoleToUserAction.getInstance();
 		rel.clear();
-		initialize_permissions({
+		initializePermissions({
 			admin: [],
 			teacher: [GAMES_EDIT_ADMIN, GAMES_EDIT_STUDENT],
 			student: [],
 			member: []
 		});
 
-		expect(can_user_edit_a_game(teacher, teacher, member)).toBe(false);
-		expect(can_user_edit_a_game(teacher, teacher, student)).toBe(true);
-		expect(can_user_edit_a_game(teacher, student, member)).toBe(true);
-		expect(can_user_edit_a_game(teacher, admin, member)).toBe(true);
+		expect(canUserEditGame(teacher, teacher, member)).toBe(false);
+		expect(canUserEditGame(teacher, teacher, student)).toBe(true);
+		expect(canUserEditGame(teacher, student, member)).toBe(true);
+		expect(canUserEditGame(teacher, admin, member)).toBe(true);
 	});
 
 	test('Teacher (2)', () => {
-		let rel = UserRoleToUserAction.get_instance();
+		let rel = UserRoleToUserAction.getInstance();
 		rel.clear();
-		initialize_permissions({
+		initializePermissions({
 			admin: [],
 			teacher: [GAMES_EDIT_ADMIN, GAMES_EDIT_TEACHER],
 			student: [],
 			member: []
 		});
 
-		expect(can_user_edit_a_game(teacher, teacher, member)).toBe(true);
-		expect(can_user_edit_a_game(teacher, teacher, student)).toBe(true);
-		expect(can_user_edit_a_game(teacher, student, member)).toBe(false);
-		expect(can_user_edit_a_game(teacher, admin, member)).toBe(true);
+		expect(canUserEditGame(teacher, teacher, member)).toBe(true);
+		expect(canUserEditGame(teacher, teacher, student)).toBe(true);
+		expect(canUserEditGame(teacher, student, member)).toBe(false);
+		expect(canUserEditGame(teacher, admin, member)).toBe(true);
 	});
 });
 
@@ -303,51 +303,51 @@ describe('Can a user create a game?', () => {
 	const student = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, [STUDENT], [], []);
 
 	test('Admin', () => {
-		let rel = UserRoleToUserAction.get_instance();
+		let rel = UserRoleToUserAction.getInstance();
 		rel.clear();
-		initialize_permissions({
+		initializePermissions({
 			admin: [GAMES_CREATE_ADMIN, GAMES_CREATE_MEMBER],
 			teacher: [],
 			student: [],
 			member: []
 		});
 
-		expect(can_user_create_a_game(admin, teacher, member)).toBe(true);
-		expect(can_user_create_a_game(admin, teacher, student)).toBe(false);
-		expect(can_user_create_a_game(admin, student, member)).toBe(true);
-		expect(can_user_create_a_game(admin, admin, member)).toBe(true);
+		expect(canUserCreateGame(admin, teacher, member)).toBe(true);
+		expect(canUserCreateGame(admin, teacher, student)).toBe(false);
+		expect(canUserCreateGame(admin, student, member)).toBe(true);
+		expect(canUserCreateGame(admin, admin, member)).toBe(true);
 	});
 
 	test('Teacher (1)', () => {
-		let rel = UserRoleToUserAction.get_instance();
+		let rel = UserRoleToUserAction.getInstance();
 		rel.clear();
-		initialize_permissions({
+		initializePermissions({
 			admin: [],
 			teacher: [GAMES_CREATE_ADMIN, GAMES_CREATE_STUDENT],
 			student: [],
 			member: []
 		});
 
-		expect(can_user_create_a_game(teacher, teacher, member)).toBe(false);
-		expect(can_user_create_a_game(teacher, teacher, student)).toBe(true);
-		expect(can_user_create_a_game(teacher, student, member)).toBe(true);
-		expect(can_user_create_a_game(teacher, admin, member)).toBe(true);
+		expect(canUserCreateGame(teacher, teacher, member)).toBe(false);
+		expect(canUserCreateGame(teacher, teacher, student)).toBe(true);
+		expect(canUserCreateGame(teacher, student, member)).toBe(true);
+		expect(canUserCreateGame(teacher, admin, member)).toBe(true);
 	});
 
 	test('Teacher (2)', () => {
-		let rel = UserRoleToUserAction.get_instance();
+		let rel = UserRoleToUserAction.getInstance();
 		rel.clear();
-		initialize_permissions({
+		initializePermissions({
 			admin: [],
 			teacher: [GAMES_CREATE_ADMIN, GAMES_CREATE_TEACHER],
 			student: [],
 			member: []
 		});
 
-		expect(can_user_create_a_game(teacher, teacher, member)).toBe(true);
-		expect(can_user_create_a_game(teacher, teacher, student)).toBe(true);
-		expect(can_user_create_a_game(teacher, student, member)).toBe(false);
-		expect(can_user_create_a_game(teacher, admin, member)).toBe(true);
+		expect(canUserCreateGame(teacher, teacher, member)).toBe(true);
+		expect(canUserCreateGame(teacher, teacher, student)).toBe(true);
+		expect(canUserCreateGame(teacher, student, member)).toBe(false);
+		expect(canUserCreateGame(teacher, admin, member)).toBe(true);
 	});
 });
 
@@ -358,51 +358,51 @@ describe('Can a user challenge?', () => {
 	const student = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, [STUDENT], [], []);
 
 	test('Admin', () => {
-		let rel = UserRoleToUserAction.get_instance();
+		let rel = UserRoleToUserAction.getInstance();
 		rel.clear();
-		initialize_permissions({
+		initializePermissions({
 			admin: [USER_CHALLENGE_ADMIN, USER_CHALLENGE_STUDENT],
 			teacher: [],
 			student: [],
 			member: []
 		});
 
-		expect(can_user_send_challenge(admin, admin)).toBe(true);
-		expect(can_user_send_challenge(admin, teacher)).toBe(false);
-		expect(can_user_send_challenge(admin, student)).toBe(true);
-		expect(can_user_send_challenge(admin, member)).toBe(false);
+		expect(canUserSendChallenge(admin, admin)).toBe(true);
+		expect(canUserSendChallenge(admin, teacher)).toBe(false);
+		expect(canUserSendChallenge(admin, student)).toBe(true);
+		expect(canUserSendChallenge(admin, member)).toBe(false);
 	});
 
 	test('Teacher (1)', () => {
-		let rel = UserRoleToUserAction.get_instance();
+		let rel = UserRoleToUserAction.getInstance();
 		rel.clear();
-		initialize_permissions({
+		initializePermissions({
 			admin: [],
 			teacher: [USER_CHALLENGE_ADMIN, USER_CHALLENGE_STUDENT],
 			student: [],
 			member: []
 		});
 
-		expect(can_user_send_challenge(teacher, admin)).toBe(true);
-		expect(can_user_send_challenge(teacher, teacher)).toBe(false);
-		expect(can_user_send_challenge(teacher, student)).toBe(true);
-		expect(can_user_send_challenge(teacher, member)).toBe(false);
+		expect(canUserSendChallenge(teacher, admin)).toBe(true);
+		expect(canUserSendChallenge(teacher, teacher)).toBe(false);
+		expect(canUserSendChallenge(teacher, student)).toBe(true);
+		expect(canUserSendChallenge(teacher, member)).toBe(false);
 	});
 
 	test('Teacher (2)', () => {
-		let rel = UserRoleToUserAction.get_instance();
+		let rel = UserRoleToUserAction.getInstance();
 		rel.clear();
-		initialize_permissions({
+		initializePermissions({
 			admin: [],
 			teacher: [USER_CHALLENGE_ADMIN, USER_CHALLENGE_STUDENT, USER_CHALLENGE_MEMBER],
 			student: [],
 			member: []
 		});
 
-		expect(can_user_send_challenge(teacher, admin)).toBe(true);
-		expect(can_user_send_challenge(teacher, teacher)).toBe(false);
-		expect(can_user_send_challenge(teacher, student)).toBe(true);
-		expect(can_user_send_challenge(teacher, member)).toBe(true);
+		expect(canUserSendChallenge(teacher, admin)).toBe(true);
+		expect(canUserSendChallenge(teacher, teacher)).toBe(false);
+		expect(canUserSendChallenge(teacher, student)).toBe(true);
+		expect(canUserSendChallenge(teacher, member)).toBe(true);
 	});
 });
 
@@ -413,50 +413,50 @@ describe('Can a user see a graph?', () => {
 	const student = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, [STUDENT], [], []);
 
 	test('Admin', () => {
-		let rel = UserRoleToUserAction.get_instance();
+		let rel = UserRoleToUserAction.getInstance();
 		rel.clear();
-		initialize_permissions({
+		initializePermissions({
 			admin: [GRAPHS_SEE_ADMIN, GRAPHS_SEE_STUDENT],
 			teacher: [],
 			student: [],
 			member: []
 		});
 
-		expect(can_user_see_graph(admin, admin)).toBe(true);
-		expect(can_user_see_graph(admin, teacher)).toBe(false);
-		expect(can_user_see_graph(admin, student)).toBe(true);
-		expect(can_user_see_graph(admin, member)).toBe(false);
+		expect(canUserSeeGraph(admin, admin)).toBe(true);
+		expect(canUserSeeGraph(admin, teacher)).toBe(false);
+		expect(canUserSeeGraph(admin, student)).toBe(true);
+		expect(canUserSeeGraph(admin, member)).toBe(false);
 	});
 
 	test('Teacher (1)', () => {
-		let rel = UserRoleToUserAction.get_instance();
+		let rel = UserRoleToUserAction.getInstance();
 		rel.clear();
-		initialize_permissions({
+		initializePermissions({
 			admin: [],
 			teacher: [GRAPHS_SEE_ADMIN, GRAPHS_SEE_STUDENT],
 			student: [],
 			member: []
 		});
 
-		expect(can_user_see_graph(teacher, admin)).toBe(true);
-		expect(can_user_see_graph(teacher, teacher)).toBe(false);
-		expect(can_user_see_graph(teacher, student)).toBe(true);
-		expect(can_user_see_graph(teacher, member)).toBe(false);
+		expect(canUserSeeGraph(teacher, admin)).toBe(true);
+		expect(canUserSeeGraph(teacher, teacher)).toBe(false);
+		expect(canUserSeeGraph(teacher, student)).toBe(true);
+		expect(canUserSeeGraph(teacher, member)).toBe(false);
 	});
 
 	test('Teacher (2)', () => {
-		let rel = UserRoleToUserAction.get_instance();
+		let rel = UserRoleToUserAction.getInstance();
 		rel.clear();
-		initialize_permissions({
+		initializePermissions({
 			admin: [],
 			teacher: [GRAPHS_SEE_ADMIN, GRAPHS_SEE_STUDENT, GRAPHS_SEE_MEMBER],
 			student: [],
 			member: []
 		});
 
-		expect(can_user_see_graph(teacher, admin)).toBe(true);
-		expect(can_user_see_graph(teacher, teacher)).toBe(false);
-		expect(can_user_see_graph(teacher, student)).toBe(true);
-		expect(can_user_see_graph(teacher, member)).toBe(true);
+		expect(canUserSeeGraph(teacher, admin)).toBe(true);
+		expect(canUserSeeGraph(teacher, teacher)).toBe(false);
+		expect(canUserSeeGraph(teacher, student)).toBe(true);
+		expect(canUserSeeGraph(teacher, member)).toBe(true);
 	});
 });

@@ -23,7 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { Rating } from '@common/models/rating_framework/rating';
+import { Rating } from '@common/models/rating-framework/rating';
 
 describe('clone', () => {
 	test('1', () => {
@@ -31,11 +31,11 @@ describe('clone', () => {
 		const rc = r.clone();
 
 		expect(rc.rating).toBe(r.rating);
-		expect(rc.num_games).toBe(r.num_games);
+		expect(rc.numGames).toBe(r.numGames);
 		expect(rc.won).toBe(r.won);
 		expect(rc.drawn).toBe(r.drawn);
 		expect(rc.lost).toBe(r.lost);
 
-		expect(rc.num_won_drawn_lost()).toEqual([rc.num_games, rc.won, rc.drawn, rc.lost]);
+		expect(rc.numWonDrawnLost()).toEqual([rc.numGames, rc.won, rc.drawn, rc.lost]);
 	});
 });

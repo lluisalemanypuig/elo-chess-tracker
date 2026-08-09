@@ -24,7 +24,7 @@ Contact:
 */
 
 import {
-	all_action_ids,
+	ALL_ACTION_IDS,
 	USER_ROLE_ASSIGN_ADMIN,
 	USER_ROLE_ASSIGN_MEMBER,
 	USER_ROLE_ASSIGN_STUDENT,
@@ -37,7 +37,7 @@ import {
 	USER_EDIT_MEMBER,
 	USER_EDIT_STUDENT,
 	USER_EDIT_TEACHER,
-	get_role_action_name,
+	getRoleActionName,
 	GAMES_EDIT_ADMIN,
 	GAMES_EDIT_MEMBER,
 	GAMES_EDIT_STUDENT,
@@ -60,14 +60,14 @@ import {
 	GAMES_DELETE_TEACHER,
 	GAMES_DELETE_MEMBER,
 	GAMES_DELETE_STUDENT
-} from '@app/common/models/user-action';
-import { all_user_roles, UserRole } from '@app/common/models/user-role';
+} from '@common/models/user-action';
+import { ALL_USER_ROLES, UserRole } from '@common/models/user-role';
 
 describe('Role concatenation', () => {
 	test('Check non-throwing functions', () => {
-		for (const action_id of all_action_ids) {
-			for (const role of all_user_roles) {
-				expect(() => get_role_action_name(action_id as UserActionID, role as UserRole)).not.toThrow();
+		for (const action_id of ALL_ACTION_IDS) {
+			for (const role of ALL_USER_ROLES) {
+				expect(() => getRoleActionName(action_id as UserActionID, role as UserRole)).not.toThrow();
 			}
 		}
 	});
@@ -89,12 +89,12 @@ describe('Role concatenation', () => {
 	};
 
 	test('Check correct concatenation', () => {
-		for (let i = 0; i < all_action_ids.length; ++i) {
-			const action_id = all_action_ids[i];
+		for (let i = 0; i < ALL_ACTION_IDS.length; ++i) {
+			const action_id = ALL_ACTION_IDS[i];
 			const concats = roles_and_actions[action_id as UserActionID];
-			for (let j = 0; j < all_user_roles.length; ++j) {
-				const r = all_user_roles[j];
-				expect(get_role_action_name(action_id as UserActionID, r)).toEqual(concats[j]);
+			for (let j = 0; j < ALL_USER_ROLES.length; ++j) {
+				const r = ALL_USER_ROLES[j];
+				expect(getRoleActionName(action_id as UserActionID, r)).toEqual(concats[j]);
 			}
 		}
 	});

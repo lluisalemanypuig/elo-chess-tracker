@@ -21,19 +21,19 @@ Full source code of elo-chess-tracker:
 
 import 'htmx.org';
 
-import { isNotDefined } from '@app/common/utils/is-defined';
-import { GameId, result_from_text_to_value } from '@common/models/game';
+import { isNotDefined } from '@common/utils/is-defined';
+import { GameId, resultFromTextToValue } from '@common/models/game';
 import { messageFromResponse, serverCall } from '@client/action';
-import { Routes } from '@common/routes';
-import { TimeControlId } from '@app/common/models/time-control';
+import { ROUTES } from '@common/routes';
+import { TimeControlId } from '@common/models/time-control';
 
-function new_text_cell(text: string) {
+function newTextCell(text: string) {
 	let cell = document.createElement('td');
 	cell.textContent = text;
 	return cell;
 }
 
-function new_rating_cell(rating: string, increment: string) {
+function newRatingCell(rating: string, increment: string) {
 	let cell = document.createElement('td');
 
 	let s1 = document.createElement('span');
@@ -54,19 +54,19 @@ function new_rating_cell(rating: string, increment: string) {
 	return cell;
 }
 
-async function select_result_game_on_change(event: any) {
+async function selectResultGameOnChange(event: any) {
 	const select = event.target;
 
-	const game_id = select.getAttribute('game_id');
-	const new_result = select.value;
+	const gameId = select.getAttribute('gameId');
+	const newResult = select.value;
 
-	if (new_result == select.getAttribute('original_value')) {
+	if (newResult == select.getAttribute('originalValue')) {
 		return;
 	}
 
-	const response = await serverCall(Routes.GAME_EDIT_RESULT, {
-		id: game_id,
-		new_result: new_result
+	const response = await serverCall(ROUTES.GAME_EDIT_RESULT, {
+		id: gameId,
+		newResult: newResult
 	});
 
 	if (response.status === 'Error') {
@@ -77,129 +77,128 @@ async function select_result_game_on_change(event: any) {
 	location.reload();
 }
 
-function new_cell_select_result(original_result: string, game_id: string) {
+function newCellSelectResult(originalResult: string, gameId: string) {
 	let select = document.createElement('select') as HTMLSelectElement;
 
 	{
-		const add_result_option = function (text: string) {
-			let option_result = document.createElement('option') as HTMLOptionElement;
-			option_result.text = text;
-			option_result.value = result_from_text_to_value(text) ?? '????';
-			select.appendChild(option_result);
+		const addResultOption = function (text: string) {
+			let optionResult = document.createElement('option') as HTMLOptionElement;
+			optionResult.text = text;
+			optionResult.value = resultFromTextToValue(text) ?? '????';
+			select.appendChild(optionResult);
 		};
-		add_result_option('1 - 0');
-		add_result_option('1/2 - 1/2');
-		add_result_option('0 - 1');
+		addResultOption('1 - 0');
+		addResultOption('1/2 - 1/2');
+		addResultOption('0 - 1');
 	}
 
 	select.className = 'select-edit-game';
-	select.value = result_from_text_to_value(original_result) ?? '???';
-	select.onchange = select_result_game_on_change;
-	select.setAttribute('original_value', result_from_text_to_value(original_result) ?? '???');
-	select.setAttribute('game_id', game_id);
+	select.value = resultFromTextToValue(originalResult) ?? '???';
+	select.onchange = selectResultGameOnChange;
+	select.setAttribute('originalValue', resultFromTextToValue(originalResult) ?? '???');
+	select.setAttribute('gameId', gameId);
 
 	let cell = document.createElement('td');
 	cell.appendChild(select);
 	return cell;
 }
 
-async function button_delete_game_on_click(event: any) {
+async function buttonDeleteGameOnClick(event: any) {
 	const button = event.target;
 
-	let select_time_control = document.getElementById('select_time_control') as HTMLSelectElement;
-	let previous_time_control_id = select_time_control.options[select_time_control.selectedIndex]
-		.value as TimeControlId;
+	let selectTimeControl = document.getElementById('selectTimeControl') as HTMLSelectElement;
+	let previousTimeControlId = selectTimeControl.options[selectTimeControl.selectedIndex].value as TimeControlId;
 
-	const game_id = button.getAttribute('game_id');
-	const response = await serverCall(Routes.GAME_DELETE, { id: game_id });
+	const gameId = button.getAttribute('gameId');
+	const response = await serverCall(ROUTES.GAME_DELETE, { id: gameId });
 
 	if (response.status === 'Error') {
 		alert(messageFromResponse(response));
 		return;
 	}
 
-	fill_games_list_time_control(previous_time_control_id);
+	fillGamesListTimeControl(previousTimeControlId);
 }
 
-function new_cell_button_delete_game(game_id: string) {
+function newCellButtonDeleteGame(gameId: string) {
 	let button = document.createElement('button') as HTMLButtonElement;
 	button.textContent = 'Delete';
 	button.className = 'button-delete-game';
-	button.setAttribute('game_id', game_id);
-	button.onclick = button_delete_game_on_click;
+	button.setAttribute('gameId', gameId);
+	button.onclick = buttonDeleteGameOnClick;
 
 	let cell = document.createElement('td');
 	cell.appendChild(button);
 	return cell;
 }
 
-async function trigger_edit_game_title(event: Event) {
+async function triggerEditGameTitle(event: Event) {
 	let input = event.target as HTMLInputElement;
-	const game_id = input.getAttribute('game_id') as GameId;
-	const original_title = input.getAttribute('original_title');
-	const new_title = input.value;
+	const gameId = input.getAttribute('gameId') as GameId;
+	const originalTitle = input.getAttribute('originalTitle');
+	const newTitle = input.value;
 
-	if (isNotDefined(game_id)) {
+	if (isNotDefined(gameId)) {
 		console.log('Game id could not be retrieved');
 		return;
 	}
-	if (original_title == new_title) {
+	if (originalTitle == newTitle) {
 		return;
 	}
 
-	const response = await serverCall(Routes.GAME_EDIT_TITLE, {
-		id: game_id,
-		title: new_title
+	const response = await serverCall(ROUTES.GAME_EDIT_TITLE, {
+		id: gameId,
+		title: newTitle
 	});
 	if (response.status === 'Error') {
 		alert(messageFromResponse(response));
 		return;
 	}
 
-	input.setAttribute('original_title', new_title);
+	input.setAttribute('originalTitle', newTitle);
 }
 
-async function edit_game_title(event: Event) {
+async function editGameTitle(event: Event) {
 	switch (event.type) {
 		case 'keydown':
 			const key = (event as KeyboardEvent).key;
 			if (key === 'Enter') {
-				trigger_edit_game_title(event);
+				triggerEditGameTitle(event);
 			}
 			break;
 
 		case 'blur':
-			trigger_edit_game_title(event);
+			triggerEditGameTitle(event);
 			break;
 	}
 }
 
-function new_cell_text_input(game_id: string, title: string) {
+function newCellTextInput(gameId: string, title: string) {
 	let input = document.createElement('input') as HTMLInputElement;
 	input.value = `${title}`;
 	input.className = 'input-text';
-	input.setAttribute('game_id', game_id);
-	input.setAttribute('original_title', title);
-	input.onkeydown = edit_game_title;
-	input.onblur = edit_game_title;
+	input.setAttribute('gameId', gameId);
+	input.setAttribute('originalTitle', title);
+	input.onkeydown = editGameTitle;
+	input.onblur = editGameTitle;
 
 	let cell = document.createElement('td');
 	cell.appendChild(input);
 	return cell;
 }
 
-async function fill_games_list_time_control(time_control_id: TimeControlId) {
+async function fillGamesListTimeControl(timeControlId: TimeControlId) {
 	let table = document.getElementById('table-games') as HTMLTableElement;
 	const val = table.getAttribute('value');
 
 	let response;
 	if (val == 'all') {
-		response = await serverCall(Routes.QUERY_GAME_LIST_ALL, {
-			time_control_id: time_control_id
+		response = await serverCall(ROUTES.QUERY_GAME_LIST_ALL, {
+			timeControlId: timeControlId
 		});
 	} else if (val == 'own') {
-		response = await serverCall(Routes.QUERY_GAME_LIST_OWN, {
-			time_control_id: time_control_id
+		response = await serverCall(ROUTES.QUERY_GAME_LIST_OWN, {
+			timeControlId: timeControlId
 		});
 	} else {
 		alert(`Wrong value for list '${val}'.`);
@@ -213,61 +212,61 @@ async function fill_games_list_time_control(time_control_id: TimeControlId) {
 
 	const games = response.value;
 
-	let new_tbody = document.createElement('tbody');
+	let newTbody = document.createElement('tbody');
 	for (const g of games) {
 		let row = document.createElement('tr');
 
 		if (g.editable) {
 			if (g.title == '') {
-				row.appendChild(new_text_cell(''));
+				row.appendChild(newTextCell(''));
 			} else {
-				row.appendChild(new_cell_text_input(g.id, g.title));
+				row.appendChild(newCellTextInput(g.id, g.title));
 			}
 		} else {
-			row.appendChild(new_text_cell(g.title));
+			row.appendChild(newTextCell(g.title));
 		}
 
-		row.appendChild(new_text_cell(g.time_control_name));
+		row.appendChild(newTextCell(g.timeControlName));
 
 		const when = g.date.substring(0, g.date.length - (3 + 1 + 2 + 1)).replace('..', ' ');
-		row.appendChild(new_text_cell(when));
+		row.appendChild(newTextCell(when));
 
-		const whiteRatingStr = `${g.white_rating}`;
-		const whiteIncrementStr = g.white_increment < 0 ? `${g.white_increment}` : `+${g.white_increment}`;
-		row.appendChild(new_rating_cell(whiteRatingStr, whiteIncrementStr));
-		row.appendChild(new_text_cell(g.white));
+		const whiteRatingStr = `${g.whiteRating}`;
+		const whiteIncrementStr = g.whiteIncrement < 0 ? `${g.whiteIncrement}` : `+${g.whiteIncrement}`;
+		row.appendChild(newRatingCell(whiteRatingStr, whiteIncrementStr));
+		row.appendChild(newTextCell(g.white));
 
 		if (g.editable) {
-			row.appendChild(new_cell_select_result(g.result, g.id));
+			row.appendChild(newCellSelectResult(g.result, g.id));
 		} else {
-			row.appendChild(new_text_cell(g.result));
+			row.appendChild(newTextCell(g.result));
 		}
 
-		const blackRatingStr = `${g.black_rating}`;
-		const blackIncrementStr = g.black_increment < 0 ? `${g.black_increment}` : `+${g.black_increment}`;
-		row.appendChild(new_text_cell(g.black));
-		row.appendChild(new_rating_cell(blackRatingStr, blackIncrementStr));
+		const blackRatingStr = `${g.blackRating}`;
+		const blackIncrementStr = g.blackIncrement < 0 ? `${g.blackIncrement}` : `+${g.blackIncrement}`;
+		row.appendChild(newTextCell(g.black));
+		row.appendChild(newRatingCell(blackRatingStr, blackIncrementStr));
 
 		if (g.deleteable) {
-			row.appendChild(new_cell_button_delete_game(g.id));
+			row.appendChild(newCellButtonDeleteGame(g.id));
 		}
 
-		new_tbody.appendChild(row);
+		newTbody.appendChild(row);
 	}
 
-	let old_tbody = table.getElementsByTagName('tbody')[0] as HTMLElement;
-	old_tbody.parentNode?.replaceChild(new_tbody, old_tbody);
+	let oldTbody = table.getElementsByTagName('tbody')[0] as HTMLElement;
+	oldTbody.parentNode?.replaceChild(newTbody, oldTbody);
 }
 
-async function fill_games_list(_event: any) {
-	const select_time_control = document.getElementById('select_time_control') as HTMLSelectElement;
-	const time_control_id = select_time_control.options[select_time_control.selectedIndex].value as TimeControlId;
-	fill_games_list_time_control(time_control_id);
+async function fillGamesList(_event: any) {
+	const selectTimeControl = document.getElementById('selectTimeControl') as HTMLSelectElement;
+	const timeControlId = selectTimeControl.options[selectTimeControl.selectedIndex].value as TimeControlId;
+	fillGamesListTimeControl(timeControlId);
 }
 
 window.onload = async function () {
-	fill_games_list_time_control('' as TimeControlId);
+	fillGamesListTimeControl('' as TimeControlId);
 
-	let time_control = document.getElementById('select_time_control') as HTMLSelectElement;
-	time_control.onchange = fill_games_list;
+	let timeControl = document.getElementById('selectTimeControl') as HTMLSelectElement;
+	timeControl.onchange = fillGamesList;
 };

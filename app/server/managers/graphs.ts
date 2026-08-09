@@ -23,76 +23,76 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { isNotDefined } from '@app/common/utils/is-defined';
-import { graph_full_to_file, graph_to_file } from '@common/io/graph/graph';
+import { isNotDefined } from '@common/utils/is-defined';
+import { graphFullToFile, graphToFile } from '@common/io/graph/graph';
 import { GameResult } from '@common/models/game';
 import { Graph } from '@common/models/graph/graph';
-import { TimeControlId } from '@app/common/models/time-control';
+import { TimeControlId } from '@common/models/time-control';
 import { EnvironmentManager } from '@app/server/managers/environment-manager';
 import { GamesIterator } from '@app/server/managers/games-iterator';
 import { GraphsManager } from '@app/server/managers/graphs-manager';
 import { RatingSystemManager } from '@app/server/managers/rating-system-manager';
 import { PlayerPrivateId } from '@common/models/player';
 
-export function graph_update(w: PlayerPrivateId, b: PlayerPrivateId, result: GameResult, id: TimeControlId): void {
-	let manager = GraphsManager.get_instance();
-	let g = manager.get_graph(id);
+export function graphUpdate(w: PlayerPrivateId, b: PlayerPrivateId, result: GameResult, id: TimeControlId): void {
+	let manager = GraphsManager.getInstance();
+	let g = manager.getGraph(id);
 	if (isNotDefined(g)) {
 		throw new Error(`Graph of time control id '${id}' does not exist.`);
 	}
-	g.add_edge(w, b, result);
+	g.addEdge(w, b, result);
 
-	const graphs_dir = EnvironmentManager.get_instance().get_dir_graphs_time_control(id);
-	graph_to_file(graphs_dir, [w], g);
+	const graphsDir = EnvironmentManager.getInstance().getDirGraphsTimeControl(id);
+	graphToFile(graphsDir, [w], g);
 }
 
-export function graph_modify_edge(
+export function graphModifyEdge(
 	w: PlayerPrivateId,
 	b: PlayerPrivateId,
-	old_res: GameResult,
-	new_res: GameResult,
+	oldRes: GameResult,
+	newRes: GameResult,
 	id: TimeControlId
 ): void {
-	let manager = GraphsManager.get_instance();
-	let g = manager.get_graph(id);
+	let manager = GraphsManager.getInstance();
+	let g = manager.getGraph(id);
 	if (isNotDefined(g)) {
 		throw new Error(`Graph of time control id '${id}' does not exist.`);
 	}
-	g.change_game_result(w, b, old_res, new_res);
+	g.changeGameResult(w, b, oldRes, newRes);
 
-	const graphs_dir = EnvironmentManager.get_instance().get_dir_graphs_time_control(id);
-	graph_to_file(graphs_dir, [w], g);
+	const graphsDir = EnvironmentManager.getInstance().getDirGraphsTimeControl(id);
+	graphToFile(graphsDir, [w], g);
 }
 
-export function graph_delete_edge(w: PlayerPrivateId, b: PlayerPrivateId, result: GameResult, id: TimeControlId): void {
-	let manager = GraphsManager.get_instance();
-	let g = manager.get_graph(id);
+export function graphDeleteEdge(w: PlayerPrivateId, b: PlayerPrivateId, result: GameResult, id: TimeControlId): void {
+	let manager = GraphsManager.getInstance();
+	let g = manager.getGraph(id);
 	if (isNotDefined(g)) {
 		throw new Error(`Graph of time control id '${id}' does not exist.`);
 	}
-	g.delete_edge(w, b, result);
+	g.deleteEdge(w, b, result);
 
-	const graphs_dir = EnvironmentManager.get_instance().get_dir_graphs_time_control(id);
-	graph_to_file(graphs_dir, [w], g);
+	const graphsDir = EnvironmentManager.getInstance().getDirGraphsTimeControl(id);
+	graphToFile(graphsDir, [w], g);
 }
 
-export function recalculate_all_graphs() {
-	let manager = GraphsManager.get_instance();
+export function recalculateAllGraphs() {
+	let manager = GraphsManager.getInstance();
 	manager.clear();
 
-	const unique_time_controls = RatingSystemManager.get_instance().get_unique_time_controls_ids();
-	for (const time_control_id of unique_time_controls) {
-		const games_dir = EnvironmentManager.get_instance().get_dir_games_time_control(time_control_id);
+	const uniqueTimeControls = RatingSystemManager.getInstance().getUniqueTimeControlsIds();
+	for (const timeControlId of uniqueTimeControls) {
+		const gamesDir = EnvironmentManager.getInstance().getDirGamesTimeControl(timeControlId);
 		let g = new Graph();
-		let iter = new GamesIterator(games_dir);
-		while (!iter.end_record_list()) {
-			const game = iter.get_current_game();
-			g.add_edge(game.white, game.black, game.result);
-			iter.next_game();
+		let iter = new GamesIterator(gamesDir);
+		while (!iter.endRecordList()) {
+			const game = iter.getCurrentGame();
+			g.addEdge(game.white, game.black, game.result);
+			iter.nextGame();
 		}
-		manager.add_graph(time_control_id, g);
+		manager.addGraph(timeControlId, g);
 
-		const graphs_dir = EnvironmentManager.get_instance().get_dir_graphs_time_control(time_control_id);
-		graph_full_to_file(graphs_dir, g);
+		const graphsDir = EnvironmentManager.getInstance().getDirGraphsTimeControl(timeControlId);
+		graphFullToFile(graphsDir, g);
 	}
 }

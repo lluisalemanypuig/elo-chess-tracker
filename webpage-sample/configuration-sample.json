@@ -1,32 +1,32 @@
 {
 	"environment": {
-		"ssl_certificate": {
-			"public_key_file": "$PUBLIC_PEM",
-			"private_key_file": "$PRIVATE_PEM",
-			"passphrase_file": "$PASSPHRASE_TXT"
+		"sslCertificate": {
+			"publicKeyFile": "$PUBLIC_PEM",
+			"privateKeyFile": "$PRIVATE_PEM",
+			"passphraseFile": "$PASSPHRASE_TXT"
 		},
 		"favicon": "favicon.png",
-		"login_page": {
+		"loginPage": {
 			"title": "Login into My Chess Club",
 			"icon": "login.png"
 		},
-		"home_page": {
+		"homePage": {
 			"title": "My Chess Club",
 			"icon": "home.png"
 		}
 	},
 
 	"server": {
-		"domain_name": "$DOMAIN_NAME",
+		"domainName": "$DOMAIN_NAME",
 		"ports": {
 			"http": "8080",
 			"https": "8443"
 		}
 	},
 
-	"rating_system": "Elo",
+	"ratingSystem": "Elo",
 
-	"time_controls": [
+	"timeControls": [
 		{
 			"id": "Classical",
 			"name": "Classical (90 + 30)"
@@ -47,7 +47,7 @@
 
 	"behavior": {
 		"challenges": {
-			"higher_rated_player_can_decline_challenge_from_lower_rated_player": false
+			"higherRatedPlayerCanDeclineChallengeFromLowerRatedPlayer": false
 		}
 	},
 

@@ -24,12 +24,12 @@ Contact:
 */
 
 import { Challenge, ChallengeId, toChallengeId } from '@common/models/challenge';
-import { number_to_string } from '@server/utils/misc';
+import { numberToString } from '@server/utils/misc';
 
-export const CHALLENGE_ID_LENGTH = 10;
+export const CHALLENGEIDLENGTH = 10;
 
 export function numberToChallengeId(n: number): ChallengeId {
-	const s = number_to_string(n, CHALLENGE_ID_LENGTH);
+	const s = numberToString(n, CHALLENGEIDLENGTH);
 	return toChallengeId(s);
 }
 
@@ -50,51 +50,51 @@ export class ChallengesManager {
 		ChallengesManager.instance = this;
 	}
 
-	static get_instance(): ChallengesManager {
+	static getInstance(): ChallengesManager {
 		ChallengesManager.instance = ChallengesManager.instance || new ChallengesManager();
 		return ChallengesManager.instance;
 	}
 
 	/// Number of games in the system
-	private max_challenge_id: number = 0;
+	private maxChallengeId: number = 0;
 	/// The challenges in the system
 	private challenges: Challenge[] = [];
 
 	clear(): void {
-		this.max_challenge_id = 0;
+		this.maxChallengeId = 0;
 		this.challenges = [];
 	}
 
-	add_challenge(c: Challenge): void {
+	addChallenge(c: Challenge): void {
 		this.challenges.push(c);
 	}
 
-	remove_challenge(c: Challenge): void {
-		const idx = this.get_challenge_index(c);
-		this.remove_challenge_index(idx);
+	removeChallenge(c: Challenge): void {
+		const idx = this.getChallengeIndex(c);
+		this.removeChallengeIndex(idx);
 	}
-	remove_challenge_index(idx: number): void {
+	removeChallengeIndex(idx: number): void {
 		this.challenges.splice(idx, 1);
 		if (this.challenges.length == 0) {
-			this.max_challenge_id = 0;
+			this.maxChallengeId = 0;
 		}
 	}
 
-	num_challenges(): number {
+	numChallenges(): number {
 		return this.challenges.length;
 	}
 
-	get_challenge_at(idx: number): Challenge | undefined {
+	getChallengeAt(idx: number): Challenge | undefined {
 		return 0 <= idx && idx < this.challenges.length ? this.challenges[idx] : undefined;
 	}
-	get_challenge_by_id(id: ChallengeId): Challenge | undefined {
-		return this.get_challenge_at(this.get_challenge_index_by_id(id));
+	getChallengeById(id: ChallengeId): Challenge | undefined {
+		return this.getChallengeAt(this.getChallengeIndexById(id));
 	}
 
-	get_challenge_index(c: Challenge): number {
-		return this.get_challenge_index_by_id(c.id);
+	getChallengeIndex(c: Challenge): number {
+		return this.getChallengeIndexById(c.id);
 	}
-	get_challenge_index_by_id(id: ChallengeId): number {
+	getChallengeIndexById(id: ChallengeId): number {
 		for (let i = 0; i < this.challenges.length; ++i) {
 			if (this.challenges[i].id == id) {
 				return i;
@@ -104,17 +104,17 @@ export class ChallengesManager {
 	}
 
 	/// Current maximum challenge ID
-	get_max_challenge_id(): number {
-		return this.max_challenge_id;
+	getMaxChallengeId(): number {
+		return this.maxChallengeId;
 	}
 	/// Sets the maximum challenge ID
-	set_max_challenge_id(id: number): void {
-		this.max_challenge_id = id;
+	setMaxChallengeId(id: number): void {
+		this.maxChallengeId = id;
 	}
 	/// Increase current maximum challenge ID
-	new_challenge_id(): ChallengeId {
-		this.max_challenge_id += 1;
-		const strId = number_to_string(this.max_challenge_id, CHALLENGE_ID_LENGTH);
+	newChallengeId(): ChallengeId {
+		this.maxChallengeId += 1;
+		const strId = numberToString(this.maxChallengeId, CHALLENGEIDLENGTH);
 		return toChallengeId(strId);
 	}
 }

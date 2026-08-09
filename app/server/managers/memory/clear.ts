@@ -39,15 +39,15 @@ import { UsersBehavior } from '@app/server/managers/users-behavior';
  *
  * That is, the RAM memory, not the disk memory.
  */
-export function clear_server(): void {
-	UsersManager.get_instance().clear();
-	UsersBehavior.get_instance().clear();
-	EnvironmentManager.get_instance().clear();
-	ConfigurationManager.get_instance().clear();
-	UserRoleToUserAction.get_instance().clear();
-	RatingSystemManager.get_instance().clear();
-	SessionIDManager.get_instance().clear();
-	ChallengesManager.get_instance().clear();
-	GamesManager.get_instance().clear();
-	GraphsManager.get_instance().clear();
+export function clearServer(): void {
+	UsersManager.getInstance().clear();
+	UsersBehavior.getInstance().clear();
+	EnvironmentManager.getInstance().clear();
+	ConfigurationManager.getInstance().clear();
+	UserRoleToUserAction.getInstance().clear();
+	RatingSystemManager.getInstance().clear();
+	SessionIDManager.getInstance().clear();
+	ChallengesManager.getInstance().clear();
+	GamesManager.getInstance().clear();
+	GraphsManager.getInstance().clear();
 }

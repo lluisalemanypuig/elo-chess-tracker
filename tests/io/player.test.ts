@@ -23,28 +23,28 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { initialize_rating_functions } from '@app/server/managers/rating-system';
-import { player_from_string } from '@common/io/player';
-import { isNotDefined } from '@app/common/utils/is-defined';
-import { toTimeControlId } from '@app/common/models/time-control';
+import { initializeRatingFunctions } from '@app/server/managers/rating-system';
+import { playerFromString } from '@common/io/player';
+import { isNotDefined } from '@common/utils/is-defined';
+import { toTimeControlId } from '@common/models/time-control';
 
 const Classical = toTimeControlId('classical');
 const Blitz = toTimeControlId('blitz');
 
 describe('IO conversion -- Elo', () => {
-	initialize_rating_functions('Elo');
-	const classical = { rating: 1700, num_games: 0, won: 0, drawn: 0, lost: 0, K: 40, surpassed_2400: false };
+	initializeRatingFunctions('Elo');
+	const classical = { rating: 1700, numGames: 0, won: 0, drawn: 0, lost: 0, K: 40, surpassed_2400: false };
 
 	test('string', () => {
-		const p = player_from_string(
+		const p = playerFromString(
 			'{\
 				"username": "user.name",\
 				"ratings": [\
 					{\
-						"time_control": "blitz",\
+						"timeControl": "blitz",\
 						"rating": {\
 							"rating": 1500,\
-							"num_games": 0,\
+							"numGames": 0,\
 							"won": 0,\
 							"drawn": 0,\
 							"lost": 0,\
@@ -53,10 +53,10 @@ describe('IO conversion -- Elo', () => {
 						}\
 					},\
 					{\
-						"time_control": "classical",\
+						"timeControl": "classical",\
 						"rating": {\
 							"rating": 1700,\
-							"num_games": 0,\
+							"numGames": 0,\
 							"won": 0,\
 							"drawn": 0,\
 							"lost": 0,\
@@ -74,8 +74,8 @@ describe('IO conversion -- Elo', () => {
 		}
 		expect(p.username).toEqual('user.name');
 		expect(p.ratings.length).toEqual(2);
-		expect(p.has_rating(Blitz)).toEqual(true);
-		expect(p.has_rating(Classical)).toEqual(true);
-		expect(p.get_rating(Classical)).toEqual(classical);
+		expect(p.hasRating(Blitz)).toEqual(true);
+		expect(p.hasRating(Classical)).toEqual(true);
+		expect(p.getRating(Classical)).toEqual(classical);
 	});
 });

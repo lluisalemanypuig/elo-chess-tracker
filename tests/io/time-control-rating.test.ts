@@ -23,19 +23,16 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { isNotDefined } from '@app/common/utils/is-defined';
-import {
-	time_control_rating_array_from_string,
-	time_control_rating_from_string
-} from '@app/common/io/time-control-rating';
-import { initialize_rating_functions } from '@app/server/managers/rating-system';
+import { isNotDefined } from '@common/utils/is-defined';
+import { timeControlRatingArrayFromString, timeControlRatingFromString } from '@common/io/time-control-rating';
+import { initializeRatingFunctions } from '@app/server/managers/rating-system';
 
 describe('IO conversion -- Elo', () => {
-	initialize_rating_functions('Elo');
+	initializeRatingFunctions('Elo');
 
 	test('string', () => {
-		const tcr = time_control_rating_from_string(
-			'{ "time_control": "blitz", "rating": { "rating": 1500.43, "num_games": 100, "won": 50, "drawn": 20, "lost": 30, "K": 40, "surpassed_2400": true } }'
+		const tcr = timeControlRatingFromString(
+			'{ "timeControl": "blitz", "rating": { "rating": 1500.43, "numGames": 100, "won": 50, "drawn": 20, "lost": 30, "K": 40, "surpassed_2400": true } }'
 		);
 		expect(tcr).not.toBeNull();
 		if (isNotDefined(tcr)) {
@@ -43,19 +40,19 @@ describe('IO conversion -- Elo', () => {
 		}
 		expect(tcr.rating).toEqual({
 			rating: 1500.43,
-			num_games: 100,
+			numGames: 100,
 			won: 50,
 			drawn: 20,
 			lost: 30,
 			K: 40,
 			surpassed_2400: true
 		});
-		expect(tcr.time_control).toEqual('blitz');
+		expect(tcr.timeControl).toEqual('blitz');
 	});
 
 	test('string -- set', () => {
-		const tcr = time_control_rating_array_from_string(
-			'[{ "time_control": "blitz", "rating": { "rating": 1500.43, "num_games": 100, "won": 50, "drawn": 20, "lost": 30, "K": 40, "surpassed_2400": true } }]'
+		const tcr = timeControlRatingArrayFromString(
+			'[{ "timeControl": "blitz", "rating": { "rating": 1500.43, "numGames": 100, "won": 50, "drawn": 20, "lost": 30, "K": 40, "surpassed_2400": true } }]'
 		);
 		expect(tcr).not.toBeNull();
 		if (isNotDefined(tcr)) {
@@ -63,13 +60,13 @@ describe('IO conversion -- Elo', () => {
 		}
 		expect(tcr[0].rating).toEqual({
 			rating: 1500.43,
-			num_games: 100,
+			numGames: 100,
 			won: 50,
 			drawn: 20,
 			lost: 30,
 			K: 40,
 			surpassed_2400: true
 		});
-		expect(tcr[0].time_control).toEqual('blitz');
+		expect(tcr[0].timeControl).toEqual('blitz');
 	});
 });

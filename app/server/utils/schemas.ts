@@ -27,7 +27,7 @@ import Debug from 'debug';
 import { z } from 'zod';
 import { Request, Response } from 'express';
 
-import { isDefined, isNotDefined } from '@app/common/utils/is-defined';
+import { isDefined, isNotDefined } from '@common/utils/is-defined';
 import { logNow } from '@common/utils/time';
 
 export type ParseResult = 'JsonDataNotProvided' | 'Error' | 'Success';
@@ -42,9 +42,9 @@ export type ParseSchemaResult<T> =
 			data: T;
 	  };
 
-export function parse_schema<S extends z.ZodTypeAny>(
+export function parseSchema<S extends z.ZodTypeAny>(
 	json: unknown | undefined | null,
-	schema_obj: S,
+	schemaObj: S,
 	debug: Debug.Debugger
 ): ParseSchemaResult<z.output<S>> {
 	const isEmptyPlainObject = (v: unknown) =>
@@ -59,9 +59,9 @@ export function parse_schema<S extends z.ZodTypeAny>(
 			data: undefined
 		};
 	}
-	const parse = schema_obj.safeParse(json);
+	const parse = schemaObj.safeParse(json);
 	if (!parse.success) {
-		debug(logNow(), `Failed to parse schema: ${schema_obj.constructor.name}`);
+		debug(logNow(), `Failed to parse schema: ${schemaObj.constructor.name}`);
 		return {
 			result: 'Error',
 			data: undefined
@@ -83,13 +83,13 @@ export type SafeParseSchemaResult<T> =
 			data: T;
 	  };
 
-export function safe_parse_request_cookies<S extends z.ZodTypeAny>(
+export function safeParseRequestCookies<S extends z.ZodTypeAny>(
 	req: Request,
-	schema_obj: S,
+	schemaObj: S,
 	res: Response,
 	debug: Debug.Debugger
 ): SafeParseSchemaResult<z.output<S>> {
-	const parse = parse_schema(req.cookies, schema_obj, debug);
+	const parse = parseSchema(req.cookies, schemaObj, debug);
 	if (parse.result !== 'Success') {
 		res.status(401).send(`Failure to parse cookies ${parse.result}.`);
 		return {
@@ -103,15 +103,15 @@ export function safe_parse_request_cookies<S extends z.ZodTypeAny>(
 	};
 }
 
-export function safe_parse_request_body<S extends z.ZodTypeAny>(
+export function safeParseRequestBody<S extends z.ZodTypeAny>(
 	req: Request,
-	schema_obj: S,
+	schemaObj: S,
 	res: Response,
 	debug: Debug.Debugger
 ): SafeParseSchemaResult<z.output<S>> {
-	const parse = parse_schema(req.body, schema_obj, debug);
+	const parse = parseSchema(req.body, schemaObj, debug);
 	if (parse.result !== 'Success') {
-		res.status(401).send(parse_error_message(parse));
+		res.status(401).send(parseErrorMessage(parse));
 		return {
 			result: 'Exit',
 			data: undefined
@@ -123,6 +123,6 @@ export function safe_parse_request_body<S extends z.ZodTypeAny>(
 	};
 }
 
-function parse_error_message<T>(res: ParseSchemaResult<T>) {
+function parseErrorMessage<T>(res: ParseSchemaResult<T>) {
 	return `Request input data (body) sent from client is malformed ${res.result}`;
 }

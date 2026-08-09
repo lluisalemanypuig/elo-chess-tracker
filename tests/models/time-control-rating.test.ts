@@ -23,9 +23,9 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { TimeControlRating } from '@app/common/models/time-control-rating';
-import { EloRating } from '@common/models/rating_framework/Elo/rating';
-import { toTimeControlId } from '@app/common/models/time-control';
+import { TimeControlRating } from '@common/models/time-control-rating';
+import { EloRating } from '@common/models/rating-framework/Elo/rating';
+import { toTimeControlId } from '@common/models/time-control';
 
 describe('clone', () => {
 	test('', () => {
@@ -33,7 +33,7 @@ describe('clone', () => {
 		const tcrc = tcr.clone();
 
 		expect(tcr).not.toBe(tcrc);
-		expect(tcr.time_control).toEqual(tcrc.time_control);
+		expect(tcr.timeControl).toEqual(tcrc.timeControl);
 		expect(tcr.rating).not.toBe(tcrc.rating);
 		expect(tcr.rating).toEqual(tcrc.rating);
 	});

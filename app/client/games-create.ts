@@ -21,91 +21,91 @@ Full source code of elo-chess-tracker:
 
 import 'htmx.org';
 
-import { result_from_text_to_value } from '@common/models/game';
-import { isNotDefined } from '@app/common/utils/is-defined';
+import { resultFromTextToValue } from '@common/models/game';
+import { isNotDefined } from '@common/utils/is-defined';
 import { messageFromResponse, serverCall } from '@client/action';
-import { Routes } from '@common/routes';
+import { ROUTES } from '@common/routes';
 import { PlayerPublicId } from '@common/models/player';
-import { TimeControlId, TimeControlName } from '@app/common/models/time-control';
+import { TimeControlId, TimeControlName } from '@common/models/time-control';
 import { toDateMajor, toDateMinor } from '@common/utils/time';
 
-async function initialize_window_client_games_create() {
-	let datalist_white_users = document.getElementById('datalist_white_users') as HTMLDataListElement;
-	let datalist_black_users = document.getElementById('datalist_black_users') as HTMLDataListElement;
+async function initializeWindowClientGamesCreate() {
+	let datalistWhiteUsers = document.getElementById('datalistWhiteUsers') as HTMLDataListElement;
+	let datalistBlackUsers = document.getElementById('datalistBlackUsers') as HTMLDataListElement;
 
 	// query the server for the list of users
-	const response = await serverCall(Routes.QUERY_HTML_USER_LIST, null);
+	const response = await serverCall(ROUTES.QUERY_HTML_USER_LIST, null);
 	if (response.status === 'Error') {
 		alert(messageFromResponse(response));
 		return;
 	}
 
-	datalist_white_users.innerHTML = response.value;
-	datalist_black_users.innerHTML = response.value;
+	datalistWhiteUsers.innerHTML = response.value;
+	datalistBlackUsers.innerHTML = response.value;
 }
 
-async function submit_new_game(_event: any) {
-	let game_title_input = document.getElementById('input_game_title') as HTMLInputElement;
-	let white_input = document.getElementById('list_white_users') as HTMLInputElement;
-	let black_input = document.getElementById('list_black_users') as HTMLInputElement;
-	let select_result_game = document.getElementById('select_result_game') as HTMLSelectElement;
-	const select_time_control = document.getElementById('select_time_control') as HTMLSelectElement;
-	const input_game_date = document.getElementById('input_game_date') as HTMLInputElement;
-	const input_game_time = document.getElementById('input_game_time') as HTMLInputElement;
+async function submitNewGame(_event: any) {
+	let gameTitleInput = document.getElementById('inputGameTitle') as HTMLInputElement;
+	let whiteInput = document.getElementById('listWhiteUsers') as HTMLInputElement;
+	let blackInput = document.getElementById('listBlackUsers') as HTMLInputElement;
+	let selectResultGame = document.getElementById('selectResultGame') as HTMLSelectElement;
+	const selectTimeControl = document.getElementById('selectTimeControl') as HTMLSelectElement;
+	const inputGameDate = document.getElementById('inputGameDate') as HTMLInputElement;
+	const inputGameTime = document.getElementById('inputGameTime') as HTMLInputElement;
 
-	const white_option = document.querySelector('option[value="' + white_input.value + '"]');
-	const black_option = document.querySelector('option[value="' + black_input.value + '"]');
-	const result_str = select_result_game.options[select_result_game.selectedIndex].value;
-	const time_control_id = select_time_control.options[select_time_control.selectedIndex].value as TimeControlId;
-	const time_control_name = select_time_control.options[select_time_control.selectedIndex].text as TimeControlName;
+	const whiteOption = document.querySelector('option[value="' + whiteInput.value + '"]');
+	const blackOption = document.querySelector('option[value="' + blackInput.value + '"]');
+	const resultStr = selectResultGame.options[selectResultGame.selectedIndex].value;
+	const timeControlId = selectTimeControl.options[selectTimeControl.selectedIndex].value as TimeControlId;
+	const timeControlName = selectTimeControl.options[selectTimeControl.selectedIndex].text as TimeControlName;
 
-	const result = result_from_text_to_value(result_str);
+	const result = resultFromTextToValue(resultStr);
 	if (isNotDefined(result)) {
-		console.log(`Wrong result for the game '${result_str}'.`);
+		console.log(`Wrong result for the game '${resultStr}'.`);
 		return;
 	}
 
-	if (input_game_date.value == '') {
+	if (inputGameDate.value == '') {
 		alert('Invalid date');
 		return;
 	}
-	if (input_game_time.value == '') {
+	if (inputGameTime.value == '') {
 		alert('Invalid time');
 		return;
 	}
 
-	const game_title = game_title_input.value;
-	if (isNotDefined(white_option)) {
+	const gameTitle = gameTitleInput.value;
+	if (isNotDefined(whiteOption)) {
 		console.log('Could not find white option');
 		return;
 	}
-	if (isNotDefined(black_option)) {
+	if (isNotDefined(blackOption)) {
 		console.log('Could not find black option');
 		return;
 	}
-	const white = Number(white_option.id) as PlayerPublicId;
-	const black = Number(black_option.id) as PlayerPublicId;
-	const whenCreated = toDateMajor(input_game_date.value);
+	const white = Number(whiteOption.id) as PlayerPublicId;
+	const black = Number(blackOption.id) as PlayerPublicId;
+	const whenCreated = toDateMajor(inputGameDate.value);
 
-	const rand_sec = `${Math.floor(Math.random() * 59)}`;
-	const rand_milli = `${Math.floor(Math.random() * 999)}`;
+	const randSec = `${Math.floor(Math.random() * 59)}`;
+	const randMilli = `${Math.floor(Math.random() * 999)}`;
 	const timeCreated = toDateMinor(
-		input_game_time.value +
+		inputGameTime.value +
 			':' +
-			(rand_sec.length == 1 ? '0' : '') +
-			rand_sec +
+			(randSec.length == 1 ? '0' : '') +
+			randSec +
 			':' +
-			(rand_milli.length == 1 ? '00' : rand_milli.length == 2 ? '0' : '') +
-			rand_milli
+			(randMilli.length == 1 ? '00' : randMilli.length == 2 ? '0' : '') +
+			randMilli
 	);
 
-	const response = await serverCall(Routes.GAME_CREATE, {
-		title: game_title,
+	const response = await serverCall(ROUTES.GAME_CREATE, {
+		title: gameTitle,
 		white: white,
 		black: black,
 		result: result,
-		time_control_id: time_control_id,
-		time_control_name: time_control_name,
+		timeControlId: timeControlId,
+		timeControlName: timeControlName,
 		whenCreated: whenCreated,
 		timeCreated: timeCreated
 	});
@@ -114,14 +114,14 @@ async function submit_new_game(_event: any) {
 		return;
 	}
 
-	white_input.value = '';
-	black_input.value = '';
-	select_result_game.value = '';
+	whiteInput.value = '';
+	blackInput.value = '';
+	selectResultGame.value = '';
 }
 
 window.onload = async function () {
-	initialize_window_client_games_create();
+	initializeWindowClientGamesCreate();
 
-	let submit = document.getElementById('submit_new_game_button') as HTMLButtonElement;
-	submit.onclick = submit_new_game;
+	let submit = document.getElementById('submitNewGameButton') as HTMLButtonElement;
+	submit.onclick = submitNewGame;
 };

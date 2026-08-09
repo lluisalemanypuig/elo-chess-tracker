@@ -23,10 +23,10 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { MethodTypeOf, OutputSchemaOf } from '@common/api/schemas';
+import { methodTypeOf, outputSchemaOf } from '@common/api/schemas';
 import { InputTypeOf, OutputTypeOf } from '@common/api/types';
 import { Route } from '@common/routes';
-import { isNotDefined } from '@app/common/utils/is-defined';
+import { isNotDefined } from '@common/utils/is-defined';
 
 type ResponseResultError = {
 	message: string;
@@ -45,7 +45,7 @@ export async function serverCall<T extends Route>(
 	route: T,
 	body: InputTypeOf<T> | undefined | null
 ): Promise<ResponseResult<OutputTypeOf<T>>> {
-	const method = MethodTypeOf(route);
+	const method = methodTypeOf(route);
 	let response: Response;
 
 	if (isNotDefined(body)) {
@@ -70,7 +70,7 @@ export async function serverCall<T extends Route>(
 		};
 	}
 
-	const schemaObject = OutputSchemaOf(route);
+	const schemaObject = outputSchemaOf(route);
 	const jsonText = await response.json();
 	const parse = schemaObject.safeParse(jsonText);
 	if (!parse.success) {

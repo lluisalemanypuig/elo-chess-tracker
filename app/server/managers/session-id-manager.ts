@@ -24,8 +24,8 @@ Contact:
 */
 
 import { PlayerPrivateId } from '@common/models/player';
-import { SessionID } from '@app/common/models/session-id';
-import { search_linear_by_key } from '@server/utils/searching';
+import { SessionId } from '@common/models/session-id';
+import { searchLinearByKey } from '@server/utils/searching';
 
 /**
  * @brief Session ID Manager singleton class
@@ -44,39 +44,39 @@ export class SessionIDManager {
 		SessionIDManager.instance = this;
 	}
 
-	static get_instance(): SessionIDManager {
+	static getInstance(): SessionIDManager {
 		SessionIDManager.instance = SessionIDManager.instance || new SessionIDManager();
 		return SessionIDManager.instance;
 	}
 
 	/// Session ids of the server.
-	private session_ids: SessionID[] = [];
+	private sessionIds: SessionId[] = [];
 
 	clear(): void {
-		this.session_ids = [];
+		this.sessionIds = [];
 	}
 
-	add_session_id(id: SessionID): void {
-		this.session_ids.push(id);
+	addSessionId(id: SessionId): void {
+		this.sessionIds.push(id);
 	}
-	num_session_ids(): number {
-		return this.session_ids.length;
+	numSessionIds(): number {
+		return this.sessionIds.length;
 	}
-	index_session_id(session: SessionID): number {
-		return search_linear_by_key(this.session_ids, (s: SessionID): boolean => {
+	indexSessionId(session: SessionId): number {
+		return searchLinearByKey(this.sessionIds, (s: SessionId): boolean => {
 			return s.token == session.token && s.username == session.username;
 		});
 	}
-	has_session_id(session: SessionID): boolean {
-		return this.index_session_id(session) != -1;
+	hasSessionId(session: SessionId): boolean {
+		return this.indexSessionId(session) != -1;
 	}
-	remove_session_id(idx: number): void {
-		this.session_ids.splice(idx, 1);
+	removeSessionId(idx: number): void {
+		this.sessionIds.splice(idx, 1);
 	}
-	remove_user_sessions(username: PlayerPrivateId): void {
-		for (let i = this.session_ids.length - 1; i >= 0; --i) {
-			if (this.session_ids[i].username == username) {
-				this.remove_session_id(i);
+	removeUserSessions(username: PlayerPrivateId): void {
+		for (let i = this.sessionIds.length - 1; i >= 0; --i) {
+			if (this.sessionIds[i].username == username) {
+				this.removeSessionId(i);
 			}
 		}
 	}

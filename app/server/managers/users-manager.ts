@@ -23,9 +23,9 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { isDefined } from '@app/common/utils/is-defined';
+import { isDefined } from '@common/utils/is-defined';
 import { User } from '@common/models/user';
-import { search_linear_by_key } from '@server/utils/searching';
+import { searchLinearByKey } from '@server/utils/searching';
 import { PlayerPrivateId, PlayerPublicId, toPlayerPublicId } from '@common/models/player';
 
 /**
@@ -44,7 +44,7 @@ export class UsersManager {
 		UsersManager.instance = this;
 	}
 
-	static get_instance(): UsersManager {
+	static getInstance(): UsersManager {
 		UsersManager.instance = UsersManager.instance || new UsersManager();
 		return UsersManager.instance;
 	}
@@ -64,10 +64,10 @@ export class UsersManager {
 	}
 
 	exists(username: PlayerPrivateId): boolean {
-		return isDefined(this.get_user_by_username(username));
+		return isDefined(this.getUserByUsername(username));
 	}
 
-	add_user(u: User): void {
+	addUser(u: User): void {
 		this.users.push(u);
 
 		// stupid and slow way of generating a unique random id
@@ -85,37 +85,37 @@ export class UsersManager {
 		this.users[idx] = u;
 	}
 
-	get_user_by_username(username: PlayerPrivateId): User | undefined {
-		const idx = search_linear_by_key(this.users, (u: User): boolean => {
+	getUserByUsername(username: PlayerPrivateId): User | undefined {
+		const idx = searchLinearByKey(this.users, (u: User): boolean => {
 			return u.username == username;
 		});
-		return idx != -1 ? this.get_user_at(idx) : undefined;
+		return idx != -1 ? this.getUserAt(idx) : undefined;
 	}
-	get_user_by_public_id(rid: PlayerPublicId): User | undefined {
-		const idx = search_linear_by_key(this.public_ids, (id: PlayerPublicId): boolean => {
+	getUserByPublicId(rid: PlayerPublicId): User | undefined {
+		const idx = searchLinearByKey(this.public_ids, (id: PlayerPublicId): boolean => {
 			return id == rid;
 		});
-		return idx != -1 ? this.get_user_at(idx) : undefined;
+		return idx != -1 ? this.getUserAt(idx) : undefined;
 	}
 
-	get_user_at(idx: number): User | undefined {
+	getUserAt(idx: number): User | undefined {
 		return 0 <= idx && idx < this.users.length ? this.users[idx] : undefined;
 	}
-	get_user_public_id_at(idx: number): PlayerPublicId | undefined {
+	getUserPublicIdAt(idx: number): PlayerPublicId | undefined {
 		return 0 <= idx && idx < this.public_ids.length ? this.public_ids[idx] : undefined;
 	}
 
-	get_user_index(u: User): number | undefined {
-		return this.get_user_index_by_username(u.username);
+	getUserIndex(u: User): number | undefined {
+		return this.getUserIndexByUsername(u.username);
 	}
-	get_user_index_by_username(username: PlayerPrivateId): number | undefined {
-		const idx = search_linear_by_key(this.users, (u: User): boolean => {
+	getUserIndexByUsername(username: PlayerPrivateId): number | undefined {
+		const idx = searchLinearByKey(this.users, (u: User): boolean => {
 			return u.username == username;
 		});
 		return idx != -1 ? idx : undefined;
 	}
 
-	num_users(): number {
+	numUsers(): number {
 		return this.users.length;
 	}
 }

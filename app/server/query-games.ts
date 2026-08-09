@@ -24,41 +24,37 @@ Contact:
 */
 
 import Debug from 'debug';
-const debug = Debug('ELO_CHESS_TRACKER:server_query_games');
+const debug = Debug('ELOCHESSTRACKER:serverQueryGames');
 import { Request, Response } from 'express';
 
 import path from 'path';
 import fs from 'fs';
 
 import { DateMajor, logNow } from '@common/utils/time';
-import { is_user_logged_in } from '@server/managers/session';
+import { isUserLoggedIn } from '@server/managers/session';
 import { GameNumber, User } from '@common/models/user';
 import { Game } from '@common/models/game';
 import { RatingSystemManager } from '@app/server/managers/rating-system-manager';
 import { EnvironmentManager } from '@app/server/managers/environment-manager';
-import { GAMES_SEE } from '@app/common/models/user-action';
-import {
-	can_user_delete_a_game,
-	can_user_edit_a_game,
-	can_user_see_a_game
-} from '@app/server/managers/user-relationships';
-import { TimeControlId } from '@app/common/models/time-control';
-import { game_array_from_string } from '@common/io/game';
+import { GAMES_SEE } from '@common/models/user-action';
+import { canUserDeleteGame, canUserEditGame, canUserSeeGame } from '@app/server/managers/user-relationships';
+import { TimeControlId } from '@common/models/time-control';
+import { gameArrayFromString } from '@common/io/game';
 import { UsersManager } from '@app/server/managers/users-manager';
-import { search_by_key } from '@server/utils/searching';
-import { read_directory } from '@app/server/utils/read-directory';
-import { isNotDefined } from '@app/common/utils/is-defined';
-import { Routes } from '@common/routes';
-import { InputSchemaOf } from '@common/api/schemas';
-import { safe_parse_request_body, safe_parse_request_cookies } from '@server/utils/schemas';
+import { searchByKey } from '@server/utils/searching';
+import { readDirectory } from '@app/server/utils/read-directory';
+import { isNotDefined } from '@common/utils/is-defined';
+import { ROUTES } from '@common/routes';
+import { inputSchemaOf } from '@common/api/schemas';
+import { safeParseRequestBody, safeParseRequestCookies } from '@server/utils/schemas';
 import { AuthenticationInputSchema } from '@common/schemas/authentication';
-import { QueryGamesListOutput, QueryGamesListOutputSingle } from '@app/common/schemas/query-games';
+import { QueryGamesListOutput, QueryGamesListOutputSingle } from '@common/schemas/query-games';
 
 function increment(g: Game): any {
-	const [white_after, black_after] = RatingSystemManager.get_instance().apply_rating_function(g);
+	const [whiteAfter, blackAfter] = RatingSystemManager.getInstance().applyRatingFunction(g);
 	return {
-		white_increment: Math.round(white_after.rating - g.white_rating.rating),
-		black_increment: Math.round(black_after.rating - g.black_rating.rating)
+		whiteIncrement: Math.round(whiteAfter.rating - g.whiteRating.rating),
+		blackIncrement: Math.round(blackAfter.rating - g.blackRating.rating)
 	};
 }
 
@@ -66,48 +62,48 @@ function increment(g: Game): any {
  * @brief Returns a list of games guided by the filter functions
  *
  * The filter functions return true when a game should be accepted.
- * @param filter_game_record Filters game record files
- * @param filter_game Filters games
+ * @param filterGameRecord Filters game record files
+ * @param filterGame Filters games
  */
-function filter_game_list(
+function filterGameList(
 	user: User,
-	time_control_id: TimeControlId,
-	filter_game_record: Function,
-	filter_game: Function
+	timeControlId: TimeControlId,
+	filterGameRecord: Function,
+	filterGame: Function
 ): QueryGamesListOutputSingle[] {
-	let data_to_return: QueryGamesListOutputSingle[] = [];
+	let dataToReturn: QueryGamesListOutputSingle[] = [];
 
-	const games_id_dir = EnvironmentManager.get_instance().get_dir_games_time_control(time_control_id);
+	const gamesIdDir = EnvironmentManager.getInstance().getDirGamesTimeControl(timeControlId);
 
-	// The files currently existing in the 'games_directory'
-	debug(logNow(), `Reading directory '${games_id_dir}'...`);
-	const game_record_file_list = read_directory(games_id_dir);
+	// The files currently existing in the 'gamesDirectory'
+	debug(logNow(), `Reading directory '${gamesIdDir}'...`);
+	const gameRecordFileList = readDirectory(gamesIdDir);
 
-	debug(logNow(), `    Directory contents: '${game_record_file_list}'`);
+	debug(logNow(), `    Directory contents: '${gameRecordFileList}'`);
 
-	let manager = UsersManager.get_instance();
+	let manager = UsersManager.getInstance();
 
-	for (let i = game_record_file_list.length - 1; i >= 0; --i) {
-		const game_record_file = path.join(games_id_dir, game_record_file_list[i]);
+	for (let i = gameRecordFileList.length - 1; i >= 0; --i) {
+		const gameRecordFile = path.join(gamesIdDir, gameRecordFileList[i]);
 
-		if (!filter_game_record(game_record_file_list[i])) {
+		if (!filterGameRecord(gameRecordFileList[i])) {
 			continue;
 		}
 
 		// read the games from the file
-		debug(logNow(), `    Reading game record '${game_record_file}'...`);
-		const data = fs.readFileSync(game_record_file, 'utf8');
-		debug(logNow(), `        Game record '${game_record_file}' read.`);
-		const game_set = game_array_from_string(data);
-		if (isNotDefined(game_set)) {
-			debug(logNow(), `        Game record '${game_record_file}' could not be parsed.`);
+		debug(logNow(), `    Reading game record '${gameRecordFile}'...`);
+		const data = fs.readFileSync(gameRecordFile, 'utf8');
+		debug(logNow(), `        Game record '${gameRecordFile}' read.`);
+		const gameSet = gameArrayFromString(data);
+		if (isNotDefined(gameSet)) {
+			debug(logNow(), `        Game record '${gameRecordFile}' could not be parsed.`);
 			continue;
 		}
 
-		for (let j = game_set.length - 1; j >= 0; --j) {
-			const g = game_set[j];
+		for (let j = gameSet.length - 1; j >= 0; --j) {
+			const g = gameSet[j];
 
-			if (!filter_game(g)) {
+			if (!filterGame(g)) {
 				continue;
 			}
 
@@ -123,50 +119,50 @@ function filter_game_list(
 				return '1/2 - 1/2';
 			})();
 
-			const white = manager.get_user_by_username(g.white);
+			const white = manager.getUserByUsername(g.white);
 			if (isNotDefined(white)) {
 				debug(logNow(), `User with username '${g.white}' could not be found.`);
 				return [];
 			}
-			const black = manager.get_user_by_username(g.black);
+			const black = manager.getUserByUsername(g.black);
 			if (isNotDefined(black)) {
 				debug(logNow(), `User with username '${g.black}' could not be found.`);
 				return [];
 			}
 
-			const is_editable: boolean = can_user_edit_a_game(user, white, black);
-			const is_deleteable: boolean = can_user_delete_a_game(user, white, black);
+			const isEditable: boolean = canUserEditGame(user, white, black);
+			const isDeleteable: boolean = canUserDeleteGame(user, white, black);
 
-			data_to_return.push({
+			dataToReturn.push({
 				id: g.id,
 				title: g.title,
-				white: white.get_full_name(),
-				black: black.get_full_name(),
+				white: white.getFullName(),
+				black: black.getFullName(),
 				result: result,
-				time_control_name: g.time_control_name,
+				timeControlName: g.timeControlName,
 				date: g.when,
-				white_rating: Math.round(g.white_rating.rating),
-				black_rating: Math.round(g.black_rating.rating),
-				white_increment: inc.white_increment,
-				black_increment: inc.black_increment,
-				editable: is_editable,
-				deleteable: is_deleteable
+				whiteRating: Math.round(g.whiteRating.rating),
+				blackRating: Math.round(g.blackRating.rating),
+				whiteIncrement: inc.whiteIncrement,
+				blackIncrement: inc.blackIncrement,
+				editable: isEditable,
+				deleteable: isDeleteable
 			});
 		}
 	}
 
-	return data_to_return;
+	return dataToReturn;
 }
 
-export async function post_query_game_list_own(req: Request, res: Response) {
-	debug(logNow(), `POST ${Routes.QUERY_GAME_LIST_OWN}...`);
+export async function postQueryGameListOwn(req: Request, res: Response) {
+	debug(logNow(), `POST ${ROUTES.QUERY_GAME_LIST_OWN}...`);
 
-	const session_parse = safe_parse_request_cookies(req, AuthenticationInputSchema, res, debug);
-	if (session_parse.result === 'Exit') {
+	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	if (sessionParse.result === 'Exit') {
 		return;
 	}
-	const session = session_parse.data;
-	const r = is_user_logged_in(session);
+	const session = sessionParse.data;
+	const r = isUserLoggedIn(session);
 
 	const user = r[2];
 	if (isNotDefined(user)) {
@@ -174,60 +170,57 @@ export async function post_query_game_list_own(req: Request, res: Response) {
 		return;
 	}
 
-	const game_parse = safe_parse_request_body(req, InputSchemaOf(Routes.QUERY_GAME_LIST_OWN), res, debug);
-	if (game_parse.result === 'Exit') {
+	const gameParse = safeParseRequestBody(req, inputSchemaOf(ROUTES.QUERY_GAME_LIST_OWN), res, debug);
+	if (gameParse.result === 'Exit') {
 		return;
 	}
-	const time_control_id = game_parse.data.time_control_id;
+	const timeControlId = gameParse.data.timeControlId;
 
-	const filter_game_function = (g: Game): boolean => {
-		return g.is_user_involved(session.username);
+	const filterGameFunction = (g: Game): boolean => {
+		return g.isUserInvolved(session.username);
 	};
 
-	let data_to_return: QueryGamesListOutput = [];
-	if (time_control_id != '') {
-		data_to_return = filter_game_list(
+	let dataToReturn: QueryGamesListOutput = [];
+	if (timeControlId != '') {
+		dataToReturn = filterGameList(
 			user,
-			time_control_id,
-			(record_id: DateMajor): boolean => {
-				const game_record_list = user.get_games(time_control_id);
+			timeControlId,
+			(recordId: DateMajor): boolean => {
+				const gameRecordList = user.getGames(timeControlId);
 				return (
-					search_by_key(game_record_list, (r: GameNumber): number => {
-						return record_id.localeCompare(r.record);
+					searchByKey(gameRecordList, (r: GameNumber): number => {
+						return recordId.localeCompare(r.record);
 					}) != -1
 				);
 			},
-			filter_game_function
+			filterGameFunction
 		);
 	} else {
-		const ratings = RatingSystemManager.get_instance();
-		for (const tid of ratings.get_unique_time_controls_ids()) {
-			const data = filter_game_list(
+		const ratings = RatingSystemManager.getInstance();
+		for (const tid of ratings.getUniqueTimeControlsIds()) {
+			const data = filterGameList(
 				user,
 				tid,
-				(record_id: DateMajor): boolean => {
-					const game_record_list = user.get_games(tid);
+				(recordId: DateMajor): boolean => {
+					const gameRecordList = user.getGames(tid);
 					return (
-						search_by_key(game_record_list, (r: GameNumber): number => {
-							return record_id.localeCompare(r.record);
+						searchByKey(gameRecordList, (r: GameNumber): number => {
+							return recordId.localeCompare(r.record);
 						}) != -1
 					);
 				},
-				filter_game_function
+				filterGameFunction
 			);
-			data_to_return = data_to_return.concat(data);
+			dataToReturn = dataToReturn.concat(data);
 		}
 	}
 
-	debug(logNow(), `Found '${data_to_return.length}' games involving '${session.username}'`);
+	debug(logNow(), `Found '${dataToReturn.length}' games involving '${session.username}'`);
 
-	res.status(200).send(data_to_return);
+	res.status(200).send(dataToReturn);
 }
 
-function merge_by_date(
-	v1: QueryGamesListOutputSingle[],
-	v2: QueryGamesListOutputSingle[]
-): QueryGamesListOutputSingle[] {
+function mergeByDate(v1: QueryGamesListOutputSingle[], v2: QueryGamesListOutputSingle[]): QueryGamesListOutputSingle[] {
 	let v3: QueryGamesListOutputSingle[] = [];
 	let i: number = 0;
 	let j: number = 0;
@@ -257,15 +250,15 @@ function merge_by_date(
 	return v3;
 }
 
-export async function post_query_game_list_all(req: Request, res: Response) {
-	debug(logNow(), `POST ${Routes.QUERY_GAME_LIST_ALL}...`);
+export async function postQueryGameListAll(req: Request, res: Response) {
+	debug(logNow(), `POST ${ROUTES.QUERY_GAME_LIST_ALL}...`);
 
-	const session_parse = safe_parse_request_cookies(req, AuthenticationInputSchema, res, debug);
-	if (session_parse.result === 'Exit') {
+	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	if (sessionParse.result === 'Exit') {
 		return;
 	}
-	const session = session_parse.data;
-	const r = is_user_logged_in(session);
+	const session = sessionParse.data;
+	const r = isUserLoggedIn(session);
 
 	const user = r[2];
 	if (isNotDefined(user)) {
@@ -273,68 +266,68 @@ export async function post_query_game_list_all(req: Request, res: Response) {
 		return;
 	}
 
-	if (!user.can_do(GAMES_SEE)) {
+	if (!user.canDo(GAMES_SEE)) {
 		res.status(403).send('You cannot see the entire list of games in the web.');
 		return;
 	}
 
-	const game_parse = safe_parse_request_body(req, InputSchemaOf(Routes.QUERY_GAME_LIST_ALL), res, debug);
-	if (game_parse.result === 'Exit') {
+	const gameParse = safeParseRequestBody(req, inputSchemaOf(ROUTES.QUERY_GAME_LIST_ALL), res, debug);
+	if (gameParse.result === 'Exit') {
 		return;
 	}
-	const time_control_id = game_parse.data.time_control_id;
+	const timeControlId = gameParse.data.timeControlId;
 
-	let manager = UsersManager.get_instance();
-	let data_to_return: QueryGamesListOutput = [];
-	if (time_control_id != '') {
-		data_to_return = filter_game_list(
+	let manager = UsersManager.getInstance();
+	let dataToReturn: QueryGamesListOutput = [];
+	if (timeControlId != '') {
+		dataToReturn = filterGameList(
 			user,
-			time_control_id,
+			timeControlId,
 			(_: DateMajor): boolean => {
 				return true;
 			},
 			(g: Game): boolean => {
-				const white = manager.get_user_by_username(g.white);
+				const white = manager.getUserByUsername(g.white);
 				if (isNotDefined(white)) {
 					debug(logNow(), `User with username '${g.white}' could not be found.`);
 					res.status(500).send('Invalid white user sent to the server.');
 					return false;
 				}
-				const black = manager.get_user_by_username(g.black);
+				const black = manager.getUserByUsername(g.black);
 				if (isNotDefined(black)) {
 					debug(logNow(), `User with username '${g.black}' could not be found.`);
 					res.status(500).send('Invalid black user sent to the server.');
 					return false;
 				}
-				return can_user_see_a_game(user, white, black);
+				return canUserSeeGame(user, white, black);
 			}
 		);
 	} else {
-		const ratings = RatingSystemManager.get_instance();
-		for (const tid of ratings.get_unique_time_controls_ids()) {
-			const data = filter_game_list(
+		const ratings = RatingSystemManager.getInstance();
+		for (const tid of ratings.getUniqueTimeControlsIds()) {
+			const data = filterGameList(
 				user,
 				tid,
 				(_: DateMajor): boolean => {
 					return true;
 				},
 				(g: Game): boolean => {
-					const white = manager.get_user_by_username(g.white);
+					const white = manager.getUserByUsername(g.white);
 					if (isNotDefined(white)) {
 						debug(logNow(), `User with username '${g.white}' could not be found.`);
 						return false;
 					}
-					const black = manager.get_user_by_username(g.black);
+					const black = manager.getUserByUsername(g.black);
 					if (isNotDefined(black)) {
 						debug(logNow(), `User with username '${g.black}' could not be found.`);
 						return false;
 					}
-					return can_user_see_a_game(user, white, black);
+					return canUserSeeGame(user, white, black);
 				}
 			);
-			data_to_return = merge_by_date(data_to_return, data);
+			dataToReturn = mergeByDate(dataToReturn, data);
 		}
 	}
 
-	res.status(200).send(data_to_return);
+	res.status(200).send(dataToReturn);
 }

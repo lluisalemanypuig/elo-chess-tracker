@@ -23,37 +23,37 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { EdgeMetadata } from '@app/common/models/graph/edge-metadata';
-import { edge_metadata_from_string } from '@app/common/io/graph/edge-metadata';
+import { EdgeMetadata } from '@common/models/graph/edge-metadata';
+import { edgeMetadataFromString } from '@common/io/graph/edge-metadata';
 
 describe('IO conversion', () => {
 	test('string', () => {
 		expect(
-			edge_metadata_from_string(
+			edgeMetadataFromString(
 				'{\
-					"num_games_won": 1,\
-					"num_games_drawn": 0,\
-					"num_games_lost": 5\
+					"numGamesWon": 1,\
+					"numGamesDrawn": 0,\
+					"numGamesLost": 5\
 				}'
 			)
 		).toEqual(new EdgeMetadata(1, 0, 5));
 
 		expect(
-			edge_metadata_from_string(
+			edgeMetadataFromString(
 				'{\
-					"num_games_won": 1,\
-					"num_games_drawn": 0,\
-					"num_games_lost": 66,\
+					"numGamesWon": 1,\
+					"numGamesDrawn": 0,\
+					"numGamesLost": 66,\
 					"other": 1234\
 				}'
 			)
 		).toBeNull();
 
 		expect(
-			edge_metadata_from_string(
+			edgeMetadataFromString(
 				'{\
-					"num_games_won": 1,\
-					"num_games_drawn": 0\
+					"numGamesWon": 1,\
+					"numGamesDrawn": 0\
 				}'
 			)
 		).toBeNull();

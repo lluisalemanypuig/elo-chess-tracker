@@ -24,11 +24,11 @@ Contact:
 */
 
 import { RatingSystemManager } from '@app/server/managers/rating-system-manager';
-import { initialize_rating_functions, initialize_rating_time_controls } from '@app/server/managers/rating-system';
-import { Elo_player_vs_player } from '@app/server/rating-framework/Elo/formula';
-import { new_rating_Elo } from '@common/models/rating_framework/Elo/rating';
-import { rating_from_string_Elo } from '@common/io/ratings/Elo/rating';
-import { toTimeControlId, toTimeControlName } from '@app/common/models/time-control';
+import { initializeRatingFunctions, initializeRatingTimeControls } from '@app/server/managers/rating-system';
+import { EloPlayerVsPlayer } from '@app/server/rating-framework/Elo/formula';
+import { newRatingElo } from '@common/models/rating-framework/Elo/rating';
+import { ratingFromStringElo } from '@common/io/ratings/Elo/rating';
+import { toTimeControlId, toTimeControlName } from '@common/models/time-control';
 
 const Classical = toTimeControlId('Classical');
 const Classical90p30 = toTimeControlName('Classical (90 + 30)');
@@ -45,21 +45,21 @@ const Blitz3p2 = toTimeControlName('Blitz (3 + 2)');
 
 describe('Rating System Manager', () => {
 	test('Initialization of functions (Elo)', () => {
-		let rating = RatingSystemManager.get_instance();
+		let rating = RatingSystemManager.getInstance();
 		rating.clear();
 
-		initialize_rating_functions('Elo');
+		initializeRatingFunctions('Elo');
 
-		expect(rating.get_rating_function()).toBe(Elo_player_vs_player);
-		expect(rating.get_rating_from_string_function()).toBe(rating_from_string_Elo);
-		expect(rating.get_new_rating_function()).toBe(new_rating_Elo);
+		expect(rating.getRatingFunction()).toBe(EloPlayerVsPlayer);
+		expect(rating.getRatingFromStringFunction()).toBe(ratingFromStringElo);
+		expect(rating.getNewRatingFunction()).toBe(newRatingElo);
 	});
 
 	test('Initialization of time controls', () => {
-		let rating = RatingSystemManager.get_instance();
+		let rating = RatingSystemManager.getInstance();
 		rating.clear();
 
-		initialize_rating_time_controls([
+		initializeRatingTimeControls([
 			{ id: Classical, name: Classical90p30 },
 			{ id: Rapid, name: Rapid15p10 },
 			{ id: Rapid, name: Rapid12p5 },
@@ -69,13 +69,13 @@ describe('Rating System Manager', () => {
 			{ id: Blitz, name: Blitz3p2 }
 		]);
 
-		expect(rating.get_time_controls().length).toBe(7);
-		expect(rating.get_unique_time_controls_ids().length).toBe(3);
-		expect(rating.is_time_control_id_valid(Classical)).toBe(true);
-		expect(rating.is_time_control_id_valid(Rapid)).toBe(true);
-		expect(rating.is_time_control_id_valid(Blitz)).toBe(true);
+		expect(rating.getTimeControls().length).toBe(7);
+		expect(rating.getUniqueTimeControlsIds().length).toBe(3);
+		expect(rating.isTimeControlIdValid(Classical)).toBe(true);
+		expect(rating.isTimeControlIdValid(Rapid)).toBe(true);
+		expect(rating.isTimeControlIdValid(Blitz)).toBe(true);
 
-		const unique_ids = rating.get_unique_time_controls_ids();
+		const unique_ids = rating.getUniqueTimeControlsIds();
 		expect(
 			unique_ids.findIndex((val: string): boolean => {
 				return val == Classical;

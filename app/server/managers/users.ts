@@ -32,34 +32,34 @@ import { Player, PlayerPrivateId } from '@common/models/player';
 import { UserGivenName, TimeControlGame, User } from '@common/models/user';
 import { EnvironmentManager } from '@app/server/managers/environment-manager';
 import { UsersManager } from '@app/server/managers/users-manager';
-import { UserRole } from '@app/common/models/user-role';
-import { encrypt_password_for_user } from '@server/utils/encrypt';
+import { UserRole } from '@common/models/user-role';
+import { encryptPasswordForUser } from '@server/utils/encrypt';
 import { RatingSystemManager } from '@app/server/managers/rating-system-manager';
-import { TimeControlRating } from '@app/common/models/time-control-rating';
+import { TimeControlRating } from '@common/models/time-control-rating';
 import { logNow } from '@common/utils/time';
-import { UserThin } from '@app/common/models/user-thin';
-import { isNotDefined } from '@app/common/utils/is-defined';
-import { TimeControlId } from '@app/common/models/time-control';
+import { UserThin } from '@common/models/user-thin';
+import { isNotDefined } from '@common/utils/is-defined';
+import { TimeControlId } from '@common/models/time-control';
 
 /// Dump the data in user @e u into its corresponding file.
-export function user_overwrite(user: User): void {
-	const user_dir = EnvironmentManager.get_instance().get_dir_users();
+export function userOverwrite(user: User): void {
+	const user_dir = EnvironmentManager.getInstance().getDirUsers();
 	const user_file = path.join(user_dir, user.username);
 	fs.writeFileSync(user_file, JSON.stringify(user, null, 4));
 }
 
 /// Overwrites user data
-export function user_rename_and_reassign_roles(
+export function userRenameAndReassignRoles(
 	username: PlayerPrivateId,
-	first_name: UserGivenName,
-	last_name: UserGivenName,
+	firstName: UserGivenName,
+	lastName: UserGivenName,
 	roles: UserRole[]
 ): User {
-	let user = UsersManager.get_instance().get_user_by_username(username) as User;
-	user.first_name = first_name;
-	user.last_name = last_name;
+	let user = UsersManager.getInstance().getUserByUsername(username) as User;
+	user.firstName = firstName;
+	user.lastName = lastName;
 	user.roles = roles;
-	user_overwrite(user);
+	userOverwrite(user);
 	return user;
 }
 
@@ -75,23 +75,23 @@ export function user_rename_and_reassign_roles(
  * - Server is updated to contain the new user.
  * @returns The new user created.
  */
-export function user_add_new(
+export function userAddNew(
 	username: PlayerPrivateId,
 	firstname: UserGivenName,
 	lastname: UserGivenName,
 	pass: string,
 	roles: UserRole[]
 ): User {
-	const rating_system = RatingSystemManager.get_instance();
+	const ratingSystem = RatingSystemManager.getInstance();
 
 	let games: TimeControlGame[] = [];
 	let ratings: TimeControlRating[] = [];
-	rating_system.get_unique_time_controls_ids().forEach((id: TimeControlId) => {
-		ratings.push(new TimeControlRating(id, rating_system.get_new_rating()));
-		games.push({ time_control: id, records: [] });
+	ratingSystem.getUniqueTimeControlsIds().forEach((id: TimeControlId) => {
+		ratings.push(new TimeControlRating(id, ratingSystem.getNewRating()));
+		games.push({ timeControl: id, records: [] });
 	});
 
-	const password = encrypt_password_for_user(username, pass);
+	const password = encryptPasswordForUser(username, pass);
 
 	const user = new User(
 		username,
@@ -103,28 +103,28 @@ export function user_add_new(
 		ratings
 	);
 
-	const user_dir = EnvironmentManager.get_instance().get_dir_users();
+	const user_dir = EnvironmentManager.getInstance().getDirUsers();
 	const user_file = path.join(user_dir, user.username);
 
 	fs.writeFileSync(user_file, JSON.stringify(user, null, 4));
 
-	UsersManager.get_instance().add_user(user);
+	UsersManager.getInstance().addUser(user);
 
 	return user;
 }
 
 /// Returns the list of all (full) names and usernames
-export function user_get_all_name_public_id(): UserThin[] {
+export function userGetAllNamePublicId(): UserThin[] {
 	let res: UserThin[] = [];
 
-	const mem = UsersManager.get_instance();
-	for (let i = 0; i < mem.num_users(); ++i) {
-		const user = mem.get_user_at(i) as User;
-		const random_id = mem.get_user_public_id_at(i);
+	const mem = UsersManager.getInstance();
+	for (let i = 0; i < mem.numUsers(); ++i) {
+		const user = mem.getUserAt(i) as User;
+		const random_id = mem.getUserPublicIdAt(i);
 		if (isNotDefined(random_id)) {
 			throw new Error(`Public id for user is not defined.`);
 		}
-		res.push({ name: user.get_full_name(), id: random_id });
+		res.push({ name: user.getFullName(), id: random_id });
 	}
 	return res;
 }
@@ -134,20 +134,20 @@ export function user_get_all_name_public_id(): UserThin[] {
  * @param players Set of players to be updated.
  * @post Users in the server (memory and database) are updated.
  */
-export function user_update_from_player_data(players: Player[]): void {
-	const users_directory = EnvironmentManager.get_instance().get_dir_users();
-	let manager = UsersManager.get_instance();
-	let mem = UsersManager.get_instance();
+export function userUpdateFromPlayerData(players: Player[]): void {
+	const users_directory = EnvironmentManager.getInstance().getDirUsers();
+	let manager = UsersManager.getInstance();
+	let mem = UsersManager.getInstance();
 
 	debug(logNow(), 'Updating users...');
 	for (const player of players) {
 		const username = player.username;
 
-		let u: User = manager.get_user_by_username(username) as User;
+		let u: User = manager.getUserByUsername(username) as User;
 
 		const ratings_player = player.ratings;
 		for (const rating of ratings_player) {
-			u.set_rating(rating.time_control, rating.rating);
+			u.setRating(rating.timeControl, rating.rating);
 		}
 
 		const user_filename = path.join(users_directory, username);
@@ -158,7 +158,7 @@ export function user_update_from_player_data(players: Player[]): void {
 		debug(logNow(), `        User file '${user_filename}' written.`);
 
 		debug(logNow(), '    Server memory...');
-		const u_idx = mem.get_user_index(u) as number;
+		const u_idx = mem.getUserIndex(u) as number;
 		debug(logNow(), `        User '${u.username}' is at index '${u_idx}'`);
 		mem.replace_user(u, u_idx);
 	}

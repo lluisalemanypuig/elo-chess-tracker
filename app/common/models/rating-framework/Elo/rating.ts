@@ -23,9 +23,9 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { Rating } from '@common/models/rating_framework/rating';
+import { Rating } from '@common/models/rating-framework/rating';
 
-export const EloRatingKeys = ['rating', 'num_games', 'won', 'drawn', 'lost', 'K', 'surpassed_2400'];
+export const EloRatingKeys = ['rating', 'numGames', 'won', 'drawn', 'lost', 'K', 'surpassed_2400'];
 
 /**
  * @brief Simple class to encode a rating.
@@ -39,7 +39,7 @@ export class EloRating extends Rating {
 	/**
 	 * @brief Constructor
 	 * @param rating Actual rating points
-	 * @param num_games Number of games
+	 * @param numGames Number of games
 	 * @param won Number of won games
 	 * @param drawn Number of drawn games
 	 * @param lost Number of lost games
@@ -48,24 +48,24 @@ export class EloRating extends Rating {
 	 */
 	constructor(
 		rating: number,
-		num_games: number,
+		numGames: number,
 		won: number,
 		drawn: number,
 		lost: number,
 		K: number,
 		surpassed_2400: boolean
 	) {
-		super(rating, num_games, won, drawn, lost);
+		super(rating, numGames, won, drawn, lost);
 		this.K = K;
 		this.surpassed_2400 = surpassed_2400;
 	}
 
 	/// Clones the object.
 	override clone(): EloRating {
-		return new EloRating(this.rating, this.num_games, this.won, this.drawn, this.lost, this.K, this.surpassed_2400);
+		return new EloRating(this.rating, this.numGames, this.won, this.drawn, this.lost, this.K, this.surpassed_2400);
 	}
 }
 
-export function new_rating_Elo(): EloRating {
+export function newRatingElo(): EloRating {
 	return new EloRating(1500, 0, 0, 0, 0, 40, false);
 }

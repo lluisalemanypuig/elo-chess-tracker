@@ -23,23 +23,18 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { clear_server } from '@server/managers/memory/clear';
-import { server_init_from_data } from '@server/managers/memory/initialization';
-import {
-	is_user_logged_in,
-	session_id_add,
-	session_id_delete,
-	session_user_delete_all
-} from '@server/managers/session';
+import { clearServer } from '@server/managers/memory/clear';
+import { serverInitFromData } from '@server/managers/memory/initialization';
+import { isUserLoggedIn, sessionIdAdd, sessionIdDelete, sessionUserDeleteAll } from '@server/managers/session';
 import { SessionIDManager } from '@app/server/managers/session-id-manager';
-import { user_add_new } from '@server/managers/users';
-import { SessionID } from '@app/common/models/session-id';
-import { ADMIN, MEMBER, STUDENT } from '@app/common/models/user-role';
-import { run_command } from '@tests/exec_utils';
+import { userAddNew } from '@server/managers/users';
+import { SessionId } from '@common/models/session-id';
+import { ADMIN, MEMBER, STUDENT } from '@common/models/user-role';
+import { run_command } from '@tests/exec-utils';
 import { Configuration } from '@common/models/configuration/configuration';
 import { toPlayerPrivateId } from '@common/models/player';
 import { toUserGivenName } from '@common/models/user';
-import { toTimeControlId, toTimeControlName } from '@app/common/models/time-control';
+import { toTimeControlId, toTimeControlName } from '@common/models/time-control';
 
 const Classical = toTimeControlId('Classical');
 const Classical90p30 = toTimeControlName('Classical (90 + 30)');
@@ -57,30 +52,30 @@ function makeSession(token: string, username: string) {
 
 const configuration: Configuration = {
 	environment: {
-		ssl_certificate: {
-			public_key_file: 'sadf',
-			private_key_file: 'qwer',
-			passphrase_file: 'kgj68'
+		sslCertificate: {
+			publicKeyFile: 'sadf',
+			privateKeyFile: 'qwer',
+			passphraseFile: 'kgj68'
 		},
 		favicon: 'favicon.png',
-		login_page: {
+		loginPage: {
 			title: 'Login title',
 			icon: 'login.png'
 		},
-		home_page: {
+		homePage: {
 			title: 'Home title',
 			icon: 'home.png'
 		}
 	},
 	server: {
-		domain_name: '',
+		domainName: '',
 		ports: {
 			http: '8080',
 			https: '8443'
 		}
 	},
-	rating_system: 'Elo',
-	time_controls: [
+	ratingSystem: 'Elo',
+	timeControls: [
 		{
 			id: Classical,
 			name: Classical90p30
@@ -100,7 +95,7 @@ const configuration: Configuration = {
 	],
 	behavior: {
 		challenges: {
-			higher_rated_player_can_decline_challenge_from_lower_rated_player: false
+			higherRatedPlayerCanDeclineChallengeFromLowerRatedPlayer: false
 		}
 	},
 	permissions: {
@@ -135,1104 +130,1104 @@ const f = toUserGivenName('f');
 describe('Session management via functions', () => {
 	test('Load an empty server', async () => {
 		await run_command('./tests/initialize_empty.sh');
-		clear_server();
-		expect(() => server_init_from_data('tests/webpage', configuration)).not.toThrow();
+		clearServer();
+		expect(() => serverInitFromData('tests/webpage', configuration)).not.toThrow();
 
-		user_add_new(aa, A, a, 'pass_a', [ADMIN]);
-		user_add_new(bb, B, b, 'pass_b', [MEMBER]);
-		user_add_new(cc, C, c, 'pass_c', [MEMBER]);
-		user_add_new(dd, D, d, 'pass_d', [STUDENT]);
-		user_add_new(ee, E, e, 'pass_e', [STUDENT]);
-		user_add_new(ff, F, f, 'pass_f', [STUDENT]);
+		userAddNew(aa, A, a, 'pass_a', [ADMIN]);
+		userAddNew(bb, B, b, 'pass_b', [MEMBER]);
+		userAddNew(cc, C, c, 'pass_c', [MEMBER]);
+		userAddNew(dd, D, d, 'pass_d', [STUDENT]);
+		userAddNew(ee, E, e, 'pass_e', [STUDENT]);
+		userAddNew(ff, F, f, 'pass_f', [STUDENT]);
 	});
 
-	let session_aa_1: SessionID;
-	let session_aa_2: SessionID;
-	let session_bb_1: SessionID;
-	let session_bb_2: SessionID;
-	let session_cc_1: SessionID;
-	let session_cc_2: SessionID;
-	let session_dd_1: SessionID;
-	let session_dd_2: SessionID;
-	let session_ee_1: SessionID;
-	let session_ee_2: SessionID;
-	let session_ff_1: SessionID;
-	let session_ff_2: SessionID;
+	let session_aa_1: SessionId;
+	let session_aa_2: SessionId;
+	let session_bb_1: SessionId;
+	let session_bb_2: SessionId;
+	let session_cc_1: SessionId;
+	let session_cc_2: SessionId;
+	let session_dd_1: SessionId;
+	let session_dd_2: SessionId;
+	let session_ee_1: SessionId;
+	let session_ee_2: SessionId;
+	let session_ff_1: SessionId;
+	let session_ff_2: SessionId;
 
 	test('Add a few sessions', () => {
-		const manager = SessionIDManager.get_instance();
+		const manager = SessionIDManager.getInstance();
 
-		const token_aa = session_id_add(aa);
+		const token_aa = sessionIdAdd(aa);
 		session_aa_1 = makeSession(token_aa, 'aa');
 		{
-			const log = is_user_logged_in(session_aa_1);
+			const log = isUserLoggedIn(session_aa_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('aa');
 		}
-		expect(manager.num_session_ids()).toBe(1);
+		expect(manager.numSessionIds()).toBe(1);
 
-		const token_bb = session_id_add(bb);
+		const token_bb = sessionIdAdd(bb);
 		session_bb_1 = makeSession(token_bb, 'bb');
 		{
-			const log = is_user_logged_in(session_aa_1);
+			const log = isUserLoggedIn(session_aa_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('aa');
 		}
 		{
-			const log = is_user_logged_in(session_bb_1);
+			const log = isUserLoggedIn(session_bb_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('bb');
 		}
-		expect(manager.num_session_ids()).toBe(2);
+		expect(manager.numSessionIds()).toBe(2);
 
-		const token_cc = session_id_add(cc);
+		const token_cc = sessionIdAdd(cc);
 		session_cc_1 = makeSession(token_cc, 'cc');
 		{
-			const log = is_user_logged_in(session_aa_1);
+			const log = isUserLoggedIn(session_aa_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('aa');
 		}
 		{
-			const log = is_user_logged_in(session_bb_1);
+			const log = isUserLoggedIn(session_bb_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('bb');
 		}
 		{
-			const log = is_user_logged_in(session_cc_1);
+			const log = isUserLoggedIn(session_cc_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('cc');
 		}
-		expect(manager.num_session_ids()).toBe(3);
+		expect(manager.numSessionIds()).toBe(3);
 
-		const token_dd = session_id_add(dd);
+		const token_dd = sessionIdAdd(dd);
 		session_dd_1 = makeSession(token_dd, 'dd');
 		{
-			const log = is_user_logged_in(session_aa_1);
+			const log = isUserLoggedIn(session_aa_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('aa');
 		}
 		{
-			const log = is_user_logged_in(session_bb_1);
+			const log = isUserLoggedIn(session_bb_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('bb');
 		}
 		{
-			const log = is_user_logged_in(session_cc_1);
+			const log = isUserLoggedIn(session_cc_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('cc');
 		}
 		{
-			const log = is_user_logged_in(session_dd_1);
+			const log = isUserLoggedIn(session_dd_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('dd');
 		}
-		expect(manager.num_session_ids()).toBe(4);
+		expect(manager.numSessionIds()).toBe(4);
 
-		const token_ee = session_id_add(ee);
+		const token_ee = sessionIdAdd(ee);
 		session_ee_1 = makeSession(token_ee, 'ee');
 		{
-			const log = is_user_logged_in(session_aa_1);
+			const log = isUserLoggedIn(session_aa_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('aa');
 		}
 		{
-			const log = is_user_logged_in(session_bb_1);
+			const log = isUserLoggedIn(session_bb_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('bb');
 		}
 		{
-			const log = is_user_logged_in(session_cc_1);
+			const log = isUserLoggedIn(session_cc_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('cc');
 		}
 		{
-			const log = is_user_logged_in(session_dd_1);
+			const log = isUserLoggedIn(session_dd_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('dd');
 		}
 		{
-			const log = is_user_logged_in(session_ee_1);
+			const log = isUserLoggedIn(session_ee_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('ee');
 		}
-		expect(manager.num_session_ids()).toBe(5);
+		expect(manager.numSessionIds()).toBe(5);
 
-		const token_ff = session_id_add(ff);
+		const token_ff = sessionIdAdd(ff);
 		session_ff_1 = makeSession(token_ff, 'ff');
 		{
-			const log = is_user_logged_in(session_aa_1);
+			const log = isUserLoggedIn(session_aa_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('aa');
 		}
 		{
-			const log = is_user_logged_in(session_bb_1);
+			const log = isUserLoggedIn(session_bb_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('bb');
 		}
 		{
-			const log = is_user_logged_in(session_cc_1);
+			const log = isUserLoggedIn(session_cc_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('cc');
 		}
 		{
-			const log = is_user_logged_in(session_dd_1);
+			const log = isUserLoggedIn(session_dd_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('dd');
 		}
 		{
-			const log = is_user_logged_in(session_ee_1);
+			const log = isUserLoggedIn(session_ee_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('ee');
 		}
 		{
-			const log = is_user_logged_in(session_ff_1);
+			const log = isUserLoggedIn(session_ff_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('ff');
 		}
-		expect(manager.num_session_ids()).toBe(6);
+		expect(manager.numSessionIds()).toBe(6);
 	});
 
 	test('Add repeated sessions', () => {
-		const manager = SessionIDManager.get_instance();
+		const manager = SessionIDManager.getInstance();
 
-		const token_aa = session_id_add(aa);
+		const token_aa = sessionIdAdd(aa);
 		session_aa_2 = makeSession(token_aa, 'aa');
 		{
-			const log = is_user_logged_in(session_aa_1);
+			const log = isUserLoggedIn(session_aa_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('aa');
 		}
 		{
-			const log = is_user_logged_in(session_bb_1);
+			const log = isUserLoggedIn(session_bb_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('bb');
 		}
 		{
-			const log = is_user_logged_in(session_cc_1);
+			const log = isUserLoggedIn(session_cc_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('cc');
 		}
 		{
-			const log = is_user_logged_in(session_dd_1);
+			const log = isUserLoggedIn(session_dd_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('dd');
 		}
 		{
-			const log = is_user_logged_in(session_ee_1);
+			const log = isUserLoggedIn(session_ee_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('ee');
 		}
 		{
-			const log = is_user_logged_in(session_ff_1);
+			const log = isUserLoggedIn(session_ff_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('ff');
 		}
 		{
-			const log = is_user_logged_in(session_aa_2);
+			const log = isUserLoggedIn(session_aa_2);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('aa');
 		}
-		expect(manager.num_session_ids()).toBe(7);
+		expect(manager.numSessionIds()).toBe(7);
 
-		const token_bb = session_id_add(bb);
+		const token_bb = sessionIdAdd(bb);
 		session_bb_2 = makeSession(token_bb, 'bb');
 		{
-			const log = is_user_logged_in(session_aa_1);
+			const log = isUserLoggedIn(session_aa_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('aa');
 		}
 		{
-			const log = is_user_logged_in(session_bb_1);
+			const log = isUserLoggedIn(session_bb_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('bb');
 		}
 		{
-			const log = is_user_logged_in(session_cc_1);
+			const log = isUserLoggedIn(session_cc_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('cc');
 		}
 		{
-			const log = is_user_logged_in(session_dd_1);
+			const log = isUserLoggedIn(session_dd_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('dd');
 		}
 		{
-			const log = is_user_logged_in(session_ee_1);
+			const log = isUserLoggedIn(session_ee_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('ee');
 		}
 		{
-			const log = is_user_logged_in(session_ff_1);
+			const log = isUserLoggedIn(session_ff_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('ff');
 		}
 		{
-			const log = is_user_logged_in(session_aa_2);
+			const log = isUserLoggedIn(session_aa_2);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('aa');
 		}
 		{
-			const log = is_user_logged_in(session_bb_2);
+			const log = isUserLoggedIn(session_bb_2);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('bb');
 		}
-		expect(manager.num_session_ids()).toBe(8);
+		expect(manager.numSessionIds()).toBe(8);
 
-		const token_cc = session_id_add(cc);
+		const token_cc = sessionIdAdd(cc);
 		session_cc_2 = makeSession(token_cc, 'cc');
 		{
-			const log = is_user_logged_in(session_aa_1);
+			const log = isUserLoggedIn(session_aa_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('aa');
 		}
 		{
-			const log = is_user_logged_in(session_bb_1);
+			const log = isUserLoggedIn(session_bb_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('bb');
 		}
 		{
-			const log = is_user_logged_in(session_cc_1);
+			const log = isUserLoggedIn(session_cc_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('cc');
 		}
 		{
-			const log = is_user_logged_in(session_dd_1);
+			const log = isUserLoggedIn(session_dd_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('dd');
 		}
 		{
-			const log = is_user_logged_in(session_ee_1);
+			const log = isUserLoggedIn(session_ee_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('ee');
 		}
 		{
-			const log = is_user_logged_in(session_ff_1);
+			const log = isUserLoggedIn(session_ff_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('ff');
 		}
 		{
-			const log = is_user_logged_in(session_aa_2);
+			const log = isUserLoggedIn(session_aa_2);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('aa');
 		}
 		{
-			const log = is_user_logged_in(session_bb_2);
+			const log = isUserLoggedIn(session_bb_2);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('bb');
 		}
 		{
-			const log = is_user_logged_in(session_cc_2);
+			const log = isUserLoggedIn(session_cc_2);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('cc');
 		}
-		expect(manager.num_session_ids()).toBe(9);
+		expect(manager.numSessionIds()).toBe(9);
 
-		const token_dd = session_id_add(dd);
+		const token_dd = sessionIdAdd(dd);
 		session_dd_2 = makeSession(token_dd, 'dd');
 		{
-			const log = is_user_logged_in(session_aa_1);
+			const log = isUserLoggedIn(session_aa_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('aa');
 		}
 		{
-			const log = is_user_logged_in(session_bb_1);
+			const log = isUserLoggedIn(session_bb_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('bb');
 		}
 		{
-			const log = is_user_logged_in(session_cc_1);
+			const log = isUserLoggedIn(session_cc_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('cc');
 		}
 		{
-			const log = is_user_logged_in(session_dd_1);
+			const log = isUserLoggedIn(session_dd_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('dd');
 		}
 		{
-			const log = is_user_logged_in(session_ee_1);
+			const log = isUserLoggedIn(session_ee_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('ee');
 		}
 		{
-			const log = is_user_logged_in(session_ff_1);
+			const log = isUserLoggedIn(session_ff_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('ff');
 		}
 		{
-			const log = is_user_logged_in(session_aa_2);
+			const log = isUserLoggedIn(session_aa_2);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('aa');
 		}
 		{
-			const log = is_user_logged_in(session_bb_2);
+			const log = isUserLoggedIn(session_bb_2);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('bb');
 		}
 		{
-			const log = is_user_logged_in(session_cc_2);
+			const log = isUserLoggedIn(session_cc_2);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('cc');
 		}
 		{
-			const log = is_user_logged_in(session_dd_2);
+			const log = isUserLoggedIn(session_dd_2);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('dd');
 		}
-		expect(manager.num_session_ids()).toBe(10);
+		expect(manager.numSessionIds()).toBe(10);
 
-		const token_ee = session_id_add(ee);
+		const token_ee = sessionIdAdd(ee);
 		session_ee_2 = makeSession(token_ee, 'ee');
 		{
-			const log = is_user_logged_in(session_aa_1);
+			const log = isUserLoggedIn(session_aa_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('aa');
 		}
 		{
-			const log = is_user_logged_in(session_bb_1);
+			const log = isUserLoggedIn(session_bb_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('bb');
 		}
 		{
-			const log = is_user_logged_in(session_cc_1);
+			const log = isUserLoggedIn(session_cc_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('cc');
 		}
 		{
-			const log = is_user_logged_in(session_dd_1);
+			const log = isUserLoggedIn(session_dd_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('dd');
 		}
 		{
-			const log = is_user_logged_in(session_ee_1);
+			const log = isUserLoggedIn(session_ee_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('ee');
 		}
 		{
-			const log = is_user_logged_in(session_ff_1);
+			const log = isUserLoggedIn(session_ff_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('ff');
 		}
 		{
-			const log = is_user_logged_in(session_aa_2);
+			const log = isUserLoggedIn(session_aa_2);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('aa');
 		}
 		{
-			const log = is_user_logged_in(session_bb_2);
+			const log = isUserLoggedIn(session_bb_2);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('bb');
 		}
 		{
-			const log = is_user_logged_in(session_cc_2);
+			const log = isUserLoggedIn(session_cc_2);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('cc');
 		}
 		{
-			const log = is_user_logged_in(session_dd_2);
+			const log = isUserLoggedIn(session_dd_2);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('dd');
 		}
 		{
-			const log = is_user_logged_in(session_ee_2);
+			const log = isUserLoggedIn(session_ee_2);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('ee');
 		}
-		expect(manager.num_session_ids()).toBe(11);
+		expect(manager.numSessionIds()).toBe(11);
 
-		const token_ff = session_id_add(ff);
+		const token_ff = sessionIdAdd(ff);
 		session_ff_2 = makeSession(token_ff, 'ff');
 		{
-			const log = is_user_logged_in(session_aa_1);
+			const log = isUserLoggedIn(session_aa_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('aa');
 		}
 		{
-			const log = is_user_logged_in(session_bb_1);
+			const log = isUserLoggedIn(session_bb_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('bb');
 		}
 		{
-			const log = is_user_logged_in(session_cc_1);
+			const log = isUserLoggedIn(session_cc_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('cc');
 		}
 		{
-			const log = is_user_logged_in(session_dd_1);
+			const log = isUserLoggedIn(session_dd_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('dd');
 		}
 		{
-			const log = is_user_logged_in(session_ee_1);
+			const log = isUserLoggedIn(session_ee_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('ee');
 		}
 		{
-			const log = is_user_logged_in(session_ff_1);
+			const log = isUserLoggedIn(session_ff_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('ff');
 		}
 		{
-			const log = is_user_logged_in(session_aa_2);
+			const log = isUserLoggedIn(session_aa_2);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('aa');
 		}
 		{
-			const log = is_user_logged_in(session_bb_2);
+			const log = isUserLoggedIn(session_bb_2);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('bb');
 		}
 		{
-			const log = is_user_logged_in(session_cc_2);
+			const log = isUserLoggedIn(session_cc_2);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('cc');
 		}
 		{
-			const log = is_user_logged_in(session_dd_2);
+			const log = isUserLoggedIn(session_dd_2);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('dd');
 		}
 		{
-			const log = is_user_logged_in(session_ee_2);
+			const log = isUserLoggedIn(session_ee_2);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('ee');
 		}
 		{
-			const log = is_user_logged_in(session_ff_2);
+			const log = isUserLoggedIn(session_ff_2);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('ff');
 		}
-		expect(manager.num_session_ids()).toBe(12);
+		expect(manager.numSessionIds()).toBe(12);
 	});
 
 	test('A user logs out of a device', () => {
-		const manager = SessionIDManager.get_instance();
+		const manager = SessionIDManager.getInstance();
 
-		session_id_delete(session_aa_1);
+		sessionIdDelete(session_aa_1);
 		{
-			const log = is_user_logged_in(session_aa_1);
+			const log = isUserLoggedIn(session_aa_1);
 			expect(log[0]).toBe(false);
 			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
-			const log = is_user_logged_in(session_bb_1);
+			const log = isUserLoggedIn(session_bb_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('bb');
 		}
 		{
-			const log = is_user_logged_in(session_cc_1);
+			const log = isUserLoggedIn(session_cc_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('cc');
 		}
 		{
-			const log = is_user_logged_in(session_dd_1);
+			const log = isUserLoggedIn(session_dd_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('dd');
 		}
 		{
-			const log = is_user_logged_in(session_ee_1);
+			const log = isUserLoggedIn(session_ee_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('ee');
 		}
 		{
-			const log = is_user_logged_in(session_ff_1);
+			const log = isUserLoggedIn(session_ff_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('ff');
 		}
 		{
-			const log = is_user_logged_in(session_aa_2);
+			const log = isUserLoggedIn(session_aa_2);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('aa');
 		}
 		{
-			const log = is_user_logged_in(session_bb_2);
+			const log = isUserLoggedIn(session_bb_2);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('bb');
 		}
 		{
-			const log = is_user_logged_in(session_cc_2);
+			const log = isUserLoggedIn(session_cc_2);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('cc');
 		}
 		{
-			const log = is_user_logged_in(session_dd_2);
+			const log = isUserLoggedIn(session_dd_2);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('dd');
 		}
 		{
-			const log = is_user_logged_in(session_ee_2);
+			const log = isUserLoggedIn(session_ee_2);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('ee');
 		}
 		{
-			const log = is_user_logged_in(session_ff_2);
+			const log = isUserLoggedIn(session_ff_2);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('ff');
 		}
-		expect(manager.num_session_ids()).toBe(11);
+		expect(manager.numSessionIds()).toBe(11);
 
-		session_id_delete(session_ff_1);
+		sessionIdDelete(session_ff_1);
 		{
-			const log = is_user_logged_in(session_aa_1);
+			const log = isUserLoggedIn(session_aa_1);
 			expect(log[0]).toBe(false);
 			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
-			const log = is_user_logged_in(session_bb_1);
+			const log = isUserLoggedIn(session_bb_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('bb');
 		}
 		{
-			const log = is_user_logged_in(session_cc_1);
+			const log = isUserLoggedIn(session_cc_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('cc');
 		}
 		{
-			const log = is_user_logged_in(session_dd_1);
+			const log = isUserLoggedIn(session_dd_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('dd');
 		}
 		{
-			const log = is_user_logged_in(session_ee_1);
+			const log = isUserLoggedIn(session_ee_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('ee');
 		}
 		{
-			const log = is_user_logged_in(session_ff_1);
+			const log = isUserLoggedIn(session_ff_1);
 			expect(log[0]).toBe(false);
 			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
-			const log = is_user_logged_in(session_aa_2);
+			const log = isUserLoggedIn(session_aa_2);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('aa');
 		}
 		{
-			const log = is_user_logged_in(session_bb_2);
+			const log = isUserLoggedIn(session_bb_2);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('bb');
 		}
 		{
-			const log = is_user_logged_in(session_cc_2);
+			const log = isUserLoggedIn(session_cc_2);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('cc');
 		}
 		{
-			const log = is_user_logged_in(session_dd_2);
+			const log = isUserLoggedIn(session_dd_2);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('dd');
 		}
 		{
-			const log = is_user_logged_in(session_ee_2);
+			const log = isUserLoggedIn(session_ee_2);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('ee');
 		}
 		{
-			const log = is_user_logged_in(session_ff_2);
+			const log = isUserLoggedIn(session_ff_2);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('ff');
 		}
-		expect(manager.num_session_ids()).toBe(10);
+		expect(manager.numSessionIds()).toBe(10);
 
-		session_id_delete(session_ee_1);
+		sessionIdDelete(session_ee_1);
 		{
-			const log = is_user_logged_in(session_aa_1);
+			const log = isUserLoggedIn(session_aa_1);
 			expect(log[0]).toBe(false);
 			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
-			const log = is_user_logged_in(session_bb_1);
+			const log = isUserLoggedIn(session_bb_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('bb');
 		}
 		{
-			const log = is_user_logged_in(session_cc_1);
+			const log = isUserLoggedIn(session_cc_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('cc');
 		}
 		{
-			const log = is_user_logged_in(session_dd_1);
+			const log = isUserLoggedIn(session_dd_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('dd');
 		}
 		{
-			const log = is_user_logged_in(session_ee_1);
+			const log = isUserLoggedIn(session_ee_1);
 			expect(log[0]).toBe(false);
 			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
-			const log = is_user_logged_in(session_ff_1);
+			const log = isUserLoggedIn(session_ff_1);
 			expect(log[0]).toBe(false);
 			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
-			const log = is_user_logged_in(session_aa_2);
+			const log = isUserLoggedIn(session_aa_2);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('aa');
 		}
 		{
-			const log = is_user_logged_in(session_bb_2);
+			const log = isUserLoggedIn(session_bb_2);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('bb');
 		}
 		{
-			const log = is_user_logged_in(session_cc_2);
+			const log = isUserLoggedIn(session_cc_2);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('cc');
 		}
 		{
-			const log = is_user_logged_in(session_dd_2);
+			const log = isUserLoggedIn(session_dd_2);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('dd');
 		}
 		{
-			const log = is_user_logged_in(session_ee_2);
+			const log = isUserLoggedIn(session_ee_2);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('ee');
 		}
 		{
-			const log = is_user_logged_in(session_ff_2);
+			const log = isUserLoggedIn(session_ff_2);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('ff');
 		}
-		expect(manager.num_session_ids()).toBe(9);
+		expect(manager.numSessionIds()).toBe(9);
 	});
 
 	test('A user has all its sessions deleted', () => {
-		const manager = SessionIDManager.get_instance();
+		const manager = SessionIDManager.getInstance();
 
-		session_user_delete_all(aa);
+		sessionUserDeleteAll(aa);
 		{
-			const log = is_user_logged_in(session_aa_1);
+			const log = isUserLoggedIn(session_aa_1);
 			expect(log[0]).toBe(false);
 			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
-			const log = is_user_logged_in(session_bb_1);
+			const log = isUserLoggedIn(session_bb_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('bb');
 		}
 		{
-			const log = is_user_logged_in(session_cc_1);
+			const log = isUserLoggedIn(session_cc_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('cc');
 		}
 		{
-			const log = is_user_logged_in(session_dd_1);
+			const log = isUserLoggedIn(session_dd_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('dd');
 		}
 		{
-			const log = is_user_logged_in(session_ee_1);
+			const log = isUserLoggedIn(session_ee_1);
 			expect(log[0]).toBe(false);
 			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
-			const log = is_user_logged_in(session_ff_1);
+			const log = isUserLoggedIn(session_ff_1);
 			expect(log[0]).toBe(false);
 			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
-			const log = is_user_logged_in(session_aa_2);
+			const log = isUserLoggedIn(session_aa_2);
 			expect(log[0]).toBe(false);
 			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
-			const log = is_user_logged_in(session_bb_2);
+			const log = isUserLoggedIn(session_bb_2);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('bb');
 		}
 		{
-			const log = is_user_logged_in(session_cc_2);
+			const log = isUserLoggedIn(session_cc_2);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('cc');
 		}
 		{
-			const log = is_user_logged_in(session_dd_2);
+			const log = isUserLoggedIn(session_dd_2);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('dd');
 		}
 		{
-			const log = is_user_logged_in(session_ee_2);
+			const log = isUserLoggedIn(session_ee_2);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('ee');
 		}
 		{
-			const log = is_user_logged_in(session_ff_2);
+			const log = isUserLoggedIn(session_ff_2);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('ff');
 		}
-		expect(manager.num_session_ids()).toBe(8);
+		expect(manager.numSessionIds()).toBe(8);
 
-		session_user_delete_all(bb);
+		sessionUserDeleteAll(bb);
 		{
-			const log = is_user_logged_in(session_aa_1);
+			const log = isUserLoggedIn(session_aa_1);
 			expect(log[0]).toBe(false);
 			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
-			const log = is_user_logged_in(session_bb_1);
+			const log = isUserLoggedIn(session_bb_1);
 			expect(log[0]).toBe(false);
 			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
-			const log = is_user_logged_in(session_cc_1);
+			const log = isUserLoggedIn(session_cc_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('cc');
 		}
 		{
-			const log = is_user_logged_in(session_dd_1);
+			const log = isUserLoggedIn(session_dd_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('dd');
 		}
 		{
-			const log = is_user_logged_in(session_ee_1);
+			const log = isUserLoggedIn(session_ee_1);
 			expect(log[0]).toBe(false);
 			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
-			const log = is_user_logged_in(session_ff_1);
+			const log = isUserLoggedIn(session_ff_1);
 			expect(log[0]).toBe(false);
 			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
-			const log = is_user_logged_in(session_aa_2);
+			const log = isUserLoggedIn(session_aa_2);
 			expect(log[0]).toBe(false);
 			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
-			const log = is_user_logged_in(session_bb_2);
+			const log = isUserLoggedIn(session_bb_2);
 			expect(log[0]).toBe(false);
 			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
-			const log = is_user_logged_in(session_cc_2);
+			const log = isUserLoggedIn(session_cc_2);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('cc');
 		}
 		{
-			const log = is_user_logged_in(session_dd_2);
+			const log = isUserLoggedIn(session_dd_2);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('dd');
 		}
 		{
-			const log = is_user_logged_in(session_ee_2);
+			const log = isUserLoggedIn(session_ee_2);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('ee');
 		}
 		{
-			const log = is_user_logged_in(session_ff_2);
+			const log = isUserLoggedIn(session_ff_2);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('ff');
 		}
-		expect(manager.num_session_ids()).toBe(6);
+		expect(manager.numSessionIds()).toBe(6);
 
-		session_user_delete_all(cc);
+		sessionUserDeleteAll(cc);
 		{
-			const log = is_user_logged_in(session_aa_1);
+			const log = isUserLoggedIn(session_aa_1);
 			expect(log[0]).toBe(false);
 			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
-			const log = is_user_logged_in(session_bb_1);
+			const log = isUserLoggedIn(session_bb_1);
 			expect(log[0]).toBe(false);
 			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
-			const log = is_user_logged_in(session_cc_1);
+			const log = isUserLoggedIn(session_cc_1);
 			expect(log[0]).toBe(false);
 			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
-			const log = is_user_logged_in(session_dd_1);
+			const log = isUserLoggedIn(session_dd_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('dd');
 		}
 		{
-			const log = is_user_logged_in(session_ee_1);
+			const log = isUserLoggedIn(session_ee_1);
 			expect(log[0]).toBe(false);
 			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
-			const log = is_user_logged_in(session_ff_1);
+			const log = isUserLoggedIn(session_ff_1);
 			expect(log[0]).toBe(false);
 			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
-			const log = is_user_logged_in(session_aa_2);
+			const log = isUserLoggedIn(session_aa_2);
 			expect(log[0]).toBe(false);
 			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
-			const log = is_user_logged_in(session_bb_2);
+			const log = isUserLoggedIn(session_bb_2);
 			expect(log[0]).toBe(false);
 			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
-			const log = is_user_logged_in(session_cc_2);
+			const log = isUserLoggedIn(session_cc_2);
 			expect(log[0]).toBe(false);
 			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
-			const log = is_user_logged_in(session_dd_2);
+			const log = isUserLoggedIn(session_dd_2);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('dd');
 		}
 		{
-			const log = is_user_logged_in(session_ee_2);
+			const log = isUserLoggedIn(session_ee_2);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('ee');
 		}
 		{
-			const log = is_user_logged_in(session_ff_2);
+			const log = isUserLoggedIn(session_ff_2);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('ff');
 		}
-		expect(manager.num_session_ids()).toBe(4);
+		expect(manager.numSessionIds()).toBe(4);
 
-		session_user_delete_all(ff);
+		sessionUserDeleteAll(ff);
 		{
-			const log = is_user_logged_in(session_aa_1);
+			const log = isUserLoggedIn(session_aa_1);
 			expect(log[0]).toBe(false);
 			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
-			const log = is_user_logged_in(session_bb_1);
+			const log = isUserLoggedIn(session_bb_1);
 			expect(log[0]).toBe(false);
 			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
-			const log = is_user_logged_in(session_cc_1);
+			const log = isUserLoggedIn(session_cc_1);
 			expect(log[0]).toBe(false);
 			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
-			const log = is_user_logged_in(session_dd_1);
+			const log = isUserLoggedIn(session_dd_1);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('dd');
 		}
 		{
-			const log = is_user_logged_in(session_ee_1);
+			const log = isUserLoggedIn(session_ee_1);
 			expect(log[0]).toBe(false);
 			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
-			const log = is_user_logged_in(session_ff_1);
+			const log = isUserLoggedIn(session_ff_1);
 			expect(log[0]).toBe(false);
 			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
-			const log = is_user_logged_in(session_aa_2);
+			const log = isUserLoggedIn(session_aa_2);
 			expect(log[0]).toBe(false);
 			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
-			const log = is_user_logged_in(session_bb_2);
+			const log = isUserLoggedIn(session_bb_2);
 			expect(log[0]).toBe(false);
 			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
-			const log = is_user_logged_in(session_cc_2);
+			const log = isUserLoggedIn(session_cc_2);
 			expect(log[0]).toBe(false);
 			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
-			const log = is_user_logged_in(session_dd_2);
+			const log = isUserLoggedIn(session_dd_2);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('dd');
 		}
 		{
-			const log = is_user_logged_in(session_ee_2);
+			const log = isUserLoggedIn(session_ee_2);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('ee');
 		}
 		{
-			const log = is_user_logged_in(session_ff_2);
+			const log = isUserLoggedIn(session_ff_2);
 			expect(log[0]).toBe(false);
 			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
-		expect(manager.num_session_ids()).toBe(3);
+		expect(manager.numSessionIds()).toBe(3);
 
-		session_user_delete_all(dd);
+		sessionUserDeleteAll(dd);
 		{
-			const log = is_user_logged_in(session_aa_1);
+			const log = isUserLoggedIn(session_aa_1);
 			expect(log[0]).toBe(false);
 			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
-			const log = is_user_logged_in(session_bb_1);
+			const log = isUserLoggedIn(session_bb_1);
 			expect(log[0]).toBe(false);
 			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
-			const log = is_user_logged_in(session_cc_1);
+			const log = isUserLoggedIn(session_cc_1);
 			expect(log[0]).toBe(false);
 			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
-			const log = is_user_logged_in(session_dd_1);
+			const log = isUserLoggedIn(session_dd_1);
 			expect(log[0]).toBe(false);
 			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
-			const log = is_user_logged_in(session_ee_1);
+			const log = isUserLoggedIn(session_ee_1);
 			expect(log[0]).toBe(false);
 			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
-			const log = is_user_logged_in(session_ff_1);
+			const log = isUserLoggedIn(session_ff_1);
 			expect(log[0]).toBe(false);
 			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
-			const log = is_user_logged_in(session_aa_2);
+			const log = isUserLoggedIn(session_aa_2);
 			expect(log[0]).toBe(false);
 			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
-			const log = is_user_logged_in(session_bb_2);
+			const log = isUserLoggedIn(session_bb_2);
 			expect(log[0]).toBe(false);
 			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
-			const log = is_user_logged_in(session_cc_2);
+			const log = isUserLoggedIn(session_cc_2);
 			expect(log[0]).toBe(false);
 			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
-			const log = is_user_logged_in(session_dd_2);
+			const log = isUserLoggedIn(session_dd_2);
 			expect(log[0]).toBe(false);
 			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
-			const log = is_user_logged_in(session_ee_2);
+			const log = isUserLoggedIn(session_ee_2);
 			expect(log[0]).toBe(true);
 			expect(log[2]?.username).toBe('ee');
 		}
 		{
-			const log = is_user_logged_in(session_ff_2);
+			const log = isUserLoggedIn(session_ff_2);
 			expect(log[0]).toBe(false);
 			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
-		expect(manager.num_session_ids()).toBe(1);
+		expect(manager.numSessionIds()).toBe(1);
 
-		session_user_delete_all(ee);
+		sessionUserDeleteAll(ee);
 		{
-			const log = is_user_logged_in(session_aa_1);
+			const log = isUserLoggedIn(session_aa_1);
 			expect(log[0]).toBe(false);
 			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
-			const log = is_user_logged_in(session_bb_1);
+			const log = isUserLoggedIn(session_bb_1);
 			expect(log[0]).toBe(false);
 			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
-			const log = is_user_logged_in(session_cc_1);
+			const log = isUserLoggedIn(session_cc_1);
 			expect(log[0]).toBe(false);
 			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
-			const log = is_user_logged_in(session_dd_1);
+			const log = isUserLoggedIn(session_dd_1);
 			expect(log[0]).toBe(false);
 			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
-			const log = is_user_logged_in(session_ee_1);
+			const log = isUserLoggedIn(session_ee_1);
 			expect(log[0]).toBe(false);
 			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
-			const log = is_user_logged_in(session_ff_1);
+			const log = isUserLoggedIn(session_ff_1);
 			expect(log[0]).toBe(false);
 			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
-			const log = is_user_logged_in(session_aa_2);
+			const log = isUserLoggedIn(session_aa_2);
 			expect(log[0]).toBe(false);
 			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
-			const log = is_user_logged_in(session_bb_2);
+			const log = isUserLoggedIn(session_bb_2);
 			expect(log[0]).toBe(false);
 			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
-			const log = is_user_logged_in(session_cc_2);
+			const log = isUserLoggedIn(session_cc_2);
 			expect(log[0]).toBe(false);
 			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
-			const log = is_user_logged_in(session_dd_2);
+			const log = isUserLoggedIn(session_dd_2);
 			expect(log[0]).toBe(false);
 			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
-			const log = is_user_logged_in(session_ee_2);
+			const log = isUserLoggedIn(session_ee_2);
 			expect(log[0]).toBe(false);
 			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
 		{
-			const log = is_user_logged_in(session_ff_2);
+			const log = isUserLoggedIn(session_ff_2);
 			expect(log[0]).toBe(false);
 			expect(log[1]).toBe('Forbidden access. <a href="/">Go home</a>.');
 			expect(log[2]).toBe(undefined);
 		}
-		expect(manager.num_session_ids()).toBe(0);
+		expect(manager.numSessionIds()).toBe(0);
 	});
 });

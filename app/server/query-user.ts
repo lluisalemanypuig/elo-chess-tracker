@@ -24,21 +24,21 @@ Contact:
 */
 
 import Debug from 'debug';
-const debug = Debug('ELO_CHESS_TRACKER:server_query_users');
+const debug = Debug('ELOCHESSTRACKER:serverQueryUsers');
 import { Request, Response } from 'express';
 
 import { logNow } from '@common/utils/time';
-import { user_get_all_name_public_id } from '@server/managers/users';
-import { is_user_logged_in } from '@server/managers/session';
+import { userGetAllNamePublicId } from '@server/managers/users';
+import { isUserLoggedIn } from '@server/managers/session';
 import { User } from '@common/models/user';
 import { UsersManager } from '@app/server/managers/users-manager';
-import { TimeControlRating } from '@app/common/models/time-control-rating';
-import { isNotDefined } from '@app/common/utils/is-defined';
-import { Routes } from '@common/routes';
-import { InputSchemaOf } from '@common/api/schemas';
-import { safe_parse_request_body, safe_parse_request_cookies } from '@server/utils/schemas';
+import { TimeControlRating } from '@common/models/time-control-rating';
+import { isNotDefined } from '@common/utils/is-defined';
+import { ROUTES } from '@common/routes';
+import { inputSchemaOf } from '@common/api/schemas';
+import { safeParseRequestBody, safeParseRequestCookies } from '@server/utils/schemas';
 import { AuthenticationInputSchema } from '@common/schemas/authentication';
-import { UserThin } from '@app/common/models/user-thin';
+import { UserThin } from '@common/models/user-thin';
 import {
 	QueryUserEditOutput,
 	QueryUserHomeOutput,
@@ -46,25 +46,25 @@ import {
 	TimeControlAndRating,
 	UserWithGames,
 	UserWithoutGames
-} from '@app/common/schemas/query-user';
+} from '@common/schemas/query-user';
 
 /// Returns the list of user full names and usernames sorted by name
-export async function get_query_user_list(req: Request, res: Response) {
-	debug(logNow(), `GET ${Routes.QUERY_USER_LIST}...`);
+export async function getQueryUserList(req: Request, res: Response) {
+	debug(logNow(), `GET ${ROUTES.QUERY_USER_LIST}...`);
 
-	const session_parse = safe_parse_request_cookies(req, AuthenticationInputSchema, res, debug);
-	if (session_parse.result === 'Exit') {
+	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	if (sessionParse.result === 'Exit') {
 		return;
 	}
-	const session = session_parse.data;
-	const r = is_user_logged_in(session);
+	const session = sessionParse.data;
+	const r = isUserLoggedIn(session);
 
 	if (isNotDefined(r[2])) {
 		res.status(401).send(r[1]);
 		return;
 	}
 
-	let list = user_get_all_name_public_id();
+	let list = userGetAllNamePublicId();
 	list.sort(function (a: UserThin, b: UserThin): number {
 		return a.name.localeCompare(b.name);
 	});
@@ -72,22 +72,22 @@ export async function get_query_user_list(req: Request, res: Response) {
 	res.status(200).send(list);
 }
 
-export async function get_query_html_user_list(req: Request, res: Response) {
-	debug(logNow(), `GET ${Routes.QUERY_HTML_USER_LIST}...`);
+export async function getQueryHtmlUserList(req: Request, res: Response) {
+	debug(logNow(), `GET ${ROUTES.QUERY_HTML_USER_LIST}...`);
 
-	const session_parse = safe_parse_request_cookies(req, AuthenticationInputSchema, res, debug);
-	if (session_parse.result === 'Exit') {
+	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	if (sessionParse.result === 'Exit') {
 		return;
 	}
-	const session = session_parse.data;
-	const r = is_user_logged_in(session);
+	const session = sessionParse.data;
+	const r = isUserLoggedIn(session);
 
 	if (isNotDefined(r[2])) {
 		res.status(401).send(r[1]);
 		return;
 	}
 
-	let list = user_get_all_name_public_id();
+	let list = userGetAllNamePublicId();
 	list.sort(function (a: UserThin, b: UserThin): number {
 		return a.name.localeCompare(b.name);
 	});
@@ -99,15 +99,15 @@ export async function get_query_html_user_list(req: Request, res: Response) {
 	res.status(200).send(data);
 }
 
-export async function get_query_user_home(req: Request, res: Response) {
-	debug(logNow(), `GET ${Routes.QUERY_USER_HOME}...`);
+export async function getQueryUserHome(req: Request, res: Response) {
+	debug(logNow(), `GET ${ROUTES.QUERY_USER_HOME}...`);
 
-	const session_parse = safe_parse_request_cookies(req, AuthenticationInputSchema, res, debug);
-	if (session_parse.result === 'Exit') {
+	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	if (sessionParse.result === 'Exit') {
 		return;
 	}
-	const session = session_parse.data;
-	const r = is_user_logged_in(session);
+	const session = sessionParse.data;
+	const r = isUserLoggedIn(session);
 
 	const user = r[2];
 	if (isNotDefined(user)) {
@@ -115,107 +115,107 @@ export async function get_query_user_home(req: Request, res: Response) {
 		return;
 	}
 
-	const ratings_user = user.ratings.map((value: TimeControlRating): TimeControlAndRating => {
+	const ratingsUser = user.ratings.map((value: TimeControlRating): TimeControlAndRating => {
 		let R = value.rating.clone();
 		R.rating = Math.round(R.rating);
-		return { time_control_id: value.time_control, rating: R };
+		return { timeControlId: value.timeControl, rating: R };
 	});
 
 	const output: QueryUserHomeOutput = {
-		fullname: user.get_full_name(),
+		fullname: user.getFullName(),
 		roles: user.roles,
-		actions: user.get_actions(),
-		ratings: ratings_user
+		actions: user.getActions(),
+		ratings: ratingsUser
 	};
 	res.status(200).send(output);
 }
 
-export async function post_query_user_edit(req: Request, res: Response) {
-	debug(logNow(), `POST ${Routes.QUERY_USER_EDIT}...`);
+export async function postQueryUserEdit(req: Request, res: Response) {
+	debug(logNow(), `POST ${ROUTES.QUERY_USER_EDIT}...`);
 
-	const session_parse = safe_parse_request_cookies(req, AuthenticationInputSchema, res, debug);
-	if (session_parse.result === 'Exit') {
+	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	if (sessionParse.result === 'Exit') {
 		return;
 	}
-	const session = session_parse.data;
-	const r = is_user_logged_in(session);
+	const session = sessionParse.data;
+	const r = isUserLoggedIn(session);
 
 	if (isNotDefined(r[2])) {
 		res.status(401).send(r[1]);
 		return;
 	}
 
-	const user_query = safe_parse_request_body(req, InputSchemaOf(Routes.QUERY_USER_EDIT), res, debug);
-	if (user_query.result === 'Exit') {
+	const userQuery = safeParseRequestBody(req, inputSchemaOf(ROUTES.QUERY_USER_EDIT), res, debug);
+	if (userQuery.result === 'Exit') {
 		return;
 	}
 
-	const to_edit_rid = user_query.data.u;
+	const toEditRid = userQuery.data.u;
 
-	const mem = UsersManager.get_instance();
+	const mem = UsersManager.getInstance();
 
-	const to_edit = mem.get_user_by_public_id(to_edit_rid);
-	if (isNotDefined(to_edit)) {
-		debug(logNow(), `Random id '${to_edit_rid}' for edited user is not valid.`);
+	const toEdit = mem.getUserByPublicId(toEditRid);
+	if (isNotDefined(toEdit)) {
+		debug(logNow(), `Random id '${toEditRid}' for edited user is not valid.`);
 		res.status(404).send('Invalid user');
 		return;
 	}
 
 	const output: QueryUserEditOutput = {
-		first_name: to_edit.first_name,
-		last_name: to_edit.last_name,
-		roles: to_edit.roles
+		firstName: toEdit.firstName,
+		lastName: toEdit.lastName,
+		roles: toEdit.roles
 	};
 	res.status(200).send(output);
 }
 
-export async function post_query_user_ranking(req: Request, res: Response) {
-	debug(logNow(), `POST ${Routes.QUERY_USER_RANKING}...`);
+export async function postQueryUserRanking(req: Request, res: Response) {
+	debug(logNow(), `POST ${ROUTES.QUERY_USER_RANKING}...`);
 
-	const session_parse = safe_parse_request_cookies(req, AuthenticationInputSchema, res, debug);
-	if (session_parse.result === 'Exit') {
+	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	if (sessionParse.result === 'Exit') {
 		return;
 	}
-	const session = session_parse.data;
-	const r = is_user_logged_in(session);
+	const session = sessionParse.data;
+	const r = isUserLoggedIn(session);
 
 	if (isNotDefined(r[2])) {
 		res.status(401).send(r[1]);
 		return;
 	}
 
-	const user_query = safe_parse_request_body(req, InputSchemaOf(Routes.QUERY_USER_RANKING), res, debug);
-	if (user_query.result === 'Exit') {
+	const userQuery = safeParseRequestBody(req, inputSchemaOf(ROUTES.QUERY_USER_RANKING), res, debug);
+	if (userQuery.result === 'Exit') {
 		return;
 	}
 
-	const time_control_id = user_query.data.time_control_id;
+	const timeControlId = userQuery.data.timeControlId;
 
-	let users_without_games: UserWithoutGames[] = [];
-	let users_with_games: UserWithGames[] = [];
+	let usersWithoutGames: UserWithoutGames[] = [];
+	let usersWithGames: UserWithGames[] = [];
 	{
-		const mem = UsersManager.get_instance();
-		for (let i = 0; i < mem.num_users(); ++i) {
-			const user = mem.get_user_at(i) as User;
-			if (user.get_rating(time_control_id).num_games > 0) {
-				users_with_games.push({
-					name: user.get_full_name(),
-					rating: Math.round(user.get_rating(time_control_id).rating),
-					total_games: user.get_rating(time_control_id).num_games,
-					won: user.get_rating(time_control_id).won,
-					drawn: user.get_rating(time_control_id).drawn,
-					lost: user.get_rating(time_control_id).lost
+		const mem = UsersManager.getInstance();
+		for (let i = 0; i < mem.numUsers(); ++i) {
+			const user = mem.getUserAt(i) as User;
+			if (user.getRating(timeControlId).numGames > 0) {
+				usersWithGames.push({
+					name: user.getFullName(),
+					rating: Math.round(user.getRating(timeControlId).rating),
+					totalGames: user.getRating(timeControlId).numGames,
+					won: user.getRating(timeControlId).won,
+					drawn: user.getRating(timeControlId).drawn,
+					lost: user.getRating(timeControlId).lost
 				});
 			} else {
-				users_without_games.push({
-					name: user.get_full_name(),
-					rating: Math.round(user.get_rating(time_control_id).rating)
+				usersWithoutGames.push({
+					name: user.getFullName(),
+					rating: Math.round(user.getRating(timeControlId).rating)
 				});
 			}
 		}
 	}
 
-	users_with_games.sort((u1: UserWithGames, u2: UserWithGames): number => {
+	usersWithGames.sort((u1: UserWithGames, u2: UserWithGames): number => {
 		if (u1.rating < u2.rating) {
 			return 1;
 		}
@@ -225,9 +225,9 @@ export async function post_query_user_ranking(req: Request, res: Response) {
 		return -1;
 	});
 
-	debug(logNow(), `    Found ${users_with_games.length} users with games.`);
-	debug(logNow(), `    Found ${users_without_games.length} users without games.`);
+	debug(logNow(), `    Found ${usersWithGames.length} users with games.`);
+	debug(logNow(), `    Found ${usersWithoutGames.length} users without games.`);
 
-	const output: QueryUserRankingOutput = { with_games: users_with_games, without_games: users_without_games };
+	const output: QueryUserRankingOutput = { withGames: usersWithGames, withoutGames: usersWithoutGames };
 	res.status(200).send(output);
 }

@@ -24,14 +24,14 @@ Contact:
 */
 
 import { Graph } from '@common/models/graph/graph';
-import { TimeControlId } from '@app/common/models/time-control';
-import { search_linear_by_key } from '@server/utils/searching';
+import { TimeControlId } from '@common/models/time-control';
+import { searchLinearByKey } from '@server/utils/searching';
 
 /**
  * @brief Graphs Manager singleton class
  *
  * This class stores in memory a graph for every time control id in the server
- * (@ref graph_list).
+ * (@ref graphList).
  */
 export class GraphsManager {
 	private static instance: GraphsManager;
@@ -43,30 +43,30 @@ export class GraphsManager {
 		GraphsManager.instance = this;
 	}
 
-	static get_instance(): GraphsManager {
+	static getInstance(): GraphsManager {
 		GraphsManager.instance = GraphsManager.instance || new GraphsManager();
 		return GraphsManager.instance;
 	}
 
-	private graph_list: [TimeControlId, Graph][] = [];
+	private graphList: [TimeControlId, Graph][] = [];
 
 	clear(): void {
-		this.graph_list = [];
+		this.graphList = [];
 	}
 
-	add_graph(id: TimeControlId, g: Graph): void {
-		const idx = search_linear_by_key(this.graph_list, (pair: [TimeControlId, Graph]): boolean => {
+	addGraph(id: TimeControlId, g: Graph): void {
+		const idx = searchLinearByKey(this.graphList, (pair: [TimeControlId, Graph]): boolean => {
 			return pair[0] == id;
 		});
 		if (idx == -1) {
-			this.graph_list.push([id, g]);
+			this.graphList.push([id, g]);
 		}
 	}
 
-	get_graph(id: TimeControlId): Graph | undefined {
-		const idx = search_linear_by_key(this.graph_list, (pair: [TimeControlId, Graph]): boolean => {
+	getGraph(id: TimeControlId): Graph | undefined {
+		const idx = searchLinearByKey(this.graphList, (pair: [TimeControlId, Graph]): boolean => {
 			return pair[0] == id;
 		});
-		return idx != -1 ? this.graph_list[idx][1] : undefined;
+		return idx != -1 ? this.graphList[idx][1] : undefined;
 	}
 }

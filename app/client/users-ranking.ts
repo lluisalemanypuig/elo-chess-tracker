@@ -22,78 +22,78 @@ Full source code of elo-chess-tracker:
 import 'htmx.org';
 
 import { messageFromResponse, serverCall } from '@client/action';
-import { Routes } from '@common/routes';
-import { TimeControlId } from '@app/common/models/time-control';
+import { ROUTES } from '@common/routes';
+import { TimeControlId } from '@common/models/time-control';
 
-async function fill_ranking(_event: any) {
-	const select_time_control = document.getElementById('select_time_control') as HTMLSelectElement;
-	const time_control_id = select_time_control.options[select_time_control.selectedIndex].value as TimeControlId;
+async function fillRanking(_event: any) {
+	const selectTimeControl = document.getElementById('selectTimeControl') as HTMLSelectElement;
+	const timeControlId = selectTimeControl.options[selectTimeControl.selectedIndex].value as TimeControlId;
 
-	if (time_control_id == '') {
+	if (timeControlId == '') {
 		return;
 	}
 
-	let new_cell = function (text: string) {
+	let newCell = function (text: string) {
 		let cell = document.createElement('td');
 		cell.innerHTML = text;
 		return cell;
 	};
 
 	// "query" the server
-	const response = await serverCall(Routes.QUERY_USER_RANKING, { time_control_id: time_control_id });
+	const response = await serverCall(ROUTES.QUERY_USER_RANKING, { timeControlId: timeControlId });
 	if (response.status === 'Error') {
 		alert(messageFromResponse(response));
 		return;
 	}
 
-	const list_of_users = response.value;
+	const listOfUsers = response.value;
 
 	{
-		let table = document.getElementById('users_table_with_games') as HTMLTableElement;
-		let old_tbody = table.getElementsByTagName('tbody')[0];
-		let new_tbody = document.createElement('tbody');
+		let table = document.getElementById('usersTableWithGames') as HTMLTableElement;
+		let oldTbody = table.getElementsByTagName('tbody')[0];
+		let newTbody = document.createElement('tbody');
 
-		const users = list_of_users.with_games;
+		const users = listOfUsers.withGames;
 		for (var i = 0; i < users.length; i++) {
 			let row = document.createElement('tr');
-			row.appendChild(new_cell(users[i].name));
-			row.appendChild(new_cell(`${users[i].rating}`));
-			row.appendChild(new_cell(`${users[i].total_games}`));
-			row.appendChild(new_cell(`${users[i].won}`));
-			row.appendChild(new_cell(`${users[i].drawn}`));
-			row.appendChild(new_cell(`${users[i].lost}`));
-			new_tbody.appendChild(row);
+			row.appendChild(newCell(users[i].name));
+			row.appendChild(newCell(`${users[i].rating}`));
+			row.appendChild(newCell(`${users[i].totalGames}`));
+			row.appendChild(newCell(`${users[i].won}`));
+			row.appendChild(newCell(`${users[i].drawn}`));
+			row.appendChild(newCell(`${users[i].lost}`));
+			newTbody.appendChild(row);
 		}
 
-		if (old_tbody.parentNode != undefined) {
-			old_tbody.parentNode.replaceChild(new_tbody, old_tbody);
+		if (oldTbody.parentNode != undefined) {
+			oldTbody.parentNode.replaceChild(newTbody, oldTbody);
 		}
 	}
 
 	{
-		let table = document.getElementById('users_table_without_games') as HTMLTableElement;
-		let old_tbody = table.getElementsByTagName('tbody')[0];
-		let new_tbody = document.createElement('tbody');
+		let table = document.getElementById('usersTableWithoutGames') as HTMLTableElement;
+		let oldTbody = table.getElementsByTagName('tbody')[0];
+		let newTbody = document.createElement('tbody');
 
-		const users = list_of_users.without_games;
+		const users = listOfUsers.withoutGames;
 		for (var i = 0; i < users.length; i++) {
 			let row = document.createElement('tr');
-			row.appendChild(new_cell(users[i].name));
-			row.appendChild(new_cell(`${users[i].rating}`));
-			row.appendChild(new_cell('-'));
-			row.appendChild(new_cell('-'));
-			row.appendChild(new_cell('-'));
-			row.appendChild(new_cell('-'));
-			new_tbody.appendChild(row);
+			row.appendChild(newCell(users[i].name));
+			row.appendChild(newCell(`${users[i].rating}`));
+			row.appendChild(newCell('-'));
+			row.appendChild(newCell('-'));
+			row.appendChild(newCell('-'));
+			row.appendChild(newCell('-'));
+			newTbody.appendChild(row);
 		}
 
-		if (old_tbody.parentNode != undefined) {
-			old_tbody.parentNode.replaceChild(new_tbody, old_tbody);
+		if (oldTbody.parentNode != undefined) {
+			oldTbody.parentNode.replaceChild(newTbody, oldTbody);
 		}
 	}
 }
 
 window.onload = async function () {
-	let select_time_control = document.getElementById('select_time_control') as HTMLSelectElement;
-	select_time_control.onchange = fill_ranking;
+	let selectTimeControl = document.getElementById('selectTimeControl') as HTMLSelectElement;
+	selectTimeControl.onchange = fillRanking;
 };

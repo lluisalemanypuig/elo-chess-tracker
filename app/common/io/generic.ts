@@ -24,13 +24,13 @@ Contact:
 */
 
 import Debug from 'debug';
-const debug = Debug(`ELO_CHESS_TRACKER:io`);
+const debug = Debug(`ELOCHESSTRACKER:io`);
 
 import { logNow } from '@common/utils/time';
 import { z } from 'zod';
-import { isNotDefined } from '@app/common/utils/is-defined';
+import { isNotDefined } from '@common/utils/is-defined';
 
-export function read_schema<T extends z.ZodTypeAny>(schema: T, str: string): z.output<T> | null {
+export function readSchema<T extends z.ZodTypeAny>(schema: T, str: string): z.output<T> | null {
 	const parse = JSON.parse(str);
 	if (isNotDefined(parse)) {
 		debug(logNow(), `JSON Failed to parse schema.`);
@@ -45,27 +45,27 @@ export function read_schema<T extends z.ZodTypeAny>(schema: T, str: string): z.o
 	return res.data;
 }
 
-export function check_json_keys(json: any, expected_keys: string[]): boolean {
-	let all_keys = [];
-	for (const key of expected_keys) {
-		all_keys.push(key);
+export function checkJsonKeys(json: any, expectedKeys: string[]): boolean {
+	let allKeys = [];
+	for (const key of expectedKeys) {
+		allKeys.push(key);
 		if (!(key in json)) {
 			debug(logNow(), `JSON is missing required key '${key}''.`);
 			return false;
 		}
 	}
 
-	if (all_keys.length != expected_keys.length) {
-		debug(logNow(), `Expected '${expected_keys.length}'; found '${all_keys.length}' instead.`);
+	if (allKeys.length != expectedKeys.length) {
+		debug(logNow(), `Expected '${expectedKeys.length}'; found '${allKeys.length}' instead.`);
 		return false;
 	}
 
 	return true;
 }
 
-export function read_json_object_string<T>(
+export function readJsonObjectString<T>(
 	str: string,
-	expected_keys: string[],
+	expectedKeys: string[],
 	conversion: (json: any) => T | null
 ): T | null {
 	let json: any;
@@ -82,7 +82,7 @@ export function read_json_object_string<T>(
 		return null;
 	}
 
-	if (!check_json_keys(json, expected_keys)) {
+	if (!checkJsonKeys(json, expectedKeys)) {
 		debug(logNow(), `JSON object does not have the right keys`);
 		return null;
 	}
@@ -90,9 +90,9 @@ export function read_json_object_string<T>(
 	return conversion(json);
 }
 
-export function read_json_array_string<T>(
+export function readJsonArrayString<T>(
 	str: string,
-	expected_keys: string[],
+	expectedKeys: string[],
 	conversion: (json: any) => T | null
 ): T[] | null {
 	let json: any;
@@ -111,7 +111,7 @@ export function read_json_array_string<T>(
 
 	let array: T[] = [];
 	for (const obj of json) {
-		if (!check_json_keys(obj, expected_keys)) {
+		if (!checkJsonKeys(obj, expectedKeys)) {
 			debug(logNow(), `JSON object does not have the right keys`);
 			return null;
 		}

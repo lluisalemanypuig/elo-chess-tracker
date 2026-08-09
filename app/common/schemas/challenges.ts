@@ -27,14 +27,14 @@ import { z } from 'zod';
 import { GameResultSchema } from '@common/models/game';
 import { PlayerPrivateIdSchema, PlayerPublicIdSchema } from '@common/models/player';
 import { ChallengeIdSchema } from '@common/models/challenge';
-import { TimeControlIdSchema, TimeControlNameSchema } from '@app/common/models/time-control';
+import { TimeControlIdSchema, TimeControlNameSchema } from '@common/models/time-control';
 
 // Routes.CHALLENGE_SEND
 
 export const ChallengeSendInputSchema = z.object({
 	to: PlayerPublicIdSchema,
-	time_control_id: TimeControlIdSchema,
-	time_control_name: TimeControlNameSchema,
+	timeControlId: TimeControlIdSchema,
+	timeControlName: TimeControlNameSchema,
 	title: z.string()
 });
 

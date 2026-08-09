@@ -80,8 +80,8 @@ export const TimeControlSchema = z
  * @brief Time control as a tuple.
  *
  * Examples:
- * - id: "blitz_5_p_3", name: "Blitz (5 + 3)"
- * - id: "blitz_5_p_0", name: "Blitz (5 + 0)"
+ * - id: "blitz_5_P_3", name: "Blitz (5 + 3)"
+ * - id: "blitz_5_P_0", name: "Blitz (5 + 0)"
  *
  * Also:
  * - id: "blitz", name: "Blitz (5 + 3)"

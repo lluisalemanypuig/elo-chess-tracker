@@ -24,10 +24,10 @@ Contact:
 */
 
 import { toPlayerPrivateId } from '@common/models/player';
-import { SessionID } from '@app/common/models/session-id';
+import { SessionId } from '@common/models/session-id';
 
 test('Fields contents are correct', () => {
-	const sid: SessionID = { token: 'asdf', username: toPlayerPrivateId('qwer') };
+	const sid: SessionId = { token: 'asdf', username: toPlayerPrivateId('qwer') };
 	expect(sid.token).toEqual('asdf');
 	expect(sid.username).toEqual('qwer');
 });

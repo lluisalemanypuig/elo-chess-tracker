@@ -24,10 +24,10 @@ Contact:
 */
 
 import { z } from 'zod';
-import { UserThinSchema } from '@app/common/models/user-thin';
-import { UserRoleArraySchema } from '@app/common/models/user-role';
-import { UserActionArraySchema } from '@app/common/models/user-action';
-import { RatingSchema } from '@common/models/rating_framework/rating';
+import { UserThinSchema } from '@common/models/user-thin';
+import { UserRoleArraySchema } from '@common/models/user-role';
+import { UserActionArraySchema } from '@common/models/user-action';
+import { RatingSchema } from '@common/models/rating-framework/rating';
 import { PlayerPublicIdSchema } from '@common/models/player';
 import { UserGivenNameSchema } from '@common/models/user';
 import { TimeControlIdSchema } from '../models/time-control';
@@ -49,7 +49,7 @@ export type QueryUserEditInput = z.infer<typeof QueryUserEditInputSchema>;
 // Routes.QUERY_USER_RANKING
 
 export const QueryUserRankingInputSchema = z.object({
-	time_control_id: TimeControlIdSchema
+	timeControlId: TimeControlIdSchema
 });
 
 export type QueryUserRankingInput = z.infer<typeof QueryUserRankingInputSchema>;
@@ -57,7 +57,7 @@ export type QueryUserRankingInput = z.infer<typeof QueryUserRankingInputSchema>;
 // Routes.QUERY_USER_HOME
 
 export const TimeControlAndRatingSchema = z.object({
-	time_control_id: TimeControlIdSchema,
+	timeControlId: TimeControlIdSchema,
 	rating: RatingSchema
 });
 
@@ -75,8 +75,8 @@ export type QueryUserHomeOutput = z.infer<typeof QueryUserHomeOutputSchema>;
 // Routes.QUERY_USER_EDIT
 
 export const QueryUserEditOutputSchema = z.object({
-	first_name: UserGivenNameSchema,
-	last_name: UserGivenNameSchema,
+	firstName: UserGivenNameSchema,
+	lastName: UserGivenNameSchema,
 	roles: UserRoleArraySchema
 });
 
@@ -87,7 +87,7 @@ export type QueryUserEditOutput = z.infer<typeof QueryUserEditOutputSchema>;
 export const UserWithGamesSchema = z.object({
 	name: UserGivenNameSchema,
 	rating: z.number(),
-	total_games: z.number(),
+	totalGames: z.number(),
 	won: z.number(),
 	drawn: z.number(),
 	lost: z.number()
@@ -103,8 +103,8 @@ export const UserWithoutGamesSchema = z.object({
 export type UserWithoutGames = z.infer<typeof UserWithoutGamesSchema>;
 
 export const QueryUserRankingOutputSchema = z.object({
-	with_games: z.array(UserWithGamesSchema),
-	without_games: z.array(UserWithoutGamesSchema)
+	withGames: z.array(UserWithGamesSchema),
+	withoutGames: z.array(UserWithoutGamesSchema)
 });
 
 export type QueryUserRankingOutput = z.infer<typeof QueryUserRankingOutputSchema>;

@@ -39,54 +39,54 @@ export class ConfigurationManager {
 		ConfigurationManager.instance = this;
 	}
 
-	static get_instance(): ConfigurationManager {
+	static getInstance(): ConfigurationManager {
 		ConfigurationManager.instance = ConfigurationManager.instance || new ConfigurationManager();
 		return ConfigurationManager.instance;
 	}
 
 	/// The HTTP port of the server
-	private port_http: string = '';
+	private portHttp: string = '';
 	/// The HTTPS port of the server
-	private port_https: string = '';
+	private portHttps: string = '';
 
-	set_port_http(http: string): void {
-		this.port_http = http;
+	setPortHttp(http: string): void {
+		this.portHttp = http;
 	}
-	set_port_https(https: string): void {
-		this.port_https = https;
+	setPortHttps(https: string): void {
+		this.portHttps = https;
 	}
 
-	get_port_http(): string {
-		return this.port_http;
+	getPortHttp(): string {
+		return this.portHttp;
 	}
-	get_port_https(): string {
-		return this.port_https;
+	getPortHttps(): string {
+		return this.portHttps;
 	}
 
 	/// The name of the domain the server can be accessed from
 	private domain: string = '';
-	set_domain_name(d: string): void {
+	setDomainName(d: string): void {
 		this.domain = d;
 	}
-	get_domain_name(): string {
+	getDomainName(): string {
 		return this.domain;
 	}
 
 	clear(): void {
-		this.port_http = '';
-		this.port_https = '';
+		this.portHttp = '';
+		this.portHttps = '';
 		this.domain = '';
 	}
 
 	/// Cache results of GET/POST methods (e.g., titles and icons)
-	private static readonly cache_data: boolean = false;
-	static should_cache_data(): boolean {
-		return ConfigurationManager.cache_data;
+	private static readonly cacheData: boolean = false;
+	static shouldCacheData(): boolean {
+		return ConfigurationManager.cacheData;
 	}
 
 	/// Is this server running in production?
 	private static readonly production: boolean = false;
-	static is_production(): boolean {
+	static isProduction(): boolean {
 		return ConfigurationManager.production;
 	}
 }

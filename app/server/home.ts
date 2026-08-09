@@ -24,66 +24,66 @@ Contact:
 */
 
 import Debug from 'debug';
-const debug = Debug('ELO_CHESS_TRACKER:server_home');
+const debug = Debug('ELOCHESSTRACKER:serverHome');
 import { Request, Response } from 'express';
 
 import { logNow } from '@common/utils/time';
-import { is_user_logged_in } from '@server/managers/session';
+import { isUserLoggedIn } from '@server/managers/session';
 import { ConfigurationManager } from '@app/server/managers/configuration-manager';
-import { get_execution_directory } from '@app/server/managers/environment-manager';
-import { isDefined, isNotDefined } from '@app/common/utils/is-defined';
-import { Routes } from '@common/routes';
-import { safe_parse_request_cookies, parse_schema } from '@server/utils/schemas';
+import { getExecutionDirectory } from '@app/server/managers/environment-manager';
+import { isDefined, isNotDefined } from '@common/utils/is-defined';
+import { ROUTES } from '@common/routes';
+import { safeParseRequestCookies, parseSchema } from '@server/utils/schemas';
 import { AuthenticationInputSchema } from '@common/schemas/authentication';
 
-export async function get_page_login(req: Request, res: Response) {
-	let send_home: boolean;
-	debug(logNow(), `GET ${Routes.ROOT}`);
+export async function getPageLogin(req: Request, res: Response) {
+	let sendHome: boolean;
+	debug(logNow(), `GET ${ROUTES.ROOT}`);
 
-	const session_parse = parse_schema(req.cookies, AuthenticationInputSchema, debug);
-	if (session_parse.result === 'Error') {
+	const sessionParse = parseSchema(req.cookies, AuthenticationInputSchema, debug);
+	if (sessionParse.result === 'Error') {
 		console.log('asdf');
 		return;
 	}
-	const session = session_parse.data;
+	const session = sessionParse.data;
 
 	if (isDefined(session)) {
 		debug(logNow(), 'There is a username key in the cookies received.');
 		debug(logNow(), `    Value: ${session.username}`);
 
-		const r = is_user_logged_in(session);
-		send_home = r[0];
+		const r = isUserLoggedIn(session);
+		sendHome = r[0];
 
-		if (send_home) {
+		if (sendHome) {
 			debug(logNow(), `    Session id for user '${session.username}' exists. Please, come in.`);
 		}
 	} else {
 		debug(logNow(), 'There is no user key in the cookies received.');
-		send_home = false;
+		sendHome = false;
 	}
 
 	res.status(200);
-	if (ConfigurationManager.should_cache_data()) {
+	if (ConfigurationManager.shouldCacheData()) {
 		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
 	}
-	if (send_home) {
+	if (sendHome) {
 		debug(logNow(), 'send /home since the user is logged in');
-		res.sendFile(`${get_execution_directory()}/html/home.html`);
+		res.sendFile(`${getExecutionDirectory()}/html/home.html`);
 	} else {
-		debug(logNow(), 'send /login_screen since the user is not logged in');
-		res.sendFile(`${get_execution_directory()}/html/login-screen.html`);
+		debug(logNow(), 'send /loginScreen since the user is not logged in');
+		res.sendFile(`${getExecutionDirectory()}/html/login-screen.html`);
 	}
 }
 
-export async function get_page_home(req: Request, res: Response) {
-	debug(logNow(), `GET ${Routes.HOME}`);
+export async function getPageHome(req: Request, res: Response) {
+	debug(logNow(), `GET ${ROUTES.HOME}`);
 
-	const session_parse = safe_parse_request_cookies(req, AuthenticationInputSchema, res, debug);
-	if (session_parse.result === 'Exit') {
+	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	if (sessionParse.result === 'Exit') {
 		return;
 	}
-	const session = session_parse.data;
-	const r = is_user_logged_in(session);
+	const session = sessionParse.data;
+	const r = isUserLoggedIn(session);
 	if (isNotDefined(r[2])) {
 		debug(logNow(), `    User ${session.username} is not logged in.`);
 		res.status(401).send(r[1]);
@@ -92,8 +92,8 @@ export async function get_page_home(req: Request, res: Response) {
 
 	debug(logNow(), `    User ${session.username} is logged in. Access granted.`);
 	res.status(200);
-	if (ConfigurationManager.should_cache_data()) {
+	if (ConfigurationManager.shouldCacheData()) {
 		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
 	}
-	res.sendFile(`${get_execution_directory()}/html/home.html`);
+	res.sendFile(`${getExecutionDirectory()}/html/home.html`);
 }

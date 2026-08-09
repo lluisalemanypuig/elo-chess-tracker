@@ -23,7 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { EdgeMetadata } from '@app/common/models/graph/edge-metadata';
+import { EdgeMetadata } from '@common/models/graph/edge-metadata';
 import { Edge } from '@common/models/graph/edge';
 import { toPlayerPrivateId } from '@common/models/player';
 
@@ -38,9 +38,9 @@ describe('Merge edges', () => {
 		e1.merge(e2);
 
 		expect(e1.neighbor).toBe('a');
-		expect(e1.metadata?.num_games_won).toBe(1);
-		expect(e1.metadata?.num_games_drawn).toBe(0);
-		expect(e1.metadata?.num_games_lost).toBe(10);
+		expect(e1.metadata?.numGamesWon).toBe(1);
+		expect(e1.metadata?.numGamesDrawn).toBe(0);
+		expect(e1.metadata?.numGamesLost).toBe(10);
 	});
 
 	test('2', () => {
@@ -49,9 +49,9 @@ describe('Merge edges', () => {
 		e1.merge(e2);
 
 		expect(e1.neighbor).toBe('b');
-		expect(e1.metadata?.num_games_won).toBe(1);
-		expect(e1.metadata?.num_games_drawn).toBe(3);
-		expect(e1.metadata?.num_games_lost).toBe(10);
+		expect(e1.metadata?.numGamesWon).toBe(1);
+		expect(e1.metadata?.numGamesDrawn).toBe(3);
+		expect(e1.metadata?.numGamesLost).toBe(10);
 	});
 
 	test('3', () => {
@@ -63,8 +63,8 @@ describe('Merge edges', () => {
 		e1.merge(e3);
 
 		expect(e1.neighbor).toBe('c');
-		expect(e1.metadata?.num_games_won).toBe(51);
-		expect(e1.metadata?.num_games_drawn).toBe(6);
-		expect(e1.metadata?.num_games_lost).toBe(10);
+		expect(e1.metadata?.numGamesWon).toBe(51);
+		expect(e1.metadata?.numGamesDrawn).toBe(6);
+		expect(e1.metadata?.numGamesLost).toBe(10);
 	});
 });

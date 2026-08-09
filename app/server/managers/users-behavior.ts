@@ -40,25 +40,25 @@ export class UsersBehavior {
 		UsersBehavior.instance = this;
 	}
 
-	static get_instance(): UsersBehavior {
+	static getInstance(): UsersBehavior {
 		UsersBehavior.instance = UsersBehavior.instance || new UsersBehavior();
 		return UsersBehavior.instance;
 	}
 
 	/// Higher rated player can decline challenge from a lower rated player
-	private hrp_decline_challenge_lrt: boolean = false;
+	private hrpDeclineChallengeLrt: boolean = false;
 
-	set_higher_rated_decline_challenge_lower_rated(v: boolean): void {
-		this.hrp_decline_challenge_lrt = v;
+	setHigherRatedDeclineChallengeLowerRated(v: boolean): void {
+		this.hrpDeclineChallengeLrt = v;
 	}
 
-	can_higher_rated_decline_challenge_lower_rated(): boolean {
-		return this.hrp_decline_challenge_lrt;
+	canHigherRatedDeclineChallengeLowerRated(): boolean {
+		return this.hrpDeclineChallengeLrt;
 	}
 
 	// -------
 
 	clear() {
-		this.hrp_decline_challenge_lrt = false;
+		this.hrpDeclineChallengeLrt = false;
 	}
 }

@@ -30,17 +30,17 @@ Contact:
  */
 
 import Debug from 'debug';
-const debug = Debug('ELO_CHESS_TRACKER:app_main');
+const debug = Debug('ELOCHESSTRACKER:appMain');
 
 import fs from 'fs';
 import { logNow } from '@common/utils/time';
 
-import { server_init_from_parameters } from '@server/managers/memory/initialization';
+import { serverInitFromParameters } from '@server/managers/memory/initialization';
 import { ConfigurationManager } from '@app/server/managers/configuration-manager';
 
 debug(logNow(), 'Initialize server memory...');
 
-server_init_from_parameters(process.argv.slice(2));
+serverInitFromParameters(process.argv.slice(2));
 
 debug(logNow(), 'Import app...');
 
@@ -70,29 +70,29 @@ function normalizePort(val: any): any {
 	return false;
 }
 
-let server_environment = EnvironmentManager.get_instance();
-let server_configuration = ConfigurationManager.get_instance();
+let serverEnvironment = EnvironmentManager.getInstance();
+let serverConfiguration = ConfigurationManager.getInstance();
 
 // create https server when possible
-if (server_environment.is_SSL_info_valid()) {
-	const port_https = server_configuration.get_port_https();
+if (serverEnvironment.isSSLInfoValid()) {
+	const portHttps = serverConfiguration.getPortHttps();
 
-	debug(logNow(), `Create https server at port '${port_https}'`);
+	debug(logNow(), `Create https server at port '${portHttps}'`);
 
 	// Get port from environment and store in Express.
-	let port = normalizePort(process.env['PORT'] || port_https);
+	let port = normalizePort(process.env['PORT'] || portHttps);
 	app.set('port', port);
 
-	let https_server = (function () {
-		const private_key = fs.readFileSync(server_environment.get_ssl_private_key_file(), 'utf8');
-		const certificate = fs.readFileSync(server_environment.get_ssl_public_key_file(), 'utf8');
+	let httpsServer = (function () {
+		const privateKey = fs.readFileSync(serverEnvironment.getSslPrivateKeyFile(), 'utf8');
+		const certificate = fs.readFileSync(serverEnvironment.getSslPublicKeyFile(), 'utf8');
 
-		if (server_environment.get_ssl_passphrase_file() != '') {
+		if (serverEnvironment.getSslPassphraseFile() != '') {
 			debug(logNow(), 'Passphrase file found...');
-			let passphrase = fs.readFileSync(server_environment.get_ssl_passphrase_file(), 'utf8');
+			let passphrase = fs.readFileSync(serverEnvironment.getSslPassphraseFile(), 'utf8');
 			return https.createServer(
 				{
-					key: private_key,
+					key: privateKey,
 					cert: certificate,
 					passphrase: passphrase.substring(0, passphrase.length - 1)
 				},
@@ -101,15 +101,15 @@ if (server_environment.is_SSL_info_valid()) {
 		}
 
 		debug(logNow(), 'No passphrase file given...');
-		return https.createServer({ key: private_key, cert: certificate }, app);
+		return https.createServer({ key: privateKey, cert: certificate }, app);
 	})();
 
-	function https_on_listening(): void {
-		let addr = https_server.address();
+	function httpsOnListening(): void {
+		let addr = httpsServer.address();
 		let bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + (addr as AddressInfo).port;
 		debug(logNow(), 'Listening on ' + bind);
 	}
-	function https_on_error(error: any): void {
+	function httpsOnError(error: any): void {
 		if (error.syscall !== 'listen') {
 			throw error;
 		}
@@ -131,22 +131,22 @@ if (server_environment.is_SSL_info_valid()) {
 		}
 	}
 
-	https_server.listen(port);
-	https_server.on('error', https_on_error);
-	https_server.on('listening', https_on_listening);
+	httpsServer.listen(port);
+	httpsServer.on('error', httpsOnError);
+	httpsServer.on('listening', httpsOnListening);
 }
 
 // Create HTTP server
-const port_http = server_configuration.get_port_http();
+const portHttp = serverConfiguration.getPortHttp();
 
-debug(logNow(), `Create http server at port '${port_http}'`);
+debug(logNow(), `Create http server at port '${portHttp}'`);
 
 // Get port from environment and store in Express.
-let port = normalizePort(process.env['PORT'] || port_http);
+let port = normalizePort(process.env['PORT'] || portHttp);
 app.set('port', port);
 
 // Event listener for servers "error" event.
-function http_on_error(error: any): void {
+function httpOnError(error: any): void {
 	if (error.syscall !== 'listen') {
 		throw error;
 	}
@@ -169,13 +169,13 @@ function http_on_error(error: any): void {
 }
 
 // Event listener for servers "listening" event.
-function http_on_listening(): void {
-	let addr = http_server.address();
+function httpOnListening(): void {
+	let addr = httpServer.address();
 	let bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + (addr as AddressInfo).port;
 	debug(logNow(), 'Listening on ' + bind);
 }
 
-let http_server = http.createServer(app);
-http_server.listen(port);
-http_server.on('error', http_on_error);
-http_server.on('listening', http_on_listening);
+let httpServer = http.createServer(app);
+httpServer.listen(port);
+httpServer.on('error', httpOnError);
+httpServer.on('listening', httpOnListening);

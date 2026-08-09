@@ -23,24 +23,24 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { Rating } from '@common/models/rating_framework/rating';
-import { TimeControlId } from '@app/common/models/time-control';
+import { Rating } from '@common/models/rating-framework/rating';
+import { TimeControlId } from '@common/models/time-control';
 
 /**
  * @brief A pair of time control id and rating
  */
 export class TimeControlRating {
-	public readonly time_control: TimeControlId;
+	public readonly timeControl: TimeControlId;
 	public rating: Rating;
 
 	constructor(id: TimeControlId, data: Rating) {
-		this.time_control = id;
+		this.timeControl = id;
 		this.rating = data;
 	}
 
 	clone(): TimeControlRating {
-		return new TimeControlRating(this.time_control, this.rating.clone());
+		return new TimeControlRating(this.timeControl, this.rating.clone());
 	}
 }
 
-export const TimeControlRatingKeys = ['time_control', 'rating'];
+export const TimeControlRatingKeys = ['timeControl', 'rating'];

@@ -23,7 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { TimeControlRating } from '@app/common/models/time-control-rating';
+import { TimeControlRating } from '@common/models/time-control-rating';
 import { toUserGivenName, User } from '@common/models/user';
 import {
 	USER_ROLE_ASSIGN_ADMIN,
@@ -53,12 +53,12 @@ import {
 	GAMES_SEE_STUDENT,
 	GAMES_SEE_TEACHER,
 	GAMES_SEE
-} from '@app/common/models/user-action';
-import { ADMIN, MEMBER, STUDENT, TEACHER } from '@app/common/models/user-role';
-import { initialize_permissions, UserRoleToUserAction } from '@app/server/managers/user-role-action';
-import { EloRating } from '@common/models/rating_framework/Elo/rating';
+} from '@common/models/user-action';
+import { ADMIN, MEMBER, STUDENT, TEACHER } from '@common/models/user-role';
+import { initializePermissions, UserRoleToUserAction } from '@app/server/managers/user-role-action';
+import { EloRating } from '@common/models/rating-framework/Elo/rating';
 import { toPlayerPrivateId } from '@common/models/player';
-import { toTimeControlId } from '@app/common/models/time-control';
+import { toTimeControlId } from '@common/models/time-control';
 import { toDateMajor } from '@common/utils/time';
 
 const Classical = toTimeControlId('Classical');
@@ -79,8 +79,8 @@ describe('Elo', () => {
 			{ encrypted: 'asdf', iv: 'ivrandom' },
 			[ADMIN, TEACHER],
 			[
-				{ time_control: Blitz, records: [{ record: toDateMajor('2024-12-24'), amount: 1 }] },
-				{ time_control: Rapid, records: [{ record: toDateMajor('2024-12-25'), amount: 1 }] }
+				{ timeControl: Blitz, records: [{ record: toDateMajor('2024-12-24'), amount: 1 }] },
+				{ timeControl: Rapid, records: [{ record: toDateMajor('2024-12-25'), amount: 1 }] }
 			],
 			[new TimeControlRating(Blitz, blitz), new TimeControlRating(Classical, classical)]
 		);
@@ -93,11 +93,11 @@ describe('Elo', () => {
 		expect(u.roles).toEqual([ADMIN, TEACHER]);
 		expect(u.roles).not.toEqual([TEACHER, ADMIN]);
 
-		expect(u.first_name).toEqual('First');
-		expect(u.last_name).toEqual('Last');
-		expect(u.get_full_name()).toEqual('First Last');
-		expect(u.get_games(Blitz)).toEqual([{ record: toDateMajor('2024-12-24'), amount: 1 }]);
-		expect(u.get_games(Rapid)).toEqual([{ record: toDateMajor('2024-12-25'), amount: 1 }]);
+		expect(u.firstName).toEqual('First');
+		expect(u.lastName).toEqual('Last');
+		expect(u.getFullName()).toEqual('First Last');
+		expect(u.getGames(Blitz)).toEqual([{ record: toDateMajor('2024-12-24'), amount: 1 }]);
+		expect(u.getGames(Rapid)).toEqual([{ record: toDateMajor('2024-12-25'), amount: 1 }]);
 	});
 
 	test('basic sets', () => {
@@ -108,8 +108,8 @@ describe('Elo', () => {
 			{ encrypted: 'asdf', iv: 'ivrandom' },
 			[ADMIN, TEACHER],
 			[
-				{ time_control: Blitz, records: [{ record: toDateMajor('2024-12-24'), amount: 1 }] },
-				{ time_control: Rapid, records: [{ record: toDateMajor('2024-12-25'), amount: 1 }] }
+				{ timeControl: Blitz, records: [{ record: toDateMajor('2024-12-24'), amount: 1 }] },
+				{ timeControl: Rapid, records: [{ record: toDateMajor('2024-12-25'), amount: 1 }] }
 			],
 			[new TimeControlRating(Blitz, blitz), new TimeControlRating(Classical, classical)]
 		);
@@ -122,11 +122,11 @@ describe('Elo', () => {
 		expect(u.roles).toEqual([ADMIN, TEACHER]);
 		expect(u.roles).not.toEqual([TEACHER, ADMIN]);
 
-		u.first_name = toUserGivenName('Perico');
-		u.last_name = toUserGivenName('Palotes');
-		expect(u.first_name).toEqual('Perico');
-		expect(u.last_name).toEqual('Palotes');
-		expect(u.get_full_name()).toEqual('Perico Palotes');
+		u.firstName = toUserGivenName('Perico');
+		u.lastName = toUserGivenName('Palotes');
+		expect(u.firstName).toEqual('Perico');
+		expect(u.lastName).toEqual('Palotes');
+		expect(u.getFullName()).toEqual('Perico Palotes');
 
 		u.password = { encrypted: 'a', iv: 'b' };
 		expect(u.password).toEqual({ encrypted: 'a', iv: 'b' });
@@ -140,45 +140,45 @@ describe('Elo', () => {
 			{ encrypted: 'asdf', iv: 'ivrandom' },
 			[ADMIN, TEACHER],
 			[
-				{ time_control: Blitz, records: [{ record: toDateMajor('2024-12-24'), amount: 1 }] },
-				{ time_control: Rapid, records: [{ record: toDateMajor('2024-12-25'), amount: 1 }] }
+				{ timeControl: Blitz, records: [{ record: toDateMajor('2024-12-24'), amount: 1 }] },
+				{ timeControl: Rapid, records: [{ record: toDateMajor('2024-12-25'), amount: 1 }] }
 			],
 			[new TimeControlRating(Blitz, blitz), new TimeControlRating(Classical, classical)]
 		);
 
 		// blitz
 
-		expect(u.get_games(Blitz)).toEqual([{ record: '2024-12-24', amount: 1 }]);
+		expect(u.getGames(Blitz)).toEqual([{ record: '2024-12-24', amount: 1 }]);
 
-		u.add_game(Blitz, toDateMajor('2024-12-31'));
-		expect(u.get_games(Blitz)).toEqual([
+		u.addGame(Blitz, toDateMajor('2024-12-31'));
+		expect(u.getGames(Blitz)).toEqual([
 			{ record: toDateMajor('2024-12-24'), amount: 1 },
 			{ record: toDateMajor('2024-12-31'), amount: 1 }
 		]);
 
-		u.add_game(Blitz, toDateMajor('2024-12-01'));
-		expect(u.get_games(Blitz)).toEqual([
+		u.addGame(Blitz, toDateMajor('2024-12-01'));
+		expect(u.getGames(Blitz)).toEqual([
 			{ record: toDateMajor('2024-12-01'), amount: 1 },
 			{ record: toDateMajor('2024-12-24'), amount: 1 },
 			{ record: toDateMajor('2024-12-31'), amount: 1 }
 		]);
 
-		u.add_game(Blitz, toDateMajor('2024-12-31'));
-		expect(u.get_games(Blitz)).toEqual([
+		u.addGame(Blitz, toDateMajor('2024-12-31'));
+		expect(u.getGames(Blitz)).toEqual([
 			{ record: toDateMajor('2024-12-01'), amount: 1 },
 			{ record: toDateMajor('2024-12-24'), amount: 1 },
 			{ record: toDateMajor('2024-12-31'), amount: 2 }
 		]);
 
-		u.add_game(Blitz, toDateMajor('2024-12-31'));
-		expect(u.get_games(Blitz)).toEqual([
+		u.addGame(Blitz, toDateMajor('2024-12-31'));
+		expect(u.getGames(Blitz)).toEqual([
 			{ record: toDateMajor('2024-12-01'), amount: 1 },
 			{ record: toDateMajor('2024-12-24'), amount: 1 },
 			{ record: toDateMajor('2024-12-31'), amount: 3 }
 		]);
 
-		u.add_game(Blitz, toDateMajor('2024-12-01'));
-		expect(u.get_games(Blitz)).toEqual([
+		u.addGame(Blitz, toDateMajor('2024-12-01'));
+		expect(u.getGames(Blitz)).toEqual([
 			{ record: toDateMajor('2024-12-01'), amount: 2 },
 			{ record: toDateMajor('2024-12-24'), amount: 1 },
 			{ record: toDateMajor('2024-12-31'), amount: 3 }
@@ -186,37 +186,37 @@ describe('Elo', () => {
 
 		// rapid
 
-		expect(u.get_games(Rapid)).toEqual([{ record: '2024-12-25', amount: 1 }]);
+		expect(u.getGames(Rapid)).toEqual([{ record: '2024-12-25', amount: 1 }]);
 
-		u.add_game(Rapid, toDateMajor('2024-12-28'));
-		expect(u.get_games(Rapid)).toEqual([
+		u.addGame(Rapid, toDateMajor('2024-12-28'));
+		expect(u.getGames(Rapid)).toEqual([
 			{ record: toDateMajor('2024-12-25'), amount: 1 },
 			{ record: toDateMajor('2024-12-28'), amount: 1 }
 		]);
 
-		u.add_game(Rapid, toDateMajor('2019-12-31'));
-		expect(u.get_games(Rapid)).toEqual([
+		u.addGame(Rapid, toDateMajor('2019-12-31'));
+		expect(u.getGames(Rapid)).toEqual([
 			{ record: toDateMajor('2019-12-31'), amount: 1 },
 			{ record: toDateMajor('2024-12-25'), amount: 1 },
 			{ record: toDateMajor('2024-12-28'), amount: 1 }
 		]);
 
-		u.add_game(Rapid, toDateMajor('2019-12-31'));
-		expect(u.get_games(Rapid)).toEqual([
+		u.addGame(Rapid, toDateMajor('2019-12-31'));
+		expect(u.getGames(Rapid)).toEqual([
 			{ record: toDateMajor('2019-12-31'), amount: 2 },
 			{ record: toDateMajor('2024-12-25'), amount: 1 },
 			{ record: toDateMajor('2024-12-28'), amount: 1 }
 		]);
 
-		u.add_game(Rapid, toDateMajor('2024-12-28'));
-		expect(u.get_games(Rapid)).toEqual([
+		u.addGame(Rapid, toDateMajor('2024-12-28'));
+		expect(u.getGames(Rapid)).toEqual([
 			{ record: toDateMajor('2019-12-31'), amount: 2 },
 			{ record: toDateMajor('2024-12-25'), amount: 1 },
 			{ record: toDateMajor('2024-12-28'), amount: 2 }
 		]);
 
-		u.add_game(Rapid, toDateMajor('2024-12-28'));
-		expect(u.get_games(Rapid)).toEqual([
+		u.addGame(Rapid, toDateMajor('2024-12-28'));
+		expect(u.getGames(Rapid)).toEqual([
 			{ record: toDateMajor('2019-12-31'), amount: 2 },
 			{ record: toDateMajor('2024-12-25'), amount: 1 },
 			{ record: toDateMajor('2024-12-28'), amount: 3 }
@@ -228,8 +228,8 @@ const u = toPlayerPrivateId('u');
 
 describe('Actions allowed per user (single role)', () => {
 	test('Admin', () => {
-		UserRoleToUserAction.get_instance().clear();
-		initialize_permissions({
+		UserRoleToUserAction.getInstance().clear();
+		initializePermissions({
 			admin: [USER_EDIT_TEACHER],
 			teacher: [],
 			student: [],
@@ -246,43 +246,43 @@ describe('Actions allowed per user (single role)', () => {
 			[]
 		);
 
-		const actions = admin.get_actions();
+		const actions = admin.getActions();
 		expect(actions.length).toBe(2);
 		expect(actions.includes(USER_EDIT)).toBe(true);
 		expect(actions.includes(USER_EDIT_TEACHER)).toBe(true);
 
-		expect(admin.can_do(CREATE_USER)).toBe(false);
-		expect(admin.can_do(GAMES_CREATE)).toBe(false);
-		expect(admin.can_do(USER_EDIT)).toBe(true);
-		expect(admin.can_do(USER_EDIT_ADMIN)).toBe(false);
-		expect(admin.can_do(USER_EDIT_TEACHER)).toBe(true);
-		expect(admin.can_do(USER_EDIT_MEMBER)).toBe(false);
-		expect(admin.can_do(USER_EDIT_STUDENT)).toBe(false);
-		expect(admin.can_do(GAMES_EDIT)).toBe(false);
-		expect(admin.can_do(GAMES_EDIT_ADMIN)).toBe(false);
-		expect(admin.can_do(GAMES_EDIT_TEACHER)).toBe(false);
-		expect(admin.can_do(GAMES_EDIT_MEMBER)).toBe(false);
-		expect(admin.can_do(GAMES_EDIT_STUDENT)).toBe(false);
-		expect(admin.can_do(USER_ROLE_ASSIGN)).toBe(false);
-		expect(admin.can_do(USER_ROLE_ASSIGN_ADMIN)).toBe(false);
-		expect(admin.can_do(USER_ROLE_ASSIGN_TEACHER)).toBe(false);
-		expect(admin.can_do(USER_ROLE_ASSIGN_MEMBER)).toBe(false);
-		expect(admin.can_do(USER_ROLE_ASSIGN_STUDENT)).toBe(false);
-		expect(admin.can_do(GAMES_SEE)).toBe(false);
-		expect(admin.can_do(GAMES_SEE_ADMIN)).toBe(false);
-		expect(admin.can_do(GAMES_SEE_TEACHER)).toBe(false);
-		expect(admin.can_do(GAMES_SEE_MEMBER)).toBe(false);
-		expect(admin.can_do(GAMES_SEE_STUDENT)).toBe(false);
-		expect(admin.can_do(USER_CHALLENGE)).toBe(false);
-		expect(admin.can_do(USER_CHALLENGE_ADMIN)).toBe(false);
-		expect(admin.can_do(USER_CHALLENGE_MEMBER)).toBe(false);
-		expect(admin.can_do(USER_CHALLENGE_TEACHER)).toBe(false);
-		expect(admin.can_do(USER_CHALLENGE_STUDENT)).toBe(false);
+		expect(admin.canDo(CREATE_USER)).toBe(false);
+		expect(admin.canDo(GAMES_CREATE)).toBe(false);
+		expect(admin.canDo(USER_EDIT)).toBe(true);
+		expect(admin.canDo(USER_EDIT_ADMIN)).toBe(false);
+		expect(admin.canDo(USER_EDIT_TEACHER)).toBe(true);
+		expect(admin.canDo(USER_EDIT_MEMBER)).toBe(false);
+		expect(admin.canDo(USER_EDIT_STUDENT)).toBe(false);
+		expect(admin.canDo(GAMES_EDIT)).toBe(false);
+		expect(admin.canDo(GAMES_EDIT_ADMIN)).toBe(false);
+		expect(admin.canDo(GAMES_EDIT_TEACHER)).toBe(false);
+		expect(admin.canDo(GAMES_EDIT_MEMBER)).toBe(false);
+		expect(admin.canDo(GAMES_EDIT_STUDENT)).toBe(false);
+		expect(admin.canDo(USER_ROLE_ASSIGN)).toBe(false);
+		expect(admin.canDo(USER_ROLE_ASSIGN_ADMIN)).toBe(false);
+		expect(admin.canDo(USER_ROLE_ASSIGN_TEACHER)).toBe(false);
+		expect(admin.canDo(USER_ROLE_ASSIGN_MEMBER)).toBe(false);
+		expect(admin.canDo(USER_ROLE_ASSIGN_STUDENT)).toBe(false);
+		expect(admin.canDo(GAMES_SEE)).toBe(false);
+		expect(admin.canDo(GAMES_SEE_ADMIN)).toBe(false);
+		expect(admin.canDo(GAMES_SEE_TEACHER)).toBe(false);
+		expect(admin.canDo(GAMES_SEE_MEMBER)).toBe(false);
+		expect(admin.canDo(GAMES_SEE_STUDENT)).toBe(false);
+		expect(admin.canDo(USER_CHALLENGE)).toBe(false);
+		expect(admin.canDo(USER_CHALLENGE_ADMIN)).toBe(false);
+		expect(admin.canDo(USER_CHALLENGE_MEMBER)).toBe(false);
+		expect(admin.canDo(USER_CHALLENGE_TEACHER)).toBe(false);
+		expect(admin.canDo(USER_CHALLENGE_STUDENT)).toBe(false);
 	});
 
 	test('Teacher', () => {
-		UserRoleToUserAction.get_instance().clear();
-		initialize_permissions({
+		UserRoleToUserAction.getInstance().clear();
+		initializePermissions({
 			admin: [],
 			teacher: [USER_ROLE_ASSIGN_MEMBER],
 			student: [],
@@ -299,43 +299,43 @@ describe('Actions allowed per user (single role)', () => {
 			[]
 		);
 
-		const actions = teacher.get_actions();
+		const actions = teacher.getActions();
 		expect(actions.length).toBe(2);
 		expect(actions.includes(USER_ROLE_ASSIGN_MEMBER)).toBe(true);
 		expect(actions.includes(USER_ROLE_ASSIGN)).toBe(true);
 
-		expect(teacher.can_do(CREATE_USER)).toBe(false);
-		expect(teacher.can_do(GAMES_CREATE)).toBe(false);
-		expect(teacher.can_do(USER_EDIT)).toBe(false);
-		expect(teacher.can_do(USER_EDIT_ADMIN)).toBe(false);
-		expect(teacher.can_do(USER_EDIT_TEACHER)).toBe(false);
-		expect(teacher.can_do(USER_EDIT_MEMBER)).toBe(false);
-		expect(teacher.can_do(USER_EDIT_STUDENT)).toBe(false);
-		expect(teacher.can_do(GAMES_EDIT)).toBe(false);
-		expect(teacher.can_do(GAMES_EDIT_ADMIN)).toBe(false);
-		expect(teacher.can_do(GAMES_EDIT_TEACHER)).toBe(false);
-		expect(teacher.can_do(GAMES_EDIT_MEMBER)).toBe(false);
-		expect(teacher.can_do(GAMES_EDIT_STUDENT)).toBe(false);
-		expect(teacher.can_do(USER_ROLE_ASSIGN)).toBe(true);
-		expect(teacher.can_do(USER_ROLE_ASSIGN_ADMIN)).toBe(false);
-		expect(teacher.can_do(USER_ROLE_ASSIGN_TEACHER)).toBe(false);
-		expect(teacher.can_do(USER_ROLE_ASSIGN_MEMBER)).toBe(true);
-		expect(teacher.can_do(USER_ROLE_ASSIGN_STUDENT)).toBe(false);
-		expect(teacher.can_do(GAMES_SEE)).toBe(false);
-		expect(teacher.can_do(GAMES_SEE_ADMIN)).toBe(false);
-		expect(teacher.can_do(GAMES_SEE_TEACHER)).toBe(false);
-		expect(teacher.can_do(GAMES_SEE_MEMBER)).toBe(false);
-		expect(teacher.can_do(GAMES_SEE_STUDENT)).toBe(false);
-		expect(teacher.can_do(USER_CHALLENGE)).toBe(false);
-		expect(teacher.can_do(USER_CHALLENGE_ADMIN)).toBe(false);
-		expect(teacher.can_do(USER_CHALLENGE_MEMBER)).toBe(false);
-		expect(teacher.can_do(USER_CHALLENGE_TEACHER)).toBe(false);
-		expect(teacher.can_do(USER_CHALLENGE_STUDENT)).toBe(false);
+		expect(teacher.canDo(CREATE_USER)).toBe(false);
+		expect(teacher.canDo(GAMES_CREATE)).toBe(false);
+		expect(teacher.canDo(USER_EDIT)).toBe(false);
+		expect(teacher.canDo(USER_EDIT_ADMIN)).toBe(false);
+		expect(teacher.canDo(USER_EDIT_TEACHER)).toBe(false);
+		expect(teacher.canDo(USER_EDIT_MEMBER)).toBe(false);
+		expect(teacher.canDo(USER_EDIT_STUDENT)).toBe(false);
+		expect(teacher.canDo(GAMES_EDIT)).toBe(false);
+		expect(teacher.canDo(GAMES_EDIT_ADMIN)).toBe(false);
+		expect(teacher.canDo(GAMES_EDIT_TEACHER)).toBe(false);
+		expect(teacher.canDo(GAMES_EDIT_MEMBER)).toBe(false);
+		expect(teacher.canDo(GAMES_EDIT_STUDENT)).toBe(false);
+		expect(teacher.canDo(USER_ROLE_ASSIGN)).toBe(true);
+		expect(teacher.canDo(USER_ROLE_ASSIGN_ADMIN)).toBe(false);
+		expect(teacher.canDo(USER_ROLE_ASSIGN_TEACHER)).toBe(false);
+		expect(teacher.canDo(USER_ROLE_ASSIGN_MEMBER)).toBe(true);
+		expect(teacher.canDo(USER_ROLE_ASSIGN_STUDENT)).toBe(false);
+		expect(teacher.canDo(GAMES_SEE)).toBe(false);
+		expect(teacher.canDo(GAMES_SEE_ADMIN)).toBe(false);
+		expect(teacher.canDo(GAMES_SEE_TEACHER)).toBe(false);
+		expect(teacher.canDo(GAMES_SEE_MEMBER)).toBe(false);
+		expect(teacher.canDo(GAMES_SEE_STUDENT)).toBe(false);
+		expect(teacher.canDo(USER_CHALLENGE)).toBe(false);
+		expect(teacher.canDo(USER_CHALLENGE_ADMIN)).toBe(false);
+		expect(teacher.canDo(USER_CHALLENGE_MEMBER)).toBe(false);
+		expect(teacher.canDo(USER_CHALLENGE_TEACHER)).toBe(false);
+		expect(teacher.canDo(USER_CHALLENGE_STUDENT)).toBe(false);
 	});
 
 	test('Student', () => {
-		UserRoleToUserAction.get_instance().clear();
-		initialize_permissions({
+		UserRoleToUserAction.getInstance().clear();
+		initializePermissions({
 			admin: [],
 			teacher: [],
 			student: [CREATE_USER, GAMES_CREATE],
@@ -352,43 +352,43 @@ describe('Actions allowed per user (single role)', () => {
 			[]
 		);
 
-		const actions = student.get_actions();
+		const actions = student.getActions();
 		expect(actions.length).toBe(2);
 		expect(actions.includes(GAMES_CREATE)).toBe(true);
 		expect(actions.includes(CREATE_USER)).toBe(true);
 
-		expect(student.can_do(CREATE_USER)).toBe(true);
-		expect(student.can_do(GAMES_CREATE)).toBe(true);
-		expect(student.can_do(USER_EDIT)).toBe(false);
-		expect(student.can_do(USER_EDIT_ADMIN)).toBe(false);
-		expect(student.can_do(USER_EDIT_TEACHER)).toBe(false);
-		expect(student.can_do(USER_EDIT_MEMBER)).toBe(false);
-		expect(student.can_do(USER_EDIT_STUDENT)).toBe(false);
-		expect(student.can_do(GAMES_EDIT)).toBe(false);
-		expect(student.can_do(GAMES_EDIT_ADMIN)).toBe(false);
-		expect(student.can_do(GAMES_EDIT_TEACHER)).toBe(false);
-		expect(student.can_do(GAMES_EDIT_MEMBER)).toBe(false);
-		expect(student.can_do(GAMES_EDIT_STUDENT)).toBe(false);
-		expect(student.can_do(USER_ROLE_ASSIGN)).toBe(false);
-		expect(student.can_do(USER_ROLE_ASSIGN_ADMIN)).toBe(false);
-		expect(student.can_do(USER_ROLE_ASSIGN_TEACHER)).toBe(false);
-		expect(student.can_do(USER_ROLE_ASSIGN_MEMBER)).toBe(false);
-		expect(student.can_do(USER_ROLE_ASSIGN_STUDENT)).toBe(false);
-		expect(student.can_do(GAMES_SEE)).toBe(false);
-		expect(student.can_do(GAMES_SEE_ADMIN)).toBe(false);
-		expect(student.can_do(GAMES_SEE_TEACHER)).toBe(false);
-		expect(student.can_do(GAMES_SEE_MEMBER)).toBe(false);
-		expect(student.can_do(GAMES_SEE_STUDENT)).toBe(false);
-		expect(student.can_do(USER_CHALLENGE)).toBe(false);
-		expect(student.can_do(USER_CHALLENGE_ADMIN)).toBe(false);
-		expect(student.can_do(USER_CHALLENGE_MEMBER)).toBe(false);
-		expect(student.can_do(USER_CHALLENGE_TEACHER)).toBe(false);
-		expect(student.can_do(USER_CHALLENGE_STUDENT)).toBe(false);
+		expect(student.canDo(CREATE_USER)).toBe(true);
+		expect(student.canDo(GAMES_CREATE)).toBe(true);
+		expect(student.canDo(USER_EDIT)).toBe(false);
+		expect(student.canDo(USER_EDIT_ADMIN)).toBe(false);
+		expect(student.canDo(USER_EDIT_TEACHER)).toBe(false);
+		expect(student.canDo(USER_EDIT_MEMBER)).toBe(false);
+		expect(student.canDo(USER_EDIT_STUDENT)).toBe(false);
+		expect(student.canDo(GAMES_EDIT)).toBe(false);
+		expect(student.canDo(GAMES_EDIT_ADMIN)).toBe(false);
+		expect(student.canDo(GAMES_EDIT_TEACHER)).toBe(false);
+		expect(student.canDo(GAMES_EDIT_MEMBER)).toBe(false);
+		expect(student.canDo(GAMES_EDIT_STUDENT)).toBe(false);
+		expect(student.canDo(USER_ROLE_ASSIGN)).toBe(false);
+		expect(student.canDo(USER_ROLE_ASSIGN_ADMIN)).toBe(false);
+		expect(student.canDo(USER_ROLE_ASSIGN_TEACHER)).toBe(false);
+		expect(student.canDo(USER_ROLE_ASSIGN_MEMBER)).toBe(false);
+		expect(student.canDo(USER_ROLE_ASSIGN_STUDENT)).toBe(false);
+		expect(student.canDo(GAMES_SEE)).toBe(false);
+		expect(student.canDo(GAMES_SEE_ADMIN)).toBe(false);
+		expect(student.canDo(GAMES_SEE_TEACHER)).toBe(false);
+		expect(student.canDo(GAMES_SEE_MEMBER)).toBe(false);
+		expect(student.canDo(GAMES_SEE_STUDENT)).toBe(false);
+		expect(student.canDo(USER_CHALLENGE)).toBe(false);
+		expect(student.canDo(USER_CHALLENGE_ADMIN)).toBe(false);
+		expect(student.canDo(USER_CHALLENGE_MEMBER)).toBe(false);
+		expect(student.canDo(USER_CHALLENGE_TEACHER)).toBe(false);
+		expect(student.canDo(USER_CHALLENGE_STUDENT)).toBe(false);
 	});
 
 	test('Member', () => {
-		UserRoleToUserAction.get_instance().clear();
-		initialize_permissions({
+		UserRoleToUserAction.getInstance().clear();
+		initializePermissions({
 			admin: [],
 			teacher: [],
 			student: [],
@@ -405,46 +405,46 @@ describe('Actions allowed per user (single role)', () => {
 			[]
 		);
 
-		const actions = member.get_actions();
+		const actions = member.getActions();
 		expect(actions.length).toBe(3);
 		expect(actions.includes(USER_CHALLENGE_STUDENT)).toBe(true);
 		expect(actions.includes(USER_CHALLENGE)).toBe(true);
 		expect(actions.includes(USER_CHALLENGE_ADMIN)).toBe(true);
 
-		expect(member.can_do(CREATE_USER)).toBe(false);
-		expect(member.can_do(GAMES_CREATE)).toBe(false);
-		expect(member.can_do(USER_EDIT)).toBe(false);
-		expect(member.can_do(USER_EDIT_ADMIN)).toBe(false);
-		expect(member.can_do(USER_EDIT_TEACHER)).toBe(false);
-		expect(member.can_do(USER_EDIT_MEMBER)).toBe(false);
-		expect(member.can_do(USER_EDIT_STUDENT)).toBe(false);
-		expect(member.can_do(GAMES_EDIT)).toBe(false);
-		expect(member.can_do(GAMES_EDIT_ADMIN)).toBe(false);
-		expect(member.can_do(GAMES_EDIT_TEACHER)).toBe(false);
-		expect(member.can_do(GAMES_EDIT_MEMBER)).toBe(false);
-		expect(member.can_do(GAMES_EDIT_STUDENT)).toBe(false);
-		expect(member.can_do(USER_ROLE_ASSIGN)).toBe(false);
-		expect(member.can_do(USER_ROLE_ASSIGN_ADMIN)).toBe(false);
-		expect(member.can_do(USER_ROLE_ASSIGN_TEACHER)).toBe(false);
-		expect(member.can_do(USER_ROLE_ASSIGN_MEMBER)).toBe(false);
-		expect(member.can_do(USER_ROLE_ASSIGN_STUDENT)).toBe(false);
-		expect(member.can_do(GAMES_SEE)).toBe(false);
-		expect(member.can_do(GAMES_SEE_ADMIN)).toBe(false);
-		expect(member.can_do(GAMES_SEE_TEACHER)).toBe(false);
-		expect(member.can_do(GAMES_SEE_MEMBER)).toBe(false);
-		expect(member.can_do(GAMES_SEE_STUDENT)).toBe(false);
-		expect(member.can_do(USER_CHALLENGE)).toBe(true);
-		expect(member.can_do(USER_CHALLENGE_ADMIN)).toBe(true);
-		expect(member.can_do(USER_CHALLENGE_MEMBER)).toBe(false);
-		expect(member.can_do(USER_CHALLENGE_TEACHER)).toBe(false);
-		expect(member.can_do(USER_CHALLENGE_STUDENT)).toBe(true);
+		expect(member.canDo(CREATE_USER)).toBe(false);
+		expect(member.canDo(GAMES_CREATE)).toBe(false);
+		expect(member.canDo(USER_EDIT)).toBe(false);
+		expect(member.canDo(USER_EDIT_ADMIN)).toBe(false);
+		expect(member.canDo(USER_EDIT_TEACHER)).toBe(false);
+		expect(member.canDo(USER_EDIT_MEMBER)).toBe(false);
+		expect(member.canDo(USER_EDIT_STUDENT)).toBe(false);
+		expect(member.canDo(GAMES_EDIT)).toBe(false);
+		expect(member.canDo(GAMES_EDIT_ADMIN)).toBe(false);
+		expect(member.canDo(GAMES_EDIT_TEACHER)).toBe(false);
+		expect(member.canDo(GAMES_EDIT_MEMBER)).toBe(false);
+		expect(member.canDo(GAMES_EDIT_STUDENT)).toBe(false);
+		expect(member.canDo(USER_ROLE_ASSIGN)).toBe(false);
+		expect(member.canDo(USER_ROLE_ASSIGN_ADMIN)).toBe(false);
+		expect(member.canDo(USER_ROLE_ASSIGN_TEACHER)).toBe(false);
+		expect(member.canDo(USER_ROLE_ASSIGN_MEMBER)).toBe(false);
+		expect(member.canDo(USER_ROLE_ASSIGN_STUDENT)).toBe(false);
+		expect(member.canDo(GAMES_SEE)).toBe(false);
+		expect(member.canDo(GAMES_SEE_ADMIN)).toBe(false);
+		expect(member.canDo(GAMES_SEE_TEACHER)).toBe(false);
+		expect(member.canDo(GAMES_SEE_MEMBER)).toBe(false);
+		expect(member.canDo(GAMES_SEE_STUDENT)).toBe(false);
+		expect(member.canDo(USER_CHALLENGE)).toBe(true);
+		expect(member.canDo(USER_CHALLENGE_ADMIN)).toBe(true);
+		expect(member.canDo(USER_CHALLENGE_MEMBER)).toBe(false);
+		expect(member.canDo(USER_CHALLENGE_TEACHER)).toBe(false);
+		expect(member.canDo(USER_CHALLENGE_STUDENT)).toBe(true);
 	});
 });
 
 describe('Actions allowed per user (multiple roles)', () => {
 	test('Admin + Teacher', () => {
-		UserRoleToUserAction.get_instance().clear();
-		initialize_permissions({
+		UserRoleToUserAction.getInstance().clear();
+		initializePermissions({
 			admin: [USER_EDIT_TEACHER],
 			teacher: [],
 			student: [USER_CHALLENGE_STUDENT],
@@ -461,45 +461,45 @@ describe('Actions allowed per user (multiple roles)', () => {
 			[]
 		);
 
-		const actions = admin_teacher.get_actions();
+		const actions = admin_teacher.getActions();
 		expect(actions.length).toBe(2);
 		expect(actions.includes(USER_EDIT)).toBe(true);
 		expect(actions.includes(USER_EDIT_TEACHER)).toBe(true);
 		expect(actions.includes(USER_CHALLENGE)).toBe(false);
 		expect(actions.includes(USER_CHALLENGE_STUDENT)).toBe(false);
 
-		expect(admin_teacher.can_do(CREATE_USER)).toBe(false);
-		expect(admin_teacher.can_do(GAMES_CREATE)).toBe(false);
-		expect(admin_teacher.can_do(USER_EDIT)).toBe(true);
-		expect(admin_teacher.can_do(USER_EDIT_ADMIN)).toBe(false);
-		expect(admin_teacher.can_do(USER_EDIT_TEACHER)).toBe(true);
-		expect(admin_teacher.can_do(USER_EDIT_MEMBER)).toBe(false);
-		expect(admin_teacher.can_do(USER_EDIT_STUDENT)).toBe(false);
-		expect(admin_teacher.can_do(GAMES_EDIT)).toBe(false);
-		expect(admin_teacher.can_do(GAMES_EDIT_ADMIN)).toBe(false);
-		expect(admin_teacher.can_do(GAMES_EDIT_TEACHER)).toBe(false);
-		expect(admin_teacher.can_do(GAMES_EDIT_MEMBER)).toBe(false);
-		expect(admin_teacher.can_do(GAMES_EDIT_STUDENT)).toBe(false);
-		expect(admin_teacher.can_do(USER_ROLE_ASSIGN)).toBe(false);
-		expect(admin_teacher.can_do(USER_ROLE_ASSIGN_ADMIN)).toBe(false);
-		expect(admin_teacher.can_do(USER_ROLE_ASSIGN_TEACHER)).toBe(false);
-		expect(admin_teacher.can_do(USER_ROLE_ASSIGN_MEMBER)).toBe(false);
-		expect(admin_teacher.can_do(USER_ROLE_ASSIGN_STUDENT)).toBe(false);
-		expect(admin_teacher.can_do(GAMES_SEE)).toBe(false);
-		expect(admin_teacher.can_do(GAMES_SEE_ADMIN)).toBe(false);
-		expect(admin_teacher.can_do(GAMES_SEE_TEACHER)).toBe(false);
-		expect(admin_teacher.can_do(GAMES_SEE_MEMBER)).toBe(false);
-		expect(admin_teacher.can_do(GAMES_SEE_STUDENT)).toBe(false);
-		expect(admin_teacher.can_do(USER_CHALLENGE)).toBe(false);
-		expect(admin_teacher.can_do(USER_CHALLENGE_ADMIN)).toBe(false);
-		expect(admin_teacher.can_do(USER_CHALLENGE_MEMBER)).toBe(false);
-		expect(admin_teacher.can_do(USER_CHALLENGE_TEACHER)).toBe(false);
-		expect(admin_teacher.can_do(USER_CHALLENGE_STUDENT)).toBe(false);
+		expect(admin_teacher.canDo(CREATE_USER)).toBe(false);
+		expect(admin_teacher.canDo(GAMES_CREATE)).toBe(false);
+		expect(admin_teacher.canDo(USER_EDIT)).toBe(true);
+		expect(admin_teacher.canDo(USER_EDIT_ADMIN)).toBe(false);
+		expect(admin_teacher.canDo(USER_EDIT_TEACHER)).toBe(true);
+		expect(admin_teacher.canDo(USER_EDIT_MEMBER)).toBe(false);
+		expect(admin_teacher.canDo(USER_EDIT_STUDENT)).toBe(false);
+		expect(admin_teacher.canDo(GAMES_EDIT)).toBe(false);
+		expect(admin_teacher.canDo(GAMES_EDIT_ADMIN)).toBe(false);
+		expect(admin_teacher.canDo(GAMES_EDIT_TEACHER)).toBe(false);
+		expect(admin_teacher.canDo(GAMES_EDIT_MEMBER)).toBe(false);
+		expect(admin_teacher.canDo(GAMES_EDIT_STUDENT)).toBe(false);
+		expect(admin_teacher.canDo(USER_ROLE_ASSIGN)).toBe(false);
+		expect(admin_teacher.canDo(USER_ROLE_ASSIGN_ADMIN)).toBe(false);
+		expect(admin_teacher.canDo(USER_ROLE_ASSIGN_TEACHER)).toBe(false);
+		expect(admin_teacher.canDo(USER_ROLE_ASSIGN_MEMBER)).toBe(false);
+		expect(admin_teacher.canDo(USER_ROLE_ASSIGN_STUDENT)).toBe(false);
+		expect(admin_teacher.canDo(GAMES_SEE)).toBe(false);
+		expect(admin_teacher.canDo(GAMES_SEE_ADMIN)).toBe(false);
+		expect(admin_teacher.canDo(GAMES_SEE_TEACHER)).toBe(false);
+		expect(admin_teacher.canDo(GAMES_SEE_MEMBER)).toBe(false);
+		expect(admin_teacher.canDo(GAMES_SEE_STUDENT)).toBe(false);
+		expect(admin_teacher.canDo(USER_CHALLENGE)).toBe(false);
+		expect(admin_teacher.canDo(USER_CHALLENGE_ADMIN)).toBe(false);
+		expect(admin_teacher.canDo(USER_CHALLENGE_MEMBER)).toBe(false);
+		expect(admin_teacher.canDo(USER_CHALLENGE_TEACHER)).toBe(false);
+		expect(admin_teacher.canDo(USER_CHALLENGE_STUDENT)).toBe(false);
 	});
 
 	test('Admin + Student', () => {
-		UserRoleToUserAction.get_instance().clear();
-		initialize_permissions({
+		UserRoleToUserAction.getInstance().clear();
+		initializePermissions({
 			admin: [USER_EDIT_TEACHER],
 			teacher: [],
 			student: [USER_CHALLENGE_STUDENT],
@@ -516,39 +516,39 @@ describe('Actions allowed per user (multiple roles)', () => {
 			[]
 		);
 
-		const actions = admin_student.get_actions();
+		const actions = admin_student.getActions();
 		expect(actions.length).toBe(4);
 		expect(actions.includes(USER_EDIT)).toBe(true);
 		expect(actions.includes(USER_EDIT_TEACHER)).toBe(true);
 		expect(actions.includes(USER_CHALLENGE)).toBe(true);
 		expect(actions.includes(USER_CHALLENGE_STUDENT)).toBe(true);
 
-		expect(admin_student.can_do(CREATE_USER)).toBe(false);
-		expect(admin_student.can_do(GAMES_CREATE)).toBe(false);
-		expect(admin_student.can_do(USER_EDIT)).toBe(true);
-		expect(admin_student.can_do(USER_EDIT_ADMIN)).toBe(false);
-		expect(admin_student.can_do(USER_EDIT_TEACHER)).toBe(true);
-		expect(admin_student.can_do(USER_EDIT_MEMBER)).toBe(false);
-		expect(admin_student.can_do(USER_EDIT_STUDENT)).toBe(false);
-		expect(admin_student.can_do(GAMES_EDIT)).toBe(false);
-		expect(admin_student.can_do(GAMES_EDIT_ADMIN)).toBe(false);
-		expect(admin_student.can_do(GAMES_EDIT_TEACHER)).toBe(false);
-		expect(admin_student.can_do(GAMES_EDIT_MEMBER)).toBe(false);
-		expect(admin_student.can_do(GAMES_EDIT_STUDENT)).toBe(false);
-		expect(admin_student.can_do(USER_ROLE_ASSIGN)).toBe(false);
-		expect(admin_student.can_do(USER_ROLE_ASSIGN_ADMIN)).toBe(false);
-		expect(admin_student.can_do(USER_ROLE_ASSIGN_TEACHER)).toBe(false);
-		expect(admin_student.can_do(USER_ROLE_ASSIGN_MEMBER)).toBe(false);
-		expect(admin_student.can_do(USER_ROLE_ASSIGN_STUDENT)).toBe(false);
-		expect(admin_student.can_do(GAMES_SEE)).toBe(false);
-		expect(admin_student.can_do(GAMES_SEE_ADMIN)).toBe(false);
-		expect(admin_student.can_do(GAMES_SEE_TEACHER)).toBe(false);
-		expect(admin_student.can_do(GAMES_SEE_MEMBER)).toBe(false);
-		expect(admin_student.can_do(GAMES_SEE_STUDENT)).toBe(false);
-		expect(admin_student.can_do(USER_CHALLENGE)).toBe(true);
-		expect(admin_student.can_do(USER_CHALLENGE_ADMIN)).toBe(false);
-		expect(admin_student.can_do(USER_CHALLENGE_MEMBER)).toBe(false);
-		expect(admin_student.can_do(USER_CHALLENGE_TEACHER)).toBe(false);
-		expect(admin_student.can_do(USER_CHALLENGE_STUDENT)).toBe(true);
+		expect(admin_student.canDo(CREATE_USER)).toBe(false);
+		expect(admin_student.canDo(GAMES_CREATE)).toBe(false);
+		expect(admin_student.canDo(USER_EDIT)).toBe(true);
+		expect(admin_student.canDo(USER_EDIT_ADMIN)).toBe(false);
+		expect(admin_student.canDo(USER_EDIT_TEACHER)).toBe(true);
+		expect(admin_student.canDo(USER_EDIT_MEMBER)).toBe(false);
+		expect(admin_student.canDo(USER_EDIT_STUDENT)).toBe(false);
+		expect(admin_student.canDo(GAMES_EDIT)).toBe(false);
+		expect(admin_student.canDo(GAMES_EDIT_ADMIN)).toBe(false);
+		expect(admin_student.canDo(GAMES_EDIT_TEACHER)).toBe(false);
+		expect(admin_student.canDo(GAMES_EDIT_MEMBER)).toBe(false);
+		expect(admin_student.canDo(GAMES_EDIT_STUDENT)).toBe(false);
+		expect(admin_student.canDo(USER_ROLE_ASSIGN)).toBe(false);
+		expect(admin_student.canDo(USER_ROLE_ASSIGN_ADMIN)).toBe(false);
+		expect(admin_student.canDo(USER_ROLE_ASSIGN_TEACHER)).toBe(false);
+		expect(admin_student.canDo(USER_ROLE_ASSIGN_MEMBER)).toBe(false);
+		expect(admin_student.canDo(USER_ROLE_ASSIGN_STUDENT)).toBe(false);
+		expect(admin_student.canDo(GAMES_SEE)).toBe(false);
+		expect(admin_student.canDo(GAMES_SEE_ADMIN)).toBe(false);
+		expect(admin_student.canDo(GAMES_SEE_TEACHER)).toBe(false);
+		expect(admin_student.canDo(GAMES_SEE_MEMBER)).toBe(false);
+		expect(admin_student.canDo(GAMES_SEE_STUDENT)).toBe(false);
+		expect(admin_student.canDo(USER_CHALLENGE)).toBe(true);
+		expect(admin_student.canDo(USER_CHALLENGE_ADMIN)).toBe(false);
+		expect(admin_student.canDo(USER_CHALLENGE_MEMBER)).toBe(false);
+		expect(admin_student.canDo(USER_CHALLENGE_TEACHER)).toBe(false);
+		expect(admin_student.canDo(USER_CHALLENGE_STUDENT)).toBe(true);
 	});
 });

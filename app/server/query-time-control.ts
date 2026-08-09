@@ -24,26 +24,26 @@ Contact:
 */
 
 import Debug from 'debug';
-const debug = Debug('ELO_CHESS_TRACKER:server_query_time_control');
+const debug = Debug('ELOCHESSTRACKER:serverQueryTimeControl');
 import { Request, Response } from 'express';
 
 import { logNow } from '@common/utils/time';
-import { is_user_logged_in } from '@server/managers/session';
+import { isUserLoggedIn } from '@server/managers/session';
 import { RatingSystemManager } from '@app/server/managers/rating-system-manager';
-import { isNotDefined } from '@app/common/utils/is-defined';
-import { Routes } from '@common/routes';
-import { safe_parse_request_cookies } from '@server/utils/schemas';
+import { isNotDefined } from '@common/utils/is-defined';
+import { ROUTES } from '@common/routes';
+import { safeParseRequestCookies } from '@server/utils/schemas';
 import { AuthenticationInputSchema } from '@common/schemas/authentication';
 
-export async function get_query_html_time_controls(req: Request, res: Response) {
-	debug(logNow(), `GET ${Routes.QUERY_HTML_TIME_CONTROLS}...`);
+export async function getQueryHtmlTimeControls(req: Request, res: Response) {
+	debug(logNow(), `GET ${ROUTES.QUERY_HTML_TIME_CONTROLS}...`);
 
-	const session_parse = safe_parse_request_cookies(req, AuthenticationInputSchema, res, debug);
-	if (session_parse.result === 'Exit') {
+	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	if (sessionParse.result === 'Exit') {
 		return;
 	}
-	const session = session_parse.data;
-	const r = is_user_logged_in(session);
+	const session = sessionParse.data;
+	const r = isUserLoggedIn(session);
 
 	if (isNotDefined(r[2])) {
 		res.status(401).send(r[1]);
@@ -51,22 +51,22 @@ export async function get_query_html_time_controls(req: Request, res: Response) 
 	}
 
 	let html: string = '';
-	const tcs = RatingSystemManager.get_instance().get_time_controls();
+	const tcs = RatingSystemManager.getInstance().getTimeControls();
 	for (const tc of tcs) {
 		html += `<option value="${tc.id}">${tc.name}</option>`;
 	}
 	res.status(200).send(html);
 }
 
-export async function get_query_html_time_controls_unique(req: Request, res: Response) {
-	debug(logNow(), `GET ${Routes.QUERY_HTML_TIME_CONTROLS_UNIQUE}...`);
+export async function getQueryHtmlTimeControlsUnique(req: Request, res: Response) {
+	debug(logNow(), `GET ${ROUTES.QUERY_HTML_TIME_CONTROLS_UNIQUE}...`);
 
-	const session_parse = safe_parse_request_cookies(req, AuthenticationInputSchema, res, debug);
-	if (session_parse.result === 'Exit') {
+	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	if (sessionParse.result === 'Exit') {
 		return;
 	}
-	const session = session_parse.data;
-	const r = is_user_logged_in(session);
+	const session = sessionParse.data;
+	const r = isUserLoggedIn(session);
 
 	if (isNotDefined(r[2])) {
 		res.status(401).send(r[1]);
@@ -74,7 +74,7 @@ export async function get_query_html_time_controls_unique(req: Request, res: Res
 	}
 
 	let html: string = '';
-	const tcs = RatingSystemManager.get_instance().get_unique_time_controls_ids();
+	const tcs = RatingSystemManager.getInstance().getUniqueTimeControlsIds();
 	for (const tc of tcs) {
 		html += `<option value="${tc}">${tc}</option>`;
 	}

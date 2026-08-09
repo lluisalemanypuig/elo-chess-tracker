@@ -27,9 +27,9 @@ import { z } from 'zod';
 
 const SSLCertificateSchema = z
 	.object({
-		public_key_file: z.string(),
-		private_key_file: z.string(),
-		passphrase_file: z.string()
+		publicKeyFile: z.string(),
+		privateKeyFile: z.string(),
+		passphraseFile: z.string()
 	})
 	.strict();
 
@@ -51,10 +51,10 @@ const HomePageSchema = z
 
 export const EnvironmentSchema = z
 	.object({
-		ssl_certificate: SSLCertificateSchema,
+		sslCertificate: SSLCertificateSchema,
 		favicon: z.string(),
-		login_page: LoginPageSchema,
-		home_page: HomePageSchema
+		loginPage: LoginPageSchema,
+		homePage: HomePageSchema
 	})
 	.strict();
 

@@ -24,10 +24,10 @@ Contact:
 */
 
 import { toPlayerPrivateId } from '@common/models/player';
-import { toTimeControlId, toTimeControlName } from '@app/common/models/time-control';
+import { toTimeControlId, toTimeControlName } from '@common/models/time-control';
 import { Game, toGameId } from '@common/models/game';
-import { EloRating } from '@common/models/rating_framework/Elo/rating';
-import { Elo_player_vs_player } from '@app/server/rating-framework/Elo/formula';
+import { EloRating } from '@common/models/rating-framework/Elo/rating';
+import { EloPlayerVsPlayer } from '@app/server/rating-framework/Elo/formula';
 import { toDateFull } from '@common/utils/time';
 
 const Blitz = toTimeControlId('Blitz');
@@ -50,17 +50,17 @@ describe('Simple games', () => {
 			toDateFull('2024-12-28..16:41:00')
 		);
 
-		const [aW, aB] = Elo_player_vs_player(game);
+		const [aW, aB] = EloPlayerVsPlayer(game);
 
 		expect(aW.rating).toEqual(1520);
-		expect(aW.num_games).toEqual(bW.num_games + 1);
+		expect(aW.numGames).toEqual(bW.numGames + 1);
 		expect(aW.won).toEqual(bW.won + 1);
 		expect(aW.drawn).toEqual(bW.drawn);
 		expect(aW.lost).toEqual(bW.lost);
 		expect(aW.K).toEqual(bW.K);
 
 		expect(aB.rating).toEqual(1480);
-		expect(aB.num_games).toEqual(bB.num_games + 1);
+		expect(aB.numGames).toEqual(bB.numGames + 1);
 		expect(aB.won).toEqual(bB.won);
 		expect(aB.drawn).toEqual(bB.drawn);
 		expect(aB.lost).toEqual(bB.lost + 1);
@@ -83,16 +83,16 @@ describe('Simple games', () => {
 			toDateFull('2024-12-28..16:41:00')
 		);
 
-		const [aW, aB] = Elo_player_vs_player(game);
+		const [aW, aB] = EloPlayerVsPlayer(game);
 
 		expect(aW.rating).toEqual(bW.rating);
-		expect(aW.num_games).toEqual(bW.num_games + 1);
+		expect(aW.numGames).toEqual(bW.numGames + 1);
 		expect(aW.won).toEqual(bW.won);
 		expect(aW.drawn).toEqual(bW.drawn + 1);
 		expect(aW.lost).toEqual(bW.lost);
 
 		expect(aB.rating).toEqual(bB.rating);
-		expect(aB.num_games).toEqual(bB.num_games + 1);
+		expect(aB.numGames).toEqual(bB.numGames + 1);
 		expect(aB.won).toEqual(bB.won);
 		expect(aB.drawn).toEqual(bB.drawn + 1);
 		expect(aB.lost).toEqual(bB.lost);
@@ -114,17 +114,17 @@ describe('Simple games', () => {
 			toDateFull('2024-12-28..16:41:00')
 		);
 
-		const [aW, aB] = Elo_player_vs_player(game);
+		const [aW, aB] = EloPlayerVsPlayer(game);
 
 		expect(aW.rating).toEqual(1480);
-		expect(aW.num_games).toEqual(bW.num_games + 1);
+		expect(aW.numGames).toEqual(bW.numGames + 1);
 		expect(aW.won).toEqual(bW.won);
 		expect(aW.drawn).toEqual(bW.drawn);
 		expect(aW.lost).toEqual(bW.lost + 1);
 		expect(aW.K).toEqual(bW.K);
 
 		expect(aB.rating).toEqual(1520);
-		expect(aB.num_games).toEqual(bB.num_games + 1);
+		expect(aB.numGames).toEqual(bB.numGames + 1);
 		expect(aB.won).toEqual(bB.won + 1);
 		expect(aB.drawn).toEqual(bB.drawn);
 		expect(aB.lost).toEqual(bB.lost);
@@ -137,7 +137,7 @@ describe('Series of games', () => {
 		let W = new EloRating(1500, 0, 0, 0, 0, 40, false);
 		let B = new EloRating(1500, 0, 0, 0, 0, 40, false);
 
-		while (W.num_games < 29) {
+		while (W.numGames < 29) {
 			const game = new Game(
 				toGameId('01'),
 				'sample',
@@ -150,7 +150,7 @@ describe('Series of games', () => {
 				Blitz5p3,
 				toDateFull('2024-12-28..16:41:00')
 			);
-			[W, B] = Elo_player_vs_player(game);
+			[W, B] = EloPlayerVsPlayer(game);
 		}
 		expect(W.K).toBe(40);
 
@@ -166,7 +166,7 @@ describe('Series of games', () => {
 			Blitz5p3,
 			toDateFull('2024-12-28..16:41:00')
 		);
-		[W, B] = Elo_player_vs_player(game);
+		[W, B] = EloPlayerVsPlayer(game);
 
 		expect(W.K).toBe(20);
 	});
@@ -175,7 +175,7 @@ describe('Series of games', () => {
 		let W = new EloRating(1500, 0, 0, 0, 0, 40, false);
 		let B = new EloRating(2000, 0, 0, 0, 0, 40, false);
 
-		while (W.num_games < 30) {
+		while (W.numGames < 30) {
 			const game = new Game(
 				toGameId('01'),
 				'sample',
@@ -188,12 +188,12 @@ describe('Series of games', () => {
 				Blitz5p3,
 				toDateFull('2024-12-28..16:41:00')
 			);
-			[W, B] = Elo_player_vs_player(game);
+			[W, B] = EloPlayerVsPlayer(game);
 			B.rating = 2000;
 		}
 
 		expect(W.K).toBe(20);
-		expect(W.num_games).toBeGreaterThanOrEqual(30);
+		expect(W.numGames).toBeGreaterThanOrEqual(30);
 
 		while (W.rating < 2400) {
 			const game = new Game(
@@ -208,14 +208,14 @@ describe('Series of games', () => {
 				Blitz5p3,
 				toDateFull('2024-12-28..16:41:00')
 			);
-			[W, B] = Elo_player_vs_player(game);
+			[W, B] = EloPlayerVsPlayer(game);
 			B.rating = 2000;
 		}
 
 		expect(W.rating).toBeGreaterThanOrEqual(2400);
 		expect(W.surpassed_2400).toBe(true);
 		expect(W.K).toBe(10);
-		expect(W.num_games).toBeGreaterThanOrEqual(30);
+		expect(W.numGames).toBeGreaterThanOrEqual(30);
 
 		while (W.rating > 2200) {
 			const game = new Game(
@@ -230,7 +230,7 @@ describe('Series of games', () => {
 				Blitz5p3,
 				toDateFull('2024-12-28..16:41:00')
 			);
-			[W, B] = Elo_player_vs_player(game);
+			[W, B] = EloPlayerVsPlayer(game);
 			B.rating = 2000;
 		}
 	});
@@ -252,7 +252,7 @@ describe('Series of games', () => {
 				Blitz5p3,
 				toDateFull('2024-12-28..16:41:00')
 			);
-			[W, B] = Elo_player_vs_player(game);
+			[W, B] = EloPlayerVsPlayer(game);
 			B.rating = 2000;
 		}
 
@@ -272,7 +272,7 @@ describe('Series of games', () => {
 				Blitz5p3,
 				toDateFull('2024-12-28..16:41:00')
 			);
-			[W, B] = Elo_player_vs_player(game);
+			[W, B] = EloPlayerVsPlayer(game);
 			B.rating = 2000;
 		}
 

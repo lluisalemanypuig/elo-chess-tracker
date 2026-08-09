@@ -22,33 +22,33 @@ Full source code of elo-chess-tracker:
 import 'htmx.org';
 
 import { messageFromResponse, serverCall } from '@client/action';
-import { Routes } from '@common/routes';
+import { ROUTES } from '@common/routes';
 import { PlayerPrivateId } from '@common/models/player';
 
-async function log_into_webpage(_event: any) {
+async function logIntoWebpage(_event: any) {
 	// username box
-	const _username_box = document.getElementById('username_box');
-	if (_username_box == null) {
-		console.log("Element 'username_box' does not exist.");
+	const UsernameBox = document.getElementById('usernameBox');
+	if (UsernameBox == null) {
+		console.log("Element 'usernameBox' does not exist.");
 		return;
 	}
 
 	// password box
-	const _password_box = document.getElementById('password_box');
-	if (_password_box == null) {
-		console.log("Element 'password_box' does not exist.");
+	const PasswordBox = document.getElementById('passwordBox');
+	if (PasswordBox == null) {
+		console.log("Element 'passwordBox' does not exist.");
 		return;
 	}
 
-	const username = (_username_box as HTMLInputElement).value as PlayerPrivateId;
-	const password = (_password_box as HTMLInputElement).value as PlayerPrivateId;
+	const username = (UsernameBox as HTMLInputElement).value as PlayerPrivateId;
+	const password = (PasswordBox as HTMLInputElement).value as PlayerPrivateId;
 
 	if (username == '' || password == '') {
 		return;
 	}
 
 	// "query" the server
-	const response = await serverCall(Routes.USER_LOGIN, { u: username, p: password });
+	const response = await serverCall(ROUTES.USER_LOGIN, { u: username, p: password });
 	if (response.status === 'Error') {
 		alert(messageFromResponse(response));
 		return;
@@ -61,20 +61,20 @@ async function log_into_webpage(_event: any) {
 	for (const c of cookies) {
 		document.cookie = c;
 	}
-	window.location.href = Routes.HOME;
+	window.location.href = ROUTES.HOME;
 }
 
-async function password_box_key_down(_event: any) {
-	if (_event.key == 'Enter') {
-		log_into_webpage(_event);
+async function passwordBoxKeyDown(event: any) {
+	if (event.key == 'Enter') {
+		logIntoWebpage(Event);
 	}
 }
 
 window.onload = function () {
 	// define behaviour of login button
-	let login_button = document.getElementById('login_button') as HTMLButtonElement;
-	login_button.onclick = log_into_webpage;
+	let loginButton = document.getElementById('loginButton') as HTMLButtonElement;
+	loginButton.onclick = logIntoWebpage;
 
-	let password_box = document.getElementById('password_box') as HTMLInputElement;
-	password_box.onkeydown = password_box_key_down;
+	let passwordBox = document.getElementById('passwordBox') as HTMLInputElement;
+	passwordBox.onkeydown = passwordBoxKeyDown;
 };

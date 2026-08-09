@@ -24,7 +24,7 @@ Contact:
 */
 
 import { z } from 'zod';
-import { UserActionSchema } from '@app/common/models/user-action';
+import { UserActionSchema } from '@common/models/user-action';
 
 const AdminSchema = z.array(UserActionSchema);
 const TeacherSchema = z.array(UserActionSchema);

@@ -23,7 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { toTimeControlId, toTimeControlName } from '@app/common/models/time-control';
+import { toTimeControlId, toTimeControlName } from '@common/models/time-control';
 import { RatingSystemManager } from '@app/server/managers/rating-system-manager';
 
 const Classical = toTimeControlId('Classical');
@@ -41,11 +41,11 @@ const Blitz3p2 = toTimeControlName('Blitz (3 + 2)');
 
 describe('Rating System Manager', () => {
 	test('Basic tests', () => {
-		let rating = RatingSystemManager.get_instance();
-		expect(rating.get_time_controls().length).toBe(0);
-		expect(rating.get_unique_time_controls_ids().length).toBe(0);
+		let rating = RatingSystemManager.getInstance();
+		expect(rating.getTimeControls().length).toBe(0);
+		expect(rating.getUniqueTimeControlsIds().length).toBe(0);
 
-		rating.set_time_controls([
+		rating.setTimeControls([
 			{ id: Classical, name: Classical90p30 },
 			{ id: Rapid, name: Rapid15p10 },
 			{ id: Rapid, name: Rapid12p5 },
@@ -55,13 +55,13 @@ describe('Rating System Manager', () => {
 			{ id: Blitz, name: Blitz3p2 }
 		]);
 
-		expect(rating.get_time_controls().length).toBe(7);
-		expect(rating.get_unique_time_controls_ids().length).toBe(3);
-		expect(rating.is_time_control_id_valid(Classical)).toBe(true);
-		expect(rating.is_time_control_id_valid(Rapid)).toBe(true);
-		expect(rating.is_time_control_id_valid(Blitz)).toBe(true);
+		expect(rating.getTimeControls().length).toBe(7);
+		expect(rating.getUniqueTimeControlsIds().length).toBe(3);
+		expect(rating.isTimeControlIdValid(Classical)).toBe(true);
+		expect(rating.isTimeControlIdValid(Rapid)).toBe(true);
+		expect(rating.isTimeControlIdValid(Blitz)).toBe(true);
 
-		const unique_ids = rating.get_unique_time_controls_ids();
+		const unique_ids = rating.getUniqueTimeControlsIds();
 		expect(
 			unique_ids.findIndex((val: string): boolean => {
 				return val == Classical;

@@ -24,61 +24,61 @@ Contact:
 */
 
 import Debug from 'debug';
-const debug = Debug('ELO_CHESS_TRACKER:server_users_password_changes');
+const debug = Debug('ELOCHESSTRACKER:serverUsersPasswordChanges');
 import { Request, Response } from 'express';
 
 import { logNow } from '@common/utils/time';
-import { is_user_logged_in, session_user_delete_all } from '@server/managers/session';
-import { encrypt_password_for_user, is_password_of_user_correct } from '@server/utils/encrypt';
-import { user_overwrite } from '@server/managers/users';
+import { isUserLoggedIn, sessionUserDeleteAll } from '@server/managers/session';
+import { encryptPasswordForUser, isPasswordOfUserCorrect } from '@server/utils/encrypt';
+import { userOverwrite } from '@server/managers/users';
 import { ConfigurationManager } from '@app/server/managers/configuration-manager';
-import { get_execution_directory } from '@app/server/managers/environment-manager';
-import { isNotDefined } from '@app/common/utils/is-defined';
-import { Routes } from '@common/routes';
-import { InputSchemaOf } from '@common/api/schemas';
-import { safe_parse_request_body, safe_parse_request_cookies } from '@server/utils/schemas';
+import { getExecutionDirectory } from '@app/server/managers/environment-manager';
+import { isNotDefined } from '@common/utils/is-defined';
+import { ROUTES } from '@common/routes';
+import { inputSchemaOf } from '@common/api/schemas';
+import { safeParseRequestBody, safeParseRequestCookies } from '@server/utils/schemas';
 import { AuthenticationInputSchema } from '@common/schemas/authentication';
 
-export async function get_page_user_password_change(req: Request, res: Response) {
-	debug(logNow(), `GET ${Routes.PAGE_USER_PASSWORD_CHANGE}...`);
+export async function getPageUserPasswordChange(req: Request, res: Response) {
+	debug(logNow(), `GET ${ROUTES.PAGE_USER_PASSWORD_CHANGE}...`);
 
-	const session_parse = safe_parse_request_cookies(req, AuthenticationInputSchema, res, debug);
-	if (session_parse.result === 'Exit') {
+	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	if (sessionParse.result === 'Exit') {
 		return;
 	}
-	const session = session_parse.data;
+	const session = sessionParse.data;
 
-	const r = is_user_logged_in(session);
+	const r = isUserLoggedIn(session);
 	if (isNotDefined(r[2])) {
 		res.status(401).send(r[1]);
 		return;
 	}
 
 	res.status(200);
-	if (ConfigurationManager.should_cache_data()) {
+	if (ConfigurationManager.shouldCacheData()) {
 		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
 	}
-	res.sendFile(`${get_execution_directory()}/html/user/password-change.html`);
+	res.sendFile(`${getExecutionDirectory()}/html/user/password-change.html`);
 }
 
-export async function post_user_password_change(req: Request, res: Response) {
-	debug(logNow(), `POST ${Routes.USER_PASSWORD_CHANGE}...`);
+export async function postUserPasswordChange(req: Request, res: Response) {
+	debug(logNow(), `POST ${ROUTES.USER_PASSWORD_CHANGE}...`);
 
-	const session_parse = safe_parse_request_cookies(req, AuthenticationInputSchema, res, debug);
-	if (session_parse.result === 'Exit') {
+	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	if (sessionParse.result === 'Exit') {
 		return;
 	}
-	const session = session_parse.data;
+	const session = sessionParse.data;
 
-	const password_parse = safe_parse_request_body(req, InputSchemaOf(Routes.USER_PASSWORD_CHANGE), res, debug);
-	if (password_parse.result === 'Exit') {
+	const passwordParse = safeParseRequestBody(req, inputSchemaOf(ROUTES.USER_PASSWORD_CHANGE), res, debug);
+	if (passwordParse.result === 'Exit') {
 		return;
 	}
 
-	const old_password = password_parse.data.old;
-	const new_password = password_parse.data.new;
+	const oldPassword = passwordParse.data.old;
+	const newPassword = passwordParse.data.new;
 
-	const r = is_user_logged_in(session);
+	const r = isUserLoggedIn(session);
 	const user = r[2];
 
 	if (isNotDefined(user)) {
@@ -87,25 +87,25 @@ export async function post_user_password_change(req: Request, res: Response) {
 	}
 
 	// check if password is correct
-	const old_pwd = user.password;
-	const is_password_correct = is_password_of_user_correct(session.username, old_password, old_pwd);
+	const oldPwd = user.password;
+	const isPasswordCorrect = isPasswordOfUserCorrect(session.username, oldPassword, oldPwd);
 
 	// is the password correct?
-	if (!is_password_correct) {
+	if (!isPasswordCorrect) {
 		debug(logNow(), `    Password for '${session.username}' is incorrect`);
 		res.status(500).send('Old password is not correct.');
 		return;
 	}
 
 	// delete all session ids of this user
-	session_user_delete_all(session.username);
+	sessionUserDeleteAll(session.username);
 
 	// make new password
-	const pass = encrypt_password_for_user(session.username, new_password);
+	const pass = encryptPasswordForUser(session.username, newPassword);
 	user.password = { encrypted: pass[0], iv: pass[1] };
 
 	// overwrite user data
-	user_overwrite(user);
+	userOverwrite(user);
 
 	res.status(200).send();
 }

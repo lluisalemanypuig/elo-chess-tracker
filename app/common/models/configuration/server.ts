@@ -36,7 +36,7 @@ export type Ports = z.infer<typeof PortsSchema>;
 
 export const ServerConfigurationSchema = z
 	.object({
-		domain_name: z.string(),
+		domainName: z.string(),
 		ports: PortsSchema
 	})
 	.strict();

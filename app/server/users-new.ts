@@ -24,37 +24,32 @@ Contact:
 */
 
 import Debug from 'debug';
-const debug = Debug('ELO_CHESS_TRACKER:server_users_new');
+const debug = Debug('ELOCHESSTRACKER:serverUsersNew');
 import { Request, Response } from 'express';
 
 import { logNow } from '@common/utils/time';
-import { is_user_logged_in } from '@server/managers/session';
-import { user_add_new } from '@server/managers/users';
-import { is_role_string_correct } from '@app/common/models/user-role';
-import {
-	CREATE_USER,
-	USER_ROLE_ASSIGN,
-	get_role_action_name,
-	USER_ROLE_ASSIGN_ID
-} from '@app/common/models/user-action';
+import { isUserLoggedIn } from '@server/managers/session';
+import { userAddNew } from '@server/managers/users';
+import { isRoleStringCorrect } from '@common/models/user-role';
+import { CREATE_USER, USER_ROLE_ASSIGN, getRoleActionName, USER_ROLE_ASSIGN_ID } from '@common/models/user-action';
 import { UsersManager } from '@app/server/managers/users-manager';
 import { ConfigurationManager } from '@app/server/managers/configuration-manager';
-import { get_execution_directory } from '@app/server/managers/environment-manager';
-import { isNotDefined } from '@app/common/utils/is-defined';
-import { Routes } from '@common/routes';
-import { InputSchemaOf } from '@common/api/schemas';
-import { safe_parse_request_body, safe_parse_request_cookies } from '@server/utils/schemas';
+import { getExecutionDirectory } from '@app/server/managers/environment-manager';
+import { isNotDefined } from '@common/utils/is-defined';
+import { ROUTES } from '@common/routes';
+import { inputSchemaOf } from '@common/api/schemas';
+import { safeParseRequestBody, safeParseRequestCookies } from '@server/utils/schemas';
 import { AuthenticationInputSchema } from '@common/schemas/authentication';
 
-export async function get_page_user_create(req: Request, res: Response) {
-	debug(logNow(), `GET ${Routes.PAGE_USER_CREATE}...`);
+export async function getPageUserCreate(req: Request, res: Response) {
+	debug(logNow(), `GET ${ROUTES.PAGE_USER_CREATE}...`);
 
-	const session_parse = safe_parse_request_cookies(req, AuthenticationInputSchema, res, debug);
-	if (session_parse.result === 'Exit') {
+	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	if (sessionParse.result === 'Exit') {
 		return;
 	}
-	const session = session_parse.data;
-	const r = is_user_logged_in(session);
+	const session = sessionParse.data;
+	const r = isUserLoggedIn(session);
 
 	const user = r[2];
 	if (isNotDefined(user)) {
@@ -62,33 +57,33 @@ export async function get_page_user_create(req: Request, res: Response) {
 		return;
 	}
 
-	if (!user.can_do(CREATE_USER)) {
+	if (!user.canDo(CREATE_USER)) {
 		debug(logNow(), `User '${session.username}' cannot create users.`);
 		res.status(403).send('You cannot create users.');
 		return;
 	}
-	if (!user.can_do(USER_ROLE_ASSIGN)) {
+	if (!user.canDo(USER_ROLE_ASSIGN)) {
 		debug(logNow(), `User '${session.username}' cannot assign roles to users.`);
 		res.status(403).send(`You cannot assign roles and thus cannot create users.`);
 		return;
 	}
 
 	res.status(200);
-	if (ConfigurationManager.should_cache_data()) {
+	if (ConfigurationManager.shouldCacheData()) {
 		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
 	}
-	res.sendFile(`${get_execution_directory()}/html/user/new.html`);
+	res.sendFile(`${getExecutionDirectory()}/html/user/new.html`);
 }
 
-export async function post_user_create(req: Request, res: Response) {
-	debug(logNow(), `POST ${Routes.USER_CREATE}`);
+export async function postUserCreate(req: Request, res: Response) {
+	debug(logNow(), `POST ${ROUTES.USER_CREATE}`);
 
-	const session_parse = safe_parse_request_cookies(req, AuthenticationInputSchema, res, debug);
-	if (session_parse.result === 'Exit') {
+	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	if (sessionParse.result === 'Exit') {
 		return;
 	}
-	const session = session_parse.data;
-	const r = is_user_logged_in(session);
+	const session = sessionParse.data;
+	const r = isUserLoggedIn(session);
 
 	const registerer = r[2];
 	if (isNotDefined(registerer)) {
@@ -96,27 +91,27 @@ export async function post_user_create(req: Request, res: Response) {
 		return;
 	}
 
-	if (!registerer.can_do(CREATE_USER)) {
+	if (!registerer.canDo(CREATE_USER)) {
 		debug(logNow(), `User '${session.username}' cannot create users.`);
 		res.status(403).send('You cannot create users.');
 		return;
 	}
-	if (!registerer.can_do(USER_ROLE_ASSIGN)) {
+	if (!registerer.canDo(USER_ROLE_ASSIGN)) {
 		debug(logNow(), `User '${session.username}' cannot assign roles to users.`);
 		res.status(403).send(`You cannot assign roles and thus cannot create users.`);
 		return;
 	}
 
-	const user_parse = safe_parse_request_body(req, InputSchemaOf(Routes.USER_CREATE), res, debug);
-	if (user_parse.result === 'Exit') {
+	const userParse = safeParseRequestBody(req, inputSchemaOf(ROUTES.USER_CREATE), res, debug);
+	if (userParse.result === 'Exit') {
 		return;
 	}
 
-	const username = user_parse.data.u;
-	const firstname = user_parse.data.fn;
-	const lastname = user_parse.data.ln;
-	const password = user_parse.data.password;
-	const roles = user_parse.data.r;
+	const username = userParse.data.u;
+	const firstname = userParse.data.fn;
+	const lastname = userParse.data.ln;
+	const password = userParse.data.password;
+	const roles = userParse.data.r;
 
 	debug(logNow(), `User '${session.username}' is trying to create a new user:`);
 	debug(logNow(), `    Username: '${username}'`);
@@ -124,24 +119,24 @@ export async function post_user_create(req: Request, res: Response) {
 	debug(logNow(), `    Last name: '${lastname}'`);
 	debug(logNow(), `    Roles: '${roles}'`);
 
-	if (UsersManager.get_instance().exists(username)) {
+	if (UsersManager.getInstance().exists(username)) {
 		res.status(500).send(`This user already exists`);
 		return;
 	}
 
 	for (const r of roles) {
-		if (!is_role_string_correct(r)) {
+		if (!isRoleStringCorrect(r)) {
 			res.status(500).send(`Role string '${r}' is not correct.`);
 			return;
 		}
 
-		const action = get_role_action_name(USER_ROLE_ASSIGN_ID, r);
-		if (!registerer.can_do(action)) {
+		const action = getRoleActionName(USER_ROLE_ASSIGN_ID, r);
+		if (!registerer.canDo(action)) {
 			res.status(403).send(`You cannot do ${action}.`);
 			return;
 		}
 	}
 
-	user_add_new(username, firstname, lastname, password, roles);
+	userAddNew(username, firstname, lastname, password, roles);
 	res.status(201).send();
 }

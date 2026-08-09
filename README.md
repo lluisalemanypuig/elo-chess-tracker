@@ -86,37 +86,37 @@ Edit the configuration file `webpage/configuration.json` appropriately. This fil
 
     {
         "environment": {
-            "ssl_certificate": {
-                "public_key_file": "server.cert",
-                "private_key_file": server.key",
-                "passphrase_file": ""
+            "sslCertificate": {
+                "publicKeyFile": "server.cert",
+                "privateKeyFile": server.key",
+                "passphraseFile": ""
             },
             "favicon": "favicon.png",
-            "login_page": {
+            "loginPage": {
                 "title": "Login into My Chess Club",
                 "icon": "login.png"
             },
-            "home_page": {
+            "homePage": {
                 "title": "My Chess Club",
                 "icon": "home.png"
             }
         },
 
     	"server": {
-            "domain_name": "coolclub.com",
+            "domainName": "coolclub.com",
     	    "ports": {
         		"http": "8080",
     		    "https": "8443"
     	    }
         },
 
-    	"rating_system": "Elo",
+    	"ratingSystem": "Elo",
 
-    	"time_controls": [ ],
+    	"timeControls": [ ],
 
         "behavior": {
             "challenges": {
-                "higher_rated_player_can_decline_challenge_from_lower_rated_player": false
+                "higherRatedPlayerCanDeclineChallengeFromLowerRatedPlayer": false
             }
         },
 
@@ -139,8 +139,8 @@ These are st by default to `8080` for HTTP and to `8443` for HTTPS. Change them 
 Write the names of the icons and titles of the sections of your webpage:
 
 - `favicon`: this is a small icon (typically, `48x48`) that shows up in the tab of a desktop's internet browser.
-- `login_page`: this is the icon that shows up in the login page of your site. The `title` field is the title of login page as well.
-- `home_page`: this is the icon that shows up in the home page of your site. The `title` field is the title of home page as well.
+- `loginPage`: this is the icon that shows up in the login page of your site. The `title` field is the title of login page as well.
+- `homePage`: this is the icon that shows up in the home page of your site. The `title` field is the title of home page as well.
 
 #### Rating system
 
@@ -148,7 +148,7 @@ Currently, this project only implements Elo's rating system (see this section of
 
 #### Time controls
 
-This webpage admits an unlimited number of time controls, where each time control has a unique rating associated to it. A time control is identified with an `id` (an arbitrary string, never shown to users), but can have many different names. For example, administrators of the site can configure a _Classical_ time control by adding the following text inside `time_controls` field.
+This webpage admits an unlimited number of time controls, where each time control has a unique rating associated to it. A time control is identified with an `id` (an arbitrary string, never shown to users), but can have many different names. For example, administrators of the site can configure a _Classical_ time control by adding the following text inside `timeControls` field.
 
     {
     	"id": "Classical",

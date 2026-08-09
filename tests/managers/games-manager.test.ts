@@ -23,7 +23,7 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { toTimeControlId } from '@app/common/models/time-control';
+import { toTimeControlId } from '@common/models/time-control';
 import { toGameId } from '@common/models/game';
 import { GamesManager } from '@app/server/managers/games-manager';
 import { toDateMajor } from '@common/utils/time';
@@ -35,54 +35,54 @@ const Bullet = toTimeControlId('bullet');
 
 describe('Games Manager', () => {
 	test('Get some new game ids', () => {
-		let games = GamesManager.get_instance();
+		let games = GamesManager.getInstance();
 		games.clear();
 
-		expect(games.get_max_game_id()).toBe('0000000000');
-		expect(games.new_game_id()).toBe('0000000001');
-		expect(games.get_max_game_id()).toBe('0000000001');
-		expect(games.new_game_id()).toBe('0000000002');
-		expect(games.get_max_game_id()).toBe('0000000002');
-		expect(games.new_game_id()).toBe('0000000003');
-		expect(games.get_max_game_id()).toBe('0000000003');
-		expect(games.new_game_id()).toBe('0000000004');
-		expect(games.get_max_game_id()).toBe('0000000004');
-		expect(games.new_game_id()).toBe('0000000005');
-		expect(games.get_max_game_id()).toBe('0000000005');
-		expect(games.num_games()).toBe(0);
+		expect(games.getMaxGameId()).toBe('0000000000');
+		expect(games.newGameId()).toBe('0000000001');
+		expect(games.getMaxGameId()).toBe('0000000001');
+		expect(games.newGameId()).toBe('0000000002');
+		expect(games.getMaxGameId()).toBe('0000000002');
+		expect(games.newGameId()).toBe('0000000003');
+		expect(games.getMaxGameId()).toBe('0000000003');
+		expect(games.newGameId()).toBe('0000000004');
+		expect(games.getMaxGameId()).toBe('0000000004');
+		expect(games.newGameId()).toBe('0000000005');
+		expect(games.getMaxGameId()).toBe('0000000005');
+		expect(games.numGames()).toBe(0);
 		games.clear();
 
-		expect(games.get_max_game_id()).toBe('0000000000');
-		expect(games.new_game_id()).toBe('0000000001');
-		expect(games.get_max_game_id()).toBe('0000000001');
-		expect(games.new_game_id()).toBe('0000000002');
-		expect(games.get_max_game_id()).toBe('0000000002');
-		expect(games.new_game_id()).toBe('0000000003');
-		expect(games.get_max_game_id()).toBe('0000000003');
-		expect(games.new_game_id()).toBe('0000000004');
-		expect(games.get_max_game_id()).toBe('0000000004');
-		expect(games.new_game_id()).toBe('0000000005');
-		expect(games.get_max_game_id()).toBe('0000000005');
-		expect(games.num_games()).toBe(0);
+		expect(games.getMaxGameId()).toBe('0000000000');
+		expect(games.newGameId()).toBe('0000000001');
+		expect(games.getMaxGameId()).toBe('0000000001');
+		expect(games.newGameId()).toBe('0000000002');
+		expect(games.getMaxGameId()).toBe('0000000002');
+		expect(games.newGameId()).toBe('0000000003');
+		expect(games.getMaxGameId()).toBe('0000000003');
+		expect(games.newGameId()).toBe('0000000004');
+		expect(games.getMaxGameId()).toBe('0000000004');
+		expect(games.newGameId()).toBe('0000000005');
+		expect(games.getMaxGameId()).toBe('0000000005');
+		expect(games.numGames()).toBe(0);
 	});
 
 	test('Start at an arbitrary id', () => {
-		let games = GamesManager.get_instance();
+		let games = GamesManager.getInstance();
 		games.clear();
 
-		games.set_max_game_id(100);
-		expect(games.get_max_game_id()).toBe('0000000100');
-		expect(games.new_game_id()).toBe('0000000101');
-		expect(games.get_max_game_id()).toBe('0000000101');
-		expect(games.new_game_id()).toBe('0000000102');
-		expect(games.get_max_game_id()).toBe('0000000102');
-		expect(games.new_game_id()).toBe('0000000103');
-		expect(games.get_max_game_id()).toBe('0000000103');
-		expect(games.new_game_id()).toBe('0000000104');
-		expect(games.get_max_game_id()).toBe('0000000104');
-		expect(games.new_game_id()).toBe('0000000105');
-		expect(games.get_max_game_id()).toBe('0000000105');
-		expect(games.num_games()).toBe(0);
+		games.setMaxGameId(100);
+		expect(games.getMaxGameId()).toBe('0000000100');
+		expect(games.newGameId()).toBe('0000000101');
+		expect(games.getMaxGameId()).toBe('0000000101');
+		expect(games.newGameId()).toBe('0000000102');
+		expect(games.getMaxGameId()).toBe('0000000102');
+		expect(games.newGameId()).toBe('0000000103');
+		expect(games.getMaxGameId()).toBe('0000000103');
+		expect(games.newGameId()).toBe('0000000104');
+		expect(games.getMaxGameId()).toBe('0000000104');
+		expect(games.newGameId()).toBe('0000000105');
+		expect(games.getMaxGameId()).toBe('0000000105');
+		expect(games.numGames()).toBe(0);
 	});
 
 	const id0000000000 = toGameId('0000000000');
@@ -94,47 +94,47 @@ describe('Games Manager', () => {
 	const id0000000006 = toGameId('0000000006');
 
 	test('Add some games', () => {
-		let games = GamesManager.get_instance();
+		let games = GamesManager.getInstance();
 		games.clear();
 
-		games.add_game(games.new_game_id(), toDateMajor('2025-01-19'), Blitz);
-		expect(games.num_games()).toBe(1);
-		games.add_game(games.new_game_id(), toDateMajor('2025-01-19'), Classical);
-		expect(games.num_games()).toBe(2);
-		games.add_game(games.new_game_id(), toDateMajor('2025-01-19'), Rapid);
-		expect(games.num_games()).toBe(3);
-		games.add_game(games.new_game_id(), toDateMajor('2025-01-19'), Bullet);
-		expect(games.num_games()).toBe(4);
+		games.addGame(games.newGameId(), toDateMajor('2025-01-19'), Blitz);
+		expect(games.numGames()).toBe(1);
+		games.addGame(games.newGameId(), toDateMajor('2025-01-19'), Classical);
+		expect(games.numGames()).toBe(2);
+		games.addGame(games.newGameId(), toDateMajor('2025-01-19'), Rapid);
+		expect(games.numGames()).toBe(3);
+		games.addGame(games.newGameId(), toDateMajor('2025-01-19'), Bullet);
+		expect(games.numGames()).toBe(4);
 
-		expect(games.get_game_info(id0000000001)?.game_record).toBe('2025-01-19');
-		expect(games.get_game_info(id0000000002)?.game_record).toBe('2025-01-19');
-		expect(games.get_game_info(id0000000003)?.game_record).toBe('2025-01-19');
-		expect(games.get_game_info(id0000000004)?.game_record).toBe('2025-01-19');
+		expect(games.getGameInfo(id0000000001)?.gameRecord).toBe('2025-01-19');
+		expect(games.getGameInfo(id0000000002)?.gameRecord).toBe('2025-01-19');
+		expect(games.getGameInfo(id0000000003)?.gameRecord).toBe('2025-01-19');
+		expect(games.getGameInfo(id0000000004)?.gameRecord).toBe('2025-01-19');
 
-		expect(games.get_game_info(id0000000001)?.time_control_id).toBe('blitz');
-		expect(games.get_game_info(id0000000002)?.time_control_id).toBe('classical');
-		expect(games.get_game_info(id0000000003)?.time_control_id).toBe('rapid');
-		expect(games.get_game_info(id0000000004)?.time_control_id).toBe('bullet');
+		expect(games.getGameInfo(id0000000001)?.timeControlId).toBe('blitz');
+		expect(games.getGameInfo(id0000000002)?.timeControlId).toBe('classical');
+		expect(games.getGameInfo(id0000000003)?.timeControlId).toBe('rapid');
+		expect(games.getGameInfo(id0000000004)?.timeControlId).toBe('bullet');
 
-		expect(games.game_exists(id0000000000)).toBe(false);
-		expect(games.game_exists(id0000000001)).toBe(true);
-		expect(games.game_exists(id0000000002)).toBe(true);
-		expect(games.game_exists(id0000000003)).toBe(true);
-		expect(games.game_exists(id0000000004)).toBe(true);
-		expect(games.game_exists(id0000000005)).toBe(false);
-		expect(games.game_exists(id0000000006)).toBe(false);
+		expect(games.gameExists(id0000000000)).toBe(false);
+		expect(games.gameExists(id0000000001)).toBe(true);
+		expect(games.gameExists(id0000000002)).toBe(true);
+		expect(games.gameExists(id0000000003)).toBe(true);
+		expect(games.gameExists(id0000000004)).toBe(true);
+		expect(games.gameExists(id0000000005)).toBe(false);
+		expect(games.gameExists(id0000000006)).toBe(false);
 
-		expect(games.get_game_info(id0000000005)).toBe(undefined);
-		expect(games.get_game_info(id0000000006)).toBe(undefined);
+		expect(games.getGameInfo(id0000000005)).toBe(undefined);
+		expect(games.getGameInfo(id0000000006)).toBe(undefined);
 	});
 
 	test('Clear and check', () => {
-		let games = GamesManager.get_instance();
+		let games = GamesManager.getInstance();
 		games.clear();
-		expect(games.num_games()).toBe(0);
-		expect(games.get_game_info(id0000000001)).toBe(undefined);
-		expect(games.get_game_info(id0000000002)).toBe(undefined);
-		expect(games.get_game_info(id0000000003)).toBe(undefined);
-		expect(games.get_game_info(id0000000004)).toBe(undefined);
+		expect(games.numGames()).toBe(0);
+		expect(games.getGameInfo(id0000000001)).toBe(undefined);
+		expect(games.getGameInfo(id0000000002)).toBe(undefined);
+		expect(games.getGameInfo(id0000000003)).toBe(undefined);
+		expect(games.getGameInfo(id0000000004)).toBe(undefined);
 	});
 });

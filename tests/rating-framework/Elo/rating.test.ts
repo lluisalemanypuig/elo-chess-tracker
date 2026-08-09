@@ -23,17 +23,17 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { new_rating_Elo } from '@common/models/rating_framework/Elo/rating';
-import { rating_from_string_Elo } from '@common/io/ratings/Elo/rating';
+import { newRatingElo } from '@common/models/rating-framework/Elo/rating';
+import { ratingFromStringElo } from '@common/io/ratings/Elo/rating';
 
 describe('JSON conversion', () => {
 	test('from string to rating', () => {
-		const elo = rating_from_string_Elo(
-			'{"rating": 1500.43, "num_games": 100, "won": 50, "drawn": 20, "lost": 30, "K": 40, "surpassed_2400": true}'
+		const elo = ratingFromStringElo(
+			'{"rating": 1500.43, "numGames": 100, "won": 50, "drawn": 20, "lost": 30, "K": 40, "surpassed_2400": true}'
 		);
 		expect(elo).toEqual({
 			rating: 1500.43,
-			num_games: 100,
+			numGames: 100,
 			won: 50,
 			drawn: 20,
 			lost: 30,
@@ -45,9 +45,9 @@ describe('JSON conversion', () => {
 
 describe('Initial rating', () => {
 	test('1', () => {
-		const elo = new_rating_Elo();
+		const elo = newRatingElo();
 		expect(elo.rating).toBe(1500);
-		expect(elo.num_games).toBe(0);
+		expect(elo.numGames).toBe(0);
 		expect(elo.won).toBe(0);
 		expect(elo.drawn).toBe(0);
 		expect(elo.lost).toBe(0);
@@ -60,7 +60,7 @@ describe('Clone', () => {
 	test('1', () => {
 		const r = {
 			rating: 1500.43,
-			num_games: 100,
+			numGames: 100,
 			won: 50,
 			drawn: 20,
 			lost: 30,
@@ -70,7 +70,7 @@ describe('Clone', () => {
 		const rc = { ...r };
 
 		expect(rc.rating).toBe(r.rating);
-		expect(rc.num_games).toBe(r.num_games);
+		expect(rc.numGames).toBe(r.numGames);
 		expect(rc.won).toBe(r.won);
 		expect(rc.drawn).toBe(r.drawn);
 		expect(rc.lost).toBe(r.lost);

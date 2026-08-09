@@ -28,9 +28,9 @@ import { GameResult } from '@common/models/game';
 
 export const EdgeMetadataSchema = z
 	.object({
-		num_games_won: z.number().gte(0),
-		num_games_drawn: z.number().gte(0),
-		num_games_lost: z.number().gte(0)
+		numGamesWon: z.number().gte(0),
+		numGamesDrawn: z.number().gte(0),
+		numGamesLost: z.number().gte(0)
 	})
 	.strict();
 
@@ -42,29 +42,29 @@ export const EdgeMetadataSchema = z
  */
 export class EdgeMetadata {
 	/// The number of games in which A beats B.
-	public num_games_won: number = 0;
+	public numGamesWon: number = 0;
 	/// The number of games in which A draws against B.
-	public num_games_drawn: number = 0;
+	public numGamesDrawn: number = 0;
 	/// The number of games in which B beats A.
-	public num_games_lost: number = 0;
+	public numGamesLost: number = 0;
 
-	constructor(num_games_won: number, num_games_drawn: number, num_games_lost: number) {
-		this.num_games_won = num_games_won;
-		this.num_games_drawn = num_games_drawn;
-		this.num_games_lost = num_games_lost;
+	constructor(numGamesWon: number, numGamesDrawn: number, numGamesLost: number) {
+		this.numGamesWon = numGamesWon;
+		this.numGamesDrawn = numGamesDrawn;
+		this.numGamesLost = numGamesLost;
 	}
 
 	merge(other: EdgeMetadata): void {
-		this.num_games_won += other.num_games_won;
-		this.num_games_drawn += other.num_games_drawn;
-		this.num_games_lost += other.num_games_lost;
+		this.numGamesWon += other.numGamesWon;
+		this.numGamesDrawn += other.numGamesDrawn;
+		this.numGamesLost += other.numGamesLost;
 	}
 
-	to_string(): string {
-		return `${this.num_games_won}/${this.num_games_drawn}/${this.num_games_lost}`;
+	toString(): string {
+		return `${this.numGamesWon}/${this.numGamesDrawn}/${this.numGamesLost}`;
 	}
 
-	static from_result(result: GameResult): EdgeMetadata {
+	static fromResult(result: GameResult): EdgeMetadata {
 		return new EdgeMetadata(
 			result == 'white_wins' ? 1 : 0,
 			result == 'draw' ? 1 : 0,
@@ -73,28 +73,28 @@ export class EdgeMetadata {
 	}
 
 	reverse(): EdgeMetadata {
-		const w = this.num_games_won;
-		this.num_games_won = this.num_games_lost;
-		this.num_games_lost = w;
+		const w = this.numGamesWon;
+		this.numGamesWon = this.numGamesLost;
+		this.numGamesLost = w;
 		return this;
 	}
 
 	clone(): EdgeMetadata {
-		return new EdgeMetadata(this.num_games_won, this.num_games_drawn, this.num_games_lost);
+		return new EdgeMetadata(this.numGamesWon, this.numGamesDrawn, this.numGamesLost);
 	}
 
 	decrease(res: GameResult): void {
 		if (res == 'white_wins') {
-			this.num_games_won -= 1;
+			this.numGamesWon -= 1;
 		} else if (res == 'draw') {
-			this.num_games_drawn -= 1;
+			this.numGamesDrawn -= 1;
 		} else {
-			this.num_games_lost -= 1;
+			this.numGamesLost -= 1;
 		}
 	}
 
-	all_zero(): boolean {
-		return this.num_games_drawn == 0 && this.num_games_lost == 0 && this.num_games_won == 0;
+	allZero(): boolean {
+		return this.numGamesDrawn == 0 && this.numGamesLost == 0 && this.numGamesWon == 0;
 	}
 
 	static empty(): EdgeMetadata {

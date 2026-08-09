@@ -23,7 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { EdgeMetadata } from '@app/common/models/graph/edge-metadata';
+import { EdgeMetadata } from '@common/models/graph/edge-metadata';
 
 describe('Static initialization', () => {
 	test('Empty', () => {
@@ -31,8 +31,8 @@ describe('Static initialization', () => {
 	});
 
 	test('From result', () => {
-		expect(EdgeMetadata.from_result('white_wins')).toEqual(new EdgeMetadata(1, 0, 0));
-		expect(EdgeMetadata.from_result('draw')).toEqual(new EdgeMetadata(0, 1, 0));
-		expect(EdgeMetadata.from_result('black_wins')).toEqual(new EdgeMetadata(0, 0, 1));
+		expect(EdgeMetadata.fromResult('white_wins')).toEqual(new EdgeMetadata(1, 0, 0));
+		expect(EdgeMetadata.fromResult('draw')).toEqual(new EdgeMetadata(0, 1, 0));
+		expect(EdgeMetadata.fromResult('black_wins')).toEqual(new EdgeMetadata(0, 0, 1));
 	});
 });

@@ -24,6 +24,6 @@ Contact:
 */
 
 import { z } from 'zod';
-import { TimeControlSchema } from '@app/common/models/time-control';
+import { TimeControlSchema } from '@common/models/time-control';
 
 export const TimeControlArraySchema = z.array(TimeControlSchema);

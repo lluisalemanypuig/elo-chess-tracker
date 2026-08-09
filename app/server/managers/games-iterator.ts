@@ -24,17 +24,17 @@ Contact:
 */
 
 import Debug from 'debug';
-const debug = Debug('ELO_CHESS_TRACKER:managers/challenges');
+const debug = Debug('ELOCHESSTRACKER:managers/challenges');
 
 import path from 'path';
 import fs from 'fs';
 
 import { Game, GameId } from '@common/models/game';
 import { DateFull, DateMajor, logNow, toDateMajor } from '@common/utils/time';
-import { game_array_from_string } from '@common/io/game';
-import { search_by_key, where_should_be_inserted_by_key } from '@server/utils/searching';
-import { read_directory } from '@app/server/utils/read-directory';
-import { isNotDefined } from '@app/common/utils/is-defined';
+import { gameArrayFromString } from '@common/io/game';
+import { searchByKey, whereShouldBeInsertedByKey } from '@server/utils/searching';
+import { readDirectory } from '@app/server/utils/read-directory';
+import { isNotDefined } from '@common/utils/is-defined';
 
 /* TODO: add a function that iterates only through those game records
  * where a player has games in.
@@ -50,65 +50,65 @@ import { isNotDefined } from '@app/common/utils/is-defined';
  */
 export class GamesIterator {
 	private directory: string = '';
-	private record_files_list: DateMajor[] = [];
-	private record_idx: number = 0;
+	private recordFilesList: DateMajor[] = [];
+	private recordIdx: number = 0;
 
-	private game_set: Game[] = [];
-	private game_idx: number = 0;
+	private gameSet: Game[] = [];
+	private gameIdx: number = 0;
 
-	private load_current_record(): void {
-		const filename = path.join(this.directory, this.record_files_list[this.record_idx]);
-		const array = game_array_from_string(fs.readFileSync(filename, 'utf8'));
+	private loadCurrentRecord(): void {
+		const filename = path.join(this.directory, this.recordFilesList[this.recordIdx]);
+		const array = gameArrayFromString(fs.readFileSync(filename, 'utf8'));
 		if (isNotDefined(array)) {
 			debug(logNow(), `File '${filename}' does not contain a valid game array.`);
 			return;
 		}
-		this.game_set = array;
-		this.game_idx = 0;
+		this.gameSet = array;
+		this.gameIdx = 0;
 	}
 
 	private invalidate(): void {
-		this.record_files_list = [];
-		this.record_idx = 0;
-		this.game_set = [];
-		this.game_idx = 0;
+		this.recordFilesList = [];
+		this.recordIdx = 0;
+		this.gameSet = [];
+		this.gameIdx = 0;
 	}
 
 	constructor(directory: string) {
 		this.directory = directory;
-		this.record_files_list = read_directory(this.directory).map(toDateMajor);
-		this.record_idx = 0;
-		if (!this.end_record_list()) {
-			this.load_current_record();
+		this.recordFilesList = readDirectory(this.directory).map(toDateMajor);
+		this.recordIdx = 0;
+		if (!this.endRecordList()) {
+			this.loadCurrentRecord();
 		}
 	}
 
-	get_number_of_records(): number {
-		return this.record_files_list.length;
+	getNumberOfRecords(): number {
+		return this.recordFilesList.length;
 	}
-	get_all_records(): DateMajor[] {
-		return this.record_files_list;
+	getAllRecords(): DateMajor[] {
+		return this.recordFilesList;
 	}
-	get_current_record_name(): DateMajor {
-		return this.record_files_list[this.record_idx];
+	getCurrentRecordName(): DateMajor {
+		return this.recordFilesList[this.recordIdx];
 	}
-	get_current_record_index(): number {
-		return this.record_idx;
+	getCurrentRecordIndex(): number {
+		return this.recordIdx;
 	}
 	/// Returns a reference to the whole game set in current record.
-	get_current_game_array(): Game[] {
-		return this.game_set;
+	getCurrentGameArray(): Game[] {
+		return this.gameSet;
 	}
 	/// Returns a reference to the current game in the iteration.
-	get_current_game(): Game {
-		return this.game_set[this.game_idx];
+	getCurrentGame(): Game {
+		return this.gameSet[this.gameIdx];
 	}
-	get_current_game_index(): number {
-		return this.game_idx;
+	getCurrentGameIndex(): number {
+		return this.gameIdx;
 	}
 
-	delete_current_game(): void {
-		this.game_set.splice(this.game_idx, 1);
+	deleteCurrentGame(): void {
+		this.gameSet.splice(this.gameIdx, 1);
 	}
 
 	/**
@@ -117,8 +117,8 @@ export class GamesIterator {
 	 * This corresponds to the end of the record file list.
 	 * @returns True on end.
 	 */
-	end_record_list(): boolean {
-		return this.record_idx >= this.record_files_list.length;
+	endRecordList(): boolean {
+		return this.recordIdx >= this.recordFilesList.length;
 	}
 	/**
 	 * @brief Returns true if the iteration reached its end of the current record.
@@ -127,19 +127,19 @@ export class GamesIterator {
 	 * current game record.
 	 * @returns True on end.
 	 */
-	end_record_single(): boolean {
-		return this.game_idx >= this.game_set.length;
+	endRecordSingle(): boolean {
+		return this.gameIdx >= this.gameSet.length;
 	}
 
 	/**
 	 * @brief Advances one record in the iteration.
 	 * @post Iterator to the game set is set to 0.
 	 */
-	next_record(): void {
-		++this.record_idx;
-		this.game_idx = 0;
-		if (this.record_idx < this.record_files_list.length) {
-			this.load_current_record();
+	nextRecord(): void {
+		++this.recordIdx;
+		this.gameIdx = 0;
+		if (this.recordIdx < this.recordFilesList.length) {
+			this.loadCurrentRecord();
 		} else {
 			this.invalidate();
 		}
@@ -150,13 +150,13 @@ export class GamesIterator {
 	 * If the current record is consumed, the iteration continues to the next
 	 * record.
 	 */
-	next_game(): void {
-		++this.game_idx;
-		if (this.game_idx == this.game_set.length) {
-			this.game_idx = 0;
-			++this.record_idx;
-			if (this.record_idx < this.record_files_list.length) {
-				this.load_current_record();
+	nextGame(): void {
+		++this.gameIdx;
+		if (this.gameIdx == this.gameSet.length) {
+			this.gameIdx = 0;
+			++this.recordIdx;
+			if (this.recordIdx < this.recordFilesList.length) {
+				this.loadCurrentRecord();
 			} else {
 				this.invalidate();
 			}
@@ -167,25 +167,25 @@ export class GamesIterator {
 	 *
 	 * The iteration stops at the current record.
 	 */
-	next_game_record(): void {
-		++this.game_idx;
+	nextGameRecord(): void {
+		++this.gameIdx;
 	}
 
 	/// Moves the iterator to the specific location of the iteration
 	/// over the set of games.
-	set_to_game(idx: number): void {
-		this.game_idx = idx;
+	setToGame(idx: number): void {
+		this.gameIdx = idx;
 	}
 
 	/// Locate the record named 'record'
-	locate_record(record: DateMajor): boolean {
-		const [idx, exists] = where_should_be_inserted_by_key(this.record_files_list, (s: DateMajor): number => {
+	locateRecord(record: DateMajor): boolean {
+		const [idx, exists] = whereShouldBeInsertedByKey(this.recordFilesList, (s: DateMajor): number => {
 			return record.localeCompare(s);
 		});
-		this.record_idx = idx;
-		this.game_idx = 0;
-		if (this.record_idx < this.record_files_list.length) {
-			this.load_current_record();
+		this.recordIdx = idx;
+		this.gameIdx = 0;
+		if (this.recordIdx < this.recordFilesList.length) {
+			this.loadCurrentRecord();
 		} else {
 			this.invalidate();
 		}
@@ -204,26 +204,23 @@ export class GamesIterator {
 	 * @pre The iterator can be in any state prior to calling this function.
 	 * @post The iterator is left in an invalid state in case of failure.
 	 */
-	locate_first_game_after(record: DateMajor, when: DateFull): boolean {
-		const [record_idx, record_exists] = where_should_be_inserted_by_key(
-			this.record_files_list,
-			(s: DateMajor): number => {
-				return record.localeCompare(s);
-			}
-		);
-		if (!record_exists) {
-			this.record_idx = record_idx;
-			this.game_idx = 0;
+	locateFirstGameAfter(record: DateMajor, when: DateFull): boolean {
+		const [recordIdx, recordExists] = whereShouldBeInsertedByKey(this.recordFilesList, (s: DateMajor): number => {
+			return record.localeCompare(s);
+		});
+		if (!recordExists) {
+			this.recordIdx = recordIdx;
+			this.gameIdx = 0;
 			return true;
 		}
-		this.record_idx = record_idx;
-		this.load_current_record();
+		this.recordIdx = recordIdx;
+		this.loadCurrentRecord();
 		let found: boolean = false;
-		while (!found && !this.end_record_single()) {
-			if (this.get_current_game().when > when) {
+		while (!found && !this.endRecordSingle()) {
+			if (this.getCurrentGame().when > when) {
 				found = true;
 			} else {
-				this.next_game();
+				this.nextGame();
 			}
 		}
 		return found;
@@ -238,21 +235,21 @@ export class GamesIterator {
 	 * @pre The iterator can be in any state prior to calling this function.
 	 * @post The iterator is left in an invalid state in case of failure.
 	 */
-	locate_game(record: DateMajor, id: GameId): boolean {
-		this.record_idx = search_by_key(this.record_files_list, (s: DateMajor): number => {
+	locateGame(record: DateMajor, id: GameId): boolean {
+		this.recordIdx = searchByKey(this.recordFilesList, (s: DateMajor): number => {
 			return record.localeCompare(s);
 		});
-		if (this.record_idx == -1) {
-			this.record_idx = this.record_files_list.length;
+		if (this.recordIdx == -1) {
+			this.recordIdx = this.recordFilesList.length;
 			return false;
 		}
-		this.load_current_record();
+		this.loadCurrentRecord();
 		let found: boolean = false;
-		while (!found && !this.end_record_single()) {
-			if (this.get_current_game().id == id) {
+		while (!found && !this.endRecordSingle()) {
+			if (this.getCurrentGame().id == id) {
 				found = true;
 			} else {
-				this.next_game();
+				this.nextGame();
 			}
 		}
 		return found;

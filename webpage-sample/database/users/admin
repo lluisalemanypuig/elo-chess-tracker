@@ -1,7 +1,7 @@
 {
 	"username": "$USERNAME",
-	"first_name": "$FIRSTNAME",
-	"last_name": "$LASTNAME",
+	"firstName": "$FIRSTNAME",
+	"lastName": "$LASTNAME",
 	"password": {
 		"encrypted": "$PASSWORD",
 		"iv": "$IV"
@@ -11,10 +11,10 @@
 	],
 	"ratings": [
 		{
-			"time_control": "Classical",
+			"timeControl": "Classical",
 			"rating": {
 				"rating": 1500,
-				"num_games": 0,
+				"numGames": 0,
 				"won": 0,
 				"drawn": 0,
 				"lost": 0,
@@ -23,10 +23,10 @@
 			}
 		},
 		{
-			"time_control": "Rapid",
+			"timeControl": "Rapid",
 			"rating": {
 				"rating": 1500,
-				"num_games": 0,
+				"numGames": 0,
 				"won": 0,
 				"drawn": 0,
 				"lost": 0,
@@ -35,10 +35,10 @@
 			}
 		},
 		{
-			"time_control": "Blitz",
+			"timeControl": "Blitz",
 			"rating": {
 				"rating": 1500,
-				"num_games": 0,
+				"numGames": 0,
 				"won": 0,
 				"drawn": 0,
 				"lost": 0,
@@ -49,15 +49,15 @@
 	],
 	"games": [
 		{
-			"time_control": "Classical",
+			"timeControl": "Classical",
 			"records": []
 		},
 		{
-			"time_control": "Rapid",
+			"timeControl": "Rapid",
 			"records": []
 		},
 		{
-			"time_control": "Blitz",
+			"timeControl": "Blitz",
 			"records": []
 		}
 	]

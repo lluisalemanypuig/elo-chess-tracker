@@ -23,25 +23,25 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { isNotDefined } from '@app/common/utils/is-defined';
-import { challenge_from_string } from '@common/io/challenge';
+import { isNotDefined } from '@common/utils/is-defined';
+import { challengeFromString } from '@common/io/challenge';
 
 describe('IO conversion', () => {
 	test('string', () => {
-		const c = challenge_from_string(
+		const c = challengeFromString(
 			'{\
 				"id": "000x1",\
 				"title": "asdf",\
-				"sent_by": "A",\
-				"sent_to": "B",\
-				"time_control_id": "blitz",\
-				"time_control_name": "Blitz (5 + 3)",\
-				"when_challenge_sent": "2024-12-29..17:10:00",\
-				"when_challenge_accepted": "2024-12-29..17:10:01",\
-				"when_result_set": "2024-12-29..17:10:02",\
-				"result_set_by": "A",\
-				"when_result_accepted": "2024-12-30..17:10:02",\
-				"result_accepted_by": "B",\
+				"sentBy": "A",\
+				"sentTo": "B",\
+				"timeControlId": "blitz",\
+				"timeControlName": "Blitz (5 + 3)",\
+				"whenChallengeSent": "2024-12-29..17:10:00",\
+				"whenChallengeAccepted": "2024-12-29..17:10:01",\
+				"whenResultSet": "2024-12-29..17:10:02",\
+				"resultSetBy": "A",\
+				"whenResultAccepted": "2024-12-30..17:10:02",\
+				"resultAcceptedBy": "B",\
 				"white": "A",\
 				"black": "B",\
 				"result": "draw",\
@@ -54,16 +54,16 @@ describe('IO conversion', () => {
 		}
 		expect(c.id).toBe('000x1');
 		expect(c.title).toBe('asdf');
-		expect(c.sent_by).toBe('A');
-		expect(c.sent_to).toBe('B');
-		expect(c.time_control_id).toBe('blitz');
-		expect(c.time_control_name).toBe('Blitz (5 + 3)');
-		expect(c.when_challenge_sent).toBe('2024-12-29..17:10:00');
-		expect(c.when_challenge_accepted).toBe('2024-12-29..17:10:01');
-		expect(c.when_result_set).toBe('2024-12-29..17:10:02');
-		expect(c.result_set_by).toBe('A');
-		expect(c.when_result_accepted).toBe('2024-12-30..17:10:02');
-		expect(c.result_accepted_by).toBe('B');
+		expect(c.sentBy).toBe('A');
+		expect(c.sentTo).toBe('B');
+		expect(c.timeControlId).toBe('blitz');
+		expect(c.timeControlName).toBe('Blitz (5 + 3)');
+		expect(c.whenChallengeSent).toBe('2024-12-29..17:10:00');
+		expect(c.whenChallengeAccepted).toBe('2024-12-29..17:10:01');
+		expect(c.whenResultSet).toBe('2024-12-29..17:10:02');
+		expect(c.resultSetBy).toBe('A');
+		expect(c.whenResultAccepted).toBe('2024-12-30..17:10:02');
+		expect(c.resultAcceptedBy).toBe('B');
 		expect(c.white).toBe('A');
 		expect(c.black).toBe('B');
 		expect(c.result).toBe('draw');

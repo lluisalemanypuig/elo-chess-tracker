@@ -22,62 +22,62 @@ Full source code of elo-chess-tracker:
 import 'htmx.org';
 
 import { messageFromResponse, serverCall } from '@client/action';
-import { isNotDefined } from '@app/common/utils/is-defined';
-import { UserRole, all_user_roles, array_string_to_roles, user_role_to_string } from '@app/common/models/user-role';
-import { Routes } from '@common/routes';
+import { isNotDefined } from '@common/utils/is-defined';
+import { UserRole, ALL_USER_ROLES, arrayStringToRoles, USER_ROLE_TO_STRING } from '@common/models/user-role';
+import { ROUTES } from '@common/routes';
 import { toPlayerPrivateId } from '@common/models/player';
 import { toUserGivenName } from '@common/models/user';
 
-async function submit_new_user_clicked(_event: any) {
+async function submitNewUserClicked(_event: any) {
 	// username box
-	const _username_box = document.getElementById('username_box');
-	if (isNotDefined(_username_box)) {
-		console.log("Element 'username_box' does not exist.");
+	const UsernameBox = document.getElementById('usernameBox');
+	if (isNotDefined(UsernameBox)) {
+		console.log("Element 'usernameBox' does not exist.");
 		return;
 	}
-	const username_box = _username_box as HTMLInputElement;
+	const usernameBox = UsernameBox as HTMLInputElement;
 
-	// first_name box
-	const _box_first_name = document.getElementById('box_first_name');
-	if (isNotDefined(_box_first_name)) {
-		console.log("Element 'box_first_name' does not exist.");
+	// firstName box
+	const BoxFirstName = document.getElementById('boxFirstName');
+	if (isNotDefined(BoxFirstName)) {
+		console.log("Element 'boxFirstName' does not exist.");
 		return;
 	}
-	const box_first_name = _box_first_name as HTMLInputElement;
+	const boxFirstName = BoxFirstName as HTMLInputElement;
 
-	// last_name box
-	const _box_last_name = document.getElementById('box_last_name');
-	if (isNotDefined(_box_last_name)) {
-		console.log("Element 'box_last_name' does not exist.");
+	// lastName box
+	const BoxLastName = document.getElementById('boxLastName');
+	if (isNotDefined(BoxLastName)) {
+		console.log("Element 'boxLastName' does not exist.");
 		return;
 	}
-	const box_last_name = _box_last_name as HTMLInputElement;
+	const boxLastName = BoxLastName as HTMLInputElement;
 
 	// password box
-	const _password_box = document.getElementById('password_box');
-	if (isNotDefined(_password_box)) {
-		console.log("Element 'password_box' does not exist.");
+	const PasswordBox = document.getElementById('passwordBox');
+	if (isNotDefined(PasswordBox)) {
+		console.log("Element 'passwordBox' does not exist.");
 		return;
 	}
-	const password_box = _password_box as HTMLInputElement;
+	const passwordBox = PasswordBox as HTMLInputElement;
 
-	const username = username_box.value;
-	const firstname = box_first_name.value;
-	const lastname = box_last_name.value;
+	const username = usernameBox.value;
+	const firstname = boxFirstName.value;
+	const lastname = boxLastName.value;
 
-	let selected_roles_str: string[] = [];
-	all_user_roles.forEach(function (role: string) {
-		let checkbox_role = document.getElementById(role) as HTMLInputElement;
-		if (checkbox_role.checked) {
-			selected_roles_str.push(role);
+	let selectedRolesStr: string[] = [];
+	ALL_USER_ROLES.forEach(function (role: string) {
+		let checkboxRole = document.getElementById(role) as HTMLInputElement;
+		if (checkboxRole.checked) {
+			selectedRolesStr.push(role);
 		}
 	});
-	const selected_roles = array_string_to_roles(selected_roles_str);
-	if (isNotDefined(selected_roles)) {
+	const selectedRoles = arrayStringToRoles(selectedRolesStr);
+	if (isNotDefined(selectedRoles)) {
 		return;
 	}
 
-	const password = password_box.value;
+	const password = passwordBox.value;
 
 	if (username == '') {
 		alert('Missing username');
@@ -91,7 +91,7 @@ async function submit_new_user_clicked(_event: any) {
 		alert('Missing last name');
 		return;
 	}
-	if (selected_roles.length == 0) {
+	if (selectedRoles.length == 0) {
 		alert('Missing roles');
 		return;
 	}
@@ -105,11 +105,11 @@ async function submit_new_user_clicked(_event: any) {
 		return;
 	}
 
-	const response = await serverCall(Routes.USER_CREATE, {
+	const response = await serverCall(ROUTES.USER_CREATE, {
 		u: toPlayerPrivateId(username),
 		fn: toUserGivenName(firstname),
 		ln: toUserGivenName(lastname),
-		r: selected_roles,
+		r: selectedRoles,
 		password: password
 	});
 	if (response.status === 'Error') {
@@ -117,30 +117,30 @@ async function submit_new_user_clicked(_event: any) {
 		return;
 	}
 
-	window.location.href = Routes.HOME;
+	window.location.href = ROUTES.HOME;
 }
 
 window.onload = function () {
-	let add_checkbox = function (div: HTMLDivElement, show: string, value: string) {
+	let addCheckbox = function (div: HTMLDivElement, show: string, value: string) {
 		let checkbox = document.createElement('input');
 		checkbox.type = 'checkbox';
 		checkbox.id = value;
 		div.appendChild(checkbox);
 
-		let checkbox_label = document.createElement('label');
-		checkbox_label.textContent = show;
-		div.appendChild(checkbox_label);
+		let checkboxLabel = document.createElement('label');
+		checkboxLabel.textContent = show;
+		div.appendChild(checkboxLabel);
 		div.appendChild(document.createElement('br'));
 	};
 
 	// fill in select role dropdown with values
-	let role_div = document.getElementById('div_role_checkboxes') as HTMLDivElement;
-	all_user_roles.forEach(function (str: string) {
-		add_checkbox(role_div, user_role_to_string[str as UserRole], str);
+	let roleDiv = document.getElementById('divRoleCheckboxes') as HTMLDivElement;
+	ALL_USER_ROLES.forEach(function (str: string) {
+		addCheckbox(roleDiv, USER_ROLE_TO_STRING[str as UserRole], str);
 	});
-	role_div.appendChild(document.createElement('br'));
+	roleDiv.appendChild(document.createElement('br'));
 
 	// link button click with function
-	let submit_new_user = document.getElementById('submit_new_user_button') as HTMLLinkElement;
-	submit_new_user.onclick = submit_new_user_clicked;
+	let submitNewUser = document.getElementById('submitNewUserButton') as HTMLLinkElement;
+	submitNewUser.onclick = submitNewUserClicked;
 };

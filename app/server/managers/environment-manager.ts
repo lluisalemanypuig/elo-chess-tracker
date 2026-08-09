@@ -24,7 +24,7 @@ Contact:
 */
 
 import path from 'path';
-import { TimeControlId } from '@app/common/models/time-control';
+import { TimeControlId } from '@common/models/time-control';
 import { Environment, SSLCertificate } from '@common/models/configuration/environment';
 
 /**
@@ -45,174 +45,174 @@ export class EnvironmentManager {
 		EnvironmentManager.instance = this;
 	}
 
-	static get_instance(): EnvironmentManager {
+	static getInstance(): EnvironmentManager {
 		EnvironmentManager.instance = EnvironmentManager.instance || new EnvironmentManager();
 		return EnvironmentManager.instance;
 	}
 
 	// execution directory (TS code)
-	private directory_execution: string = '';
+	private directoryExecution: string = '';
 
-	set_execution_environment(base_dir: string): void {
-		this.directory_execution = base_dir;
+	setExecutionEnvironment(baseDir: string): void {
+		this.directoryExecution = baseDir;
 	}
 
-	get_execution_directory(): string {
-		return this.directory_execution;
+	getExecutionDirectory(): string {
+		return this.directoryExecution;
 	}
 
 	// database directory
-	private directory_database: string = '';
-	private directory_database_games: string = '';
-	private directory_database_users: string = '';
-	private directory_database_challenges: string = '';
-	private directory_database_graphs: string = '';
+	private directoryDatabase: string = '';
+	private directoryDatabaseGames: string = '';
+	private directoryDatabaseUsers: string = '';
+	private directoryDatabaseChallenges: string = '';
+	private directoryDatabaseGraphs: string = '';
 
-	clear_database(): void {
-		this.directory_database = '';
-		this.directory_database_games = '';
-		this.directory_database_users = '';
-		this.directory_database_challenges = '';
-		this.directory_database_graphs = '';
-	}
-
-	get_dir_database(): string {
-		return this.directory_database;
-	}
-	get_dir_games(): string {
-		return this.directory_database_games;
-	}
-	get_dir_games_time_control(id: TimeControlId): string {
-		return path.join(this.directory_database_games, id);
-	}
-	get_dir_users(): string {
-		return this.directory_database_users;
-	}
-	get_dir_challenges(): string {
-		return this.directory_database_challenges;
-	}
-	get_dir_graphs(): string {
-		return this.directory_database_graphs;
-	}
-	get_dir_graphs_time_control(id: TimeControlId): string {
-		return path.join(this.directory_database_graphs, id);
+	clearDatabase(): void {
+		this.directoryDatabase = '';
+		this.directoryDatabaseGames = '';
+		this.directoryDatabaseUsers = '';
+		this.directoryDatabaseChallenges = '';
+		this.directoryDatabaseGraphs = '';
 	}
 
-	set_database_base_directory(base_dir: string): void {
-		this.directory_database = base_dir;
-		this.directory_database_games = path.join(this.directory_database, 'games');
-		this.directory_database_users = path.join(this.directory_database, 'users');
-		this.directory_database_challenges = path.join(this.directory_database, 'challenges');
-		this.directory_database_graphs = path.join(this.directory_database, 'graphs');
+	getDirDatabase(): string {
+		return this.directoryDatabase;
+	}
+	getDirGames(): string {
+		return this.directoryDatabaseGames;
+	}
+	getDirGamesTimeControl(id: TimeControlId): string {
+		return path.join(this.directoryDatabaseGames, id);
+	}
+	getDirUsers(): string {
+		return this.directoryDatabaseUsers;
+	}
+	getDirChallenges(): string {
+		return this.directoryDatabaseChallenges;
+	}
+	getDirGraphs(): string {
+		return this.directoryDatabaseGraphs;
+	}
+	getDirGraphsTimeControl(id: TimeControlId): string {
+		return path.join(this.directoryDatabaseGraphs, id);
+	}
+
+	setDatabaseBaseDirectory(baseDir: string): void {
+		this.directoryDatabase = baseDir;
+		this.directoryDatabaseGames = path.join(this.directoryDatabase, 'games');
+		this.directoryDatabaseUsers = path.join(this.directoryDatabase, 'users');
+		this.directoryDatabaseChallenges = path.join(this.directoryDatabase, 'challenges');
+		this.directoryDatabaseGraphs = path.join(this.directoryDatabase, 'graphs');
 	}
 
 	// SSL certificate info
-	private directory_ssl: string = '';
-	private ssl_public_key_file: string = '';
-	private ssl_private_key_file: string = '';
-	private ssl_passphrase_file: string = '';
+	private directorySsl: string = '';
+	private sslPublicKeyFile: string = '';
+	private sslPrivateKeyFile: string = '';
+	private sslPassphraseFile: string = '';
 
-	clear_ssl(): void {
-		this.directory_ssl = '';
-		this.ssl_public_key_file = '';
-		this.ssl_private_key_file = '';
-		this.ssl_passphrase_file = '';
-	}
-
-	get_dir_ssl(): string {
-		return this.directory_ssl;
-	}
-	get_ssl_public_key_file(): string {
-		return this.ssl_public_key_file;
-	}
-	get_ssl_private_key_file(): string {
-		return this.ssl_private_key_file;
-	}
-	get_ssl_passphrase_file(): string {
-		return this.ssl_passphrase_file;
+	clearSsl(): void {
+		this.directorySsl = '';
+		this.sslPublicKeyFile = '';
+		this.sslPrivateKeyFile = '';
+		this.sslPassphraseFile = '';
 	}
 
-	set_SSL_info(base_dir: string, ssl: SSLCertificate): void {
-		this.directory_ssl = base_dir;
-		if (ssl.public_key_file != '') {
-			this.ssl_public_key_file = path.join(this.directory_ssl, ssl.public_key_file);
+	getDirSsl(): string {
+		return this.directorySsl;
+	}
+	getSslPublicKeyFile(): string {
+		return this.sslPublicKeyFile;
+	}
+	getSslPrivateKeyFile(): string {
+		return this.sslPrivateKeyFile;
+	}
+	getSslPassphraseFile(): string {
+		return this.sslPassphraseFile;
+	}
+
+	setSSLInfo(baseDir: string, ssl: SSLCertificate): void {
+		this.directorySsl = baseDir;
+		if (ssl.publicKeyFile != '') {
+			this.sslPublicKeyFile = path.join(this.directorySsl, ssl.publicKeyFile);
 		}
-		if (ssl.private_key_file != '') {
-			this.ssl_private_key_file = path.join(this.directory_ssl, ssl.private_key_file);
+		if (ssl.privateKeyFile != '') {
+			this.sslPrivateKeyFile = path.join(this.directorySsl, ssl.privateKeyFile);
 		}
-		if (ssl.passphrase_file != '') {
-			this.ssl_passphrase_file = path.join(this.directory_ssl, ssl.passphrase_file);
+		if (ssl.passphraseFile != '') {
+			this.sslPassphraseFile = path.join(this.directorySsl, ssl.passphraseFile);
 		}
 	}
 
-	is_SSL_info_valid(): boolean {
-		return this.directory_ssl != '' && this.ssl_public_key_file != '' && this.ssl_private_key_file != '';
+	isSSLInfoValid(): boolean {
+		return this.directorySsl != '' && this.sslPublicKeyFile != '' && this.sslPrivateKeyFile != '';
 	}
 
 	// icons
-	private directory_icon: string = '';
-	private icon_favicon: string = '';
-	private icon_login_page: string = '';
-	private icon_home_page: string = '';
+	private directoryIcon: string = '';
+	private iconFavicon: string = '';
+	private iconLoginPage: string = '';
+	private iconHomePage: string = '';
 
-	clear_icons(): void {
-		this.directory_icon = '';
-		this.icon_favicon = '';
-		this.icon_login_page = '';
-		this.icon_home_page = '';
-	}
-
-	get_dir_icons(): string {
-		return this.directory_icon;
-	}
-	get_icon_favicon(): string {
-		return this.icon_favicon;
-	}
-	get_icon_login_page(): string {
-		return this.icon_login_page;
-	}
-	get_icon_home_page(): string {
-		return this.icon_home_page;
+	clearIcons(): void {
+		this.directoryIcon = '';
+		this.iconFavicon = '';
+		this.iconLoginPage = '';
+		this.iconHomePage = '';
 	}
 
-	set_icons_info(base_dir: string, env: Environment) {
-		this.directory_icon = base_dir;
-		this.icon_favicon = path.join(base_dir, env.favicon);
-		this.icon_login_page = path.join(base_dir, env.login_page.icon);
-		this.icon_home_page = path.join(base_dir, env.home_page.icon);
+	getDirIcons(): string {
+		return this.directoryIcon;
+	}
+	getIconFavicon(): string {
+		return this.iconFavicon;
+	}
+	getIconLoginPage(): string {
+		return this.iconLoginPage;
+	}
+	getIconHomePage(): string {
+		return this.iconHomePage;
+	}
+
+	setIconsInfo(baseDir: string, env: Environment) {
+		this.directoryIcon = baseDir;
+		this.iconFavicon = path.join(baseDir, env.favicon);
+		this.iconLoginPage = path.join(baseDir, env.loginPage.icon);
+		this.iconHomePage = path.join(baseDir, env.homePage.icon);
 	}
 
 	// titles
-	private title_login_page: string = '';
-	private title_home_page: string = '';
+	private titleLoginPage: string = '';
+	private titleHomePage: string = '';
 
-	clear_titles(): void {
-		this.title_login_page = '';
-		this.title_home_page = '';
+	clearTitles(): void {
+		this.titleLoginPage = '';
+		this.titleHomePage = '';
 	}
 
-	get_title_login_page(): string {
-		return this.title_login_page;
+	getTitleLoginPage(): string {
+		return this.titleLoginPage;
 	}
-	get_title_home_page(): string {
-		return this.title_home_page;
+	getTitleHomePage(): string {
+		return this.titleHomePage;
 	}
 
-	set_titles_info(login_page: string, home_page: string): void {
-		this.title_login_page = login_page;
-		this.title_home_page = home_page;
+	setTitlesInfo(loginPage: string, homePage: string): void {
+		this.titleLoginPage = loginPage;
+		this.titleHomePage = homePage;
 	}
 
 	// --------------------
 
 	clear(): void {
-		this.clear_database();
-		this.clear_ssl();
-		this.clear_icons();
-		this.clear_titles();
+		this.clearDatabase();
+		this.clearSsl();
+		this.clearIcons();
+		this.clearTitles();
 	}
 }
 
-export function get_execution_directory(): string {
-	return EnvironmentManager.get_instance().get_execution_directory();
+export function getExecutionDirectory(): string {
+	return EnvironmentManager.getInstance().getExecutionDirectory();
 }

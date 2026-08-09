@@ -24,32 +24,32 @@ Contact:
 */
 
 import Debug from 'debug';
-const debug = Debug('ELO_CHESS_TRACKER:server_users_edit');
+const debug = Debug('ELOCHESSTRACKER:serverUsersEdit');
 import { Request, Response } from 'express';
 
 import { logNow } from '@common/utils/time';
-import { is_user_logged_in } from '@server/managers/session';
-import { user_rename_and_reassign_roles } from '@server/managers/users';
-import { USER_ROLE_ASSIGN_ID, USER_EDIT, get_role_action_name } from '@app/common/models/user-action';
-import { can_user_edit } from '@app/server/managers/user-relationships';
+import { isUserLoggedIn } from '@server/managers/session';
+import { userRenameAndReassignRoles } from '@server/managers/users';
+import { USER_ROLE_ASSIGN_ID, USER_EDIT, getRoleActionName } from '@common/models/user-action';
+import { canUserEdit } from '@app/server/managers/user-relationships';
 import { UsersManager } from '@app/server/managers/users-manager';
 import { ConfigurationManager } from '@app/server/managers/configuration-manager';
-import { get_execution_directory } from '@app/server/managers/environment-manager';
-import { isNotDefined } from '@app/common/utils/is-defined';
-import { Routes } from '@common/routes';
-import { InputSchemaOf } from '@common/api/schemas';
-import { safe_parse_request_body, safe_parse_request_cookies } from '@server/utils/schemas';
+import { getExecutionDirectory } from '@app/server/managers/environment-manager';
+import { isNotDefined } from '@common/utils/is-defined';
+import { ROUTES } from '@common/routes';
+import { inputSchemaOf } from '@common/api/schemas';
+import { safeParseRequestBody, safeParseRequestCookies } from '@server/utils/schemas';
 import { AuthenticationInputSchema } from '@common/schemas/authentication';
 
-export async function get_page_user_edit(req: Request, res: Response) {
-	debug(logNow(), `GET ${Routes.PAGE_USER_EDIT}...`);
+export async function getPageUserEdit(req: Request, res: Response) {
+	debug(logNow(), `GET ${ROUTES.PAGE_USER_EDIT}...`);
 
-	const session_parse = safe_parse_request_cookies(req, AuthenticationInputSchema, res, debug);
-	if (session_parse.result === 'Exit') {
+	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	if (sessionParse.result === 'Exit') {
 		return;
 	}
-	const session = session_parse.data;
-	const r = is_user_logged_in(session);
+	const session = sessionParse.data;
+	const r = isUserLoggedIn(session);
 
 	const user = r[2];
 	if (isNotDefined(user)) {
@@ -57,28 +57,28 @@ export async function get_page_user_edit(req: Request, res: Response) {
 		return;
 	}
 
-	if (!user.can_do(USER_EDIT)) {
+	if (!user.canDo(USER_EDIT)) {
 		debug(logNow(), `    User '${session.username}' does not have sufficient permissions.`);
 		res.status(403).send('You cannot edit users');
 		return;
 	}
 
 	res.status(200);
-	if (ConfigurationManager.should_cache_data()) {
+	if (ConfigurationManager.shouldCacheData()) {
 		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
 	}
-	res.sendFile(`${get_execution_directory()}/html/user/edit.html`);
+	res.sendFile(`${getExecutionDirectory()}/html/user/edit.html`);
 }
 
-export async function post_user_edit(req: Request, res: Response) {
-	debug(logNow(), `POST ${Routes.USER_EDIT}...`);
+export async function postUserEdit(req: Request, res: Response) {
+	debug(logNow(), `POST ${ROUTES.USER_EDIT}...`);
 
-	const session_parse = safe_parse_request_cookies(req, AuthenticationInputSchema, res, debug);
-	if (session_parse.result === 'Exit') {
+	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	if (sessionParse.result === 'Exit') {
 		return;
 	}
-	const session = session_parse.data;
-	const r = is_user_logged_in(session);
+	const session = sessionParse.data;
+	const r = isUserLoggedIn(session);
 
 	const editor = r[2];
 	if (isNotDefined(editor)) {
@@ -86,47 +86,47 @@ export async function post_user_edit(req: Request, res: Response) {
 		return;
 	}
 
-	const user_parse = safe_parse_request_body(req, InputSchemaOf(Routes.USER_EDIT), res, debug);
-	if (user_parse.result === 'Exit') {
+	const userParse = safeParseRequestBody(req, inputSchemaOf(ROUTES.USER_EDIT), res, debug);
+	if (userParse.result === 'Exit') {
 		return;
 	}
 
-	const edited_rid = user_parse.data.u;
-	const first_name = user_parse.data.f;
-	const last_name = user_parse.data.l;
-	const roles = user_parse.data.r;
+	const editedRid = userParse.data.u;
+	const firstName = userParse.data.f;
+	const lastName = userParse.data.l;
+	const roles = userParse.data.r;
 
-	const mem = UsersManager.get_instance();
+	const mem = UsersManager.getInstance();
 
-	const edited = mem.get_user_by_public_id(edited_rid);
+	const edited = mem.getUserByPublicId(editedRid);
 	if (isNotDefined(edited)) {
-		debug(logNow(), `Random id '${edited_rid}' for user is not valid.`);
+		debug(logNow(), `Random id '${editedRid}' for user is not valid.`);
 		res.status(404).send('Invalid user');
 		return;
 	}
 
 	debug(logNow(), `User '${editor.username}' is trying to modify user '${edited.username}'`);
 
-	if (!can_user_edit(editor, edited)) {
+	if (!canUserEdit(editor, edited)) {
 		res.status(403).send('You do not have enough permissions to edit this user.');
 		return;
 	}
 
-	debug(logNow(), `    First name: '${first_name}'`);
-	debug(logNow(), `    Last name: '${last_name}'`);
+	debug(logNow(), `    First name: '${firstName}'`);
+	debug(logNow(), `    Last name: '${lastName}'`);
 	debug(logNow(), `    Roles: '${roles}'`);
 
 	for (const role of roles) {
 		if (!editor.is(role)) {
-			const action = get_role_action_name(USER_ROLE_ASSIGN_ID, role);
-			if (!editor.can_do(action)) {
+			const action = getRoleActionName(USER_ROLE_ASSIGN_ID, role);
+			if (!editor.canDo(action)) {
 				res.status(403).send(`You do not have enough permissions to assign role '${role}'.`);
 				return;
 			}
 		}
 	}
 
-	user_rename_and_reassign_roles(edited.username, first_name, last_name, roles);
+	userRenameAndReassignRoles(edited.username, firstName, lastName, roles);
 
 	res.status(200).send();
 }

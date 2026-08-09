@@ -24,28 +24,28 @@ Contact:
 */
 
 import Debug from 'debug';
-const debug = Debug('ELO_CHESS_TRACKER:server_users_ranking');
+const debug = Debug('ELOCHESSTRACKER:serverUsersRanking');
 import { Request, Response } from 'express';
 
 import { logNow } from '@common/utils/time';
-import { is_user_logged_in } from '@server/managers/session';
+import { isUserLoggedIn } from '@server/managers/session';
 import { ConfigurationManager } from '@app/server/managers/configuration-manager';
-import { get_execution_directory } from '@app/server/managers/environment-manager';
-import { isNotDefined } from '@app/common/utils/is-defined';
-import { Routes } from '@common/routes';
-import { safe_parse_request_cookies } from '@server/utils/schemas';
+import { getExecutionDirectory } from '@app/server/managers/environment-manager';
+import { isNotDefined } from '@common/utils/is-defined';
+import { ROUTES } from '@common/routes';
+import { safeParseRequestCookies } from '@server/utils/schemas';
 import { AuthenticationInputSchema } from '@common/schemas/authentication';
 
-export async function get_page_user_ranking(req: Request, res: Response) {
-	debug(logNow(), `GET ${Routes.PAGE_USER_RANKING}...`);
+export async function getPageUserRanking(req: Request, res: Response) {
+	debug(logNow(), `GET ${ROUTES.PAGE_USER_RANKING}...`);
 
-	const session_parse = safe_parse_request_cookies(req, AuthenticationInputSchema, res, debug);
-	if (session_parse.result === 'Exit') {
+	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	if (sessionParse.result === 'Exit') {
 		return;
 	}
-	const session = session_parse.data;
+	const session = sessionParse.data;
 
-	const r = is_user_logged_in(session);
+	const r = isUserLoggedIn(session);
 
 	if (isNotDefined(r[2])) {
 		res.status(401).send(r[1]);
@@ -53,8 +53,8 @@ export async function get_page_user_ranking(req: Request, res: Response) {
 	}
 
 	res.status(200);
-	if (ConfigurationManager.should_cache_data()) {
+	if (ConfigurationManager.shouldCacheData()) {
 		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
 	}
-	res.sendFile(`${get_execution_directory()}/html/user/ranking.html`);
+	res.sendFile(`${getExecutionDirectory()}/html/user/ranking.html`);
 }

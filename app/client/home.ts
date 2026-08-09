@@ -22,13 +22,13 @@ Full source code of elo-chess-tracker:
 import 'htmx.org';
 
 import { messageFromResponse, serverCall } from '@client/action';
-import { ADMIN, user_role_to_string, UserRole } from '@app/common/models/user-role';
-import { GAMES_CREATE, CREATE_USER, USER_EDIT, GAMES_SEE, GRAPHS_SEE_USER } from '@app/common/models/user-action';
-import { Routes } from '@common/routes';
+import { ADMIN, USER_ROLE_TO_STRING, UserRole } from '@common/models/user-role';
+import { GAMES_CREATE, CREATE_USER, USER_EDIT, GAMES_SEE, GRAPHS_SEE_USER } from '@common/models/user-action';
+import { ROUTES } from '@common/routes';
 
-export async function logout_link_clicked(_event: any) {
+export async function logoutLinkClicked(_event: any) {
 	// "query" the server
-	const response = await serverCall(Routes.USER_LOGOUT, null);
+	const response = await serverCall(ROUTES.USER_LOGOUT, null);
 	if (response.status === 'Error') {
 		alert(messageFromResponse(response));
 		return;
@@ -39,73 +39,73 @@ export async function logout_link_clicked(_event: any) {
 		document.cookie = c;
 	}
 
-	window.location.href = Routes.ROOT;
+	window.location.href = ROUTES.ROOT;
 }
 
-function fill_action_links(user_actions: string[], user_roles: string[]) {
-	let action_links = document.getElementById('special_action_links') as HTMLDivElement;
+function fillActionLinks(userActions: string[], userRoles: string[]) {
+	let actionLinks = document.getElementById('specialActionLinks') as HTMLDivElement;
 
-	if (user_actions.includes(CREATE_USER)) {
-		let user_create_link = document.createElement('a') as HTMLAnchorElement;
-		user_create_link.href = Routes.PAGE_USER_CREATE;
-		user_create_link.text = 'Create new user';
-		action_links.appendChild(user_create_link);
+	if (userActions.includes(CREATE_USER)) {
+		let userCreateLink = document.createElement('a') as HTMLAnchorElement;
+		userCreateLink.href = ROUTES.PAGE_USER_CREATE;
+		userCreateLink.text = 'Create new user';
+		actionLinks.appendChild(userCreateLink);
 	}
-	if (user_actions.includes(USER_EDIT)) {
-		let user_edit_link = document.createElement('a') as HTMLAnchorElement;
-		user_edit_link.href = Routes.PAGE_USER_EDIT;
-		user_edit_link.text = 'Edit user';
-		action_links.appendChild(user_edit_link);
+	if (userActions.includes(USER_EDIT)) {
+		let userEditLink = document.createElement('a') as HTMLAnchorElement;
+		userEditLink.href = ROUTES.PAGE_USER_EDIT;
+		userEditLink.text = 'Edit user';
+		actionLinks.appendChild(userEditLink);
 	}
-	if (user_actions.includes(GAMES_CREATE)) {
-		let game_create_link = document.createElement('a') as HTMLAnchorElement;
-		game_create_link.href = Routes.PAGE_GAME_CREATE;
-		game_create_link.text = 'Create new game';
-		action_links.appendChild(game_create_link);
+	if (userActions.includes(GAMES_CREATE)) {
+		let gameCreateLink = document.createElement('a') as HTMLAnchorElement;
+		gameCreateLink.href = ROUTES.PAGE_GAME_CREATE;
+		gameCreateLink.text = 'Create new game';
+		actionLinks.appendChild(gameCreateLink);
 	}
-	if (user_actions.includes(GAMES_SEE)) {
-		let see_all_games_link = document.createElement('a') as HTMLAnchorElement;
-		see_all_games_link.href = Routes.PAGE_GAME_LIST_ALL;
-		see_all_games_link.text = 'See all games';
-		action_links.appendChild(see_all_games_link);
+	if (userActions.includes(GAMES_SEE)) {
+		let seeAllGamesLink = document.createElement('a') as HTMLAnchorElement;
+		seeAllGamesLink.href = ROUTES.PAGE_GAME_LIST_ALL;
+		seeAllGamesLink.text = 'See all games';
+		actionLinks.appendChild(seeAllGamesLink);
 	}
-	if (user_actions.includes(GRAPHS_SEE_USER)) {
-		let see_full_graph_link = document.createElement('a') as HTMLAnchorElement;
-		see_full_graph_link.href = Routes.PAGE_GRAPH_FULL;
-		see_full_graph_link.text = 'See the full graph';
-		action_links.appendChild(see_full_graph_link);
+	if (userActions.includes(GRAPHS_SEE_USER)) {
+		let seeFullGraphLink = document.createElement('a') as HTMLAnchorElement;
+		seeFullGraphLink.href = ROUTES.PAGE_GRAPH_FULL;
+		seeFullGraphLink.text = 'See the full graph';
+		actionLinks.appendChild(seeFullGraphLink);
 	}
 
-	if (user_roles.includes(ADMIN)) {
-		let recalculate_ratings_link = document.createElement('u') as HTMLElement;
-		recalculate_ratings_link.id = 'recalculate-ratings-link';
-		recalculate_ratings_link.textContent = 'Recalculate ratings';
-		recalculate_ratings_link.onclick = async function () {
-			const response = await serverCall(Routes.RECALCULATE_RATINGS, null);
+	if (userRoles.includes(ADMIN)) {
+		let recalculateRatingsLink = document.createElement('u') as HTMLElement;
+		recalculateRatingsLink.id = 'recalculate-ratings-link';
+		recalculateRatingsLink.textContent = 'Recalculate ratings';
+		recalculateRatingsLink.onclick = async function () {
+			const response = await serverCall(ROUTES.RECALCULATE_RATINGS, null);
 			if (response.status === 'Error') {
 				alert(messageFromResponse(response));
 				return;
 			}
 		};
-		action_links.appendChild(recalculate_ratings_link);
+		actionLinks.appendChild(recalculateRatingsLink);
 
-		let recalculate_graphs_link = document.createElement('u') as HTMLElement;
-		recalculate_graphs_link.id = 'recalculate-graphs';
-		recalculate_graphs_link.textContent = 'Recalculate graphs';
-		recalculate_graphs_link.onclick = async function () {
-			const response = await serverCall(Routes.RECALCULATE_GRAPHS, null);
+		let recalculateGraphsLink = document.createElement('u') as HTMLElement;
+		recalculateGraphsLink.id = 'recalculate-graphs';
+		recalculateGraphsLink.textContent = 'Recalculate graphs';
+		recalculateGraphsLink.onclick = async function () {
+			const response = await serverCall(ROUTES.RECALCULATE_GRAPHS, null);
 			if (response.status === 'Error') {
 				alert(messageFromResponse(response));
 				return;
 			}
 		};
-		action_links.appendChild(recalculate_graphs_link);
+		actionLinks.appendChild(recalculateGraphsLink);
 	}
 }
 
-async function fill_own_info() {
+async function fillOwnInfo() {
 	// "query" the server
-	const response = await serverCall(Routes.QUERY_USER_HOME, null);
+	const response = await serverCall(ROUTES.QUERY_USER_HOME, null);
 	if (response.status === 'Error') {
 		alert(messageFromResponse(response));
 		return;
@@ -114,45 +114,45 @@ async function fill_own_info() {
 	const data = response.value;
 
 	// add hrefs according to the user's permissions.
-	fill_action_links(data.actions, data.roles);
+	fillActionLinks(data.actions, data.roles);
 
 	{
-		let label_name_and_roles = document.getElementById('user-name-and-roles') as HTMLDivElement;
-		label_name_and_roles.textContent = data.fullname;
+		let labelNameAndRoles = document.getElementById('user-name-and-roles') as HTMLDivElement;
+		labelNameAndRoles.textContent = data.fullname;
 
 		// roles of user from the cookies
-		let user_roles = data.roles as string[];
+		let userRoles = data.roles as string[];
 		// add roles of user next to the name
-		label_name_and_roles.textContent += ' - ';
-		label_name_and_roles.textContent += user_role_to_string[user_roles[0] as UserRole];
-		for (let i = 1; i < user_roles.length; ++i) {
-			label_name_and_roles.textContent += ', ' + user_role_to_string[user_roles[i] as UserRole];
+		labelNameAndRoles.textContent += ' - ';
+		labelNameAndRoles.textContent += USER_ROLE_TO_STRING[userRoles[0] as UserRole];
+		for (let i = 1; i < userRoles.length; ++i) {
+			labelNameAndRoles.textContent += ', ' + USER_ROLE_TO_STRING[userRoles[i] as UserRole];
 		}
 	}
 
 	{
-		let table = document.getElementById('user_ratings_table') as HTMLTableElement;
+		let table = document.getElementById('userRatingsTable') as HTMLTableElement;
 
 		const ratings = data.ratings as any[];
 		for (const r of ratings) {
-			const data_i = r;
+			const dataI = r;
 
 			let row = table.insertRow(-1);
 
-			row.insertCell(-1).appendChild(document.createTextNode(data_i.time_control_name));
-			row.insertCell(-1).appendChild(document.createTextNode(data_i.rating.rating));
-			row.insertCell(-1).appendChild(document.createTextNode(data_i.rating.num_games));
-			row.insertCell(-1).appendChild(document.createTextNode(data_i.rating.won));
-			row.insertCell(-1).appendChild(document.createTextNode(data_i.rating.drawn));
-			row.insertCell(-1).appendChild(document.createTextNode(data_i.rating.lost));
+			row.insertCell(-1).appendChild(document.createTextNode(dataI.timeControlName));
+			row.insertCell(-1).appendChild(document.createTextNode(dataI.rating.rating));
+			row.insertCell(-1).appendChild(document.createTextNode(dataI.rating.numGames));
+			row.insertCell(-1).appendChild(document.createTextNode(dataI.rating.won));
+			row.insertCell(-1).appendChild(document.createTextNode(dataI.rating.drawn));
+			row.insertCell(-1).appendChild(document.createTextNode(dataI.rating.lost));
 		}
 	}
 }
 
 window.onload = function () {
 	// display user info
-	fill_own_info();
+	fillOwnInfo();
 
-	let logout_link = document.getElementById('logout-link') as HTMLLinkElement;
-	logout_link.onclick = logout_link_clicked;
+	let logoutLink = document.getElementById('logout-link') as HTMLLinkElement;
+	logoutLink.onclick = logoutLinkClicked;
 };

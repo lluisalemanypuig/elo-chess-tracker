@@ -38,7 +38,7 @@ export type NodeWeight = z.infer<typeof NodeWeightSchema>;
 
 export const NodeInfoSchema = z.object({
 	id: PlayerPublicIdSchema,
-	full_name: UserGivenNameSchema,
+	fullName: UserGivenNameSchema,
 	weight: NodeWeightSchema
 });
 
@@ -71,7 +71,7 @@ export type QueryGraphOutput = z.infer<typeof QueryGraphOutputSchema>;
 // Routes.QUERY_GRAPH_OWN
 
 export const QueryGraphInputOwnSchema = z.object({
-	time_control_id: TimeControlIdSchema
+	timeControlId: TimeControlIdSchema
 });
 
 export type QueryGraphOwnInput = z.infer<typeof QueryGraphInputOwnSchema>;
@@ -79,7 +79,7 @@ export type QueryGraphOwnInput = z.infer<typeof QueryGraphInputOwnSchema>;
 // Routes.QUERY_GRAPH_FULL
 
 export const QueryGraphInputFullSchema = z.object({
-	time_control_id: TimeControlIdSchema
+	timeControlId: TimeControlIdSchema
 });
 
 export type QueryGraphFullInput = z.infer<typeof QueryGraphInputFullSchema>;

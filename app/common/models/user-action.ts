@@ -24,7 +24,7 @@ Contact:
 */
 
 import { z } from 'zod';
-import { ADMIN, MEMBER, STUDENT, TEACHER, UserRole } from '@app/common/models/user-role';
+import { ADMIN, MEMBER, STUDENT, TEACHER, UserRole } from '@common/models/user-role';
 
 /// Can create users
 export const CREATE_USER = 'create_user';
@@ -118,7 +118,7 @@ export const USER_CHALLENGE_TEACHER = 'challenge_teacher';
 export const USER_CHALLENGE_STUDENT = 'challenge_student';
 
 /// All actions that can be performed in this web
-export const all_actions = [
+export const ALL_ACTIONS = [
 	CREATE_USER,
 
 	GAMES_CREATE,
@@ -171,9 +171,9 @@ export const all_actions = [
 ] as const;
 
 /// All actions as type
-export type UserAction = (typeof all_actions)[number];
+export type UserAction = (typeof ALL_ACTIONS)[number];
 
-export const UserActionSchema = z.enum(all_actions);
+export const UserActionSchema = z.enum(ALL_ACTIONS);
 
 export const UserActionArraySchema = z.array(UserActionSchema);
 
@@ -189,7 +189,7 @@ export const USER_CHALLENGE_ID = 'challenge';
 export const GRAPHS_SEE_ID = 'see_graphs';
 
 /// All action ids that can be performed in this web
-export const all_action_ids = [
+export const ALL_ACTION_IDS = [
 	GAMES_CREATE_ID,
 	GAMES_EDIT_ID,
 	GAMES_DELETE_ID,
@@ -201,11 +201,11 @@ export const all_action_ids = [
 ] as const;
 
 /// All actions as type
-export type UserActionID = (typeof all_action_ids)[number];
+export type UserActionID = (typeof ALL_ACTION_IDS)[number];
 
-export const UserActionIDSchema = z.enum(all_action_ids);
+export const UserActionIDSchema = z.enum(ALL_ACTION_IDS);
 
-export function get_generic_role_action_name(id: UserActionID): UserAction {
+export function getGenericRoleActionName(id: UserActionID): UserAction {
 	switch (id) {
 		case GAMES_CREATE_ID:
 			return GAMES_CREATE;
@@ -237,7 +237,7 @@ export function get_generic_role_action_name(id: UserActionID): UserAction {
  *
  *    result: USER_EDIT_ADMIN (UserAction)
  */
-export function get_role_action_name(id: UserActionID, r: UserRole): UserAction {
+export function getRoleActionName(id: UserActionID, r: UserRole): UserAction {
 	switch (id) {
 		case GAMES_CREATE_ID:
 			switch (r) {

@@ -24,15 +24,15 @@ Contact:
 */
 
 import { Password, PasswordSchema, PasswordArraySchema } from '@common/models/password';
-import { read_schema } from '@common/io/generic';
+import { readSchema } from '@common/io/generic';
 
 /**
  * @brief Parses a JSON string and returns a Password.
  * @param str A string with data of a Password.
  * @returns A new Password object.
  */
-export function password_from_string(str: string): Password | null {
-	return read_schema(PasswordSchema, str);
+export function passwordFromString(str: string): Password | null {
+	return readSchema(PasswordSchema, str);
 }
 
 /**
@@ -40,6 +40,6 @@ export function password_from_string(str: string): Password | null {
  * @param str A string with data of several Password.
  * @returns An array of Password objects.
  */
-export function password_array_from_string(str: string): Password[] | null {
-	return read_schema(PasswordArraySchema, str);
+export function passwordArrayFromString(str: string): Password[] | null {
+	return readSchema(PasswordArraySchema, str);
 }

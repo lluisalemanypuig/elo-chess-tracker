@@ -28,8 +28,8 @@ Contact:
  * @param arr Input array
  * @param F Boolean function
  */
-export function search_linear<T>(arr: T[], x: T): number {
-	return search_linear_by_key(arr, (y: T): boolean => {
+export function searchLinear<T>(arr: T[], x: T): number {
+	return searchLinearByKey(arr, (y: T): boolean => {
 		return x == y;
 	});
 }
@@ -39,7 +39,7 @@ export function search_linear<T>(arr: T[], x: T): number {
  * @param arr Input array
  * @param F Boolean function
  */
-export function search_linear_by_key<T>(arr: T[], F: Function): number {
+export function searchLinearByKey<T>(arr: T[], F: Function): number {
 	for (let i = 0; i < arr.length; ++i) {
 		if (F(arr[i])) {
 			return i;
@@ -57,7 +57,7 @@ export function search_linear_by_key<T>(arr: T[], F: Function): number {
  * @pre Elements in @e arr are sorted by @e F.
  */
 export function search<T>(arr: T[], x: T): number {
-	return search_by_key(arr, (e: T): number => {
+	return searchByKey(arr, (e: T): number => {
 		if (x < e) {
 			return -1;
 		}
@@ -80,20 +80,20 @@ export function search<T>(arr: T[], x: T): number {
  * @returns The index of the element if it is in the array. Returns -1 if it is not.
  * @pre Elements in @e arr are sorted by @e F.
  */
-export function search_by_key<T>(arr: T[], F: Function): number {
+export function searchByKey<T>(arr: T[], F: Function): number {
 	let i: number = 0;
 	let j: number = arr.length - 1;
 	while (i < j) {
 		const m: number = Math.floor((i + j) / 2);
 
 		const comp = F(arr[m]);
-		const is_equal = comp == 0;
-		const is_less_than = comp == -1;
+		const isEqual = comp == 0;
+		const isLessThan = comp == -1;
 
-		if (is_equal) {
+		if (isEqual) {
 			return m;
 		}
-		if (is_less_than) {
+		if (isLessThan) {
 			j = m - 1;
 		} else {
 			i = m + 1;
@@ -117,8 +117,8 @@ export function search_by_key<T>(arr: T[], F: Function): number {
  * @pre Element @e x does not exist in @e arr, that is, function
  * 'search(arr, x, F)' returns false.
  */
-export function where_should_be_inserted<T>(arr: T[], x: T): [number, boolean] {
-	return where_should_be_inserted_by_key(arr, (e: T): number => {
+export function whereShouldBeInserted<T>(arr: T[], x: T): [number, boolean] {
+	return whereShouldBeInsertedByKey(arr, (e: T): number => {
 		if (x < e) {
 			return -1;
 		}
@@ -144,7 +144,7 @@ export function where_should_be_inserted<T>(arr: T[], x: T): [number, boolean] {
  * @pre Element @e x does not exist in @e arr, that is, function
  * 'search(arr, x, F)' returns false.
  */
-export function where_should_be_inserted_by_key<T>(arr: T[], F: Function): [number, boolean] {
+export function whereShouldBeInsertedByKey<T>(arr: T[], F: Function): [number, boolean] {
 	if (arr.length == 0) {
 		return [1, false];
 	}
@@ -155,13 +155,13 @@ export function where_should_be_inserted_by_key<T>(arr: T[], F: Function): [numb
 		const m: number = Math.floor((i + j) / 2);
 
 		const comp = F(arr[m]);
-		const is_equal = comp == 0;
-		const is_less_than = comp == -1;
+		const isEqual = comp == 0;
+		const isLessThan = comp == -1;
 
-		if (is_equal) {
+		if (isEqual) {
 			return [m, true];
 		}
-		if (is_less_than) {
+		if (isLessThan) {
 			j = m - 1;
 		} else {
 			i = m + 1;
@@ -169,13 +169,13 @@ export function where_should_be_inserted_by_key<T>(arr: T[], F: Function): [numb
 	}
 
 	const comp = F(arr[i]);
-	const is_equal = comp == 0;
-	const is_less_than = comp == -1;
+	const isEqual = comp == 0;
+	const isLessThan = comp == -1;
 
-	if (is_equal) {
+	if (isEqual) {
 		return [i, true];
 	}
-	if (is_less_than) {
+	if (isLessThan) {
 		return [i, false];
 	}
 	return [i + 1, false];

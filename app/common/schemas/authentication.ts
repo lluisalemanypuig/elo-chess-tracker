@@ -23,8 +23,8 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { SessionID, SessionIDLenientSchema } from '@app/common/models/session-id';
+import { SessionId, SessionIdLenientSchema } from '@common/models/session-id';
 
-export const AuthenticationInputSchema = SessionIDLenientSchema;
+export const AuthenticationInputSchema = SessionIdLenientSchema;
 
-export type AuthenticationInput = SessionID;
+export type AuthenticationInput = SessionId;

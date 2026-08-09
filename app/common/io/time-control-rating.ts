@@ -24,17 +24,17 @@ Contact:
 */
 
 import { RatingSystemManager } from '@app/server/managers/rating-system-manager';
-import { TimeControlRating, TimeControlRatingKeys } from '@app/common/models/time-control-rating';
-import { read_json_array_string, read_json_object_string } from '@common/io/generic';
+import { TimeControlRating, TimeControlRatingKeys } from '@common/models/time-control-rating';
+import { readJsonArrayString, readJsonObjectString } from '@common/io/generic';
 
 /**
  * @brief Parses a JSON string and returns a TimeControlRating object.
  * @param str A JSON string with data of a TimeControlRating object.
  * @returns A TimeControlRating object.
  */
-function time_control_rating_from_json(json: any) {
-	const rating = RatingSystemManager.get_instance().get_rating_from_json(json.rating);
-	return new TimeControlRating(json.time_control, rating);
+function timeControlRatingFromJson(json: any) {
+	const rating = RatingSystemManager.getInstance().getRatingFromJson(json.rating);
+	return new TimeControlRating(json.timeControl, rating);
 }
 
 /**
@@ -42,8 +42,8 @@ function time_control_rating_from_json(json: any) {
  * @param str A JSON string with data of a TimeControlRating object.
  * @returns A TimeControlRating object.
  */
-export function time_control_rating_from_string(str: string): TimeControlRating | null {
-	return read_json_object_string(str, TimeControlRatingKeys, time_control_rating_from_json);
+export function timeControlRatingFromString(str: string): TimeControlRating | null {
+	return readJsonObjectString(str, TimeControlRatingKeys, timeControlRatingFromJson);
 }
 
 /**
@@ -51,6 +51,6 @@ export function time_control_rating_from_string(str: string): TimeControlRating 
  * @param str A JSON string with data of several TimeControlRating.
  * @returns An array of TimeControlRating objects.
  */
-export function time_control_rating_array_from_string(str: string): TimeControlRating[] | null {
-	return read_json_array_string(str, TimeControlRatingKeys, time_control_rating_from_json);
+export function timeControlRatingArrayFromString(str: string): TimeControlRating[] | null {
+	return readJsonArrayString(str, TimeControlRatingKeys, timeControlRatingFromJson);
 }

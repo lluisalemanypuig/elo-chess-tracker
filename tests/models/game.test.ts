@@ -25,8 +25,8 @@ Contact:
 
 import { toPlayerPrivateId } from '@common/models/player';
 import { Game, toGameId } from '@common/models/game';
-import { EloRating } from '@common/models/rating_framework/Elo/rating';
-import { toTimeControlId, toTimeControlName } from '@app/common/models/time-control';
+import { EloRating } from '@common/models/rating-framework/Elo/rating';
+import { toTimeControlId, toTimeControlName } from '@common/models/time-control';
 import { toDateFull } from '@common/utils/time';
 
 const Blitz = toTimeControlId('Blitz');
@@ -53,12 +53,12 @@ describe('Setters and Getters -- Elo', () => {
 		expect(g.white).toEqual('W');
 		expect(g.black).toEqual('B');
 		expect(g.result).toEqual('white_wins');
-		expect(g.time_control_id).toEqual(Blitz);
-		expect(g.time_control_name).toEqual(Blitz5p3);
+		expect(g.timeControlId).toEqual(Blitz);
+		expect(g.timeControlName).toEqual(Blitz5p3);
 		expect(g.when).toEqual('2024-12-29..11:15:00');
-		expect(g.is_user_involved(toPlayerPrivateId('W'))).toBe(true);
-		expect(g.is_user_involved(toPlayerPrivateId('B'))).toBe(true);
-		expect(g.is_user_involved(toPlayerPrivateId('q'))).toBe(false);
+		expect(g.isUserInvolved(toPlayerPrivateId('W'))).toBe(true);
+		expect(g.isUserInvolved(toPlayerPrivateId('B'))).toBe(true);
+		expect(g.isUserInvolved(toPlayerPrivateId('q'))).toBe(false);
 	});
 
 	test('Sets', () => {
@@ -81,14 +81,14 @@ describe('Setters and Getters -- Elo', () => {
 		g.result = 'black_wins';
 		expect(g.result).toEqual('black_wins');
 
-		expect(g.white_rating).toEqual(rW);
+		expect(g.whiteRating).toEqual(rW);
 		rW.rating = 2000;
-		g.white_rating = rW;
-		expect(g.white_rating).toEqual(rW);
+		g.whiteRating = rW;
+		expect(g.whiteRating).toEqual(rW);
 
-		expect(g.black_rating).toEqual(rB);
+		expect(g.blackRating).toEqual(rB);
 		rB.rating = 1900;
-		g.black_rating = rB;
-		expect(g.black_rating).toEqual(rB);
+		g.blackRating = rB;
+		expect(g.blackRating).toEqual(rB);
 	});
 });

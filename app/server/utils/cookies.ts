@@ -23,7 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { isDefined } from '@app/common/utils/is-defined';
+import { isDefined } from '@common/utils/is-defined';
 
 type SameSite = 'Lax';
 
@@ -37,7 +37,7 @@ interface CookiesParams {
 	secure: boolean;
 }
 
-function make_cookie({ name, value, days, path, samesite, domain, secure }: CookiesParams): string {
+function makeCookie({ name, value, days, path, samesite, domain, secure }: CookiesParams): string {
 	let cookie: string = '';
 
 	cookie += encodeURIComponent(name) + '=' + encodeURIComponent(value);
@@ -47,12 +47,12 @@ function make_cookie({ name, value, days, path, samesite, domain, secure }: Cook
 	}
 
 	{
-		let num_days = 1;
+		let numDays = 1;
 		if (isDefined(days)) {
-			num_days = days;
+			numDays = days;
 		}
 		const d = new Date();
-		d.setTime(d.getTime() + num_days * 24 * 60 * 60 * 1000);
+		d.setTime(d.getTime() + numDays * 24 * 60 * 60 * 1000);
 		cookie += '; expires=' + d.toUTCString();
 	}
 
@@ -76,8 +76,8 @@ function make_cookie({ name, value, days, path, samesite, domain, secure }: Cook
  * @param days Expiry date of the cookie.
  * @pre Parameter @e values must have entries: 'name' and 'values'.
  */
-export function make_session_id_cookie(name: string, value: string, days: number): string {
-	return make_cookie({
+export function makeSessionIdCookie(name: string, value: string, days: number): string {
+	return makeCookie({
 		name: name,
 		value: value,
 		days: days,
@@ -92,8 +92,8 @@ export function make_session_id_cookie(name: string, value: string, days: number
  * @param name Name of the cookie.
  * @pre Parameter @e values must have entries: 'name' and 'values'.
  */
-export function empty_session_id_cookie(name: string): string {
-	return make_cookie({
+export function emptySessionIdCookie(name: string): string {
+	return makeCookie({
 		name: name,
 		value: '',
 		days: 1,

@@ -24,7 +24,7 @@ Contact:
 */
 
 import { z } from 'zod';
-import { EdgeMetadataSchema, EdgeMetadata } from '@app/common/models/graph/edge-metadata';
+import { EdgeMetadataSchema, EdgeMetadata } from '@common/models/graph/edge-metadata';
 import { PlayerPrivateId, PlayerPrivateIdSchema } from '@common/models/player';
 
 export const EdgeSchema = z
@@ -68,10 +68,8 @@ export class Edge {
 	}
 
 	/// Is the metadata of this edge all zeroes?
-	is_empty_edge(): boolean {
-		return (
-			this.metadata.num_games_drawn == 0 && this.metadata.num_games_lost == 0 && this.metadata.num_games_won == 0
-		);
+	isEmptyEdge(): boolean {
+		return this.metadata.numGamesDrawn == 0 && this.metadata.numGamesLost == 0 && this.metadata.numGamesWon == 0;
 	}
 }
 

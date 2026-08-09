@@ -27,7 +27,7 @@ import { z } from 'zod';
 
 const ChallengesBehaviorSchema = z
 	.object({
-		higher_rated_player_can_decline_challenge_from_lower_rated_player: z.boolean()
+		higherRatedPlayerCanDeclineChallengeFromLowerRatedPlayer: z.boolean()
 	})
 	.strict();
 

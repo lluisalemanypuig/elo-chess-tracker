@@ -24,7 +24,7 @@ Contact:
 */
 
 import { PlayerPrivateId } from '@common/models/player';
-import { encrypt_password_for_user } from '@server/utils/encrypt';
+import { encryptPasswordForUser } from '@server/utils/encrypt';
 
 const args = process.argv.slice(2);
 
@@ -46,7 +46,7 @@ const password = args[password_index + 1];
 console.log(`Username: '${username}'`);
 console.log(`Psasword: '${password}'`);
 
-let [encrypted_password, iv] = encrypt_password_for_user(username, password);
+let [encrypted_password, iv] = encryptPasswordForUser(username, password);
 
 const result = {
 	encrypted: `${encrypted_password}`,

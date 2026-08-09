@@ -34,16 +34,16 @@ Contact:
  * @post The input array is shuffled.
  */
 export function shuffle<T>(array: T[]): void {
-	let cur_idx = array.length;
-	let rnd_idx = 0;
+	let curIdx = array.length;
+	let rndIdx = 0;
 
 	// While there remain elements to shuffle.
-	while (cur_idx != 0) {
+	while (curIdx != 0) {
 		// Pick a remaining element
-		rnd_idx = Math.floor(Math.random() * cur_idx);
-		cur_idx--;
+		rndIdx = Math.floor(Math.random() * curIdx);
+		curIdx--;
 
 		// And swap it with the current element
-		[array[cur_idx], array[rnd_idx]] = [array[rnd_idx], array[cur_idx]];
+		[array[curIdx], array[rndIdx]] = [array[rndIdx], array[curIdx]];
 	}
 }

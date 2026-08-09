@@ -25,14 +25,14 @@ Contact:
 
 import { z } from 'zod';
 import { UserGivenNameSchema } from '@common/models/user';
-import { TimeControlIdSchema, TimeControlNameSchema } from '@app/common/models/time-control';
+import { TimeControlIdSchema, TimeControlNameSchema } from '@common/models/time-control';
 import { GameIdSchema } from '@common/models/game';
 import { DateFullSchema } from '@common/utils/time';
 
 // Routes.QUERY_GAME_LIST_OWN
 
 export const QueryGamesListOwnInputSchema = z.object({
-	time_control_id: TimeControlIdSchema
+	timeControlId: TimeControlIdSchema
 });
 
 export type QueryGamesListOwnInput = z.infer<typeof QueryGamesListOwnInputSchema>;
@@ -40,7 +40,7 @@ export type QueryGamesListOwnInput = z.infer<typeof QueryGamesListOwnInputSchema
 // Routes.QUERY_GAME_LIST_ALL
 
 export const QueryGamesListAllInputSchema = z.object({
-	time_control_id: TimeControlIdSchema
+	timeControlId: TimeControlIdSchema
 });
 
 export type QueryGamesListAllInput = z.infer<typeof QueryGamesListAllInputSchema>;
@@ -53,12 +53,12 @@ export const QueryGamesListOutputSingleSchema = z.object({
 	white: UserGivenNameSchema,
 	black: UserGivenNameSchema,
 	result: z.string(),
-	time_control_name: TimeControlNameSchema,
+	timeControlName: TimeControlNameSchema,
 	date: DateFullSchema,
-	white_rating: z.number(),
-	black_rating: z.number(),
-	white_increment: z.number(),
-	black_increment: z.number(),
+	whiteRating: z.number(),
+	blackRating: z.number(),
+	whiteIncrement: z.number(),
+	blackIncrement: z.number(),
 	editable: z.boolean(),
 	deleteable: z.boolean()
 });

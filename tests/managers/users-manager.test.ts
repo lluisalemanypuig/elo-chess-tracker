@@ -44,77 +44,77 @@ const dd = toUserGivenName('dd');
 
 describe('Users Manager', () => {
 	test('Empty manager', () => {
-		let users = UsersManager.get_instance();
+		let users = UsersManager.getInstance();
 		users.clear();
 
-		expect(users.num_users()).toBe(0);
+		expect(users.numUsers()).toBe(0);
 	});
 
 	test('Add some users', () => {
-		let users = UsersManager.get_instance();
+		let users = UsersManager.getInstance();
 		users.clear();
 
 		const aU = new User(a, AA, aa, { encrypted: 'p', iv: 'w' }, [], [], []);
 		const bU = new User(b, BB, bb, { encrypted: 'p', iv: 'w' }, [], [], []);
 		const cU = new User(c, CC, cc, { encrypted: 'p', iv: 'w' }, [], [], []);
 
-		users.add_user(aU);
-		expect(users.num_users()).toBe(1);
+		users.addUser(aU);
+		expect(users.numUsers()).toBe(1);
 
-		users.add_user(bU);
-		expect(users.num_users()).toBe(2);
+		users.addUser(bU);
+		expect(users.numUsers()).toBe(2);
 
-		users.add_user(cU);
-		expect(users.num_users()).toBe(3);
+		users.addUser(cU);
+		expect(users.numUsers()).toBe(3);
 
-		expect(users.get_user_at(0)).toEqual(aU);
-		expect(users.get_user_at(1)).toEqual(bU);
-		expect(users.get_user_at(2)).toEqual(cU);
+		expect(users.getUserAt(0)).toEqual(aU);
+		expect(users.getUserAt(1)).toEqual(bU);
+		expect(users.getUserAt(2)).toEqual(cU);
 
-		expect(users.get_user_index_by_username(a)).toBe(0);
-		expect(users.get_user_index(aU)).toBe(0);
+		expect(users.getUserIndexByUsername(a)).toBe(0);
+		expect(users.getUserIndex(aU)).toBe(0);
 
-		expect(users.get_user_index_by_username(b)).toBe(1);
-		expect(users.get_user_index(bU)).toBe(1);
+		expect(users.getUserIndexByUsername(b)).toBe(1);
+		expect(users.getUserIndex(bU)).toBe(1);
 
-		expect(users.get_user_index_by_username(c)).toBe(2);
-		expect(users.get_user_index(cU)).toBe(2);
+		expect(users.getUserIndexByUsername(c)).toBe(2);
+		expect(users.getUserIndex(cU)).toBe(2);
 	});
 
 	test('Replace some users', () => {
-		let users = UsersManager.get_instance();
+		let users = UsersManager.getInstance();
 		users.clear();
 
 		const aU = new User(a, AA, aa, { encrypted: 'p', iv: 'w' }, [], [], []);
 		const bU = new User(b, BB, bb, { encrypted: 'p', iv: 'w' }, [], [], []);
 		const cU = new User(c, CC, cc, { encrypted: 'p', iv: 'w' }, [], [], []);
 
-		users.add_user(aU);
-		users.add_user(bU);
-		users.add_user(cU);
+		users.addUser(aU);
+		users.addUser(bU);
+		users.addUser(cU);
 
 		const dU = new User(d, DD, dd, { encrypted: 'p', iv: 'w' }, [], [], []);
 
-		users.replace_user(dU, users.get_user_index(bU) as number);
+		users.replace_user(dU, users.getUserIndex(bU) as number);
 
 		expect(() => users.replace_user(bU, 500)).toThrow();
 
-		expect(users.num_users()).toBe(3);
+		expect(users.numUsers()).toBe(3);
 
-		expect(users.get_user_at(0)).toEqual(aU);
-		expect(users.get_user_at(1)).toEqual(dU);
-		expect(users.get_user_at(2)).toEqual(cU);
+		expect(users.getUserAt(0)).toEqual(aU);
+		expect(users.getUserAt(1)).toEqual(dU);
+		expect(users.getUserAt(2)).toEqual(cU);
 
-		expect(users.get_user_index_by_username(a)).toBe(0);
-		expect(users.get_user_index(aU)).toBe(0);
+		expect(users.getUserIndexByUsername(a)).toBe(0);
+		expect(users.getUserIndex(aU)).toBe(0);
 
-		expect(users.get_user_index_by_username(b)).toBe(undefined);
-		expect(users.get_user_index(bU)).toBe(undefined);
+		expect(users.getUserIndexByUsername(b)).toBe(undefined);
+		expect(users.getUserIndex(bU)).toBe(undefined);
 
-		expect(users.get_user_index_by_username(d)).toBe(1);
-		expect(users.get_user_index(dU)).toBe(1);
+		expect(users.getUserIndexByUsername(d)).toBe(1);
+		expect(users.getUserIndex(dU)).toBe(1);
 
-		expect(users.get_user_index_by_username(c)).toBe(2);
-		expect(users.get_user_index(cU)).toBe(2);
+		expect(users.getUserIndexByUsername(c)).toBe(2);
+		expect(users.getUserIndex(cU)).toBe(2);
 	});
 });

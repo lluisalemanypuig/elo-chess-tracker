@@ -24,12 +24,12 @@ Contact:
 */
 
 import CryptoJS from 'crypto-js';
-import { interleave_strings } from '@server/utils/misc';
+import { interleaveStrings } from '@server/utils/misc';
 import { PlayerPrivateId } from '@common/models/player';
 import { Password } from '@common/models/password';
 
-// original allowed_symbols string:
-// a!b·c$d%e&f/g(h)i=j?k¿l|m@n#o~p¬qr\'s[¡]t{u}v/w*x-y+zºAªB"C,D.E;F:G_HIJKLMNOPQRSTUVWXYZ0123456789
+// original allowedSymbols string:
+// a!b·c$d%e&f/g(h)i=j?k¿l|m@n#o~p¬qr\'s[¡]t{u}v/w*x-y+zºAªB"C,D.E;F:GHIJKLMNOPQRSTUVWXYZ0123456789
 
 // In case of accidental overwrite, use:
 // '$ALLOWED-SYMBOLS-ENCRYPT'.normalize('NFC');
@@ -37,16 +37,16 @@ import { Password } from '@common/models/password';
 
 // This string is randomized by the build script which the administrator must
 // use in order to configure the webpage in their machine.
-const allowed_symbols: string = '$ALLOWED_SYMBOLS_ENCRYPT'.normalize('NFC');
+const allowedSymbols: string = '$ALLOWEDSYMBOLSENCRYPT'.normalize('NFC');
 
 /// Logarithm of 'x' in base 'base'
-function log_base(x: number, base: number): number {
+function logBase(x: number, base: number): number {
 	return Math.log(x) / Math.log(base);
 }
 
 /// Next power of 2
-function next_power_of_2(n: number): number {
-	return Math.pow(2, Math.floor(log_base(n, 2)) + 1);
+function nextPowerOf_2(n: number): number {
+	return Math.pow(2, Math.floor(logBase(n, 2)) + 1);
 }
 
 /**
@@ -54,40 +54,40 @@ function next_power_of_2(n: number): number {
  * @param str A string
  * @returns A longer string padded with random characters
  */
-export function normalize_string(str: string): string {
-	let new_password = str.normalize('NFC');
+export function normalizeString(str: string): string {
+	let newPassword = str.normalize('NFC');
 
-	const current_length = new_password.length;
-	const next_length = (function () {
-		if (new_password.length < 4) {
-			return next_power_of_2(next_power_of_2(current_length));
+	const currentLength = newPassword.length;
+	const nextLength = (function () {
+		if (newPassword.length < 4) {
+			return nextPowerOf_2(nextPowerOf_2(currentLength));
 		}
-		return next_power_of_2(current_length);
+		return nextPowerOf_2(currentLength);
 	})();
 
-	for (let i = current_length; i < next_length; ++i) {
-		const rand_idx = (i - current_length) % allowed_symbols.length;
-		const rand_char = allowed_symbols.charAt(rand_idx);
-		new_password += rand_char;
+	for (let i = currentLength; i < nextLength; ++i) {
+		const randIdx = (i - currentLength) % allowedSymbols.length;
+		const randChar = allowedSymbols.charAt(randIdx);
+		newPassword += randChar;
 	}
 
-	return new_password;
+	return newPassword;
 }
 
-/// Encrypts 'plain_msg' using password 'pwd'
-export function encrypt_message(plain_msg: string, pwd: string): string {
-	return CryptoJS.AES.encrypt(plain_msg, pwd).toString();
+/// Encrypts 'plainMsg' using password 'pwd'
+export function encryptMessage(plainMsg: string, pwd: string): string {
+	return CryptoJS.AES.encrypt(plainMsg, pwd).toString();
 }
 
-/// Decrypts 'encrypted_msg' using password 'pwd'
-function decrypt_bytes(encrypted_msg: string, pwd: string): any {
-	return CryptoJS.AES.decrypt(encrypted_msg, pwd);
+/// Decrypts 'encryptedMsg' using password 'pwd'
+function decryptBytes(encryptedMsg: string, pwd: string): any {
+	return CryptoJS.AES.decrypt(encryptedMsg, pwd);
 }
 
-/// Decrypts 'encrypted_msg' using password 'pwd'
-export function decrypt_message(encrypted_msg: string, pwd: string): string {
+/// Decrypts 'encryptedMsg' using password 'pwd'
+export function decryptMessage(encryptedMsg: string, pwd: string): string {
 	try {
-		return decrypt_bytes(encrypted_msg, pwd).toString(CryptoJS.enc.Utf8);
+		return decryptBytes(encryptedMsg, pwd).toString(CryptoJS.enc.Utf8);
 	} catch (error) {
 		return '';
 	}
@@ -102,15 +102,15 @@ export function decrypt_message(encrypted_msg: string, pwd: string): string {
  * @param password Password in plain text set by the user.
  * @returns A pair of strings: encrypted text, and random initialization vector of AES (length 16 bytes)
  */
-export function encrypt_password_for_user(username: PlayerPrivateId, password: string): [string, string] {
-	const normalized_password = normalize_string(password);
-	const key_used_to_encrypt = CryptoJS.SHA256(normalized_password);
+export function encryptPasswordForUser(username: PlayerPrivateId, password: string): [string, string] {
+	const normalizedPassword = normalizeString(password);
+	const keyUsedToEncrypt = CryptoJS.SHA256(normalizedPassword);
 
-	const actual_password_to_be_encrypted = interleave_strings(username, password);
+	const actualPasswordToBeEncrypted = interleaveStrings(username, password);
 
 	const iv = CryptoJS.lib.WordArray.random(16);
 
-	const encrypted = CryptoJS.AES.encrypt(actual_password_to_be_encrypted, key_used_to_encrypt, {
+	const encrypted = CryptoJS.AES.encrypt(actualPasswordToBeEncrypted, keyUsedToEncrypt, {
 		iv: iv,
 		mode: CryptoJS.mode.CBC,
 		padding: CryptoJS.pad.Pkcs7
@@ -120,18 +120,18 @@ export function encrypt_password_for_user(username: PlayerPrivateId, password: s
 }
 
 /**
- * @brief Decrypts @e encrypted_msg using @e password and @e iv.
+ * @brief Decrypts @e encryptedMsg using @e password and @e iv.
  * @param encrypted Encrypted message.
  * @param password Password of user (this may not be the string you think it is!).
  * @param iv Initialization vector of AES.
- * @returns A string resulting of decrypting @e encrypted_msg.
+ * @returns A string resulting of decrypting @e encryptedMsg.
  */
-export function decrypt_password_for_user(password: string, { encrypted, iv }: Password): string {
-	const normalized_password = normalize_string(password);
-	const key_used_to_decrypt = CryptoJS.SHA256(normalized_password);
+export function decryptPasswordForUser(password: string, { encrypted, iv }: Password): string {
+	const normalizedPassword = normalizeString(password);
+	const keyUsedToDecrypt = CryptoJS.SHA256(normalizedPassword);
 
 	try {
-		return CryptoJS.AES.decrypt(encrypted, key_used_to_decrypt, {
+		return CryptoJS.AES.decrypt(encrypted, keyUsedToDecrypt, {
 			iv: CryptoJS.enc.Base64.parse(iv),
 			mode: CryptoJS.mode.CBC,
 			padding: CryptoJS.pad.Pkcs7
@@ -144,20 +144,20 @@ export function decrypt_password_for_user(password: string, { encrypted, iv }: P
 /**
  * @brief Checks that @e password is the actual password of user @e username.
  *
- * Decrypts @e encrypted_msg with @e password and @e iv and checks
+ * Decrypts @e encryptedMsg with @e password and @e iv and checks
  * that the result is correct.
- * @param encrypted_password Encrypted message
+ * @param encryptedPassword Encrypted message
  * @param username Username of user
  * @param password Password of user
  * @param iv Initialization vector of AES
  * @returns True or false whether @e password is the actual password or not.
  */
-export function is_password_of_user_correct(
+export function isPasswordOfUserCorrect(
 	username: PlayerPrivateId,
 	password: string,
-	actual_password: Password
+	actualPassword: Password
 ): boolean {
-	const decrypted = decrypt_password_for_user(password, actual_password);
-	const interleave = interleave_strings(username, password);
+	const decrypted = decryptPasswordForUser(password, actualPassword);
+	const interleave = interleaveStrings(username, password);
 	return decrypted == interleave;
 }

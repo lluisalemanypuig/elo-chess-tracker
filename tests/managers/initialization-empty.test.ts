@@ -26,8 +26,8 @@ Contact:
 import fs from 'fs';
 import path from 'path';
 
-import { server_init_from_data } from '@server/managers/memory/initialization';
-import { clear_server } from '@server/managers/memory/clear';
+import { serverInitFromData } from '@server/managers/memory/initialization';
+import { clearServer } from '@server/managers/memory/clear';
 import { RatingSystemManager } from '@app/server/managers/rating-system-manager';
 import { EnvironmentManager } from '@app/server/managers/environment-manager';
 import { ConfigurationManager } from '@app/server/managers/configuration-manager';
@@ -35,11 +35,11 @@ import { ChallengesManager } from '@app/server/managers/challenges-manager';
 import { GamesManager } from '@app/server/managers/games-manager';
 import { SessionIDManager } from '@app/server/managers/session-id-manager';
 import { UsersManager } from '@app/server/managers/users-manager';
-import { run_command } from '@tests/exec_utils';
+import { run_command } from '@tests/exec-utils';
 import { GraphsManager } from '@app/server/managers/graphs-manager';
 import { Graph } from '@common/models/graph/graph';
 import { Configuration } from '@common/models/configuration/configuration';
-import { toTimeControlId, toTimeControlName } from '@app/common/models/time-control';
+import { toTimeControlId, toTimeControlName } from '@common/models/time-control';
 
 const webpage_dir = 'tests/webpage';
 const icons_dir = path.join(webpage_dir, 'icons');
@@ -64,32 +64,32 @@ const Blitz5p3 = toTimeControlName('Blitz (5 + 3)');
 
 const configuration: Configuration = {
 	environment: {
-		ssl_certificate: {
-			public_key_file: 'sadf',
-			private_key_file: 'qwer',
-			passphrase_file: 'kgj68'
+		sslCertificate: {
+			publicKeyFile: 'sadf',
+			privateKeyFile: 'qwer',
+			passphraseFile: 'kgj68'
 		},
 		favicon: 'favicon.png',
-		login_page: {
+		loginPage: {
 			title: 'Login title',
 			icon: 'login.png'
 		},
-		home_page: {
+		homePage: {
 			title: 'Home title',
 			icon: 'home.png'
 		}
 	},
 
 	server: {
-		domain_name: 'my_domain',
+		domainName: 'my_domain',
 		ports: {
 			http: '8080',
 			https: '8443'
 		}
 	},
 
-	rating_system: 'Elo',
-	time_controls: [
+	ratingSystem: 'Elo',
+	timeControls: [
 		{
 			id: Classical,
 			name: Classical90p30
@@ -109,7 +109,7 @@ const configuration: Configuration = {
 	],
 	behavior: {
 		challenges: {
-			higher_rated_player_can_decline_challenge_from_lower_rated_player: false
+			higherRatedPlayerCanDeclineChallengeFromLowerRatedPlayer: false
 		}
 	},
 	permissions: {
@@ -123,20 +123,20 @@ const configuration: Configuration = {
 describe('Configure server', () => {
 	test('Load an empty server', async () => {
 		await run_command('./tests/initialize_empty.sh');
-		expect(() => server_init_from_data('tests/webpage', configuration)).not.toThrow();
+		expect(() => serverInitFromData('tests/webpage', configuration)).not.toThrow();
 	});
 
 	test('Check RatingSystemManager', () => {
-		const rating_system_manager = RatingSystemManager.get_instance();
+		const ratingSystem_manager = RatingSystemManager.getInstance();
 
-		expect(rating_system_manager.is_time_control_id_valid(Classical)).toBe(true);
-		expect(rating_system_manager.is_time_control_id_valid(toTimeControlId('classical'))).toBe(false);
-		expect(rating_system_manager.is_time_control_id_valid(Rapid)).toBe(true);
-		expect(rating_system_manager.is_time_control_id_valid(toTimeControlId('rapid'))).toBe(false);
-		expect(rating_system_manager.is_time_control_id_valid(Blitz)).toBe(true);
-		expect(rating_system_manager.is_time_control_id_valid(toTimeControlId('blitz'))).toBe(false);
+		expect(ratingSystem_manager.isTimeControlIdValid(Classical)).toBe(true);
+		expect(ratingSystem_manager.isTimeControlIdValid(toTimeControlId('classical'))).toBe(false);
+		expect(ratingSystem_manager.isTimeControlIdValid(Rapid)).toBe(true);
+		expect(ratingSystem_manager.isTimeControlIdValid(toTimeControlId('rapid'))).toBe(false);
+		expect(ratingSystem_manager.isTimeControlIdValid(Blitz)).toBe(true);
+		expect(ratingSystem_manager.isTimeControlIdValid(toTimeControlId('blitz'))).toBe(false);
 
-		const unique_ids = rating_system_manager.get_unique_time_controls_ids();
+		const unique_ids = ratingSystem_manager.getUniqueTimeControlsIds();
 		expect(
 			unique_ids.find((val: string): boolean => {
 				return val == Rapid;
@@ -149,88 +149,88 @@ describe('Configure server', () => {
 			})
 		).toEqual(Blitz);
 
-		expect(rating_system_manager.get_time_controls().length).toBe(4);
-		expect(rating_system_manager.get_unique_time_controls_ids().length).toBe(3);
+		expect(ratingSystem_manager.getTimeControls().length).toBe(4);
+		expect(ratingSystem_manager.getUniqueTimeControlsIds().length).toBe(3);
 	});
 
 	test('Check UsersManager', () => {
-		const users_manager = UsersManager.get_instance();
-		expect(users_manager.num_users()).toBe(0);
+		const users_manager = UsersManager.getInstance();
+		expect(users_manager.numUsers()).toBe(0);
 	});
 
 	test('Check ChallengesManager', () => {
-		const challenges_manager = ChallengesManager.get_instance();
-		expect(challenges_manager.num_challenges()).toBe(0);
+		const challenges_manager = ChallengesManager.getInstance();
+		expect(challenges_manager.numChallenges()).toBe(0);
 	});
 
 	test('Check GamesManager', () => {
-		const games_manager = GamesManager.get_instance();
-		expect(games_manager.get_max_game_id()).toBe('0000000000');
+		const games_manager = GamesManager.getInstance();
+		expect(games_manager.getMaxGameId()).toBe('0000000000');
 	});
 
 	test('Check ConfigurationManager', () => {
-		const configuration_manager = ConfigurationManager.get_instance();
-		expect(configuration_manager.get_port_http()).toBe('8080');
-		expect(configuration_manager.get_port_https()).toBe('8443');
-		expect(configuration_manager.get_domain_name()).toBe('my_domain');
+		const configuration_manager = ConfigurationManager.getInstance();
+		expect(configuration_manager.getPortHttp()).toBe('8080');
+		expect(configuration_manager.getPortHttps()).toBe('8443');
+		expect(configuration_manager.getDomainName()).toBe('my_domain');
 	});
 
 	test('Check SessionIDManager', () => {
-		const session_manager = SessionIDManager.get_instance();
-		expect(session_manager.num_session_ids()).toBe(0);
+		const session_manager = SessionIDManager.getInstance();
+		expect(session_manager.numSessionIds()).toBe(0);
 	});
 
 	test('Check Environmentmanager', () => {
-		const environment_manager = EnvironmentManager.get_instance();
+		const environment_manager = EnvironmentManager.getInstance();
 
-		expect(environment_manager.get_dir_database()).toEqual(db_dir);
-		expect(environment_manager.get_dir_games()).toEqual(db_games_dir);
-		expect(environment_manager.get_dir_games_time_control(Classical)).toEqual(db_games_Classical_dir);
-		expect(environment_manager.get_dir_games_time_control(Rapid)).toEqual(db_games_Rapid_dir);
-		expect(environment_manager.get_dir_games_time_control(Blitz)).toEqual(db_games_Blitz_dir);
-		expect(environment_manager.get_dir_users()).toEqual(db_users_dir);
-		expect(environment_manager.get_dir_challenges()).toEqual(db_challenges_dir);
+		expect(environment_manager.getDirDatabase()).toEqual(db_dir);
+		expect(environment_manager.getDirGames()).toEqual(db_games_dir);
+		expect(environment_manager.getDirGamesTimeControl(Classical)).toEqual(db_games_Classical_dir);
+		expect(environment_manager.getDirGamesTimeControl(Rapid)).toEqual(db_games_Rapid_dir);
+		expect(environment_manager.getDirGamesTimeControl(Blitz)).toEqual(db_games_Blitz_dir);
+		expect(environment_manager.getDirUsers()).toEqual(db_users_dir);
+		expect(environment_manager.getDirChallenges()).toEqual(db_challenges_dir);
 
 		expect(fs.existsSync(db_games_Classical_dir)).toBe(true);
 		expect(fs.existsSync(db_games_Rapid_dir)).toBe(true);
 		expect(fs.existsSync(db_games_Blitz_dir)).toBe(true);
 
-		expect(environment_manager.get_dir_ssl()).toEqual(ssl_dir);
-		expect(environment_manager.get_ssl_public_key_file()).toEqual(path.join(ssl_dir, 'sadf'));
-		expect(environment_manager.get_ssl_private_key_file()).toEqual(path.join(ssl_dir, 'qwer'));
-		expect(environment_manager.get_ssl_passphrase_file()).toEqual(path.join(ssl_dir, 'kgj68'));
+		expect(environment_manager.getDirSsl()).toEqual(ssl_dir);
+		expect(environment_manager.getSslPublicKeyFile()).toEqual(path.join(ssl_dir, 'sadf'));
+		expect(environment_manager.getSslPrivateKeyFile()).toEqual(path.join(ssl_dir, 'qwer'));
+		expect(environment_manager.getSslPassphraseFile()).toEqual(path.join(ssl_dir, 'kgj68'));
 
-		expect(environment_manager.get_dir_icons()).toEqual(icons_dir);
-		expect(environment_manager.get_icon_favicon()).toEqual(path.join(icons_dir, 'favicon.png'));
-		expect(environment_manager.get_icon_login_page()).toEqual(path.join(icons_dir, 'login.png'));
-		expect(environment_manager.get_icon_home_page()).toEqual(path.join(icons_dir, 'home.png'));
+		expect(environment_manager.getDirIcons()).toEqual(icons_dir);
+		expect(environment_manager.getIconFavicon()).toEqual(path.join(icons_dir, 'favicon.png'));
+		expect(environment_manager.getIconLoginPage()).toEqual(path.join(icons_dir, 'login.png'));
+		expect(environment_manager.getIconHomePage()).toEqual(path.join(icons_dir, 'home.png'));
 
-		expect(environment_manager.get_title_login_page()).toEqual('Login title');
-		expect(environment_manager.get_title_home_page()).toEqual('Home title');
+		expect(environment_manager.getTitleLoginPage()).toEqual('Login title');
+		expect(environment_manager.getTitleHomePage()).toEqual('Home title');
 	});
 
 	test('Check GraphsManager', () => {
-		const graphs_manager = GraphsManager.get_instance();
-		expect(graphs_manager.get_graph(Blitz)).toEqual(new Graph());
-		expect(graphs_manager.get_graph(Rapid)).toEqual(new Graph());
-		expect(graphs_manager.get_graph(Classical)).toEqual(new Graph());
+		const graphs_manager = GraphsManager.getInstance();
+		expect(graphs_manager.getGraph(Blitz)).toEqual(new Graph());
+		expect(graphs_manager.getGraph(Rapid)).toEqual(new Graph());
+		expect(graphs_manager.getGraph(Classical)).toEqual(new Graph());
 	});
 
 	test('Clear the server memory', () => {
-		expect(() => clear_server()).not.toThrow();
+		expect(() => clearServer()).not.toThrow();
 	});
 
 	test('Check RatingSystemManager', () => {
-		const rating_system_manager = RatingSystemManager.get_instance();
+		const ratingSystem_manager = RatingSystemManager.getInstance();
 
-		expect(rating_system_manager.is_time_control_id_valid(Classical)).toBe(false);
-		expect(rating_system_manager.is_time_control_id_valid(Classical)).toBe(false);
-		expect(rating_system_manager.is_time_control_id_valid(Rapid)).toBe(false);
-		expect(rating_system_manager.is_time_control_id_valid(Rapid)).toBe(false);
-		expect(rating_system_manager.is_time_control_id_valid(Blitz)).toBe(false);
-		expect(rating_system_manager.is_time_control_id_valid(Blitz)).toBe(false);
+		expect(ratingSystem_manager.isTimeControlIdValid(Classical)).toBe(false);
+		expect(ratingSystem_manager.isTimeControlIdValid(Classical)).toBe(false);
+		expect(ratingSystem_manager.isTimeControlIdValid(Rapid)).toBe(false);
+		expect(ratingSystem_manager.isTimeControlIdValid(Rapid)).toBe(false);
+		expect(ratingSystem_manager.isTimeControlIdValid(Blitz)).toBe(false);
+		expect(ratingSystem_manager.isTimeControlIdValid(Blitz)).toBe(false);
 
-		const unique_ids = rating_system_manager.get_unique_time_controls_ids();
+		const unique_ids = ratingSystem_manager.getUniqueTimeControlsIds();
 		expect(
 			unique_ids.find((val: string): boolean => {
 				return val == Rapid;
@@ -243,62 +243,62 @@ describe('Configure server', () => {
 			})
 		).toEqual(undefined);
 
-		expect(rating_system_manager.get_time_controls().length).toBe(0);
-		expect(rating_system_manager.get_unique_time_controls_ids().length).toBe(0);
+		expect(ratingSystem_manager.getTimeControls().length).toBe(0);
+		expect(ratingSystem_manager.getUniqueTimeControlsIds().length).toBe(0);
 	});
 
 	test('Check UsersManager', () => {
-		const users_manager = UsersManager.get_instance();
-		expect(users_manager.num_users()).toBe(0);
+		const users_manager = UsersManager.getInstance();
+		expect(users_manager.numUsers()).toBe(0);
 	});
 
 	test('Check ChallengesManager', () => {
-		const challenges_manager = ChallengesManager.get_instance();
-		expect(challenges_manager.num_challenges()).toBe(0);
+		const challenges_manager = ChallengesManager.getInstance();
+		expect(challenges_manager.numChallenges()).toBe(0);
 	});
 
 	test('Check GamesManager', () => {
-		const games_manager = GamesManager.get_instance();
-		expect(games_manager.get_max_game_id()).toBe('0000000000');
+		const games_manager = GamesManager.getInstance();
+		expect(games_manager.getMaxGameId()).toBe('0000000000');
 	});
 
 	test('Check ConfigurationManager', () => {
-		const configuration_manager = ConfigurationManager.get_instance();
-		expect(configuration_manager.get_port_http()).toBe('');
-		expect(configuration_manager.get_port_https()).toBe('');
+		const configuration_manager = ConfigurationManager.getInstance();
+		expect(configuration_manager.getPortHttp()).toBe('');
+		expect(configuration_manager.getPortHttps()).toBe('');
 	});
 
 	test('Check SessionIDManager', () => {
-		const session_manager = SessionIDManager.get_instance();
-		expect(session_manager.num_session_ids()).toBe(0);
+		const session_manager = SessionIDManager.getInstance();
+		expect(session_manager.numSessionIds()).toBe(0);
 	});
 
 	test('Check Environmentmanager', () => {
-		const environment_manager = EnvironmentManager.get_instance();
+		const environment_manager = EnvironmentManager.getInstance();
 
-		expect(environment_manager.get_dir_database()).toEqual('');
-		expect(environment_manager.get_dir_games()).toEqual('');
-		expect(environment_manager.get_dir_users()).toEqual('');
-		expect(environment_manager.get_dir_challenges()).toEqual('');
+		expect(environment_manager.getDirDatabase()).toEqual('');
+		expect(environment_manager.getDirGames()).toEqual('');
+		expect(environment_manager.getDirUsers()).toEqual('');
+		expect(environment_manager.getDirChallenges()).toEqual('');
 
-		expect(environment_manager.get_dir_ssl()).toEqual('');
-		expect(environment_manager.get_ssl_public_key_file()).toEqual('');
-		expect(environment_manager.get_ssl_private_key_file()).toEqual('');
-		expect(environment_manager.get_ssl_passphrase_file()).toEqual('');
+		expect(environment_manager.getDirSsl()).toEqual('');
+		expect(environment_manager.getSslPublicKeyFile()).toEqual('');
+		expect(environment_manager.getSslPrivateKeyFile()).toEqual('');
+		expect(environment_manager.getSslPassphraseFile()).toEqual('');
 
-		expect(environment_manager.get_dir_icons()).toEqual('');
-		expect(environment_manager.get_icon_favicon()).toEqual('');
-		expect(environment_manager.get_icon_login_page()).toEqual('');
-		expect(environment_manager.get_icon_home_page()).toEqual('');
+		expect(environment_manager.getDirIcons()).toEqual('');
+		expect(environment_manager.getIconFavicon()).toEqual('');
+		expect(environment_manager.getIconLoginPage()).toEqual('');
+		expect(environment_manager.getIconHomePage()).toEqual('');
 
-		expect(environment_manager.get_title_login_page()).toEqual('');
-		expect(environment_manager.get_title_home_page()).toEqual('');
+		expect(environment_manager.getTitleLoginPage()).toEqual('');
+		expect(environment_manager.getTitleHomePage()).toEqual('');
 	});
 
 	test('Check GraphsManager', () => {
-		const graphs_manager = GraphsManager.get_instance();
-		expect(graphs_manager.get_graph(Blitz)).toEqual(undefined);
-		expect(graphs_manager.get_graph(Rapid)).toEqual(undefined);
-		expect(graphs_manager.get_graph(Classical)).toEqual(undefined);
+		const graphs_manager = GraphsManager.getInstance();
+		expect(graphs_manager.getGraph(Blitz)).toEqual(undefined);
+		expect(graphs_manager.getGraph(Rapid)).toEqual(undefined);
+		expect(graphs_manager.getGraph(Classical)).toEqual(undefined);
 	});
 });

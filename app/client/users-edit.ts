@@ -24,115 +24,114 @@ import 'htmx.org';
 import { messageFromResponse, serverCall } from '@client/action';
 import {
 	UserRole,
-	all_user_roles,
-	user_role_to_string,
-	array_string_to_roles,
-	string_to_role
-} from '@app/common/models/user-role';
-import { isNotDefined } from '@app/common/utils/is-defined';
-import { Routes } from '@common/routes';
+	ALL_USER_ROLES,
+	USER_ROLE_TO_STRING,
+	arrayStringToRoles,
+	stringToRole
+} from '@common/models/user-role';
+import { isNotDefined } from '@common/utils/is-defined';
+import { ROUTES } from '@common/routes';
 import { PlayerPublicId } from '@common/models/player';
 import { toUserGivenName } from '@common/models/user';
 
-async function user_was_changed(_event: any) {
-	all_user_roles.forEach(function (role: string) {
-		let checkbox_role = document.getElementById('checkbox_' + role) as HTMLInputElement;
-		checkbox_role.checked = false;
+async function userWasChanged(_event: any) {
+	ALL_USER_ROLES.forEach(function (role: string) {
+		let checkboxRole = document.getElementById('checkbox_' + role) as HTMLInputElement;
+		checkboxRole.checked = false;
 	});
-	let box_first_name = document.getElementById('box_first_name') as HTMLInputElement;
-	let box_last_name = document.getElementById('box_last_name') as HTMLInputElement;
-	box_first_name.value = '';
-	box_last_name.value = '';
+	let boxFirstName = document.getElementById('boxFirstName') as HTMLInputElement;
+	let boxLastName = document.getElementById('boxLastName') as HTMLInputElement;
+	boxFirstName.value = '';
+	boxLastName.value = '';
 
-	let username_list_input = document.getElementById('username_list') as HTMLInputElement;
-	const username_option = document.querySelector('option[value="' + username_list_input.value + '"]');
+	let usernameListInput = document.getElementById('usernameList') as HTMLInputElement;
+	const usernameOption = document.querySelector('option[value="' + usernameListInput.value + '"]');
 
-	if (username_option != null) {
-		const user_id = (username_option as HTMLOptionElement).id;
-		const response = await serverCall(Routes.QUERY_USER_EDIT, { u: Number(user_id) as PlayerPublicId });
+	if (usernameOption != null) {
+		const userId = (usernameOption as HTMLOptionElement).id;
+		const response = await serverCall(ROUTES.QUERY_USER_EDIT, { u: Number(userId) as PlayerPublicId });
 		if (response.status === 'Error') {
 			alert(messageFromResponse(response));
 			return;
 		}
 
 		const data = response.value;
-		box_first_name.value = data.first_name;
-		box_last_name.value = data.last_name;
+		boxFirstName.value = data.firstName;
+		boxLastName.value = data.lastName;
 
-		all_user_roles.forEach(function (role: string) {
-			let checkbox_role = document.getElementById('checkbox_' + role) as HTMLInputElement;
-			const proper_role = string_to_role(role);
-			if (isNotDefined(proper_role)) {
+		ALL_USER_ROLES.forEach(function (role: string) {
+			let checkboxRole = document.getElementById('checkbox_' + role) as HTMLInputElement;
+			const properRole = stringToRole(role);
+			if (isNotDefined(properRole)) {
 				console.log(`Role '${role}' could not be converted to a proper role.`);
 				return;
 			}
-			if (data.roles.includes(proper_role)) {
-				checkbox_role.checked = true;
+			if (data.roles.includes(properRole)) {
+				checkboxRole.checked = true;
 			}
 		});
 	}
 }
 
-async function submit_was_clicked(_event: any) {
+async function submitWasClicked(_event: any) {
 	// username
-	let username_list_input = document.getElementById('username_list') as HTMLInputElement;
-	const user_rid = (document.querySelector('option[value="' + username_list_input.value + '"]') as HTMLOptionElement)
-		.id;
+	let usernameListInput = document.getElementById('usernameList') as HTMLInputElement;
+	const userRid = (document.querySelector('option[value="' + usernameListInput.value + '"]') as HTMLOptionElement).id;
 
 	// first and last name
-	const first_name = (document.getElementById('box_first_name') as HTMLInputElement).value;
-	const last_name = (document.getElementById('box_last_name') as HTMLInputElement).value;
+	const firstName = (document.getElementById('boxFirstName') as HTMLInputElement).value;
+	const lastName = (document.getElementById('boxLastName') as HTMLInputElement).value;
 
 	// retrieve selected role
-	let selected_roles_str: string[] = [];
-	all_user_roles.forEach(function (role: string) {
-		let checkbox_role = document.getElementById('checkbox_' + role) as HTMLInputElement;
-		if (checkbox_role.checked) {
-			selected_roles_str.push(role);
+	let selectedRolesStr: string[] = [];
+	ALL_USER_ROLES.forEach(function (role: string) {
+		let checkboxRole = document.getElementById('checkbox_' + role) as HTMLInputElement;
+		if (checkboxRole.checked) {
+			selectedRolesStr.push(role);
 		}
 	});
-	const selected_roles = array_string_to_roles(selected_roles_str);
-	if (isNotDefined(selected_roles)) {
+	const selectedRoles = arrayStringToRoles(selectedRolesStr);
+	if (isNotDefined(selectedRoles)) {
 		return;
 	}
 
-	const response = await serverCall(Routes.USER_EDIT, {
-		u: Number(user_rid) as PlayerPublicId,
-		f: toUserGivenName(first_name),
-		l: toUserGivenName(last_name),
-		r: selected_roles
+	const response = await serverCall(ROUTES.USER_EDIT, {
+		u: Number(userRid) as PlayerPublicId,
+		f: toUserGivenName(firstName),
+		l: toUserGivenName(lastName),
+		r: selectedRoles
 	});
 	if (response.status === 'Error') {
 		alert(messageFromResponse(response));
 		return;
 	}
 
-	window.location.href = Routes.HOME;
+	window.location.href = ROUTES.HOME;
 }
 
 window.onload = function () {
 	// imlement behaviour of data list
-	let datalist_username_input = document.getElementById('username_list') as HTMLInputElement;
-	datalist_username_input.onselectionchange = user_was_changed;
+	let datalistUsernameInput = document.getElementById('usernameList') as HTMLInputElement;
+	datalistUsernameInput.onselectionchange = userWasChanged;
 
 	// imlement behaviour of submit button
-	let submit_changes_button = document.getElementById('submit_changes_button') as HTMLButtonElement;
-	submit_changes_button.onclick = submit_was_clicked;
+	let submitChangesButton = document.getElementById('submitChangesButton') as HTMLButtonElement;
+	submitChangesButton.onclick = submitWasClicked;
 
 	// fill in role checkboxes with values
-	let add_checkbox = function (div: HTMLDivElement, show: string, value: string) {
+	let addCheckbox = function (div: HTMLDivElement, show: string, value: string) {
 		let checkbox = document.createElement('input');
 		checkbox.type = 'checkbox';
 		checkbox.id = 'checkbox_' + value;
 		div.appendChild(checkbox);
 
-		let checkbox_label = document.createElement('label');
-		checkbox_label.textContent = show;
-		div.appendChild(checkbox_label);
+		let checkboxLabel = document.createElement('label');
+		checkboxLabel.textContent = show;
+		div.appendChild(checkboxLabel);
 		div.appendChild(document.createElement('br'));
 	};
-	let role_div = document.getElementById('div_role_checkboxes') as HTMLDivElement;
-	all_user_roles.forEach(function (role: string) {
-		add_checkbox(role_div, user_role_to_string[role as UserRole], role);
+	let roleDiv = document.getElementById('divRoleCheckboxes') as HTMLDivElement;
+	ALL_USER_ROLES.forEach(function (role: string) {
+		addCheckbox(roleDiv, USER_ROLE_TO_STRING[role as UserRole], role);
 	});
 };

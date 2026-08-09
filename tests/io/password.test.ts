@@ -23,10 +23,10 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { password_from_string } from '@common/io/password';
+import { passwordFromString } from '@common/io/password';
 
 describe('From string', () => {
 	test('creates a Password from a string', () => {
-		expect(password_from_string('{"encrypted": "1234", "iv": "asdf"}')).toEqual({ encrypted: '1234', iv: 'asdf' });
+		expect(passwordFromString('{"encrypted": "1234", "iv": "asdf"}')).toEqual({ encrypted: '1234', iv: 'asdf' });
 	});
 });

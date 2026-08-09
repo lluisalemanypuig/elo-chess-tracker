@@ -24,19 +24,19 @@ Contact:
 */
 
 import { z } from 'zod';
-import { EdgeMetadata } from '@app/common/models/graph/edge-metadata';
+import { EdgeMetadata } from '@common/models/graph/edge-metadata';
 import { EdgeSchema, Edge } from '@common/models/graph/edge';
-import { search_by_key, where_should_be_inserted_by_key } from '@server/utils/searching';
-import { GameResult, opposite_result } from '@common/models/game';
-import { isDefined, isNotDefined } from '@app/common/utils/is-defined';
+import { searchByKey, whereShouldBeInsertedByKey } from '@server/utils/searching';
+import { GameResult, oppositeResult } from '@common/models/game';
+import { isDefined, isNotDefined } from '@common/utils/is-defined';
 import { PlayerPrivateId } from '@common/models/player';
 
 export const NeighborhoodSchema = z.array(EdgeSchema);
 
 export const GraphSchema = z
 	.object({
-		adjacency_list: z.map(z.string(), NeighborhoodSchema),
-		in_adjacency_list: z.map(z.string(), NeighborhoodSchema)
+		adjacencyList: z.map(z.string(), NeighborhoodSchema),
+		inAdjacencyList: z.map(z.string(), NeighborhoodSchema)
 	})
 	.strict();
 
@@ -49,29 +49,29 @@ export class Graph {
 	/// The set of edges from a user A to all other users B against whom
 	/// A played as White. That is, edges of the form (A, B) where A is the
 	/// white player, and B is the black player.
-	private adjacency_list: Map<PlayerPrivateId, Neighborhood> = new Map();
+	private adjacencyList: Map<PlayerPrivateId, Neighborhood> = new Map();
 	/// The set of edges from a user A to all other users B against whom
 	/// A played as Black. That is, edges of the form (A, B) where A is the
 	/// white player, and B is the black player.
-	private in_adjacency_list: Map<PlayerPrivateId, Neighborhood> = new Map();
+	private inAdjacencyList: Map<PlayerPrivateId, Neighborhood> = new Map();
 
 	/// An iterator to the list of users who played as White.
-	get_out_entries(): MapIterator<PlayerPrivateId> {
-		return this.adjacency_list.keys();
+	getOutEntries(): MapIterator<PlayerPrivateId> {
+		return this.adjacencyList.keys();
 	}
 	/// An iterator to the list of users who played as Black.
-	get_in_entries(): MapIterator<PlayerPrivateId> {
-		return this.in_adjacency_list.keys();
+	getInEntries(): MapIterator<PlayerPrivateId> {
+		return this.inAdjacencyList.keys();
 	}
 
-	private static insert_into_list(_u: PlayerPrivateId, v: PlayerPrivateId, edge: Edge, N_u: Neighborhood): void {
-		const [edge_idx, exists]: [number, boolean] = where_should_be_inserted_by_key(N_u, function (e: Edge): number {
+	private static insertIntoList(_u: PlayerPrivateId, v: PlayerPrivateId, edge: Edge, nU: Neighborhood): void {
+		const [edgeIdx, exists]: [number, boolean] = whereShouldBeInsertedByKey(nU, (e: Edge): number => {
 			return v.localeCompare(e.neighbor);
 		});
 		if (exists) {
-			N_u[edge_idx].merge(edge);
+			nU[edgeIdx].merge(edge);
 		} else {
-			N_u.splice(edge_idx, 0, edge);
+			nU.splice(edgeIdx, 0, edge);
 		}
 	}
 	/**
@@ -80,24 +80,24 @@ export class Graph {
 	 * @param b Black player
 	 * @param result Result of the player
 	 */
-	add_edge(w: PlayerPrivateId, b: PlayerPrivateId, result: GameResult): void {
+	addEdge(w: PlayerPrivateId, b: PlayerPrivateId, result: GameResult): void {
 		// insert into w's outgoing edges list
-		let w_out_list = this.adjacency_list.get(w);
-		if (isNotDefined(w_out_list)) {
-			this.adjacency_list.set(w, []);
-			w_out_list = this.adjacency_list.get(w);
+		let wOutList = this.adjacencyList.get(w);
+		if (isNotDefined(wOutList)) {
+			this.adjacencyList.set(w, []);
+			wOutList = this.adjacencyList.get(w);
 		}
-		const w_edge = new Edge(b, EdgeMetadata.from_result(result));
-		Graph.insert_into_list(w, b, w_edge, w_out_list as Neighborhood);
+		const wEdge = new Edge(b, EdgeMetadata.fromResult(result));
+		Graph.insertIntoList(w, b, wEdge, wOutList as Neighborhood);
 
 		// insert into b's ingoing edges list
-		let b_in_list = this.in_adjacency_list.get(b);
-		if (isNotDefined(b_in_list)) {
-			this.in_adjacency_list.set(b, []);
-			b_in_list = this.in_adjacency_list.get(b);
+		let bInList = this.inAdjacencyList.get(b);
+		if (isNotDefined(bInList)) {
+			this.inAdjacencyList.set(b, []);
+			bInList = this.inAdjacencyList.get(b);
 		}
-		const b_edge = new Edge(w, EdgeMetadata.from_result(opposite_result(result)));
-		Graph.insert_into_list(b, w, b_edge, b_in_list as Neighborhood);
+		const bEdge = new Edge(w, EdgeMetadata.fromResult(oppositeResult(result)));
+		Graph.insertIntoList(b, w, bEdge, bInList as Neighborhood);
 	}
 	/**
 	 * @brief Add an edge between White @e w and Black @e b, with result.
@@ -105,39 +105,32 @@ export class Graph {
 	 * @param b Black player
 	 * @param result Result of the player
 	 */
-	add_edge_raw(w: PlayerPrivateId, b: PlayerPrivateId, w_edge: Edge): void {
+	addEdgeRaw(w: PlayerPrivateId, b: PlayerPrivateId, wEdge: Edge): void {
 		// insert into w's outgoing edges list
-		let w_out_list = this.adjacency_list.get(w);
-		if (isNotDefined(w_out_list)) {
-			this.adjacency_list.set(w, []);
-			w_out_list = this.adjacency_list.get(w);
+		let wOutList = this.adjacencyList.get(w);
+		if (isNotDefined(wOutList)) {
+			this.adjacencyList.set(w, []);
+			wOutList = this.adjacencyList.get(w);
 		}
-		Graph.insert_into_list(w, b, w_edge, w_out_list as Neighborhood);
+		Graph.insertIntoList(w, b, wEdge, wOutList as Neighborhood);
 
 		// insert into b's ingoing edges list
-		let b_in_list = this.in_adjacency_list.get(b);
-		if (isNotDefined(b_in_list)) {
-			this.in_adjacency_list.set(b, []);
-			b_in_list = this.in_adjacency_list.get(b);
+		let bInList = this.inAdjacencyList.get(b);
+		if (isNotDefined(bInList)) {
+			this.inAdjacencyList.set(b, []);
+			bInList = this.inAdjacencyList.get(b);
 		}
 
-		const em = w_edge.metadata.clone().reverse();
-		const b_edge = new Edge(w, em);
-		Graph.insert_into_list(b, w, b_edge, b_in_list as Neighborhood);
+		const em = wEdge.metadata.clone().reverse();
+		const bEdge = new Edge(w, em);
+		Graph.insertIntoList(b, w, bEdge, bInList as Neighborhood);
 	}
 
-	private static delete_from_list(
-		_u: PlayerPrivateId,
-		v: PlayerPrivateId,
-		result: GameResult,
-		N_u: Neighborhood
-	): void {
-		const index = search_by_key(N_u, (e: Edge): number => {
-			return v.localeCompare(e.neighbor);
-		});
-		N_u[index].metadata.decrease(result);
-		if (N_u[index].metadata.all_zero()) {
-			N_u.splice(index, 1);
+	private static deleteFromList(_u: PlayerPrivateId, v: PlayerPrivateId, result: GameResult, nU: Neighborhood): void {
+		const index = searchByKey(nU, (e: Edge): number => v.localeCompare(e.neighbor));
+		nU[index].metadata.decrease(result);
+		if (nU[index].metadata.allZero()) {
+			nU.splice(index, 1);
 		}
 	}
 	/**
@@ -149,25 +142,25 @@ export class Graph {
 	 * @param b Black player
 	 * @param result Result of the game.
 	 */
-	delete_edge(w: PlayerPrivateId, b: PlayerPrivateId, result: GameResult): void {
+	deleteEdge(w: PlayerPrivateId, b: PlayerPrivateId, result: GameResult): void {
 		// delete from w's outgoing edges list
-		let w_out_list = this.adjacency_list.get(w);
-		if (isNotDefined(w_out_list)) {
+		let wOutList = this.adjacencyList.get(w);
+		if (isNotDefined(wOutList)) {
 			throw new Error(`Player '${w}' does not have any outgoing edge, and so no edge to '${b}'.`);
 		}
-		Graph.delete_from_list(w, b, result, w_out_list);
-		if (w_out_list.length == 0) {
-			this.adjacency_list.delete(w);
+		Graph.deleteFromList(w, b, result, wOutList);
+		if (wOutList.length == 0) {
+			this.adjacencyList.delete(w);
 		}
 
 		// delete from b's ingoing edges list
-		let b_in_list = this.in_adjacency_list.get(b);
-		if (isNotDefined(b_in_list)) {
+		let bInList = this.inAdjacencyList.get(b);
+		if (isNotDefined(bInList)) {
 			throw new Error(`Player '${b}' does not have any ingoing edge, and so no edge from '${w}'.`);
 		}
-		Graph.delete_from_list(b, w, opposite_result(result), b_in_list);
-		if (b_in_list.length == 0) {
-			this.in_adjacency_list.delete(b);
+		Graph.deleteFromList(b, w, oppositeResult(result), bInList);
+		if (bInList.length == 0) {
+			this.inAdjacencyList.delete(b);
 		}
 	}
 
@@ -178,16 +171,16 @@ export class Graph {
 	 * @returns The summary of the games between @e u and @e v when @e u plays
 	 * as white.
 	 */
-	get_data_as_white(u: PlayerPrivateId, v: PlayerPrivateId): EdgeMetadata | undefined {
-		const w_list = this.adjacency_list.get(u);
-		if (isNotDefined(w_list)) {
+	getDataAsWhite(u: PlayerPrivateId, v: PlayerPrivateId): EdgeMetadata | undefined {
+		const wList = this.adjacencyList.get(u);
+		if (isNotDefined(wList)) {
 			return undefined;
 		}
 
-		const b_idx = search_by_key(w_list, function (e: Edge): number {
+		const bIdx = searchByKey(wList, function (e: Edge): number {
 			return v.localeCompare(e.neighbor);
 		});
-		return b_idx == -1 ? undefined : w_list[b_idx].metadata;
+		return bIdx == -1 ? undefined : wList[bIdx].metadata;
 	}
 	/**
 	 * @brief The weight of edge (u,v) when 'u' plays as black.
@@ -196,46 +189,46 @@ export class Graph {
 	 * @returns The summary of the games between @e u and @e v when @e u plays
 	 * as black.
 	 */
-	get_data_as_black(u: PlayerPrivateId, v: PlayerPrivateId): EdgeMetadata | undefined {
-		const u_list = this.in_adjacency_list.get(u);
-		if (isNotDefined(u_list)) {
+	getDataAsBlack(u: PlayerPrivateId, v: PlayerPrivateId): EdgeMetadata | undefined {
+		const uList = this.inAdjacencyList.get(u);
+		if (isNotDefined(uList)) {
 			return undefined;
 		}
 
-		const v_idx = search_by_key(u_list, function (e: Edge): number {
+		const vIdx = searchByKey(uList, function (e: Edge): number {
 			return v.localeCompare(e.neighbor);
 		});
-		return v_idx == -1 ? undefined : u_list[v_idx].metadata;
+		return vIdx == -1 ? undefined : uList[vIdx].metadata;
 	}
 
-	private change_game_result_list(
+	private changeGameResultList(
 		u: PlayerPrivateId,
 		v: PlayerPrivateId,
-		old_res: GameResult,
-		new_res: GameResult,
-		N_u: Neighborhood
+		oldRes: GameResult,
+		newRes: GameResult,
+		NU: Neighborhood
 	): void {
-		const b_idx = search_by_key(N_u, function (e: Edge): number {
+		const bIdx = searchByKey(NU, function (e: Edge): number {
 			return v.localeCompare(e.neighbor);
 		});
-		if (b_idx == -1) {
+		if (bIdx == -1) {
 			throw new Error(`The edge from '${u}' to '${v}' does not exist.`);
 		}
 
-		if (old_res == 'white_wins') {
-			--N_u[b_idx].metadata.num_games_won;
-		} else if (old_res == 'draw') {
-			--N_u[b_idx].metadata.num_games_drawn;
+		if (oldRes == 'white_wins') {
+			--NU[bIdx].metadata.numGamesWon;
+		} else if (oldRes == 'draw') {
+			--NU[bIdx].metadata.numGamesDrawn;
 		} else {
-			--N_u[b_idx].metadata.num_games_lost;
+			--NU[bIdx].metadata.numGamesLost;
 		}
 
-		if (new_res == 'white_wins') {
-			++N_u[b_idx].metadata.num_games_won;
-		} else if (new_res == 'draw') {
-			++N_u[b_idx].metadata.num_games_drawn;
+		if (newRes == 'white_wins') {
+			++NU[bIdx].metadata.numGamesWon;
+		} else if (newRes == 'draw') {
+			++NU[bIdx].metadata.numGamesDrawn;
 		} else {
-			++N_u[b_idx].metadata.num_games_lost;
+			++NU[bIdx].metadata.numGamesLost;
 		}
 	}
 	/**
@@ -245,38 +238,20 @@ export class Graph {
 	 * and the change only affects the aggregated data.
 	 * @param w White player.
 	 * @param b Black player.
-	 * @param old_res Original result of the game.
-	 * @param new_res New result of the game.
-	 * @pre @e old_res != @e new_result.
+	 * @param oldRes Original result of the game.
+	 * @param newRes New result of the game.
+	 * @pre @e oldRes != @e newResult.
 	 */
-	change_game_result(w: PlayerPrivateId, b: PlayerPrivateId, old_res: GameResult, new_res: GameResult): void {
-		const w_list = this.adjacency_list.get(w);
-		if (isDefined(w_list)) {
-			this.change_game_result_list(w, b, old_res, new_res, w_list);
+	changeGameResult(w: PlayerPrivateId, b: PlayerPrivateId, oldRes: GameResult, newRes: GameResult): void {
+		const wList = this.adjacencyList.get(w);
+		if (isDefined(wList)) {
+			this.changeGameResultList(w, b, oldRes, newRes, wList);
 		}
 
-		const b_list = this.in_adjacency_list.get(b);
-		if (isDefined(b_list)) {
-			this.change_game_result_list(b, w, opposite_result(old_res), opposite_result(new_res), b_list);
+		const bList = this.inAdjacencyList.get(b);
+		if (isDefined(bList)) {
+			this.changeGameResultList(b, w, oppositeResult(oldRes), oppositeResult(newRes), bList);
 		}
-	}
-
-	/**
-	 * @brief Number of opponents of @e u as white.
-	 * @param u Player as white.
-	 * @returns The number of opponents of @e u over games where @e u plays as
-	 * White.
-	 */
-	get_out_degree(u: PlayerPrivateId): number {
-		const u_list = this.adjacency_list.get(u);
-		if (isNotDefined(u_list)) {
-			return 0;
-		}
-		return u_list.length;
-	}
-	/// Returns the list of opponents and the metadata of @e u.
-	get_outgoing_edges(u: PlayerPrivateId): Neighborhood | undefined {
-		return this.adjacency_list.get(u);
 	}
 
 	/**
@@ -285,36 +260,54 @@ export class Graph {
 	 * @returns The number of opponents of @e u over games where @e u plays as
 	 * White.
 	 */
-	get_in_degree(u: PlayerPrivateId): number {
-		const u_list = this.in_adjacency_list.get(u);
-		if (isNotDefined(u_list)) {
+	getOutDegree(u: PlayerPrivateId): number {
+		const uList = this.adjacencyList.get(u);
+		if (isNotDefined(uList)) {
 			return 0;
 		}
-		return (u_list as Neighborhood).length;
+		return uList.length;
 	}
 	/// Returns the list of opponents and the metadata of @e u.
-	get_incoming_edges(u: PlayerPrivateId): Neighborhood | undefined {
-		return this.in_adjacency_list.get(u);
+	getOutgoingEdges(u: PlayerPrivateId): Neighborhood | undefined {
+		return this.adjacencyList.get(u);
+	}
+
+	/**
+	 * @brief Number of opponents of @e u as white.
+	 * @param u Player as white.
+	 * @returns The number of opponents of @e u over games where @e u plays as
+	 * White.
+	 */
+	getInDegree(u: PlayerPrivateId): number {
+		const uList = this.inAdjacencyList.get(u);
+		if (isNotDefined(uList)) {
+			return 0;
+		}
+		return (uList as Neighborhood).length;
+	}
+	/// Returns the list of opponents and the metadata of @e u.
+	getIncomingEdges(u: PlayerPrivateId): Neighborhood | undefined {
+		return this.inAdjacencyList.get(u);
 	}
 
 	/// Returns the list of Black opponents of @e u.
-	get_black_opponents(u: PlayerPrivateId): PlayerPrivateId[] {
-		const u_list = this.adjacency_list.get(u);
-		if (isNotDefined(u_list)) {
+	getBlackOpponents(u: PlayerPrivateId): PlayerPrivateId[] {
+		const uList = this.adjacencyList.get(u);
+		if (isNotDefined(uList)) {
 			return [];
 		}
-		return u_list.map((e: Edge): PlayerPrivateId => {
+		return uList.map((e: Edge): PlayerPrivateId => {
 			return e.neighbor;
 		});
 	}
 
 	/// Returns the list of White opponents of @e u.
-	get_white_opponents(u: PlayerPrivateId): PlayerPrivateId[] {
-		const u_list = this.in_adjacency_list.get(u);
-		if (isNotDefined(u_list)) {
+	getWhiteOpponents(u: PlayerPrivateId): PlayerPrivateId[] {
+		const uList = this.inAdjacencyList.get(u);
+		if (isNotDefined(uList)) {
 			return [];
 		}
-		return u_list.map((e: Edge): PlayerPrivateId => {
+		return uList.map((e: Edge): PlayerPrivateId => {
 			return e.neighbor;
 		});
 	}

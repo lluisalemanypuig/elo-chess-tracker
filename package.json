@@ -7,7 +7,7 @@
 		"devstart": "DEBUG=ELO_CHESS_TRACKER:* bun run ./app/main.ts",
 		"serverstart": "bun run devstart",
 		"test": "jest --runInBand",
-		"compile": "./build/compile-deep.sh"
+		"compile": "./build/compile_deep.sh"
 	},
 	"devDependencies": {
 		"@types/compression": "^1.8.1",

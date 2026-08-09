@@ -26,7 +26,7 @@ Contact:
 import { z } from 'zod';
 import { EnvironmentSchema } from '@common/models/configuration/environment';
 import { ServerConfigurationSchema } from '@common/models/configuration/server';
-import { TimeControlArraySchema } from '@app/common/models/configuration/time-controls';
+import { TimeControlArraySchema } from '@common/models/configuration/time-controls';
 import { BehaviorSchema } from '@common/models/configuration/behavior';
 import { UserPermissionsSchema } from '@common/models/configuration/permissions';
 import { RatingFrameworkTypeSchema } from '@common/models/rating-framework/rating-framework-type';
@@ -35,8 +35,8 @@ export const ConfigurationSchema = z
 	.object({
 		environment: EnvironmentSchema,
 		server: ServerConfigurationSchema,
-		rating_system: RatingFrameworkTypeSchema,
-		time_controls: TimeControlArraySchema,
+		ratingSystem: RatingFrameworkTypeSchema,
+		timeControls: TimeControlArraySchema,
 		behavior: BehaviorSchema,
 		permissions: UserPermissionsSchema
 	})

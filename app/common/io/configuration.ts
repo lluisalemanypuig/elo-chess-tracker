@@ -23,7 +23,7 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { read_schema } from '@common/io/generic';
+import { readSchema } from '@common/io/generic';
 import { Configuration, ConfigurationSchema } from '@common/models/configuration/configuration';
 
 /**
@@ -31,6 +31,6 @@ import { Configuration, ConfigurationSchema } from '@common/models/configuration
  * @param str A string with data of a Configuration.
  * @returns A new Configuration object.
  */
-export function configuration_from_string(str: string): Configuration | null {
-	return read_schema(ConfigurationSchema, str);
+export function configurationFromString(str: string): Configuration | null {
+	return readSchema(ConfigurationSchema, str);
 }

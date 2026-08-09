@@ -25,7 +25,7 @@ Contact:
 
 import fs from 'fs';
 
-export function read_directory(dir: string, sorted: boolean = true): string[] {
+export function readDirectory(dir: string, sorted: boolean = true): string[] {
 	let l = fs.readdirSync(dir);
 	if (sorted) {
 		l.sort((a, b) => a.localeCompare(b));

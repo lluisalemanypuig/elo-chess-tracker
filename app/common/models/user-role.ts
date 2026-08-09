@@ -24,7 +24,7 @@ Contact:
 */
 
 import { z } from 'zod';
-import { isNotDefined } from '@app/common/utils/is-defined';
+import { isNotDefined } from '@common/utils/is-defined';
 
 /// Administrator
 export const ADMIN = 'admin';
@@ -40,17 +40,17 @@ export const STUDENT = 'student';
  *
  * See below for details on
  */
-export const all_user_roles = [ADMIN, TEACHER, MEMBER, STUDENT] as const;
+export const ALL_USER_ROLES = [ADMIN, TEACHER, MEMBER, STUDENT] as const;
 
 /// All roles as type
-export type UserRole = (typeof all_user_roles)[number];
+export type UserRole = (typeof ALL_USER_ROLES)[number];
 
-export const UserRoleSchema = z.enum(all_user_roles);
+export const UserRoleSchema = z.enum(ALL_USER_ROLES);
 
 export const UserRoleArraySchema = z.array(UserRoleSchema);
 
 /// Relate each user role to a readable string
-export const user_role_to_string: { [key in UserRole]: string } = {
+export const USER_ROLE_TO_STRING: { [key in UserRole]: string } = {
 	admin: 'Admin',
 	teacher: 'Teacher',
 	member: 'Member',
@@ -58,11 +58,11 @@ export const user_role_to_string: { [key in UserRole]: string } = {
 };
 
 /// Does the string parameter encode a valid user role?
-export function is_role_string_correct(r: string): boolean {
-	return all_user_roles.includes(r as UserRole);
+export function isRoleStringCorrect(r: string): boolean {
+	return ALL_USER_ROLES.includes(r as UserRole);
 }
 
-export function string_to_role(r: string): UserRole | undefined {
+export function stringToRole(r: string): UserRole | undefined {
 	if (r == ADMIN) {
 		return ADMIN;
 	}
@@ -78,10 +78,10 @@ export function string_to_role(r: string): UserRole | undefined {
 	return undefined;
 }
 
-export function array_string_to_roles(roles: string[]): UserRole[] | undefined {
+export function arrayStringToRoles(roles: string[]): UserRole[] | undefined {
 	let actual_roles: UserRole[] = [];
 	for (const role_str of roles) {
-		const res = string_to_role(role_str);
+		const res = stringToRole(role_str);
 		if (isNotDefined(res)) {
 			return undefined;
 		}
