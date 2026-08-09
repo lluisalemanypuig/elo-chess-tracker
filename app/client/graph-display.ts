@@ -31,7 +31,7 @@ import { interpolateRgb } from 'd3-interpolate';
 
 import { messageFromResponse, serverCall } from '@client/action';
 import { Route, ROUTES } from '@common/routes';
-import { QueryGraphOutput } from '@common/schemas/query-graphs';
+import { EdgeWeight, QueryGraphOutput } from '@common/schemas/query-graphs';
 import { TimeControlId } from '@common/models/time-control';
 
 let s: Sigma;
@@ -47,7 +47,7 @@ let maxGames: number;
 let minEdgeWeight: number;
 let maxEdgeWeight: number;
 
-function weightEdge(weight: any): number {
+function weightEdge(weight: EdgeWeight): number {
 	return 10 * weight.wins + 5 * weight.draws + weight.losses;
 }
 

@@ -133,18 +133,14 @@ async function fillOwnInfo() {
 	{
 		let table = document.getElementById('user-ratings-table') as HTMLTableElement;
 
-		const ratings = data.ratings as any[];
-		for (const r of ratings) {
-			const dataI = r;
-
+		for (const r of data.ratings) {
 			let row = table.insertRow(-1);
-
-			row.insertCell(-1).appendChild(document.createTextNode(dataI.timeControlName));
-			row.insertCell(-1).appendChild(document.createTextNode(dataI.rating.rating));
-			row.insertCell(-1).appendChild(document.createTextNode(dataI.rating.numGames));
-			row.insertCell(-1).appendChild(document.createTextNode(dataI.rating.won));
-			row.insertCell(-1).appendChild(document.createTextNode(dataI.rating.drawn));
-			row.insertCell(-1).appendChild(document.createTextNode(dataI.rating.lost));
+			row.insertCell(-1).appendChild(document.createTextNode(r.timeControlId));
+			row.insertCell(-1).appendChild(document.createTextNode(`${r.rating.rating}`));
+			row.insertCell(-1).appendChild(document.createTextNode(`${r.rating.numGames}`));
+			row.insertCell(-1).appendChild(document.createTextNode(`${r.rating.won}`));
+			row.insertCell(-1).appendChild(document.createTextNode(`${r.rating.drawn}`));
+			row.insertCell(-1).appendChild(document.createTextNode(`${r.rating.lost}`));
 		}
 	}
 }
