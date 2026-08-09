@@ -3,11 +3,10 @@
 	"version": "20xx.yy.00",
 	"author": "Lluís Alemany Puig",
 	"scripts": {
-		"start": "bun run ./app/main.ts",
-		"devstart": "DEBUG=ELO_CHESS_TRACKER:* bun run ./app/main.ts",
-		"serverstart": "bun run devstart",
+		"run": "bun run ./app/main.ts",
+		"debug": "DEBUG=ELO_CHESS_TRACKER:* bun run ./app/main.ts",
 		"test": "jest --runInBand",
-		"compile": "./build/compile_deep.sh"
+		"compile": "./build/compile-deep.sh"
 	},
 	"devDependencies": {
 		"@types/compression": "^1.8.1",
