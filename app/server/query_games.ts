@@ -141,10 +141,10 @@ function filter_game_list(
 				result: result,
 				time_control_name: g.time_control_name,
 				date: g.when,
-				white_rating: `${Math.round(g.white_rating.rating)}`,
-				black_rating: `${Math.round(g.black_rating.rating)}`,
-				white_increment: inc.white_increment < 0 ? `${inc.white_increment}` : `+${inc.white_increment}`,
-				black_increment: inc.black_increment < 0 ? `${inc.black_increment}` : `+${inc.black_increment}`,
+				white_rating: Math.round(g.white_rating.rating),
+				black_rating: Math.round(g.black_rating.rating),
+				white_increment: inc.white_increment,
+				black_increment: inc.black_increment,
 				editable: is_editable,
 				deleteable: is_deleteable
 			});

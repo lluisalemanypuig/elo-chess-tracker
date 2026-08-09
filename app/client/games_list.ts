@@ -229,10 +229,12 @@ async function fill_games_list_time_control(time_control_id: TimeControlId) {
 
 		row.appendChild(new_text_cell(g.time_control_name));
 
-		const when = g.date.substring(0, g.date.length - (3 + 1 + 2 + 1));
+		const when = g.date.substring(0, g.date.length - (3 + 1 + 2 + 1)).replace('..', ' ');
 		row.appendChild(new_text_cell(when));
 
-		row.appendChild(new_rating_cell(g.white_rating, g.white_increment));
+		const whiteRatingStr = `${g.white_rating}`;
+		const whiteIncrementStr = g.white_increment < 0 ? `${g.white_increment}` : `+${g.white_increment}`;
+		row.appendChild(new_rating_cell(whiteRatingStr, whiteIncrementStr));
 		row.appendChild(new_text_cell(g.white));
 
 		if (g.editable) {
@@ -241,8 +243,10 @@ async function fill_games_list_time_control(time_control_id: TimeControlId) {
 			row.appendChild(new_text_cell(g.result));
 		}
 
+		const blackRatingStr = `${g.black_rating}`;
+		const blackIncrementStr = g.black_increment < 0 ? `${g.black_increment}` : `+${g.black_increment}`;
 		row.appendChild(new_text_cell(g.black));
-		row.appendChild(new_rating_cell(g.black_rating, g.black_increment));
+		row.appendChild(new_rating_cell(blackRatingStr, blackIncrementStr));
 
 		if (g.deleteable) {
 			row.appendChild(new_cell_button_delete_game(g.id));

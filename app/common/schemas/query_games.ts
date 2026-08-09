@@ -55,10 +55,10 @@ export const QueryGamesListOutputSingleSchema = z.object({
 	result: z.string(),
 	time_control_name: TimeControlNameSchema,
 	date: DateFullSchema,
-	white_rating: z.string(),
-	black_rating: z.string(),
-	white_increment: z.string(),
-	black_increment: z.string(),
+	white_rating: z.number(),
+	black_rating: z.number(),
+	white_increment: z.number(),
+	black_increment: z.number(),
 	editable: z.boolean(),
 	deleteable: z.boolean()
 });
