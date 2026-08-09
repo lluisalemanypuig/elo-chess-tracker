@@ -32,9 +32,16 @@ import {
 	TimeControlName,
 	TimeControlNameSchema
 } from '@common/models/time_control';
-import { PlayerPrivateId, PlayerPrivateIdSchema } from '@common/models/player';
+import { Player, PlayerPrivateId, PlayerPrivateIdSchema } from '@common/models/player';
 
-/// A type for challenge IDs.
+// Challenge state
+
+export const CHALLENGE_STATE = ['PENDING_ACCEPT', 'PENDING_RESULT', 'PENDING_RESULT_AGREE', 'COMPLETED'] as const;
+
+export const ChallengeStateSchema = z.enum(CHALLENGE_STATE);
+export type ChallengeState = z.infer<typeof ChallengeStateSchema>;
+
+// A type for challenge IDs.
 
 declare const ChallengeIdBrand: unique symbol;
 export type ChallengeIdLocal = string & {
@@ -50,37 +57,40 @@ export function toChallengeId(s: string): ChallengeId {
 export const ChallengeSchema = z
 	.object({
 		id: ChallengeIdSchema,
-		/// Name of the game that will result from this challenge
+		// Name of the game that will result from this challenge
 		title: z.string(),
-		/// The user sending the challenge
-		sent_by: PlayerPrivateIdSchema,
-		/// The user receiving the challenge
-		sent_to: PlayerPrivateIdSchema,
-		/// Time control of the challenge
+		// Time control of the challenge
 		time_control_id: TimeControlIdSchema,
-		/// Time control of the challenge
+		// Time control of the challenge
 		time_control_name: TimeControlNameSchema,
-		/// Date when the challenge was sent
+
+		// The user sending the challenge
+		sent_by: PlayerPrivateIdSchema,
+		// The user receiving the challenge
+		sent_to: PlayerPrivateIdSchema,
+		// Date when the challenge was sent
 		when_challenge_sent: DateFullSchema,
-		/// Date when the challenge was accepted
+
+		// Date when the challenge was accepted
 		when_challenge_accepted: DateFullSchema.optional(),
 
-		/// Has the result been set at some point?
-		result_was_set: z.boolean().default(false),
-		/// Date when the result of the game was last modified
+		// Date when the result of the game was last modified
 		when_result_set: DateFullSchema.optional(),
-		/// Player who set the result
+		// Player who set the result
 		result_set_by: PlayerPrivateIdSchema.optional(),
 
-		/// Date when the result of the game was accepted.
+		// Date when the result of the game was accepted.
 		when_result_accepted: DateFullSchema.optional(),
-		/// User that accepted the result
-		result_accepted_by: z.string().optional(),
+		// User that accepted the result
+		result_accepted_by: PlayerPrivateIdSchema.optional(),
 
-		/// The resulting game of the challenge
+		// The resulting game of the challenge
 		white: PlayerPrivateIdSchema.optional(),
 		black: PlayerPrivateIdSchema.optional(),
-		result: GameResultSchema.optional()
+		result: GameResultSchema.optional(),
+
+		// the state of the challenge
+		state: ChallengeStateSchema
 	})
 	.strict();
 
@@ -95,36 +105,50 @@ export const ChallengeArraySchema = z.array(ChallengeSchema);
 
 export type ChallengeArray = z.infer<typeof ChallengeArraySchema>;
 
-export function new_challenge(
+export function newChallenge(
 	id: ChallengeId,
 	title: string,
-	sent_by: PlayerPrivateId,
-	sent_to: PlayerPrivateId,
-	time_control_id: TimeControlId,
-	time_control_name: TimeControlName,
-	when_challenge_sent: DateFull
+	sentBy: PlayerPrivateId,
+	sentTo: PlayerPrivateId,
+	timeControlId: TimeControlId,
+	timeControlName: TimeControlName,
+	whenChallengeSent: DateFull
 ): Challenge {
 	return {
 		id: id,
 		title: title,
-		sent_by: sent_by,
-		sent_to: sent_to,
-		time_control_id: time_control_id,
-		time_control_name: time_control_name,
-		when_challenge_sent: when_challenge_sent,
+		time_control_id: timeControlId,
+		time_control_name: timeControlName,
+		sent_by: sentBy,
+		sent_to: sentTo,
+		when_challenge_sent: whenChallengeSent,
 		when_challenge_accepted: undefined,
-		result_was_set: false,
 		when_result_set: undefined,
 		result_set_by: undefined,
 		when_result_accepted: undefined,
 		result_accepted_by: undefined,
 		white: undefined,
 		black: undefined,
-		result: undefined
+		result: undefined,
+		state: 'PENDING_ACCEPT'
 	};
 }
 
-interface Result {
+export interface ChallengeAccept {
+	by: PlayerPrivateId;
+	when: DateFull;
+}
+
+export function accept(c: Challenge, { by: _by, when }: ChallengeAccept) {
+	c.when_challenge_accepted = when;
+	c.state = 'PENDING_RESULT';
+}
+
+export interface ChallengeDecline {
+	by: PlayerPrivateId;
+}
+
+export interface ChallengeSetResult {
 	by: PlayerPrivateId;
 	when: DateFull;
 	white: PlayerPrivateId;
@@ -132,45 +156,42 @@ interface Result {
 	result: GameResult;
 }
 
-/// Set the result of a challenge. Checks integrity of input parameters.s
-export function set_result(c: Challenge, { by, when, white, black, result }: Result): void {
-	if (!(by === white || by === black)) {
-		throw new Error(`The setter (${by}) must be either white (${white}) or black (${black}).`);
-	}
-	if (!(white === c.sent_by || white === c.sent_to)) {
-		throw new Error(`White (${white}) must be either the sender (${c.sent_by}) or the receiver (${c.sent_to}).`);
-	}
-	if (!(black === c.sent_by || black === c.sent_to)) {
-		throw new Error(`Black (${black}) must be either the sender (${c.sent_by}) or the receiver (${c.sent_to}).`);
-	}
-
-	c.result_was_set = true;
+// Set the result of a challenge. Checks integrity of input parameters.s
+export function setResult(c: Challenge, { by, when, white, black, result }: ChallengeSetResult): void {
 	c.result_set_by = by;
 	c.when_result_set = when;
 	c.white = white;
 	c.black = black;
 	c.result = result;
+	c.state = 'PENDING_RESULT_AGREE';
 }
 
-/// Unset the previous result
-export function unset_result(c: Challenge): void {
-	c.result_was_set = false;
+export interface ChallengeDisagreeResult {
+	by: PlayerPrivateId;
+}
+
+// Unset the previous result
+export function disagreeResult(c: Challenge): void {
 	c.result_set_by = undefined;
 	c.when_result_set = undefined;
 	c.white = undefined;
 	c.black = undefined;
 	c.result = undefined;
+	c.state = 'PENDING_RESULT';
 }
 
-/// Accepts the result
-export function set_result_accepted(c: Challenge, by: string, when: DateFull) {
-	if (!c.result_was_set) {
-		throw new Error('Result must have been set previously');
-	}
-	if (by != undefined && by == c.result_set_by) {
-		throw new Error('The accepter of the result cannot be the same person who set the result');
-	}
+export interface ChallengeAgreeResult {
+	by: PlayerPrivateId;
+	when: DateFull;
+}
 
+// Accepts the result
+export function agreeResult(c: Challenge, { by, when }: ChallengeAgreeResult) {
 	c.result_accepted_by = by;
 	c.when_result_accepted = when;
+	c.state = 'COMPLETED';
+}
+
+export function isPartOfChallenge(c: Challenge, by: PlayerPrivateId): boolean {
+	return by === c.sent_by || by === c.sent_to;
 }

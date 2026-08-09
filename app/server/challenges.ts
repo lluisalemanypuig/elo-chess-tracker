@@ -30,12 +30,12 @@ import { Request, Response } from 'express';
 import { log_now } from '@common/utils/time';
 import { is_user_logged_in } from '@server/managers/session';
 import {
-	challenge_accept,
-	challenge_decline,
-	challenge_send_new,
-	challenge_set_result,
-	challenge_unset_result,
-	challenge_agree_result
+	challengeAccept,
+	challengeDecline,
+	challengeSendNew,
+	challengeSetResult,
+	challengeDisagreeResult,
+	challengeAgreeResult
 } from '@server/managers/challenges';
 
 import { ChallengeId } from '@common/models/challenge';
@@ -88,9 +88,9 @@ export async function post_challenge_send(req: Request, res: Response) {
 	if (challenge_parse.result === 'Exit') {
 		return;
 	}
-	const to_random_id = challenge_parse.data.to;
-	const time_control_id = challenge_parse.data.time_control_id;
-	const time_control_name = challenge_parse.data.time_control_name;
+	const receiverPublicId = challenge_parse.data.to;
+	const timeControlId = challenge_parse.data.time_control_id;
+	const timeControlName = challenge_parse.data.time_control_name;
 	const title = challenge_parse.data.title;
 
 	const r = is_user_logged_in(session);
@@ -106,19 +106,13 @@ export async function post_challenge_send(req: Request, res: Response) {
 		return;
 	}
 
-	debug(log_now(), `Trying to send challenge from '${session.username}' to '${to_random_id}'.`);
+	debug(log_now(), `Trying to send challenge from '${session.username}' to '${receiverPublicId}'.`);
 
-	const receiver = UsersManager.get_instance().get_user_by_public_id(to_random_id);
+	const receiver = UsersManager.get_instance().get_user_by_public_id(receiverPublicId);
 
 	if (isNotDefined(receiver)) {
-		debug(log_now(), `User receiver of the challenge '${to_random_id}' does not exist.`);
+		debug(log_now(), `User receiver of the challenge '${receiverPublicId}' does not exist.`);
 		res.status(404).send('User receiver of the challenge does not exist');
-		return;
-	}
-
-	if (receiver.username == sender.username) {
-		debug(log_now(), `A challenge cannot be sent to oneself.`);
-		res.status(403).send('You cannot challenge yourself.');
 		return;
 	}
 
@@ -129,26 +123,33 @@ export async function post_challenge_send(req: Request, res: Response) {
 	}
 
 	const ratsys = RatingSystemManager.get_instance();
-	if (!ratsys.is_time_control_id_valid(time_control_id)) {
-		debug(log_now(), `Time control id ${time_control_id} is not valid.`);
+	if (!ratsys.is_time_control_id_valid(timeControlId)) {
+		debug(log_now(), `Time control id ${timeControlId} is not valid.`);
 		res.status(500).send('The chosen time control id is not valid.');
 		return;
 	}
 	let match: boolean = false;
 	const time_controls = ratsys.get_time_controls();
 	for (let t of time_controls) {
-		if (t.id == time_control_id && t.name == time_control_name) {
+		if (t.id == timeControlId && t.name == timeControlName) {
 			match = true;
+			break;
 		}
 	}
 	if (!match) {
-		debug(log_now(), `Time control id ${time_control_id} is not valid.`);
+		debug(log_now(), `Time control id ${timeControlId} is not valid.`);
 		res.status(500).send('The chosen time control name does not correspond to the given time control id.');
 		return;
 	}
 
 	debug(log_now(), `Send challenge from '${sender.username}' to '${receiver.username}'`);
-	challenge_send_new(title, sender.username, receiver.username, time_control_id, time_control_name, log_now());
+
+	try {
+		challengeSendNew(title, sender.username, receiver.username, timeControlId, timeControlName, log_now());
+	} catch (e: unknown) {
+		res.status(403).send((e as Error).message);
+		return;
+	}
 
 	res.status(200).send();
 }
@@ -184,12 +185,13 @@ export async function post_challenge_accept(req: Request, res: Response) {
 
 	debug(log_now(), `Challenge '${challenge_id}' involves players '${c.sent_by}' and '${c.sent_to}'`);
 
-	if (session.username != c.sent_to) {
-		res.status(403).send('You cannot accept this challenge');
+	try {
+		challengeAccept(c, { by: session.username, when: log_now() });
+	} catch (e: unknown) {
+		res.status(403).send((e as Error).message);
 		return;
 	}
 
-	challenge_accept(c);
 	res.status(200).send();
 }
 
@@ -224,12 +226,13 @@ export async function post_challenge_decline(req: Request, res: Response) {
 
 	debug(log_now(), `Challenge '${challenge_id}' involves players '${c.sent_by}' and '${c.sent_to}'`);
 
-	if (session.username != c.sent_to) {
-		res.status(403).send('You cannot decline this challenge');
+	try {
+		challengeDecline(c, { by: session.username });
+	} catch (e: unknown) {
+		res.status(403).send((e as Error).message);
 		return;
 	}
 
-	challenge_decline(c);
 	res.status(200).send();
 }
 
@@ -264,11 +267,6 @@ export async function post_challenge_set_result(req: Request, res: Response) {
 	debug(log_now(), `    Black: '${black_username}'`);
 	debug(log_now(), `    Result: '${result}'`);
 
-	if (white_username == black_username) {
-		res.status(500).send('White and Black cannot be the same players.');
-		return;
-	}
-
 	const manager = UsersManager.get_instance();
 	if (!manager.exists(white_username)) {
 		res.status(404).send(`White user does not exist.`);
@@ -285,34 +283,18 @@ export async function post_challenge_set_result(req: Request, res: Response) {
 		return;
 	}
 
-	{
-		const original_setter = c.result_set_by;
-		if (original_setter != undefined && original_setter != setter_user) {
-			debug(
-				log_now(),
-				`User '${setter_user}' is trying to override the result of
-			challenge '${challenge_id}' which was set by '${original_setter}'
-			on '${c.when_result_set}'`
-			);
-			res.status(403).send(
-				'The result of this challenge has to be set by the original setter, which you are not.'
-			);
-			return;
-		}
-	}
-
-	if (white_username != c.sent_by && white_username != c.sent_to) {
-		debug(log_now(), `White '${white_username}' is not part of challenge '${challenge_id}'.`);
-		res.status(403).send(`White user sent is not part of this challenge.`);
+	try {
+		challengeSetResult(c, {
+			by: setter_user,
+			when: log_now(),
+			white: white_username,
+			black: black_username,
+			result
+		});
+	} catch (e: unknown) {
+		res.status(403).send((e as Error).message);
 		return;
 	}
-	if (black_username != c.sent_by && black_username != c.sent_to) {
-		debug(log_now(), `Black '${black_username}' is not part of challenge '${challenge_id}'.`);
-		res.status(403).send(`Black user sent is not part of this challenge.`);
-		return;
-	}
-
-	challenge_set_result(c, setter_user, log_now(), white_username, black_username, result);
 
 	res.status(200).send();
 }
@@ -344,7 +326,13 @@ export async function post_challenge_agree(req: Request, res: Response) {
 		return;
 	}
 
-	challenge_agree_result(c);
+	try {
+		challengeAgreeResult(c, { by: session.username, when: log_now() });
+	} catch (e: unknown) {
+		res.status(403).send((e as Error).message);
+		return;
+	}
+
 	res.status(200).send();
 }
 
@@ -375,6 +363,12 @@ export async function post_challenge_disagree(req: Request, res: Response) {
 		return;
 	}
 
-	challenge_unset_result(c);
+	try {
+		challengeDisagreeResult(c, { by: session.username });
+	} catch (e: unknown) {
+		res.status(403).send((e as Error).message);
+		return;
+	}
+
 	res.status(200).send();
 }
