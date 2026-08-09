@@ -25,6 +25,6 @@ Contact:
 
 import { SessionId, SessionIdLenientSchema } from '@common/models/session-id';
 
-export const AuthenticationInputSchema = SessionIdLenientSchema;
+export const AuthenticationInputSchema = SessionIdLenientSchema.strict();
 
 export type AuthenticationInput = SessionId;

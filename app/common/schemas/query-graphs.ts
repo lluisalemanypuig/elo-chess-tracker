@@ -30,56 +30,70 @@ import { TimeControlIdSchema } from '../models/time-control';
 
 // utils
 
-export const NodeWeightSchema = z.object({
-	rating: z.number()
-});
+export const NodeWeightSchema = z
+	.object({
+		rating: z.number()
+	})
+	.strict();
 
 export type NodeWeight = z.infer<typeof NodeWeightSchema>;
 
-export const NodeInfoSchema = z.object({
-	id: PlayerPublicIdSchema,
-	fullName: UserGivenNameSchema,
-	weight: NodeWeightSchema
-});
+export const NodeInfoSchema = z
+	.object({
+		id: PlayerPublicIdSchema,
+		fullName: UserGivenNameSchema,
+		weight: NodeWeightSchema
+	})
+	.strict();
 
 export type NodeInfo = z.infer<typeof NodeInfoSchema>;
 
-export const EdgeWeightSchema = z.object({
-	wins: z.number(),
-	draws: z.number(),
-	losses: z.number()
-});
+export const EdgeWeightSchema = z
+	.object({
+		wins: z.number(),
+		draws: z.number(),
+		losses: z.number()
+	})
+	.strict();
 
 export type EdgeWeight = z.infer<typeof EdgeWeightSchema>;
 
-export const EdgeInfoSchema = z.object({
-	source: z.number(),
-	target: z.number(),
-	label: z.string(),
-	weight: EdgeWeightSchema
-});
+export const EdgeInfoSchema = z
+	.object({
+		source: z.number(),
+		target: z.number(),
+		label: z.string(),
+		weight: EdgeWeightSchema
+	})
+	.strict();
 
 export type EdgeInfo = z.infer<typeof EdgeInfoSchema>;
 
-export const QueryGraphOutputSchema = z.object({
-	nodes: z.array(NodeInfoSchema),
-	edges: z.array(EdgeInfoSchema)
-});
+export const QueryGraphOutputSchema = z
+	.object({
+		nodes: z.array(NodeInfoSchema),
+		edges: z.array(EdgeInfoSchema)
+	})
+	.strict();
 
 export type QueryGraphOutput = z.infer<typeof QueryGraphOutputSchema>;
 
 // Routes.QUERY_GRAPH_OWN
 
-export const QueryGraphInputOwnSchema = z.object({
-	timeControlId: TimeControlIdSchema
-});
+export const QueryGraphInputOwnSchema = z
+	.object({
+		timeControlId: TimeControlIdSchema
+	})
+	.strict();
 
 export type QueryGraphOwnInput = z.infer<typeof QueryGraphInputOwnSchema>;
 
 // Routes.QUERY_GRAPH_FULL
 
-export const QueryGraphInputFullSchema = z.object({
-	timeControlId: TimeControlIdSchema
-});
+export const QueryGraphInputFullSchema = z
+	.object({
+		timeControlId: TimeControlIdSchema
+	})
+	.strict();
 
 export type QueryGraphFullInput = z.infer<typeof QueryGraphInputFullSchema>;

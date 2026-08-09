@@ -30,30 +30,36 @@ import { UserGivenNameSchema } from '@common/models/user';
 
 // Routes.USER_CREATE
 
-export const UserCreateInputSchema = z.object({
-	u: PlayerPrivateIdSchema,
-	fn: UserGivenNameSchema,
-	ln: UserGivenNameSchema,
-	password: z.string(),
-	r: UserRoleArraySchema
-});
+export const UserCreateInputSchema = z
+	.object({
+		u: PlayerPrivateIdSchema,
+		fn: UserGivenNameSchema,
+		ln: UserGivenNameSchema,
+		password: z.string(),
+		r: UserRoleArraySchema
+	})
+	.strict();
 
 export type UserCreateInput = z.infer<typeof UserCreateInputSchema>;
 
 // Routes.USER_EDIT
 
-export const UserEditInputSchema = z.object({
-	u: PlayerPublicIdSchema,
-	f: UserGivenNameSchema,
-	l: UserGivenNameSchema,
-	r: UserRoleArraySchema
-});
+export const UserEditInputSchema = z
+	.object({
+		u: PlayerPublicIdSchema,
+		f: UserGivenNameSchema,
+		l: UserGivenNameSchema,
+		r: UserRoleArraySchema
+	})
+	.strict();
 
 export type UserEditInput = z.infer<typeof UserEditInputSchema>;
 
-export const UserPasswordChangeInputSchema = z.object({
-	old: z.string(),
-	new: z.string()
-});
+export const UserPasswordChangeInputSchema = z
+	.object({
+		old: z.string(),
+		new: z.string()
+	})
+	.strict();
 
 export type UserPasswordChangeInput = z.infer<typeof UserPasswordChangeInputSchema>;

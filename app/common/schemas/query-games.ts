@@ -31,37 +31,43 @@ import { DateFullSchema } from '@common/utils/time';
 
 // Routes.QUERY_GAME_LIST_OWN
 
-export const QueryGamesListOwnInputSchema = z.object({
-	timeControlId: TimeControlIdSchema
-});
+export const QueryGamesListOwnInputSchema = z
+	.object({
+		timeControlId: TimeControlIdSchema
+	})
+	.strict();
 
 export type QueryGamesListOwnInput = z.infer<typeof QueryGamesListOwnInputSchema>;
 
 // Routes.QUERY_GAME_LIST_ALL
 
-export const QueryGamesListAllInputSchema = z.object({
-	timeControlId: TimeControlIdSchema
-});
+export const QueryGamesListAllInputSchema = z
+	.object({
+		timeControlId: TimeControlIdSchema
+	})
+	.strict();
 
 export type QueryGamesListAllInput = z.infer<typeof QueryGamesListAllInputSchema>;
 
 // Routes.QUERY_GAME_LIST_OWN + Routes.QUERY_GAME_LIST_ALL
 
-export const QueryGamesListOutputSingleSchema = z.object({
-	id: GameIdSchema,
-	title: z.string(),
-	white: UserGivenNameSchema,
-	black: UserGivenNameSchema,
-	result: z.string(),
-	timeControlName: TimeControlNameSchema,
-	date: DateFullSchema,
-	whiteRating: z.number(),
-	blackRating: z.number(),
-	whiteIncrement: z.number(),
-	blackIncrement: z.number(),
-	editable: z.boolean(),
-	deleteable: z.boolean()
-});
+export const QueryGamesListOutputSingleSchema = z
+	.object({
+		id: GameIdSchema,
+		title: z.string(),
+		white: UserGivenNameSchema,
+		black: UserGivenNameSchema,
+		result: z.string(),
+		timeControlName: TimeControlNameSchema,
+		date: DateFullSchema,
+		whiteRating: z.number(),
+		blackRating: z.number(),
+		whiteIncrement: z.number(),
+		blackIncrement: z.number(),
+		editable: z.boolean(),
+		deleteable: z.boolean()
+	})
+	.strict();
 
 export type QueryGamesListOutputSingle = z.infer<typeof QueryGamesListOutputSingleSchema>;
 

@@ -28,23 +28,29 @@ import { PlayerPrivateIdSchema } from '@common/models/player';
 
 // Routes.USER_LOGIN
 
-export const UserLoginInputSchema = z.object({
-	u: PlayerPrivateIdSchema,
-	p: PlayerPrivateIdSchema
-});
+export const UserLoginInputSchema = z
+	.object({
+		u: PlayerPrivateIdSchema,
+		p: PlayerPrivateIdSchema
+	})
+	.strict();
 
 export type UserLoginInput = z.infer<typeof UserLoginInputSchema>;
 
-export const UserLoginOutputSchema = z.object({
-	cookies: z.array(z.string())
-});
+export const UserLoginOutputSchema = z
+	.object({
+		cookies: z.array(z.string())
+	})
+	.strict();
 
 export type UserLoginOutput = z.infer<typeof UserLoginOutputSchema>;
 
 // Routes.USER_LOGOUT
 
-export const UserLogoutOutputSchema = z.object({
-	cookies: z.array(z.string())
-});
+export const UserLogoutOutputSchema = z
+	.object({
+		cookies: z.array(z.string())
+	})
+	.strict();
 
 export type UserLogoutOutput = z.infer<typeof UserLogoutOutputSchema>;

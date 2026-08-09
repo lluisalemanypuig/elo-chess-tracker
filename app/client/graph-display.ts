@@ -355,7 +355,7 @@ window.onresize = resizeViewer;
 
 window.onload = async function () {
 	const menu = document.getElementById('side-menu') as HTMLDivElement;
-	let toggleBtn = document.getElementById('menu-toggle-btn') as HTMLDivElement;
+	let toggleBtn = document.getElementById('menu-toggle') as HTMLDivElement;
 	let arrow = document.getElementById('menu-arrow') as HTMLSpanElement;
 
 	toggleBtn.addEventListener('click', function () {

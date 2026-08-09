@@ -31,53 +31,65 @@ import { TimeControlIdSchema, TimeControlNameSchema } from '@common/models/time-
 
 // Routes.CHALLENGE_SEND
 
-export const ChallengeSendInputSchema = z.object({
-	to: PlayerPublicIdSchema,
-	timeControlId: TimeControlIdSchema,
-	timeControlName: TimeControlNameSchema,
-	title: z.string()
-});
+export const ChallengeSendInputSchema = z
+	.object({
+		to: PlayerPublicIdSchema,
+		timeControlId: TimeControlIdSchema,
+		timeControlName: TimeControlNameSchema,
+		title: z.string()
+	})
+	.strict();
 
 export type ChallengeSendInput = z.infer<typeof ChallengeSendInputSchema>;
 
 // Routes.CHALLENGE_ACCEPT
 
-export const ChallengeAcceptInputSchema = z.object({
-	id: ChallengeIdSchema
-});
+export const ChallengeAcceptInputSchema = z
+	.object({
+		id: ChallengeIdSchema
+	})
+	.strict();
 
 export type ChallengeAcceptInput = z.infer<typeof ChallengeAcceptInputSchema>;
 
 // Routes.CHALLENGE_DECLINE
 
-export const ChallengeDeclineInputSchema = z.object({
-	id: ChallengeIdSchema
-});
+export const ChallengeDeclineInputSchema = z
+	.object({
+		id: ChallengeIdSchema
+	})
+	.strict();
 
 export type ChallengeDeclineInput = z.infer<typeof ChallengeDeclineInputSchema>;
 
 // Routes.CHALLENGE_SET_RESULT
 
-export const ChallengeSetResultInputSchema = z.object({
-	id: ChallengeIdSchema,
-	/// TODO: use public ids
-	white: PlayerPrivateIdSchema,
-	black: PlayerPrivateIdSchema,
-	result: GameResultSchema
-});
+export const ChallengeSetResultInputSchema = z
+	.object({
+		id: ChallengeIdSchema,
+		/// TODO: use public ids
+		white: PlayerPrivateIdSchema,
+		black: PlayerPrivateIdSchema,
+		result: GameResultSchema
+	})
+	.strict();
 
 export type ChallengeSetResultInput = z.infer<typeof ChallengeSetResultInputSchema>;
 
 // Routes.CHALLENGE_AGREE
 
-export const ChallengeAgreeResultInputSchema = z.object({
-	id: ChallengeIdSchema
-});
+export const ChallengeAgreeResultInputSchema = z
+	.object({
+		id: ChallengeIdSchema
+	})
+	.strict();
 
 export type ChallengeAgreeResultInput = z.infer<typeof ChallengeAgreeResultInputSchema>;
 
-export const ChallengeDisagreeResultInputSchema = z.object({
-	id: ChallengeIdSchema
-});
+export const ChallengeDisagreeResultInputSchema = z
+	.object({
+		id: ChallengeIdSchema
+	})
+	.strict();
 
 export type ChallengeDisagreeResultInput = z.infer<typeof ChallengeDisagreeResultInputSchema>;

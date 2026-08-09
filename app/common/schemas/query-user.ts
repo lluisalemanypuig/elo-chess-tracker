@@ -40,71 +40,87 @@ export type QueryUserListOutput = z.infer<typeof QueryUserListOutputSchema>;
 
 // Routes.QUERY_USER_LIST
 
-export const QueryUserEditInputSchema = z.object({
-	u: PlayerPublicIdSchema
-});
+export const QueryUserEditInputSchema = z
+	.object({
+		u: PlayerPublicIdSchema
+	})
+	.strict();
 
 export type QueryUserEditInput = z.infer<typeof QueryUserEditInputSchema>;
 
 // Routes.QUERY_USER_RANKING
 
-export const QueryUserRankingInputSchema = z.object({
-	timeControlId: TimeControlIdSchema
-});
+export const QueryUserRankingInputSchema = z
+	.object({
+		timeControlId: TimeControlIdSchema
+	})
+	.strict();
 
 export type QueryUserRankingInput = z.infer<typeof QueryUserRankingInputSchema>;
 
 // Routes.QUERY_USER_HOME
 
-export const TimeControlAndRatingSchema = z.object({
-	timeControlId: TimeControlIdSchema,
-	rating: RatingSchema
-});
+export const TimeControlAndRatingSchema = z
+	.object({
+		timeControlId: TimeControlIdSchema,
+		rating: RatingSchema
+	})
+	.strict();
 
 export type TimeControlAndRating = z.infer<typeof TimeControlAndRatingSchema>;
 
-export const QueryUserHomeOutputSchema = z.object({
-	fullname: UserGivenNameSchema,
-	roles: UserRoleArraySchema,
-	actions: UserActionArraySchema,
-	ratings: z.array(TimeControlAndRatingSchema)
-});
+export const QueryUserHomeOutputSchema = z
+	.object({
+		fullname: UserGivenNameSchema,
+		roles: UserRoleArraySchema,
+		actions: UserActionArraySchema,
+		ratings: z.array(TimeControlAndRatingSchema)
+	})
+	.strict();
 
 export type QueryUserHomeOutput = z.infer<typeof QueryUserHomeOutputSchema>;
 
 // Routes.QUERY_USER_EDIT
 
-export const QueryUserEditOutputSchema = z.object({
-	firstName: UserGivenNameSchema,
-	lastName: UserGivenNameSchema,
-	roles: UserRoleArraySchema
-});
+export const QueryUserEditOutputSchema = z
+	.object({
+		firstName: UserGivenNameSchema,
+		lastName: UserGivenNameSchema,
+		roles: UserRoleArraySchema
+	})
+	.strict();
 
 export type QueryUserEditOutput = z.infer<typeof QueryUserEditOutputSchema>;
 
 // Routes.QUERY_USER_RANKING
 
-export const UserWithGamesSchema = z.object({
-	name: UserGivenNameSchema,
-	rating: z.number(),
-	totalGames: z.number(),
-	won: z.number(),
-	drawn: z.number(),
-	lost: z.number()
-});
+export const UserWithGamesSchema = z
+	.object({
+		name: UserGivenNameSchema,
+		rating: z.number(),
+		totalGames: z.number(),
+		won: z.number(),
+		drawn: z.number(),
+		lost: z.number()
+	})
+	.strict();
 
 export type UserWithGames = z.infer<typeof UserWithGamesSchema>;
 
-export const UserWithoutGamesSchema = z.object({
-	name: UserGivenNameSchema,
-	rating: z.number()
-});
+export const UserWithoutGamesSchema = z
+	.object({
+		name: UserGivenNameSchema,
+		rating: z.number()
+	})
+	.strict();
 
 export type UserWithoutGames = z.infer<typeof UserWithoutGamesSchema>;
 
-export const QueryUserRankingOutputSchema = z.object({
-	withGames: z.array(UserWithGamesSchema),
-	withoutGames: z.array(UserWithoutGamesSchema)
-});
+export const QueryUserRankingOutputSchema = z
+	.object({
+		withGames: z.array(UserWithGamesSchema),
+		withoutGames: z.array(UserWithoutGamesSchema)
+	})
+	.strict();
 
 export type QueryUserRankingOutput = z.infer<typeof QueryUserRankingOutputSchema>;

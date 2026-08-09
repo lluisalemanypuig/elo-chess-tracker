@@ -32,14 +32,16 @@ import { DateFullSchema } from '@common/utils/time';
 
 // Routes.QUERY_CHALLENGE_RECEIVED
 
-export const QueryChallengesReceivedOutputSingleSchema = z.object({
-	id: ChallengeIdSchema,
-	title: z.string(),
-	sentBy: UserGivenNameSchema,
-	sentWhen: DateFullSchema,
-	timeControlName: TimeControlNameSchema,
-	canBeDeclined: z.boolean()
-});
+export const QueryChallengesReceivedOutputSingleSchema = z
+	.object({
+		id: ChallengeIdSchema,
+		title: z.string(),
+		sentBy: UserGivenNameSchema,
+		sentWhen: DateFullSchema,
+		timeControlName: TimeControlNameSchema,
+		canBeDeclined: z.boolean()
+	})
+	.strict();
 
 export type QueryChallengesReceivedOutputSingle = z.infer<typeof QueryChallengesReceivedOutputSingleSchema>;
 
@@ -49,14 +51,16 @@ export type QueryChallengesReceivedOutput = z.infer<typeof QueryChallengesReceiv
 
 // Routes.QUERY_CHALLENGE_SENT
 
-export const QueryChallengesSentOutputSingleSchema = z.object({
-	id: ChallengeIdSchema,
-	title: z.string(),
-	sentTo: UserGivenNameSchema,
-	sentWhen: DateFullSchema,
-	timeControlName: TimeControlNameSchema,
-	canBeDeclined: z.boolean()
-});
+export const QueryChallengesSentOutputSingleSchema = z
+	.object({
+		id: ChallengeIdSchema,
+		title: z.string(),
+		sentTo: UserGivenNameSchema,
+		sentWhen: DateFullSchema,
+		timeControlName: TimeControlNameSchema,
+		canBeDeclined: z.boolean()
+	})
+	.strict();
 
 export type QueryChallengesSentOutputSingle = z.infer<typeof QueryChallengesSentOutputSingleSchema>;
 
@@ -66,19 +70,21 @@ export type QueryChallengesSentOutput = z.infer<typeof QueryChallengesSentOutput
 
 // Routes.QUERY_CHALLENGE_PENDING_RESULT
 
-export const QueryChallengesPendingResultOutputSingleSchema = z.object({
-	id: ChallengeIdSchema,
-	title: z.string(),
-	sentByName: UserGivenNameSchema,
-	/// TODO: use user public IDs
-	sentByUsername: PlayerPrivateIdSchema,
-	sentToName: UserGivenNameSchema,
-	/// TODO: use user public IDs
-	sentToUsername: PlayerPrivateIdSchema,
-	opponent: UserGivenNameSchema,
-	sentWhen: DateFullSchema,
-	timeControlName: TimeControlNameSchema
-});
+export const QueryChallengesPendingResultOutputSingleSchema = z
+	.object({
+		id: ChallengeIdSchema,
+		title: z.string(),
+		sentByName: UserGivenNameSchema,
+		/// TODO: use user public IDs
+		sentByUsername: PlayerPrivateIdSchema,
+		sentToName: UserGivenNameSchema,
+		/// TODO: use user public IDs
+		sentToUsername: PlayerPrivateIdSchema,
+		opponent: UserGivenNameSchema,
+		sentWhen: DateFullSchema,
+		timeControlName: TimeControlNameSchema
+	})
+	.strict();
 
 export type QueryChallengesPendingResultOutputSingle = z.infer<typeof QueryChallengesPendingResultOutputSingleSchema>;
 
@@ -88,16 +94,18 @@ export type QueryChallengesPendingResultOutput = z.infer<typeof QueryChallengesP
 
 // Routes.QUERY_CHALLENGE_CONFIRM_RESULT_OTHER
 
-export const QueryChallengesConfirmResultOtherOutputSingleSchema = z.object({
-	id: ChallengeIdSchema,
-	title: z.string(),
-	opponent: UserGivenNameSchema,
-	sentWhen: DateFullSchema,
-	white: UserGivenNameSchema,
-	black: UserGivenNameSchema,
-	result: z.string(),
-	timeControlName: TimeControlNameSchema
-});
+export const QueryChallengesConfirmResultOtherOutputSingleSchema = z
+	.object({
+		id: ChallengeIdSchema,
+		title: z.string(),
+		opponent: UserGivenNameSchema,
+		sentWhen: DateFullSchema,
+		white: UserGivenNameSchema,
+		black: UserGivenNameSchema,
+		result: z.string(),
+		timeControlName: TimeControlNameSchema
+	})
+	.strict();
 
 export type QueryChallengesConfirmResultOtherOutputSingle = z.infer<
 	typeof QueryChallengesConfirmResultOtherOutputSingleSchema
@@ -111,16 +119,18 @@ export type QueryChallengesConfirmResultOtherOutput = z.infer<typeof QueryChalle
 
 // Routes.QUERY_CHALLENGE_CONFIRM_RESULT_SELF
 
-export const QueryChallengesConfirmResultSelfOutputSingleSchema = z.object({
-	id: ChallengeIdSchema,
-	title: z.string(),
-	opponent: UserGivenNameSchema,
-	sentWhen: DateFullSchema,
-	white: UserGivenNameSchema,
-	black: UserGivenNameSchema,
-	result: z.string(),
-	timeControlName: TimeControlNameSchema
-});
+export const QueryChallengesConfirmResultSelfOutputSingleSchema = z
+	.object({
+		id: ChallengeIdSchema,
+		title: z.string(),
+		opponent: UserGivenNameSchema,
+		sentWhen: DateFullSchema,
+		white: UserGivenNameSchema,
+		black: UserGivenNameSchema,
+		result: z.string(),
+		timeControlName: TimeControlNameSchema
+	})
+	.strict();
 
 export type QueryChallengesConfirmResultSelfOutputSingle = z.infer<
 	typeof QueryChallengesConfirmResultSelfOutputSingleSchema

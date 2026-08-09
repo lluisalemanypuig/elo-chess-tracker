@@ -31,41 +31,49 @@ import { DateMajorSchema, DateMinorSchema } from '@common/utils/time';
 
 // Routes.GAME_CREATE
 
-export const GameCreateInputSchema = z.object({
-	white: PlayerPublicIdSchema,
-	black: PlayerPublicIdSchema,
-	title: z.string(),
-	result: GameResultSchema,
-	timeControlId: TimeControlIdSchema,
-	timeControlName: TimeControlNameSchema,
-	whenCreated: DateMajorSchema,
-	timeCreated: DateMinorSchema
-});
+export const GameCreateInputSchema = z
+	.object({
+		white: PlayerPublicIdSchema,
+		black: PlayerPublicIdSchema,
+		title: z.string(),
+		result: GameResultSchema,
+		timeControlId: TimeControlIdSchema,
+		timeControlName: TimeControlNameSchema,
+		whenCreated: DateMajorSchema,
+		timeCreated: DateMinorSchema
+	})
+	.strict();
 
 export type GameCreateInput = z.infer<typeof GameCreateInputSchema>;
 
 // Routes.gameEditResult
 
-export const GameEditResultInputSchema = z.object({
-	id: GameIdSchema,
-	newResult: GameResultSchema
-});
+export const GameEditResultInputSchema = z
+	.object({
+		id: GameIdSchema,
+		newResult: GameResultSchema
+	})
+	.strict();
 
 export type GameEditResultInput = z.infer<typeof GameEditResultInputSchema>;
 
 // Routes.GAME_EDIT_TITLE
 
-export const GameEditTitleInputSchema = z.object({
-	id: GameIdSchema,
-	title: z.string()
-});
+export const GameEditTitleInputSchema = z
+	.object({
+		id: GameIdSchema,
+		title: z.string()
+	})
+	.strict();
 
 export type GameEditTitleInput = z.infer<typeof GameEditTitleInputSchema>;
 
 // Routes.GAME_DELETE
 
-export const GameDeleteInputSchema = z.object({
-	id: GameIdSchema
-});
+export const GameDeleteInputSchema = z
+	.object({
+		id: GameIdSchema
+	})
+	.strict();
 
 export type GameDeleteInput = z.infer<typeof GameDeleteInputSchema>;
