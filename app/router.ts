@@ -138,7 +138,7 @@ import {
 	get_query_user_home,
 	post_query_user_ranking,
 	get_query_html_user_list
-} from '@server/query_user';
+} from '@app/server/query-user';
 router.get(Routes.QUERY_USER_LIST, get_query_user_list);
 router.get(Routes.QUERY_HTML_USER_LIST, get_query_html_user_list);
 router.get(Routes.QUERY_USER_HOME, get_query_user_home);
@@ -155,48 +155,48 @@ import {
 	get_query_challenge_pending_result,
 	get_query_challenge_confirm_result_other,
 	get_query_challenge_confirm_result_self
-} from '@server/query_challenges';
+} from '@app/server/query-challenges';
 router.get(Routes.QUERY_CHALLENGE_RECEIVED, get_query_challenge_received);
 router.get(Routes.QUERY_CHALLENGE_SENT, get_query_challenge_sent);
 router.get(Routes.QUERY_CHALLENGE_PENDING_RESULT, get_query_challenge_pending_result);
 router.get(Routes.QUERY_CHALLENGE_CONFIRM_RESULT_OTHER, get_query_challenge_confirm_result_other);
 router.get(Routes.QUERY_CHALLENGE_CONFIRM_RESULT_SELF, get_query_challenge_confirm_result_self);
 
-import { post_query_game_list_own, post_query_game_list_all } from '@server/query_games';
+import { post_query_game_list_own, post_query_game_list_all } from '@app/server/query-games';
 router.post(Routes.QUERY_GAME_LIST_OWN, post_query_game_list_own);
 router.post(Routes.QUERY_GAME_LIST_ALL, post_query_game_list_all);
 
-import { post_query_graph_full, post_query_graph_own } from '@server/query_graphs';
+import { post_query_graph_full, post_query_graph_own } from '@app/server/query-graphs';
 router.post(Routes.QUERY_GRAPH_OWN, post_query_graph_own);
 router.post(Routes.QUERY_GRAPH_FULL, post_query_graph_full);
 
 // query time controls
-import { get_query_html_time_controls, get_query_html_time_controls_unique } from '@server/query_time_control';
+import { get_query_html_time_controls, get_query_html_time_controls_unique } from '@app/server/query-time-control';
 router.get(Routes.QUERY_HTML_TIME_CONTROLS, get_query_html_time_controls);
 router.get(Routes.QUERY_HTML_TIME_CONTROLS_UNIQUE, get_query_html_time_controls_unique);
 
 // user login and logout
-import { post_user_login, post_user_logout } from '@server/login_logout';
+import { post_user_login, post_user_logout } from '@app/server/login-logout';
 router.post(Routes.USER_LOGIN, post_user_login);
 router.post(Routes.USER_LOGOUT, post_user_logout);
 
 // creation of a new user
-import { post_user_create, get_page_user_create } from '@server/users_new';
+import { post_user_create, get_page_user_create } from '@app/server/users-new';
 router.get(Routes.PAGE_USER_CREATE, get_page_user_create);
 router.post(Routes.USER_CREATE, post_user_create);
 
 // edition of an existing user
-import { post_user_edit, get_page_user_edit } from '@server/users_edit';
+import { post_user_edit, get_page_user_edit } from '@app/server/users-edit';
 router.get(Routes.PAGE_USER_EDIT, get_page_user_edit);
 router.post(Routes.USER_EDIT, post_user_edit);
 
 // change of password
-import { get_page_user_password_change, post_user_password_change } from '@server/users_password_change';
+import { get_page_user_password_change, post_user_password_change } from '@app/server/users-password-change';
 router.get(Routes.PAGE_USER_PASSWORD_CHANGE, get_page_user_password_change);
 router.post(Routes.USER_PASSWORD_CHANGE, post_user_password_change);
 
 // retrieve ranking of players
-import { get_page_user_ranking } from '@server/users_ranking';
+import { get_page_user_ranking } from '@app/server/users-ranking';
 router.get(Routes.PAGE_USER_RANKING, get_page_user_ranking);
 
 // create a new game

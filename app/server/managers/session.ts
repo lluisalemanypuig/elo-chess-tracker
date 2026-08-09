@@ -31,7 +31,7 @@ const debug = Debug('ELO_CHESS_TRACKER:managers/session');
 
 import { SessionIDManager } from '@app/server/managers/session-id-manager';
 import { SessionID } from '@app/common/models/session-id';
-import { shuffle } from '@server/utils/shuffle_random';
+import { shuffle } from '@app/server/utils/shuffle-random';
 import { UsersManager } from '@app/server/managers/users-manager';
 import { isNotDefined } from '@app/common/utils/is-defined';
 import { PlayerPrivateId } from '@common/models/player';
