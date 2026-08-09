@@ -53,7 +53,7 @@ import {
 	GAMES_SEE
 } from '@common/models/user-action';
 import { ADMIN, MEMBER, STUDENT, TEACHER } from '@common/models/user-role';
-import { initializePermissions, UserRoleToUserAction } from '@app/server/managers/user-role-action';
+import { initializePermissions, UserRoleToUserAction } from '@server/managers/user-role-action';
 
 describe('Actions allowed per user (single role)', () => {
 	test('Admin', () => {

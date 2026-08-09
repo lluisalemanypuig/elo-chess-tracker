@@ -23,9 +23,9 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { RatingSystemManager } from '@app/server/managers/rating-system-manager';
-import { initializeRatingFunctions, initializeRatingTimeControls } from '@app/server/managers/rating-system';
-import { EloPlayerVsPlayer } from '@app/server/rating-framework/Elo/formula';
+import { RatingSystemManager } from '@server/managers/rating-system-manager';
+import { initializeRatingFunctions, initializeRatingTimeControls } from '@server/managers/rating-system';
+import { EloPlayerVsPlayer } from '@server/rating-framework/Elo/formula';
 import { newRatingElo } from '@common/models/rating-framework/Elo/rating';
 import { ratingFromStringElo } from '@common/io/ratings/Elo/rating';
 import { toTimeControlId, toTimeControlName } from '@common/models/time-control';

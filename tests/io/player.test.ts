@@ -23,7 +23,7 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { initializeRatingFunctions } from '@app/server/managers/rating-system';
+import { initializeRatingFunctions } from '@server/managers/rating-system';
 import { playerFromString } from '@common/io/player';
 import { isNotDefined } from '@common/utils/is-defined';
 import { toTimeControlId } from '@common/models/time-control';

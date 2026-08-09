@@ -25,7 +25,7 @@ Contact:
 
 import { isNotDefined } from '@common/utils/is-defined';
 import { timeControlRatingArrayFromString, timeControlRatingFromString } from '@common/io/time-control-rating';
-import { initializeRatingFunctions } from '@app/server/managers/rating-system';
+import { initializeRatingFunctions } from '@server/managers/rating-system';
 
 describe('IO conversion -- Elo', () => {
 	initializeRatingFunctions('Elo');

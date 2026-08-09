@@ -31,8 +31,8 @@ import { clearServer } from '@server/managers/memory/clear';
 import { serverInitFromData } from '@server/managers/memory/initialization';
 import { ADMIN, MEMBER, STUDENT } from '@common/models/user-role';
 import { userAddNew } from '@server/managers/users';
-import { ChallengesManager, numberToChallengeId } from '@app/server/managers/challenges-manager';
-import { GamesManager } from '@app/server/managers/games-manager';
+import { ChallengesManager, numberToChallengeId } from '@server/managers/challenges-manager';
+import { GamesManager } from '@server/managers/games-manager';
 import {
 	challengeAccept,
 	challengeAgreeResult,
@@ -45,7 +45,7 @@ import {
 import { Challenge } from '@common/models/challenge';
 import { toUserGivenName, User } from '@common/models/user';
 import { challengeFromString } from '@common/io/challenge';
-import { UsersManager } from '@app/server/managers/users-manager';
+import { UsersManager } from '@server/managers/users-manager';
 import { Configuration } from '@common/models/configuration/configuration';
 import { PlayerPrivateId, toPlayerPrivateId } from '@common/models/player';
 import { toTimeControlId, toTimeControlName } from '@common/models/time-control';

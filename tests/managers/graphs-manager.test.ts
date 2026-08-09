@@ -24,7 +24,7 @@ Contact:
 */
 
 import { clearServer } from '@server/managers/memory/clear';
-import { GraphsManager } from '@app/server/managers/graphs-manager';
+import { GraphsManager } from '@server/managers/graphs-manager';
 import { Graph } from '@common/models/graph/graph';
 import { toPlayerPrivateId } from '@common/models/player';
 import { toTimeControlId } from '@common/models/time-control';

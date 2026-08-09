@@ -46,8 +46,8 @@ import {
 	GRAPHS_SEE_MEMBER
 } from '@common/models/user-action';
 import { ADMIN, MEMBER, STUDENT, TEACHER } from '@common/models/user-role';
-import { UserRoleToUserAction } from '@app/server/managers/user-role-action';
-import { initializePermissions } from '@app/server/managers/user-role-action';
+import { UserRoleToUserAction } from '@server/managers/user-role-action';
+import { initializePermissions } from '@server/managers/user-role-action';
 import {
 	canUserEdit,
 	canUserEditGame,
@@ -55,7 +55,7 @@ import {
 	canUserSeeGame,
 	canUserSendChallenge,
 	canUserSeeGraph
-} from '@app/server/managers/user-relationships';
+} from '@server/managers/user-relationships';
 import { toPlayerPrivateId } from '@common/models/player';
 
 const un = toPlayerPrivateId('un');

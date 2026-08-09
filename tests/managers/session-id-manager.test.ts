@@ -24,7 +24,7 @@ Contact:
 */
 
 import { toPlayerPrivateId } from '@common/models/player';
-import { SessionIDManager } from '@app/server/managers/session-id-manager';
+import { SessionIDManager } from '@server/managers/session-id-manager';
 
 function makeSession(token: string, username: string) {
 	return { token, username: toPlayerPrivateId(username) };

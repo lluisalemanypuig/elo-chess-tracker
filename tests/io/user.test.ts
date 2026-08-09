@@ -24,7 +24,7 @@ Contact:
 */
 
 import { ADMIN, STUDENT } from '@common/models/user-role';
-import { initializeRatingFunctions } from '@app/server/managers/rating-system';
+import { initializeRatingFunctions } from '@server/managers/rating-system';
 import { userFromString } from '@common/io/user';
 import { isNotDefined } from '@common/utils/is-defined';
 import { toDateMajor } from '@common/utils/time';

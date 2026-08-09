@@ -23,7 +23,7 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { initializeRatingFunctions } from '@app/server/managers/rating-system';
+import { initializeRatingFunctions } from '@server/managers/rating-system';
 import { gameFromString } from '@common/io/game';
 import { isNotDefined } from '@common/utils/is-defined';
 

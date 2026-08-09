@@ -26,7 +26,7 @@ Contact:
 import { clearServer } from '@server/managers/memory/clear';
 import { serverInitFromData } from '@server/managers/memory/initialization';
 import { isUserLoggedIn, sessionIdAdd, sessionIdDelete, sessionUserDeleteAll } from '@server/managers/session';
-import { SessionIDManager } from '@app/server/managers/session-id-manager';
+import { SessionIDManager } from '@server/managers/session-id-manager';
 import { userAddNew } from '@server/managers/users';
 import { SessionId } from '@common/models/session-id';
 import { ADMIN, MEMBER, STUDENT } from '@common/models/user-role';

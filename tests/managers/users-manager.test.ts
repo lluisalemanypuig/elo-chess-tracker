@@ -23,7 +23,7 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { UsersManager } from '@app/server/managers/users-manager';
+import { UsersManager } from '@server/managers/users-manager';
 import { toUserGivenName, User } from '@common/models/user';
 import { toPlayerPrivateId } from '@common/models/player';
 

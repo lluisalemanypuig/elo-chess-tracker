@@ -55,7 +55,7 @@ import {
 	GAMES_SEE
 } from '@common/models/user-action';
 import { ADMIN, MEMBER, STUDENT, TEACHER } from '@common/models/user-role';
-import { initializePermissions, UserRoleToUserAction } from '@app/server/managers/user-role-action';
+import { initializePermissions, UserRoleToUserAction } from '@server/managers/user-role-action';
 import { EloRating } from '@common/models/rating-framework/Elo/rating';
 import { toPlayerPrivateId } from '@common/models/player';
 import { toTimeControlId } from '@common/models/time-control';

@@ -23,7 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { ChallengesManager, numberToChallengeId } from '@app/server/managers/challenges-manager';
+import { ChallengesManager, numberToChallengeId } from '@server/managers/challenges-manager';
 import { newChallenge, toChallengeId } from '@common/models/challenge';
 import { toPlayerPrivateId } from '@common/models/player';
 import { toTimeControlId, toTimeControlName } from '@common/models/time-control';

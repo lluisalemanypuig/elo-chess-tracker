@@ -30,7 +30,7 @@ import { graphModifyEdge, graphUpdate } from '@server/managers/graphs';
 import { serverInitFromData } from '@server/managers/memory/initialization';
 import { clearServer } from '@server/managers/memory/clear';
 import { graphFromString } from '@common/io/graph/graph';
-import { EnvironmentManager } from '@app/server/managers/environment-manager';
+import { EnvironmentManager } from '@server/managers/environment-manager';
 import { Configuration } from '@common/models/configuration/configuration';
 import { isNotDefined } from '@common/utils/is-defined';
 import { toPlayerPrivateId } from '@common/models/player';

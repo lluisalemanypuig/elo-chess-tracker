@@ -40,7 +40,7 @@ import { run_command } from '@tests/exec-utils';
 import { Player, toPlayerPrivateId } from '@common/models/player';
 import { EloRating } from '@common/models/rating-framework/Elo/rating';
 import { userFromString } from '@common/io/user';
-import { UsersManager } from '@app/server/managers/users-manager';
+import { UsersManager } from '@server/managers/users-manager';
 import { isNotDefined } from '@common/utils/is-defined';
 import { Configuration } from '@common/models/configuration/configuration';
 import { TimeControlRating } from '@common/models/time-control-rating';

@@ -25,7 +25,7 @@ Contact:
 
 import { toTimeControlId } from '@common/models/time-control';
 import { toGameId } from '@common/models/game';
-import { GamesManager } from '@app/server/managers/games-manager';
+import { GamesManager } from '@server/managers/games-manager';
 import { toDateMajor } from '@common/utils/time';
 
 const Classical = toTimeControlId('classical');

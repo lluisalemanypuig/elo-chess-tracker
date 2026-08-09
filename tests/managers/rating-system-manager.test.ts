@@ -24,7 +24,7 @@ Contact:
 */
 
 import { toTimeControlId, toTimeControlName } from '@common/models/time-control';
-import { RatingSystemManager } from '@app/server/managers/rating-system-manager';
+import { RatingSystemManager } from '@server/managers/rating-system-manager';
 
 const Classical = toTimeControlId('Classical');
 const Classical90p30 = toTimeControlName('Classical (90 + 30)');
