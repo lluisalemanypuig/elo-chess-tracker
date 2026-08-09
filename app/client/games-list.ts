@@ -40,10 +40,10 @@ function newRatingCell(rating: string, increment: string) {
 	s1.textContent = rating + ' ';
 	cell.appendChild(s1);
 
-	if (increment[1] != '0') {
+	if (increment[1] !== '0') {
 		let s2 = document.createElement('span');
 		s2.textContent = increment;
-		if (increment[0] == '+') {
+		if (increment[0] === '+') {
 			s2.style.color = 'green';
 		} else {
 			s2.style.color = 'red';
@@ -60,7 +60,7 @@ async function selectResultGameOnChange(event: any) {
 	const gameId = select.getAttribute('gameId');
 	const newResult = select.value;
 
-	if (newResult == select.getAttribute('originalValue')) {
+	if (newResult === select.getAttribute('originalValue')) {
 		return;
 	}
 
@@ -142,7 +142,7 @@ async function triggerEditGameTitle(event: Event) {
 		console.log('Game id could not be retrieved');
 		return;
 	}
-	if (originalTitle == newTitle) {
+	if (originalTitle === newTitle) {
 		return;
 	}
 
@@ -192,11 +192,11 @@ async function fillGamesListTimeControl(timeControlId: TimeControlId) {
 	const val = table.getAttribute('value');
 
 	let response;
-	if (val == 'all') {
+	if (val === 'all') {
 		response = await serverCall(ROUTES.QUERY_GAME_LIST_ALL, {
 			timeControlId: timeControlId
 		});
-	} else if (val == 'own') {
+	} else if (val === 'own') {
 		response = await serverCall(ROUTES.QUERY_GAME_LIST_OWN, {
 			timeControlId: timeControlId
 		});
@@ -217,7 +217,7 @@ async function fillGamesListTimeControl(timeControlId: TimeControlId) {
 		let row = document.createElement('tr');
 
 		if (g.editable) {
-			if (g.title == '') {
+			if (g.title === '') {
 				row.appendChild(newTextCell(''));
 			} else {
 				row.appendChild(newCellTextInput(g.id, g.title));

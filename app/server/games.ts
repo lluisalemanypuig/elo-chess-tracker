@@ -176,16 +176,16 @@ export async function postGameCreate(req: Request, res: Response) {
 		return;
 	}
 
-	if (white.username == black.username) {
+	if (white.username === black.username) {
 		res.status(500).send('The players cannot be the same.');
 		return;
 	}
 
-	if (gameDate == '') {
+	if (gameDate === '') {
 		res.status(500).send('The selected date is incorrect.');
 		return;
 	}
-	if (gameTime == '') {
+	if (gameTime === '') {
 		res.status(500).send('The selected time is incorrect.');
 		return;
 	}

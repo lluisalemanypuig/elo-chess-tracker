@@ -87,7 +87,7 @@ if (serverEnvironment.isSSLInfoValid()) {
 		const privateKey = fs.readFileSync(serverEnvironment.getSslPrivateKeyFile(), 'utf8');
 		const certificate = fs.readFileSync(serverEnvironment.getSslPublicKeyFile(), 'utf8');
 
-		if (serverEnvironment.getSslPassphraseFile() != '') {
+		if (serverEnvironment.getSslPassphraseFile() !== '') {
 			debug(logNow(), 'Passphrase file found...');
 			let passphrase = fs.readFileSync(serverEnvironment.getSslPassphraseFile(), 'utf8');
 			return https.createServer(

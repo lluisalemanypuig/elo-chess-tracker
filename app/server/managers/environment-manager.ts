@@ -134,19 +134,19 @@ export class EnvironmentManager {
 
 	setSSLInfo(baseDir: string, ssl: SSLCertificate): void {
 		this.directorySsl = baseDir;
-		if (ssl.publicKeyFile != '') {
+		if (ssl.publicKeyFile !== '') {
 			this.sslPublicKeyFile = path.join(this.directorySsl, ssl.publicKeyFile);
 		}
-		if (ssl.privateKeyFile != '') {
+		if (ssl.privateKeyFile !== '') {
 			this.sslPrivateKeyFile = path.join(this.directorySsl, ssl.privateKeyFile);
 		}
-		if (ssl.passphraseFile != '') {
+		if (ssl.passphraseFile !== '') {
 			this.sslPassphraseFile = path.join(this.directorySsl, ssl.passphraseFile);
 		}
 	}
 
 	isSSLInfoValid(): boolean {
-		return this.directorySsl != '' && this.sslPublicKeyFile != '' && this.sslPrivateKeyFile != '';
+		return this.directorySsl !== '' && this.sslPublicKeyFile !== '' && this.sslPrivateKeyFile !== '';
 	}
 
 	// icons

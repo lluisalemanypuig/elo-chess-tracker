@@ -64,17 +64,17 @@ describe('Rating System Manager', () => {
 		const unique_ids = rating.getUniqueTimeControlsIds();
 		expect(
 			unique_ids.findIndex((val: string): boolean => {
-				return val == Classical;
+				return val === Classical;
 			})
 		).not.toEqual(-1);
 		expect(
 			unique_ids.findIndex((val: string): boolean => {
-				return val == Rapid;
+				return val === Rapid;
 			})
 		).not.toEqual(-1);
 		expect(
 			unique_ids.findIndex((val: string): boolean => {
-				return val == Blitz;
+				return val === Blitz;
 			})
 		).not.toEqual(-1);
 	});

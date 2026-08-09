@@ -139,7 +139,7 @@ export class RatingSystemManager {
 
 	isTimeControlIdValid(id: TimeControlId): boolean {
 		for (const tc of this.allTimeControls) {
-			if (tc.id == id) {
+			if (tc.id === id) {
 				return true;
 			}
 		}

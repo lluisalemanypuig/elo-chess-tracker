@@ -139,13 +139,13 @@ describe('Configure server', () => {
 		const unique_ids = ratingSystem_manager.getUniqueTimeControlsIds();
 		expect(
 			unique_ids.find((val: string): boolean => {
-				return val == Rapid;
+				return val === Rapid;
 			})
 		).toEqual(Rapid);
 
 		expect(
 			unique_ids.find((val: string): boolean => {
-				return val == Blitz;
+				return val === Blitz;
 			})
 		).toEqual(Blitz);
 
@@ -233,13 +233,13 @@ describe('Configure server', () => {
 		const unique_ids = ratingSystem_manager.getUniqueTimeControlsIds();
 		expect(
 			unique_ids.find((val: string): boolean => {
-				return val == Rapid;
+				return val === Rapid;
 			})
 		).toEqual(undefined);
 
 		expect(
 			unique_ids.find((val: string): boolean => {
-				return val == Blitz;
+				return val === Blitz;
 			})
 		).toEqual(undefined);
 

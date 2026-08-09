@@ -82,7 +82,7 @@ export function sessionIdDelete(session: SessionId): void {
 
 	debug(logNow(), `Before deleting, '${mem.numSessionIds()}' sessions`);
 	const idx = mem.indexSessionId(session);
-	if (idx != -1) {
+	if (idx !== -1) {
 		debug(logNow(), `    Session of user '${session.username}' was found. Deleting...`);
 		mem.removeSessionId(idx);
 	} else {

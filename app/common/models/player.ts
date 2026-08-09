@@ -80,7 +80,7 @@ export class Player {
 
 	/// Returns whether the rating under the given time control id exists
 	hasRating(id: TimeControlId): boolean {
-		return this.indexTimeControlId(id) != -1;
+		return this.indexTimeControlId(id) !== -1;
 	}
 
 	/**
@@ -96,7 +96,7 @@ export class Player {
 	/// Returns the rating of the player under the given time control id
 	getRating(id: TimeControlId): Rating {
 		const index = this.indexTimeControlId(id);
-		if (index == -1) {
+		if (index === -1) {
 			throw new Error(`Rating with id '${id}' does not exist!`);
 		}
 		return this.ratings[index].rating;
@@ -105,7 +105,7 @@ export class Player {
 	/// Sets the rating of the player
 	setRating(id: TimeControlId, rating: Rating): void {
 		const index = this.indexTimeControlId(id);
-		if (index == -1) {
+		if (index === -1) {
 			throw new Error(`Rating with id '${id}' does not exist!`);
 		}
 		this.ratings[index].rating = rating;
@@ -123,7 +123,7 @@ export class Player {
 
 	indexTimeControlId(id: TimeControlId): number {
 		return searchLinearByKey(this.ratings, (v: TimeControlRating): boolean => {
-			return v.timeControl == id;
+			return v.timeControl === id;
 		});
 	}
 }

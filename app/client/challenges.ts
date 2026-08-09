@@ -49,7 +49,7 @@ async function sendChallengeButtonClicked(_event: any) {
 	const usernameListInput = document.getElementById('username-list') as HTMLInputElement;
 	const usernameOption = document.querySelector('option[value="' + usernameListInput.value + '"]');
 
-	if (usernameOption != null) {
+	if (usernameOption !== null) {
 		const publicUserId = Number(usernameOption.id) as PlayerPublicId;
 
 		const selectTimeControl = document.getElementById('select-time-control') as HTMLSelectElement;
@@ -110,11 +110,11 @@ async function submitResultChallengeButtonClicked(event: any) {
 	const blackUsername = blackSelect.options[blackSelect.selectedIndex].value as PlayerPrivateId;
 	const resultStr = selectResultGame.options[selectResultGame.selectedIndex].value;
 	let result: GameResult;
-	if (resultStr == 'white_wins') {
+	if (resultStr === 'white_wins') {
 		result = 'white_wins';
-	} else if (resultStr == 'black_wins') {
+	} else if (resultStr === 'black_wins') {
 		result = 'black_wins';
-	} else if (resultStr == 'draw') {
+	} else if (resultStr === 'draw') {
 		result = 'draw';
 	} else {
 		console.log(`Wrong result for the game '${resultStr}'.`);
@@ -190,7 +190,7 @@ async function fillChallengesReceived() {
 			li.textContent = `Of time control: ${elem.timeControlName}.`;
 			challengeDiv.appendChild(li);
 			//
-			if (elem.title != '') {
+			if (elem.title !== '') {
 				li = document.createElement('li') as HTMLLIElement;
 				li.className = 'challenge-items-nobullet';
 				li.textContent = `Of title: ${elem.title}.`;
@@ -275,7 +275,7 @@ async function fillChallengesSent() {
 		li.textContent = `Of time control: ${elem.timeControlName}.`;
 		challengeList.appendChild(li);
 		//
-		if (elem.title != '') {
+		if (elem.title !== '') {
 			li = document.createElement('li') as HTMLLIElement;
 			li.className = 'challenge-items-nobullet';
 			li.textContent = `Of title: ${elem.title}.`;
@@ -325,7 +325,7 @@ async function fillChallengesPendingResult() {
 				li.textContent = `Of time control: ${elem.timeControlName}.`;
 				header.appendChild(li);
 				//
-				if (elem.title != '') {
+				if (elem.title !== '') {
 					li = document.createElement('li') as HTMLLIElement;
 					li.className = 'challenge-items-nobullet';
 					li.textContent = `Of title: ${elem.title}.`;
@@ -476,7 +476,7 @@ async function fillChallengesConfirmResultOther() {
 			li.textContent = `Time control: ${elem.timeControlName}.`;
 			challengeList.appendChild(li);
 			//
-			if (elem.title != '') {
+			if (elem.title !== '') {
 				li = document.createElement('li') as HTMLLIElement;
 				li.className = 'challenge-items-nobullet';
 				li.textContent = `Of title: ${elem.title}.`;
@@ -529,7 +529,7 @@ async function fillChallengesConfirmResultSelf() {
 			li.textContent = `Time control: ${elem.timeControlName}.`;
 			confirmationDiv.appendChild(li);
 			//
-			if (elem.title != '') {
+			if (elem.title !== '') {
 				li = document.createElement('li') as HTMLLIElement;
 				li.className = 'challenge-items-nobullet';
 				li.textContent = `Of title: ${elem.title}.`;

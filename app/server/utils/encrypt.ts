@@ -159,5 +159,5 @@ export function isPasswordOfUserCorrect(
 ): boolean {
 	const decrypted = decryptPasswordForUser(password, actualPassword);
 	const interleave = interleaveStrings(username, password);
-	return decrypted == interleave;
+	return decrypted === interleave;
 }

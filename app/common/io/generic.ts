@@ -55,7 +55,7 @@ export function checkJsonKeys<Key extends string>(json: any, expectedKeys: reado
 		}
 	}
 
-	if (allKeys.length != expectedKeys.length) {
+	if (allKeys.length !== expectedKeys.length) {
 		debug(logNow(), `Expected '${expectedKeys.length}'; found '${allKeys.length}' instead.`);
 		return false;
 	}

@@ -56,20 +56,20 @@ export class Edge {
 
 	/// Merge two edges
 	merge(other: Edge): void {
-		if (this.neighbor != other.neighbor) {
+		if (this.neighbor !== other.neighbor) {
 			throw new Error(
 				`The current edge points to '${this.neighbor}' but the new edge points to '${other.neighbor}'.`
 			);
 		}
 
-		if (this.metadata != undefined && other.metadata != undefined) {
+		if (this.metadata !== undefined && other.metadata !== undefined) {
 			this.metadata.merge(other.metadata);
 		}
 	}
 
 	/// Is the metadata of this edge all zeroes?
 	isEmptyEdge(): boolean {
-		return this.metadata.numGamesDrawn == 0 && this.metadata.numGamesLost == 0 && this.metadata.numGamesWon == 0;
+		return this.metadata.numGamesDrawn === 0 && this.metadata.numGamesLost === 0 && this.metadata.numGamesWon === 0;
 	}
 }
 

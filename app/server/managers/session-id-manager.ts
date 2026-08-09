@@ -64,18 +64,18 @@ export class SessionIDManager {
 	}
 	indexSessionId(session: SessionId): number {
 		return searchLinearByKey(this.sessionIds, (s: SessionId): boolean => {
-			return s.token == session.token && s.username == session.username;
+			return s.token === session.token && s.username === session.username;
 		});
 	}
 	hasSessionId(session: SessionId): boolean {
-		return this.indexSessionId(session) != -1;
+		return this.indexSessionId(session) !== -1;
 	}
 	removeSessionId(idx: number): void {
 		this.sessionIds.splice(idx, 1);
 	}
 	removeUserSessions(username: PlayerPrivateId): void {
 		for (let i = this.sessionIds.length - 1; i >= 0; --i) {
-			if (this.sessionIds[i].username == username) {
+			if (this.sessionIds[i].username === username) {
 				this.removeSessionId(i);
 			}
 		}

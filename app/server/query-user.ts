@@ -226,7 +226,7 @@ export async function postQueryUserRanking(req: Request, res: Response) {
 		if (u1.rating < u2.rating) {
 			return 1;
 		}
-		if (u1.rating == u2.rating) {
+		if (u1.rating === u2.rating) {
 			return 0;
 		}
 		return -1;

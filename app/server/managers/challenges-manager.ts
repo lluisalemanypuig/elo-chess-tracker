@@ -75,7 +75,7 @@ export class ChallengesManager {
 	}
 	removeChallengeIndex(idx: number): void {
 		this.challenges.splice(idx, 1);
-		if (this.challenges.length == 0) {
+		if (this.challenges.length === 0) {
 			this.maxChallengeId = 0;
 		}
 	}
@@ -96,7 +96,7 @@ export class ChallengesManager {
 	}
 	getChallengeIndexById(id: ChallengeId): number {
 		for (let i = 0; i < this.challenges.length; ++i) {
-			if (this.challenges[i].id == id) {
+			if (this.challenges[i].id === id) {
 				return i;
 			}
 		}

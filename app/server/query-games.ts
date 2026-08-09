@@ -110,10 +110,10 @@ function filterGameList(
 			const inc = increment(g);
 
 			const result = ((): string => {
-				if (g.result == 'white_wins') {
+				if (g.result === 'white_wins') {
 					return '1 - 0';
 				}
-				if (g.result == 'black_wins') {
+				if (g.result === 'black_wins') {
 					return '0 - 1';
 				}
 				return '1/2 - 1/2';
@@ -181,7 +181,7 @@ export async function postQueryGameListOwn(req: Request, res: Response) {
 	};
 
 	let dataToReturn: QueryGamesListOutput = [];
-	if (timeControlId != '') {
+	if (timeControlId !== '') {
 		dataToReturn = filterGameList(
 			user,
 			timeControlId,
@@ -190,7 +190,7 @@ export async function postQueryGameListOwn(req: Request, res: Response) {
 				return (
 					searchByKey(gameRecordList, (r: GameNumber): number => {
 						return recordId.localeCompare(r.record);
-					}) != -1
+					}) !== -1
 				);
 			},
 			filterGameFunction
@@ -206,7 +206,7 @@ export async function postQueryGameListOwn(req: Request, res: Response) {
 					return (
 						searchByKey(gameRecordList, (r: GameNumber): number => {
 							return recordId.localeCompare(r.record);
-						}) != -1
+						}) !== -1
 					);
 				},
 				filterGameFunction
@@ -279,7 +279,7 @@ export async function postQueryGameListAll(req: Request, res: Response) {
 
 	let manager = UsersManager.getInstance();
 	let dataToReturn: QueryGamesListOutput = [];
-	if (timeControlId != '') {
+	if (timeControlId !== '') {
 		dataToReturn = filterGameList(
 			user,
 			timeControlId,

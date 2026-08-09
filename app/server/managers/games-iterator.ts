@@ -152,7 +152,7 @@ export class GamesIterator {
 	 */
 	nextGame(): void {
 		++this.gameIdx;
-		if (this.gameIdx == this.gameSet.length) {
+		if (this.gameIdx === this.gameSet.length) {
 			this.gameIdx = 0;
 			++this.recordIdx;
 			if (this.recordIdx < this.recordFilesList.length) {
@@ -239,14 +239,14 @@ export class GamesIterator {
 		this.recordIdx = searchByKey(this.recordFilesList, (s: DateMajor): number => {
 			return record.localeCompare(s);
 		});
-		if (this.recordIdx == -1) {
+		if (this.recordIdx === -1) {
 			this.recordIdx = this.recordFilesList.length;
 			return false;
 		}
 		this.loadCurrentRecord();
 		let found: boolean = false;
 		while (!found && !this.endRecordSingle()) {
-			if (this.getCurrentGame().id == id) {
+			if (this.getCurrentGame().id === id) {
 				found = true;
 			} else {
 				this.nextGame();

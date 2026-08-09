@@ -37,7 +37,7 @@ import { RatingFrameworkType } from '@common/models/rating-framework/rating-fram
  */
 export function initializeRatingFunctions(name: RatingFrameworkType): void {
 	let ratingSystem = RatingSystemManager.getInstance();
-	if (name == 'Elo') {
+	if (name === 'Elo') {
 		ratingSystem.setFunctions(EloPlayerVsPlayer, newRatingElo, ratingFromStringElo, ratingFromJsonElo);
 	}
 }

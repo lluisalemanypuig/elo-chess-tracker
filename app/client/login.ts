@@ -28,14 +28,14 @@ import { PlayerPrivateId } from '@common/models/player';
 async function logIntoWebpage(_event: any) {
 	// username box
 	const usernameBox = document.getElementById('username-box');
-	if (usernameBox == null) {
+	if (usernameBox === null) {
 		console.log("Element 'username-box' does not exist.");
 		return;
 	}
 
 	// password box
 	const passwordBox = document.getElementById('password-box');
-	if (passwordBox == null) {
+	if (passwordBox === null) {
 		console.log("Element 'password-box' does not exist.");
 		return;
 	}
@@ -43,7 +43,7 @@ async function logIntoWebpage(_event: any) {
 	const username = (usernameBox as HTMLInputElement).value as PlayerPrivateId;
 	const password = (passwordBox as HTMLInputElement).value as PlayerPrivateId;
 
-	if (username == '' || password == '') {
+	if (username === '' || password === '') {
 		return;
 	}
 
@@ -65,7 +65,7 @@ async function logIntoWebpage(_event: any) {
 }
 
 async function passwordBoxKeyDown(event: any) {
-	if (event.key == 'Enter') {
+	if (event.key === 'Enter') {
 		logIntoWebpage(event);
 	}
 }

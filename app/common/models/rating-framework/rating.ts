@@ -53,7 +53,7 @@ export class Rating {
 		this.drawn = drawn;
 		this.lost = lost;
 
-		if (this.numGames != this.won + this.drawn + this.lost) {
+		if (this.numGames !== this.won + this.drawn + this.lost) {
 			throw new Error(
 				`Consistency check: total number of games is not equal to the sum of won, drawn and lost. Total ${this.numGames}; Won: ${this.won}; Drawn: ${this.drawn}, Lost: ${this.lost}`
 			);

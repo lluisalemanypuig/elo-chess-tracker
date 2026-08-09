@@ -47,7 +47,7 @@ async function userWasChanged(_event: any) {
 	let usernameListInput = document.getElementById('username-list') as HTMLInputElement;
 	const usernameOption = document.querySelector('option[value="' + usernameListInput.value + '"]');
 
-	if (usernameOption != null) {
+	if (usernameOption !== null) {
 		const userId = (usernameOption as HTMLOptionElement).id;
 		const response = await serverCall(ROUTES.QUERY_USER_EDIT, { u: Number(userId) as PlayerPublicId });
 		if (response.status === 'Error') {

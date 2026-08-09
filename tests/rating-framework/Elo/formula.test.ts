@@ -239,7 +239,7 @@ describe('Series of games', () => {
 		let W = new EloRating(1500, 0, 0, 0, 0, 40, false);
 		let B = new EloRating(2000, 0, 0, 0, 0, 40, false);
 
-		while (W.K != 10) {
+		while (W.K !== 10) {
 			const game = new Game(
 				toGameId('01'),
 				'sample',

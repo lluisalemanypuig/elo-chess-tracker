@@ -56,17 +56,17 @@ export class GraphsManager {
 
 	addGraph(id: TimeControlId, g: Graph): void {
 		const idx = searchLinearByKey(this.graphList, (pair: [TimeControlId, Graph]): boolean => {
-			return pair[0] == id;
+			return pair[0] === id;
 		});
-		if (idx == -1) {
+		if (idx === -1) {
 			this.graphList.push([id, g]);
 		}
 	}
 
 	getGraph(id: TimeControlId): Graph | undefined {
 		const idx = searchLinearByKey(this.graphList, (pair: [TimeControlId, Graph]): boolean => {
-			return pair[0] == id;
+			return pair[0] === id;
 		});
-		return idx != -1 ? this.graphList[idx][1] : undefined;
+		return idx !== -1 ? this.graphList[idx][1] : undefined;
 	}
 }

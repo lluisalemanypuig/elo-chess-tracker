@@ -343,7 +343,7 @@ export function serverInitFromConfigurationFile(configurationFile: string): void
 export function serverInitFromParameters(args: string[]): void {
 	let configurationFile: string = '';
 	for (let i = 0; i < args.length; ++i) {
-		if (args[i] == 'configuration-file') {
+		if (args[i] === 'configuration-file') {
 			configurationFile = args[i + 1];
 			++i;
 		} else {
@@ -351,7 +351,7 @@ export function serverInitFromParameters(args: string[]): void {
 		}
 	}
 
-	if (configurationFile == '') {
+	if (configurationFile === '') {
 		debug(logNow(), 'Error: configuration file parameter is missing');
 		return;
 	}

@@ -51,7 +51,7 @@ function gameCompareDates(g: Game): Function {
 		if (g.when < g2.when) {
 			return -1;
 		}
-		if (g.when == g2.when) {
+		if (g.when === g2.when) {
 			return 0;
 		}
 		return 1;
@@ -104,8 +104,8 @@ function gameNew(
 	{
 		// get white's next game in the history
 		let next = gameNextOfPlayer(white, timeControlId, when);
-		if (next != null) {
-			if (next.white == white) {
+		if (next !== null) {
+			if (next.white === white) {
 				// white in this game is also white in the next game
 				whiteToAssign = next.whiteRating.clone();
 			} else {
@@ -125,8 +125,8 @@ function gameNew(
 	{
 		// get black's next game in the history
 		let next = gameNextOfPlayer(black, timeControlId, when);
-		if (next != null) {
-			if (next.white == black) {
+		if (next !== null) {
+			if (next.white === black) {
 				// white in this game is white in the next game
 				blackToAssign = next.whiteRating.clone();
 			} else {
@@ -259,7 +259,7 @@ function gameInsertInHistory(g: Game, recordId: DateMajor): void {
 	let gamesIter = new GamesIterator(gamesDir);
 
 	// the directory is completely empty
-	if (gamesIter.getAllRecords().length == 0) {
+	if (gamesIter.getAllRecords().length === 0) {
 		debug(logNow(), `There are no game record files for time control '${timeControlId}'.`);
 
 		fs.writeFileSync(gameRecordFile, JSON.stringify([g], null, 4));
@@ -369,7 +369,7 @@ export function gameFindById(gameId: GameId): Game | undefined {
 	const gamesDir = EnvironmentManager.getInstance().getDirGamesTimeControl(timeControlId);
 
 	let gamesIter = new GamesIterator(gamesDir);
-	if (gamesIter.getNumberOfRecords() == 0) {
+	if (gamesIter.getNumberOfRecords() === 0) {
 		throw new Error(`There are no game records in database for time control ${timeControlId}.`);
 	}
 
@@ -378,7 +378,7 @@ export function gameFindById(gameId: GameId): Game | undefined {
 		throw new Error(`There is no game record '${gameRecord}' in the database for time control ${timeControlId}.`);
 	}
 
-	while (!gamesIter.endRecordSingle() && gamesIter.getCurrentGame().id != gameId) {
+	while (!gamesIter.endRecordSingle() && gamesIter.getCurrentGame().id !== gameId) {
 		gamesIter.nextGameRecord();
 	}
 	if (gamesIter.endRecordSingle()) {
@@ -414,7 +414,7 @@ export function gameEditResult(gameId: GameId, newResult: GameResult): void {
 	const oldResult = game.result;
 
 	// avoid unnecessary work
-	if (oldResult == newResult) {
+	if (oldResult === newResult) {
 		return;
 	}
 
@@ -483,7 +483,7 @@ export function gameEditTitle(gameId: GameId, newTitle: string): void {
 	let game = gamesIter.getCurrentGame();
 
 	// avoid unnecessary work
-	if (game.title == newTitle) {
+	if (game.title === newTitle) {
 		return;
 	}
 
@@ -540,7 +540,7 @@ export function gameDelete(gameId: GameId): void {
 
 	// delete the current game in the record
 	gamesIter.deleteCurrentGame();
-	const recordIsEmpty = gamesIter.getCurrentGameArray().length == 0;
+	const recordIsEmpty = gamesIter.getCurrentGameArray().length === 0;
 
 	while (!gamesIter.endRecordList()) {
 		updateGameRecord(gamesIter, timeControlId, updatedPlayers, playerToIndex);

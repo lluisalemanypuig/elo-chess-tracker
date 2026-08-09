@@ -34,24 +34,24 @@ export const GameResultSchema = z.enum(['white_wins', 'black_wins', 'draw']);
 export type GameResult = z.infer<typeof GameResultSchema>;
 
 export function oppositeResult(res: GameResult): GameResult {
-	if (res == 'draw') {
+	if (res === 'draw') {
 		return 'draw';
 	}
-	if (res == 'white_wins') {
+	if (res === 'white_wins') {
 		return 'black_wins';
 	}
-	// res == "black_wins"
+	// res === "black_wins"
 	return 'white_wins';
 }
 
 export function resultFromTextToValue(text: string): GameResult | undefined {
-	if (text == '1 - 0') {
+	if (text === '1 - 0') {
 		return 'white_wins';
 	}
-	if (text == '1/2 - 1/2') {
+	if (text === '1/2 - 1/2') {
 		return 'draw';
 	}
-	if (text == '0 - 1') {
+	if (text === '0 - 1') {
 		return 'black_wins';
 	}
 	return undefined;
@@ -155,6 +155,6 @@ export class Game {
 
 	/// Is user 'username' in this game?
 	isUserInvolved(username: PlayerPrivateId): boolean {
-		return this.white == username || this.black == username;
+		return this.white === username || this.black === username;
 	}
 }

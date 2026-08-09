@@ -149,7 +149,7 @@ export class Graph {
 			throw new Error(`Player '${w}' does not have any outgoing edge, and so no edge to '${b}'.`);
 		}
 		Graph.deleteFromList(w, b, result, wOutList);
-		if (wOutList.length == 0) {
+		if (wOutList.length === 0) {
 			this.adjacencyList.delete(w);
 		}
 
@@ -159,7 +159,7 @@ export class Graph {
 			throw new Error(`Player '${b}' does not have any ingoing edge, and so no edge from '${w}'.`);
 		}
 		Graph.deleteFromList(b, w, oppositeResult(result), bInList);
-		if (bInList.length == 0) {
+		if (bInList.length === 0) {
 			this.inAdjacencyList.delete(b);
 		}
 	}
@@ -180,7 +180,7 @@ export class Graph {
 		const bIdx = searchByKey(wList, function (e: Edge): number {
 			return v.localeCompare(e.neighbor);
 		});
-		return bIdx == -1 ? undefined : wList[bIdx].metadata;
+		return bIdx === -1 ? undefined : wList[bIdx].metadata;
 	}
 	/**
 	 * @brief The weight of edge (u,v) when 'u' plays as black.
@@ -198,7 +198,7 @@ export class Graph {
 		const vIdx = searchByKey(uList, function (e: Edge): number {
 			return v.localeCompare(e.neighbor);
 		});
-		return vIdx == -1 ? undefined : uList[vIdx].metadata;
+		return vIdx === -1 ? undefined : uList[vIdx].metadata;
 	}
 
 	private changeGameResultList(
@@ -211,21 +211,21 @@ export class Graph {
 		const bIdx = searchByKey(NU, function (e: Edge): number {
 			return v.localeCompare(e.neighbor);
 		});
-		if (bIdx == -1) {
+		if (bIdx === -1) {
 			throw new Error(`The edge from '${u}' to '${v}' does not exist.`);
 		}
 
-		if (oldRes == 'white_wins') {
+		if (oldRes === 'white_wins') {
 			--NU[bIdx].metadata.numGamesWon;
-		} else if (oldRes == 'draw') {
+		} else if (oldRes === 'draw') {
 			--NU[bIdx].metadata.numGamesDrawn;
 		} else {
 			--NU[bIdx].metadata.numGamesLost;
 		}
 
-		if (newRes == 'white_wins') {
+		if (newRes === 'white_wins') {
 			++NU[bIdx].metadata.numGamesWon;
-		} else if (newRes == 'draw') {
+		} else if (newRes === 'draw') {
 			++NU[bIdx].metadata.numGamesDrawn;
 		} else {
 			++NU[bIdx].metadata.numGamesLost;
@@ -240,7 +240,7 @@ export class Graph {
 	 * @param b Black player.
 	 * @param oldRes Original result of the game.
 	 * @param newRes New result of the game.
-	 * @pre @e oldRes != @e newResult.
+	 * @pre @e oldRes !== @e newResult.
 	 */
 	changeGameResult(w: PlayerPrivateId, b: PlayerPrivateId, oldRes: GameResult, newRes: GameResult): void {
 		const wList = this.adjacencyList.get(w);

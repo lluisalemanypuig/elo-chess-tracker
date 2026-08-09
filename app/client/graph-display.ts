@@ -52,7 +52,7 @@ function weightEdge(weight: EdgeWeight): number {
 }
 
 function normalize(v: number, min: number, max: number): number {
-	if (max == min) {
+	if (max === min) {
 		return 1;
 	}
 	return (v - min) / (max - min);
@@ -82,16 +82,16 @@ async function loadGraph() {
 	const selectTimeControl = document.getElementById('select-time-control') as HTMLSelectElement;
 	const timeControlId = selectTimeControl.options[selectTimeControl.selectedIndex].value as TimeControlId;
 
-	if (timeControlId == '') {
+	if (timeControlId === '') {
 		return;
 	}
 
 	const val = document.getElementById('graph-viewer')?.getAttribute('value');
 	const queryToServer: Route = (() => {
-		if (val == 'full') {
+		if (val === 'full') {
 			return ROUTES.QUERY_GRAPH_FULL;
 		}
-		if (val == 'own') {
+		if (val === 'own') {
 			return ROUTES.QUERY_GRAPH_OWN;
 		}
 		throw new Error(`Wrong value for page configuration ${val}`);
@@ -159,11 +159,11 @@ function colorPickerNodeChanged(_event: any) {
 	const option = selectNodeColor.options[selectNodeColor.selectedIndex].value;
 	const colorPickerNode = document.getElementById('color-picker-node') as HTMLInputElement;
 
-	if (option == 'fixed') {
+	if (option === 'fixed') {
 		for (const node of graphData.nodes) {
 			serverGraph.setNodeAttribute(node.id, 'color', colorPickerNode.value);
 		}
-	} else if (option == 'dynamicRating') {
+	} else if (option === 'dynamicRating') {
 		const colorInterpolator = scaleLinear<string>()
 			.domain([0, 1])
 			.interpolate(interpolateRgb)
@@ -197,12 +197,12 @@ function colorPickerEdgeChanged(_event: any) {
 	const option = selectNodeColor.options[selectNodeColor.selectedIndex].value;
 	const colorPickerNode = document.getElementById('color-picker-edge') as HTMLInputElement;
 
-	if (option == 'fixed') {
+	if (option === 'fixed') {
 		const color = colorPickerNode.value;
 		for (const edge of graphData.edges) {
 			serverGraph.setEdgeAttribute(edge.source, edge.target, 'color', color);
 		}
-	} else if (option == 'dynamicGames') {
+	} else if (option === 'dynamicGames') {
 		const colorInterpolator = scaleLinear<string>()
 			.domain([0, 1])
 			.interpolate(interpolateRgb)
@@ -211,14 +211,14 @@ function colorPickerEdgeChanged(_event: any) {
 		for (const edge of graphData.edges) {
 			const numGames = edge.weight.wins + edge.weight.draws + edge.weight.losses;
 			let k: number;
-			if (numGames == minGames && numGames == maxGames) {
+			if (numGames === minGames && numGames === maxGames) {
 				k = 1;
 			} else {
 				k = normalize(numGames, minGames, maxGames);
 			}
 			serverGraph.setEdgeAttribute(edge.source, edge.target, 'color', colorInterpolator(k));
 		}
-	} else if (option == 'dynamicResults') {
+	} else if (option === 'dynamicResults') {
 		const colorInterpolator = scaleLinear<string>()
 			.domain([0, 1])
 			.interpolate(interpolateRgb)
@@ -227,7 +227,7 @@ function colorPickerEdgeChanged(_event: any) {
 		for (const edge of graphData.edges) {
 			const edgeW = weightEdge(edge.weight);
 			let k: number;
-			if (edgeW == minEdgeWeight && edgeW == maxEdgeWeight) {
+			if (edgeW === minEdgeWeight && edgeW === maxEdgeWeight) {
 				k = 1;
 			} else {
 				k = normalize(edgeW, minEdgeWeight, maxEdgeWeight);
@@ -256,11 +256,11 @@ function sizePickerNodeChanged(_event: any) {
 	const option = selectNodeSize.options[selectNodeSize.selectedIndex].value;
 	const sizePickerNode = document.getElementById('size-picker-node') as HTMLInputElement;
 
-	if (option == 'fixed') {
+	if (option === 'fixed') {
 		for (const node of graphData.nodes) {
 			serverGraph.setNodeAttribute(node.id, 'size', sizePickerNode.value);
 		}
-	} else if (option == 'dynamicRating') {
+	} else if (option === 'dynamicRating') {
 		const M = parseInt(sizePickerNode.value);
 		for (const node of graphData.nodes) {
 			const r = node.weight.rating;
@@ -289,17 +289,17 @@ function sizePickerEdgeChanged(_event: any) {
 	const sizePickerNode = document.getElementById('size-picker-edge') as HTMLInputElement;
 	const M = parseInt(sizePickerNode.value);
 
-	if (option == 'fixed') {
+	if (option === 'fixed') {
 		for (const edge of graphData.edges) {
 			serverGraph.setEdgeAttribute(edge.source, edge.target, 'size', sizePickerNode.value);
 		}
-	} else if (option == 'dynamicGames') {
+	} else if (option === 'dynamicGames') {
 		for (const edge of graphData.edges) {
 			const numGames = edge.weight.wins + edge.weight.draws + edge.weight.losses;
 			const k = M * (1 + normalize(numGames, minGames, maxGames));
 			serverGraph.setEdgeAttribute(edge.source, edge.target, 'size', k);
 		}
-	} else if (option == 'dynamicResults') {
+	} else if (option === 'dynamicResults') {
 		for (const edge of graphData.edges) {
 			const edgeW = weightEdge(edge.weight);
 			const k: number = M * (1 + normalize(edgeW, minEdgeWeight, maxEdgeWeight));

@@ -114,10 +114,10 @@ function retrieveGraphUser(username: PlayerPrivateId, timeControlId: TimeControl
 		const neighborPublicId = users.getUserPublicIdAt(neighborIdx) as PlayerPublicId;
 
 		const idx = searchLinearByKey(listNodes, (i: NodeInfo): boolean => {
-			return i.id == neighborPublicId;
+			return i.id === neighborPublicId;
 		});
 
-		if (idx == -1) {
+		if (idx === -1) {
 			const edgeUser = users.getUserAt(neighborIdx) as User;
 
 			const node: NodeInfo = {

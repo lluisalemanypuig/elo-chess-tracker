@@ -65,7 +65,7 @@ export async function getQueryChallengeReceived(req: Request, res: Response) {
 
 	// challenges to be returned
 	const toReturn = getChallengesBy((c: Challenge): boolean => {
-		if (c.sentTo != session.username) {
+		if (c.sentTo !== session.username) {
 			return false;
 		}
 		if (isDefined(c.whenChallengeAccepted)) {
@@ -120,7 +120,7 @@ export async function getQueryChallengeSent(req: Request, res: Response) {
 
 	// challenges to be returned
 	const toReturn = getChallengesBy((c: Challenge): boolean => {
-		if (c.sentBy != session.username) {
+		if (c.sentBy !== session.username) {
 			return false;
 		}
 		if (isDefined(c.whenChallengeAccepted)) {
@@ -181,7 +181,7 @@ export async function getQueryChallengePendingResult(req: Request, res: Response
 	// challenges to be returned
 	const toReturn = getChallengesBy((c: Challenge): boolean => {
 		// this user must be involved in the challenge
-		if (c.sentBy != session.username && c.sentTo != session.username) {
+		if (c.sentBy !== session.username && c.sentTo !== session.username) {
 			return false;
 		}
 		// must have been accepted
@@ -214,7 +214,7 @@ export async function getQueryChallengePendingResult(req: Request, res: Response
 		}
 
 		const opponent = ((): UserGivenName => {
-			if (userSentBy.username == session.username) {
+			if (userSentBy.username === session.username) {
 				return userSentTo.getFullName();
 			}
 			return userSentBy.getFullName();
@@ -258,7 +258,7 @@ export async function getQueryChallengeConfirmResultOther(req: Request, res: Res
 	// challenges to be returned
 	const toReturn = getChallengesBy((c: Challenge): boolean => {
 		// this user must be involved in the challenge
-		if (c.sentBy != session.username && c.sentTo != session.username) {
+		if (c.sentBy !== session.username && c.sentTo !== session.username) {
 			return false;
 		}
 		// must have been accepted
@@ -270,7 +270,7 @@ export async function getQueryChallengeConfirmResultOther(req: Request, res: Res
 			return false;
 		}
 		// result should have been set by this user
-		if (c.resultSetBy != session.username) {
+		if (c.resultSetBy !== session.username) {
 			return false;
 		}
 		return true;
@@ -301,17 +301,17 @@ export async function getQueryChallengeConfirmResultOther(req: Request, res: Res
 		}
 
 		const opponent = ((): UserGivenName => {
-			if (userSentBy.username == session.username) {
+			if (userSentBy.username === session.username) {
 				return userSentTo.getFullName();
 			}
 			return userSentBy.getFullName();
 		})();
 
 		const niceResult: string = ((): string => {
-			if (c.result == 'white_wins') {
+			if (c.result === 'white_wins') {
 				return 'White wins';
 			}
-			if (c.result == 'black_wins') {
+			if (c.result === 'black_wins') {
 				return 'Black wins';
 			}
 			return 'Draw';
@@ -354,7 +354,7 @@ export async function getQueryChallengeConfirmResultSelf(req: Request, res: Resp
 	// challenges to be returned
 	const toReturn = getChallengesBy((c: Challenge): boolean => {
 		// this user must be involved in the challenge
-		if (c.sentBy != session.username && c.sentTo != session.username) {
+		if (c.sentBy !== session.username && c.sentTo !== session.username) {
 			return false;
 		}
 		// must have been accepted
@@ -366,7 +366,7 @@ export async function getQueryChallengeConfirmResultSelf(req: Request, res: Resp
 			return false;
 		}
 		// result should NOT have been set by this user
-		if (c.resultSetBy == session.username) {
+		if (c.resultSetBy === session.username) {
 			return false;
 		}
 		return true;
@@ -397,17 +397,17 @@ export async function getQueryChallengeConfirmResultSelf(req: Request, res: Resp
 		}
 
 		const opponent = ((): UserGivenName => {
-			if (userSentBy.username == session.username) {
+			if (userSentBy.username === session.username) {
 				return userSentTo.getFullName();
 			}
 			return userSentBy.getFullName();
 		})();
 
 		const niceResult: string = ((): string => {
-			if (c.result == 'white_wins') {
+			if (c.result === 'white_wins') {
 				return 'White wins';
 			}
-			if (c.result == 'black_wins') {
+			if (c.result === 'black_wins') {
 				return 'Black wins';
 			}
 			return 'Draw';

@@ -65,11 +65,11 @@ async function submitNewGame(_event: any) {
 		return;
 	}
 
-	if (inputGameDate.value == '') {
+	if (inputGameDate.value === '') {
 		alert('Invalid date');
 		return;
 	}
-	if (inputGameTime.value == '') {
+	if (inputGameTime.value === '') {
 		alert('Invalid time');
 		return;
 	}
@@ -92,10 +92,10 @@ async function submitNewGame(_event: any) {
 	const timeCreated = toDateMinor(
 		inputGameTime.value +
 			':' +
-			(randSec.length == 1 ? '0' : '') +
+			(randSec.length === 1 ? '0' : '') +
 			randSec +
 			':' +
-			(randMilli.length == 1 ? '00' : randMilli.length == 2 ? '0' : '') +
+			(randMilli.length === 1 ? '00' : randMilli.length === 2 ? '0' : '') +
 			randMilli
 	);
 

@@ -38,7 +38,7 @@ export function shuffle<T>(array: T[]): void {
 	let rndIdx = 0;
 
 	// While there remain elements to shuffle.
-	while (curIdx != 0) {
+	while (curIdx !== 0) {
 		// Pick a remaining element
 		rndIdx = Math.floor(Math.random() * curIdx);
 		curIdx--;

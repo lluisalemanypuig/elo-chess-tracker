@@ -138,9 +138,9 @@ export class User extends Player {
 	 */
 	getGames(id: TimeControlId): GameNumber[] {
 		const idx = searchLinearByKey(this.games, (v: TimeControlGame): boolean => {
-			return v.timeControl == id;
+			return v.timeControl === id;
 		});
-		if (idx == -1) {
+		if (idx === -1) {
 			throw new Error(`Rating with id '${id}' does not exist!`);
 		}
 		return this.games[idx].records;
@@ -155,9 +155,9 @@ export class User extends Player {
 	 */
 	addGame(id: TimeControlId, gameRecord: DateMajor): void {
 		const idx = searchLinearByKey(this.games, (p: TimeControlGame): boolean => {
-			return p.timeControl == id;
+			return p.timeControl === id;
 		});
-		if (idx == -1) {
+		if (idx === -1) {
 			throw new Error(`User does not have time control id '${id}'`);
 		}
 
@@ -173,23 +173,23 @@ export class User extends Player {
 
 	deleteGame(id: TimeControlId, gameRecord: DateMajor): void {
 		const idx = searchLinearByKey(this.games, (p: TimeControlGame): boolean => {
-			return p.timeControl == id;
+			return p.timeControl === id;
 		});
-		if (idx == -1) {
+		if (idx === -1) {
 			throw new Error(`User does not have time control id '${id}'`);
 		}
 
 		const index = searchByKey(this.games[idx].records, (s: GameNumber): number => {
 			return gameRecord.localeCompare(s.record);
 		});
-		if (index == -1) {
+		if (index === -1) {
 			throw new Error(
 				`User '${this.username}' does not have game record '${gameRecord}' in time control '${id}': '${this.games[idx].records}'.`
 			);
 		}
 
 		this.games[idx].records[index].amount -= 1;
-		if (this.games[idx].records[index].amount == 0) {
+		if (this.games[idx].records[index].amount === 0) {
 			this.games[idx].records.splice(index, 1);
 		}
 	}
@@ -204,7 +204,7 @@ export class User extends Player {
 			const actions_from_role = role_to_action.getActionsRole(r);
 
 			for (const action of actions_from_role) {
-				if (actions.indexOf(action) == -1) {
+				if (actions.indexOf(action) === -1) {
 					actions.push(action);
 				}
 			}
@@ -235,7 +235,7 @@ export class User extends Player {
 	 * @pre Usernames are equal
 	 */
 	copyPlayerData(p: Player): void {
-		if (this.username != p.username) {
+		if (this.username !== p.username) {
 			throw new Error(`Trying to dump data of user ${p.username} into a different player ${this.username}`);
 		}
 

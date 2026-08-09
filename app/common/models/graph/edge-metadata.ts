@@ -66,9 +66,9 @@ export class EdgeMetadata {
 
 	static fromResult(result: GameResult): EdgeMetadata {
 		return new EdgeMetadata(
-			result == 'white_wins' ? 1 : 0,
-			result == 'draw' ? 1 : 0,
-			result == 'black_wins' ? 1 : 0
+			result === 'white_wins' ? 1 : 0,
+			result === 'draw' ? 1 : 0,
+			result === 'black_wins' ? 1 : 0
 		);
 	}
 
@@ -84,9 +84,9 @@ export class EdgeMetadata {
 	}
 
 	decrease(res: GameResult): void {
-		if (res == 'white_wins') {
+		if (res === 'white_wins') {
 			this.numGamesWon -= 1;
-		} else if (res == 'draw') {
+		} else if (res === 'draw') {
 			this.numGamesDrawn -= 1;
 		} else {
 			this.numGamesLost -= 1;
@@ -94,7 +94,7 @@ export class EdgeMetadata {
 	}
 
 	allZero(): boolean {
-		return this.numGamesDrawn == 0 && this.numGamesLost == 0 && this.numGamesWon == 0;
+		return this.numGamesDrawn === 0 && this.numGamesLost === 0 && this.numGamesWon === 0;
 	}
 
 	static empty(): EdgeMetadata {

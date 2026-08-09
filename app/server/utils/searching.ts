@@ -30,7 +30,7 @@ Contact:
  */
 export function searchLinear<T>(arr: T[], x: T): number {
 	return searchLinearByKey(arr, (y: T): boolean => {
-		return x == y;
+		return x === y;
 	});
 }
 
@@ -61,7 +61,7 @@ export function search<T>(arr: T[], x: T): number {
 		if (x < e) {
 			return -1;
 		}
-		if (x == e) {
+		if (x === e) {
 			return 0;
 		}
 		return 1;
@@ -87,8 +87,8 @@ export function searchByKey<T>(arr: T[], F: Function): number {
 		const m: number = Math.floor((i + j) / 2);
 
 		const comp = F(arr[m]);
-		const isEqual = comp == 0;
-		const isLessThan = comp == -1;
+		const isEqual = comp === 0;
+		const isLessThan = comp === -1;
 
 		if (isEqual) {
 			return m;
@@ -99,7 +99,7 @@ export function searchByKey<T>(arr: T[], F: Function): number {
 			i = m + 1;
 		}
 	}
-	if (i == j && F(arr[i]) == 0) {
+	if (i === j && F(arr[i]) === 0) {
 		return i;
 	}
 	return -1;
@@ -122,7 +122,7 @@ export function whereShouldBeInserted<T>(arr: T[], x: T): [number, boolean] {
 		if (x < e) {
 			return -1;
 		}
-		if (x == e) {
+		if (x === e) {
 			return 0;
 		}
 		return 1;
@@ -145,7 +145,7 @@ export function whereShouldBeInserted<T>(arr: T[], x: T): [number, boolean] {
  * 'search(arr, x, F)' returns false.
  */
 export function whereShouldBeInsertedByKey<T>(arr: T[], F: Function): [number, boolean] {
-	if (arr.length == 0) {
+	if (arr.length === 0) {
 		return [1, false];
 	}
 
@@ -155,8 +155,8 @@ export function whereShouldBeInsertedByKey<T>(arr: T[], F: Function): [number, b
 		const m: number = Math.floor((i + j) / 2);
 
 		const comp = F(arr[m]);
-		const isEqual = comp == 0;
-		const isLessThan = comp == -1;
+		const isEqual = comp === 0;
+		const isLessThan = comp === -1;
 
 		if (isEqual) {
 			return [m, true];
@@ -169,8 +169,8 @@ export function whereShouldBeInsertedByKey<T>(arr: T[], F: Function): [number, b
 	}
 
 	const comp = F(arr[i]);
-	const isEqual = comp == 0;
-	const isLessThan = comp == -1;
+	const isEqual = comp === 0;
+	const isLessThan = comp === -1;
 
 	if (isEqual) {
 		return [i, true];

@@ -87,15 +87,15 @@ export class UsersManager {
 
 	getUserByUsername(username: PlayerPrivateId): User | undefined {
 		const idx = searchLinearByKey(this.users, (u: User): boolean => {
-			return u.username == username;
+			return u.username === username;
 		});
-		return idx != -1 ? this.getUserAt(idx) : undefined;
+		return idx !== -1 ? this.getUserAt(idx) : undefined;
 	}
 	getUserByPublicId(rid: PlayerPublicId): User | undefined {
 		const idx = searchLinearByKey(this.public_ids, (id: PlayerPublicId): boolean => {
-			return id == rid;
+			return id === rid;
 		});
-		return idx != -1 ? this.getUserAt(idx) : undefined;
+		return idx !== -1 ? this.getUserAt(idx) : undefined;
 	}
 
 	getUserAt(idx: number): User | undefined {
@@ -110,9 +110,9 @@ export class UsersManager {
 	}
 	getUserIndexByUsername(username: PlayerPrivateId): number | undefined {
 		const idx = searchLinearByKey(this.users, (u: User): boolean => {
-			return u.username == username;
+			return u.username === username;
 		});
-		return idx != -1 ? idx : undefined;
+		return idx !== -1 ? idx : undefined;
 	}
 
 	numUsers(): number {

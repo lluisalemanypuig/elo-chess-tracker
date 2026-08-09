@@ -29,7 +29,7 @@ async function buttonSubmitClicked() {
 	let boxNewPassword = document.getElementById('box-new-password') as HTMLInputElement;
 	let boxRepeatPassword = document.getElementById('box-repeat-password') as HTMLInputElement;
 
-	if (boxNewPassword.value != boxRepeatPassword.value) {
+	if (boxNewPassword.value !== boxRepeatPassword.value) {
 		alert('The passwords must coincide');
 		return;
 	}

@@ -29,7 +29,7 @@ async function fillRanking(_event: any) {
 	const selectTimeControl = document.getElementById('select-time-control') as HTMLSelectElement;
 	const timeControlId = selectTimeControl.options[selectTimeControl.selectedIndex].value as TimeControlId;
 
-	if (timeControlId == '') {
+	if (timeControlId === '') {
 		return;
 	}
 
@@ -65,7 +65,7 @@ async function fillRanking(_event: any) {
 			newTbody.appendChild(row);
 		}
 
-		if (oldTbody.parentNode != undefined) {
+		if (oldTbody.parentNode !== undefined) {
 			oldTbody.parentNode.replaceChild(newTbody, oldTbody);
 		}
 	}
@@ -87,7 +87,7 @@ async function fillRanking(_event: any) {
 			newTbody.appendChild(row);
 		}
 
-		if (oldTbody.parentNode != undefined) {
+		if (oldTbody.parentNode !== undefined) {
 			oldTbody.parentNode.replaceChild(newTbody, oldTbody);
 		}
 	}

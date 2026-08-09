@@ -60,7 +60,7 @@ describe('Any function tests', () => {
 		const array: number[] = [];
 		expect(
 			any(array, (i: number): boolean => {
-				return i % 2 == 0;
+				return i % 2 === 0;
 			})
 		).toBe(false);
 	});
@@ -69,7 +69,7 @@ describe('Any function tests', () => {
 		const array: number[] = [1, 3, 5, 7, 9];
 		expect(
 			any(array, (i: number): boolean => {
-				return i % 2 == 0;
+				return i % 2 === 0;
 			})
 		).toBe(false);
 		expect(
@@ -83,7 +83,7 @@ describe('Any function tests', () => {
 		const array: number[] = [1, 3, 5, 7, 9];
 		expect(
 			any(array, (i: number): boolean => {
-				return i % 2 == 1;
+				return i % 2 === 1;
 			})
 		).toBe(true);
 		expect(

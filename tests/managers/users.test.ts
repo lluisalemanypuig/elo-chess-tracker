@@ -351,7 +351,7 @@ describe('Create users', () => {
 		expect(
 			all_users
 				.map((u: User): boolean => {
-					return u.ratings.length == 4;
+					return u.ratings.length === 4;
 				})
 				.reduce((pre: boolean, cur: boolean): boolean => {
 					return pre && cur;
@@ -371,7 +371,7 @@ describe('Create users', () => {
 		expect(
 			all_users
 				.map((u: User): boolean => {
-					return u.ratings.length == 4;
+					return u.ratings.length === 4;
 				})
 				.reduce((pre: boolean, cur: boolean): boolean => {
 					return pre && cur;

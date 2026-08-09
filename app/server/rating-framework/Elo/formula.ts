@@ -89,19 +89,19 @@ export function EloPlayerVsPlayer(game: Game): [EloRating, EloRating] {
 	const result = game.result;
 
 	let exp_score_a = getExpScore(whiteRating.rating, blackRating.rating);
-	if (result == 'white_wins') {
+	if (result === 'white_wins') {
 		whiteRating.rating += ratingAdjustment(whiteRating.K, 1, exp_score_a);
 		blackRating.rating += ratingAdjustment(blackRating.K, 0, 1 - exp_score_a);
 
 		whiteRating.won += 1;
 		blackRating.lost += 1;
-	} else if (result == 'black_wins') {
+	} else if (result === 'black_wins') {
 		whiteRating.rating += ratingAdjustment(whiteRating.K, 0, exp_score_a);
 		blackRating.rating += ratingAdjustment(blackRating.K, 1, 1 - exp_score_a);
 
 		whiteRating.lost += 1;
 		blackRating.won += 1;
-	} else if (result == 'draw') {
+	} else if (result === 'draw') {
 		whiteRating.rating += ratingAdjustment(whiteRating.K, 0.5, exp_score_a);
 		blackRating.rating += ratingAdjustment(blackRating.K, 0.5, 1 - exp_score_a);
 

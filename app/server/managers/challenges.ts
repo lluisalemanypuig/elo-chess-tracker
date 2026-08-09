@@ -122,7 +122,7 @@ export function challengeAccept(c: Challenge, { by, when }: ChallengeAccept): vo
 		debug(logNow(), `Player '${by}' is not part of this challenge.`);
 		throw new Error(`You cannot disagree to this result.`);
 	}
-	if (by != c.sentTo) {
+	if (by !== c.sentTo) {
 		throw new Error('You cannot accept this challenge');
 	}
 
@@ -150,7 +150,7 @@ export function challengeDecline(c: Challenge, { by }: ChallengeDecline): void {
 		debug(logNow(), `Player '${by}' is not part of this challenge.`);
 		throw new Error(`You cannot disagree to this result.`);
 	}
-	if (by != c.sentTo) {
+	if (by !== c.sentTo) {
 		throw new Error('You cannot decline this challenge');
 	}
 
@@ -179,7 +179,7 @@ export function challengeSetResult(c: Challenge, { by, when, white, black, resul
 		throw new Error(`You cannot disagree to this result.`);
 	}
 	const originalSetter = c.resultSetBy;
-	if (originalSetter != undefined && originalSetter != by) {
+	if (originalSetter !== undefined && originalSetter !== by) {
 		debug(
 			logNow(),
 			`User '${by}' is trying to override the result of challenge '${c.id}' which was set by '${originalSetter} on '${c.whenResultSet}'`
@@ -191,11 +191,11 @@ export function challengeSetResult(c: Challenge, { by, when, white, black, resul
 		debug(logNow(), `White '${white}' and Black '${black}' cannot be the same player.`);
 		throw new Error('White and Black cannot be the same players.');
 	}
-	if (white != c.sentBy && white != c.sentTo) {
+	if (white !== c.sentBy && white !== c.sentTo) {
 		debug(logNow(), `White '${white}' is not part of challenge '${c.id}'.`);
 		throw new Error(`Wrong player data.`);
 	}
-	if (black != c.sentBy && black != c.sentTo) {
+	if (black !== c.sentBy && black !== c.sentTo) {
 		debug(logNow(), `Black '${black}' is not part of challenge '${c.id}'.`);
 		throw new Error(`Wrong player data.`);
 	}
@@ -263,7 +263,7 @@ export function challengeAgreeResult(c: Challenge, { by, when }: ChallengeAgreeR
 
 	const randMilli = `${Math.floor(Math.random() * 999)}`;
 	const date = toDateMinor(
-		split[1] + ':' + (randMilli.length == 1 ? '00' : randMilli.length == 2 ? '0' : '') + randMilli
+		split[1] + ':' + (randMilli.length === 1 ? '00' : randMilli.length === 2 ? '0' : '') + randMilli
 	);
 	gameAddNew(c.title, white, black, c.result, c.timeControlId, c.timeControlName, split[0], date);
 

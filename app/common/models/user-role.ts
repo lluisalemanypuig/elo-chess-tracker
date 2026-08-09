@@ -63,16 +63,16 @@ export function isRoleStringCorrect(r: string): boolean {
 }
 
 export function stringToRole(r: string): UserRole | undefined {
-	if (r == ADMIN) {
+	if (r === ADMIN) {
 		return ADMIN;
 	}
-	if (r == TEACHER) {
+	if (r === TEACHER) {
 		return TEACHER;
 	}
-	if (r == MEMBER) {
+	if (r === MEMBER) {
 		return MEMBER;
 	}
-	if (r == STUDENT) {
+	if (r === STUDENT) {
 		return STUDENT;
 	}
 	return undefined;

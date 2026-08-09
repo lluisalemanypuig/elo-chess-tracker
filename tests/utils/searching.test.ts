@@ -141,17 +141,17 @@ describe('Searching in an array of structs -- locate an element', () => {
 
 		expect(
 			searchLinearByKey(arr, (p: pair): boolean => {
-				return p.name == 'A';
+				return p.name === 'A';
 			})
 		).toBe(-1);
 		expect(
 			searchLinearByKey(arr, (p: pair): boolean => {
-				return p.name == 'B';
+				return p.name === 'B';
 			})
 		).toBe(-1);
 		expect(
 			searchLinearByKey(arr, (p: pair): boolean => {
-				return p.name == 'C';
+				return p.name === 'C';
 			})
 		).toBe(-1);
 	});
@@ -229,68 +229,68 @@ describe('Searching in an array of structs -- locate an element', () => {
 
 		expect(
 			searchLinearByKey(arr, (p: pair): boolean => {
-				return p.name == 'A';
+				return p.name === 'A';
 			})
 		).toBe(0);
 		expect(
 			searchLinearByKey(arr, (p: pair): boolean => {
-				return p.name == 'B';
+				return p.name === 'B';
 			})
 		).toBe(1);
 		expect(
 			searchLinearByKey(arr, (p: pair): boolean => {
-				return p.name == 'C';
+				return p.name === 'C';
 			})
 		).toBe(2);
 		expect(
 			searchLinearByKey(arr, (p: pair): boolean => {
-				return p.name == 'D';
+				return p.name === 'D';
 			})
 		).toBe(3);
 		expect(
 			searchLinearByKey(arr, (p: pair): boolean => {
-				return p.name == 'M';
+				return p.name === 'M';
 			})
 		).toBe(4);
 		expect(
 			searchLinearByKey(arr, (p: pair): boolean => {
-				return p.name == 'Z';
+				return p.name === 'Z';
 			})
 		).toBe(5);
 
 		expect(
 			searchLinearByKey(arr, (p: pair): boolean => {
-				return p.name == 'a';
+				return p.name === 'a';
 			})
 		).toBe(-1);
 		expect(
 			searchLinearByKey(arr, (p: pair): boolean => {
-				return p.name == 'E';
+				return p.name === 'E';
 			})
 		).toBe(-1);
 		expect(
 			searchLinearByKey(arr, (p: pair): boolean => {
-				return p.name == 'F';
+				return p.name === 'F';
 			})
 		).toBe(-1);
 		expect(
 			searchLinearByKey(arr, (p: pair): boolean => {
-				return p.name == 'G';
+				return p.name === 'G';
 			})
 		).toBe(-1);
 		expect(
 			searchLinearByKey(arr, (p: pair): boolean => {
-				return p.name == 'H';
+				return p.name === 'H';
 			})
 		).toBe(-1);
 		expect(
 			searchLinearByKey(arr, (p: pair): boolean => {
-				return p.name == 'Q';
+				return p.name === 'Q';
 			})
 		).toBe(-1);
 		expect(
 			searchLinearByKey(arr, (p: pair): boolean => {
-				return p.name == 'z';
+				return p.name === 'z';
 			})
 		).toBe(-1);
 	});

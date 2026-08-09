@@ -79,23 +79,23 @@ async function submitNewUserClicked(_event: any) {
 
 	const password = passwordBox.value;
 
-	if (username == '') {
+	if (username === '') {
 		alert('Missing username');
 		return;
 	}
-	if (firstname == '') {
+	if (firstname === '') {
 		alert('Missing first name');
 		return;
 	}
-	if (lastname == '') {
+	if (lastname === '') {
 		alert('Missing last name');
 		return;
 	}
-	if (selectedRoles.length == 0) {
+	if (selectedRoles.length === 0) {
 		alert('Missing roles');
 		return;
 	}
-	if (password == '') {
+	if (password === '') {
 		alert('Missing password');
 		return;
 	}
