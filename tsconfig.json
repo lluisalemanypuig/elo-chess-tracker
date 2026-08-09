@@ -34,7 +34,7 @@
 		/* JavaScript Support */
 
 		/* Emit */
-		"outDir": "js",
+		"outDir": "js-full",
 
 		/* Interop Constraints */
 		"esModuleInterop": true,
