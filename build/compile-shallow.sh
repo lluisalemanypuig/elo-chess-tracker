@@ -12,7 +12,7 @@ if [ "$?" != "0" ]; then
 fi
 
 echo "Flatten js/ directory..."
-./build/flatten_js_source.sh
+./build/flatten-js-source.sh
 
 echo "esbuild..."
 ./build/esbuild.sh
