@@ -32,7 +32,7 @@ import {
 	TimeControlName,
 	TimeControlNameSchema
 } from '@common/models/time_control';
-import { Player, PlayerPrivateId, PlayerPrivateIdSchema } from '@common/models/player';
+import { PlayerPrivateId, PlayerPrivateIdSchema } from '@common/models/player';
 
 // Challenge state
 
