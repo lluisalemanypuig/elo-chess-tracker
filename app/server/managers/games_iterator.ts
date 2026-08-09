@@ -30,7 +30,7 @@ import path from 'path';
 import fs from 'fs';
 
 import { Game, GameId } from '@common/models/game';
-import { DateFull, DateMajor, log_now } from '@common/utils/time';
+import { DateFull, DateMajor, log_now, toDateMajor } from '@common/utils/time';
 import { game_array_from_string } from '@common/io/game';
 import { search_by_key, where_should_be_inserted_by_key } from '@server/utils/searching';
 import { read_directory } from '@server/utils/read_directory';
@@ -76,7 +76,7 @@ export class GamesIterator {
 
 	constructor(directory: string) {
 		this.directory = directory;
-		this.record_files_list = read_directory(this.directory);
+		this.record_files_list = read_directory(this.directory).map(toDateMajor);
 		this.record_idx = 0;
 		if (!this.end_record_list()) {
 			this.load_current_record();

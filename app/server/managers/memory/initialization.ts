@@ -28,7 +28,7 @@ import path from 'path';
 import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:managers/initialization');
 
-import { log_now } from '@common/utils/time';
+import { log_now, toDateMajor } from '@common/utils/time';
 import { EnvironmentManager } from '@server/managers/environment_manager';
 import { ConfigurationManager } from '@server/managers/configuration_manager';
 import { ChallengesManager } from '@server/managers/challenges_manager';
@@ -252,7 +252,7 @@ function init_games(): void {
 		const games_dir = EnvironmentManager.get_instance().get_dir_games_time_control(id);
 
 		debug(log_now(), `    Reading directory '${games_dir}'`);
-		const all_date_record_files = read_directory(games_dir);
+		const all_date_record_files = read_directory(games_dir).map(toDateMajor);
 
 		for (let i = 0; i < all_date_record_files.length; ++i) {
 			const game_record_file = path.join(games_dir, all_date_record_files[i]);

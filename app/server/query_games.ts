@@ -140,7 +140,7 @@ function filter_game_list(
 				black: black.get_full_name(),
 				result: result,
 				time_control_name: g.time_control_name,
-				date: g.when.replace('..', ' '),
+				date: g.when,
 				white_rating: `${Math.round(g.white_rating.rating)}`,
 				black_rating: `${Math.round(g.black_rating.rating)}`,
 				white_increment: inc.white_increment < 0 ? `${inc.white_increment}` : `+${inc.white_increment}`,
