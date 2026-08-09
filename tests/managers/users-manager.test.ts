@@ -26,7 +26,7 @@ Contact:
 import { UsersManager } from '@server/managers/users-manager';
 import { toUserGivenName, User } from '@common/models/user';
 import { toPlayerPrivateId } from '@common/models/player';
-import { isNotDefined } from '@app/common/utils/is-defined';
+import { isNotDefined } from '@common//utils/is-defined';
 
 const a = toPlayerPrivateId('a');
 const b = toPlayerPrivateId('b');
