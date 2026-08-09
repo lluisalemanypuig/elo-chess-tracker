@@ -20,7 +20,7 @@ for (let file of filesToBundle) {
 	await esbuild.build({
 		entryPoints: ['js/' + file],
 		bundle: true,
-		outfile: 'js/bdl__' + file,
+		outfile: 'js/bdl--' + file,
 		format: 'esm',
 		minify: true
 	});
