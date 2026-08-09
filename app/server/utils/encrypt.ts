@@ -80,7 +80,7 @@ export function encryptMessage(plainMsg: string, pwd: string): string {
 }
 
 /// Decrypts 'encryptedMsg' using password 'pwd'
-function decryptBytes(encryptedMsg: string, pwd: string): any {
+function decryptBytes(encryptedMsg: string, pwd: string) {
 	return CryptoJS.AES.decrypt(encryptedMsg, pwd);
 }
 
