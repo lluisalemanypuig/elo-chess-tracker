@@ -29,4 +29,4 @@ if [ $randomize_allowed_symbols -eq 1 ]; then
 fi
 
 echo "Compiling front end code into javascript..."
-./build/shallow_compile.sh
+./build/compile_shallow.sh
