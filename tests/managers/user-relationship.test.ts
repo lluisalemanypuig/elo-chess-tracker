@@ -24,28 +24,6 @@ Contact:
 */
 
 import { toUserGivenName, User } from '@common/models/user';
-import {
-	USER_EDIT_STUDENT,
-	USER_EDIT_TEACHER,
-	GAMES_EDIT_ADMIN,
-	GAMES_EDIT_STUDENT,
-	GAMES_EDIT_TEACHER,
-	GAMES_EDIT_MEMBER,
-	GAMES_SEE_ADMIN,
-	GAMES_SEE_MEMBER,
-	GAMES_SEE_STUDENT,
-	GAMES_CREATE_MEMBER,
-	GAMES_CREATE_ADMIN,
-	GAMES_CREATE_STUDENT,
-	GAMES_CREATE_TEACHER,
-	USER_CHALLENGE_ADMIN,
-	USER_CHALLENGE_STUDENT,
-	USER_CHALLENGE_MEMBER,
-	GRAPHS_SEE_ADMIN,
-	GRAPHS_SEE_STUDENT,
-	GRAPHS_SEE_MEMBER
-} from '@common/models/user-action';
-import { ADMIN, MEMBER, STUDENT, TEACHER } from '@common/models/user-role';
 import { UserRoleToUserAction } from '@server/managers/user-role-action';
 import { initializePermissions } from '@server/managers/user-role-action';
 import {
@@ -63,21 +41,21 @@ const firstName = toUserGivenName('f');
 const lastName = toUserGivenName('l');
 
 describe('Edition', () => {
-	const editor_admin = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, [ADMIN], [], []);
-	const editor_teacher = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, [TEACHER], [], []);
-	const editor_member = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, [MEMBER], [], []);
-	const editor_student = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, [STUDENT], [], []);
+	const editor_admin = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, ['ADMIN'], [], []);
+	const editor_teacher = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, ['TEACHER'], [], []);
+	const editor_member = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, ['MEMBER'], [], []);
+	const editor_student = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, ['STUDENT'], [], []);
 
-	const edited_admin = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, [ADMIN], [], []);
-	const edited_teacher = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, [TEACHER], [], []);
-	const edited_member = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, [MEMBER], [], []);
-	const edited_student = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, [STUDENT], [], []);
+	const edited_admin = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, ['ADMIN'], [], []);
+	const edited_teacher = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, ['TEACHER'], [], []);
+	const edited_member = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, ['MEMBER'], [], []);
+	const edited_student = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, ['STUDENT'], [], []);
 
 	test('Admin -> Teacher', () => {
 		let rel = UserRoleToUserAction.getInstance();
 		rel.clear();
 		initializePermissions({
-			admin: [USER_EDIT_TEACHER],
+			admin: ['EDIT_USER_TEACHER'],
 			teacher: [],
 			student: [],
 			member: []
@@ -93,7 +71,7 @@ describe('Edition', () => {
 		let rel = UserRoleToUserAction.getInstance();
 		rel.clear();
 		initializePermissions({
-			admin: [USER_EDIT_TEACHER, USER_EDIT_STUDENT],
+			admin: ['EDIT_USER_TEACHER', 'EDIT_USER_STUDENT'],
 			teacher: [],
 			student: [],
 			member: []
@@ -110,7 +88,7 @@ describe('Edition', () => {
 		rel.clear();
 		initializePermissions({
 			admin: [],
-			teacher: [USER_EDIT_TEACHER],
+			teacher: ['EDIT_USER_TEACHER'],
 			student: [],
 			member: []
 		});
@@ -126,7 +104,7 @@ describe('Edition', () => {
 		rel.clear();
 		initializePermissions({
 			admin: [],
-			teacher: [USER_EDIT_TEACHER, USER_EDIT_STUDENT],
+			teacher: ['EDIT_USER_TEACHER', 'EDIT_USER_STUDENT'],
 			student: [],
 			member: []
 		});
@@ -143,7 +121,7 @@ describe('Edition', () => {
 		initializePermissions({
 			admin: [],
 			teacher: [],
-			student: [USER_EDIT_TEACHER],
+			student: ['EDIT_USER_TEACHER'],
 			member: []
 		});
 
@@ -159,7 +137,7 @@ describe('Edition', () => {
 		initializePermissions({
 			admin: [],
 			teacher: [],
-			student: [USER_EDIT_TEACHER, USER_EDIT_STUDENT],
+			student: ['EDIT_USER_TEACHER', 'EDIT_USER_STUDENT'],
 			member: []
 		});
 
@@ -176,7 +154,7 @@ describe('Edition', () => {
 			admin: [],
 			teacher: [],
 			student: [],
-			member: [USER_EDIT_TEACHER]
+			member: ['EDIT_USER_TEACHER']
 		});
 
 		expect(canUserEdit(editor_member, edited_admin)).toBe(false);
@@ -192,7 +170,7 @@ describe('Edition', () => {
 			admin: [],
 			teacher: [],
 			student: [],
-			member: [USER_EDIT_TEACHER, USER_EDIT_STUDENT]
+			member: ['EDIT_USER_TEACHER', 'EDIT_USER_STUDENT']
 		});
 
 		expect(canUserEdit(editor_member, edited_admin)).toBe(false);
@@ -203,16 +181,16 @@ describe('Edition', () => {
 });
 
 describe('Can a user see a game?', () => {
-	const admin = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, [ADMIN], [], []);
-	const teacher = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, [TEACHER], [], []);
-	const member = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, [MEMBER], [], []);
-	const student = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, [STUDENT], [], []);
+	const admin = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, ['ADMIN'], [], []);
+	const teacher = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, ['TEACHER'], [], []);
+	const member = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, ['MEMBER'], [], []);
+	const student = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, ['STUDENT'], [], []);
 
 	test('Admin', () => {
 		let rel = UserRoleToUserAction.getInstance();
 		rel.clear();
 		initializePermissions({
-			admin: [GAMES_SEE_ADMIN, GAMES_SEE_MEMBER],
+			admin: ['SEE_GAMES_ADMIN', 'SEE_GAMES_MEMBER'],
 			teacher: [],
 			student: [],
 			member: []
@@ -229,7 +207,7 @@ describe('Can a user see a game?', () => {
 		rel.clear();
 		initializePermissions({
 			admin: [],
-			teacher: [GAMES_SEE_ADMIN, GAMES_SEE_STUDENT],
+			teacher: ['SEE_GAMES_ADMIN', 'SEE_GAMES_STUDENT'],
 			student: [],
 			member: []
 		});
@@ -242,16 +220,16 @@ describe('Can a user see a game?', () => {
 });
 
 describe('Can a user edit a game?', () => {
-	const admin = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, [ADMIN], [], []);
-	const teacher = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, [TEACHER], [], []);
-	const member = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, [MEMBER], [], []);
-	const student = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, [STUDENT], [], []);
+	const admin = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, ['ADMIN'], [], []);
+	const teacher = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, ['TEACHER'], [], []);
+	const member = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, ['MEMBER'], [], []);
+	const student = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, ['STUDENT'], [], []);
 
 	test('Admin', () => {
 		let rel = UserRoleToUserAction.getInstance();
 		rel.clear();
 		initializePermissions({
-			admin: [GAMES_EDIT_ADMIN, GAMES_EDIT_MEMBER],
+			admin: ['EDIT_GAMES_ADMIN', 'EDIT_GAMES_MEMBER'],
 			teacher: [],
 			student: [],
 			member: []
@@ -268,7 +246,7 @@ describe('Can a user edit a game?', () => {
 		rel.clear();
 		initializePermissions({
 			admin: [],
-			teacher: [GAMES_EDIT_ADMIN, GAMES_EDIT_STUDENT],
+			teacher: ['EDIT_GAMES_ADMIN', 'EDIT_GAMES_STUDENT'],
 			student: [],
 			member: []
 		});
@@ -284,7 +262,7 @@ describe('Can a user edit a game?', () => {
 		rel.clear();
 		initializePermissions({
 			admin: [],
-			teacher: [GAMES_EDIT_ADMIN, GAMES_EDIT_TEACHER],
+			teacher: ['EDIT_GAMES_ADMIN', 'EDIT_GAMES_TEACHER'],
 			student: [],
 			member: []
 		});
@@ -297,16 +275,16 @@ describe('Can a user edit a game?', () => {
 });
 
 describe('Can a user create a game?', () => {
-	const admin = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, [ADMIN], [], []);
-	const teacher = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, [TEACHER], [], []);
-	const member = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, [MEMBER], [], []);
-	const student = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, [STUDENT], [], []);
+	const admin = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, ['ADMIN'], [], []);
+	const teacher = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, ['TEACHER'], [], []);
+	const member = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, ['MEMBER'], [], []);
+	const student = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, ['STUDENT'], [], []);
 
 	test('Admin', () => {
 		let rel = UserRoleToUserAction.getInstance();
 		rel.clear();
 		initializePermissions({
-			admin: [GAMES_CREATE_ADMIN, GAMES_CREATE_MEMBER],
+			admin: ['CREATE_GAMES_ADMIN', 'CREATE_GAMES_MEMBER'],
 			teacher: [],
 			student: [],
 			member: []
@@ -323,7 +301,7 @@ describe('Can a user create a game?', () => {
 		rel.clear();
 		initializePermissions({
 			admin: [],
-			teacher: [GAMES_CREATE_ADMIN, GAMES_CREATE_STUDENT],
+			teacher: ['CREATE_GAMES_ADMIN', 'CREATE_GAMES_STUDENT'],
 			student: [],
 			member: []
 		});
@@ -339,7 +317,7 @@ describe('Can a user create a game?', () => {
 		rel.clear();
 		initializePermissions({
 			admin: [],
-			teacher: [GAMES_CREATE_ADMIN, GAMES_CREATE_TEACHER],
+			teacher: ['CREATE_GAMES_ADMIN', 'CREATE_GAMES_TEACHER'],
 			student: [],
 			member: []
 		});
@@ -352,16 +330,16 @@ describe('Can a user create a game?', () => {
 });
 
 describe('Can a user challenge?', () => {
-	const admin = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, [ADMIN], [], []);
-	const teacher = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, [TEACHER], [], []);
-	const member = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, [MEMBER], [], []);
-	const student = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, [STUDENT], [], []);
+	const admin = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, ['ADMIN'], [], []);
+	const teacher = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, ['TEACHER'], [], []);
+	const member = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, ['MEMBER'], [], []);
+	const student = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, ['STUDENT'], [], []);
 
 	test('Admin', () => {
 		let rel = UserRoleToUserAction.getInstance();
 		rel.clear();
 		initializePermissions({
-			admin: [USER_CHALLENGE_ADMIN, USER_CHALLENGE_STUDENT],
+			admin: ['CHALLENGE_USER_ADMIN', 'CHALLENGE_USER_STUDENT'],
 			teacher: [],
 			student: [],
 			member: []
@@ -378,7 +356,7 @@ describe('Can a user challenge?', () => {
 		rel.clear();
 		initializePermissions({
 			admin: [],
-			teacher: [USER_CHALLENGE_ADMIN, USER_CHALLENGE_STUDENT],
+			teacher: ['CHALLENGE_USER_ADMIN', 'CHALLENGE_USER_STUDENT'],
 			student: [],
 			member: []
 		});
@@ -394,7 +372,7 @@ describe('Can a user challenge?', () => {
 		rel.clear();
 		initializePermissions({
 			admin: [],
-			teacher: [USER_CHALLENGE_ADMIN, USER_CHALLENGE_STUDENT, USER_CHALLENGE_MEMBER],
+			teacher: ['CHALLENGE_USER_ADMIN', 'CHALLENGE_USER_STUDENT', 'CHALLENGE_USER_MEMBER'],
 			student: [],
 			member: []
 		});
@@ -407,16 +385,16 @@ describe('Can a user challenge?', () => {
 });
 
 describe('Can a user see a graph?', () => {
-	const admin = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, [ADMIN], [], []);
-	const teacher = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, [TEACHER], [], []);
-	const member = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, [MEMBER], [], []);
-	const student = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, [STUDENT], [], []);
+	const admin = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, ['ADMIN'], [], []);
+	const teacher = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, ['TEACHER'], [], []);
+	const member = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, ['MEMBER'], [], []);
+	const student = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, ['STUDENT'], [], []);
 
 	test('Admin', () => {
 		let rel = UserRoleToUserAction.getInstance();
 		rel.clear();
 		initializePermissions({
-			admin: [GRAPHS_SEE_ADMIN, GRAPHS_SEE_STUDENT],
+			admin: ['SEE_GRAPHS_ADMIN', 'SEE_GRAPHS_STUDENT'],
 			teacher: [],
 			student: [],
 			member: []
@@ -433,7 +411,7 @@ describe('Can a user see a graph?', () => {
 		rel.clear();
 		initializePermissions({
 			admin: [],
-			teacher: [GRAPHS_SEE_ADMIN, GRAPHS_SEE_STUDENT],
+			teacher: ['SEE_GRAPHS_ADMIN', 'SEE_GRAPHS_STUDENT'],
 			student: [],
 			member: []
 		});
@@ -449,7 +427,7 @@ describe('Can a user see a graph?', () => {
 		rel.clear();
 		initializePermissions({
 			admin: [],
-			teacher: [GRAPHS_SEE_ADMIN, GRAPHS_SEE_STUDENT, GRAPHS_SEE_MEMBER],
+			teacher: ['SEE_GRAPHS_ADMIN', 'SEE_GRAPHS_STUDENT', 'SEE_GRAPHS_MEMBER'],
 			student: [],
 			member: []
 		});

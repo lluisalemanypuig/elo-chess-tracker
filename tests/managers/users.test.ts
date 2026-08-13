@@ -34,7 +34,7 @@ import {
 	userUpdateFromPlayerData
 } from '@server/managers/users';
 import { toUserGivenName, User } from '@common/models/user';
-import { ADMIN, MEMBER, STUDENT, TEACHER, UserRole } from '@common/models/user-role';
+import { UserRole } from '@common/models/user-role';
 import { clearServer } from '@server/managers/memory/clear';
 import { run_command } from '@tests/exec-utils';
 import { Player, toPlayerPrivateId } from '@common/models/player';
@@ -272,7 +272,7 @@ describe('Create users', () => {
 		clearServer();
 		serverInitFromData('tests/webpage/', classical_rapid_blitz);
 
-		const new_user = testUserAddNew('asdf', 'First', 'Last', 'password', [ADMIN]);
+		const new_user = testUserAddNew('asdf', 'First', 'Last', 'password', ['ADMIN']);
 
 		{
 			const asdf_user_file = path.join(db_users_dir, 'asdf');
@@ -310,7 +310,7 @@ describe('Create users', () => {
 			expect(all_users.length).toBe(1);
 			expect(all_users[0].firstName).toEqual('First');
 			expect(all_users[0].lastName).toEqual('Last');
-			expect(all_users[0].roles).toEqual([ADMIN]);
+			expect(all_users[0].roles).toEqual(['ADMIN']);
 			expect(all_users[0].ratings.length).toBe(4);
 			expect(
 				userGetAllNamePublicId().map((d: UserThin): string => {
@@ -329,7 +329,7 @@ describe('Create users', () => {
 			expect(u.ratings.length).toBe(4);
 		}
 
-		const new_user = testUserAddNew('qwer', 'Perico', 'Palotes', 'password', [TEACHER]);
+		const new_user = testUserAddNew('qwer', 'Perico', 'Palotes', 'password', ['TEACHER']);
 
 		const qwer_user_file = path.join(db_users_dir, 'qwer');
 		expect(fs.existsSync(qwer_user_file)).toBe(true);
@@ -394,7 +394,7 @@ describe('Modify existing users', () => {
 		clearServer();
 		serverInitFromData('tests/webpage/', classical_rapid_blitz);
 
-		const new_user = testUserAddNew('asdf', 'First', 'Last', 'password', [ADMIN]);
+		const new_user = testUserAddNew('asdf', 'First', 'Last', 'password', ['ADMIN']);
 
 		const asdf_user_file = path.join(db_users_dir, 'asdf');
 
@@ -404,7 +404,7 @@ describe('Modify existing users', () => {
 			expect(new_user).toEqual(u);
 		}
 
-		const modified_user = testUserRenameAndReassignRoles('asdf', 'QQQ', 'WWW', [TEACHER]);
+		const modified_user = testUserRenameAndReassignRoles('asdf', 'QQQ', 'WWW', ['TEACHER']);
 
 		expect(testUserRetrieve('asdf')).toEqual(modified_user);
 		expect(testUserExists('asdf')).toBe(true);
@@ -424,7 +424,7 @@ describe('Modify existing users', () => {
 			expect(modified_user).toEqual(u);
 			expect(u.firstName).toEqual('QQQ');
 			expect(u.lastName).toEqual('WWW');
-			expect(u.roles).toEqual([TEACHER]);
+			expect(u.roles).toEqual(['TEACHER']);
 		}
 	});
 
@@ -432,7 +432,7 @@ describe('Modify existing users', () => {
 		clearServer();
 		serverInitFromData('tests/webpage/', classical_rapid_blitz);
 
-		const modified_user = testUserRenameAndReassignRoles('asdf', 'FFF', 'GGG', [ADMIN, MEMBER]);
+		const modified_user = testUserRenameAndReassignRoles('asdf', 'FFF', 'GGG', ['ADMIN', 'MEMBER']);
 
 		const asdf_user_file = path.join(db_users_dir, 'asdf');
 		expect(fs.existsSync(asdf_user_file)).toBe(true);
@@ -444,7 +444,7 @@ describe('Modify existing users', () => {
 		expect(modified_user).toEqual(u);
 		expect(u.firstName).toEqual('FFF');
 		expect(u.lastName).toEqual('GGG');
-		expect(u.roles).toEqual([ADMIN, MEMBER]);
+		expect(u.roles).toEqual(['ADMIN', 'MEMBER']);
 
 		expect(testUserRetrieve('asdf')).toEqual(modified_user);
 		expect(testUserExists('asdf')).toBe(true);
@@ -459,12 +459,12 @@ describe('Modify existing users', () => {
 		clearServer();
 		serverInitFromData('tests/webpage/', classical_rapid_blitz);
 
-		testUserAddNew(aa, 'A', 'a', 'pass_a', [ADMIN]);
-		testUserAddNew(bb, 'B', 'b', 'pass_b', [MEMBER]);
-		testUserAddNew(cc, 'C', 'c', 'pass_c', [MEMBER]);
-		testUserAddNew(dd, 'D', 'd', 'pass_d', [STUDENT]);
-		testUserAddNew(ee, 'E', 'e', 'pass_e', [STUDENT]);
-		testUserAddNew(ff, 'F', 'f', 'pass_f', [STUDENT]);
+		testUserAddNew(aa, 'A', 'a', 'pass_a', ['ADMIN']);
+		testUserAddNew(bb, 'B', 'b', 'pass_b', ['MEMBER']);
+		testUserAddNew(cc, 'C', 'c', 'pass_c', ['MEMBER']);
+		testUserAddNew(dd, 'D', 'd', 'pass_d', ['STUDENT']);
+		testUserAddNew(ee, 'E', 'e', 'pass_e', ['STUDENT']);
+		testUserAddNew(ff, 'F', 'f', 'pass_f', ['STUDENT']);
 
 		const aa_Classical = new TimeControlRating(Classical, new EloRating(2000, 10, 10, 0, 0, 40, false));
 		const aa_Blitz = new TimeControlRating(Blitz, new EloRating(300, 100, 0, 0, 100, 40, false));

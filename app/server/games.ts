@@ -29,7 +29,6 @@ import { Request, Response } from 'express';
 
 import { logNow } from '@common/utils/time';
 import { isUserLoggedIn } from '@server/managers/session';
-import { GAMES_CREATE, GAMES_DELETE, GAMES_EDIT } from '@common/models/user-action';
 import {
 	gameAddNew,
 	gameDelete,
@@ -38,7 +37,7 @@ import {
 	gameFindById,
 	recalculateAllRatings
 } from '@server/managers/games';
-import { ADMIN } from '@common/models/user-role';
+
 import { canUserCreateGame, canUserDeleteGame, canUserEditGame } from '@server/managers/user-relationships';
 import { UsersManager } from '@server/managers/users-manager';
 import { ConfigurationManager } from '@server/managers/configuration-manager';
@@ -107,7 +106,7 @@ export async function getPageGameCreate(req: Request, res: Response) {
 		return;
 	}
 
-	if (!user.canDo(GAMES_CREATE)) {
+	if (!user.canDo('CREATE_GAMES')) {
 		debug(logNow(), `User '${user.username}' cannot create games.`);
 		res.status(403).send('You cannot create games.');
 		return;
@@ -135,7 +134,7 @@ export async function postGameCreate(req: Request, res: Response) {
 		return;
 	}
 
-	if (!creator.canDo(GAMES_CREATE)) {
+	if (!creator.canDo('CREATE_GAMES')) {
 		debug(logNow(), `User '${creator.username}' cannot create users.`);
 		res.status(403).send('You cannot create games');
 		return;
@@ -222,7 +221,7 @@ export async function postGameEditResult(req: Request, res: Response) {
 		return;
 	}
 
-	if (!user.canDo(GAMES_EDIT)) {
+	if (!user.canDo('EDIT_GAMES')) {
 		debug(logNow(), `User '${user.username}' cannot edit games.`);
 		res.status(403).send('You cannot edit games');
 		return;
@@ -290,7 +289,7 @@ export async function postGameEditTitle(req: Request, res: Response) {
 		return;
 	}
 
-	if (!user.canDo(GAMES_EDIT)) {
+	if (!user.canDo('EDIT_GAMES')) {
 		debug(logNow(), `User '${user.username}' cannot edit games.`);
 		res.status(403).send('You cannot edit games');
 		return;
@@ -358,7 +357,7 @@ export async function postGameDelete(req: Request, res: Response) {
 		return;
 	}
 
-	if (!user.canDo(GAMES_DELETE)) {
+	if (!user.canDo('DELETE_GAMES')) {
 		debug(logNow(), `User '${user.username}' cannot delete games.`);
 		res.status(403).send('You cannot delete games');
 		return;
@@ -423,7 +422,7 @@ export async function postRecalculateRatings(req: Request, res: Response) {
 		return;
 	}
 
-	if (!user.is(ADMIN)) {
+	if (!user.is('ADMIN')) {
 		debug(logNow(), `User '${user.username}' cannot recalculate ratings.`);
 		res.status(403).send('You cannot recalculate ratings.');
 		return;

@@ -36,7 +36,6 @@ import { searchLinearByKey } from '@server/utils/searching';
 import { UsersManager } from '@server/managers/users-manager';
 import { Edge } from '@common/models/graph/edge';
 import { canUserSeeGraph } from '@server/managers/user-relationships';
-import { GRAPHS_SEE_USER } from '@common/models/user-action';
 import { isNotDefined } from '@common/utils/is-defined';
 import { ROUTES } from '@common/api/routes';
 import { inputSchemaOf } from '@common/api/schemas-endpoints';
@@ -241,7 +240,7 @@ export async function postQueryGraphFull(req: Request, res: Response) {
 		return;
 	}
 
-	if (!user.canDo(GRAPHS_SEE_USER)) {
+	if (!user.canDo('SEE_GRAPHS')) {
 		res.status(403).send('You do not have enough permissions.');
 		return;
 	}

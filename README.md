@@ -174,51 +174,51 @@ _Note_: the configuration file created by the `initialize.sh` script already pro
 
 The site implements four different roles a user can have. To each role we can associate a series of actions that a user with said role can perform. All roles implemented are
 
-- _admin_
-- _member_
-- _teacher_
-- _student_
+- _ADMIN_
+- _MEMBER_
+- _TEACHER_
+- _STUDENT_
 
 Available actions are
 
 - Creation of users:
-    - _create_user_
+    - _CREATE_USER_
 
 - Assignment of roles to another user
-    - _assign_role_admin_
-    - _assign_role_teacher_
-    - _assign_role_member_
-    - _assign_role_student_
+    - _ASSIGN_ROLE_ADMIN_
+    - _ASSIGN_ROLE_TEACHER_
+    - _ASSIGN_ROLE_MEMBER_
+    - _ASSIGN_ROLE_STUDENT_
 
 - Edition of users: to be able to edit user's information, except for passwords and ratings.
-    - _edit_admin_
-    - _edit_teacher_
-    - _edit_member_
-    - _edit_student_
+    - _EDIT_ADMIN_
+    - _EDIT_TEACHER_
+    - _EDIT_MEMBER_
+    - _EDIT_STUDENT_
 
 - Creation of games: to be able to create games between pairs of players. This is restricted to players of specific roles.
-    - _create_games_admin_
-    - _create_games_teacher_
-    - _create_games_member_
-    - _create_games_student_
+    - _CREATE_GAMES_ADMIN_
+    - _CREATE_GAMES_TEACHER_
+    - _CREATE_GAMES_MEMBER_
+    - _CREATE_GAMES_STUDENT_
 
 - Edition of a user's game: to change the result of a game.
-    - _edit_games_admin_
-    - _edit_games_teacher_
-    - _edit_games_member_
-    - _edit_games_student_
+    - _EDIT_GAMES_ADMIN_
+    - _EDIT_GAMES_TEACHER_
+    - _EDIT_GAMES_MEMBER_
+    - _EDIT_GAMES_STUDENT_
 
 - See another user's games.
-    - _see_games_admin_
-    - _see_games_teacher_
-    - _see_games_member_
-    - _see_games_student_
+    - _SEE_GAMES_ADMIN_
+    - _SEE_GAMES_TEACHER_
+    - _SEE_GAMES_MEMBER_
+    - _SEE_GAMES_STUDENT_
 
 - Challenge other users to a game.
-    - _challenge_admin_
-    - _challenge_member_
-    - _challenge_teacher_
-    - _challenge_student_
+    - _CHALLENGE_ADMIN_
+    - _CHALLENGE_MEMBER_
+    - _CHALLENGE_TEACHER_
+    - _CHALLENGE_STUDENT_
 
 ## Running the website
 

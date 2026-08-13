@@ -29,7 +29,6 @@ import path from 'path';
 import { gameAddNew, gameEditResult, gameFindById, recalculateAllRatings } from '@server/managers/games';
 import { serverInitFromData } from '@server/managers/memory/initialization';
 import { userAddNew } from '@server/managers/users';
-import { ADMIN } from '@common/models/user-role';
 import { run_command } from '@tests/exec-utils';
 import { toPlayerPrivateId } from '@common/models/player';
 import { EnvironmentManager } from '@server/managers/environment-manager';
@@ -109,10 +108,34 @@ const configuration: Configuration = {
 		}
 	},
 	permissions: {
-		admin: ['challenge_user', 'challenge_admin', 'challenge_member', 'challenge_teacher', 'challenge_student'],
-		teacher: ['challenge_user', 'challenge_admin', 'challenge_member', 'challenge_teacher', 'challenge_student'],
-		member: ['challenge_user', 'challenge_admin', 'challenge_member', 'challenge_teacher', 'challenge_student'],
-		student: ['challenge_user', 'challenge_admin', 'challenge_member', 'challenge_teacher', 'challenge_student']
+		admin: [
+			'CHALLENGE_USER',
+			'CHALLENGE_USER_ADMIN',
+			'CHALLENGE_USER_MEMBER',
+			'CHALLENGE_USER_TEACHER',
+			'CHALLENGE_USER_STUDENT'
+		],
+		teacher: [
+			'CHALLENGE_USER',
+			'CHALLENGE_USER_ADMIN',
+			'CHALLENGE_USER_MEMBER',
+			'CHALLENGE_USER_TEACHER',
+			'CHALLENGE_USER_STUDENT'
+		],
+		member: [
+			'CHALLENGE_USER',
+			'CHALLENGE_USER_ADMIN',
+			'CHALLENGE_USER_MEMBER',
+			'CHALLENGE_USER_TEACHER',
+			'CHALLENGE_USER_STUDENT'
+		],
+		student: [
+			'CHALLENGE_USER',
+			'CHALLENGE_USER_ADMIN',
+			'CHALLENGE_USER_MEMBER',
+			'CHALLENGE_USER_TEACHER',
+			'CHALLENGE_USER_STUDENT'
+		]
 	}
 };
 
@@ -157,12 +180,12 @@ describe('Server setup', () => {
 		await run_command('./tests/initialize-empty.sh');
 		expect(() => serverInitFromData('tests/webpage', configuration)).not.toThrow();
 
-		aU = userAddNew(a, A, aa, 'aaaa', [ADMIN]);
-		bU = userAddNew(b, B, bb, 'dddd', [ADMIN]);
-		cU = userAddNew(c, C, cc, 'cccc', [ADMIN]);
-		dU = userAddNew(d, D, dd, 'dddd', [ADMIN]);
-		eU = userAddNew(e, E, ee, 'eeee', [ADMIN]);
-		fU = userAddNew(f, F, ff, 'ffff', [ADMIN]);
+		aU = userAddNew(a, A, aa, 'aaaa', ['ADMIN']);
+		bU = userAddNew(b, B, bb, 'dddd', ['ADMIN']);
+		cU = userAddNew(c, C, cc, 'cccc', ['ADMIN']);
+		dU = userAddNew(d, D, dd, 'dddd', ['ADMIN']);
+		eU = userAddNew(e, E, ee, 'eeee', ['ADMIN']);
+		fU = userAddNew(f, F, ff, 'ffff', ['ADMIN']);
 	});
 });
 

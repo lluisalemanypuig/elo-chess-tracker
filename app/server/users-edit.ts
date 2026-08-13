@@ -30,7 +30,7 @@ import { Request, Response } from 'express';
 import { logNow } from '@common/utils/time';
 import { isUserLoggedIn } from '@server/managers/session';
 import { userRenameAndReassignRoles } from '@server/managers/users';
-import { USER_ROLE_ASSIGN_ID, USER_EDIT, getRoleActionName } from '@common/models/user-action';
+import { getRoleActionName } from '@common/models/user-action';
 import { canUserEdit } from '@server/managers/user-relationships';
 import { UsersManager } from '@server/managers/users-manager';
 import { ConfigurationManager } from '@server/managers/configuration-manager';
@@ -55,7 +55,7 @@ export async function getPageUserEdit(req: Request, res: Response) {
 		return;
 	}
 
-	if (!user.canDo(USER_EDIT)) {
+	if (!user.canDo('EDIT_USER')) {
 		debug(logNow(), `    User '${user.username}' does not have sufficient permissions.`);
 		res.status(403).send('You cannot edit users');
 		return;
@@ -116,7 +116,7 @@ export async function postUserEdit(req: Request, res: Response) {
 
 	for (const role of roles) {
 		if (!editor.is(role)) {
-			const action = getRoleActionName(USER_ROLE_ASSIGN_ID, role);
+			const action = getRoleActionName('ASSIGN_ROLE_USERS', role);
 			if (!editor.canDo(action)) {
 				res.status(403).send(`You do not have enough permissions to assign role '${role}'.`);
 				return;

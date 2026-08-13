@@ -23,7 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { UserRole, ADMIN, TEACHER, MEMBER, STUDENT, ALL_USER_ROLES } from '@common/models/user-role';
+import { UserRole, ALL_USER_ROLES } from '@common/models/user-role';
 import {
 	ALL_ACTION_IDS,
 	getGenericRoleActionName,
@@ -59,10 +59,10 @@ export class UserRoleToUserAction {
 
 	/// The data structure that relates user roles to actions
 	private relate: { [key in UserRole]: UserAction[] } = {
-		admin: [],
-		teacher: [],
-		member: [],
-		student: []
+		ADMIN: [],
+		TEACHER: [],
+		MEMBER: [],
+		STUDENT: []
 	};
 
 	/// Add action 'action' to role 'role'
@@ -101,10 +101,10 @@ export class UserRoleToUserAction {
 	/// Clears the relationships contained in this instance.
 	clear(): void {
 		this.relate = {
-			admin: [],
-			teacher: [],
-			member: [],
-			student: []
+			ADMIN: [],
+			TEACHER: [],
+			MEMBER: [],
+			STUDENT: []
 		};
 	}
 }
@@ -125,25 +125,25 @@ export function initializePermissions(permissions: UserPermissions): void {
 
 	// ADMIN
 	for (const permission of permissions.admin) {
-		actions.addToRole(ADMIN, permission);
+		actions.addToRole('ADMIN', permission);
 	}
-	actions.addMissingGenericActions(ADMIN);
+	actions.addMissingGenericActions('ADMIN');
 
 	// TEACHER
 	for (const permission of permissions.teacher) {
-		actions.addToRole(TEACHER, permission);
+		actions.addToRole('TEACHER', permission);
 	}
-	actions.addMissingGenericActions(TEACHER);
+	actions.addMissingGenericActions('TEACHER');
 
 	// MEMBER
 	for (const permission of permissions.member) {
-		actions.addToRole(MEMBER, permission);
+		actions.addToRole('MEMBER', permission);
 	}
-	actions.addMissingGenericActions(MEMBER);
+	actions.addMissingGenericActions('MEMBER');
 
 	// STUDENT
 	for (const permission of permissions.student) {
-		actions.addToRole(STUDENT, permission);
+		actions.addToRole('STUDENT', permission);
 	}
-	actions.addMissingGenericActions(STUDENT);
+	actions.addMissingGenericActions('STUDENT');
 }

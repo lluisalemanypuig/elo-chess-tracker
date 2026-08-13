@@ -23,51 +23,40 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import {
-	ADMIN,
-	ALL_USER_ROLES,
-	isRoleStringCorrect,
-	MEMBER,
-	STUDENT,
-	TEACHER,
-	USER_ROLE_TO_STRING
-} from '@common/models/user-role';
+import { ALL_USER_ROLES, isRoleStringCorrect, USER_ROLE_TO_STRING } from '@common/models/user-role';
 
 test('Array of all roles', () => {
 	expect(ALL_USER_ROLES.length).toBe(4);
 });
 
 test('Human-readable strings', () => {
-	expect(USER_ROLE_TO_STRING[ADMIN]).toEqual('Admin');
-	expect(USER_ROLE_TO_STRING['admin']).toEqual('Admin');
-
-	expect(USER_ROLE_TO_STRING[TEACHER]).toEqual('Teacher');
-	expect(USER_ROLE_TO_STRING['teacher']).toEqual('Teacher');
-
-	expect(USER_ROLE_TO_STRING[MEMBER]).toEqual('Member');
-	expect(USER_ROLE_TO_STRING['member']).toEqual('Member');
-
-	expect(USER_ROLE_TO_STRING[STUDENT]).toEqual('Student');
-	expect(USER_ROLE_TO_STRING['student']).toEqual('Student');
+	expect(USER_ROLE_TO_STRING['ADMIN']).toEqual('Admin');
+	expect(USER_ROLE_TO_STRING['TEACHER']).toEqual('Teacher');
+	expect(USER_ROLE_TO_STRING['MEMBER']).toEqual('Member');
+	expect(USER_ROLE_TO_STRING['STUDENT']).toEqual('Student');
 });
 
 test('Correct roles', () => {
-	expect(isRoleStringCorrect('admin')).toBe(true);
+	expect(isRoleStringCorrect('ADMIN')).toBe(true);
+	expect(isRoleStringCorrect('admin')).toBe(false);
 	expect(isRoleStringCorrect('admi')).toBe(false);
 	expect(isRoleStringCorrect('admin!')).toBe(false);
 	expect(isRoleStringCorrect('Admin')).toBe(false);
 
-	expect(isRoleStringCorrect('teacher')).toBe(true);
+	expect(isRoleStringCorrect('TEACHER')).toBe(true);
+	expect(isRoleStringCorrect('teacher')).toBe(false);
 	expect(isRoleStringCorrect('teach')).toBe(false);
 	expect(isRoleStringCorrect('teacher!')).toBe(false);
 	expect(isRoleStringCorrect('Teacher')).toBe(false);
 
-	expect(isRoleStringCorrect('member')).toBe(true);
+	expect(isRoleStringCorrect('MEMBER')).toBe(true);
+	expect(isRoleStringCorrect('member')).toBe(false);
 	expect(isRoleStringCorrect('memb')).toBe(false);
 	expect(isRoleStringCorrect('memberi')).toBe(false);
 	expect(isRoleStringCorrect('Member')).toBe(false);
 
-	expect(isRoleStringCorrect('student')).toBe(true);
+	expect(isRoleStringCorrect('STUDENT')).toBe(true);
+	expect(isRoleStringCorrect('student')).toBe(false);
 	expect(isRoleStringCorrect('stud')).toBe(false);
 	expect(isRoleStringCorrect('student!')).toBe(false);
 	expect(isRoleStringCorrect('Student')).toBe(false);

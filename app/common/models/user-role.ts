@@ -26,21 +26,12 @@ Contact:
 import { z } from 'zod';
 import { isNotDefined } from '@common/utils/is-defined';
 
-/// Administrator
-export const ADMIN = 'admin';
-/// Teacher
-export const TEACHER = 'teacher';
-/// Member
-export const MEMBER = 'member';
-/// Student
-export const STUDENT = 'student';
-
 /**
  * @brief All roles of users as strings.
  *
  * See below for details on
  */
-export const ALL_USER_ROLES = [ADMIN, TEACHER, MEMBER, STUDENT] as const;
+export const ALL_USER_ROLES = ['ADMIN', 'TEACHER', 'MEMBER', 'STUDENT'] as const;
 
 /// All roles as type
 export type UserRole = (typeof ALL_USER_ROLES)[number];
@@ -51,10 +42,10 @@ export const UserRoleArraySchema = z.array(UserRoleSchema);
 
 /// Relate each user role to a readable string
 export const USER_ROLE_TO_STRING: { [key in UserRole]: string } = {
-	admin: 'Admin',
-	teacher: 'Teacher',
-	member: 'Member',
-	student: 'Student'
+	ADMIN: 'Admin',
+	TEACHER: 'Teacher',
+	MEMBER: 'Member',
+	STUDENT: 'Student'
 };
 
 /// Does the string parameter encode a valid user role?
@@ -63,17 +54,17 @@ export function isRoleStringCorrect(r: string): boolean {
 }
 
 export function stringToRole(r: string): UserRole | undefined {
-	if (r === ADMIN) {
-		return ADMIN;
+	if (r === 'ADMIN') {
+		return 'ADMIN';
 	}
-	if (r === TEACHER) {
-		return TEACHER;
+	if (r === 'TEACHER') {
+		return 'TEACHER';
 	}
-	if (r === MEMBER) {
-		return MEMBER;
+	if (r === 'MEMBER') {
+		return 'MEMBER';
 	}
-	if (r === STUDENT) {
-		return STUDENT;
+	if (r === 'STUDENT') {
+		return 'STUDENT';
 	}
 	return undefined;
 }

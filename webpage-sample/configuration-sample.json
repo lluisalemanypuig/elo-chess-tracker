@@ -53,52 +53,53 @@
 
 	"permissions": {
 		"admin": [
-			"create_user",
+			"CREATE_USER",
 
-			"assign_role_admin",
-			"assign_role_teacher",
-			"assign_role_member",
-			"assign_role_student",
+			"ASSIGN_ROLE_USERS_ADMIN",
+			"ASSIGN_ROLE_USERS_TEACHER",
+			"ASSIGN_ROLE_USERS_MEMBER",
+			"ASSIGN_ROLE_USERS_STUDENT",
 
-			"create_games_admin",
-			"create_games_teacher",
-			"create_games_member",
-			"create_games_student",
-			"delete_games_admin",
-			"delete_games_teacher",
-			"delete_games_member",
-			"delete_games_student",
-			"see_games_admin",
-			"see_games_teacher",
-			"see_games_member",
-			"see_games_student",
-			"edit_games_admin",
-			"edit_games_teacher",
-			"edit_games_member",
-			"edit_games_student",
+			"CREATE_GAMES_ADMIN",
+			"CREATE_GAMES_TEACHER",
+			"CREATE_GAMES_MEMBER",
+			"CREATE_GAMES_STUDENT",
+			"DELETE_GAMES_ADMIN",
+			"DELETE_GAMES_TEACHER",
+			"DELETE_GAMES_MEMBER",
+			"DELETE_GAMES_STUDENT",
+			"SEE_GAMES_ADMIN",
+			"SEE_GAMES_TEACHER",
+			"SEE_GAMES_MEMBER",
+			"SEE_GAMES_STUDENT",
+			"EDIT_GAMES_ADMIN",
+			"EDIT_GAMES_TEACHER",
+			"EDIT_GAMES_MEMBER",
+			"EDIT_GAMES_STUDENT",
 
-			"edit_admin",
-			"edit_teacher",
-			"edit_member",
-			"edit_student",
-			"challenge_admin",
-			"challenge_member",
-			"challenge_teacher",
-			"challenge_student"
+			"EDIT_ADMIN",
+			"EDIT_TEACHER",
+			"EDIT_MEMBER",
+			"EDIT_STUDENT",
+
+			"CHALLENGE_ADMIN",
+			"CHALLENGE_MEMBER",
+			"CHALLENGE_TEACHER",
+			"CHALLENGE_STUDENT"
 		],
 		"teacher": [
-			"create_user",
-			"assign_role_student",
+			"CREATE_USER",
+			"ASSIGN_ROLE",
 
-			"edit_student",
-			"edit_games_student",
-			"see_games_student",
-			"challenge_admin",
-			"challenge_member",
-			"challenge_teacher",
-			"challenge_student"
+			"EDIT_STUDENT",
+			"EDIT_GAMES_STUDENT",
+			"SEE_GAMES_STUDENT",
+			"CHALLENGE_ADMIN",
+			"CHALLENGE_MEMBER",
+			"CHALLENGE_TEACHER",
+			"CHALLENGE_STUDENT"
 		],
-		"member": ["challenge_admin", "challenge_member", "challenge_teacher"],
-		"student": ["challenge_admin", "challenge_member", "challenge_teacher", "challenge_student"]
+		"member": ["CHALLENGE_ADMIN", "CHALLENGE_MEMBER", "CHALLENGE_TEACHER"],
+		"student": ["CHALLENGE_ADMIN", "CHALLENGE_MEMBER", "CHALLENGE_TEACHER", "CHALLENGE_STUDENT"]
 	}
 }
