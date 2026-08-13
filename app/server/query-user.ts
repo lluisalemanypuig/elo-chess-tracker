@@ -36,7 +36,6 @@ import { isNotDefined } from '@common/utils/is-defined';
 import { ROUTES } from '@common/api/routes';
 import { inputSchemaOf } from '@common/api/schemas-endpoints';
 import { safeParseRequestBody, safeParseRequestCookies } from '@server/utils/schemas';
-import { AuthenticationInputSchema } from '@common/api/schemas/authentication';
 import { UserThin } from '@common/models/user-thin';
 import {
 	QueryUserEditOutput,

@@ -30,7 +30,7 @@ import { UserActionArraySchema } from '@common/models/user-action';
 import { RatingSchema } from '@common/models/rating-framework/rating';
 import { PlayerPublicIdSchema } from '@common/models/player';
 import { UserGivenNameSchema } from '@common/models/user';
-import { TimeControlIdSchema } from '../models/time-control';
+import { TimeControlIdSchema } from '@common/models/time-control';
 
 // Routes.QUERY_USER_LIST
 

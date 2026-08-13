@@ -47,7 +47,6 @@ import { isNotDefined } from '@common/utils/is-defined';
 import { ROUTES } from '@common/api/routes';
 import { inputSchemaOf } from '@common/api/schemas-endpoints';
 import { safeParseRequestCookies, safeParseRequestBody } from '@server/utils/schemas';
-import { AuthenticationInputSchema } from '@common/api/schemas/authentication';
 
 export async function getPageGameListOwn(req: Request, res: Response) {
 	debug(logNow(), `GET ${ROUTES.PAGE_GAME_LIST_OWN}...`);

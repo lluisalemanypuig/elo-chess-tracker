@@ -41,7 +41,6 @@ import { isNotDefined } from '@common/utils/is-defined';
 import { ROUTES } from '@common/api/routes';
 import { inputSchemaOf } from '@common/api/schemas-endpoints';
 import { safeParseRequestBody, safeParseRequestCookies } from '@server/utils/schemas';
-import { AuthenticationInputSchema } from '@common/api/schemas/authentication';
 import { EdgeInfo, NodeInfo, QueryGraphOutput } from '@common/api/schemas/query-graphs';
 import { PlayerPrivateId } from '@common/models/player';
 

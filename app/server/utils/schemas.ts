@@ -29,7 +29,7 @@ import { Request, Response } from 'express';
 
 import { isDefined, isNotDefined } from '@common/utils/is-defined';
 import { logNow } from '@common/utils/time';
-import { AuthenticationInputSchema, authenticationInputSchemaToSessionId } from '@common//schemas/authentication';
+import { AuthenticationInputSchema, authenticationInputSchemaToSessionId } from '@common/api/schemas/authentication';
 import { SessionId } from '@common//models/session-id';
 
 export type ParseResult = 'JsonDataNotProvided' | 'Error' | 'Success';

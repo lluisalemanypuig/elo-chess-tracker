@@ -51,7 +51,6 @@ import { isNotDefined } from '@common/utils/is-defined';
 import { ROUTES } from '@common/api/routes';
 import { inputSchemaOf } from '@common/api/schemas-endpoints';
 import { safeParseRequestBody, safeParseRequestCookies } from '@server/utils/schemas';
-import { AuthenticationInputSchema } from '@common/api/schemas/authentication';
 
 export async function getPageChallenge(req: Request, res: Response) {
 	debug(logNow(), `GET ${ROUTES.PAGE_CHALLENGE}...`);

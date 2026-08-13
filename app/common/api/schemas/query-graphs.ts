@@ -26,7 +26,7 @@ Contact:
 import { z } from 'zod';
 import { UserGivenNameSchema } from '@common/models/user';
 import { PlayerPublicIdSchema } from '@common/models/player';
-import { TimeControlIdSchema } from '../models/time-control';
+import { TimeControlIdSchema } from '@common/models/time-control';
 
 // utils
 

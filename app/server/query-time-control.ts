@@ -33,7 +33,6 @@ import { RatingSystemManager } from '@server/managers/rating-system-manager';
 import { isNotDefined } from '@common/utils/is-defined';
 import { ROUTES } from '@common/api/routes';
 import { safeParseRequestCookies } from '@server/utils/schemas';
-import { AuthenticationInputSchema } from '@common/api/schemas/authentication';
 
 export async function getQueryHtmlTimeControls(req: Request, res: Response) {
 	debug(logNow(), `GET ${ROUTES.QUERY_HTML_TIME_CONTROLS}...`);

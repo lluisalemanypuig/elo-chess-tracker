@@ -37,7 +37,6 @@ import { canUserDeclineChallenge } from '@server/managers/user-relationships';
 import { isDefined, isNotDefined } from '@common/utils/is-defined';
 import { ROUTES } from '@common/api/routes';
 import { safeParseRequestCookies } from '@server/utils/schemas';
-import { AuthenticationInputSchema } from '@common/api/schemas/authentication';
 import {
 	QueryChallengesConfirmResultOtherOutput,
 	QueryChallengesConfirmResultSelfOutput,
