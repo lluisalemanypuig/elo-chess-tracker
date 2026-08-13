@@ -25,17 +25,17 @@ Contact:
 
 import { TimeControlId } from '@common/models/time-control';
 import { User } from '@common/models/user';
-import { ADMIN, MEMBER, STUDENT, TEACHER, UserRole } from '@common/models/user-role';
+import { UserRole } from '@common/models/user-role';
 import { UsersBehavior } from '@server/managers/users-behavior';
 
 /// Can a user (@e editor) edit another user (@e edited)?
 export function canUserEdit(editor: User, edited: User): boolean {
 	return (
 		editor.canDo('EDIT_USER') &&
-		((editor.canDo('EDIT_USER_ADMIN') && edited.is(ADMIN)) ||
-			(editor.canDo('EDIT_USER_TEACHER') && edited.is(TEACHER)) ||
-			(editor.canDo('EDIT_USER_MEMBER') && edited.is(MEMBER)) ||
-			(editor.canDo('EDIT_USER_STUDENT') && edited.is(STUDENT)))
+		((editor.canDo('EDIT_USER_ADMIN') && edited.is('ADMIN')) ||
+			(editor.canDo('EDIT_USER_TEACHER') && edited.is('TEACHER')) ||
+			(editor.canDo('EDIT_USER_MEMBER') && edited.is('MEMBER')) ||
+			(editor.canDo('EDIT_USER_STUDENT') && edited.is('STUDENT')))
 	);
 }
 
@@ -47,10 +47,10 @@ export function canUserSeeGame(u: User, white: User, black: User): boolean {
 
 	return (
 		u.canDo('SEE_GAMES') &&
-		((u.canDo('SEE_GAMES_ADMIN') && either_user_is(ADMIN)) ||
-			(u.canDo('SEE_GAMES_TEACHER') && either_user_is(TEACHER)) ||
-			(u.canDo('SEE_GAMES_STUDENT') && either_user_is(STUDENT)) ||
-			(u.canDo('SEE_GAMES_MEMBER') && either_user_is(MEMBER)))
+		((u.canDo('SEE_GAMES_ADMIN') && either_user_is('ADMIN')) ||
+			(u.canDo('SEE_GAMES_TEACHER') && either_user_is('TEACHER')) ||
+			(u.canDo('SEE_GAMES_STUDENT') && either_user_is('STUDENT')) ||
+			(u.canDo('SEE_GAMES_MEMBER') && either_user_is('MEMBER')))
 	);
 }
 
@@ -62,10 +62,10 @@ export function canUserCreateGame(u: User, white: User, black: User): boolean {
 
 	return (
 		u.canDo('CREATE_GAMES') &&
-		((u.canDo('CREATE_GAMES_ADMIN') && either_user_is(ADMIN)) ||
-			(u.canDo('CREATE_GAMES_TEACHER') && either_user_is(TEACHER)) ||
-			(u.canDo('CREATE_GAMES_STUDENT') && either_user_is(STUDENT)) ||
-			(u.canDo('CREATE_GAMES_MEMBER') && either_user_is(MEMBER)))
+		((u.canDo('CREATE_GAMES_ADMIN') && either_user_is('ADMIN')) ||
+			(u.canDo('CREATE_GAMES_TEACHER') && either_user_is('TEACHER')) ||
+			(u.canDo('CREATE_GAMES_STUDENT') && either_user_is('STUDENT')) ||
+			(u.canDo('CREATE_GAMES_MEMBER') && either_user_is('MEMBER')))
 	);
 }
 
@@ -77,10 +77,10 @@ export function canUserEditGame(u: User, white: User, black: User): boolean {
 
 	return (
 		u.canDo('EDIT_GAMES') &&
-		((u.canDo('EDIT_GAMES_ADMIN') && either_user_is(ADMIN)) ||
-			(u.canDo('EDIT_GAMES_TEACHER') && either_user_is(TEACHER)) ||
-			(u.canDo('EDIT_GAMES_STUDENT') && either_user_is(STUDENT)) ||
-			(u.canDo('EDIT_GAMES_MEMBER') && either_user_is(MEMBER)))
+		((u.canDo('EDIT_GAMES_ADMIN') && either_user_is('ADMIN')) ||
+			(u.canDo('EDIT_GAMES_TEACHER') && either_user_is('TEACHER')) ||
+			(u.canDo('EDIT_GAMES_STUDENT') && either_user_is('STUDENT')) ||
+			(u.canDo('EDIT_GAMES_MEMBER') && either_user_is('MEMBER')))
 	);
 }
 
@@ -92,10 +92,10 @@ export function canUserDeleteGame(u: User, white: User, black: User): boolean {
 
 	return (
 		u.canDo('DELETE_GAMES') &&
-		((u.canDo('DELETE_GAMES_ADMIN') && either_user_is(ADMIN)) ||
-			(u.canDo('DELETE_GAMES_TEACHER') && either_user_is(TEACHER)) ||
-			(u.canDo('DELETE_GAMES_STUDENT') && either_user_is(STUDENT)) ||
-			(u.canDo('DELETE_GAMES_MEMBER') && either_user_is(MEMBER)))
+		((u.canDo('DELETE_GAMES_ADMIN') && either_user_is('ADMIN')) ||
+			(u.canDo('DELETE_GAMES_TEACHER') && either_user_is('TEACHER')) ||
+			(u.canDo('DELETE_GAMES_STUDENT') && either_user_is('STUDENT')) ||
+			(u.canDo('DELETE_GAMES_MEMBER') && either_user_is('MEMBER')))
 	);
 }
 
@@ -108,10 +108,10 @@ export function canUserDeleteGame(u: User, white: User, black: User): boolean {
 export function canUserSendChallenge(sender: User, receiver: User): boolean {
 	return (
 		sender.canDo('CHALLENGE_USER') &&
-		((receiver.is(ADMIN) && sender.canDo('CHALLENGE_USER_ADMIN')) ||
-			(receiver.is(MEMBER) && sender.canDo('CHALLENGE_USER_MEMBER')) ||
-			(receiver.is(STUDENT) && sender.canDo('CHALLENGE_USER_STUDENT')) ||
-			(receiver.is(TEACHER) && sender.canDo('CHALLENGE_USER_TEACHER')))
+		((receiver.is('ADMIN') && sender.canDo('CHALLENGE_USER_ADMIN')) ||
+			(receiver.is('MEMBER') && sender.canDo('CHALLENGE_USER_MEMBER')) ||
+			(receiver.is('STUDENT') && sender.canDo('CHALLENGE_USER_STUDENT')) ||
+			(receiver.is('TEACHER') && sender.canDo('CHALLENGE_USER_TEACHER')))
 	);
 }
 
@@ -119,10 +119,10 @@ export function canUserSendChallenge(sender: User, receiver: User): boolean {
 export function canUserSeeGraph(u: User, other: User): boolean {
 	return (
 		u.canDo('SEE_GRAPHS') &&
-		((other.is(ADMIN) && u.canDo('SEE_GRAPHS_ADMIN')) ||
-			(other.is(MEMBER) && u.canDo('SEE_GRAPHS_MEMBER')) ||
-			(other.is(STUDENT) && u.canDo('SEE_GRAPHS_STUDENT')) ||
-			(other.is(TEACHER) && u.canDo('SEE_GRAPHS_TEACHER')))
+		((other.is('ADMIN') && u.canDo('SEE_GRAPHS_ADMIN')) ||
+			(other.is('MEMBER') && u.canDo('SEE_GRAPHS_MEMBER')) ||
+			(other.is('STUDENT') && u.canDo('SEE_GRAPHS_STUDENT')) ||
+			(other.is('TEACHER') && u.canDo('SEE_GRAPHS_TEACHER')))
 	);
 }
 

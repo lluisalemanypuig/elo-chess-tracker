@@ -24,7 +24,7 @@ Contact:
 */
 
 import { z } from 'zod';
-import { ADMIN, MEMBER, STUDENT, TEACHER, UserRole } from '@common/models/user-role';
+import { UserRole } from '@common/models/user-role';
 
 /// All actions that can be performed in this web
 export const ALL_ACTIONS = [
@@ -140,97 +140,97 @@ export function getRoleActionName(id: UserActionID, r: UserRole): UserAction {
 	switch (id) {
 		case 'CREATE_GAMES':
 			switch (r) {
-				case ADMIN:
+				case 'ADMIN':
 					return 'CREATE_GAMES_ADMIN';
-				case TEACHER:
+				case 'TEACHER':
 					return 'CREATE_GAMES_TEACHER';
-				case MEMBER:
+				case 'MEMBER':
 					return 'CREATE_GAMES_MEMBER';
-				case STUDENT:
+				case 'STUDENT':
 					return 'CREATE_GAMES_STUDENT';
 			}
 			throw new Error(`Unhandled user role ${r} in ${id}`);
 		case 'EDIT_GAMES':
 			switch (r) {
-				case ADMIN:
+				case 'ADMIN':
 					return 'EDIT_GAMES_ADMIN';
-				case TEACHER:
+				case 'TEACHER':
 					return 'EDIT_GAMES_TEACHER';
-				case MEMBER:
+				case 'MEMBER':
 					return 'EDIT_GAMES_MEMBER';
-				case STUDENT:
+				case 'STUDENT':
 					return 'EDIT_GAMES_STUDENT';
 			}
 			throw new Error(`Unhandled user role ${r} in ${id}`);
 		case 'DELETE_GAMES':
 			switch (r) {
-				case ADMIN:
+				case 'ADMIN':
 					return 'DELETE_GAMES_ADMIN';
-				case TEACHER:
+				case 'TEACHER':
 					return 'DELETE_GAMES_TEACHER';
-				case MEMBER:
+				case 'MEMBER':
 					return 'DELETE_GAMES_MEMBER';
-				case STUDENT:
+				case 'STUDENT':
 					return 'DELETE_GAMES_STUDENT';
 			}
 			throw new Error(`Unhandled user role ${r} in ${id}`);
 		case 'SEE_GAMES':
 			switch (r) {
-				case ADMIN:
+				case 'ADMIN':
 					return 'SEE_GAMES_ADMIN';
-				case TEACHER:
+				case 'TEACHER':
 					return 'SEE_GAMES_TEACHER';
-				case MEMBER:
+				case 'MEMBER':
 					return 'SEE_GAMES_MEMBER';
-				case STUDENT:
+				case 'STUDENT':
 					return 'SEE_GAMES_STUDENT';
 			}
 			throw new Error(`Unhandled user role ${r} in ${id}`);
 		case 'EDIT_USERS':
 			switch (r) {
-				case ADMIN:
+				case 'ADMIN':
 					return 'EDIT_USER_ADMIN';
-				case TEACHER:
+				case 'TEACHER':
 					return 'EDIT_USER_TEACHER';
-				case MEMBER:
+				case 'MEMBER':
 					return 'EDIT_USER_MEMBER';
-				case STUDENT:
+				case 'STUDENT':
 					return 'EDIT_USER_STUDENT';
 			}
 			throw new Error(`Unhandled user role ${r} in ${id}`);
 		case 'ASSIGN_ROLE_USERS':
 			switch (r) {
-				case ADMIN:
+				case 'ADMIN':
 					return 'ASSIGN_ROLE_ADMIN';
-				case TEACHER:
+				case 'TEACHER':
 					return 'ASSIGN_ROLE_TEACHER';
-				case MEMBER:
+				case 'MEMBER':
 					return 'ASSIGN_ROLE_MEMBER';
-				case STUDENT:
+				case 'STUDENT':
 					return 'ASSIGN_ROLE_STUDENT';
 			}
 			throw new Error(`Unhandled user role ${r} in ${id}`);
 		case 'CHALLENGE_USERS':
 			switch (r) {
-				case ADMIN:
+				case 'ADMIN':
 					return 'CHALLENGE_USER_ADMIN';
-				case TEACHER:
+				case 'TEACHER':
 					return 'CHALLENGE_USER_TEACHER';
-				case MEMBER:
+				case 'MEMBER':
 					return 'CHALLENGE_USER_MEMBER';
-				case STUDENT:
+				case 'STUDENT':
 					return 'CHALLENGE_USER_STUDENT';
 			}
 			throw new Error(`Unhandled user role ${r} in ${id}`);
 		case 'SEE_GRAPHS':
 			switch (r) {
-				case ADMIN:
+				case 'ADMIN':
 					return 'SEE_GRAPHS_ADMIN';
-				case TEACHER:
+				case 'TEACHER':
 					return 'SEE_GRAPHS_TEACHER';
-				case MEMBER:
+				case 'MEMBER':
 					return 'SEE_GRAPHS_MEMBER';
-				case STUDENT:
+				case 'STUDENT':
 					return 'SEE_GRAPHS_STUDENT';
 			}
 			throw new Error(`Unhandled user role ${r} in ${id}`);
