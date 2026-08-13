@@ -109,10 +109,34 @@ const configuration: Configuration = {
 		}
 	},
 	permissions: {
-		admin: ['challenge_user', 'challenge_admin', 'challenge_member', 'challenge_teacher', 'challenge_student'],
-		teacher: ['challenge_user', 'challenge_admin', 'challenge_member', 'challenge_teacher', 'challenge_student'],
-		member: ['challenge_user', 'challenge_admin', 'challenge_member', 'challenge_teacher', 'challenge_student'],
-		student: ['challenge_user', 'challenge_admin', 'challenge_member', 'challenge_teacher', 'challenge_student']
+		admin: [
+			'CHALLENGE_USER',
+			'CHALLENGE_USER_ADMIN',
+			'CHALLENGE_USER_MEMBER',
+			'CHALLENGE_USER_TEACHER',
+			'CHALLENGE_USER_STUDENT'
+		],
+		teacher: [
+			'CHALLENGE_USER',
+			'CHALLENGE_USER_ADMIN',
+			'CHALLENGE_USER_MEMBER',
+			'CHALLENGE_USER_TEACHER',
+			'CHALLENGE_USER_STUDENT'
+		],
+		member: [
+			'CHALLENGE_USER',
+			'CHALLENGE_USER_ADMIN',
+			'CHALLENGE_USER_MEMBER',
+			'CHALLENGE_USER_TEACHER',
+			'CHALLENGE_USER_STUDENT'
+		],
+		student: [
+			'CHALLENGE_USER',
+			'CHALLENGE_USER_ADMIN',
+			'CHALLENGE_USER_MEMBER',
+			'CHALLENGE_USER_TEACHER',
+			'CHALLENGE_USER_STUDENT'
+		]
 	}
 };
 

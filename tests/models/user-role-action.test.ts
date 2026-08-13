@@ -23,35 +23,6 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import {
-	USER_ROLE_ASSIGN_ADMIN,
-	USER_ROLE_ASSIGN_MEMBER,
-	USER_ROLE_ASSIGN_STUDENT,
-	USER_ROLE_ASSIGN_TEACHER,
-	USER_ROLE_ASSIGN,
-	USER_CHALLENGE_ADMIN,
-	USER_CHALLENGE_MEMBER,
-	USER_CHALLENGE_STUDENT,
-	USER_CHALLENGE_TEACHER,
-	USER_CHALLENGE,
-	GAMES_CREATE,
-	CREATE_USER,
-	USER_EDIT_ADMIN,
-	USER_EDIT_MEMBER,
-	USER_EDIT_STUDENT,
-	USER_EDIT_TEACHER,
-	USER_EDIT,
-	GAMES_EDIT_ADMIN,
-	GAMES_EDIT_MEMBER,
-	GAMES_EDIT_STUDENT,
-	GAMES_EDIT_TEACHER,
-	GAMES_EDIT,
-	GAMES_SEE_ADMIN,
-	GAMES_SEE_MEMBER,
-	GAMES_SEE_STUDENT,
-	GAMES_SEE_TEACHER,
-	GAMES_SEE
-} from '@common/models/user-action';
 import { ADMIN, MEMBER, STUDENT, TEACHER } from '@common/models/user-role';
 import { initializePermissions, UserRoleToUserAction } from '@server/managers/user-role-action';
 
@@ -60,39 +31,39 @@ describe('Actions allowed per user (single role)', () => {
 		let rel = UserRoleToUserAction.getInstance();
 		rel.clear();
 		initializePermissions({
-			admin: [USER_EDIT_TEACHER],
+			admin: ['EDIT_USER_TEACHER'],
 			teacher: [],
 			student: [],
 			member: []
 		});
 
-		expect(rel.roleIncludesAction(ADMIN, CREATE_USER)).toBe(false);
-		expect(rel.roleIncludesAction(ADMIN, GAMES_CREATE)).toBe(false);
-		expect(rel.roleIncludesAction(ADMIN, USER_EDIT)).toBe(true);
-		expect(rel.roleIncludesAction(ADMIN, USER_EDIT_ADMIN)).toBe(false);
-		expect(rel.roleIncludesAction(ADMIN, USER_EDIT_TEACHER)).toBe(true);
-		expect(rel.roleIncludesAction(ADMIN, USER_EDIT_MEMBER)).toBe(false);
-		expect(rel.roleIncludesAction(ADMIN, USER_EDIT_STUDENT)).toBe(false);
-		expect(rel.roleIncludesAction(ADMIN, GAMES_EDIT)).toBe(false);
-		expect(rel.roleIncludesAction(ADMIN, GAMES_EDIT_ADMIN)).toBe(false);
-		expect(rel.roleIncludesAction(ADMIN, GAMES_EDIT_TEACHER)).toBe(false);
-		expect(rel.roleIncludesAction(ADMIN, GAMES_EDIT_MEMBER)).toBe(false);
-		expect(rel.roleIncludesAction(ADMIN, GAMES_EDIT_STUDENT)).toBe(false);
-		expect(rel.roleIncludesAction(ADMIN, USER_ROLE_ASSIGN)).toBe(false);
-		expect(rel.roleIncludesAction(ADMIN, USER_ROLE_ASSIGN_ADMIN)).toBe(false);
-		expect(rel.roleIncludesAction(ADMIN, USER_ROLE_ASSIGN_TEACHER)).toBe(false);
-		expect(rel.roleIncludesAction(ADMIN, USER_ROLE_ASSIGN_MEMBER)).toBe(false);
-		expect(rel.roleIncludesAction(ADMIN, USER_ROLE_ASSIGN_STUDENT)).toBe(false);
-		expect(rel.roleIncludesAction(ADMIN, GAMES_SEE)).toBe(false);
-		expect(rel.roleIncludesAction(ADMIN, GAMES_SEE_ADMIN)).toBe(false);
-		expect(rel.roleIncludesAction(ADMIN, GAMES_SEE_TEACHER)).toBe(false);
-		expect(rel.roleIncludesAction(ADMIN, GAMES_SEE_MEMBER)).toBe(false);
-		expect(rel.roleIncludesAction(ADMIN, GAMES_SEE_STUDENT)).toBe(false);
-		expect(rel.roleIncludesAction(ADMIN, USER_CHALLENGE)).toBe(false);
-		expect(rel.roleIncludesAction(ADMIN, USER_CHALLENGE_ADMIN)).toBe(false);
-		expect(rel.roleIncludesAction(ADMIN, USER_CHALLENGE_MEMBER)).toBe(false);
-		expect(rel.roleIncludesAction(ADMIN, USER_CHALLENGE_TEACHER)).toBe(false);
-		expect(rel.roleIncludesAction(ADMIN, USER_CHALLENGE_STUDENT)).toBe(false);
+		expect(rel.roleIncludesAction(ADMIN, 'CREATE_USER')).toBe(false);
+		expect(rel.roleIncludesAction(ADMIN, 'CREATE_GAMES')).toBe(false);
+		expect(rel.roleIncludesAction(ADMIN, 'EDIT_USER')).toBe(true);
+		expect(rel.roleIncludesAction(ADMIN, 'EDIT_USER_ADMIN')).toBe(false);
+		expect(rel.roleIncludesAction(ADMIN, 'EDIT_USER_TEACHER')).toBe(true);
+		expect(rel.roleIncludesAction(ADMIN, 'EDIT_USER_MEMBER')).toBe(false);
+		expect(rel.roleIncludesAction(ADMIN, 'EDIT_USER_STUDENT')).toBe(false);
+		expect(rel.roleIncludesAction(ADMIN, 'EDIT_GAMES')).toBe(false);
+		expect(rel.roleIncludesAction(ADMIN, 'EDIT_GAMES_ADMIN')).toBe(false);
+		expect(rel.roleIncludesAction(ADMIN, 'EDIT_GAMES_TEACHER')).toBe(false);
+		expect(rel.roleIncludesAction(ADMIN, 'EDIT_GAMES_MEMBER')).toBe(false);
+		expect(rel.roleIncludesAction(ADMIN, 'EDIT_GAMES_STUDENT')).toBe(false);
+		expect(rel.roleIncludesAction(ADMIN, 'ASSIGN_ROLE')).toBe(false);
+		expect(rel.roleIncludesAction(ADMIN, 'ASSIGN_ROLE_ADMIN')).toBe(false);
+		expect(rel.roleIncludesAction(ADMIN, 'ASSIGN_ROLE_TEACHER')).toBe(false);
+		expect(rel.roleIncludesAction(ADMIN, 'ASSIGN_ROLE_MEMBER')).toBe(false);
+		expect(rel.roleIncludesAction(ADMIN, 'ASSIGN_ROLE_STUDENT')).toBe(false);
+		expect(rel.roleIncludesAction(ADMIN, 'SEE_GAMES')).toBe(false);
+		expect(rel.roleIncludesAction(ADMIN, 'SEE_GAMES_ADMIN')).toBe(false);
+		expect(rel.roleIncludesAction(ADMIN, 'SEE_GAMES_TEACHER')).toBe(false);
+		expect(rel.roleIncludesAction(ADMIN, 'SEE_GAMES_MEMBER')).toBe(false);
+		expect(rel.roleIncludesAction(ADMIN, 'SEE_GAMES_STUDENT')).toBe(false);
+		expect(rel.roleIncludesAction(ADMIN, 'CHALLENGE_USER')).toBe(false);
+		expect(rel.roleIncludesAction(ADMIN, 'CHALLENGE_USER_ADMIN')).toBe(false);
+		expect(rel.roleIncludesAction(ADMIN, 'CHALLENGE_USER_MEMBER')).toBe(false);
+		expect(rel.roleIncludesAction(ADMIN, 'CHALLENGE_USER_TEACHER')).toBe(false);
+		expect(rel.roleIncludesAction(ADMIN, 'CHALLENGE_USER_STUDENT')).toBe(false);
 	});
 
 	test('Teacher', () => {
@@ -100,38 +71,38 @@ describe('Actions allowed per user (single role)', () => {
 		rel.clear();
 		initializePermissions({
 			admin: [],
-			teacher: [USER_ROLE_ASSIGN_MEMBER],
+			teacher: ['ASSIGN_ROLE_MEMBER'],
 			student: [],
 			member: []
 		});
 
-		expect(rel.roleIncludesAction(TEACHER, CREATE_USER)).toBe(false);
-		expect(rel.roleIncludesAction(TEACHER, GAMES_CREATE)).toBe(false);
-		expect(rel.roleIncludesAction(TEACHER, USER_EDIT)).toBe(false);
-		expect(rel.roleIncludesAction(TEACHER, USER_EDIT_ADMIN)).toBe(false);
-		expect(rel.roleIncludesAction(TEACHER, USER_EDIT_TEACHER)).toBe(false);
-		expect(rel.roleIncludesAction(TEACHER, USER_EDIT_MEMBER)).toBe(false);
-		expect(rel.roleIncludesAction(TEACHER, USER_EDIT_STUDENT)).toBe(false);
-		expect(rel.roleIncludesAction(TEACHER, GAMES_EDIT)).toBe(false);
-		expect(rel.roleIncludesAction(TEACHER, GAMES_EDIT_ADMIN)).toBe(false);
-		expect(rel.roleIncludesAction(TEACHER, GAMES_EDIT_TEACHER)).toBe(false);
-		expect(rel.roleIncludesAction(TEACHER, GAMES_EDIT_MEMBER)).toBe(false);
-		expect(rel.roleIncludesAction(TEACHER, GAMES_EDIT_STUDENT)).toBe(false);
-		expect(rel.roleIncludesAction(TEACHER, USER_ROLE_ASSIGN)).toBe(true);
-		expect(rel.roleIncludesAction(TEACHER, USER_ROLE_ASSIGN_ADMIN)).toBe(false);
-		expect(rel.roleIncludesAction(TEACHER, USER_ROLE_ASSIGN_TEACHER)).toBe(false);
-		expect(rel.roleIncludesAction(TEACHER, USER_ROLE_ASSIGN_MEMBER)).toBe(true);
-		expect(rel.roleIncludesAction(TEACHER, USER_ROLE_ASSIGN_STUDENT)).toBe(false);
-		expect(rel.roleIncludesAction(TEACHER, GAMES_SEE)).toBe(false);
-		expect(rel.roleIncludesAction(TEACHER, GAMES_SEE_ADMIN)).toBe(false);
-		expect(rel.roleIncludesAction(TEACHER, GAMES_SEE_TEACHER)).toBe(false);
-		expect(rel.roleIncludesAction(TEACHER, GAMES_SEE_MEMBER)).toBe(false);
-		expect(rel.roleIncludesAction(TEACHER, GAMES_SEE_STUDENT)).toBe(false);
-		expect(rel.roleIncludesAction(TEACHER, USER_CHALLENGE)).toBe(false);
-		expect(rel.roleIncludesAction(TEACHER, USER_CHALLENGE_ADMIN)).toBe(false);
-		expect(rel.roleIncludesAction(TEACHER, USER_CHALLENGE_MEMBER)).toBe(false);
-		expect(rel.roleIncludesAction(TEACHER, USER_CHALLENGE_TEACHER)).toBe(false);
-		expect(rel.roleIncludesAction(TEACHER, USER_CHALLENGE_STUDENT)).toBe(false);
+		expect(rel.roleIncludesAction(TEACHER, 'CREATE_USER')).toBe(false);
+		expect(rel.roleIncludesAction(TEACHER, 'CREATE_GAMES')).toBe(false);
+		expect(rel.roleIncludesAction(TEACHER, 'EDIT_USER')).toBe(false);
+		expect(rel.roleIncludesAction(TEACHER, 'EDIT_USER_ADMIN')).toBe(false);
+		expect(rel.roleIncludesAction(TEACHER, 'EDIT_USER_TEACHER')).toBe(false);
+		expect(rel.roleIncludesAction(TEACHER, 'EDIT_USER_MEMBER')).toBe(false);
+		expect(rel.roleIncludesAction(TEACHER, 'EDIT_USER_STUDENT')).toBe(false);
+		expect(rel.roleIncludesAction(TEACHER, 'EDIT_GAMES')).toBe(false);
+		expect(rel.roleIncludesAction(TEACHER, 'EDIT_GAMES_ADMIN')).toBe(false);
+		expect(rel.roleIncludesAction(TEACHER, 'EDIT_GAMES_TEACHER')).toBe(false);
+		expect(rel.roleIncludesAction(TEACHER, 'EDIT_GAMES_MEMBER')).toBe(false);
+		expect(rel.roleIncludesAction(TEACHER, 'EDIT_GAMES_STUDENT')).toBe(false);
+		expect(rel.roleIncludesAction(TEACHER, 'ASSIGN_ROLE')).toBe(true);
+		expect(rel.roleIncludesAction(TEACHER, 'ASSIGN_ROLE_ADMIN')).toBe(false);
+		expect(rel.roleIncludesAction(TEACHER, 'ASSIGN_ROLE_TEACHER')).toBe(false);
+		expect(rel.roleIncludesAction(TEACHER, 'ASSIGN_ROLE_MEMBER')).toBe(true);
+		expect(rel.roleIncludesAction(TEACHER, 'ASSIGN_ROLE_STUDENT')).toBe(false);
+		expect(rel.roleIncludesAction(TEACHER, 'SEE_GAMES')).toBe(false);
+		expect(rel.roleIncludesAction(TEACHER, 'SEE_GAMES_ADMIN')).toBe(false);
+		expect(rel.roleIncludesAction(TEACHER, 'SEE_GAMES_TEACHER')).toBe(false);
+		expect(rel.roleIncludesAction(TEACHER, 'SEE_GAMES_MEMBER')).toBe(false);
+		expect(rel.roleIncludesAction(TEACHER, 'SEE_GAMES_STUDENT')).toBe(false);
+		expect(rel.roleIncludesAction(TEACHER, 'CHALLENGE_USER')).toBe(false);
+		expect(rel.roleIncludesAction(TEACHER, 'CHALLENGE_USER_ADMIN')).toBe(false);
+		expect(rel.roleIncludesAction(TEACHER, 'CHALLENGE_USER_MEMBER')).toBe(false);
+		expect(rel.roleIncludesAction(TEACHER, 'CHALLENGE_USER_TEACHER')).toBe(false);
+		expect(rel.roleIncludesAction(TEACHER, 'CHALLENGE_USER_STUDENT')).toBe(false);
 	});
 
 	test('Student', () => {
@@ -140,37 +111,37 @@ describe('Actions allowed per user (single role)', () => {
 		initializePermissions({
 			admin: [],
 			teacher: [],
-			student: [CREATE_USER, GAMES_CREATE],
+			student: ['CREATE_USER', 'CREATE_GAMES'],
 			member: []
 		});
 
-		expect(rel.roleIncludesAction(STUDENT, CREATE_USER)).toBe(true);
-		expect(rel.roleIncludesAction(STUDENT, GAMES_CREATE)).toBe(true);
-		expect(rel.roleIncludesAction(STUDENT, USER_EDIT)).toBe(false);
-		expect(rel.roleIncludesAction(STUDENT, USER_EDIT_ADMIN)).toBe(false);
-		expect(rel.roleIncludesAction(STUDENT, USER_EDIT_TEACHER)).toBe(false);
-		expect(rel.roleIncludesAction(STUDENT, USER_EDIT_MEMBER)).toBe(false);
-		expect(rel.roleIncludesAction(STUDENT, USER_EDIT_STUDENT)).toBe(false);
-		expect(rel.roleIncludesAction(STUDENT, GAMES_EDIT)).toBe(false);
-		expect(rel.roleIncludesAction(STUDENT, GAMES_EDIT_ADMIN)).toBe(false);
-		expect(rel.roleIncludesAction(STUDENT, GAMES_EDIT_TEACHER)).toBe(false);
-		expect(rel.roleIncludesAction(STUDENT, GAMES_EDIT_MEMBER)).toBe(false);
-		expect(rel.roleIncludesAction(STUDENT, GAMES_EDIT_STUDENT)).toBe(false);
-		expect(rel.roleIncludesAction(STUDENT, USER_ROLE_ASSIGN)).toBe(false);
-		expect(rel.roleIncludesAction(STUDENT, USER_ROLE_ASSIGN_ADMIN)).toBe(false);
-		expect(rel.roleIncludesAction(STUDENT, USER_ROLE_ASSIGN_TEACHER)).toBe(false);
-		expect(rel.roleIncludesAction(STUDENT, USER_ROLE_ASSIGN_MEMBER)).toBe(false);
-		expect(rel.roleIncludesAction(STUDENT, USER_ROLE_ASSIGN_STUDENT)).toBe(false);
-		expect(rel.roleIncludesAction(STUDENT, GAMES_SEE)).toBe(false);
-		expect(rel.roleIncludesAction(STUDENT, GAMES_SEE_ADMIN)).toBe(false);
-		expect(rel.roleIncludesAction(STUDENT, GAMES_SEE_TEACHER)).toBe(false);
-		expect(rel.roleIncludesAction(STUDENT, GAMES_SEE_MEMBER)).toBe(false);
-		expect(rel.roleIncludesAction(STUDENT, GAMES_SEE_STUDENT)).toBe(false);
-		expect(rel.roleIncludesAction(STUDENT, USER_CHALLENGE)).toBe(false);
-		expect(rel.roleIncludesAction(STUDENT, USER_CHALLENGE_ADMIN)).toBe(false);
-		expect(rel.roleIncludesAction(STUDENT, USER_CHALLENGE_MEMBER)).toBe(false);
-		expect(rel.roleIncludesAction(STUDENT, USER_CHALLENGE_TEACHER)).toBe(false);
-		expect(rel.roleIncludesAction(STUDENT, USER_CHALLENGE_STUDENT)).toBe(false);
+		expect(rel.roleIncludesAction(STUDENT, 'CREATE_USER')).toBe(true);
+		expect(rel.roleIncludesAction(STUDENT, 'CREATE_GAMES')).toBe(true);
+		expect(rel.roleIncludesAction(STUDENT, 'EDIT_USER')).toBe(false);
+		expect(rel.roleIncludesAction(STUDENT, 'EDIT_USER_ADMIN')).toBe(false);
+		expect(rel.roleIncludesAction(STUDENT, 'EDIT_USER_TEACHER')).toBe(false);
+		expect(rel.roleIncludesAction(STUDENT, 'EDIT_USER_MEMBER')).toBe(false);
+		expect(rel.roleIncludesAction(STUDENT, 'EDIT_USER_STUDENT')).toBe(false);
+		expect(rel.roleIncludesAction(STUDENT, 'EDIT_GAMES')).toBe(false);
+		expect(rel.roleIncludesAction(STUDENT, 'EDIT_GAMES_ADMIN')).toBe(false);
+		expect(rel.roleIncludesAction(STUDENT, 'EDIT_GAMES_TEACHER')).toBe(false);
+		expect(rel.roleIncludesAction(STUDENT, 'EDIT_GAMES_MEMBER')).toBe(false);
+		expect(rel.roleIncludesAction(STUDENT, 'EDIT_GAMES_STUDENT')).toBe(false);
+		expect(rel.roleIncludesAction(STUDENT, 'ASSIGN_ROLE')).toBe(false);
+		expect(rel.roleIncludesAction(STUDENT, 'ASSIGN_ROLE_ADMIN')).toBe(false);
+		expect(rel.roleIncludesAction(STUDENT, 'ASSIGN_ROLE_TEACHER')).toBe(false);
+		expect(rel.roleIncludesAction(STUDENT, 'ASSIGN_ROLE_MEMBER')).toBe(false);
+		expect(rel.roleIncludesAction(STUDENT, 'ASSIGN_ROLE_STUDENT')).toBe(false);
+		expect(rel.roleIncludesAction(STUDENT, 'SEE_GAMES')).toBe(false);
+		expect(rel.roleIncludesAction(STUDENT, 'SEE_GAMES_ADMIN')).toBe(false);
+		expect(rel.roleIncludesAction(STUDENT, 'SEE_GAMES_TEACHER')).toBe(false);
+		expect(rel.roleIncludesAction(STUDENT, 'SEE_GAMES_MEMBER')).toBe(false);
+		expect(rel.roleIncludesAction(STUDENT, 'SEE_GAMES_STUDENT')).toBe(false);
+		expect(rel.roleIncludesAction(STUDENT, 'CHALLENGE_USER')).toBe(false);
+		expect(rel.roleIncludesAction(STUDENT, 'CHALLENGE_USER_ADMIN')).toBe(false);
+		expect(rel.roleIncludesAction(STUDENT, 'CHALLENGE_USER_MEMBER')).toBe(false);
+		expect(rel.roleIncludesAction(STUDENT, 'CHALLENGE_USER_TEACHER')).toBe(false);
+		expect(rel.roleIncludesAction(STUDENT, 'CHALLENGE_USER_STUDENT')).toBe(false);
 	});
 
 	test('Member', () => {
@@ -180,36 +151,36 @@ describe('Actions allowed per user (single role)', () => {
 			admin: [],
 			teacher: [],
 			student: [],
-			member: [USER_CHALLENGE_ADMIN, USER_CHALLENGE_STUDENT]
+			member: ['CHALLENGE_USER_ADMIN', 'CHALLENGE_USER_STUDENT']
 		});
 
-		expect(rel.roleIncludesAction(MEMBER, CREATE_USER)).toBe(false);
-		expect(rel.roleIncludesAction(MEMBER, GAMES_CREATE)).toBe(false);
-		expect(rel.roleIncludesAction(MEMBER, USER_EDIT)).toBe(false);
-		expect(rel.roleIncludesAction(MEMBER, USER_EDIT_ADMIN)).toBe(false);
-		expect(rel.roleIncludesAction(MEMBER, USER_EDIT_TEACHER)).toBe(false);
-		expect(rel.roleIncludesAction(MEMBER, USER_EDIT_MEMBER)).toBe(false);
-		expect(rel.roleIncludesAction(MEMBER, USER_EDIT_STUDENT)).toBe(false);
-		expect(rel.roleIncludesAction(MEMBER, GAMES_EDIT)).toBe(false);
-		expect(rel.roleIncludesAction(MEMBER, GAMES_EDIT_ADMIN)).toBe(false);
-		expect(rel.roleIncludesAction(MEMBER, GAMES_EDIT_TEACHER)).toBe(false);
-		expect(rel.roleIncludesAction(MEMBER, GAMES_EDIT_MEMBER)).toBe(false);
-		expect(rel.roleIncludesAction(MEMBER, GAMES_EDIT_STUDENT)).toBe(false);
-		expect(rel.roleIncludesAction(MEMBER, USER_ROLE_ASSIGN)).toBe(false);
-		expect(rel.roleIncludesAction(MEMBER, USER_ROLE_ASSIGN_ADMIN)).toBe(false);
-		expect(rel.roleIncludesAction(MEMBER, USER_ROLE_ASSIGN_TEACHER)).toBe(false);
-		expect(rel.roleIncludesAction(MEMBER, USER_ROLE_ASSIGN_MEMBER)).toBe(false);
-		expect(rel.roleIncludesAction(MEMBER, USER_ROLE_ASSIGN_STUDENT)).toBe(false);
-		expect(rel.roleIncludesAction(MEMBER, GAMES_SEE)).toBe(false);
-		expect(rel.roleIncludesAction(MEMBER, GAMES_SEE_ADMIN)).toBe(false);
-		expect(rel.roleIncludesAction(MEMBER, GAMES_SEE_TEACHER)).toBe(false);
-		expect(rel.roleIncludesAction(MEMBER, GAMES_SEE_MEMBER)).toBe(false);
-		expect(rel.roleIncludesAction(MEMBER, GAMES_SEE_STUDENT)).toBe(false);
-		expect(rel.roleIncludesAction(MEMBER, USER_CHALLENGE)).toBe(true);
-		expect(rel.roleIncludesAction(MEMBER, USER_CHALLENGE_ADMIN)).toBe(true);
-		expect(rel.roleIncludesAction(MEMBER, USER_CHALLENGE_MEMBER)).toBe(false);
-		expect(rel.roleIncludesAction(MEMBER, USER_CHALLENGE_TEACHER)).toBe(false);
-		expect(rel.roleIncludesAction(MEMBER, USER_CHALLENGE_STUDENT)).toBe(true);
+		expect(rel.roleIncludesAction(MEMBER, 'CREATE_USER')).toBe(false);
+		expect(rel.roleIncludesAction(MEMBER, 'CREATE_GAMES')).toBe(false);
+		expect(rel.roleIncludesAction(MEMBER, 'EDIT_USER')).toBe(false);
+		expect(rel.roleIncludesAction(MEMBER, 'EDIT_USER_ADMIN')).toBe(false);
+		expect(rel.roleIncludesAction(MEMBER, 'EDIT_USER_TEACHER')).toBe(false);
+		expect(rel.roleIncludesAction(MEMBER, 'EDIT_USER_MEMBER')).toBe(false);
+		expect(rel.roleIncludesAction(MEMBER, 'EDIT_USER_STUDENT')).toBe(false);
+		expect(rel.roleIncludesAction(MEMBER, 'EDIT_GAMES')).toBe(false);
+		expect(rel.roleIncludesAction(MEMBER, 'EDIT_GAMES_ADMIN')).toBe(false);
+		expect(rel.roleIncludesAction(MEMBER, 'EDIT_GAMES_TEACHER')).toBe(false);
+		expect(rel.roleIncludesAction(MEMBER, 'EDIT_GAMES_MEMBER')).toBe(false);
+		expect(rel.roleIncludesAction(MEMBER, 'EDIT_GAMES_STUDENT')).toBe(false);
+		expect(rel.roleIncludesAction(MEMBER, 'ASSIGN_ROLE')).toBe(false);
+		expect(rel.roleIncludesAction(MEMBER, 'ASSIGN_ROLE_ADMIN')).toBe(false);
+		expect(rel.roleIncludesAction(MEMBER, 'ASSIGN_ROLE_TEACHER')).toBe(false);
+		expect(rel.roleIncludesAction(MEMBER, 'ASSIGN_ROLE_MEMBER')).toBe(false);
+		expect(rel.roleIncludesAction(MEMBER, 'ASSIGN_ROLE_STUDENT')).toBe(false);
+		expect(rel.roleIncludesAction(MEMBER, 'SEE_GAMES')).toBe(false);
+		expect(rel.roleIncludesAction(MEMBER, 'SEE_GAMES_ADMIN')).toBe(false);
+		expect(rel.roleIncludesAction(MEMBER, 'SEE_GAMES_TEACHER')).toBe(false);
+		expect(rel.roleIncludesAction(MEMBER, 'SEE_GAMES_MEMBER')).toBe(false);
+		expect(rel.roleIncludesAction(MEMBER, 'SEE_GAMES_STUDENT')).toBe(false);
+		expect(rel.roleIncludesAction(MEMBER, 'CHALLENGE_USER')).toBe(true);
+		expect(rel.roleIncludesAction(MEMBER, 'CHALLENGE_USER_ADMIN')).toBe(true);
+		expect(rel.roleIncludesAction(MEMBER, 'CHALLENGE_USER_MEMBER')).toBe(false);
+		expect(rel.roleIncludesAction(MEMBER, 'CHALLENGE_USER_TEACHER')).toBe(false);
+		expect(rel.roleIncludesAction(MEMBER, 'CHALLENGE_USER_STUDENT')).toBe(true);
 	});
 });
 
@@ -218,67 +189,67 @@ describe('Actions allowed per user (multiple roles)', () => {
 		let rel = UserRoleToUserAction.getInstance();
 		rel.clear();
 		initializePermissions({
-			admin: [USER_EDIT_TEACHER],
+			admin: ['EDIT_USER_TEACHER'],
 			teacher: [],
-			student: [USER_CHALLENGE_STUDENT],
+			student: ['CHALLENGE_USER_STUDENT'],
 			member: []
 		});
 
-		expect(rel.roleIncludesAction(ADMIN, CREATE_USER)).toBe(false);
-		expect(rel.roleIncludesAction(ADMIN, GAMES_CREATE)).toBe(false);
-		expect(rel.roleIncludesAction(ADMIN, USER_EDIT)).toBe(true);
-		expect(rel.roleIncludesAction(ADMIN, USER_EDIT_ADMIN)).toBe(false);
-		expect(rel.roleIncludesAction(ADMIN, USER_EDIT_TEACHER)).toBe(true);
-		expect(rel.roleIncludesAction(ADMIN, USER_EDIT_MEMBER)).toBe(false);
-		expect(rel.roleIncludesAction(ADMIN, USER_EDIT_STUDENT)).toBe(false);
-		expect(rel.roleIncludesAction(ADMIN, GAMES_EDIT)).toBe(false);
-		expect(rel.roleIncludesAction(ADMIN, GAMES_EDIT_ADMIN)).toBe(false);
-		expect(rel.roleIncludesAction(ADMIN, GAMES_EDIT_TEACHER)).toBe(false);
-		expect(rel.roleIncludesAction(ADMIN, GAMES_EDIT_MEMBER)).toBe(false);
-		expect(rel.roleIncludesAction(ADMIN, GAMES_EDIT_STUDENT)).toBe(false);
-		expect(rel.roleIncludesAction(ADMIN, USER_ROLE_ASSIGN)).toBe(false);
-		expect(rel.roleIncludesAction(ADMIN, USER_ROLE_ASSIGN_ADMIN)).toBe(false);
-		expect(rel.roleIncludesAction(ADMIN, USER_ROLE_ASSIGN_TEACHER)).toBe(false);
-		expect(rel.roleIncludesAction(ADMIN, USER_ROLE_ASSIGN_MEMBER)).toBe(false);
-		expect(rel.roleIncludesAction(ADMIN, USER_ROLE_ASSIGN_STUDENT)).toBe(false);
-		expect(rel.roleIncludesAction(ADMIN, GAMES_SEE)).toBe(false);
-		expect(rel.roleIncludesAction(ADMIN, GAMES_SEE_ADMIN)).toBe(false);
-		expect(rel.roleIncludesAction(ADMIN, GAMES_SEE_TEACHER)).toBe(false);
-		expect(rel.roleIncludesAction(ADMIN, GAMES_SEE_MEMBER)).toBe(false);
-		expect(rel.roleIncludesAction(ADMIN, GAMES_SEE_STUDENT)).toBe(false);
-		expect(rel.roleIncludesAction(ADMIN, USER_CHALLENGE)).toBe(false);
-		expect(rel.roleIncludesAction(ADMIN, USER_CHALLENGE_ADMIN)).toBe(false);
-		expect(rel.roleIncludesAction(ADMIN, USER_CHALLENGE_MEMBER)).toBe(false);
-		expect(rel.roleIncludesAction(ADMIN, USER_CHALLENGE_TEACHER)).toBe(false);
-		expect(rel.roleIncludesAction(ADMIN, USER_CHALLENGE_STUDENT)).toBe(false);
+		expect(rel.roleIncludesAction(ADMIN, 'CREATE_USER')).toBe(false);
+		expect(rel.roleIncludesAction(ADMIN, 'CREATE_GAMES')).toBe(false);
+		expect(rel.roleIncludesAction(ADMIN, 'EDIT_USER')).toBe(true);
+		expect(rel.roleIncludesAction(ADMIN, 'EDIT_USER_ADMIN')).toBe(false);
+		expect(rel.roleIncludesAction(ADMIN, 'EDIT_USER_TEACHER')).toBe(true);
+		expect(rel.roleIncludesAction(ADMIN, 'EDIT_USER_MEMBER')).toBe(false);
+		expect(rel.roleIncludesAction(ADMIN, 'EDIT_USER_STUDENT')).toBe(false);
+		expect(rel.roleIncludesAction(ADMIN, 'EDIT_GAMES')).toBe(false);
+		expect(rel.roleIncludesAction(ADMIN, 'EDIT_GAMES_ADMIN')).toBe(false);
+		expect(rel.roleIncludesAction(ADMIN, 'EDIT_GAMES_TEACHER')).toBe(false);
+		expect(rel.roleIncludesAction(ADMIN, 'EDIT_GAMES_MEMBER')).toBe(false);
+		expect(rel.roleIncludesAction(ADMIN, 'EDIT_GAMES_STUDENT')).toBe(false);
+		expect(rel.roleIncludesAction(ADMIN, 'ASSIGN_ROLE')).toBe(false);
+		expect(rel.roleIncludesAction(ADMIN, 'ASSIGN_ROLE_ADMIN')).toBe(false);
+		expect(rel.roleIncludesAction(ADMIN, 'ASSIGN_ROLE_TEACHER')).toBe(false);
+		expect(rel.roleIncludesAction(ADMIN, 'ASSIGN_ROLE_MEMBER')).toBe(false);
+		expect(rel.roleIncludesAction(ADMIN, 'ASSIGN_ROLE_STUDENT')).toBe(false);
+		expect(rel.roleIncludesAction(ADMIN, 'SEE_GAMES')).toBe(false);
+		expect(rel.roleIncludesAction(ADMIN, 'SEE_GAMES_ADMIN')).toBe(false);
+		expect(rel.roleIncludesAction(ADMIN, 'SEE_GAMES_TEACHER')).toBe(false);
+		expect(rel.roleIncludesAction(ADMIN, 'SEE_GAMES_MEMBER')).toBe(false);
+		expect(rel.roleIncludesAction(ADMIN, 'SEE_GAMES_STUDENT')).toBe(false);
+		expect(rel.roleIncludesAction(ADMIN, 'CHALLENGE_USER')).toBe(false);
+		expect(rel.roleIncludesAction(ADMIN, 'CHALLENGE_USER_ADMIN')).toBe(false);
+		expect(rel.roleIncludesAction(ADMIN, 'CHALLENGE_USER_MEMBER')).toBe(false);
+		expect(rel.roleIncludesAction(ADMIN, 'CHALLENGE_USER_TEACHER')).toBe(false);
+		expect(rel.roleIncludesAction(ADMIN, 'CHALLENGE_USER_STUDENT')).toBe(false);
 
-		expect(rel.roleIncludesAction(STUDENT, CREATE_USER)).toBe(false);
-		expect(rel.roleIncludesAction(STUDENT, GAMES_CREATE)).toBe(false);
-		expect(rel.roleIncludesAction(STUDENT, USER_EDIT)).toBe(false);
-		expect(rel.roleIncludesAction(STUDENT, USER_EDIT_ADMIN)).toBe(false);
-		expect(rel.roleIncludesAction(STUDENT, USER_EDIT_TEACHER)).toBe(false);
-		expect(rel.roleIncludesAction(STUDENT, USER_EDIT_MEMBER)).toBe(false);
-		expect(rel.roleIncludesAction(STUDENT, USER_EDIT_STUDENT)).toBe(false);
-		expect(rel.roleIncludesAction(STUDENT, GAMES_EDIT)).toBe(false);
-		expect(rel.roleIncludesAction(STUDENT, GAMES_EDIT_ADMIN)).toBe(false);
-		expect(rel.roleIncludesAction(STUDENT, GAMES_EDIT_TEACHER)).toBe(false);
-		expect(rel.roleIncludesAction(STUDENT, GAMES_EDIT_MEMBER)).toBe(false);
-		expect(rel.roleIncludesAction(STUDENT, GAMES_EDIT_STUDENT)).toBe(false);
-		expect(rel.roleIncludesAction(STUDENT, USER_ROLE_ASSIGN)).toBe(false);
-		expect(rel.roleIncludesAction(STUDENT, USER_ROLE_ASSIGN_ADMIN)).toBe(false);
-		expect(rel.roleIncludesAction(STUDENT, USER_ROLE_ASSIGN_TEACHER)).toBe(false);
-		expect(rel.roleIncludesAction(STUDENT, USER_ROLE_ASSIGN_MEMBER)).toBe(false);
-		expect(rel.roleIncludesAction(STUDENT, USER_ROLE_ASSIGN_STUDENT)).toBe(false);
-		expect(rel.roleIncludesAction(STUDENT, GAMES_SEE)).toBe(false);
-		expect(rel.roleIncludesAction(STUDENT, GAMES_SEE_ADMIN)).toBe(false);
-		expect(rel.roleIncludesAction(STUDENT, GAMES_SEE_TEACHER)).toBe(false);
-		expect(rel.roleIncludesAction(STUDENT, GAMES_SEE_MEMBER)).toBe(false);
-		expect(rel.roleIncludesAction(STUDENT, GAMES_SEE_STUDENT)).toBe(false);
-		expect(rel.roleIncludesAction(STUDENT, USER_CHALLENGE)).toBe(true);
-		expect(rel.roleIncludesAction(STUDENT, USER_CHALLENGE_ADMIN)).toBe(false);
-		expect(rel.roleIncludesAction(STUDENT, USER_CHALLENGE_MEMBER)).toBe(false);
-		expect(rel.roleIncludesAction(STUDENT, USER_CHALLENGE_TEACHER)).toBe(false);
-		expect(rel.roleIncludesAction(STUDENT, USER_CHALLENGE_STUDENT)).toBe(true);
+		expect(rel.roleIncludesAction(STUDENT, 'CREATE_USER')).toBe(false);
+		expect(rel.roleIncludesAction(STUDENT, 'CREATE_GAMES')).toBe(false);
+		expect(rel.roleIncludesAction(STUDENT, 'EDIT_USER')).toBe(false);
+		expect(rel.roleIncludesAction(STUDENT, 'EDIT_USER_ADMIN')).toBe(false);
+		expect(rel.roleIncludesAction(STUDENT, 'EDIT_USER_TEACHER')).toBe(false);
+		expect(rel.roleIncludesAction(STUDENT, 'EDIT_USER_MEMBER')).toBe(false);
+		expect(rel.roleIncludesAction(STUDENT, 'EDIT_USER_STUDENT')).toBe(false);
+		expect(rel.roleIncludesAction(STUDENT, 'EDIT_GAMES')).toBe(false);
+		expect(rel.roleIncludesAction(STUDENT, 'EDIT_GAMES_ADMIN')).toBe(false);
+		expect(rel.roleIncludesAction(STUDENT, 'EDIT_GAMES_TEACHER')).toBe(false);
+		expect(rel.roleIncludesAction(STUDENT, 'EDIT_GAMES_MEMBER')).toBe(false);
+		expect(rel.roleIncludesAction(STUDENT, 'EDIT_GAMES_STUDENT')).toBe(false);
+		expect(rel.roleIncludesAction(STUDENT, 'ASSIGN_ROLE')).toBe(false);
+		expect(rel.roleIncludesAction(STUDENT, 'ASSIGN_ROLE_ADMIN')).toBe(false);
+		expect(rel.roleIncludesAction(STUDENT, 'ASSIGN_ROLE_TEACHER')).toBe(false);
+		expect(rel.roleIncludesAction(STUDENT, 'ASSIGN_ROLE_MEMBER')).toBe(false);
+		expect(rel.roleIncludesAction(STUDENT, 'ASSIGN_ROLE_STUDENT')).toBe(false);
+		expect(rel.roleIncludesAction(STUDENT, 'SEE_GAMES')).toBe(false);
+		expect(rel.roleIncludesAction(STUDENT, 'SEE_GAMES_ADMIN')).toBe(false);
+		expect(rel.roleIncludesAction(STUDENT, 'SEE_GAMES_TEACHER')).toBe(false);
+		expect(rel.roleIncludesAction(STUDENT, 'SEE_GAMES_MEMBER')).toBe(false);
+		expect(rel.roleIncludesAction(STUDENT, 'SEE_GAMES_STUDENT')).toBe(false);
+		expect(rel.roleIncludesAction(STUDENT, 'CHALLENGE_USER')).toBe(true);
+		expect(rel.roleIncludesAction(STUDENT, 'CHALLENGE_USER_ADMIN')).toBe(false);
+		expect(rel.roleIncludesAction(STUDENT, 'CHALLENGE_USER_MEMBER')).toBe(false);
+		expect(rel.roleIncludesAction(STUDENT, 'CHALLENGE_USER_TEACHER')).toBe(false);
+		expect(rel.roleIncludesAction(STUDENT, 'CHALLENGE_USER_STUDENT')).toBe(true);
 	});
 
 	test('Teacher + Member', () => {
@@ -286,65 +257,65 @@ describe('Actions allowed per user (multiple roles)', () => {
 		rel.clear();
 		initializePermissions({
 			admin: [],
-			teacher: [USER_ROLE_ASSIGN_STUDENT, GAMES_SEE_MEMBER],
+			teacher: ['ASSIGN_ROLE_STUDENT', 'SEE_GAMES_MEMBER'],
 			student: [],
-			member: [USER_CHALLENGE_STUDENT, USER_CHALLENGE_TEACHER]
+			member: ['CHALLENGE_USER_STUDENT', 'CHALLENGE_USER_TEACHER']
 		});
 
-		expect(rel.roleIncludesAction(TEACHER, CREATE_USER)).toBe(false);
-		expect(rel.roleIncludesAction(TEACHER, GAMES_CREATE)).toBe(false);
-		expect(rel.roleIncludesAction(TEACHER, USER_EDIT)).toBe(false);
-		expect(rel.roleIncludesAction(TEACHER, USER_EDIT_ADMIN)).toBe(false);
-		expect(rel.roleIncludesAction(TEACHER, USER_EDIT_TEACHER)).toBe(false);
-		expect(rel.roleIncludesAction(TEACHER, USER_EDIT_MEMBER)).toBe(false);
-		expect(rel.roleIncludesAction(TEACHER, USER_EDIT_STUDENT)).toBe(false);
-		expect(rel.roleIncludesAction(TEACHER, GAMES_EDIT)).toBe(false);
-		expect(rel.roleIncludesAction(TEACHER, GAMES_EDIT_ADMIN)).toBe(false);
-		expect(rel.roleIncludesAction(TEACHER, GAMES_EDIT_TEACHER)).toBe(false);
-		expect(rel.roleIncludesAction(TEACHER, GAMES_EDIT_MEMBER)).toBe(false);
-		expect(rel.roleIncludesAction(TEACHER, GAMES_EDIT_STUDENT)).toBe(false);
-		expect(rel.roleIncludesAction(TEACHER, USER_ROLE_ASSIGN)).toBe(true);
-		expect(rel.roleIncludesAction(TEACHER, USER_ROLE_ASSIGN_ADMIN)).toBe(false);
-		expect(rel.roleIncludesAction(TEACHER, USER_ROLE_ASSIGN_TEACHER)).toBe(false);
-		expect(rel.roleIncludesAction(TEACHER, USER_ROLE_ASSIGN_MEMBER)).toBe(false);
-		expect(rel.roleIncludesAction(TEACHER, USER_ROLE_ASSIGN_STUDENT)).toBe(true);
-		expect(rel.roleIncludesAction(TEACHER, GAMES_SEE)).toBe(true);
-		expect(rel.roleIncludesAction(TEACHER, GAMES_SEE_ADMIN)).toBe(false);
-		expect(rel.roleIncludesAction(TEACHER, GAMES_SEE_TEACHER)).toBe(false);
-		expect(rel.roleIncludesAction(TEACHER, GAMES_SEE_MEMBER)).toBe(true);
-		expect(rel.roleIncludesAction(TEACHER, GAMES_SEE_STUDENT)).toBe(false);
-		expect(rel.roleIncludesAction(TEACHER, USER_CHALLENGE)).toBe(false);
-		expect(rel.roleIncludesAction(TEACHER, USER_CHALLENGE_ADMIN)).toBe(false);
-		expect(rel.roleIncludesAction(TEACHER, USER_CHALLENGE_MEMBER)).toBe(false);
-		expect(rel.roleIncludesAction(TEACHER, USER_CHALLENGE_TEACHER)).toBe(false);
-		expect(rel.roleIncludesAction(TEACHER, USER_CHALLENGE_STUDENT)).toBe(false);
+		expect(rel.roleIncludesAction(TEACHER, 'CREATE_USER')).toBe(false);
+		expect(rel.roleIncludesAction(TEACHER, 'CREATE_GAMES')).toBe(false);
+		expect(rel.roleIncludesAction(TEACHER, 'EDIT_USER')).toBe(false);
+		expect(rel.roleIncludesAction(TEACHER, 'EDIT_USER_ADMIN')).toBe(false);
+		expect(rel.roleIncludesAction(TEACHER, 'EDIT_USER_TEACHER')).toBe(false);
+		expect(rel.roleIncludesAction(TEACHER, 'EDIT_USER_MEMBER')).toBe(false);
+		expect(rel.roleIncludesAction(TEACHER, 'EDIT_USER_STUDENT')).toBe(false);
+		expect(rel.roleIncludesAction(TEACHER, 'EDIT_GAMES')).toBe(false);
+		expect(rel.roleIncludesAction(TEACHER, 'EDIT_GAMES_ADMIN')).toBe(false);
+		expect(rel.roleIncludesAction(TEACHER, 'EDIT_GAMES_TEACHER')).toBe(false);
+		expect(rel.roleIncludesAction(TEACHER, 'EDIT_GAMES_MEMBER')).toBe(false);
+		expect(rel.roleIncludesAction(TEACHER, 'EDIT_GAMES_STUDENT')).toBe(false);
+		expect(rel.roleIncludesAction(TEACHER, 'ASSIGN_ROLE')).toBe(true);
+		expect(rel.roleIncludesAction(TEACHER, 'ASSIGN_ROLE_ADMIN')).toBe(false);
+		expect(rel.roleIncludesAction(TEACHER, 'ASSIGN_ROLE_TEACHER')).toBe(false);
+		expect(rel.roleIncludesAction(TEACHER, 'ASSIGN_ROLE_MEMBER')).toBe(false);
+		expect(rel.roleIncludesAction(TEACHER, 'ASSIGN_ROLE_STUDENT')).toBe(true);
+		expect(rel.roleIncludesAction(TEACHER, 'SEE_GAMES')).toBe(true);
+		expect(rel.roleIncludesAction(TEACHER, 'SEE_GAMES_ADMIN')).toBe(false);
+		expect(rel.roleIncludesAction(TEACHER, 'SEE_GAMES_TEACHER')).toBe(false);
+		expect(rel.roleIncludesAction(TEACHER, 'SEE_GAMES_MEMBER')).toBe(true);
+		expect(rel.roleIncludesAction(TEACHER, 'SEE_GAMES_STUDENT')).toBe(false);
+		expect(rel.roleIncludesAction(TEACHER, 'CHALLENGE_USER')).toBe(false);
+		expect(rel.roleIncludesAction(TEACHER, 'CHALLENGE_USER_ADMIN')).toBe(false);
+		expect(rel.roleIncludesAction(TEACHER, 'CHALLENGE_USER_MEMBER')).toBe(false);
+		expect(rel.roleIncludesAction(TEACHER, 'CHALLENGE_USER_TEACHER')).toBe(false);
+		expect(rel.roleIncludesAction(TEACHER, 'CHALLENGE_USER_STUDENT')).toBe(false);
 
-		expect(rel.roleIncludesAction(MEMBER, CREATE_USER)).toBe(false);
-		expect(rel.roleIncludesAction(MEMBER, GAMES_CREATE)).toBe(false);
-		expect(rel.roleIncludesAction(MEMBER, USER_EDIT)).toBe(false);
-		expect(rel.roleIncludesAction(MEMBER, USER_EDIT_ADMIN)).toBe(false);
-		expect(rel.roleIncludesAction(MEMBER, USER_EDIT_TEACHER)).toBe(false);
-		expect(rel.roleIncludesAction(MEMBER, USER_EDIT_MEMBER)).toBe(false);
-		expect(rel.roleIncludesAction(MEMBER, USER_EDIT_STUDENT)).toBe(false);
-		expect(rel.roleIncludesAction(MEMBER, GAMES_EDIT)).toBe(false);
-		expect(rel.roleIncludesAction(MEMBER, GAMES_EDIT_ADMIN)).toBe(false);
-		expect(rel.roleIncludesAction(MEMBER, GAMES_EDIT_TEACHER)).toBe(false);
-		expect(rel.roleIncludesAction(MEMBER, GAMES_EDIT_MEMBER)).toBe(false);
-		expect(rel.roleIncludesAction(MEMBER, GAMES_EDIT_STUDENT)).toBe(false);
-		expect(rel.roleIncludesAction(MEMBER, USER_ROLE_ASSIGN)).toBe(false);
-		expect(rel.roleIncludesAction(MEMBER, USER_ROLE_ASSIGN_ADMIN)).toBe(false);
-		expect(rel.roleIncludesAction(MEMBER, USER_ROLE_ASSIGN_TEACHER)).toBe(false);
-		expect(rel.roleIncludesAction(MEMBER, USER_ROLE_ASSIGN_MEMBER)).toBe(false);
-		expect(rel.roleIncludesAction(MEMBER, USER_ROLE_ASSIGN_STUDENT)).toBe(false);
-		expect(rel.roleIncludesAction(MEMBER, GAMES_SEE)).toBe(false);
-		expect(rel.roleIncludesAction(MEMBER, GAMES_SEE_ADMIN)).toBe(false);
-		expect(rel.roleIncludesAction(MEMBER, GAMES_SEE_TEACHER)).toBe(false);
-		expect(rel.roleIncludesAction(MEMBER, GAMES_SEE_MEMBER)).toBe(false);
-		expect(rel.roleIncludesAction(MEMBER, GAMES_SEE_STUDENT)).toBe(false);
-		expect(rel.roleIncludesAction(MEMBER, USER_CHALLENGE)).toBe(true);
-		expect(rel.roleIncludesAction(MEMBER, USER_CHALLENGE_ADMIN)).toBe(false);
-		expect(rel.roleIncludesAction(MEMBER, USER_CHALLENGE_MEMBER)).toBe(false);
-		expect(rel.roleIncludesAction(MEMBER, USER_CHALLENGE_TEACHER)).toBe(true);
-		expect(rel.roleIncludesAction(MEMBER, USER_CHALLENGE_STUDENT)).toBe(true);
+		expect(rel.roleIncludesAction(MEMBER, 'CREATE_USER')).toBe(false);
+		expect(rel.roleIncludesAction(MEMBER, 'CREATE_GAMES')).toBe(false);
+		expect(rel.roleIncludesAction(MEMBER, 'EDIT_USER')).toBe(false);
+		expect(rel.roleIncludesAction(MEMBER, 'EDIT_USER_ADMIN')).toBe(false);
+		expect(rel.roleIncludesAction(MEMBER, 'EDIT_USER_TEACHER')).toBe(false);
+		expect(rel.roleIncludesAction(MEMBER, 'EDIT_USER_MEMBER')).toBe(false);
+		expect(rel.roleIncludesAction(MEMBER, 'EDIT_USER_STUDENT')).toBe(false);
+		expect(rel.roleIncludesAction(MEMBER, 'EDIT_GAMES')).toBe(false);
+		expect(rel.roleIncludesAction(MEMBER, 'EDIT_GAMES_ADMIN')).toBe(false);
+		expect(rel.roleIncludesAction(MEMBER, 'EDIT_GAMES_TEACHER')).toBe(false);
+		expect(rel.roleIncludesAction(MEMBER, 'EDIT_GAMES_MEMBER')).toBe(false);
+		expect(rel.roleIncludesAction(MEMBER, 'EDIT_GAMES_STUDENT')).toBe(false);
+		expect(rel.roleIncludesAction(MEMBER, 'ASSIGN_ROLE')).toBe(false);
+		expect(rel.roleIncludesAction(MEMBER, 'ASSIGN_ROLE_ADMIN')).toBe(false);
+		expect(rel.roleIncludesAction(MEMBER, 'ASSIGN_ROLE_TEACHER')).toBe(false);
+		expect(rel.roleIncludesAction(MEMBER, 'ASSIGN_ROLE_MEMBER')).toBe(false);
+		expect(rel.roleIncludesAction(MEMBER, 'ASSIGN_ROLE_STUDENT')).toBe(false);
+		expect(rel.roleIncludesAction(MEMBER, 'SEE_GAMES')).toBe(false);
+		expect(rel.roleIncludesAction(MEMBER, 'SEE_GAMES_ADMIN')).toBe(false);
+		expect(rel.roleIncludesAction(MEMBER, 'SEE_GAMES_TEACHER')).toBe(false);
+		expect(rel.roleIncludesAction(MEMBER, 'SEE_GAMES_MEMBER')).toBe(false);
+		expect(rel.roleIncludesAction(MEMBER, 'SEE_GAMES_STUDENT')).toBe(false);
+		expect(rel.roleIncludesAction(MEMBER, 'CHALLENGE_USER')).toBe(true);
+		expect(rel.roleIncludesAction(MEMBER, 'CHALLENGE_USER_ADMIN')).toBe(false);
+		expect(rel.roleIncludesAction(MEMBER, 'CHALLENGE_USER_MEMBER')).toBe(false);
+		expect(rel.roleIncludesAction(MEMBER, 'CHALLENGE_USER_TEACHER')).toBe(true);
+		expect(rel.roleIncludesAction(MEMBER, 'CHALLENGE_USER_STUDENT')).toBe(true);
 	});
 });

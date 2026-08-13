@@ -31,7 +31,7 @@ import { logNow } from '@common/utils/time';
 import { isUserLoggedIn } from '@server/managers/session';
 import { userAddNew } from '@server/managers/users';
 import { isRoleStringCorrect } from '@common/models/user-role';
-import { CREATE_USER, USER_ROLE_ASSIGN, getRoleActionName, USER_ROLE_ASSIGN_ID } from '@common/models/user-action';
+import { getRoleActionName } from '@common/models/user-action';
 import { UsersManager } from '@server/managers/users-manager';
 import { ConfigurationManager } from '@server/managers/configuration-manager';
 import { getExecutionDirectory } from '@server/managers/environment-manager';
@@ -55,12 +55,12 @@ export async function getPageUserCreate(req: Request, res: Response) {
 		return;
 	}
 
-	if (!user.canDo(CREATE_USER)) {
+	if (!user.canDo('CREATE_USER')) {
 		debug(logNow(), `User '${user.username}' cannot create users.`);
 		res.status(403).send('You cannot create users.');
 		return;
 	}
-	if (!user.canDo(USER_ROLE_ASSIGN)) {
+	if (!user.canDo('ASSIGN_ROLE')) {
 		debug(logNow(), `User '${user.username}' cannot assign roles to users.`);
 		res.status(403).send(`You cannot assign roles and thus cannot create users.`);
 		return;
@@ -88,12 +88,12 @@ export async function postUserCreate(req: Request, res: Response) {
 		return;
 	}
 
-	if (!registerer.canDo(CREATE_USER)) {
+	if (!registerer.canDo('CREATE_USER')) {
 		debug(logNow(), `User '${registerer.username}' cannot create users.`);
 		res.status(403).send('You cannot create users.');
 		return;
 	}
-	if (!registerer.canDo(USER_ROLE_ASSIGN)) {
+	if (!registerer.canDo('ASSIGN_ROLE')) {
 		debug(logNow(), `User '${registerer.username}' cannot assign roles to users.`);
 		res.status(403).send(`You cannot assign roles and thus cannot create users.`);
 		return;
@@ -127,7 +127,7 @@ export async function postUserCreate(req: Request, res: Response) {
 			return;
 		}
 
-		const action = getRoleActionName(USER_ROLE_ASSIGN_ID, r);
+		const action = getRoleActionName('ASSIGN_ROLE_USERS', r);
 		if (!registerer.canDo(action)) {
 			res.status(403).send(`You cannot do ${action}.`);
 			return;

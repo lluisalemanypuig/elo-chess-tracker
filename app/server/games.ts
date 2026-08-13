@@ -29,7 +29,6 @@ import { Request, Response } from 'express';
 
 import { logNow } from '@common/utils/time';
 import { isUserLoggedIn } from '@server/managers/session';
-import { GAMES_CREATE, GAMES_DELETE, GAMES_EDIT } from '@common/models/user-action';
 import {
 	gameAddNew,
 	gameDelete,
@@ -107,7 +106,7 @@ export async function getPageGameCreate(req: Request, res: Response) {
 		return;
 	}
 
-	if (!user.canDo(GAMES_CREATE)) {
+	if (!user.canDo('CREATE_GAMES')) {
 		debug(logNow(), `User '${user.username}' cannot create games.`);
 		res.status(403).send('You cannot create games.');
 		return;
@@ -135,7 +134,7 @@ export async function postGameCreate(req: Request, res: Response) {
 		return;
 	}
 
-	if (!creator.canDo(GAMES_CREATE)) {
+	if (!creator.canDo('CREATE_GAMES')) {
 		debug(logNow(), `User '${creator.username}' cannot create users.`);
 		res.status(403).send('You cannot create games');
 		return;
@@ -222,7 +221,7 @@ export async function postGameEditResult(req: Request, res: Response) {
 		return;
 	}
 
-	if (!user.canDo(GAMES_EDIT)) {
+	if (!user.canDo('EDIT_GAMES')) {
 		debug(logNow(), `User '${user.username}' cannot edit games.`);
 		res.status(403).send('You cannot edit games');
 		return;
@@ -290,7 +289,7 @@ export async function postGameEditTitle(req: Request, res: Response) {
 		return;
 	}
 
-	if (!user.canDo(GAMES_EDIT)) {
+	if (!user.canDo('EDIT_GAMES')) {
 		debug(logNow(), `User '${user.username}' cannot edit games.`);
 		res.status(403).send('You cannot edit games');
 		return;
@@ -358,7 +357,7 @@ export async function postGameDelete(req: Request, res: Response) {
 		return;
 	}
 
-	if (!user.canDo(GAMES_DELETE)) {
+	if (!user.canDo('DELETE_GAMES')) {
 		debug(logNow(), `User '${user.username}' cannot delete games.`);
 		res.status(403).send('You cannot delete games');
 		return;

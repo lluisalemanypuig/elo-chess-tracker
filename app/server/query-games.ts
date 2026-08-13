@@ -36,7 +36,6 @@ import { GameNumber, User } from '@common/models/user';
 import { Game } from '@common/models/game';
 import { RatingSystemManager } from '@server/managers/rating-system-manager';
 import { EnvironmentManager } from '@server/managers/environment-manager';
-import { GAMES_SEE } from '@common/models/user-action';
 import { canUserDeleteGame, canUserEditGame, canUserSeeGame } from '@server/managers/user-relationships';
 import { TimeControlId } from '@common/models/time-control';
 import { gameArrayFromString } from '@common/io/game';
@@ -263,7 +262,7 @@ export async function postQueryGameListAll(req: Request, res: Response) {
 		return;
 	}
 
-	if (!user.canDo(GAMES_SEE)) {
+	if (!user.canDo('SEE_GAMES')) {
 		res.status(403).send('You cannot see the entire list of games in the web.');
 		return;
 	}

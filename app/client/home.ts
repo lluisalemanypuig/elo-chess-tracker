@@ -23,7 +23,6 @@ import 'htmx.org';
 
 import { messageFromResponse, serverCall } from '@client/action';
 import { ADMIN, USER_ROLE_TO_STRING, UserRole } from '@common/models/user-role';
-import { GAMES_CREATE, CREATE_USER, USER_EDIT, GAMES_SEE, GRAPHS_SEE_USER } from '@common/models/user-action';
 import { ROUTES } from '@common/api/routes';
 
 export async function logoutLinkClicked(_event: any) {
@@ -45,31 +44,31 @@ export async function logoutLinkClicked(_event: any) {
 function fillActionLinks(userActions: string[], userRoles: string[]) {
 	let actionLinks = document.getElementById('special-action-links') as HTMLDivElement;
 
-	if (userActions.includes(CREATE_USER)) {
+	if (userActions.includes('CREATE_USER')) {
 		let userCreateLink = document.createElement('a') as HTMLAnchorElement;
 		userCreateLink.href = ROUTES.PAGE_USER_CREATE;
 		userCreateLink.text = 'Create new user';
 		actionLinks.appendChild(userCreateLink);
 	}
-	if (userActions.includes(USER_EDIT)) {
+	if (userActions.includes('EDIT_USER')) {
 		let userEditLink = document.createElement('a') as HTMLAnchorElement;
 		userEditLink.href = ROUTES.PAGE_USER_EDIT;
 		userEditLink.text = 'Edit user';
 		actionLinks.appendChild(userEditLink);
 	}
-	if (userActions.includes(GAMES_CREATE)) {
+	if (userActions.includes('CREATE_GAMES')) {
 		let gameCreateLink = document.createElement('a') as HTMLAnchorElement;
 		gameCreateLink.href = ROUTES.PAGE_GAME_CREATE;
 		gameCreateLink.text = 'Create new game';
 		actionLinks.appendChild(gameCreateLink);
 	}
-	if (userActions.includes(GAMES_SEE)) {
+	if (userActions.includes('SEE_GAMES')) {
 		let seeAllGamesLink = document.createElement('a') as HTMLAnchorElement;
 		seeAllGamesLink.href = ROUTES.PAGE_GAME_LIST_ALL;
 		seeAllGamesLink.text = 'See all games';
 		actionLinks.appendChild(seeAllGamesLink);
 	}
-	if (userActions.includes(GRAPHS_SEE_USER)) {
+	if (userActions.includes('SEE_GRAPHS')) {
 		let seeFullGraphLink = document.createElement('a') as HTMLAnchorElement;
 		seeFullGraphLink.href = ROUTES.PAGE_GRAPH_FULL;
 		seeFullGraphLink.text = 'See the full graph';

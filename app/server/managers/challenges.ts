@@ -50,7 +50,6 @@ import { TimeControlId, TimeControlName } from '@common/models/time-control';
 import { UsersManager } from '@server/managers/users-manager';
 import { isNotDefined } from '@common/utils/is-defined';
 import { User } from '@common/models/user';
-import { USER_CHALLENGE } from '@common/models/user-action';
 import { canUserDeclineChallenge, canUserSendChallenge } from './user-relationships';
 
 export function writeChallengeToFile(filename: string, c: Challenge) {
@@ -91,7 +90,7 @@ export function challengeSendNew(
 ): Challenge {
 	debug(logNow(), 'Adding a new challenge...');
 
-	if (!sender.canDo(USER_CHALLENGE)) {
+	if (!sender.canDo('CHALLENGE_USER')) {
 		debug(logNow(), `User '${sender.username}' cannot challenge other users.`);
 		throw new Error('You cannot challenge other users');
 	}
