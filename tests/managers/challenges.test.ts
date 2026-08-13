@@ -29,7 +29,6 @@ import fs from 'fs';
 import { run_command } from '@tests/exec-utils';
 import { clearServer } from '@server/managers/memory/clear';
 import { serverInitFromData } from '@server/managers/memory/initialization';
-import { ADMIN, MEMBER, STUDENT } from '@common/models/user-role';
 import { userAddNew } from '@server/managers/users';
 import { ChallengesManager, numberToChallengeId } from '@server/managers/challenges-manager';
 import { GamesManager } from '@server/managers/games-manager';
@@ -173,12 +172,12 @@ describe('Check initialization', () => {
 
 describe('Check challenge communication', () => {
 	test('Add users', () => {
-		uA = userAddNew(aa, A, A, 'pass_a', [ADMIN]);
-		uB = userAddNew(bb, B, B, 'pass_b', [MEMBER]);
-		uC = userAddNew(cc, C, C, 'pass_c', [MEMBER]);
-		uD = userAddNew(dd, D, D, 'pass_d', [STUDENT]);
-		uE = userAddNew(ee, E, E, 'pass_e', [STUDENT]);
-		uF = userAddNew(ff, F, F, 'pass_f', [STUDENT]);
+		uA = userAddNew(aa, A, A, 'pass_a', ['ADMIN']);
+		uB = userAddNew(bb, B, B, 'pass_b', ['MEMBER']);
+		uC = userAddNew(cc, C, C, 'pass_c', ['MEMBER']);
+		uD = userAddNew(dd, D, D, 'pass_d', ['STUDENT']);
+		uE = userAddNew(ee, E, E, 'pass_e', ['STUDENT']);
+		uF = userAddNew(ff, F, F, 'pass_f', ['STUDENT']);
 	});
 
 	test('Sending', () => {

@@ -22,7 +22,7 @@ Full source code of elo-chess-tracker:
 import 'htmx.org';
 
 import { messageFromResponse, serverCall } from '@client/action';
-import { ADMIN, USER_ROLE_TO_STRING, UserRole } from '@common/models/user-role';
+import { USER_ROLE_TO_STRING, UserRole } from '@common/models/user-role';
 import { ROUTES } from '@common/api/routes';
 
 export async function logoutLinkClicked(_event: any) {
@@ -75,7 +75,7 @@ function fillActionLinks(userActions: string[], userRoles: string[]) {
 		actionLinks.appendChild(seeFullGraphLink);
 	}
 
-	if (userRoles.includes(ADMIN)) {
+	if (userRoles.includes('ADMIN')) {
 		let recalculateRatingsLink = document.createElement('u') as HTMLElement;
 		recalculateRatingsLink.id = 'recalculate-ratings-link';
 		recalculateRatingsLink.textContent = 'Recalculate ratings';

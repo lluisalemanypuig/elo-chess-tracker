@@ -29,7 +29,7 @@ import { Request, Response } from 'express';
 
 import { logNow } from '@common/utils/time';
 import { isUserLoggedIn } from '@server/managers/session';
-import { ADMIN } from '@common/models/user-role';
+
 import { recalculateAllGraphs } from '@server/managers/graphs';
 import { ConfigurationManager } from '@server/managers/configuration-manager';
 import { getExecutionDirectory } from '@server/managers/environment-manager';
@@ -102,7 +102,7 @@ export async function postRecalculateGraphs(req: Request, res: Response) {
 		return;
 	}
 
-	if (!user.is(ADMIN)) {
+	if (!user.is('ADMIN')) {
 		debug(logNow(), `User '${user.username}' cannot recalculate graphs.`);
 		res.status(403).send('You cannot recalculate the graphs.');
 		return;

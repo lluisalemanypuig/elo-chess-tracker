@@ -37,7 +37,7 @@ import {
 	gameFindById,
 	recalculateAllRatings
 } from '@server/managers/games';
-import { ADMIN } from '@common/models/user-role';
+
 import { canUserCreateGame, canUserDeleteGame, canUserEditGame } from '@server/managers/user-relationships';
 import { UsersManager } from '@server/managers/users-manager';
 import { ConfigurationManager } from '@server/managers/configuration-manager';
@@ -422,7 +422,7 @@ export async function postRecalculateRatings(req: Request, res: Response) {
 		return;
 	}
 
-	if (!user.is(ADMIN)) {
+	if (!user.is('ADMIN')) {
 		debug(logNow(), `User '${user.username}' cannot recalculate ratings.`);
 		res.status(403).send('You cannot recalculate ratings.');
 		return;

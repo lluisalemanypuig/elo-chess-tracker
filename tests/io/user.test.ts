@@ -23,7 +23,7 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { ADMIN, STUDENT } from '@common/models/user-role';
+// roles used as string literals; no imports needed from user-role
 import { initializeRatingFunctions } from '@server/managers/rating-system';
 import { userFromString } from '@common/io/user';
 import { isNotDefined } from '@common/utils/is-defined';
@@ -47,7 +47,7 @@ describe('IO conversion (Elo)', () => {
 					"encrypted": "a",\
 					"iv": "b"\
 				},\
-				"roles": ["admin"],\
+				"roles": ["ADMIN"],\
 				"games": [\
 					{\
 						"timeControl": "blitz",\
@@ -74,8 +74,8 @@ describe('IO conversion (Elo)', () => {
 		expect(u.firstName).toEqual('f');
 		expect(u.lastName).toEqual('l');
 		expect(u.password).toEqual({ encrypted: 'a', iv: 'b' });
-		expect(u.roles).toEqual([ADMIN]);
-		expect(u.is(ADMIN)).toEqual(true);
+		expect(u.roles).toEqual(['ADMIN']);
+		expect(u.is('ADMIN')).toEqual(true);
 		expect(u.getGames(Blitz)).toEqual([{ record: toDateMajor('2024-12-31'), amount: 1 }]);
 		expect(u.getGames(Rapid)).toEqual([{ record: toDateMajor('2025-01-01'), amount: 1 }]);
 		expect(u.ratings).toEqual([]);
@@ -84,14 +84,14 @@ describe('IO conversion (Elo)', () => {
 
 	test('string (2)', () => {
 		const u1 = userFromString(
-			'{ "username": "u", "firstName": "f", "lastName": "l", "password": { "encrypted": "a", "iv": "b" }, "roles": ["admin", "student"], "games": [ { "timeControl": "rapid", "records": [{ "record": "2025-01-01", "amount": 1 }] } ], "ratings": [] }'
+			'{ "username": "u", "firstName": "f", "lastName": "l", "password": { "encrypted": "a", "iv": "b" }, "roles": ["ADMIN", "STUDENT"], "games": [ { "timeControl": "rapid", "records": [{ "record": "2025-01-01", "amount": 1 }] } ], "ratings": [] }'
 		);
 
 		expect(u1).not.toBeNull();
 		if (isNotDefined(u1)) {
 			return;
 		}
-		expect(u1.roles).toEqual([ADMIN, STUDENT]);
+		expect(u1.roles).toEqual(['ADMIN', 'STUDENT']);
 		expect(u1.ratings.length).toBe(0);
 
 		const u2 = userFromString(
@@ -103,7 +103,7 @@ describe('IO conversion (Elo)', () => {
 					"encrypted": "a",\
 					"iv": "b"\
 				},\
-				"roles": ["student", "admin"],\
+				"roles": ["STUDENT", "ADMIN"],\
 				"games": [\
 					{\
 						"timeControl": "blitz",\
@@ -125,13 +125,13 @@ describe('IO conversion (Elo)', () => {
 		if (isNotDefined(u2)) {
 			return;
 		}
-		expect(u2.roles).toEqual([STUDENT, ADMIN]);
+		expect(u2.roles).toEqual(['STUDENT', 'ADMIN']);
 		expect(u2.ratings.length).toBe(0);
 	});
 
 	test('string (3)', () => {
 		const u = userFromString(
-			'{ "username": "u", "firstName": "f", "lastName": "l", "password": { "encrypted": "a", "iv": "b" }, "roles": ["student", "admin"], "games": [ {"timeControl": "blitz", "records": [{ "record": "2024-12-31", "amount": 1 }]}, {"timeControl": "rapid", "records": [{ "record": "2025-01-01", "amount": 1 }]} ], "ratings": [ { "timeControl": "blitz", "rating": { "rating": 1500, "numGames": 0, "won": 0, "drawn": 0, "lost": 0, "K": 40, "surpassed2400": false } }, { "timeControl": "classical", "rating": { "rating": 1700, "numGames": 0, "won": 0, "drawn": 0, "lost": 0, "K": 40, "surpassed2400": false } } ] }'
+			'{ "username": "u", "firstName": "f", "lastName": "l", "password": { "encrypted": "a", "iv": "b" }, "roles": ["STUDENT", "ADMIN"], "games": [ {"timeControl": "blitz", "records": [{ "record": "2024-12-31", "amount": 1 }]}, {"timeControl": "rapid", "records": [{ "record": "2025-01-01", "amount": 1 }]} ], "ratings": [ { "timeControl": "blitz", "rating": { "rating": 1500, "numGames": 0, "won": 0, "drawn": 0, "lost": 0, "K": 40, "surpassed2400": false } }, { "timeControl": "classical", "rating": { "rating": 1700, "numGames": 0, "won": 0, "drawn": 0, "lost": 0, "K": 40, "surpassed2400": false } } ] }'
 		);
 		expect(u).not.toBeNull();
 		if (isNotDefined(u)) {

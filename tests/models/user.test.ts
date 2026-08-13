@@ -25,7 +25,6 @@ Contact:
 
 import { TimeControlRating } from '@common/models/time-control-rating';
 import { toUserGivenName, User } from '@common/models/user';
-import { ADMIN, MEMBER, STUDENT, TEACHER } from '@common/models/user-role';
 import { initializePermissions, UserRoleToUserAction } from '@server/managers/user-role-action';
 import { EloRating } from '@common/models/rating-framework/Elo/rating';
 import { toPlayerPrivateId } from '@common/models/player';
@@ -48,7 +47,7 @@ describe('Elo', () => {
 			toUserGivenName('First'),
 			toUserGivenName('Last'),
 			{ encrypted: 'asdf', iv: 'ivrandom' },
-			[ADMIN, TEACHER],
+			['ADMIN', 'TEACHER'],
 			[
 				{ timeControl: Blitz, records: [{ record: toDateMajor('2024-12-24'), amount: 1 }] },
 				{ timeControl: Rapid, records: [{ record: toDateMajor('2024-12-25'), amount: 1 }] }
@@ -56,13 +55,13 @@ describe('Elo', () => {
 			[new TimeControlRating(Blitz, blitz), new TimeControlRating(Classical, classical)]
 		);
 
-		expect(u.is(ADMIN)).toBe(true);
-		expect(u.is(TEACHER)).toBe(true);
-		expect(u.is(STUDENT)).toBe(false);
-		expect(u.is(MEMBER)).toBe(false);
+		expect(u.is('ADMIN')).toBe(true);
+		expect(u.is('TEACHER')).toBe(true);
+		expect(u.is('STUDENT')).toBe(false);
+		expect(u.is('MEMBER')).toBe(false);
 
-		expect(u.roles).toEqual([ADMIN, TEACHER]);
-		expect(u.roles).not.toEqual([TEACHER, ADMIN]);
+		expect(u.roles).toEqual(['ADMIN', 'TEACHER']);
+		expect(u.roles).not.toEqual(['TEACHER', 'ADMIN']);
 
 		expect(u.firstName).toEqual('First');
 		expect(u.lastName).toEqual('Last');
@@ -77,7 +76,7 @@ describe('Elo', () => {
 			toUserGivenName('First'),
 			toUserGivenName('Last'),
 			{ encrypted: 'asdf', iv: 'ivrandom' },
-			[ADMIN, TEACHER],
+			['ADMIN', 'TEACHER'],
 			[
 				{ timeControl: Blitz, records: [{ record: toDateMajor('2024-12-24'), amount: 1 }] },
 				{ timeControl: Rapid, records: [{ record: toDateMajor('2024-12-25'), amount: 1 }] }
@@ -85,13 +84,13 @@ describe('Elo', () => {
 			[new TimeControlRating(Blitz, blitz), new TimeControlRating(Classical, classical)]
 		);
 
-		expect(u.is(ADMIN)).toBe(true);
-		expect(u.is(TEACHER)).toBe(true);
-		expect(u.is(STUDENT)).toBe(false);
-		expect(u.is(MEMBER)).toBe(false);
+		expect(u.is('ADMIN')).toBe(true);
+		expect(u.is('TEACHER')).toBe(true);
+		expect(u.is('STUDENT')).toBe(false);
+		expect(u.is('MEMBER')).toBe(false);
 
-		expect(u.roles).toEqual([ADMIN, TEACHER]);
-		expect(u.roles).not.toEqual([TEACHER, ADMIN]);
+		expect(u.roles).toEqual(['ADMIN', 'TEACHER']);
+		expect(u.roles).not.toEqual(['TEACHER', 'ADMIN']);
 
 		u.firstName = toUserGivenName('Perico');
 		u.lastName = toUserGivenName('Palotes');
@@ -109,7 +108,7 @@ describe('Elo', () => {
 			toUserGivenName('First'),
 			toUserGivenName('Last'),
 			{ encrypted: 'asdf', iv: 'ivrandom' },
-			[ADMIN, TEACHER],
+			['ADMIN', 'TEACHER'],
 			[
 				{ timeControl: Blitz, records: [{ record: toDateMajor('2024-12-24'), amount: 1 }] },
 				{ timeControl: Rapid, records: [{ record: toDateMajor('2024-12-25'), amount: 1 }] }
@@ -212,7 +211,7 @@ describe('Actions allowed per user (single role)', () => {
 			toUserGivenName('F'),
 			toUserGivenName('L'),
 			{ encrypted: 'a', iv: 'i' },
-			[ADMIN],
+			['ADMIN'],
 			[],
 			[]
 		);
@@ -265,7 +264,7 @@ describe('Actions allowed per user (single role)', () => {
 			toUserGivenName('F'),
 			toUserGivenName('L'),
 			{ encrypted: 'a', iv: 'i' },
-			[TEACHER],
+			['TEACHER'],
 			[],
 			[]
 		);
@@ -318,7 +317,7 @@ describe('Actions allowed per user (single role)', () => {
 			toUserGivenName('F'),
 			toUserGivenName('L'),
 			{ encrypted: 'a', iv: 'i' },
-			[STUDENT],
+			['STUDENT'],
 			[],
 			[]
 		);
@@ -371,7 +370,7 @@ describe('Actions allowed per user (single role)', () => {
 			toUserGivenName('F'),
 			toUserGivenName('L'),
 			{ encrypted: 'a', iv: 'i' },
-			[MEMBER],
+			['MEMBER'],
 			[],
 			[]
 		);
@@ -427,7 +426,7 @@ describe('Actions allowed per user (multiple roles)', () => {
 			toUserGivenName('F'),
 			toUserGivenName('L'),
 			{ encrypted: 'a', iv: 'i' },
-			[ADMIN, TEACHER],
+			['ADMIN', 'TEACHER'],
 			[],
 			[]
 		);
@@ -482,7 +481,7 @@ describe('Actions allowed per user (multiple roles)', () => {
 			toUserGivenName('F'),
 			toUserGivenName('L'),
 			{ encrypted: 'a', iv: 'i' },
-			[ADMIN, STUDENT],
+			['ADMIN', 'STUDENT'],
 			[],
 			[]
 		);

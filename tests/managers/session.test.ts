@@ -29,7 +29,6 @@ import { isUserLoggedIn, sessionIdAdd, sessionIdDelete, sessionUserDeleteAll } f
 import { SessionIDManager } from '@server/managers/session-id-manager';
 import { userAddNew } from '@server/managers/users';
 import { SessionId } from '@common/models/session-id';
-import { ADMIN, MEMBER, STUDENT } from '@common/models/user-role';
 import { run_command } from '@tests/exec-utils';
 import { Configuration } from '@common/models/configuration/configuration';
 import { toPlayerPrivateId } from '@common/models/player';
@@ -153,12 +152,12 @@ describe('Session management via functions', () => {
 		clearServer();
 		expect(() => serverInitFromData('tests/webpage', configuration)).not.toThrow();
 
-		userAddNew(aa, A, a, 'pass_a', [ADMIN]);
-		userAddNew(bb, B, b, 'pass_b', [MEMBER]);
-		userAddNew(cc, C, c, 'pass_c', [MEMBER]);
-		userAddNew(dd, D, d, 'pass_d', [STUDENT]);
-		userAddNew(ee, E, e, 'pass_e', [STUDENT]);
-		userAddNew(ff, F, f, 'pass_f', [STUDENT]);
+		userAddNew(aa, A, a, 'pass_a', ['ADMIN']);
+		userAddNew(bb, B, b, 'pass_b', ['MEMBER']);
+		userAddNew(cc, C, c, 'pass_c', ['MEMBER']);
+		userAddNew(dd, D, d, 'pass_d', ['STUDENT']);
+		userAddNew(ee, E, e, 'pass_e', ['STUDENT']);
+		userAddNew(ff, F, f, 'pass_f', ['STUDENT']);
 	});
 
 	let session_aa_1: SessionId;
