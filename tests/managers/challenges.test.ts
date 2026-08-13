@@ -139,6 +139,13 @@ const D = toUserGivenName('D');
 const E = toUserGivenName('E');
 const F = toUserGivenName('F');
 
+let uA: User;
+let uB: User;
+let uC: User;
+let uD: User;
+let uE: User;
+let uF: User;
+
 function user_retrieve(username: PlayerPrivateId): User | undefined {
 	const d = UsersManager.getInstance().getAllUserDataByPrivateId(username);
 	if (isNotDefined(d)) {
@@ -166,12 +173,12 @@ describe('Check initialization', () => {
 
 describe('Check challenge communication', () => {
 	test('Add users', () => {
-		userAddNew(aa, A, A, 'pass_a', [ADMIN]);
-		userAddNew(bb, B, B, 'pass_b', [MEMBER]);
-		userAddNew(cc, C, C, 'pass_c', [MEMBER]);
-		userAddNew(dd, D, D, 'pass_d', [STUDENT]);
-		userAddNew(ee, E, E, 'pass_e', [STUDENT]);
-		userAddNew(ff, F, F, 'pass_f', [STUDENT]);
+		uA = userAddNew(aa, A, A, 'pass_a', [ADMIN]);
+		uB = userAddNew(bb, B, B, 'pass_b', [MEMBER]);
+		uC = userAddNew(cc, C, C, 'pass_c', [MEMBER]);
+		uD = userAddNew(dd, D, D, 'pass_d', [STUDENT]);
+		uE = userAddNew(ee, E, E, 'pass_e', [STUDENT]);
+		uF = userAddNew(ff, F, F, 'pass_f', [STUDENT]);
 	});
 
 	test('Sending', () => {
@@ -180,25 +187,25 @@ describe('Check challenge communication', () => {
 
 		const c_aa_bb = challengeSendNew(
 			'sample',
-			aa,
-			bb,
+			uA,
+			uB,
 			Classical,
 			Classical90p30,
 			toDateFull('2025-01-10..20:38:12:000')
 		);
 		const c_aa_cc = challengeSendNew(
 			'sample',
-			aa,
-			cc,
+			uA,
+			uC,
 			Classical,
 			Classical90p30,
 			toDateFull('2025-01-10..20:38:13:000')
 		);
-		const c_aa_dd = challengeSendNew('sample', aa, dd, Blitz, Blitz5p3, toDateFull('2025-01-10..20:38:14:000'));
+		const c_aa_dd = challengeSendNew('sample', uA, uD, Blitz, Blitz5p3, toDateFull('2025-01-10..20:38:14:000'));
 		const c_ee_ff = challengeSendNew(
 			'sample',
-			ee,
-			ff,
+			uE,
+			uF,
 			Classical,
 			Classical90p30,
 			toDateFull('2025-01-10..20:38:15:000')
@@ -524,7 +531,7 @@ describe('Check initialization and communication', () => {
 
 describe('Incorrect challenge communication', () => {
 	test('New challenge (Blitz) aa -- bb', () => {
-		const c_aa_bb = challengeSendNew('sample', aa, bb, Blitz, Blitz5p3, toDateFull('2025-01-10..20:38:45:000'));
+		const c_aa_bb = challengeSendNew('sample', uA, uB, Blitz, Blitz5p3, toDateFull('2025-01-10..20:38:45:000'));
 
 		expect(() => challengeAccept(c_aa_bb, { by: aa, when: toDateFull('2025-01-10..20:38:50:000') })).toThrow();
 
@@ -599,8 +606,8 @@ describe('Incorrect challenge communication', () => {
 	test('New challenge (Classical) cc -- bb', () => {
 		const c_bb_cc = challengeSendNew(
 			'sample',
-			cc,
-			bb,
+			uC,
+			uB,
 			Classical,
 			Classical90p30,
 			toDateFull('2025-01-10..20:40:00:000')

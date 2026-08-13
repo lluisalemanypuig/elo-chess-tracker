@@ -166,8 +166,7 @@ export function canUserSeeGraph(u: User, other: User): boolean {
 /// Can user 'u1' decline the challenge sent by user 'u2'?
 export function canUserDeclineChallenge(u1: User, u2: User, id: TimeControlId): boolean {
 	if (u1.getRating(id).rating > u2.getRating(id).rating) {
-		const behavior = UsersBehavior.getInstance();
-		return behavior.canHigherRatedDeclineChallengeLowerRated();
+		return UsersBehavior.getInstance().canHigherRatedDeclineChallengeLowerRated();
 	}
 	return true;
 }

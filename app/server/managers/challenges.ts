@@ -49,7 +49,9 @@ import { gameAddNew } from '@server/managers/games';
 import { TimeControlId, TimeControlName } from '@common/models/time-control';
 import { UsersManager } from '@server/managers/users-manager';
 import { isNotDefined } from '@common/utils/is-defined';
-import { PlayerPrivateId } from '@common/models/player';
+import { User } from '@common/models/user';
+import { USER_CHALLENGE } from '@common/models/user-action';
+import { canUserDeclineChallenge, canUserSendChallenge } from './user-relationships';
 
 export function writeChallengeToFile(filename: string, c: Challenge) {
 	fs.writeFileSync(filename, JSON.stringify(c, null, 4));
@@ -81,14 +83,22 @@ export function getChallengesBy(by: Function = (_c: Challenge): boolean => true)
  */
 export function challengeSendNew(
 	title: string,
-	sender: PlayerPrivateId,
-	receiver: PlayerPrivateId,
+	sender: User,
+	receiver: User,
 	timeControlId: TimeControlId,
 	timeControlName: TimeControlName,
 	when: DateFull
 ): Challenge {
 	debug(logNow(), 'Adding a new challenge...');
 
+	if (!sender.canDo(USER_CHALLENGE)) {
+		debug(logNow(), `User '${sender.username}' cannot challenge other users.`);
+		throw new Error('You cannot challenge other users');
+	}
+	if (!canUserSendChallenge(sender, receiver)) {
+		debug(logNow(), `Sender '${sender.username}' cannot challenge user '${receiver.username}'.`);
+		throw new Error('You cannot challenge this user.');
+	}
 	if (receiver === sender) {
 		debug(logNow(), `A challenge cannot be sent to oneself.`);
 		throw new Error('You cannot challenge yourself.');
@@ -97,7 +107,7 @@ export function challengeSendNew(
 	let mem = ChallengesManager.getInstance();
 	const newId = mem.newChallengeId();
 
-	const c = newChallenge(newId, title, sender, receiver, timeControlId, timeControlName, when);
+	const c = newChallenge(newId, title, sender.username, receiver.username, timeControlId, timeControlName, when);
 
 	mem.addChallenge(c);
 
@@ -151,10 +161,22 @@ export function challengeDecline(c: Challenge, { by }: ChallengeDecline): void {
 	}
 	if (!isPartOfChallenge(c, by)) {
 		debug(logNow(), `Player '${by}' is not part of this challenge.`);
-		throw new Error(`You cannot disagree to this result.`);
+		throw new Error(`You cannot decline this challenge.`);
 	}
 	if (by !== c.sentTo) {
 		throw new Error('You cannot decline this challenge');
+	}
+
+	const mem = UsersManager.getInstance();
+	const sentTo = mem.getAllUserDataByPrivateId(c.sentTo);
+	const sentBy = mem.getAllUserDataByPrivateId(by);
+	if (isNotDefined(sentTo) || isNotDefined(sentBy)) {
+		throw new Error('In challenge, either the white or black player do not exist.');
+	}
+
+	if (!canUserDeclineChallenge(sentTo.user, sentBy.user, c.timeControlId)) {
+		debug(logNow(), `User ${sentTo.user.username} is trying to decline challenge sent by ${sentBy.user.username}`);
+		throw new Error(`You cannot decline this challenge`);
 	}
 
 	ChallengesManager.getInstance().removeChallenge(c);
@@ -179,7 +201,7 @@ export function challengeSetResult(c: Challenge, { by, when, white, black, resul
 	}
 	if (!isPartOfChallenge(c, by)) {
 		debug(logNow(), `Player '${by}' is not part of this challenge.`);
-		throw new Error(`You cannot disagree to this result.`);
+		throw new Error(`You cannot set this result.`);
 	}
 	const originalSetter = c.resultSetBy;
 	if (originalSetter !== undefined && originalSetter !== by) {
@@ -224,25 +246,21 @@ export function challengeAgreeResult(c: Challenge, { by, when }: ChallengeAgreeR
 	}
 	if (!isPartOfChallenge(c, by)) {
 		debug(logNow(), `Player '${by}' is not part of this challenge.`);
-		throw new Error(`You cannot disagree to this result.`);
+		throw new Error(`You cannot agree to this result.`);
 	}
 	if (isNotDefined(c.whenResultSet)) {
 		debug(logNow(), `Date 'whenResultSet' is not defined`);
-		return;
+		throw new Error(`Invalid date when the challenge was set.`);
 	}
 	if (isNotDefined(c.white) || isNotDefined(c.black)) {
 		debug(logNow(), `Player 'white' or 'black' is not defined.`);
 		debug(logNow(), `    White: '${c.white}'.`);
 		debug(logNow(), `    Black: '${c.black}'.`);
-		return;
+		throw new Error(`White or Black player has not been set.`);
 	}
 	if (isNotDefined(c.result)) {
 		debug(logNow(), `Result is not set.`);
-		return;
-	}
-	if (isNotDefined(c.result)) {
-		debug(logNow(), `Result is not set.`);
-		return;
+		throw new Error(`Result is not set.`);
 	}
 	if (by === c.resultSetBy) {
 		throw new Error('The accepter of the result cannot be the same person who set the result');

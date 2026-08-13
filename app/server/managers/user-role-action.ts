@@ -80,9 +80,9 @@ export class UserRoleToUserAction {
 	}
 
 	roleCanDo(role: UserRole, action: UserActionID): boolean {
-		for (const other_roles of ALL_USER_ROLES) {
-			const user_action = getRoleActionName(action, other_roles);
-			if (this.roleIncludesAction(role, user_action)) {
+		for (const otherRoles of ALL_USER_ROLES) {
+			const userAction = getRoleActionName(action, otherRoles);
+			if (this.roleIncludesAction(role, userAction)) {
 				return true;
 			}
 		}
@@ -90,9 +90,9 @@ export class UserRoleToUserAction {
 	}
 
 	addMissingGenericActions(role: UserRole): void {
-		for (const action_id of ALL_ACTION_IDS) {
-			if (this.roleCanDo(role, action_id)) {
-				const genericActionName = getGenericRoleActionName(action_id);
+		for (const actionId of ALL_ACTION_IDS) {
+			if (this.roleCanDo(role, actionId)) {
+				const genericActionName = getGenericRoleActionName(actionId);
 				this.addToRole(role, genericActionName);
 			}
 		}
