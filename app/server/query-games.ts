@@ -47,7 +47,6 @@ import { isNotDefined } from '@common/utils/is-defined';
 import { ROUTES } from '@common/routes';
 import { inputSchemaOf } from '@common/api/schemas';
 import { safeParseRequestBody, safeParseRequestCookies } from '@server/utils/schemas';
-import { AuthenticationInputSchema } from '@common/schemas/authentication';
 import { QueryGamesListOutput, QueryGamesListOutputSingle } from '@common/schemas/query-games';
 
 function increment(g: Game): any {
