@@ -182,7 +182,7 @@ The site implements four different roles a user can have. To each role we can as
 Available actions are
 
 - Creation of users:
-    - _create_user_
+    - _CREATE_USER_
 
 - Assignment of roles to another user
     - _ASSIGN_ROLE_ADMIN_
