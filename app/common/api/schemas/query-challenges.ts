@@ -24,7 +24,7 @@ Contact:
 */
 
 import { z } from 'zod';
-import { PlayerPrivateIdSchema, PlayerPublicIdSchema } from '@common/models/player';
+import { PlayerPublicIdSchema } from '@common/models/player';
 import { UserGivenNameSchema } from '@common/models/user';
 import { ChallengeIdSchema } from '@common/models/challenge';
 import { TimeControlNameSchema } from '@common/models/time-control';
