@@ -86,6 +86,8 @@ export const ChallengeAgreeResultInputSchema = z
 
 export type ChallengeAgreeResultInput = z.infer<typeof ChallengeAgreeResultInputSchema>;
 
+// ROUTES.CHALLENGE_DISAGREE
+
 export const ChallengeDisagreeResultInputSchema = z
 	.object({
 		id: ChallengeIdSchema
