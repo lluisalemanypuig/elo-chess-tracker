@@ -28,7 +28,7 @@ import { UserRoleArraySchema } from '@common/models/user-role';
 import { PlayerPrivateIdSchema, PlayerPublicIdSchema } from '@common/models/player';
 import { UserGivenNameSchema } from '@common/models/user';
 
-// Routes.USER_CREATE
+// ROUTES.USER_CREATE
 
 export const UserCreateInputSchema = z
 	.object({
@@ -42,7 +42,7 @@ export const UserCreateInputSchema = z
 
 export type UserCreateInput = z.infer<typeof UserCreateInputSchema>;
 
-// Routes.USER_EDIT
+// ROUTES.USER_EDIT
 
 export const UserEditInputSchema = z
 	.object({

@@ -29,7 +29,7 @@ import { PlayerPublicIdSchema } from '@common/models/player';
 import { TimeControlIdSchema, TimeControlNameSchema } from '@common/models/time-control';
 import { DateMajorSchema, DateMinorSchema } from '@common/utils/time';
 
-// Routes.GAME_CREATE
+// ROUTES.GAME_CREATE
 
 export const GameCreateInputSchema = z
 	.object({
@@ -46,7 +46,7 @@ export const GameCreateInputSchema = z
 
 export type GameCreateInput = z.infer<typeof GameCreateInputSchema>;
 
-// Routes.gameEditResult
+// ROUTES.gameEditResult
 
 export const GameEditResultInputSchema = z
 	.object({
@@ -57,7 +57,7 @@ export const GameEditResultInputSchema = z
 
 export type GameEditResultInput = z.infer<typeof GameEditResultInputSchema>;
 
-// Routes.GAME_EDIT_TITLE
+// ROUTES.GAME_EDIT_TITLE
 
 export const GameEditTitleInputSchema = z
 	.object({
@@ -68,7 +68,7 @@ export const GameEditTitleInputSchema = z
 
 export type GameEditTitleInput = z.infer<typeof GameEditTitleInputSchema>;
 
-// Routes.GAME_DELETE
+// ROUTES.GAME_DELETE
 
 export const GameDeleteInputSchema = z
 	.object({
