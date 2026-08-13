@@ -39,8 +39,6 @@ import {
 } from '@server/managers/challenges';
 
 import { ChallengeId } from '@common/models/challenge';
-import { USER_CHALLENGE } from '@common/models/user-action';
-import { canUserSendChallenge } from '@server/managers/user-relationships';
 import { ChallengesManager } from '@server/managers/challenges-manager';
 import { GameResult } from '@common/models/game';
 import { UsersManager } from '@server/managers/users-manager';
@@ -98,12 +96,6 @@ export async function postChallengeSend(req: Request, res: Response) {
 		return;
 	}
 
-	if (!sender.canDo(USER_CHALLENGE)) {
-		debug(logNow(), `User '${sender.username}' cannot challenge other users.`);
-		res.status(403).send('You cannot challenge other users');
-		return;
-	}
-
 	debug(logNow(), `Trying to send challenge from '${sender.username}' to '${receiverPublicId}'.`);
 
 	const receiver = UsersManager.getInstance().getAllUserDataByPublicId(receiverPublicId);
@@ -111,12 +103,6 @@ export async function postChallengeSend(req: Request, res: Response) {
 	if (isNotDefined(receiver)) {
 		debug(logNow(), `User receiver of the challenge '${receiverPublicId}' does not exist.`);
 		res.status(404).send('User receiver of the challenge does not exist');
-		return;
-	}
-
-	if (!canUserSendChallenge(sender, receiver.user)) {
-		debug(logNow(), `Sender '${sender.username}' cannot challenge user '${receiver.user.username}'.`);
-		res.status(403).send('You cannot challenge this user.');
 		return;
 	}
 
@@ -143,7 +129,7 @@ export async function postChallengeSend(req: Request, res: Response) {
 	debug(logNow(), `Send challenge from '${sender.username}' to '${receiver.user.username}'`);
 
 	try {
-		challengeSendNew(title, sender.username, receiver.user.username, timeControlId, timeControlName, logNow());
+		challengeSendNew(title, sender, receiver.user, timeControlId, timeControlName, logNow());
 	} catch (e: unknown) {
 		res.status(403).send((e as Error).message);
 		return;

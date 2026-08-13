@@ -49,7 +49,9 @@ import { gameAddNew } from '@server/managers/games';
 import { TimeControlId, TimeControlName } from '@common/models/time-control';
 import { UsersManager } from '@server/managers/users-manager';
 import { isNotDefined } from '@common/utils/is-defined';
-import { PlayerPrivateId } from '@common/models/player';
+import { User } from '@common/models/user';
+import { USER_CHALLENGE } from '@common/models/user-action';
+import { canUserSendChallenge } from './user-relationships';
 
 export function writeChallengeToFile(filename: string, c: Challenge) {
 	fs.writeFileSync(filename, JSON.stringify(c, null, 4));
@@ -81,14 +83,22 @@ export function getChallengesBy(by: Function = (_c: Challenge): boolean => true)
  */
 export function challengeSendNew(
 	title: string,
-	sender: PlayerPrivateId,
-	receiver: PlayerPrivateId,
+	sender: User,
+	receiver: User,
 	timeControlId: TimeControlId,
 	timeControlName: TimeControlName,
 	when: DateFull
 ): Challenge {
 	debug(logNow(), 'Adding a new challenge...');
 
+	if (!sender.canDo(USER_CHALLENGE)) {
+		debug(logNow(), `User '${sender.username}' cannot challenge other users.`);
+		throw new Error('You cannot challenge other users');
+	}
+	if (!canUserSendChallenge(sender, receiver)) {
+		debug(logNow(), `Sender '${sender.username}' cannot challenge user '${receiver.username}'.`);
+		throw new Error('You cannot challenge this user.');
+	}
 	if (receiver === sender) {
 		debug(logNow(), `A challenge cannot be sent to oneself.`);
 		throw new Error('You cannot challenge yourself.');
@@ -97,7 +107,7 @@ export function challengeSendNew(
 	let mem = ChallengesManager.getInstance();
 	const newId = mem.newChallengeId();
 
-	const c = newChallenge(newId, title, sender, receiver, timeControlId, timeControlName, when);
+	const c = newChallenge(newId, title, sender.username, receiver.username, timeControlId, timeControlName, when);
 
 	mem.addChallenge(c);
 
