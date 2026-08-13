@@ -354,11 +354,11 @@ async function fillChallengesPendingResult() {
 
 			let option1 = document.createElement('option') as HTMLOptionElement;
 			option1.text = elem.sentToName;
-			option1.value = elem.sentToUsername;
+			option1.value = `${elem.sentToPublicId}`;
 			select.appendChild(option1);
 			let option2 = document.createElement('option') as HTMLOptionElement;
 			option2.text = elem.sentByName;
-			option2.value = elem.sentByUsername;
+			option2.value = `${elem.sentByPublicId}`;
 			select.appendChild(option2);
 
 			div.appendChild(select);
@@ -378,11 +378,11 @@ async function fillChallengesPendingResult() {
 
 			let option1 = document.createElement('option') as HTMLOptionElement;
 			option1.text = elem.sentByName;
-			option1.value = elem.sentByUsername;
+			option1.value = `${elem.sentByPublicId}`;
 			select.appendChild(option1);
 			let option2 = document.createElement('option') as HTMLOptionElement;
 			option2.text = elem.sentToName;
-			option2.value = elem.sentToUsername;
+			option2.value = `${elem.sentToPublicId}`;
 			select.appendChild(option2);
 
 			div.appendChild(select);

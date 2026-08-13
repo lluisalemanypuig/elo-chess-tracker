@@ -24,7 +24,7 @@ Contact:
 */
 
 import { z } from 'zod';
-import { PlayerPrivateIdSchema } from '@common/models/player';
+import { PlayerPrivateIdSchema, PlayerPublicIdSchema } from '@common/models/player';
 import { UserGivenNameSchema } from '@common/models/user';
 import { ChallengeIdSchema } from '@common/models/challenge';
 import { TimeControlNameSchema } from '@common/models/time-control';
@@ -75,11 +75,9 @@ export const QueryChallengesPendingResultOutputSingleSchema = z
 		id: ChallengeIdSchema,
 		title: z.string(),
 		sentByName: UserGivenNameSchema,
-		/// TODO: use user public IDs
-		sentByUsername: PlayerPrivateIdSchema,
+		sentByPublicId: PlayerPublicIdSchema,
 		sentToName: UserGivenNameSchema,
-		/// TODO: use user public IDs
-		sentToUsername: PlayerPrivateIdSchema,
+		sentToPublicId: PlayerPublicIdSchema,
 		opponent: UserGivenNameSchema,
 		sentWhen: DateFullSchema,
 		timeControlName: TimeControlNameSchema

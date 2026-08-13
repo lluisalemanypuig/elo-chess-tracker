@@ -223,9 +223,9 @@ export async function getQueryChallengePendingResult(req: Request, res: Response
 			id: c.id,
 			title: c.title,
 			sentByName: userSentBy.user.getFullName(),
-			sentByUsername: userSentBy.user.username,
+			sentByPublicId: userSentBy.publicId,
 			sentToName: userSentTo.user.getFullName(),
-			sentToUsername: userSentTo.user.username,
+			sentToPublicId: userSentTo.publicId,
 			opponent: opponent,
 			sentWhen: c.whenChallengeSent,
 			timeControlName: c.timeControlName
