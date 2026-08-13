@@ -31,7 +31,7 @@ import {
 	QueryChallengesReceivedOutputSingle,
 	QueryChallengesSentOutputSingle
 } from '@common/api/schemas/query-challenges';
-import { PlayerPrivateId, PlayerPublicId } from '@common/models/player';
+import { PlayerPrivateId, PlayerPublicId, toPlayerPublicId } from '@common/models/player';
 import { TimeControlId, TimeControlName } from '@common/models/time-control';
 
 function createLabelText(text: string): HTMLLabelElement {
@@ -106,8 +106,8 @@ async function submitResultChallengeButtonClicked(event: any) {
 	const blackSelect = document.getElementById('black-select-' + challengeId) as HTMLSelectElement;
 	const selectResultGame = document.getElementById('select-result-game-' + challengeId) as HTMLSelectElement;
 
-	const whiteUsername = whiteSelect.options[whiteSelect.selectedIndex].value as PlayerPrivateId;
-	const blackUsername = blackSelect.options[blackSelect.selectedIndex].value as PlayerPrivateId;
+	const whitePublicId = whiteSelect.options[whiteSelect.selectedIndex].value as PlayerPrivateId;
+	const blackPublicId = blackSelect.options[blackSelect.selectedIndex].value as PlayerPrivateId;
 	const resultStr = selectResultGame.options[selectResultGame.selectedIndex].value;
 	let result: GameResult;
 	if (resultStr === 'white_wins') {
@@ -124,8 +124,8 @@ async function submitResultChallengeButtonClicked(event: any) {
 	// "query" the server
 	const response = await serverCall(ROUTES.CHALLENGE_SET_RESULT, {
 		id: challengeId,
-		white: whiteUsername,
-		black: blackUsername,
+		white: toPlayerPublicId(Number(whitePublicId)),
+		black: toPlayerPublicId(Number(blackPublicId)),
 		result: result
 	});
 	if (response.status === 'Error') {

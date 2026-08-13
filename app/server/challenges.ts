@@ -256,22 +256,25 @@ export async function postChallengeSetResult(req: Request, res: Response) {
 	}
 
 	const challengeId: ChallengeId = challengeParse.data.id;
-	const whiteUsername = challengeParse.data.white;
-	const blackUsername = challengeParse.data.black;
+	const whitePublicId = challengeParse.data.white;
+	const blackPublicId = challengeParse.data.black;
 	const result: GameResult = challengeParse.data.result;
 
 	debug(logNow(), `User '${setterUser}' is trying to set the result of a challenge`);
 	debug(logNow(), `    Challenge id: '${challengeId}'`);
-	debug(logNow(), `    White: '${whiteUsername}'`);
-	debug(logNow(), `    Black: '${blackUsername}'`);
+	debug(logNow(), `    White: '${whitePublicId}'`);
+	debug(logNow(), `    Black: '${blackPublicId}'`);
 	debug(logNow(), `    Result: '${result}'`);
 
 	const manager = UsersManager.getInstance();
-	if (!manager.exists(whiteUsername)) {
+	const white = manager.getAllUserDataByPublicId(whitePublicId);
+	const black = manager.getAllUserDataByPublicId(blackPublicId);
+
+	if (isNotDefined(white)) {
 		res.status(404).send(`White user does not exist.`);
 		return;
 	}
-	if (!manager.exists(blackUsername)) {
+	if (isNotDefined(black)) {
 		res.status(404).send(`Black user does not exist.`);
 		return;
 	}
@@ -286,8 +289,8 @@ export async function postChallengeSetResult(req: Request, res: Response) {
 		challengeSetResult(c, {
 			by: setterUser,
 			when: logNow(),
-			white: whiteUsername,
-			black: blackUsername,
+			white: white.user.username,
+			black: black.user.username,
 			result
 		});
 	} catch (e: unknown) {
