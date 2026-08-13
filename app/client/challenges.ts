@@ -353,12 +353,12 @@ async function fillChallengesPendingResult() {
 			select.className = 'select-basic';
 
 			let option1 = document.createElement('option') as HTMLOptionElement;
-			option1.text = elem.sentToName;
-			option1.value = `${elem.sentToPublicId}`;
+			option1.text = elem.sentTo.name;
+			option1.value = `${elem.sentTo.publicId}`;
 			select.appendChild(option1);
 			let option2 = document.createElement('option') as HTMLOptionElement;
-			option2.text = elem.sentByName;
-			option2.value = `${elem.sentByPublicId}`;
+			option2.text = elem.sentBy.name;
+			option2.value = `${elem.sentBy.publicId}`;
 			select.appendChild(option2);
 
 			div.appendChild(select);
@@ -377,12 +377,12 @@ async function fillChallengesPendingResult() {
 			select.className = 'select-basic';
 
 			let option1 = document.createElement('option') as HTMLOptionElement;
-			option1.text = elem.sentByName;
-			option1.value = `${elem.sentByPublicId}`;
+			option1.text = elem.sentBy.name;
+			option1.value = `${elem.sentBy.publicId}`;
 			select.appendChild(option1);
 			let option2 = document.createElement('option') as HTMLOptionElement;
-			option2.text = elem.sentToName;
-			option2.value = `${elem.sentToPublicId}`;
+			option2.text = elem.sentTo.name;
+			option2.value = `${elem.sentTo.publicId}`;
 			select.appendChild(option2);
 
 			div.appendChild(select);

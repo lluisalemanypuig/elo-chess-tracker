@@ -74,10 +74,14 @@ export const QueryChallengesPendingResultOutputSingleSchema = z
 	.object({
 		id: ChallengeIdSchema,
 		title: z.string(),
-		sentByName: UserGivenNameSchema,
-		sentByPublicId: PlayerPublicIdSchema,
-		sentToName: UserGivenNameSchema,
-		sentToPublicId: PlayerPublicIdSchema,
+		sentBy: z.object({
+			name: UserGivenNameSchema,
+			publicId: PlayerPublicIdSchema
+		}),
+		sentTo: z.object({
+			name: UserGivenNameSchema,
+			publicId: PlayerPublicIdSchema
+		}),
 		opponent: UserGivenNameSchema,
 		sentWhen: DateFullSchema,
 		timeControlName: TimeControlNameSchema
