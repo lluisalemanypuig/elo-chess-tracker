@@ -44,11 +44,10 @@ import { UsersManager } from '@server/managers/users-manager';
 import { searchByKey } from '@server/utils/searching';
 import { readDirectory } from '@server/utils/read-directory';
 import { isNotDefined } from '@common/utils/is-defined';
-import { ROUTES } from '@common/routes';
-import { inputSchemaOf } from '@common/api/schemas';
+import { ROUTES } from '@common/api/routes';
+import { inputSchemaOf } from '@common/api/schemas-endpoints';
 import { safeParseRequestBody, safeParseRequestCookies } from '@server/utils/schemas';
-import { AuthenticationInputSchema } from '@common/schemas/authentication';
-import { QueryGamesListOutput, QueryGamesListOutputSingle } from '@common/schemas/query-games';
+import { QueryGamesListOutput, QueryGamesListOutputSingle } from '@common/api/schemas/query-games';
 
 function increment(g: Game): any {
 	const [whiteAfter, blackAfter] = RatingSystemManager.getInstance().applyRatingFunction(g);
@@ -157,13 +156,12 @@ function filterGameList(
 export async function postQueryGameListOwn(req: Request, res: Response) {
 	debug(logNow(), `POST ${ROUTES.QUERY_GAME_LIST_OWN}...`);
 
-	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	const sessionParse = safeParseRequestCookies(req, res, debug);
 	if (sessionParse.result === 'Exit') {
 		return;
 	}
 	const session = sessionParse.data;
 	const r = isUserLoggedIn(session);
-
 	const user = r[2];
 	if (isNotDefined(user)) {
 		res.status(401).send(r[1]);
@@ -177,7 +175,7 @@ export async function postQueryGameListOwn(req: Request, res: Response) {
 	const timeControlId = gameParse.data.timeControlId;
 
 	const filterGameFunction = (g: Game): boolean => {
-		return g.isUserInvolved(session.username);
+		return g.isUserInvolved(user.username);
 	};
 
 	let dataToReturn: QueryGamesListOutput = [];
@@ -215,7 +213,7 @@ export async function postQueryGameListOwn(req: Request, res: Response) {
 		}
 	}
 
-	debug(logNow(), `Found '${dataToReturn.length}' games involving '${session.username}'`);
+	debug(logNow(), `Found '${dataToReturn.length}' games involving '${user.username}'`);
 
 	res.status(200).send(dataToReturn);
 }
@@ -253,13 +251,12 @@ function mergeByDate(v1: QueryGamesListOutputSingle[], v2: QueryGamesListOutputS
 export async function postQueryGameListAll(req: Request, res: Response) {
 	debug(logNow(), `POST ${ROUTES.QUERY_GAME_LIST_ALL}...`);
 
-	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	const sessionParse = safeParseRequestCookies(req, res, debug);
 	if (sessionParse.result === 'Exit') {
 		return;
 	}
 	const session = sessionParse.data;
 	const r = isUserLoggedIn(session);
-
 	const user = r[2];
 	if (isNotDefined(user)) {
 		res.status(401).send(r[1]);

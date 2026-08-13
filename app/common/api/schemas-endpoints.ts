@@ -32,25 +32,25 @@ import {
 	ChallengeDisagreeResultInputSchema,
 	ChallengeSendInputSchema,
 	ChallengeSetResultInputSchema
-} from '@common/schemas/challenges';
+} from '@common/api/schemas/challenges';
 import {
 	GameCreateInputSchema,
 	GameDeleteInputSchema,
 	GameEditResultInputSchema,
 	GameEditTitleInputSchema
-} from '@common/schemas/games';
-import { Route, ROUTES } from '@common/routes';
-import { UserLoginInputSchema, UserLoginOutputSchema, UserLogoutOutputSchema } from '@common/schemas/login-logout';
+} from '@common/api/schemas/games';
+import { Route, ROUTES } from '@common/api/routes';
+import { UserLoginInputSchema, UserLoginOutputSchema, UserLogoutOutputSchema } from '@common/api/schemas/login-logout';
 import {
 	QueryGamesListAllInputSchema,
 	QueryGamesListOutputSchema,
 	QueryGamesListOwnInputSchema
-} from '@common/schemas/query-games';
+} from '@common/api/schemas/query-games';
 import {
 	QueryGraphInputFullSchema,
 	QueryGraphInputOwnSchema,
 	QueryGraphOutputSchema
-} from '@common/schemas/query-graphs';
+} from '@common/api/schemas/query-graphs';
 import {
 	QueryUserEditInputSchema,
 	QueryUserEditOutputSchema,
@@ -58,15 +58,15 @@ import {
 	QueryUserListOutputSchema,
 	QueryUserRankingInputSchema,
 	QueryUserRankingOutputSchema
-} from '@common/schemas/query-user';
-import { UserCreateInputSchema, UserEditInputSchema, UserPasswordChangeInputSchema } from '@common/schemas/user';
+} from '@common/api/schemas/query-user';
+import { UserCreateInputSchema, UserEditInputSchema, UserPasswordChangeInputSchema } from '@common/api/schemas/user';
 import {
 	QueryChallengesConfirmResultOtherOutputSchema,
 	QueryChallengesConfirmResultSelfOutputSchema,
 	QueryChallengesPendingResultOutputSchema,
 	QueryChallengesReceivedOutputSchema,
 	QueryChallengesSentOutputSchema
-} from '@common/schemas/query-challenges';
+} from '@common/api/schemas/query-challenges';
 
 export const EmptySchema = z.object({}).strict();
 export const StringSchema = z.string();

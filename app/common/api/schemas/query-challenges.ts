@@ -24,13 +24,13 @@ Contact:
 */
 
 import { z } from 'zod';
-import { PlayerPrivateIdSchema } from '@common/models/player';
+import { PlayerPublicIdSchema } from '@common/models/player';
 import { UserGivenNameSchema } from '@common/models/user';
 import { ChallengeIdSchema } from '@common/models/challenge';
 import { TimeControlNameSchema } from '@common/models/time-control';
 import { DateFullSchema } from '@common/utils/time';
 
-// Routes.QUERY_CHALLENGE_RECEIVED
+// ROUTES.QUERY_CHALLENGE_RECEIVED
 
 export const QueryChallengesReceivedOutputSingleSchema = z
 	.object({
@@ -49,7 +49,7 @@ export const QueryChallengesReceivedOutputSchema = z.array(QueryChallengesReceiv
 
 export type QueryChallengesReceivedOutput = z.infer<typeof QueryChallengesReceivedOutputSchema>;
 
-// Routes.QUERY_CHALLENGE_SENT
+// ROUTES.QUERY_CHALLENGE_SENT
 
 export const QueryChallengesSentOutputSingleSchema = z
 	.object({
@@ -68,18 +68,20 @@ export const QueryChallengesSentOutputSchema = z.array(QueryChallengesSentOutput
 
 export type QueryChallengesSentOutput = z.infer<typeof QueryChallengesSentOutputSchema>;
 
-// Routes.QUERY_CHALLENGE_PENDING_RESULT
+// ROUTES.QUERY_CHALLENGE_PENDING_RESULT
 
 export const QueryChallengesPendingResultOutputSingleSchema = z
 	.object({
 		id: ChallengeIdSchema,
 		title: z.string(),
-		sentByName: UserGivenNameSchema,
-		/// TODO: use user public IDs
-		sentByUsername: PlayerPrivateIdSchema,
-		sentToName: UserGivenNameSchema,
-		/// TODO: use user public IDs
-		sentToUsername: PlayerPrivateIdSchema,
+		sentBy: z.object({
+			name: UserGivenNameSchema,
+			publicId: PlayerPublicIdSchema
+		}),
+		sentTo: z.object({
+			name: UserGivenNameSchema,
+			publicId: PlayerPublicIdSchema
+		}),
 		opponent: UserGivenNameSchema,
 		sentWhen: DateFullSchema,
 		timeControlName: TimeControlNameSchema
@@ -92,7 +94,7 @@ export const QueryChallengesPendingResultOutputSchema = z.array(QueryChallengesP
 
 export type QueryChallengesPendingResultOutput = z.infer<typeof QueryChallengesPendingResultOutputSchema>;
 
-// Routes.QUERY_CHALLENGE_CONFIRM_RESULT_OTHER
+// ROUTES.QUERY_CHALLENGE_CONFIRM_RESULT_OTHER
 
 export const QueryChallengesConfirmResultOtherOutputSingleSchema = z
 	.object({
@@ -117,7 +119,7 @@ export const QueryChallengesConfirmResultOtherOutputSchema = z.array(
 
 export type QueryChallengesConfirmResultOtherOutput = z.infer<typeof QueryChallengesConfirmResultOtherOutputSchema>;
 
-// Routes.QUERY_CHALLENGE_CONFIRM_RESULT_SELF
+// ROUTES.QUERY_CHALLENGE_CONFIRM_RESULT_SELF
 
 export const QueryChallengesConfirmResultSelfOutputSingleSchema = z
 	.object({

@@ -29,7 +29,7 @@ import { TimeControlIdSchema, TimeControlNameSchema } from '@common/models/time-
 import { GameIdSchema } from '@common/models/game';
 import { DateFullSchema } from '@common/utils/time';
 
-// Routes.QUERY_GAME_LIST_OWN
+// ROUTES.QUERY_GAME_LIST_OWN
 
 export const QueryGamesListOwnInputSchema = z
 	.object({
@@ -39,7 +39,7 @@ export const QueryGamesListOwnInputSchema = z
 
 export type QueryGamesListOwnInput = z.infer<typeof QueryGamesListOwnInputSchema>;
 
-// Routes.QUERY_GAME_LIST_ALL
+// ROUTES.QUERY_GAME_LIST_ALL
 
 export const QueryGamesListAllInputSchema = z
 	.object({
@@ -49,7 +49,7 @@ export const QueryGamesListAllInputSchema = z
 
 export type QueryGamesListAllInput = z.infer<typeof QueryGamesListAllInputSchema>;
 
-// Routes.QUERY_GAME_LIST_OWN + Routes.QUERY_GAME_LIST_ALL
+// ROUTES.QUERY_GAME_LIST_OWN + Routes.QUERY_GAME_LIST_ALL
 
 export const QueryGamesListOutputSingleSchema = z
 	.object({

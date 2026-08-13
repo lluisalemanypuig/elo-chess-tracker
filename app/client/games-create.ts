@@ -24,7 +24,7 @@ import 'htmx.org';
 import { resultFromTextToValue } from '@common/models/game';
 import { isNotDefined } from '@common/utils/is-defined';
 import { messageFromResponse, serverCall } from '@client/action';
-import { ROUTES } from '@common/routes';
+import { ROUTES } from '@common/api/routes';
 import { PlayerPublicId } from '@common/models/player';
 import { TimeControlId, TimeControlName } from '@common/models/time-control';
 import { toDateMajor, toDateMinor } from '@common/utils/time';

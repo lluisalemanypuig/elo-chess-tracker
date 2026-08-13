@@ -47,8 +47,8 @@ import { PlayerPrivateId } from '@common/models/player';
 // use in order to configure the webpage in their machine.
 const characterSamples: string = '$ALLOWED_SYMBOLS_COOKIES';
 
-/// Makes a random session id from a starting string.
-function randomSessionId(str: string): string {
+/// Makes a random session token from a starting string.
+function randomSessionToken(str: string): string {
 	// convert string to an array
 	let stringArray: string[] = [];
 	for (const char of str) {
@@ -69,11 +69,16 @@ function randomSessionId(str: string): string {
  * @param username Username.
  * @returns The authentication token.
  */
-export function sessionIdAdd(username: PlayerPrivateId): string {
-	const token = randomSessionId(username);
-	const sessionId: SessionId = { token: token, username: username };
+export function sessionIdAdd(username: PlayerPrivateId) {
+	const u = UsersManager.getInstance().getAllUserDataByPrivateId(username);
+	if (isNotDefined(u)) {
+		debug(logNow(), `User '${username}' does not exist.`);
+		throw new Error(`User does not exist.`);
+	}
+	const token = randomSessionToken(username);
+	const sessionId: SessionId = { token: token, publicId: u.publicId };
 	SessionIDManager.getInstance().addSessionId(sessionId);
-	return token;
+	return sessionId;
 }
 
 /// Deletes a session id.
@@ -83,22 +88,22 @@ export function sessionIdDelete(session: SessionId): void {
 	debug(logNow(), `Before deleting, '${mem.numSessionIds()}' sessions`);
 	const idx = mem.indexSessionId(session);
 	if (idx !== -1) {
-		debug(logNow(), `    Session of user '${session.username}' was found. Deleting...`);
+		debug(logNow(), `    Session of user '${session.publicId}' was found. Deleting...`);
 		mem.removeSessionId(idx);
 	} else {
-		debug(logNow(), `    Session of user '${session.username}' was not found.`);
+		debug(logNow(), `    Session of user '${session.publicId}' was not found.`);
 	}
 
 	debug(logNow(), `Currently, '${mem.numSessionIds()}' sessions`);
 }
 
 /// Deletes a session id.
-export function sessionUserDeleteAll(username: PlayerPrivateId): void {
+export function sessionUserDeleteAll(session: SessionId): void {
 	let mem = SessionIDManager.getInstance();
 
 	debug(logNow(), `Before deleting, '${mem.numSessionIds()}' sessions`);
 
-	mem.removeUserSessions(username);
+	mem.removeUserSessions(session.publicId);
 
 	debug(logNow(), `Currently, '${mem.numSessionIds()}' sessions`);
 }
@@ -109,23 +114,23 @@ export function sessionUserDeleteAll(username: PlayerPrivateId): void {
  * Checks that a user logged in or not using the cookies.
  */
 export function isUserLoggedIn(session: SessionId): [boolean, string, User | undefined] {
-	const user = UsersManager.getInstance().getAllUserDataByPrivateId(session.username);
+	const user = UsersManager.getInstance().getAllUserDataByPublicId(session.publicId);
 	if (isNotDefined(user)) {
-		debug(logNow(), `User '${session.username}' does not exist.`);
+		debug(logNow(), `User '${session.publicId}' does not exist.`);
 		return [false, 'Forbidden access. <a href="/">Go home</a>.', undefined];
 	}
 
-	debug(logNow(), `User '${session.username}' exists and is trying to access the page.`);
+	debug(logNow(), `User '${session.publicId}' exists and is trying to access the page.`);
 	debug(logNow(), `Checking now if the user has a valid session ID.`);
 
 	// at this point, the user exists --> check if the session id received exists
 	if (!SessionIDManager.getInstance().hasSessionId(session)) {
-		debug(logNow(), `    The session ID received for user '${session.username}' does not exist.`);
+		debug(logNow(), `    The session ID received for user '${session.publicId}' does not exist.`);
 		debug(logNow(), '    This means that the user is not logged into the web in');
 		debug(logNow(), '    the device they are trying to access the web from.');
 		return [false, 'Forbidden access. <a href="/">Go home</a>.', undefined];
 	} else {
-		debug(logNow(), `    Valid session ID received for user '${session.username}'.`);
+		debug(logNow(), `    Valid session ID received for user '${session.publicId}'.`);
 	}
 	return [true, '', user.user];
 }

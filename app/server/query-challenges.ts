@@ -35,22 +35,21 @@ import { Challenge } from '@common/models/challenge';
 import { UsersManager } from '@server/managers/users-manager';
 import { canUserDeclineChallenge } from '@server/managers/user-relationships';
 import { isDefined, isNotDefined } from '@common/utils/is-defined';
-import { ROUTES } from '@common/routes';
+import { ROUTES } from '@common/api/routes';
 import { safeParseRequestCookies } from '@server/utils/schemas';
-import { AuthenticationInputSchema } from '@common/schemas/authentication';
 import {
 	QueryChallengesConfirmResultOtherOutput,
 	QueryChallengesConfirmResultSelfOutput,
 	QueryChallengesPendingResultOutput,
 	QueryChallengesReceivedOutput,
 	QueryChallengesSentOutput
-} from '@common/schemas/query-challenges';
+} from '@common/api/schemas/query-challenges';
 
 /// Query the server for challenges received sento to me by other users
 export async function getQueryChallengeReceived(req: Request, res: Response) {
 	debug(logNow(), `GET ${ROUTES.QUERY_CHALLENGE_RECEIVED}...`);
 
-	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	const sessionParse = safeParseRequestCookies(req, res, debug);
 	if (sessionParse.result === 'Exit') {
 		return;
 	}
@@ -65,7 +64,7 @@ export async function getQueryChallengeReceived(req: Request, res: Response) {
 
 	// challenges to be returned
 	const toReturn = getChallengesBy((c: Challenge): boolean => {
-		if (c.sentTo !== session.username) {
+		if (c.sentTo !== sentTo.username) {
 			return false;
 		}
 		if (isDefined(c.whenChallengeAccepted)) {
@@ -105,21 +104,21 @@ export async function getQueryChallengeReceived(req: Request, res: Response) {
 export async function getQueryChallengeSent(req: Request, res: Response) {
 	debug(logNow(), `GET ${ROUTES.QUERY_CHALLENGE_SENT}...`);
 
-	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	const sessionParse = safeParseRequestCookies(req, res, debug);
 	if (sessionParse.result === 'Exit') {
 		return;
 	}
 	const session = sessionParse.data;
 	const r = isUserLoggedIn(session);
-
-	if (isNotDefined(r[2])) {
+	const user = r[2];
+	if (isNotDefined(user)) {
 		res.status(401).send(r[1]);
 		return;
 	}
 
 	// challenges to be returned
 	const toReturn = getChallengesBy((c: Challenge): boolean => {
-		if (c.sentBy !== session.username) {
+		if (c.sentBy !== user.username) {
 			return false;
 		}
 		if (isDefined(c.whenChallengeAccepted)) {
@@ -129,9 +128,9 @@ export async function getQueryChallengeSent(req: Request, res: Response) {
 	});
 
 	let manager = UsersManager.getInstance();
-	const sentBy = manager.getAllUserDataByPrivateId(session.username);
+	const sentBy = manager.getAllUserDataByPrivateId(user.username);
 	if (isNotDefined(sentBy)) {
-		debug(logNow(), `User '${session.username}' does not exist.`);
+		debug(logNow(), `User '${user.username}' does not exist.`);
 		res.status(500).send();
 		return;
 	}
@@ -165,14 +164,14 @@ export async function getQueryChallengeSent(req: Request, res: Response) {
 export async function getQueryChallengePendingResult(req: Request, res: Response) {
 	debug(logNow(), `GET ${ROUTES.QUERY_CHALLENGE_PENDING_RESULT}...`);
 
-	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	const sessionParse = safeParseRequestCookies(req, res, debug);
 	if (sessionParse.result === 'Exit') {
 		return;
 	}
 	const session = sessionParse.data;
 	const r = isUserLoggedIn(session);
-
-	if (isNotDefined(r[2])) {
+	const user = r[2];
+	if (isNotDefined(user)) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -180,7 +179,7 @@ export async function getQueryChallengePendingResult(req: Request, res: Response
 	// challenges to be returned
 	const toReturn = getChallengesBy((c: Challenge): boolean => {
 		// this user must be involved in the challenge
-		if (c.sentBy !== session.username && c.sentTo !== session.username) {
+		if (c.sentBy !== user.username && c.sentTo !== user.username) {
 			return false;
 		}
 		// must have been accepted
@@ -213,7 +212,7 @@ export async function getQueryChallengePendingResult(req: Request, res: Response
 		}
 
 		const opponent = ((): UserGivenName => {
-			if (userSentBy.user.username === session.username) {
+			if (userSentBy.user.username === user.username) {
 				return userSentTo.user.getFullName();
 			}
 			return userSentBy.user.getFullName();
@@ -223,10 +222,14 @@ export async function getQueryChallengePendingResult(req: Request, res: Response
 		allChallenges.push({
 			id: c.id,
 			title: c.title,
-			sentByName: userSentBy.user.getFullName(),
-			sentByUsername: userSentBy.user.username,
-			sentToName: userSentTo.user.getFullName(),
-			sentToUsername: userSentTo.user.username,
+			sentBy: {
+				name: userSentBy.user.getFullName(),
+				publicId: userSentBy.publicId
+			},
+			sentTo: {
+				name: userSentTo.user.getFullName(),
+				publicId: userSentTo.publicId
+			},
 			opponent: opponent,
 			sentWhen: c.whenChallengeSent,
 			timeControlName: c.timeControlName
@@ -242,14 +245,14 @@ export async function getQueryChallengePendingResult(req: Request, res: Response
 export async function getQueryChallengeConfirmResultOther(req: Request, res: Response) {
 	debug(logNow(), `GET ${ROUTES.QUERY_CHALLENGE_CONFIRM_RESULT_OTHER}...`);
 
-	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	const sessionParse = safeParseRequestCookies(req, res, debug);
 	if (sessionParse.result === 'Exit') {
 		return;
 	}
 	const session = sessionParse.data;
 	const r = isUserLoggedIn(session);
-
-	if (isNotDefined(r[2])) {
+	const user = r[2];
+	if (isNotDefined(user)) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -257,7 +260,7 @@ export async function getQueryChallengeConfirmResultOther(req: Request, res: Res
 	// challenges to be returned
 	const toReturn = getChallengesBy((c: Challenge): boolean => {
 		// this user must be involved in the challenge
-		if (c.sentBy !== session.username && c.sentTo !== session.username) {
+		if (c.sentBy !== user.username && c.sentTo !== user.username) {
 			return false;
 		}
 		// must have been accepted
@@ -269,7 +272,7 @@ export async function getQueryChallengeConfirmResultOther(req: Request, res: Res
 			return false;
 		}
 		// result should have been set by this user
-		if (c.resultSetBy !== session.username) {
+		if (c.resultSetBy !== user.username) {
 			return false;
 		}
 		return true;
@@ -307,7 +310,7 @@ export async function getQueryChallengeConfirmResultOther(req: Request, res: Res
 		})();
 
 		const opponent = ((): UserGivenName => {
-			if (sentBy.user.username === session.username) {
+			if (sentBy.user.username === user.username) {
 				return sentTo.user.getFullName();
 			}
 			return sentBy.user.getFullName();
@@ -345,14 +348,14 @@ export async function getQueryChallengeConfirmResultOther(req: Request, res: Res
 export async function getQueryChallengeConfirmResultSelf(req: Request, res: Response) {
 	debug(logNow(), `GET ${ROUTES.QUERY_CHALLENGE_CONFIRM_RESULT_SELF}...`);
 
-	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	const sessionParse = safeParseRequestCookies(req, res, debug);
 	if (sessionParse.result === 'Exit') {
 		return;
 	}
 	const session = sessionParse.data;
 	const r = isUserLoggedIn(session);
-
-	if (isNotDefined(r[2])) {
+	const user = r[2];
+	if (isNotDefined(user)) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -360,7 +363,7 @@ export async function getQueryChallengeConfirmResultSelf(req: Request, res: Resp
 	// challenges to be returned
 	const toReturn = getChallengesBy((c: Challenge): boolean => {
 		// this user must be involved in the challenge
-		if (c.sentBy !== session.username && c.sentTo !== session.username) {
+		if (c.sentBy !== user.username && c.sentTo !== user.username) {
 			return false;
 		}
 		// must have been accepted
@@ -372,7 +375,7 @@ export async function getQueryChallengeConfirmResultSelf(req: Request, res: Resp
 			return false;
 		}
 		// result should NOT have been set by this user
-		if (c.resultSetBy === session.username) {
+		if (c.resultSetBy === user.username) {
 			return false;
 		}
 		return true;
@@ -410,7 +413,7 @@ export async function getQueryChallengeConfirmResultSelf(req: Request, res: Resp
 		})();
 
 		const opponent = ((): UserGivenName => {
-			if (sentBy.user.username === session.username) {
+			if (sentBy.user.username === user.username) {
 				return sentTo.user.getFullName();
 			}
 			return sentBy.user.getFullName();

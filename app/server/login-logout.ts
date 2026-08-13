@@ -32,13 +32,12 @@ import { isPasswordOfUserCorrect } from '@server/utils/encrypt';
 import { emptySessionIdCookie, makeSessionIdCookie } from '@server/utils/cookies';
 import { sessionIdAdd, sessionIdDelete } from '@server/managers/session';
 import { SessionIDManager } from '@server/managers/session-id-manager';
-import { SessionIdTokenFieldName, SessionIdUsernameFieldName } from '@common/models/session-id';
+import { SessionIdPublicIdFieldName, SessionIdTokenFieldName } from '@common/models/session-id';
 import { UsersManager } from '@server/managers/users-manager';
 import { isNotDefined } from '@common/utils/is-defined';
-import { UserLoginInputSchema } from '@common/schemas/login-logout';
-import { ROUTES } from '@common/routes';
+import { UserLoginInputSchema } from '@common/api/schemas/login-logout';
+import { ROUTES } from '@common/api/routes';
 import { safeParseRequestBody, safeParseRequestCookies } from '@server/utils/schemas';
-import { AuthenticationInputSchema } from '@common/schemas/authentication';
 
 export async function postUserLogin(req: Request, res: Response) {
 	debug(logNow(), `POST ${ROUTES.USER_LOGIN}`);
@@ -77,13 +76,13 @@ export async function postUserLogin(req: Request, res: Response) {
 
 	debug(logNow(), `    Password for '${username}' is correct`);
 
-	const token = sessionIdAdd(username);
+	const session = sessionIdAdd(username);
 
 	// send response
 	res.status(200).send({
 		cookies: [
-			makeSessionIdCookie(SessionIdTokenFieldName, token, 1),
-			makeSessionIdCookie(SessionIdUsernameFieldName, username, 1)
+			makeSessionIdCookie(SessionIdTokenFieldName, session.token, 1),
+			makeSessionIdCookie(SessionIdPublicIdFieldName, `${session.publicId}`, 1)
 		]
 	});
 }
@@ -91,30 +90,28 @@ export async function postUserLogin(req: Request, res: Response) {
 export async function postUserLogout(req: Request, res: Response) {
 	debug(logNow(), `POST ${ROUTES.USER_LOGOUT}`);
 
-	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	const sessionParse = safeParseRequestCookies(req, res, debug);
 	if (sessionParse.result === 'Exit') {
 		return;
 	}
 	const session = sessionParse.data;
 
 	debug(logNow(), `    Cookie:`);
-	debug(logNow(), `        Username:   '${session.username}'`);
-	// debug(logNow(), `        Session ID: '${session.token}'`);
+	debug(logNow(), `        Public Id:   '${session.publicId}'`);
 
 	// in order to log out a user, the must have been logged in with the given
 	// session id token
 	if (!SessionIDManager.getInstance().hasSessionId(session)) {
 		debug(
 			logNow(),
-			`    User '${session.username}' was never logged in with this session id but it is fine, since they are logging out.`
+			`    User '${session.publicId}' was never logged in with this session id but it is fine, since they are logging out.`
 		);
 	} else {
-		debug(logNow(), `    User '${session.username}' was logged in.`);
-		debug(logNow(), `    Deleting session id of user '${session.username}'...`);
+		debug(logNow(), `    Deleting session id of user '${session.publicId}'...`);
 		sessionIdDelete(session);
 		debug(logNow(), `        Deleted.`);
 	}
 	res.status(200).send({
-		cookies: [emptySessionIdCookie(SessionIdTokenFieldName), emptySessionIdCookie(SessionIdUsernameFieldName)]
+		cookies: [emptySessionIdCookie(SessionIdTokenFieldName), emptySessionIdCookie(SessionIdPublicIdFieldName)]
 	});
 }

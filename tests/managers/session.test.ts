@@ -46,10 +46,6 @@ const Rapid10p0 = toTimeControlName('Rapid (10 + 0)');
 const Blitz = toTimeControlId('Blitz');
 const Blitz5p3 = toTimeControlName('Blitz (5 + 3)');
 
-function makeSession(token: string, username: string) {
-	return { token, username: toPlayerPrivateId(username) };
-}
-
 const configuration: Configuration = {
 	environment: {
 		sslCertificate: {
@@ -157,8 +153,7 @@ describe('Session management via functions', () => {
 	test('Add a few sessions', () => {
 		const manager = SessionIDManager.getInstance();
 
-		const token_aa = sessionIdAdd(aa);
-		session_aa_1 = makeSession(token_aa, 'aa');
+		session_aa_1 = sessionIdAdd(aa);
 		{
 			const log = isUserLoggedIn(session_aa_1);
 			expect(log[0]).toBe(true);
@@ -166,8 +161,7 @@ describe('Session management via functions', () => {
 		}
 		expect(manager.numSessionIds()).toBe(1);
 
-		const token_bb = sessionIdAdd(bb);
-		session_bb_1 = makeSession(token_bb, 'bb');
+		session_bb_1 = sessionIdAdd(bb);
 		{
 			const log = isUserLoggedIn(session_aa_1);
 			expect(log[0]).toBe(true);
@@ -180,8 +174,7 @@ describe('Session management via functions', () => {
 		}
 		expect(manager.numSessionIds()).toBe(2);
 
-		const token_cc = sessionIdAdd(cc);
-		session_cc_1 = makeSession(token_cc, 'cc');
+		session_cc_1 = sessionIdAdd(cc);
 		{
 			const log = isUserLoggedIn(session_aa_1);
 			expect(log[0]).toBe(true);
@@ -199,8 +192,7 @@ describe('Session management via functions', () => {
 		}
 		expect(manager.numSessionIds()).toBe(3);
 
-		const token_dd = sessionIdAdd(dd);
-		session_dd_1 = makeSession(token_dd, 'dd');
+		session_dd_1 = sessionIdAdd(dd);
 		{
 			const log = isUserLoggedIn(session_aa_1);
 			expect(log[0]).toBe(true);
@@ -223,8 +215,7 @@ describe('Session management via functions', () => {
 		}
 		expect(manager.numSessionIds()).toBe(4);
 
-		const token_ee = sessionIdAdd(ee);
-		session_ee_1 = makeSession(token_ee, 'ee');
+		session_ee_1 = sessionIdAdd(ee);
 		{
 			const log = isUserLoggedIn(session_aa_1);
 			expect(log[0]).toBe(true);
@@ -252,8 +243,7 @@ describe('Session management via functions', () => {
 		}
 		expect(manager.numSessionIds()).toBe(5);
 
-		const token_ff = sessionIdAdd(ff);
-		session_ff_1 = makeSession(token_ff, 'ff');
+		session_ff_1 = sessionIdAdd(ff);
 		{
 			const log = isUserLoggedIn(session_aa_1);
 			expect(log[0]).toBe(true);
@@ -290,8 +280,7 @@ describe('Session management via functions', () => {
 	test('Add repeated sessions', () => {
 		const manager = SessionIDManager.getInstance();
 
-		const token_aa = sessionIdAdd(aa);
-		session_aa_2 = makeSession(token_aa, 'aa');
+		session_aa_2 = sessionIdAdd(aa);
 		{
 			const log = isUserLoggedIn(session_aa_1);
 			expect(log[0]).toBe(true);
@@ -329,8 +318,7 @@ describe('Session management via functions', () => {
 		}
 		expect(manager.numSessionIds()).toBe(7);
 
-		const token_bb = sessionIdAdd(bb);
-		session_bb_2 = makeSession(token_bb, 'bb');
+		session_bb_2 = sessionIdAdd(bb);
 		{
 			const log = isUserLoggedIn(session_aa_1);
 			expect(log[0]).toBe(true);
@@ -373,8 +361,7 @@ describe('Session management via functions', () => {
 		}
 		expect(manager.numSessionIds()).toBe(8);
 
-		const token_cc = sessionIdAdd(cc);
-		session_cc_2 = makeSession(token_cc, 'cc');
+		session_cc_2 = sessionIdAdd(cc);
 		{
 			const log = isUserLoggedIn(session_aa_1);
 			expect(log[0]).toBe(true);
@@ -422,8 +409,7 @@ describe('Session management via functions', () => {
 		}
 		expect(manager.numSessionIds()).toBe(9);
 
-		const token_dd = sessionIdAdd(dd);
-		session_dd_2 = makeSession(token_dd, 'dd');
+		session_dd_2 = sessionIdAdd(dd);
 		{
 			const log = isUserLoggedIn(session_aa_1);
 			expect(log[0]).toBe(true);
@@ -476,8 +462,7 @@ describe('Session management via functions', () => {
 		}
 		expect(manager.numSessionIds()).toBe(10);
 
-		const token_ee = sessionIdAdd(ee);
-		session_ee_2 = makeSession(token_ee, 'ee');
+		session_ee_2 = sessionIdAdd(ee);
 		{
 			const log = isUserLoggedIn(session_aa_1);
 			expect(log[0]).toBe(true);
@@ -535,8 +520,7 @@ describe('Session management via functions', () => {
 		}
 		expect(manager.numSessionIds()).toBe(11);
 
-		const token_ff = sessionIdAdd(ff);
-		session_ff_2 = makeSession(token_ff, 'ff');
+		session_ff_2 = sessionIdAdd(ff);
 		{
 			const log = isUserLoggedIn(session_aa_1);
 			expect(log[0]).toBe(true);
@@ -802,7 +786,7 @@ describe('Session management via functions', () => {
 	test('A user has all its sessions deleted', () => {
 		const manager = SessionIDManager.getInstance();
 
-		sessionUserDeleteAll(aa);
+		sessionUserDeleteAll(session_aa_2);
 		{
 			const log = isUserLoggedIn(session_aa_1);
 			expect(log[0]).toBe(false);
@@ -869,7 +853,7 @@ describe('Session management via functions', () => {
 		}
 		expect(manager.numSessionIds()).toBe(8);
 
-		sessionUserDeleteAll(bb);
+		sessionUserDeleteAll(session_bb_2);
 		{
 			const log = isUserLoggedIn(session_aa_1);
 			expect(log[0]).toBe(false);
@@ -938,7 +922,7 @@ describe('Session management via functions', () => {
 		}
 		expect(manager.numSessionIds()).toBe(6);
 
-		sessionUserDeleteAll(cc);
+		sessionUserDeleteAll(session_cc_1);
 		{
 			const log = isUserLoggedIn(session_aa_1);
 			expect(log[0]).toBe(false);
@@ -1009,7 +993,7 @@ describe('Session management via functions', () => {
 		}
 		expect(manager.numSessionIds()).toBe(4);
 
-		sessionUserDeleteAll(ff);
+		sessionUserDeleteAll(session_ff_1);
 		{
 			const log = isUserLoggedIn(session_aa_1);
 			expect(log[0]).toBe(false);
@@ -1081,7 +1065,7 @@ describe('Session management via functions', () => {
 		}
 		expect(manager.numSessionIds()).toBe(3);
 
-		sessionUserDeleteAll(dd);
+		sessionUserDeleteAll(session_dd_2);
 		{
 			const log = isUserLoggedIn(session_aa_1);
 			expect(log[0]).toBe(false);
@@ -1155,7 +1139,7 @@ describe('Session management via functions', () => {
 		}
 		expect(manager.numSessionIds()).toBe(1);
 
-		sessionUserDeleteAll(ee);
+		sessionUserDeleteAll(session_ee_2);
 		{
 			const log = isUserLoggedIn(session_aa_1);
 			expect(log[0]).toBe(false);

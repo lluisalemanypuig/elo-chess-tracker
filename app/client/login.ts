@@ -22,7 +22,7 @@ Full source code of elo-chess-tracker:
 import 'htmx.org';
 
 import { messageFromResponse, serverCall } from '@client/action';
-import { ROUTES } from '@common/routes';
+import { ROUTES } from '@common/api/routes';
 import { PlayerPrivateId } from '@common/models/player';
 
 async function logIntoWebpage(_event: any) {

@@ -23,7 +23,7 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { PlayerPrivateId } from '@common/models/player';
+import { PlayerPublicId } from '@common/models/player';
 import { SessionId } from '@common/models/session-id';
 import { searchLinearByKey } from '@server/utils/searching';
 
@@ -64,7 +64,7 @@ export class SessionIDManager {
 	}
 	indexSessionId(session: SessionId): number {
 		return searchLinearByKey(this.sessionIds, (s: SessionId): boolean => {
-			return s.token === session.token && s.username === session.username;
+			return s.token === session.token && s.publicId === session.publicId;
 		});
 	}
 	hasSessionId(session: SessionId): boolean {
@@ -73,9 +73,9 @@ export class SessionIDManager {
 	removeSessionId(idx: number): void {
 		this.sessionIds.splice(idx, 1);
 	}
-	removeUserSessions(username: PlayerPrivateId): void {
+	removeUserSessions(publicId: PlayerPublicId): void {
 		for (let i = this.sessionIds.length - 1; i >= 0; --i) {
-			if (this.sessionIds[i].username === username) {
+			if (this.sessionIds[i].publicId === publicId) {
 				this.removeSessionId(i);
 			}
 		}

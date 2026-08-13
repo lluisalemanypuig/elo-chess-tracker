@@ -24,42 +24,33 @@ Contact:
 */
 
 import { z } from 'zod';
-import { UserRoleArraySchema } from '@common/models/user-role';
-import { PlayerPrivateIdSchema, PlayerPublicIdSchema } from '@common/models/player';
-import { UserGivenNameSchema } from '@common/models/user';
+import { PlayerPrivateIdSchema } from '@common/models/player';
 
-// Routes.USER_CREATE
+// ROUTES.USER_LOGIN
 
-export const UserCreateInputSchema = z
+export const UserLoginInputSchema = z
 	.object({
 		u: PlayerPrivateIdSchema,
-		fn: UserGivenNameSchema,
-		ln: UserGivenNameSchema,
-		password: z.string(),
-		r: UserRoleArraySchema
+		p: PlayerPrivateIdSchema
 	})
 	.strict();
 
-export type UserCreateInput = z.infer<typeof UserCreateInputSchema>;
+export type UserLoginInput = z.infer<typeof UserLoginInputSchema>;
 
-// Routes.USER_EDIT
-
-export const UserEditInputSchema = z
+export const UserLoginOutputSchema = z
 	.object({
-		u: PlayerPublicIdSchema,
-		f: UserGivenNameSchema,
-		l: UserGivenNameSchema,
-		r: UserRoleArraySchema
+		cookies: z.array(z.string())
 	})
 	.strict();
 
-export type UserEditInput = z.infer<typeof UserEditInputSchema>;
+export type UserLoginOutput = z.infer<typeof UserLoginOutputSchema>;
 
-export const UserPasswordChangeInputSchema = z
+// ROUTES.USER_LOGOUT
+
+export const UserLogoutOutputSchema = z
 	.object({
-		old: z.string(),
-		new: z.string()
+		cookies: z.array(z.string())
 	})
 	.strict();
 
-export type UserPasswordChangeInput = z.infer<typeof UserPasswordChangeInputSchema>;
+export type UserLogoutOutput = z.infer<typeof UserLogoutOutputSchema>;

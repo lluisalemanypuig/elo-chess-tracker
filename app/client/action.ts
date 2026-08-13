@@ -23,9 +23,9 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { methodTypeOf, outputSchemaOf } from '@common/api/schemas';
+import { methodTypeOf, outputSchemaOf } from '@common/api/schemas-endpoints';
 import { InputTypeOf, OutputTypeOf } from '@common/api/types';
-import { Route } from '@common/routes';
+import { Route } from '@common/api/routes';
 import { isNotDefined } from '@common/utils/is-defined';
 
 type ResponseResultError = {

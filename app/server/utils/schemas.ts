@@ -29,6 +29,8 @@ import { Request, Response } from 'express';
 
 import { isDefined, isNotDefined } from '@common/utils/is-defined';
 import { logNow } from '@common/utils/time';
+import { AuthenticationInputSchema, authenticationInputSchemaToSessionId } from '@common/api/schemas/authentication';
+import { SessionId } from '@common//models/session-id';
 
 export type ParseResult = 'JsonDataNotProvided' | 'Error' | 'Success';
 
@@ -83,15 +85,14 @@ export type SafeParseSchemaResult<T> =
 			data: T;
 	  };
 
-export function safeParseRequestCookies<S extends z.ZodTypeAny>(
+export function safeParseRequestCookies(
 	req: Request,
-	schemaObj: S,
 	res: Response,
 	debug: Debug.Debugger
-): SafeParseSchemaResult<z.output<S>> {
-	const parse = parseSchema(req.cookies, schemaObj, debug);
+): SafeParseSchemaResult<SessionId> {
+	const parse = parseSchema(req.cookies, AuthenticationInputSchema, debug);
 	if (parse.result !== 'Success') {
-		res.status(401).send(`Failure to parse cookies ${parse.result}.`);
+		res.status(401).send(`Failure to parse cookies.`);
 		return {
 			result: 'Exit',
 			data: undefined
@@ -99,7 +100,7 @@ export function safeParseRequestCookies<S extends z.ZodTypeAny>(
 	}
 	return {
 		result: 'Continue',
-		data: parse.data
+		data: authenticationInputSchemaToSessionId(parse.data)
 	};
 }
 

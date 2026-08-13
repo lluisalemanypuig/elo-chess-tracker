@@ -36,21 +36,19 @@ import { UsersManager } from '@server/managers/users-manager';
 import { ConfigurationManager } from '@server/managers/configuration-manager';
 import { getExecutionDirectory } from '@server/managers/environment-manager';
 import { isNotDefined } from '@common/utils/is-defined';
-import { ROUTES } from '@common/routes';
-import { inputSchemaOf } from '@common/api/schemas';
+import { ROUTES } from '@common/api/routes';
+import { inputSchemaOf } from '@common/api/schemas-endpoints';
 import { safeParseRequestBody, safeParseRequestCookies } from '@server/utils/schemas';
-import { AuthenticationInputSchema } from '@common/schemas/authentication';
 
 export async function getPageUserCreate(req: Request, res: Response) {
 	debug(logNow(), `GET ${ROUTES.PAGE_USER_CREATE}...`);
 
-	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	const sessionParse = safeParseRequestCookies(req, res, debug);
 	if (sessionParse.result === 'Exit') {
 		return;
 	}
 	const session = sessionParse.data;
 	const r = isUserLoggedIn(session);
-
 	const user = r[2];
 	if (isNotDefined(user)) {
 		res.status(401).send(r[1]);
@@ -58,12 +56,12 @@ export async function getPageUserCreate(req: Request, res: Response) {
 	}
 
 	if (!user.canDo(CREATE_USER)) {
-		debug(logNow(), `User '${session.username}' cannot create users.`);
+		debug(logNow(), `User '${user.username}' cannot create users.`);
 		res.status(403).send('You cannot create users.');
 		return;
 	}
 	if (!user.canDo(USER_ROLE_ASSIGN)) {
-		debug(logNow(), `User '${session.username}' cannot assign roles to users.`);
+		debug(logNow(), `User '${user.username}' cannot assign roles to users.`);
 		res.status(403).send(`You cannot assign roles and thus cannot create users.`);
 		return;
 	}
@@ -78,13 +76,12 @@ export async function getPageUserCreate(req: Request, res: Response) {
 export async function postUserCreate(req: Request, res: Response) {
 	debug(logNow(), `POST ${ROUTES.USER_CREATE}`);
 
-	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	const sessionParse = safeParseRequestCookies(req, res, debug);
 	if (sessionParse.result === 'Exit') {
 		return;
 	}
 	const session = sessionParse.data;
 	const r = isUserLoggedIn(session);
-
 	const registerer = r[2];
 	if (isNotDefined(registerer)) {
 		res.status(401).send(r[1]);
@@ -92,12 +89,12 @@ export async function postUserCreate(req: Request, res: Response) {
 	}
 
 	if (!registerer.canDo(CREATE_USER)) {
-		debug(logNow(), `User '${session.username}' cannot create users.`);
+		debug(logNow(), `User '${registerer.username}' cannot create users.`);
 		res.status(403).send('You cannot create users.');
 		return;
 	}
 	if (!registerer.canDo(USER_ROLE_ASSIGN)) {
-		debug(logNow(), `User '${session.username}' cannot assign roles to users.`);
+		debug(logNow(), `User '${registerer.username}' cannot assign roles to users.`);
 		res.status(403).send(`You cannot assign roles and thus cannot create users.`);
 		return;
 	}
@@ -113,7 +110,7 @@ export async function postUserCreate(req: Request, res: Response) {
 	const password = userParse.data.password;
 	const roles = userParse.data.r;
 
-	debug(logNow(), `User '${session.username}' is trying to create a new user:`);
+	debug(logNow(), `User '${registerer.username}' is trying to create a new user:`);
 	debug(logNow(), `    Username: '${username}'`);
 	debug(logNow(), `    First name: '${firstname}'`);
 	debug(logNow(), `    Last name: '${lastname}'`);

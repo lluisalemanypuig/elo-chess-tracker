@@ -16,41 +16,27 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 Full source code of elo-chess-tracker:
-    https://github.com/lluisalemanypuig/elo-chess-tracker
+	https://github.com/lluisalemanypuig/elo-chess-tracker
 
 Contact:
-    Lluís Alemany Puig
-    https://github.com/lluisalemanypuig
+	Lluís Alemany Puig
+	https://github.com/lluisalemanypuig
 */
 
 import { z } from 'zod';
-import { PlayerPrivateIdSchema } from '@common/models/player';
+import { SessionId } from '@common/models/session-id';
+import { toPlayerPublicId } from '@common/models/player';
 
-// Routes.USER_LOGIN
+export const AuthenticationInputSchema = z.object({
+	token: z.string(),
+	publicId: z.string()
+});
 
-export const UserLoginInputSchema = z
-	.object({
-		u: PlayerPrivateIdSchema,
-		p: PlayerPrivateIdSchema
-	})
-	.strict();
+export type AuthenticationInput = z.infer<typeof AuthenticationInputSchema>;
 
-export type UserLoginInput = z.infer<typeof UserLoginInputSchema>;
-
-export const UserLoginOutputSchema = z
-	.object({
-		cookies: z.array(z.string())
-	})
-	.strict();
-
-export type UserLoginOutput = z.infer<typeof UserLoginOutputSchema>;
-
-// Routes.USER_LOGOUT
-
-export const UserLogoutOutputSchema = z
-	.object({
-		cookies: z.array(z.string())
-	})
-	.strict();
-
-export type UserLogoutOutput = z.infer<typeof UserLogoutOutputSchema>;
+export function authenticationInputSchemaToSessionId(id: AuthenticationInput): SessionId {
+	return {
+		token: id.token,
+		publicId: toPlayerPublicId(Number(id.publicId))
+	};
+}

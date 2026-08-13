@@ -48,22 +48,21 @@ import { ConfigurationManager } from '@server/managers/configuration-manager';
 import { RatingSystemManager } from '@server/managers/rating-system-manager';
 import { getExecutionDirectory } from '@server/managers/environment-manager';
 import { isNotDefined } from '@common/utils/is-defined';
-import { ROUTES } from '@common/routes';
-import { inputSchemaOf } from '@common/api/schemas';
+import { ROUTES } from '@common/api/routes';
+import { inputSchemaOf } from '@common/api/schemas-endpoints';
 import { safeParseRequestBody, safeParseRequestCookies } from '@server/utils/schemas';
-import { AuthenticationInputSchema } from '@common/schemas/authentication';
 
 export async function getPageChallenge(req: Request, res: Response) {
 	debug(logNow(), `GET ${ROUTES.PAGE_CHALLENGE}...`);
 
-	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	const sessionParse = safeParseRequestCookies(req, res, debug);
 	if (sessionParse.result === 'Exit') {
 		return;
 	}
 	const session = sessionParse.data;
-
 	const r = isUserLoggedIn(session);
-	if (isNotDefined(r[2])) {
+	const user = r[2];
+	if (isNotDefined(user)) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -78,7 +77,7 @@ export async function getPageChallenge(req: Request, res: Response) {
 export async function postChallengeSend(req: Request, res: Response) {
 	debug(logNow(), `POST ${ROUTES.CHALLENGE_SEND}...`);
 
-	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	const sessionParse = safeParseRequestCookies(req, res, debug);
 	if (sessionParse.result === 'Exit') {
 		return;
 	}
@@ -92,7 +91,6 @@ export async function postChallengeSend(req: Request, res: Response) {
 	const timeControlId = challengeParse.data.timeControlId;
 	const timeControlName = challengeParse.data.timeControlName;
 	const title = challengeParse.data.title;
-
 	const r = isUserLoggedIn(session);
 	const sender = r[2];
 	if (isNotDefined(sender)) {
@@ -101,12 +99,12 @@ export async function postChallengeSend(req: Request, res: Response) {
 	}
 
 	if (!sender.canDo(USER_CHALLENGE)) {
-		debug(logNow(), `User '${session.username}' cannot challenge other users.`);
+		debug(logNow(), `User '${sender.username}' cannot challenge other users.`);
 		res.status(403).send('You cannot challenge other users');
 		return;
 	}
 
-	debug(logNow(), `Trying to send challenge from '${session.username}' to '${receiverPublicId}'.`);
+	debug(logNow(), `Trying to send challenge from '${sender.username}' to '${receiverPublicId}'.`);
 
 	const receiver = UsersManager.getInstance().getAllUserDataByPublicId(receiverPublicId);
 
@@ -157,14 +155,14 @@ export async function postChallengeSend(req: Request, res: Response) {
 export async function postChallengeAccept(req: Request, res: Response) {
 	debug(logNow(), `POST ${ROUTES.CHALLENGE_ACCEPT}...`);
 
-	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	const sessionParse = safeParseRequestCookies(req, res, debug);
 	if (sessionParse.result === 'Exit') {
 		return;
 	}
 	const session = sessionParse.data;
-
 	const r = isUserLoggedIn(session);
-	if (isNotDefined(r[2])) {
+	const user = r[2];
+	if (isNotDefined(user)) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -175,7 +173,7 @@ export async function postChallengeAccept(req: Request, res: Response) {
 	}
 	const challengeId = challengeParse.data.id;
 
-	debug(logNow(), `User '${session.username}' wants to accept challenge '${challengeParse}'`);
+	debug(logNow(), `User '${session.publicId}' wants to accept challenge '${challengeParse}'`);
 
 	const c = ChallengesManager.getInstance().getChallengeById(challengeId);
 	if (isNotDefined(c)) {
@@ -186,7 +184,7 @@ export async function postChallengeAccept(req: Request, res: Response) {
 	debug(logNow(), `Challenge '${challengeId}' involves players '${c.sentBy}' and '${c.sentTo}'`);
 
 	try {
-		challengeAccept(c, { by: session.username, when: logNow() });
+		challengeAccept(c, { by: user.username, when: logNow() });
 	} catch (e: unknown) {
 		res.status(403).send((e as Error).message);
 		return;
@@ -198,14 +196,14 @@ export async function postChallengeAccept(req: Request, res: Response) {
 export async function postChallengeDecline(req: Request, res: Response) {
 	debug(logNow(), `POST ${ROUTES.CHALLENGE_DECLINE}...`);
 
-	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	const sessionParse = safeParseRequestCookies(req, res, debug);
 	if (sessionParse.result === 'Exit') {
 		return;
 	}
 	const session = sessionParse.data;
-
 	const r = isUserLoggedIn(session);
-	if (isNotDefined(r[2])) {
+	const user = r[2];
+	if (isNotDefined(user)) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -216,7 +214,7 @@ export async function postChallengeDecline(req: Request, res: Response) {
 	}
 	const challengeId = challengeParse.data.id;
 
-	debug(logNow(), `User '${session.username}' wants to decline challenge '${challengeId}'`);
+	debug(logNow(), `User '${session.publicId}' wants to decline challenge '${challengeId}'`);
 
 	const c = ChallengesManager.getInstance().getChallengeById(challengeId);
 	if (isNotDefined(c)) {
@@ -227,7 +225,7 @@ export async function postChallengeDecline(req: Request, res: Response) {
 	debug(logNow(), `Challenge '${challengeId}' involves players '${c.sentBy}' and '${c.sentTo}'`);
 
 	try {
-		challengeDecline(c, { by: session.username });
+		challengeDecline(c, { by: user.username });
 	} catch (e: unknown) {
 		res.status(403).send((e as Error).message);
 		return;
@@ -239,18 +237,19 @@ export async function postChallengeDecline(req: Request, res: Response) {
 export async function postChallengeSetResult(req: Request, res: Response) {
 	debug(logNow(), `POST ${ROUTES.CHALLENGE_SET_RESULT}...`);
 
-	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	const sessionParse = safeParseRequestCookies(req, res, debug);
 	if (sessionParse.result === 'Exit') {
 		return;
 	}
 	const session = sessionParse.data;
 	const r = isUserLoggedIn(session);
-	if (isNotDefined(r[2])) {
+	const user = r[2];
+	if (isNotDefined(user)) {
 		res.status(401).send(r[1]);
 		return;
 	}
 
-	const setterUser = session.username;
+	const setterUser = user.username;
 	const challengeParse = safeParseRequestBody(req.body, inputSchemaOf(ROUTES.CHALLENGE_SET_RESULT), res, debug);
 	if (challengeParse.result === 'Exit') {
 		return;
@@ -302,14 +301,14 @@ export async function postChallengeSetResult(req: Request, res: Response) {
 export async function postChallengeAgree(req: Request, res: Response) {
 	debug(logNow(), `POST ${ROUTES.CHALLENGE_AGREE}...`);
 
-	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	const sessionParse = safeParseRequestCookies(req, res, debug);
 	if (sessionParse.result === 'Exit') {
 		return;
 	}
 	const session = sessionParse.data;
 	const r = isUserLoggedIn(session);
-
-	if (isNotDefined(r[2])) {
+	const user = r[2];
+	if (isNotDefined(user)) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -327,7 +326,7 @@ export async function postChallengeAgree(req: Request, res: Response) {
 	}
 
 	try {
-		challengeAgreeResult(c, { by: session.username, when: logNow() });
+		challengeAgreeResult(c, { by: user.username, when: logNow() });
 	} catch (e: unknown) {
 		res.status(403).send((e as Error).message);
 		return;
@@ -339,14 +338,14 @@ export async function postChallengeAgree(req: Request, res: Response) {
 export async function postChallengeDisagree(req: Request, res: Response) {
 	debug(logNow(), `POST ${ROUTES.CHALLENGE_DISAGREE}...`);
 
-	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	const sessionParse = safeParseRequestCookies(req, res, debug);
 	if (sessionParse.result === 'Exit') {
 		return;
 	}
 	const session = sessionParse.data;
 	const r = isUserLoggedIn(session);
-
-	if (isNotDefined(r[2])) {
+	const user = r[2];
+	if (isNotDefined(user)) {
 		res.status(401).send(r[1]);
 		return;
 	}
@@ -364,7 +363,7 @@ export async function postChallengeDisagree(req: Request, res: Response) {
 	}
 
 	try {
-		challengeDisagreeResult(c, { by: session.username });
+		challengeDisagreeResult(c, { by: user.username });
 	} catch (e: unknown) {
 		res.status(403).send((e as Error).message);
 		return;

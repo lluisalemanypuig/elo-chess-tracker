@@ -23,19 +23,20 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { toPlayerPrivateId } from '@common/models/player';
+import { SessionId } from '@common//models/session-id';
+import { toPlayerPublicId } from '@common/models/player';
 import { SessionIDManager } from '@server/managers/session-id-manager';
 
-function makeSession(token: string, username: string) {
-	return { token, username: toPlayerPrivateId(username) };
+function makeSession(token: string, publicId: number): SessionId {
+	return { token, publicId: toPlayerPublicId(publicId) };
 }
 
 describe('Session ID Manager', () => {
 	test('Add single sessions', () => {
-		const s1 = makeSession('1', 'user.1');
-		const s2 = makeSession('2', 'user.2');
-		const s3 = makeSession('3', 'user.3');
-		const s4 = makeSession('4', 'user.4');
+		const s1 = makeSession('1', 1111);
+		const s2 = makeSession('2', 2222);
+		const s3 = makeSession('3', 3333);
+		const s4 = makeSession('4', 4444);
 
 		let sessions = SessionIDManager.getInstance();
 
@@ -61,38 +62,38 @@ describe('Session ID Manager', () => {
 		expect(sessions.indexSessionId(s3)).toBe(2);
 		expect(sessions.indexSessionId(s4)).toBe(3);
 
-		expect(sessions.hasSessionId(makeSession('1', 'user.2'))).toBe(false);
-		expect(sessions.hasSessionId(makeSession('1', 'user.3'))).toBe(false);
-		expect(sessions.hasSessionId(makeSession('1', 'user.4'))).toBe(false);
-		expect(sessions.hasSessionId(makeSession('2', 'user.1'))).toBe(false);
-		expect(sessions.hasSessionId(makeSession('2', 'user.3'))).toBe(false);
-		expect(sessions.hasSessionId(makeSession('2', 'user.4'))).toBe(false);
-		expect(sessions.hasSessionId(makeSession('3', 'user.1'))).toBe(false);
-		expect(sessions.hasSessionId(makeSession('3', 'user.2'))).toBe(false);
-		expect(sessions.hasSessionId(makeSession('3', 'user.4'))).toBe(false);
-		expect(sessions.hasSessionId(makeSession('4', 'user.1'))).toBe(false);
-		expect(sessions.hasSessionId(makeSession('4', 'user.2'))).toBe(false);
-		expect(sessions.hasSessionId(makeSession('4', 'user.3'))).toBe(false);
+		expect(sessions.hasSessionId(makeSession('1', 2222))).toBe(false);
+		expect(sessions.hasSessionId(makeSession('1', 3333))).toBe(false);
+		expect(sessions.hasSessionId(makeSession('1', 4444))).toBe(false);
+		expect(sessions.hasSessionId(makeSession('2', 1111))).toBe(false);
+		expect(sessions.hasSessionId(makeSession('2', 3333))).toBe(false);
+		expect(sessions.hasSessionId(makeSession('2', 4444))).toBe(false);
+		expect(sessions.hasSessionId(makeSession('3', 1111))).toBe(false);
+		expect(sessions.hasSessionId(makeSession('3', 2222))).toBe(false);
+		expect(sessions.hasSessionId(makeSession('3', 4444))).toBe(false);
+		expect(sessions.hasSessionId(makeSession('4', 1111))).toBe(false);
+		expect(sessions.hasSessionId(makeSession('4', 2222))).toBe(false);
+		expect(sessions.hasSessionId(makeSession('4', 3333))).toBe(false);
 
-		expect(sessions.indexSessionId(makeSession('1', 'user.2'))).toBe(-1);
-		expect(sessions.indexSessionId(makeSession('1', 'user.3'))).toBe(-1);
-		expect(sessions.indexSessionId(makeSession('1', 'user.4'))).toBe(-1);
-		expect(sessions.indexSessionId(makeSession('2', 'user.1'))).toBe(-1);
-		expect(sessions.indexSessionId(makeSession('2', 'user.3'))).toBe(-1);
-		expect(sessions.indexSessionId(makeSession('2', 'user.4'))).toBe(-1);
-		expect(sessions.indexSessionId(makeSession('3', 'user.1'))).toBe(-1);
-		expect(sessions.indexSessionId(makeSession('3', 'user.2'))).toBe(-1);
-		expect(sessions.indexSessionId(makeSession('3', 'user.4'))).toBe(-1);
-		expect(sessions.indexSessionId(makeSession('4', 'user.1'))).toBe(-1);
-		expect(sessions.indexSessionId(makeSession('4', 'user.2'))).toBe(-1);
-		expect(sessions.indexSessionId(makeSession('4', 'user.3'))).toBe(-1);
+		expect(sessions.indexSessionId(makeSession('1', 2222))).toBe(-1);
+		expect(sessions.indexSessionId(makeSession('1', 3333))).toBe(-1);
+		expect(sessions.indexSessionId(makeSession('1', 4444))).toBe(-1);
+		expect(sessions.indexSessionId(makeSession('2', 1111))).toBe(-1);
+		expect(sessions.indexSessionId(makeSession('2', 3333))).toBe(-1);
+		expect(sessions.indexSessionId(makeSession('2', 4444))).toBe(-1);
+		expect(sessions.indexSessionId(makeSession('3', 1111))).toBe(-1);
+		expect(sessions.indexSessionId(makeSession('3', 2222))).toBe(-1);
+		expect(sessions.indexSessionId(makeSession('3', 4444))).toBe(-1);
+		expect(sessions.indexSessionId(makeSession('4', 1111))).toBe(-1);
+		expect(sessions.indexSessionId(makeSession('4', 2222))).toBe(-1);
+		expect(sessions.indexSessionId(makeSession('4', 3333))).toBe(-1);
 	});
 
 	test('Remove sessions', () => {
-		const s1 = makeSession('1', 'user.1');
-		const s2 = makeSession('2', 'user.2');
-		const s3 = makeSession('3', 'user.3');
-		const s4 = makeSession('4', 'user.4');
+		const s1 = makeSession('1', 1111);
+		const s2 = makeSession('2', 2222);
+		const s3 = makeSession('3', 3333);
+		const s4 = makeSession('4', 4444);
 
 		let sessions = SessionIDManager.getInstance();
 
@@ -109,31 +110,31 @@ describe('Session ID Manager', () => {
 		expect(sessions.indexSessionId(s3)).toBe(-1);
 		expect(sessions.indexSessionId(s4)).toBe(2);
 
-		expect(sessions.hasSessionId(makeSession('1', 'user.2'))).toBe(false);
-		expect(sessions.hasSessionId(makeSession('1', 'user.3'))).toBe(false);
-		expect(sessions.hasSessionId(makeSession('1', 'user.4'))).toBe(false);
-		expect(sessions.hasSessionId(makeSession('2', 'user.1'))).toBe(false);
-		expect(sessions.hasSessionId(makeSession('2', 'user.3'))).toBe(false);
-		expect(sessions.hasSessionId(makeSession('2', 'user.4'))).toBe(false);
-		expect(sessions.hasSessionId(makeSession('3', 'user.1'))).toBe(false);
-		expect(sessions.hasSessionId(makeSession('3', 'user.2'))).toBe(false);
-		expect(sessions.hasSessionId(makeSession('3', 'user.4'))).toBe(false);
-		expect(sessions.hasSessionId(makeSession('4', 'user.1'))).toBe(false);
-		expect(sessions.hasSessionId(makeSession('4', 'user.2'))).toBe(false);
-		expect(sessions.hasSessionId(makeSession('4', 'user.3'))).toBe(false);
+		expect(sessions.hasSessionId(makeSession('1', 2222))).toBe(false);
+		expect(sessions.hasSessionId(makeSession('1', 3333))).toBe(false);
+		expect(sessions.hasSessionId(makeSession('1', 4444))).toBe(false);
+		expect(sessions.hasSessionId(makeSession('2', 1111))).toBe(false);
+		expect(sessions.hasSessionId(makeSession('2', 3333))).toBe(false);
+		expect(sessions.hasSessionId(makeSession('2', 4444))).toBe(false);
+		expect(sessions.hasSessionId(makeSession('3', 1111))).toBe(false);
+		expect(sessions.hasSessionId(makeSession('3', 2222))).toBe(false);
+		expect(sessions.hasSessionId(makeSession('3', 4444))).toBe(false);
+		expect(sessions.hasSessionId(makeSession('4', 1111))).toBe(false);
+		expect(sessions.hasSessionId(makeSession('4', 2222))).toBe(false);
+		expect(sessions.hasSessionId(makeSession('4', 3333))).toBe(false);
 
-		expect(sessions.indexSessionId(makeSession('1', 'user.2'))).toBe(-1);
-		expect(sessions.indexSessionId(makeSession('1', 'user.3'))).toBe(-1);
-		expect(sessions.indexSessionId(makeSession('1', 'user.4'))).toBe(-1);
-		expect(sessions.indexSessionId(makeSession('2', 'user.1'))).toBe(-1);
-		expect(sessions.indexSessionId(makeSession('2', 'user.3'))).toBe(-1);
-		expect(sessions.indexSessionId(makeSession('2', 'user.4'))).toBe(-1);
-		expect(sessions.indexSessionId(makeSession('3', 'user.1'))).toBe(-1);
-		expect(sessions.indexSessionId(makeSession('3', 'user.2'))).toBe(-1);
-		expect(sessions.indexSessionId(makeSession('3', 'user.4'))).toBe(-1);
-		expect(sessions.indexSessionId(makeSession('4', 'user.1'))).toBe(-1);
-		expect(sessions.indexSessionId(makeSession('4', 'user.2'))).toBe(-1);
-		expect(sessions.indexSessionId(makeSession('4', 'user.3'))).toBe(-1);
+		expect(sessions.indexSessionId(makeSession('1', 2222))).toBe(-1);
+		expect(sessions.indexSessionId(makeSession('1', 3333))).toBe(-1);
+		expect(sessions.indexSessionId(makeSession('1', 4444))).toBe(-1);
+		expect(sessions.indexSessionId(makeSession('2', 1111))).toBe(-1);
+		expect(sessions.indexSessionId(makeSession('2', 3333))).toBe(-1);
+		expect(sessions.indexSessionId(makeSession('2', 4444))).toBe(-1);
+		expect(sessions.indexSessionId(makeSession('3', 1111))).toBe(-1);
+		expect(sessions.indexSessionId(makeSession('3', 2222))).toBe(-1);
+		expect(sessions.indexSessionId(makeSession('3', 4444))).toBe(-1);
+		expect(sessions.indexSessionId(makeSession('4', 1111))).toBe(-1);
+		expect(sessions.indexSessionId(makeSession('4', 2222))).toBe(-1);
+		expect(sessions.indexSessionId(makeSession('4', 3333))).toBe(-1);
 
 		sessions.removeSessionId(sessions.indexSessionId(s1));
 		expect(sessions.numSessionIds()).toBe(2);
@@ -148,31 +149,31 @@ describe('Session ID Manager', () => {
 		expect(sessions.indexSessionId(s3)).toBe(-1);
 		expect(sessions.indexSessionId(s4)).toBe(1);
 
-		expect(sessions.hasSessionId(makeSession('1', 'user.2'))).toBe(false);
-		expect(sessions.hasSessionId(makeSession('1', 'user.3'))).toBe(false);
-		expect(sessions.hasSessionId(makeSession('1', 'user.4'))).toBe(false);
-		expect(sessions.hasSessionId(makeSession('2', 'user.1'))).toBe(false);
-		expect(sessions.hasSessionId(makeSession('2', 'user.3'))).toBe(false);
-		expect(sessions.hasSessionId(makeSession('2', 'user.4'))).toBe(false);
-		expect(sessions.hasSessionId(makeSession('3', 'user.1'))).toBe(false);
-		expect(sessions.hasSessionId(makeSession('3', 'user.2'))).toBe(false);
-		expect(sessions.hasSessionId(makeSession('3', 'user.4'))).toBe(false);
-		expect(sessions.hasSessionId(makeSession('4', 'user.1'))).toBe(false);
-		expect(sessions.hasSessionId(makeSession('4', 'user.2'))).toBe(false);
-		expect(sessions.hasSessionId(makeSession('4', 'user.3'))).toBe(false);
+		expect(sessions.hasSessionId(makeSession('1', 2222))).toBe(false);
+		expect(sessions.hasSessionId(makeSession('1', 3333))).toBe(false);
+		expect(sessions.hasSessionId(makeSession('1', 4444))).toBe(false);
+		expect(sessions.hasSessionId(makeSession('2', 1111))).toBe(false);
+		expect(sessions.hasSessionId(makeSession('2', 3333))).toBe(false);
+		expect(sessions.hasSessionId(makeSession('2', 4444))).toBe(false);
+		expect(sessions.hasSessionId(makeSession('3', 1111))).toBe(false);
+		expect(sessions.hasSessionId(makeSession('3', 2222))).toBe(false);
+		expect(sessions.hasSessionId(makeSession('3', 4444))).toBe(false);
+		expect(sessions.hasSessionId(makeSession('4', 1111))).toBe(false);
+		expect(sessions.hasSessionId(makeSession('4', 2222))).toBe(false);
+		expect(sessions.hasSessionId(makeSession('4', 3333))).toBe(false);
 
-		expect(sessions.indexSessionId(makeSession('1', 'user.2'))).toBe(-1);
-		expect(sessions.indexSessionId(makeSession('1', 'user.3'))).toBe(-1);
-		expect(sessions.indexSessionId(makeSession('1', 'user.4'))).toBe(-1);
-		expect(sessions.indexSessionId(makeSession('2', 'user.1'))).toBe(-1);
-		expect(sessions.indexSessionId(makeSession('2', 'user.3'))).toBe(-1);
-		expect(sessions.indexSessionId(makeSession('2', 'user.4'))).toBe(-1);
-		expect(sessions.indexSessionId(makeSession('3', 'user.1'))).toBe(-1);
-		expect(sessions.indexSessionId(makeSession('3', 'user.2'))).toBe(-1);
-		expect(sessions.indexSessionId(makeSession('3', 'user.4'))).toBe(-1);
-		expect(sessions.indexSessionId(makeSession('4', 'user.1'))).toBe(-1);
-		expect(sessions.indexSessionId(makeSession('4', 'user.2'))).toBe(-1);
-		expect(sessions.indexSessionId(makeSession('4', 'user.3'))).toBe(-1);
+		expect(sessions.indexSessionId(makeSession('1', 2222))).toBe(-1);
+		expect(sessions.indexSessionId(makeSession('1', 3333))).toBe(-1);
+		expect(sessions.indexSessionId(makeSession('1', 4444))).toBe(-1);
+		expect(sessions.indexSessionId(makeSession('2', 1111))).toBe(-1);
+		expect(sessions.indexSessionId(makeSession('2', 3333))).toBe(-1);
+		expect(sessions.indexSessionId(makeSession('2', 4444))).toBe(-1);
+		expect(sessions.indexSessionId(makeSession('3', 1111))).toBe(-1);
+		expect(sessions.indexSessionId(makeSession('3', 2222))).toBe(-1);
+		expect(sessions.indexSessionId(makeSession('3', 4444))).toBe(-1);
+		expect(sessions.indexSessionId(makeSession('4', 1111))).toBe(-1);
+		expect(sessions.indexSessionId(makeSession('4', 2222))).toBe(-1);
+		expect(sessions.indexSessionId(makeSession('4', 3333))).toBe(-1);
 	});
 
 	test('Clear sessions', () => {
@@ -182,22 +183,22 @@ describe('Session ID Manager', () => {
 	});
 
 	test('Add multiple sessions (sequential)', () => {
-		const s11 = makeSession('1', 'user.1');
-		const s12 = makeSession('2', 'user.1');
-		const s13 = makeSession('3', 'user.1');
-		const s14 = makeSession('4', 'user.1');
-		const s21 = makeSession('1', 'user.2');
-		const s22 = makeSession('2', 'user.2');
-		const s23 = makeSession('3', 'user.2');
-		const s24 = makeSession('4', 'user.2');
-		const s31 = makeSession('1', 'user.3');
-		const s32 = makeSession('2', 'user.3');
-		const s33 = makeSession('3', 'user.3');
-		const s34 = makeSession('4', 'user.3');
-		const s41 = makeSession('1', 'user.4');
-		const s42 = makeSession('2', 'user.4');
-		const s43 = makeSession('3', 'user.4');
-		const s44 = makeSession('4', 'user.4');
+		const s11 = makeSession('1', 1111);
+		const s12 = makeSession('2', 1111);
+		const s13 = makeSession('3', 1111);
+		const s14 = makeSession('4', 1111);
+		const s21 = makeSession('1', 2222);
+		const s22 = makeSession('2', 2222);
+		const s23 = makeSession('3', 2222);
+		const s24 = makeSession('4', 2222);
+		const s31 = makeSession('1', 3333);
+		const s32 = makeSession('2', 3333);
+		const s33 = makeSession('3', 3333);
+		const s34 = makeSession('4', 3333);
+		const s41 = makeSession('1', 4444);
+		const s42 = makeSession('2', 4444);
+		const s43 = makeSession('3', 4444);
+		const s44 = makeSession('4', 4444);
 
 		let sessions = SessionIDManager.getInstance();
 		sessions.addSessionId(s11);
@@ -235,7 +236,7 @@ describe('Session ID Manager', () => {
 		expect(sessions.hasSessionId(s43)).toBe(true);
 		expect(sessions.hasSessionId(s44)).toBe(true);
 
-		sessions.removeUserSessions(toPlayerPrivateId('user.1'));
+		sessions.removeUserSessions(toPlayerPublicId(1111));
 		expect(sessions.numSessionIds()).toBe(12);
 
 		expect(sessions.hasSessionId(s11)).toBe(false);
@@ -255,7 +256,7 @@ describe('Session ID Manager', () => {
 		expect(sessions.hasSessionId(s43)).toBe(true);
 		expect(sessions.hasSessionId(s44)).toBe(true);
 
-		sessions.removeUserSessions(toPlayerPrivateId('user.4'));
+		sessions.removeUserSessions(toPlayerPublicId(4444));
 		expect(sessions.numSessionIds()).toBe(8);
 
 		expect(sessions.hasSessionId(s11)).toBe(false);
@@ -275,7 +276,7 @@ describe('Session ID Manager', () => {
 		expect(sessions.hasSessionId(s43)).toBe(false);
 		expect(sessions.hasSessionId(s44)).toBe(false);
 
-		sessions.removeUserSessions(toPlayerPrivateId('user.2'));
+		sessions.removeUserSessions(toPlayerPublicId(2222));
 		expect(sessions.numSessionIds()).toBe(4);
 
 		expect(sessions.hasSessionId(s11)).toBe(false);
@@ -295,7 +296,7 @@ describe('Session ID Manager', () => {
 		expect(sessions.hasSessionId(s43)).toBe(false);
 		expect(sessions.hasSessionId(s44)).toBe(false);
 
-		sessions.removeUserSessions(toPlayerPrivateId('user.3'));
+		sessions.removeUserSessions(toPlayerPublicId(3333));
 		expect(sessions.numSessionIds()).toBe(0);
 
 		expect(sessions.hasSessionId(s11)).toBe(false);
@@ -317,22 +318,22 @@ describe('Session ID Manager', () => {
 	});
 
 	test('Add multiple sessions (randomized)', () => {
-		const s11 = makeSession('1', 'user.1');
-		const s12 = makeSession('2', 'user.1');
-		const s13 = makeSession('3', 'user.1');
-		const s14 = makeSession('4', 'user.1');
-		const s21 = makeSession('1', 'user.2');
-		const s22 = makeSession('2', 'user.2');
-		const s23 = makeSession('3', 'user.2');
-		const s24 = makeSession('4', 'user.2');
-		const s31 = makeSession('1', 'user.3');
-		const s32 = makeSession('2', 'user.3');
-		const s33 = makeSession('3', 'user.3');
-		const s34 = makeSession('4', 'user.3');
-		const s41 = makeSession('1', 'user.4');
-		const s42 = makeSession('2', 'user.4');
-		const s43 = makeSession('3', 'user.4');
-		const s44 = makeSession('4', 'user.4');
+		const s11 = makeSession('1', 1111);
+		const s12 = makeSession('2', 1111);
+		const s13 = makeSession('3', 1111);
+		const s14 = makeSession('4', 1111);
+		const s21 = makeSession('1', 2222);
+		const s22 = makeSession('2', 2222);
+		const s23 = makeSession('3', 2222);
+		const s24 = makeSession('4', 2222);
+		const s31 = makeSession('1', 3333);
+		const s32 = makeSession('2', 3333);
+		const s33 = makeSession('3', 3333);
+		const s34 = makeSession('4', 3333);
+		const s41 = makeSession('1', 4444);
+		const s42 = makeSession('2', 4444);
+		const s43 = makeSession('3', 4444);
+		const s44 = makeSession('4', 4444);
 
 		let sessions = SessionIDManager.getInstance();
 		sessions.addSessionId(s11);
@@ -370,7 +371,7 @@ describe('Session ID Manager', () => {
 		expect(sessions.hasSessionId(s43)).toBe(true);
 		expect(sessions.hasSessionId(s44)).toBe(true);
 
-		sessions.removeUserSessions(toPlayerPrivateId('user.1'));
+		sessions.removeUserSessions(toPlayerPublicId(1111));
 		expect(sessions.numSessionIds()).toBe(12);
 
 		expect(sessions.hasSessionId(s11)).toBe(false);
@@ -390,7 +391,7 @@ describe('Session ID Manager', () => {
 		expect(sessions.hasSessionId(s43)).toBe(true);
 		expect(sessions.hasSessionId(s44)).toBe(true);
 
-		sessions.removeUserSessions(toPlayerPrivateId('user.4'));
+		sessions.removeUserSessions(toPlayerPublicId(4444));
 		expect(sessions.numSessionIds()).toBe(8);
 
 		expect(sessions.hasSessionId(s11)).toBe(false);
@@ -410,7 +411,7 @@ describe('Session ID Manager', () => {
 		expect(sessions.hasSessionId(s43)).toBe(false);
 		expect(sessions.hasSessionId(s44)).toBe(false);
 
-		sessions.removeUserSessions(toPlayerPrivateId('user.2'));
+		sessions.removeUserSessions(toPlayerPublicId(2222));
 		expect(sessions.numSessionIds()).toBe(4);
 
 		expect(sessions.hasSessionId(s11)).toBe(false);
@@ -430,7 +431,7 @@ describe('Session ID Manager', () => {
 		expect(sessions.hasSessionId(s43)).toBe(false);
 		expect(sessions.hasSessionId(s44)).toBe(false);
 
-		sessions.removeUserSessions(toPlayerPrivateId('user.3'));
+		sessions.removeUserSessions(toPlayerPublicId(3333));
 		expect(sessions.numSessionIds()).toBe(0);
 
 		expect(sessions.hasSessionId(s11)).toBe(false);

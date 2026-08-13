@@ -24,7 +24,7 @@ import 'htmx.org';
 import { messageFromResponse, serverCall } from '@client/action';
 import { ADMIN, USER_ROLE_TO_STRING, UserRole } from '@common/models/user-role';
 import { GAMES_CREATE, CREATE_USER, USER_EDIT, GAMES_SEE, GRAPHS_SEE_USER } from '@common/models/user-action';
-import { ROUTES } from '@common/routes';
+import { ROUTES } from '@common/api/routes';
 
 export async function logoutLinkClicked(_event: any) {
 	// "query" the server

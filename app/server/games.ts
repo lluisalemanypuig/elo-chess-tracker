@@ -44,21 +44,19 @@ import { UsersManager } from '@server/managers/users-manager';
 import { ConfigurationManager } from '@server/managers/configuration-manager';
 import { getExecutionDirectory } from '@server/managers/environment-manager';
 import { isNotDefined } from '@common/utils/is-defined';
-import { ROUTES } from '@common/routes';
-import { inputSchemaOf } from '@common/api/schemas';
+import { ROUTES } from '@common/api/routes';
+import { inputSchemaOf } from '@common/api/schemas-endpoints';
 import { safeParseRequestCookies, safeParseRequestBody } from '@server/utils/schemas';
-import { AuthenticationInputSchema } from '@common/schemas/authentication';
 
 export async function getPageGameListOwn(req: Request, res: Response) {
 	debug(logNow(), `GET ${ROUTES.PAGE_GAME_LIST_OWN}...`);
 
-	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	const sessionParse = safeParseRequestCookies(req, res, debug);
 	if (sessionParse.result === 'Exit') {
 		return;
 	}
 	const session = sessionParse.data;
 	const r = isUserLoggedIn(session);
-
 	const user = r[2];
 	if (isNotDefined(user)) {
 		res.status(401).send(r[1]);
@@ -75,13 +73,12 @@ export async function getPageGameListOwn(req: Request, res: Response) {
 export async function getPageGameListAll(req: Request, res: Response) {
 	debug(logNow(), `GET ${ROUTES.PAGE_GAME_LIST_ALL}...`);
 
-	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	const sessionParse = safeParseRequestCookies(req, res, debug);
 	if (sessionParse.result === 'Exit') {
 		return;
 	}
 	const session = sessionParse.data;
 	const r = isUserLoggedIn(session);
-
 	const user = r[2];
 	if (isNotDefined(user)) {
 		res.status(401).send(r[1]);
@@ -98,13 +95,12 @@ export async function getPageGameListAll(req: Request, res: Response) {
 export async function getPageGameCreate(req: Request, res: Response) {
 	debug(logNow(), `GET ${ROUTES.PAGE_GAME_CREATE}...`);
 
-	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	const sessionParse = safeParseRequestCookies(req, res, debug);
 	if (sessionParse.result === 'Exit') {
 		return;
 	}
 	const session = sessionParse.data;
 	const r = isUserLoggedIn(session);
-
 	const user = r[2];
 	if (isNotDefined(user)) {
 		res.status(401).send(r[1]);
@@ -112,7 +108,7 @@ export async function getPageGameCreate(req: Request, res: Response) {
 	}
 
 	if (!user.canDo(GAMES_CREATE)) {
-		debug(logNow(), `User '${session.username}' cannot create games.`);
+		debug(logNow(), `User '${user.username}' cannot create games.`);
 		res.status(403).send('You cannot create games.');
 		return;
 	}
@@ -127,13 +123,12 @@ export async function getPageGameCreate(req: Request, res: Response) {
 export async function postGameCreate(req: Request, res: Response) {
 	debug(logNow(), `POST ${ROUTES.GAME_CREATE}...`);
 
-	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	const sessionParse = safeParseRequestCookies(req, res, debug);
 	if (sessionParse.result === 'Exit') {
 		return;
 	}
 	const session = sessionParse.data;
 	const r = isUserLoggedIn(session);
-
 	const creator = r[2];
 	if (isNotDefined(creator)) {
 		res.status(401).send(r[1]);
@@ -141,7 +136,7 @@ export async function postGameCreate(req: Request, res: Response) {
 	}
 
 	if (!creator.canDo(GAMES_CREATE)) {
-		debug(logNow(), `User '${session.username}' cannot create users.`);
+		debug(logNow(), `User '${creator.username}' cannot create users.`);
 		res.status(403).send('You cannot create games');
 		return;
 	}
@@ -215,13 +210,12 @@ export async function postGameCreate(req: Request, res: Response) {
 export async function postGameEditResult(req: Request, res: Response) {
 	debug(logNow(), `POST ${ROUTES.GAME_EDIT_RESULT}...`);
 
-	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	const sessionParse = safeParseRequestCookies(req, res, debug);
 	if (sessionParse.result === 'Exit') {
 		return;
 	}
 	const session = sessionParse.data;
 	const r = isUserLoggedIn(session);
-
 	const user = r[2];
 	if (isNotDefined(user)) {
 		res.status(401).send(r[1]);
@@ -229,7 +223,7 @@ export async function postGameEditResult(req: Request, res: Response) {
 	}
 
 	if (!user.canDo(GAMES_EDIT)) {
-		debug(logNow(), `User '${session.username}' cannot edit games.`);
+		debug(logNow(), `User '${user.username}' cannot edit games.`);
 		res.status(403).send('You cannot edit games');
 		return;
 	}
@@ -284,13 +278,12 @@ export async function postGameEditResult(req: Request, res: Response) {
 export async function postGameEditTitle(req: Request, res: Response) {
 	debug(logNow(), `POST ${ROUTES.GAME_EDIT_TITLE}...`);
 
-	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	const sessionParse = safeParseRequestCookies(req, res, debug);
 	if (sessionParse.result === 'Exit') {
 		return;
 	}
 	const session = sessionParse.data;
 	const r = isUserLoggedIn(session);
-
 	const user = r[2];
 	if (isNotDefined(user)) {
 		res.status(401).send(r[1]);
@@ -298,7 +291,7 @@ export async function postGameEditTitle(req: Request, res: Response) {
 	}
 
 	if (!user.canDo(GAMES_EDIT)) {
-		debug(logNow(), `User '${session.username}' cannot edit games.`);
+		debug(logNow(), `User '${user.username}' cannot edit games.`);
 		res.status(403).send('You cannot edit games');
 		return;
 	}
@@ -353,13 +346,12 @@ export async function postGameEditTitle(req: Request, res: Response) {
 export async function postGameDelete(req: Request, res: Response) {
 	debug(logNow(), `POST ${ROUTES.GAME_DELETE}...`);
 
-	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	const sessionParse = safeParseRequestCookies(req, res, debug);
 	if (sessionParse.result === 'Exit') {
 		return;
 	}
 	const session = sessionParse.data;
 	const r = isUserLoggedIn(session);
-
 	const user = r[2];
 	if (isNotDefined(user)) {
 		res.status(401).send(r[1]);
@@ -367,7 +359,7 @@ export async function postGameDelete(req: Request, res: Response) {
 	}
 
 	if (!user.canDo(GAMES_DELETE)) {
-		debug(logNow(), `User '${session.username}' cannot delete games.`);
+		debug(logNow(), `User '${user.username}' cannot delete games.`);
 		res.status(403).send('You cannot delete games');
 		return;
 	}
@@ -419,13 +411,12 @@ export async function postGameDelete(req: Request, res: Response) {
 export async function postRecalculateRatings(req: Request, res: Response) {
 	debug(logNow(), `POST ${ROUTES.RECALCULATE_RATINGS}...`);
 
-	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	const sessionParse = safeParseRequestCookies(req, res, debug);
 	if (sessionParse.result === 'Exit') {
 		return;
 	}
 	const session = sessionParse.data;
 	const r = isUserLoggedIn(session);
-
 	const user = r[2];
 	if (isNotDefined(user)) {
 		res.status(401).send(r[1]);
@@ -433,7 +424,7 @@ export async function postRecalculateRatings(req: Request, res: Response) {
 	}
 
 	if (!user.is(ADMIN)) {
-		debug(logNow(), `User '${session.username}' cannot recalculate ratings.`);
+		debug(logNow(), `User '${user.username}' cannot recalculate ratings.`);
 		res.status(403).send('You cannot recalculate ratings.');
 		return;
 	}

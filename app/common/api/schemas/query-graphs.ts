@@ -26,7 +26,7 @@ Contact:
 import { z } from 'zod';
 import { UserGivenNameSchema } from '@common/models/user';
 import { PlayerPublicIdSchema } from '@common/models/player';
-import { TimeControlIdSchema } from '../models/time-control';
+import { TimeControlIdSchema } from '@common/models/time-control';
 
 // utils
 
@@ -78,7 +78,7 @@ export const QueryGraphOutputSchema = z
 
 export type QueryGraphOutput = z.infer<typeof QueryGraphOutputSchema>;
 
-// Routes.QUERY_GRAPH_OWN
+// ROUTES.QUERY_GRAPH_OWN
 
 export const QueryGraphInputOwnSchema = z
 	.object({
@@ -88,7 +88,7 @@ export const QueryGraphInputOwnSchema = z
 
 export type QueryGraphOwnInput = z.infer<typeof QueryGraphInputOwnSchema>;
 
-// Routes.QUERY_GRAPH_FULL
+// ROUTES.QUERY_GRAPH_FULL
 
 export const QueryGraphInputFullSchema = z
 	.object({

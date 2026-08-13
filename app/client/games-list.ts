@@ -24,7 +24,7 @@ import 'htmx.org';
 import { isNotDefined } from '@common/utils/is-defined';
 import { GameId, resultFromTextToValue } from '@common/models/game';
 import { messageFromResponse, serverCall } from '@client/action';
-import { ROUTES } from '@common/routes';
+import { ROUTES } from '@common/api/routes';
 import { TimeControlId } from '@common/models/time-control';
 
 function newTextCell(text: string) {

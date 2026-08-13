@@ -23,14 +23,14 @@ import 'htmx.org';
 
 import { GameResult } from '@common/models/game';
 import { messageFromResponse, serverCall } from '@client/action';
-import { ROUTES } from '@common/routes';
+import { ROUTES } from '@common/api/routes';
 import {
 	QueryChallengesConfirmResultOtherOutputSingle,
 	QueryChallengesConfirmResultSelfOutputSingle,
 	QueryChallengesPendingResultOutputSingle,
 	QueryChallengesReceivedOutputSingle,
 	QueryChallengesSentOutputSingle
-} from '@common/schemas/query-challenges';
+} from '@common/api/schemas/query-challenges';
 import { PlayerPrivateId, PlayerPublicId } from '@common/models/player';
 import { TimeControlId, TimeControlName } from '@common/models/time-control';
 
@@ -353,12 +353,12 @@ async function fillChallengesPendingResult() {
 			select.className = 'select-basic';
 
 			let option1 = document.createElement('option') as HTMLOptionElement;
-			option1.text = elem.sentToName;
-			option1.value = elem.sentToUsername;
+			option1.text = elem.sentTo.name;
+			option1.value = `${elem.sentTo.publicId}`;
 			select.appendChild(option1);
 			let option2 = document.createElement('option') as HTMLOptionElement;
-			option2.text = elem.sentByName;
-			option2.value = elem.sentByUsername;
+			option2.text = elem.sentBy.name;
+			option2.value = `${elem.sentBy.publicId}`;
 			select.appendChild(option2);
 
 			div.appendChild(select);
@@ -377,12 +377,12 @@ async function fillChallengesPendingResult() {
 			select.className = 'select-basic';
 
 			let option1 = document.createElement('option') as HTMLOptionElement;
-			option1.text = elem.sentByName;
-			option1.value = elem.sentByUsername;
+			option1.text = elem.sentBy.name;
+			option1.value = `${elem.sentBy.publicId}`;
 			select.appendChild(option1);
 			let option2 = document.createElement('option') as HTMLOptionElement;
-			option2.text = elem.sentToName;
-			option2.value = elem.sentToUsername;
+			option2.text = elem.sentTo.name;
+			option2.value = `${elem.sentTo.publicId}`;
 			select.appendChild(option2);
 
 			div.appendChild(select);

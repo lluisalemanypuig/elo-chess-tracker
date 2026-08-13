@@ -33,10 +33,9 @@ import { isUserLoggedIn } from '@server/managers/session';
 import { UsersManager } from '@server/managers/users-manager';
 import { TimeControlRating } from '@common/models/time-control-rating';
 import { isNotDefined } from '@common/utils/is-defined';
-import { ROUTES } from '@common/routes';
-import { inputSchemaOf } from '@common/api/schemas';
+import { ROUTES } from '@common/api/routes';
+import { inputSchemaOf } from '@common/api/schemas-endpoints';
 import { safeParseRequestBody, safeParseRequestCookies } from '@server/utils/schemas';
-import { AuthenticationInputSchema } from '@common/schemas/authentication';
 import { UserThin } from '@common/models/user-thin';
 import {
 	QueryUserEditOutput,
@@ -45,13 +44,13 @@ import {
 	TimeControlAndRating,
 	UserWithGames,
 	UserWithoutGames
-} from '@common/schemas/query-user';
+} from '@common/api/schemas/query-user';
 
 /// Returns the list of user full names and usernames sorted by name
 export async function getQueryUserList(req: Request, res: Response) {
 	debug(logNow(), `GET ${ROUTES.QUERY_USER_LIST}...`);
 
-	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	const sessionParse = safeParseRequestCookies(req, res, debug);
 	if (sessionParse.result === 'Exit') {
 		return;
 	}
@@ -74,7 +73,7 @@ export async function getQueryUserList(req: Request, res: Response) {
 export async function getQueryHtmlUserList(req: Request, res: Response) {
 	debug(logNow(), `GET ${ROUTES.QUERY_HTML_USER_LIST}...`);
 
-	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	const sessionParse = safeParseRequestCookies(req, res, debug);
 	if (sessionParse.result === 'Exit') {
 		return;
 	}
@@ -101,7 +100,7 @@ export async function getQueryHtmlUserList(req: Request, res: Response) {
 export async function getQueryUserHome(req: Request, res: Response) {
 	debug(logNow(), `GET ${ROUTES.QUERY_USER_HOME}...`);
 
-	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	const sessionParse = safeParseRequestCookies(req, res, debug);
 	if (sessionParse.result === 'Exit') {
 		return;
 	}
@@ -139,7 +138,7 @@ export async function getQueryUserHome(req: Request, res: Response) {
 export async function postQueryUserEdit(req: Request, res: Response) {
 	debug(logNow(), `POST ${ROUTES.QUERY_USER_EDIT}...`);
 
-	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	const sessionParse = safeParseRequestCookies(req, res, debug);
 	if (sessionParse.result === 'Exit') {
 		return;
 	}
@@ -178,7 +177,7 @@ export async function postQueryUserEdit(req: Request, res: Response) {
 export async function postQueryUserRanking(req: Request, res: Response) {
 	debug(logNow(), `POST ${ROUTES.QUERY_USER_RANKING}...`);
 
-	const sessionParse = safeParseRequestCookies(req, AuthenticationInputSchema, res, debug);
+	const sessionParse = safeParseRequestCookies(req, res, debug);
 	if (sessionParse.result === 'Exit') {
 		return;
 	}
