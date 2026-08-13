@@ -30,7 +30,7 @@ import {
 	stringToRole
 } from '@common/models/user-role';
 import { isNotDefined } from '@common/utils/is-defined';
-import { ROUTES } from '@common/routes';
+import { ROUTES } from '@common/api/routes';
 import { PlayerPublicId } from '@common/models/player';
 import { toUserGivenName } from '@common/models/user';
 

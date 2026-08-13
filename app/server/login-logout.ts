@@ -35,8 +35,8 @@ import { SessionIDManager } from '@server/managers/session-id-manager';
 import { SessionIdPublicIdFieldName, SessionIdTokenFieldName } from '@common/models/session-id';
 import { UsersManager } from '@server/managers/users-manager';
 import { isNotDefined } from '@common/utils/is-defined';
-import { UserLoginInputSchema } from '@common/schemas/login-logout';
-import { ROUTES } from '@common/routes';
+import { UserLoginInputSchema } from '@common/api/schemas/login-logout';
+import { ROUTES } from '@common/api/routes';
 import { safeParseRequestBody, safeParseRequestCookies } from '@server/utils/schemas';
 
 export async function postUserLogin(req: Request, res: Response) {

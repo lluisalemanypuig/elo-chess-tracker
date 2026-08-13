@@ -25,9 +25,9 @@ Contact:
 
 import { z } from 'zod';
 
-import { Route } from '@common/routes';
+import { Route } from '@common/api/routes';
 
-import { API_SCHEMA } from '@common/api/schemas';
+import { API_SCHEMA } from '@common/api/schemas-endpoints';
 
 export type Empty = undefined;
 

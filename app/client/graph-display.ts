@@ -30,8 +30,8 @@ import { scaleLinear } from 'd3-scale';
 import { interpolateRgb } from 'd3-interpolate';
 
 import { messageFromResponse, serverCall } from '@client/action';
-import { Route, ROUTES } from '@common/routes';
-import { EdgeWeight, QueryGraphOutput } from '@common/schemas/query-graphs';
+import { Route, ROUTES } from '@common/api/routes';
+import { EdgeWeight, QueryGraphOutput } from '@common/api/schemas/query-graphs';
 import { TimeControlId } from '@common/models/time-control';
 
 let s: Sigma;

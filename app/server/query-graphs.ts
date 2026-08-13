@@ -38,11 +38,11 @@ import { Edge } from '@common/models/graph/edge';
 import { canUserSeeGraph } from '@server/managers/user-relationships';
 import { GRAPHS_SEE_USER } from '@common/models/user-action';
 import { isNotDefined } from '@common/utils/is-defined';
-import { ROUTES } from '@common/routes';
-import { inputSchemaOf } from '@common/api/schemas';
+import { ROUTES } from '@common/api/routes';
+import { inputSchemaOf } from '@common/api/schemas-endpoints';
 import { safeParseRequestBody, safeParseRequestCookies } from '@server/utils/schemas';
-import { AuthenticationInputSchema } from '@common/schemas/authentication';
-import { EdgeInfo, NodeInfo, QueryGraphOutput } from '@common/schemas/query-graphs';
+import { AuthenticationInputSchema } from '@common/api/schemas/authentication';
+import { EdgeInfo, NodeInfo, QueryGraphOutput } from '@common/api/schemas/query-graphs';
 import { PlayerPrivateId } from '@common/models/player';
 
 function retrieveGraphUser(username: PlayerPrivateId, timeControlId: TimeControlId): QueryGraphOutput {

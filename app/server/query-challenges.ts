@@ -35,16 +35,16 @@ import { Challenge } from '@common/models/challenge';
 import { UsersManager } from '@server/managers/users-manager';
 import { canUserDeclineChallenge } from '@server/managers/user-relationships';
 import { isDefined, isNotDefined } from '@common/utils/is-defined';
-import { ROUTES } from '@common/routes';
+import { ROUTES } from '@common/api/routes';
 import { safeParseRequestCookies } from '@server/utils/schemas';
-import { AuthenticationInputSchema } from '@common/schemas/authentication';
+import { AuthenticationInputSchema } from '@common/api/schemas/authentication';
 import {
 	QueryChallengesConfirmResultOtherOutput,
 	QueryChallengesConfirmResultSelfOutput,
 	QueryChallengesPendingResultOutput,
 	QueryChallengesReceivedOutput,
 	QueryChallengesSentOutput
-} from '@common/schemas/query-challenges';
+} from '@common/api/schemas/query-challenges';
 
 /// Query the server for challenges received sento to me by other users
 export async function getQueryChallengeReceived(req: Request, res: Response) {

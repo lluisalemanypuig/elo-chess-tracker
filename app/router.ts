@@ -32,7 +32,7 @@ import { logNow } from '@common/utils/time';
 
 import { EnvironmentManager, getExecutionDirectory } from '@server/managers/environment-manager';
 import { ConfigurationManager } from '@server/managers/configuration-manager';
-import { ROUTES } from '@common/routes';
+import { ROUTES } from '@common/api/routes';
 
 let router = express.Router();
 

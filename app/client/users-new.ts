@@ -24,7 +24,7 @@ import 'htmx.org';
 import { messageFromResponse, serverCall } from '@client/action';
 import { isNotDefined } from '@common/utils/is-defined';
 import { UserRole, ALL_USER_ROLES, arrayStringToRoles, USER_ROLE_TO_STRING } from '@common/models/user-role';
-import { ROUTES } from '@common/routes';
+import { ROUTES } from '@common/api/routes';
 import { toPlayerPrivateId } from '@common/models/player';
 import { toUserGivenName } from '@common/models/user';
 

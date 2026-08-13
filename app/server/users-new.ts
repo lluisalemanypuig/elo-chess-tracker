@@ -36,10 +36,10 @@ import { UsersManager } from '@server/managers/users-manager';
 import { ConfigurationManager } from '@server/managers/configuration-manager';
 import { getExecutionDirectory } from '@server/managers/environment-manager';
 import { isNotDefined } from '@common/utils/is-defined';
-import { ROUTES } from '@common/routes';
-import { inputSchemaOf } from '@common/api/schemas';
+import { ROUTES } from '@common/api/routes';
+import { inputSchemaOf } from '@common/api/schemas-endpoints';
 import { safeParseRequestBody, safeParseRequestCookies } from '@server/utils/schemas';
-import { AuthenticationInputSchema } from '@common/schemas/authentication';
+import { AuthenticationInputSchema } from '@common/api/schemas/authentication';
 
 export async function getPageUserCreate(req: Request, res: Response) {
 	debug(logNow(), `GET ${ROUTES.PAGE_USER_CREATE}...`);

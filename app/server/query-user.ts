@@ -33,10 +33,10 @@ import { isUserLoggedIn } from '@server/managers/session';
 import { UsersManager } from '@server/managers/users-manager';
 import { TimeControlRating } from '@common/models/time-control-rating';
 import { isNotDefined } from '@common/utils/is-defined';
-import { ROUTES } from '@common/routes';
-import { inputSchemaOf } from '@common/api/schemas';
+import { ROUTES } from '@common/api/routes';
+import { inputSchemaOf } from '@common/api/schemas-endpoints';
 import { safeParseRequestBody, safeParseRequestCookies } from '@server/utils/schemas';
-import { AuthenticationInputSchema } from '@common/schemas/authentication';
+import { AuthenticationInputSchema } from '@common/api/schemas/authentication';
 import { UserThin } from '@common/models/user-thin';
 import {
 	QueryUserEditOutput,
@@ -45,7 +45,7 @@ import {
 	TimeControlAndRating,
 	UserWithGames,
 	UserWithoutGames
-} from '@common/schemas/query-user';
+} from '@common/api/schemas/query-user';
 
 /// Returns the list of user full names and usernames sorted by name
 export async function getQueryUserList(req: Request, res: Response) {

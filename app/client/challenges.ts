@@ -23,14 +23,14 @@ import 'htmx.org';
 
 import { GameResult } from '@common/models/game';
 import { messageFromResponse, serverCall } from '@client/action';
-import { ROUTES } from '@common/routes';
+import { ROUTES } from '@common/api/routes';
 import {
 	QueryChallengesConfirmResultOtherOutputSingle,
 	QueryChallengesConfirmResultSelfOutputSingle,
 	QueryChallengesPendingResultOutputSingle,
 	QueryChallengesReceivedOutputSingle,
 	QueryChallengesSentOutputSingle
-} from '@common/schemas/query-challenges';
+} from '@common/api/schemas/query-challenges';
 import { PlayerPrivateId, PlayerPublicId } from '@common/models/player';
 import { TimeControlId, TimeControlName } from '@common/models/time-control';
 

@@ -44,10 +44,10 @@ import { UsersManager } from '@server/managers/users-manager';
 import { searchByKey } from '@server/utils/searching';
 import { readDirectory } from '@server/utils/read-directory';
 import { isNotDefined } from '@common/utils/is-defined';
-import { ROUTES } from '@common/routes';
-import { inputSchemaOf } from '@common/api/schemas';
+import { ROUTES } from '@common/api/routes';
+import { inputSchemaOf } from '@common/api/schemas-endpoints';
 import { safeParseRequestBody, safeParseRequestCookies } from '@server/utils/schemas';
-import { QueryGamesListOutput, QueryGamesListOutputSingle } from '@common/schemas/query-games';
+import { QueryGamesListOutput, QueryGamesListOutputSingle } from '@common/api/schemas/query-games';
 
 function increment(g: Game): any {
 	const [whiteAfter, blackAfter] = RatingSystemManager.getInstance().applyRatingFunction(g);

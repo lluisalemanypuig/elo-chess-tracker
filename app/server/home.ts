@@ -32,9 +32,9 @@ import { isUserLoggedIn } from '@server/managers/session';
 import { ConfigurationManager } from '@server/managers/configuration-manager';
 import { getExecutionDirectory } from '@server/managers/environment-manager';
 import { isDefined, isNotDefined } from '@common/utils/is-defined';
-import { ROUTES } from '@common/routes';
+import { ROUTES } from '@common/api/routes';
 import { safeParseRequestCookies, parseSchema } from '@server/utils/schemas';
-import { AuthenticationInputSchema, authenticationInputSchemaToSessionId } from '@common/schemas/authentication';
+import { AuthenticationInputSchema, authenticationInputSchemaToSessionId } from '@common/api/schemas/authentication';
 
 export async function getPageLogin(req: Request, res: Response) {
 	let sendHome: boolean;
