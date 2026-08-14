@@ -101,7 +101,7 @@ const configuration: Configuration = {
 		}
 	},
 	permissions: {
-		admin: [],
+		admin: ['DELETE_GAMES', 'DELETE_GAMES_ADMIN'],
 		teacher: [],
 		member: [],
 		student: []
@@ -303,7 +303,7 @@ describe('Sequential game creation', () => {
 	const id0000000005 = toGameId('0000000005');
 
 	test('Delete game 0000000001', () => {
-		expect(() => gameDelete(id0000000001)).not.toThrow();
+		expect(() => gameDelete(aU, id0000000001)).not.toThrow();
 
 		let man = GamesManager.getInstance();
 		expect(man.gameExists(id0000000001)).toBe(false);
@@ -418,7 +418,7 @@ describe('Sequential game creation', () => {
 	});
 
 	test('Delete game 0000000004', () => {
-		expect(() => gameDelete(id0000000004)).not.toThrow();
+		expect(() => gameDelete(aU, id0000000004)).not.toThrow();
 
 		let man = GamesManager.getInstance();
 		expect(man.gameExists(id0000000001)).toBe(false);
@@ -533,7 +533,7 @@ describe('Sequential game creation', () => {
 	});
 
 	test('Delete game 0000000003', () => {
-		expect(() => gameDelete(id0000000003)).not.toThrow();
+		expect(() => gameDelete(aU, id0000000003)).not.toThrow();
 
 		let man = GamesManager.getInstance();
 		expect(man.gameExists(id0000000001)).toBe(false);
@@ -648,7 +648,7 @@ describe('Sequential game creation', () => {
 	});
 
 	test('Delete game 0000000002', () => {
-		expect(() => gameDelete(id0000000002)).not.toThrow();
+		expect(() => gameDelete(aU, id0000000002)).not.toThrow();
 
 		let man = GamesManager.getInstance();
 		expect(man.gameExists(id0000000001)).toBe(false);
@@ -763,7 +763,7 @@ describe('Sequential game creation', () => {
 	});
 
 	test('Delete game 0000000005', () => {
-		expect(() => gameDelete(id0000000005)).not.toThrow();
+		expect(() => gameDelete(aU, id0000000005)).not.toThrow();
 
 		let man = GamesManager.getInstance();
 		expect(man.gameExists(id0000000001)).toBe(false);
