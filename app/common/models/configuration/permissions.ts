@@ -24,19 +24,14 @@ Contact:
 */
 
 import { z } from 'zod';
-import { UserActionSchema } from '@common/models/user-action';
-
-const AdminSchema = z.array(UserActionSchema);
-const TeacherSchema = z.array(UserActionSchema);
-const MemberSchema = z.array(UserActionSchema);
-const StudentSchema = z.array(UserActionSchema);
+import { UserActionArraySchema } from '@common/models/user-action';
 
 export const UserPermissionsSchema = z
 	.object({
-		admin: AdminSchema,
-		teacher: TeacherSchema,
-		member: MemberSchema,
-		student: StudentSchema
+		admin: UserActionArraySchema,
+		teacher: UserActionArraySchema,
+		member: UserActionArraySchema,
+		student: UserActionArraySchema
 	})
 	.strict();
 
