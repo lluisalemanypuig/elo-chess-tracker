@@ -26,7 +26,7 @@ Contact:
 import fs from 'fs';
 import path from 'path';
 
-import { gameAddNew, gameEditResult, gameFindById, recalculateAllRatings } from '@server/managers/games';
+import { gameAddNew, gameEditResult, recalculateAllRatings } from '@server/managers/games';
 import { serverInitFromData } from '@server/managers/memory/initialization';
 import { userAddNew } from '@server/managers/users';
 import { run_command } from '@tests/exec-utils';
@@ -34,7 +34,6 @@ import { toPlayerPrivateId } from '@common/models/player';
 import { EnvironmentManager } from '@server/managers/environment-manager';
 import { Game, toGameId } from '@common/models/game';
 import { toUserGivenName, User } from '@common/models/user';
-import { UsersManager } from '@server/managers/users-manager';
 import { gameArrayFromString } from '@common/io/game';
 import { GamesIterator } from '@server/managers/games-iterator';
 import { dateFullToMajor, toDateMinor, toDateMajor } from '@common/utils/time';
@@ -108,34 +107,10 @@ const configuration: Configuration = {
 		}
 	},
 	permissions: {
-		admin: [
-			'CHALLENGE_USER',
-			'CHALLENGE_USER_ADMIN',
-			'CHALLENGE_USER_MEMBER',
-			'CHALLENGE_USER_TEACHER',
-			'CHALLENGE_USER_STUDENT'
-		],
-		teacher: [
-			'CHALLENGE_USER',
-			'CHALLENGE_USER_ADMIN',
-			'CHALLENGE_USER_MEMBER',
-			'CHALLENGE_USER_TEACHER',
-			'CHALLENGE_USER_STUDENT'
-		],
-		member: [
-			'CHALLENGE_USER',
-			'CHALLENGE_USER_ADMIN',
-			'CHALLENGE_USER_MEMBER',
-			'CHALLENGE_USER_TEACHER',
-			'CHALLENGE_USER_STUDENT'
-		],
-		student: [
-			'CHALLENGE_USER',
-			'CHALLENGE_USER_ADMIN',
-			'CHALLENGE_USER_MEMBER',
-			'CHALLENGE_USER_TEACHER',
-			'CHALLENGE_USER_STUDENT'
-		]
+		admin: ['CREATE_GAMES', 'CREATE_GAMES_ADMIN', 'EDIT_GAMES', 'EDIT_GAMES_ADMIN'],
+		teacher: [],
+		member: [],
+		student: []
 	}
 };
 
@@ -167,14 +142,6 @@ const dd = toUserGivenName('dd');
 const ee = toUserGivenName('ee');
 const ff = toUserGivenName('ff');
 
-function u(username: string): User {
-	const d = UsersManager.getInstance().getAllUserDataByPrivateId(toPlayerPrivateId(username));
-	if (isNotDefined(d)) {
-		throw new Error(`Error in tests`);
-	}
-	return d.user;
-}
-
 describe('Server setup', () => {
 	test('Fill an empty server', async () => {
 		await run_command('./tests/initialize-empty.sh');
@@ -195,8 +162,8 @@ describe('Sequential game creation', () => {
 
 		gameAddNew(
 			'sample',
-			u('a'),
-			u('b'),
+			aU,
+			bU,
 			'white_wins',
 			Blitz,
 			Blitz5p3,
@@ -248,8 +215,8 @@ describe('Sequential game creation', () => {
 
 		gameAddNew(
 			'sample',
-			u('c'),
-			u('d'),
+			cU,
+			dU,
 			'black_wins',
 			Blitz,
 			Blitz5p3,
@@ -307,16 +274,7 @@ describe('Sequential game creation', () => {
 			expect(fU.getRating(Classical).numWonDrawnLost()).toEqual([0, 0, 0, 0]);
 		}
 
-		gameAddNew(
-			'sample',
-			u('e'),
-			u('f'),
-			'draw',
-			Blitz,
-			Blitz5p3,
-			toDateMajor('2025-01-19'),
-			toDateMinor('17:06:20:000')
-		);
+		gameAddNew('sample', eU, fU, 'draw', Blitz, Blitz5p3, toDateMajor('2025-01-19'), toDateMinor('17:06:20:000'));
 		{
 			const game_array = gameArrayFromString(fs.readFileSync(path.join(blitz_dir, '2025-01-19'), 'utf8'));
 			expect(game_array).not.toBeNull();
@@ -378,8 +336,8 @@ describe('Sequential game creation', () => {
 
 		gameAddNew(
 			'sample',
-			u('a'),
-			u('f'),
+			aU,
+			fU,
 			'black_wins',
 			Blitz,
 			Blitz5p3,
@@ -459,8 +417,8 @@ describe('Sequential game creation', () => {
 
 		gameAddNew(
 			'sample',
-			u('a'),
-			u('b'),
+			aU,
+			bU,
 			'white_wins',
 			Classical,
 			Classical90p30,
@@ -512,8 +470,8 @@ describe('Sequential game creation', () => {
 
 		gameAddNew(
 			'sample',
-			u('c'),
-			u('d'),
+			cU,
+			dU,
 			'black_wins',
 			Classical,
 			Classical90p30,
@@ -573,8 +531,8 @@ describe('Sequential game creation', () => {
 
 		gameAddNew(
 			'sample',
-			u('e'),
-			u('f'),
+			eU,
+			fU,
 			'draw',
 			Classical,
 			Classical90p30,
@@ -642,8 +600,8 @@ describe('Sequential game creation', () => {
 
 		gameAddNew(
 			'sample',
-			u('a'),
-			u('f'),
+			aU,
+			fU,
 			'black_wins',
 			Classical,
 			Classical90p30,
@@ -723,16 +681,7 @@ describe('Inverse game creation', () => {
 	test('Add "Blitz" games', () => {
 		const blitz_dir = EnvironmentManager.getInstance().getDirGamesTimeControl(Blitz);
 
-		gameAddNew(
-			'sample',
-			u('a'),
-			u('f'),
-			'draw',
-			Blitz,
-			Blitz5p0,
-			toDateMajor('2025-01-20'),
-			toDateMinor('17:06:30:000')
-		);
+		gameAddNew('sample', aU, fU, 'draw', Blitz, Blitz5p0, toDateMajor('2025-01-20'), toDateMinor('17:06:30:000'));
 		{
 			const game_array = gameArrayFromString(fs.readFileSync(path.join(blitz_dir, '2025-01-20'), 'utf8'));
 			expect(game_array).not.toBeNull();
@@ -776,16 +725,7 @@ describe('Inverse game creation', () => {
 			expect(fU.getRating(Classical).numWonDrawnLost()).toEqual([2, 1, 1, 0]);
 		}
 
-		gameAddNew(
-			'sample',
-			u('e'),
-			u('f'),
-			'draw',
-			Blitz,
-			Blitz5p0,
-			toDateMajor('2025-01-20'),
-			toDateMinor('17:06:20:000')
-		);
+		gameAddNew('sample', eU, fU, 'draw', Blitz, Blitz5p0, toDateMajor('2025-01-20'), toDateMinor('17:06:20:000'));
 		{
 			const game_array = gameArrayFromString(fs.readFileSync(path.join(blitz_dir, '2025-01-20'), 'utf8'));
 			expect(game_array).not.toBeNull();
@@ -839,8 +779,8 @@ describe('Inverse game creation', () => {
 
 		gameAddNew(
 			'sample',
-			u('c'),
-			u('d'),
+			cU,
+			dU,
 			'black_wins',
 			Blitz,
 			Blitz5p3,
@@ -908,8 +848,8 @@ describe('Inverse game creation', () => {
 
 		gameAddNew(
 			'sample',
-			u('a'),
-			u('b'),
+			aU,
+			bU,
 			'white_wins',
 			Blitz,
 			Blitz5p3,
@@ -989,8 +929,8 @@ describe('Inverse game creation', () => {
 
 		gameAddNew(
 			'sample',
-			u('a'),
-			u('f'),
+			aU,
+			fU,
 			'draw',
 			Classical,
 			Classical90p30,
@@ -1042,8 +982,8 @@ describe('Inverse game creation', () => {
 
 		gameAddNew(
 			'sample',
-			u('e'),
-			u('f'),
+			eU,
+			fU,
 			'draw',
 			Classical,
 			Classical90p30,
@@ -1103,8 +1043,8 @@ describe('Inverse game creation', () => {
 
 		gameAddNew(
 			'sample',
-			u('c'),
-			u('d'),
+			cU,
+			dU,
 			'black_wins',
 			Classical,
 			Classical90p30,
@@ -1172,8 +1112,8 @@ describe('Inverse game creation', () => {
 
 		gameAddNew(
 			'sample',
-			u('a'),
-			u('b'),
+			aU,
+			bU,
 			'white_wins',
 			Classical,
 			Classical90p30,
@@ -1252,16 +1192,7 @@ describe('Inverse game creation', () => {
 describe('Zig-zag game creation', () => {
 	test('Add "Blitz" games', () => {
 		const blitz_dir = EnvironmentManager.getInstance().getDirGamesTimeControl(Blitz);
-		gameAddNew(
-			'sample',
-			u('a'),
-			u('f'),
-			'draw',
-			Blitz,
-			Blitz5p0,
-			toDateMajor('2025-01-20'),
-			toDateMinor('17:06:25:000')
-		);
+		gameAddNew('sample', aU, fU, 'draw', Blitz, Blitz5p0, toDateMajor('2025-01-20'), toDateMinor('17:06:25:000'));
 		{
 			const game_array = gameArrayFromString(fs.readFileSync(path.join(blitz_dir, '2025-01-20'), 'utf8'));
 			expect(game_array).not.toBeNull();
@@ -1337,16 +1268,7 @@ describe('Zig-zag game creation', () => {
 			expect(fU.getRating(Classical).numWonDrawnLost()).toEqual([4, 1, 3, 0]);
 		}
 
-		gameAddNew(
-			'sample',
-			u('e'),
-			u('f'),
-			'draw',
-			Blitz,
-			Blitz5p0,
-			toDateMajor('2025-01-20'),
-			toDateMinor('17:06:05:000')
-		);
+		gameAddNew('sample', eU, fU, 'draw', Blitz, Blitz5p0, toDateMajor('2025-01-20'), toDateMinor('17:06:05:000'));
 		{
 			const game_array = gameArrayFromString(fs.readFileSync(path.join(blitz_dir, '2025-01-20'), 'utf8'));
 			expect(game_array).not.toBeNull();
@@ -1432,8 +1354,8 @@ describe('Zig-zag game creation', () => {
 
 		gameAddNew(
 			'sample',
-			u('c'),
-			u('d'),
+			cU,
+			dU,
 			'white_wins',
 			Blitz,
 			Blitz5p3,
@@ -1533,8 +1455,8 @@ describe('Zig-zag game creation', () => {
 
 		gameAddNew(
 			'sample',
-			u('a'),
-			u('b'),
+			aU,
+			bU,
 			'black_wins',
 			Blitz,
 			Blitz5p3,
@@ -1645,8 +1567,8 @@ describe('Zig-zag game creation', () => {
 		const blitz_dir = EnvironmentManager.getInstance().getDirGamesTimeControl(Classical);
 		gameAddNew(
 			'sample',
-			u('a'),
-			u('f'),
+			aU,
+			fU,
 			'draw',
 			Classical,
 			Classical90p30,
@@ -1730,8 +1652,8 @@ describe('Zig-zag game creation', () => {
 
 		gameAddNew(
 			'sample',
-			u('e'),
-			u('f'),
+			eU,
+			fU,
 			'draw',
 			Classical,
 			Classical90p30,
@@ -1823,8 +1745,8 @@ describe('Zig-zag game creation', () => {
 
 		gameAddNew(
 			'sample',
-			u('c'),
-			u('d'),
+			cU,
+			dU,
 			'white_wins',
 			Classical,
 			Classical90p30,
@@ -1924,8 +1846,8 @@ describe('Zig-zag game creation', () => {
 
 		gameAddNew(
 			'sample',
-			u('a'),
-			u('b'),
+			aU,
+			bU,
 			'black_wins',
 			Classical,
 			Classical90p30,
@@ -2036,16 +1958,7 @@ describe('Zig-zag game creation', () => {
 describe('Before-time inverse game creation', () => {
 	test('Add "Blitz" games', () => {
 		const blitz_dir = EnvironmentManager.getInstance().getDirGamesTimeControl(Blitz);
-		gameAddNew(
-			'sample',
-			u('a'),
-			u('f'),
-			'draw',
-			Blitz,
-			Blitz5p0,
-			toDateMajor('2023-01-20'),
-			toDateMinor('17:06:50:000')
-		);
+		gameAddNew('sample', aU, fU, 'draw', Blitz, Blitz5p0, toDateMajor('2023-01-20'), toDateMinor('17:06:50:000'));
 		{
 			const game_array = gameArrayFromString(fs.readFileSync(path.join(blitz_dir, '2023-01-20'), 'utf8'));
 			expect(game_array).not.toBeNull();
@@ -2089,16 +2002,7 @@ describe('Before-time inverse game creation', () => {
 			expect(fU.getRating(Classical).numWonDrawnLost()).toEqual([6, 1, 5, 0]);
 		}
 
-		gameAddNew(
-			'sample',
-			u('a'),
-			u('c'),
-			'draw',
-			Blitz,
-			Blitz5p0,
-			toDateMajor('2023-01-10'),
-			toDateMinor('17:06:40:000')
-		);
+		gameAddNew('sample', aU, cU, 'draw', Blitz, Blitz5p0, toDateMajor('2023-01-10'), toDateMinor('17:06:40:000'));
 		{
 			const game_array = gameArrayFromString(fs.readFileSync(path.join(blitz_dir, '2023-01-10'), 'utf8'));
 			expect(game_array).not.toBeNull();
@@ -2300,18 +2204,18 @@ describe('Test graphs metadata before edition', () => {
 
 const id0000000001 = toGameId('0000000001');
 const id0000000002 = toGameId('0000000002');
-const id0000000008 = toGameId('0000000008');
+// const id0000000008 = toGameId('0000000008');
 const id0000000013 = toGameId('0000000013');
-const id0000000015 = toGameId('0000000015');
-const id0000000020 = toGameId('0000000020');
+// const id0000000015 = toGameId('0000000015');
+// const id0000000020 = toGameId('0000000020');
 const id0000000021 = toGameId('0000000021');
-const id1200003433 = toGameId('1200003433');
-const id1288883433 = toGameId('1288883433');
-const id1299999433 = toGameId('1299999433');
+// const id1200003433 = toGameId('1200003433');
+// const id1288883433 = toGameId('1288883433');
+// const id1299999433 = toGameId('1299999433');
 
 describe('Edition of game results', () => {
 	test('Edit some "Blitz" games', () => {
-		gameEditResult(id0000000001, 'black_wins');
+		gameEditResult(aU, id0000000001, 'black_wins');
 
 		expect(aU.getRating(Blitz).numWonDrawnLost()).toEqual([8, 1, 4, 3]);
 		expect(bU.getRating(Blitz).numWonDrawnLost()).toEqual([3, 2, 0, 1]);
@@ -2326,7 +2230,7 @@ describe('Edition of game results', () => {
 		expect(eU.getRating(Classical).numWonDrawnLost()).toEqual([3, 0, 3, 0]);
 		expect(fU.getRating(Classical).numWonDrawnLost()).toEqual([6, 1, 5, 0]);
 
-		gameEditResult(id0000000001, 'draw');
+		gameEditResult(aU, id0000000001, 'draw');
 
 		expect(aU.getRating(Blitz).numWonDrawnLost()).toEqual([8, 1, 5, 2]);
 		expect(bU.getRating(Blitz).numWonDrawnLost()).toEqual([3, 1, 1, 1]);
@@ -2341,7 +2245,7 @@ describe('Edition of game results', () => {
 		expect(eU.getRating(Classical).numWonDrawnLost()).toEqual([3, 0, 3, 0]);
 		expect(fU.getRating(Classical).numWonDrawnLost()).toEqual([6, 1, 5, 0]);
 
-		gameEditResult(id0000000001, 'draw');
+		gameEditResult(aU, id0000000001, 'draw');
 
 		expect(aU.getRating(Blitz).numWonDrawnLost()).toEqual([8, 1, 5, 2]);
 		expect(bU.getRating(Blitz).numWonDrawnLost()).toEqual([3, 1, 1, 1]);
@@ -2356,7 +2260,7 @@ describe('Edition of game results', () => {
 		expect(eU.getRating(Classical).numWonDrawnLost()).toEqual([3, 0, 3, 0]);
 		expect(fU.getRating(Classical).numWonDrawnLost()).toEqual([6, 1, 5, 0]);
 
-		gameEditResult(id0000000002, 'draw');
+		gameEditResult(aU, id0000000002, 'draw');
 
 		expect(aU.getRating(Blitz).numWonDrawnLost()).toEqual([8, 1, 5, 2]);
 		expect(bU.getRating(Blitz).numWonDrawnLost()).toEqual([3, 1, 1, 1]);
@@ -2373,7 +2277,7 @@ describe('Edition of game results', () => {
 	});
 
 	test('Edit some "Classical" games', () => {
-		gameEditResult(id0000000013, 'black_wins');
+		gameEditResult(aU, id0000000013, 'black_wins');
 
 		expect(aU.getRating(Blitz).numWonDrawnLost()).toEqual([8, 1, 5, 2]);
 		expect(bU.getRating(Blitz).numWonDrawnLost()).toEqual([3, 1, 1, 1]);
@@ -2388,7 +2292,7 @@ describe('Edition of game results', () => {
 		expect(eU.getRating(Classical).numWonDrawnLost()).toEqual([3, 0, 3, 0]);
 		expect(fU.getRating(Classical).numWonDrawnLost()).toEqual([6, 2, 4, 0]);
 
-		gameEditResult(id0000000013, 'white_wins');
+		gameEditResult(aU, id0000000013, 'white_wins');
 
 		expect(aU.getRating(Blitz).numWonDrawnLost()).toEqual([8, 1, 5, 2]);
 		expect(bU.getRating(Blitz).numWonDrawnLost()).toEqual([3, 1, 1, 1]);
@@ -2403,7 +2307,7 @@ describe('Edition of game results', () => {
 		expect(eU.getRating(Classical).numWonDrawnLost()).toEqual([3, 0, 3, 0]);
 		expect(fU.getRating(Classical).numWonDrawnLost()).toEqual([6, 1, 4, 1]);
 
-		gameEditResult(id0000000013, 'draw');
+		gameEditResult(aU, id0000000013, 'draw');
 
 		expect(aU.getRating(Blitz).numWonDrawnLost()).toEqual([8, 1, 5, 2]);
 		expect(bU.getRating(Blitz).numWonDrawnLost()).toEqual([3, 1, 1, 1]);
@@ -2418,7 +2322,7 @@ describe('Edition of game results', () => {
 		expect(eU.getRating(Classical).numWonDrawnLost()).toEqual([3, 0, 3, 0]);
 		expect(fU.getRating(Classical).numWonDrawnLost()).toEqual([6, 1, 5, 0]);
 
-		gameEditResult(id0000000021, 'black_wins');
+		gameEditResult(aU, id0000000021, 'black_wins');
 
 		expect(aU.getRating(Blitz).numWonDrawnLost()).toEqual([8, 1, 5, 2]);
 		expect(bU.getRating(Blitz).numWonDrawnLost()).toEqual([3, 1, 1, 1]);
@@ -2629,101 +2533,6 @@ for (let i = 0; i < N; ++i) {
 		});
 	});
 
-	describe(`(${i}) Look for a game`, () => {
-		test('"Blitz" games', () => {
-			{
-				const _game = gameFindById(id0000000001);
-				expect(_game).not.toBe(undefined);
-				const game = _game as Game;
-				expect(game.id).toEqual('0000000001');
-				expect(game.white).toEqual('a');
-				expect(game.black).toEqual('b');
-				expect(game.result).toEqual('draw');
-				expect(game.timeControlId).toEqual(Blitz);
-				expect(game.timeControlName).toEqual(Blitz5p3);
-			}
-
-			{
-				const _game = gameFindById(id0000000002);
-				expect(_game).not.toBe(undefined);
-				const game = _game as Game;
-				expect(game.id).toEqual('0000000002');
-				expect(game.white).toEqual('c');
-				expect(game.black).toEqual('d');
-				expect(game.result).toEqual('draw');
-				expect(game.timeControlId).toEqual(Blitz);
-				expect(game.timeControlName).toEqual(Blitz5p3);
-			}
-
-			{
-				const _game = gameFindById(id0000000020);
-				expect(_game).not.toBe(undefined);
-				const game = _game as Game;
-				expect(game.id).toEqual('0000000020');
-				expect(game.white).toEqual('a');
-				expect(game.black).toEqual('b');
-				expect(game.result).toEqual('black_wins');
-				expect(game.timeControlId).toEqual(Blitz);
-				expect(game.timeControlName).toEqual(Blitz5p3);
-			}
-		});
-
-		test('"Classical" games', () => {
-			{
-				const _game = gameFindById(id0000000015);
-				expect(_game).not.toBe(undefined);
-				const game = _game as Game;
-				expect(game.id).toEqual('0000000015');
-				expect(game.white).toEqual('c');
-				expect(game.black).toEqual('d');
-				expect(game.result).toEqual('black_wins');
-				expect(game.timeControlId).toEqual(Classical);
-				expect(game.timeControlName).toEqual(Classical90p30);
-			}
-
-			{
-				const _game = gameFindById(id0000000021);
-				expect(_game).not.toBe(undefined);
-				const game = _game as Game;
-				expect(game.id).toEqual('0000000021');
-				expect(game.white).toEqual('a');
-				expect(game.black).toEqual('f');
-				expect(game.result).toEqual('black_wins');
-				expect(game.timeControlId).toEqual(Classical);
-				expect(game.timeControlName).toEqual(Classical90p30);
-			}
-
-			{
-				const _game = gameFindById(id0000000008);
-				expect(_game).not.toBe(undefined);
-				const game = _game as Game;
-				expect(game.id).toEqual('0000000008');
-				expect(game.white).toEqual('a');
-				expect(game.black).toEqual('f');
-				expect(game.result).toEqual('black_wins');
-				expect(game.timeControlId).toEqual(Classical);
-				expect(game.timeControlName).toEqual(Classical90p30);
-			}
-		});
-
-		test('Nonexistent games', () => {
-			{
-				const _game = gameFindById(id1200003433);
-				expect(_game).toBe(undefined);
-			}
-
-			{
-				const _game = gameFindById(id1288883433);
-				expect(_game).toBe(undefined);
-			}
-
-			{
-				const _game = gameFindById(id1299999433);
-				expect(_game).toBe(undefined);
-			}
-		});
-	});
-
 	describe(`(${i}) Check all games are sorted by date`, () => {
 		test(Blitz, () => {
 			let all_games: Game[] = [];
@@ -2816,7 +2625,7 @@ for (let i = 0; i < N; ++i) {
 		});
 
 		test('Recalculate', () => {
-			recalculateAllRatings();
+			recalculateAllRatings(aU);
 		});
 
 		test('Read Blitz and compare', () => {
