@@ -28,15 +28,14 @@ const debug = Debug('ELO_CHESS_TRACKER:serverUsersPasswordChanges');
 import { Request, Response } from 'express';
 
 import { logNow } from '@common/utils/time';
-import { isUserLoggedIn, sessionUserDeleteAll } from '@server/managers/session';
-import { encryptPasswordForUser, isPasswordOfUserCorrect } from '@server/utils/encrypt';
-import { userOverwrite } from '@server/managers/users';
+import { isUserLoggedIn } from '@server/managers/session';
 import { ConfigurationManager } from '@server/managers/configuration-manager';
 import { getExecutionDirectory } from '@server/managers/environment-manager';
 import { isNotDefined } from '@common/utils/is-defined';
 import { ROUTES } from '@common/api/routes';
 import { inputSchemaOf } from '@common/api/schemas-endpoints';
 import { safeParseRequestBody, safeParseRequestCookies } from '@server/utils/schemas';
+import { userSelfChangePassword } from '@server/managers/users';
 
 export async function getPageUserPasswordChange(req: Request, res: Response) {
 	debug(logNow(), `GET ${ROUTES.PAGE_USER_PASSWORD_CHANGE}...`);
@@ -84,26 +83,12 @@ export async function postUserPasswordChange(req: Request, res: Response) {
 		return;
 	}
 
-	// check if password is correct
-	const oldPwd = user.password;
-	const isPasswordCorrect = isPasswordOfUserCorrect(user.username, oldPassword, oldPwd);
-
-	// is the password correct?
-	if (!isPasswordCorrect) {
-		debug(logNow(), `    Password for '${user.username}' is incorrect`);
-		res.status(500).send('Old password is not correct.');
+	try {
+		userSelfChangePassword(user, { session, oldPassword, newPassword });
+	} catch (e) {
+		res.status(403).send((e as Error).message);
 		return;
 	}
-
-	// delete all session ids of this user
-	sessionUserDeleteAll(session);
-
-	// make new password
-	const pass = encryptPasswordForUser(user.username, newPassword);
-	user.password = { encrypted: pass[0], iv: pass[1] };
-
-	// overwrite user data
-	userOverwrite(user);
 
 	res.status(200).send();
 }

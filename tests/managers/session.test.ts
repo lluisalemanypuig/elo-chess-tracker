@@ -34,6 +34,8 @@ import { Configuration } from '@common/models/configuration/configuration';
 import { toPlayerPrivateId } from '@common/models/player';
 import { toUserGivenName } from '@common/models/user';
 import { toTimeControlId, toTimeControlName } from '@common/models/time-control';
+import { UsersManager } from '@app/server/managers/users-manager';
+import { isNotDefined } from '@app/common/utils/is-defined';
 
 const Classical = toTimeControlId('Classical');
 const Classical90p30 = toTimeControlName('Classical (90 + 30)');
@@ -95,6 +97,12 @@ const configuration: Configuration = {
 	},
 	permissions: {
 		admin: [
+			'CREATE_USER',
+			'ASSIGN_ROLE',
+			'ASSIGN_ROLE_ADMIN',
+			'ASSIGN_ROLE_TEACHER',
+			'ASSIGN_ROLE_MEMBER',
+			'ASSIGN_ROLE_STUDENT',
 			'CHALLENGE_USER',
 			'CHALLENGE_USER_ADMIN',
 			'CHALLENGE_USER_MEMBER',
@@ -152,12 +160,35 @@ describe('Session management via functions', () => {
 		clearServer();
 		expect(() => serverInitFromData('tests/webpage', configuration)).not.toThrow();
 
-		userAddNew(aa, A, a, 'pass_a', ['ADMIN']);
-		userAddNew(bb, B, b, 'pass_b', ['MEMBER']);
-		userAddNew(cc, C, c, 'pass_c', ['MEMBER']);
-		userAddNew(dd, D, d, 'pass_d', ['STUDENT']);
-		userAddNew(ee, E, e, 'pass_e', ['STUDENT']);
-		userAddNew(ff, F, f, 'pass_f', ['STUDENT']);
+		const admin = UsersManager.getInstance().getAllUserDataByPrivateId(toPlayerPrivateId('admin.default'));
+		if (isNotDefined(admin)) {
+			throw new Error('admin default user could not be retrieved');
+		}
+
+		userAddNew(admin.user, { username: aa, firstName: A, lastName: a, password: 'pass_a', roles: ['ADMIN'] });
+		userAddNew(admin.user, { username: bb, firstName: B, lastName: b, password: 'pass_b', roles: ['MEMBER'] });
+		userAddNew(admin.user, { username: cc, firstName: C, lastName: c, password: 'pass_c', roles: ['MEMBER'] });
+		userAddNew(admin.user, {
+			username: dd,
+			firstName: D,
+			lastName: d,
+			password: 'pass_d',
+			roles: ['STUDENT']
+		});
+		userAddNew(admin.user, {
+			username: ee,
+			firstName: E,
+			lastName: e,
+			password: 'pass_e',
+			roles: ['STUDENT']
+		});
+		userAddNew(admin.user, {
+			username: ff,
+			firstName: F,
+			lastName: f,
+			password: 'pass_f',
+			roles: ['STUDENT']
+		});
 	});
 
 	let session_aa_1: SessionId;

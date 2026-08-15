@@ -117,7 +117,18 @@ const classical_rapid_blitz: Configuration = {
 		}
 	},
 	permissions: {
-		admin: ['CHALLENGE_USER_ADMIN', 'CHALLENGE_USER_MEMBER', 'CHALLENGE_USER_TEACHER', 'CHALLENGE_USER_STUDENT'],
+		admin: [
+			'CREATE_USER',
+			'ASSIGN_ROLE',
+			'ASSIGN_ROLE_ADMIN',
+			'ASSIGN_ROLE_TEACHER',
+			'ASSIGN_ROLE_MEMBER',
+			'ASSIGN_ROLE_STUDENT',
+			'CHALLENGE_USER_ADMIN',
+			'CHALLENGE_USER_MEMBER',
+			'CHALLENGE_USER_TEACHER',
+			'CHALLENGE_USER_STUDENT'
+		],
 		teacher: ['CHALLENGE_USER_ADMIN', 'CHALLENGE_USER_MEMBER', 'CHALLENGE_USER_TEACHER', 'CHALLENGE_USER_STUDENT'],
 		member: ['CHALLENGE_USER_ADMIN', 'CHALLENGE_USER_MEMBER', 'CHALLENGE_USER_TEACHER', 'CHALLENGE_USER_STUDENT'],
 		student: ['CHALLENGE_USER_ADMIN', 'CHALLENGE_USER_MEMBER', 'CHALLENGE_USER_TEACHER', 'CHALLENGE_USER_STUDENT']
@@ -145,7 +156,7 @@ let uD: User;
 let uE: User;
 let uF: User;
 
-function user_retrieve(username: PlayerPrivateId): User | undefined {
+function userRetrieve(username: PlayerPrivateId): User | undefined {
 	const d = UsersManager.getInstance().getAllUserDataByPrivateId(username);
 	if (isNotDefined(d)) {
 		return undefined;
@@ -172,12 +183,34 @@ describe('Check initialization', () => {
 
 describe('Check challenge communication', () => {
 	test('Add users', () => {
-		uA = userAddNew(aa, A, A, 'pass_a', ['ADMIN']);
-		uB = userAddNew(bb, B, B, 'pass_b', ['MEMBER']);
-		uC = userAddNew(cc, C, C, 'pass_c', ['MEMBER']);
-		uD = userAddNew(dd, D, D, 'pass_d', ['STUDENT']);
-		uE = userAddNew(ee, E, E, 'pass_e', ['STUDENT']);
-		uF = userAddNew(ff, F, F, 'pass_f', ['STUDENT']);
+		const admin = UsersManager.getInstance().getAllUserDataByPrivateId(toPlayerPrivateId('admin.default'));
+		if (isNotDefined(admin)) {
+			throw new Error('admin default user could not be retrieved');
+		}
+		uA = userAddNew(admin.user, { username: aa, firstName: A, lastName: A, password: 'pass_a', roles: ['ADMIN'] });
+		uB = userAddNew(admin.user, { username: bb, firstName: B, lastName: B, password: 'pass_b', roles: ['MEMBER'] });
+		uC = userAddNew(admin.user, { username: cc, firstName: C, lastName: C, password: 'pass_c', roles: ['MEMBER'] });
+		uD = userAddNew(admin.user, {
+			username: dd,
+			firstName: D,
+			lastName: D,
+			password: 'pass_d',
+			roles: ['STUDENT']
+		});
+		uE = userAddNew(admin.user, {
+			username: ee,
+			firstName: E,
+			lastName: E,
+			password: 'pass_e',
+			roles: ['STUDENT']
+		});
+		uF = userAddNew(admin.user, {
+			username: ff,
+			firstName: F,
+			lastName: F,
+			password: 'pass_f',
+			roles: ['STUDENT']
+		});
 	});
 
 	test('Sending', () => {
@@ -378,27 +411,27 @@ describe('Check challenge communication', () => {
 
 		challengeAgreeResult(c, { by: ee, when: toDateFull('2026-08-09..11:23:58:000') });
 
-		const aaUser = user_retrieve(aa) as User;
+		const aaUser = userRetrieve(aa) as User;
 		expect(aaUser.getGames(Classical).length).toBe(0);
 		expect(aaUser.getGames(Rapid).length).toBe(0);
 		expect(aaUser.getGames(Blitz).length).toBe(0);
-		const bbUser = user_retrieve(bb) as User;
+		const bbUser = userRetrieve(bb) as User;
 		expect(bbUser.getGames(Classical).length).toBe(0);
 		expect(bbUser.getGames(Rapid).length).toBe(0);
 		expect(bbUser.getGames(Blitz).length).toBe(0);
-		const ccUser = user_retrieve(cc) as User;
+		const ccUser = userRetrieve(cc) as User;
 		expect(ccUser.getGames(Classical).length).toBe(0);
 		expect(ccUser.getGames(Rapid).length).toBe(0);
 		expect(ccUser.getGames(Blitz).length).toBe(0);
-		const ddUser = user_retrieve(dd) as User;
+		const ddUser = userRetrieve(dd) as User;
 		expect(ddUser.getGames(Classical).length).toBe(0);
 		expect(ddUser.getGames(Rapid).length).toBe(0);
 		expect(ddUser.getGames(Blitz).length).toBe(0);
-		const eeUser = user_retrieve(ee) as User;
+		const eeUser = userRetrieve(ee) as User;
 		expect(eeUser.getGames(Classical).length).toBe(1);
 		expect(eeUser.getGames(Rapid).length).toBe(0);
 		expect(eeUser.getGames(Blitz).length).toBe(0);
-		const ffUser = user_retrieve(ff) as User;
+		const ffUser = userRetrieve(ff) as User;
 		expect(ffUser.getGames(Classical).length).toBe(1);
 		expect(ffUser.getGames(Rapid).length).toBe(0);
 		expect(ffUser.getGames(Blitz).length).toBe(0);
@@ -489,27 +522,27 @@ describe('Check initialization and communication', () => {
 
 		challengeAgreeResult(c, { by: dd, when: toDateFull('2026-08-09..11:25:19:000') });
 
-		const aaUser = user_retrieve(aa) as User;
+		const aaUser = userRetrieve(aa) as User;
 		expect(aaUser.getGames(Classical).length).toBe(0);
 		expect(aaUser.getGames(Rapid).length).toBe(0);
 		expect(aaUser.getGames(Blitz).length).toBe(1);
-		const bbUser = user_retrieve(bb) as User;
+		const bbUser = userRetrieve(bb) as User;
 		expect(bbUser.getGames(Classical).length).toBe(0);
 		expect(bbUser.getGames(Rapid).length).toBe(0);
 		expect(bbUser.getGames(Blitz).length).toBe(0);
-		const ccUser = user_retrieve(cc) as User;
+		const ccUser = userRetrieve(cc) as User;
 		expect(ccUser.getGames(Classical).length).toBe(0);
 		expect(ccUser.getGames(Rapid).length).toBe(0);
 		expect(ccUser.getGames(Blitz).length).toBe(0);
-		const ddUser = user_retrieve(dd) as User;
+		const ddUser = userRetrieve(dd) as User;
 		expect(ddUser.getGames(Classical).length).toBe(0);
 		expect(ddUser.getGames(Rapid).length).toBe(0);
 		expect(ddUser.getGames(Blitz).length).toBe(1);
-		const eeUser = user_retrieve(ee) as User;
+		const eeUser = userRetrieve(ee) as User;
 		expect(eeUser.getGames(Classical).length).toBe(1);
 		expect(eeUser.getGames(Rapid).length).toBe(0);
 		expect(eeUser.getGames(Blitz).length).toBe(0);
-		const ffUser = user_retrieve(ff) as User;
+		const ffUser = userRetrieve(ff) as User;
 		expect(ffUser.getGames(Classical).length).toBe(1);
 		expect(ffUser.getGames(Rapid).length).toBe(0);
 		expect(ffUser.getGames(Blitz).length).toBe(0);
@@ -576,27 +609,27 @@ describe('Incorrect challenge communication', () => {
 
 		challengeAgreeResult(c_aa_bb, { by: bb, when: toDateFull('2025-01-10..20:39:30:000') });
 
-		const aaUser = user_retrieve(aa) as User;
+		const aaUser = userRetrieve(aa) as User;
 		expect(aaUser.getGames(Classical).length).toBe(0);
 		expect(aaUser.getGames(Rapid).length).toBe(0);
 		expect(aaUser.getGames(Blitz).length).toBe(1);
-		const bbUser = user_retrieve(bb) as User;
+		const bbUser = userRetrieve(bb) as User;
 		expect(bbUser.getGames(Classical).length).toBe(0);
 		expect(bbUser.getGames(Rapid).length).toBe(0);
 		expect(bbUser.getGames(Blitz).length).toBe(1);
-		const ccUser = user_retrieve(cc) as User;
+		const ccUser = userRetrieve(cc) as User;
 		expect(ccUser.getGames(Classical).length).toBe(0);
 		expect(ccUser.getGames(Rapid).length).toBe(0);
 		expect(ccUser.getGames(Blitz).length).toBe(0);
-		const ddUser = user_retrieve(dd) as User;
+		const ddUser = userRetrieve(dd) as User;
 		expect(ddUser.getGames(Classical).length).toBe(0);
 		expect(ddUser.getGames(Rapid).length).toBe(0);
 		expect(ddUser.getGames(Blitz).length).toBe(1);
-		const eeUser = user_retrieve(ee) as User;
+		const eeUser = userRetrieve(ee) as User;
 		expect(eeUser.getGames(Classical).length).toBe(1);
 		expect(eeUser.getGames(Rapid).length).toBe(0);
 		expect(eeUser.getGames(Blitz).length).toBe(0);
-		const ffUser = user_retrieve(ff) as User;
+		const ffUser = userRetrieve(ff) as User;
 		expect(ffUser.getGames(Classical).length).toBe(1);
 		expect(ffUser.getGames(Rapid).length).toBe(0);
 		expect(ffUser.getGames(Blitz).length).toBe(0);
@@ -655,27 +688,27 @@ describe('Incorrect challenge communication', () => {
 
 		challengeAgreeResult(c_bb_cc, { by: cc, when: toDateFull('2025-01-10..20:40:30:000') });
 
-		const aaUser = user_retrieve(aa) as User;
+		const aaUser = userRetrieve(aa) as User;
 		expect(aaUser.getGames(Classical).length).toBe(0);
 		expect(aaUser.getGames(Rapid).length).toBe(0);
 		expect(aaUser.getGames(Blitz).length).toBe(1);
-		const bbUser = user_retrieve(bb) as User;
+		const bbUser = userRetrieve(bb) as User;
 		expect(bbUser.getGames(Classical).length).toBe(1);
 		expect(bbUser.getGames(Rapid).length).toBe(0);
 		expect(bbUser.getGames(Blitz).length).toBe(1);
-		const ccUser = user_retrieve(cc) as User;
+		const ccUser = userRetrieve(cc) as User;
 		expect(ccUser.getGames(Classical).length).toBe(1);
 		expect(ccUser.getGames(Rapid).length).toBe(0);
 		expect(ccUser.getGames(Blitz).length).toBe(0);
-		const ddUser = user_retrieve(dd) as User;
+		const ddUser = userRetrieve(dd) as User;
 		expect(ddUser.getGames(Classical).length).toBe(0);
 		expect(ddUser.getGames(Rapid).length).toBe(0);
 		expect(ddUser.getGames(Blitz).length).toBe(1);
-		const eeUser = user_retrieve(ee) as User;
+		const eeUser = userRetrieve(ee) as User;
 		expect(eeUser.getGames(Classical).length).toBe(1);
 		expect(eeUser.getGames(Rapid).length).toBe(0);
 		expect(eeUser.getGames(Blitz).length).toBe(0);
-		const ffUser = user_retrieve(ff) as User;
+		const ffUser = userRetrieve(ff) as User;
 		expect(ffUser.getGames(Classical).length).toBe(1);
 		expect(ffUser.getGames(Rapid).length).toBe(0);
 		expect(ffUser.getGames(Blitz).length).toBe(0);

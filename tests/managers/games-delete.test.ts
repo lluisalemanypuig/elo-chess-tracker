@@ -41,6 +41,8 @@ import { toPlayerPrivateId } from '@common/models/player';
 import { toGameId } from '@common/models/game';
 import { toTimeControlId, toTimeControlName } from '@common/models/time-control';
 import { toDateMajor, toDateMinor } from '@common/utils/time';
+import { UsersManager } from '@app/server/managers/users-manager';
+import { isNotDefined } from '@app/common/utils/is-defined';
 
 const Classical = toTimeControlId('Classical');
 const Classical90p30 = toTimeControlName('Classical (90 + 30)');
@@ -101,7 +103,16 @@ const configuration: Configuration = {
 		}
 	},
 	permissions: {
-		admin: ['DELETE_GAMES', 'DELETE_GAMES_ADMIN'],
+		admin: [
+			'CREATE_USER',
+			'ASSIGN_ROLE',
+			'ASSIGN_ROLE_ADMIN',
+			'ASSIGN_ROLE_TEACHER',
+			'ASSIGN_ROLE_MEMBER',
+			'ASSIGN_ROLE_STUDENT',
+			'DELETE_GAMES',
+			'DELETE_GAMES_ADMIN'
+		],
 		teacher: [],
 		member: [],
 		student: []
@@ -141,12 +152,17 @@ describe('Server setup', () => {
 		await run_command('./tests/initialize-empty.sh');
 		expect(() => serverInitFromData('tests/webpage', configuration)).not.toThrow();
 
-		aU = userAddNew(a, A, aa, 'aaaa', ['ADMIN']);
-		bU = userAddNew(b, B, bb, 'dddd', ['ADMIN']);
-		cU = userAddNew(c, C, cc, 'cccc', ['ADMIN']);
-		dU = userAddNew(d, D, dd, 'dddd', ['ADMIN']);
-		eU = userAddNew(e, E, ee, 'eeee', ['ADMIN']);
-		fU = userAddNew(f, F, ff, 'ffff', ['ADMIN']);
+		const admin = UsersManager.getInstance().getAllUserDataByPrivateId(toPlayerPrivateId('admin.default'));
+		if (isNotDefined(admin)) {
+			throw new Error('admin default user could not be retrieved');
+		}
+
+		aU = userAddNew(admin.user, { username: a, firstName: A, lastName: aa, password: 'aaaa', roles: ['ADMIN'] });
+		bU = userAddNew(admin.user, { username: b, firstName: B, lastName: bb, password: 'dddd', roles: ['ADMIN'] });
+		cU = userAddNew(admin.user, { username: c, firstName: C, lastName: cc, password: 'cccc', roles: ['ADMIN'] });
+		dU = userAddNew(admin.user, { username: d, firstName: D, lastName: dd, password: 'dddd', roles: ['ADMIN'] });
+		eU = userAddNew(admin.user, { username: e, firstName: E, lastName: ee, password: 'eeee', roles: ['ADMIN'] });
+		fU = userAddNew(admin.user, { username: f, firstName: F, lastName: ff, password: 'ffff', roles: ['ADMIN'] });
 	});
 });
 

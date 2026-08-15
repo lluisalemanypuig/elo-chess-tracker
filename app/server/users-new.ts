@@ -31,8 +31,6 @@ import { logNow } from '@common/utils/time';
 import { isUserLoggedIn } from '@server/managers/session';
 import { userAddNew } from '@server/managers/users';
 import { isRoleStringCorrect } from '@common/models/user-role';
-import { getRoleActionName } from '@common/models/user-action';
-import { UsersManager } from '@server/managers/users-manager';
 import { ConfigurationManager } from '@server/managers/configuration-manager';
 import { getExecutionDirectory } from '@server/managers/environment-manager';
 import { isNotDefined } from '@common/utils/is-defined';
@@ -88,52 +86,36 @@ export async function postUserCreate(req: Request, res: Response) {
 		return;
 	}
 
-	if (!registerer.canDo('CREATE_USER')) {
-		debug(logNow(), `User '${registerer.username}' cannot create users.`);
-		res.status(403).send('You cannot create users.');
-		return;
-	}
-	if (!registerer.canDo('ASSIGN_ROLE')) {
-		debug(logNow(), `User '${registerer.username}' cannot assign roles to users.`);
-		res.status(403).send(`You cannot assign roles and thus cannot create users.`);
-		return;
-	}
-
 	const userParse = safeParseRequestBody(req, inputSchemaOf(ROUTES.USER_CREATE), res, debug);
 	if (userParse.result === 'Exit') {
 		return;
 	}
 
 	const username = userParse.data.u;
-	const firstname = userParse.data.fn;
-	const lastname = userParse.data.ln;
+	const firstName = userParse.data.fn;
+	const lastName = userParse.data.ln;
 	const password = userParse.data.password;
 	const roles = userParse.data.r;
 
 	debug(logNow(), `User '${registerer.username}' is trying to create a new user:`);
 	debug(logNow(), `    Username: '${username}'`);
-	debug(logNow(), `    First name: '${firstname}'`);
-	debug(logNow(), `    Last name: '${lastname}'`);
+	debug(logNow(), `    First name: '${firstName}'`);
+	debug(logNow(), `    Last name: '${lastName}'`);
 	debug(logNow(), `    Roles: '${roles}'`);
-
-	if (UsersManager.getInstance().exists(username)) {
-		res.status(500).send(`This user already exists`);
-		return;
-	}
 
 	for (const r of roles) {
 		if (!isRoleStringCorrect(r)) {
 			res.status(500).send(`Role string '${r}' is not correct.`);
 			return;
 		}
-
-		const action = getRoleActionName('ASSIGN_ROLE_USERS', r);
-		if (!registerer.canDo(action)) {
-			res.status(403).send(`You cannot do ${action}.`);
-			return;
-		}
 	}
 
-	userAddNew(username, firstname, lastname, password, roles);
+	try {
+		userAddNew(registerer, { username, firstName, lastName, password, roles });
+	} catch (e) {
+		res.status(403).send((e as Error).message);
+		return;
+	}
+
 	res.status(201).send();
 }
