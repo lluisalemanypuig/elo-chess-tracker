@@ -31,7 +31,7 @@ import { Environment, SSLCertificate } from '@server/models/configuration/enviro
  * @brief Directories and other parameters of the server's environment
  */
 export class EnvironmentManager {
-	/// The only instance of this class
+	// The only instance of this class
 	private static instance: EnvironmentManager;
 
 	/**

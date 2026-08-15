@@ -45,7 +45,7 @@ import {
 } from '@common/api/schemas/query-challenges';
 import { UserGivenName } from '@common/models/user-given-name';
 
-/// Query the server for challenges received sento to me by other users
+// Query the server for challenges received sento to me by other users
 export async function getQueryChallengeReceived(req: Request, res: Response) {
 	debug(logNow(), `GET ${ROUTES.QUERY_CHALLENGE_RECEIVED}...`);
 
@@ -100,7 +100,7 @@ export async function getQueryChallengeReceived(req: Request, res: Response) {
 	res.status(200).send(allChallengesReceived);
 }
 
-/// Query the server for challenges sent to other users by me
+// Query the server for challenges sent to other users by me
 export async function getQueryChallengeSent(req: Request, res: Response) {
 	debug(logNow(), `GET ${ROUTES.QUERY_CHALLENGE_SENT}...`);
 
@@ -160,7 +160,7 @@ export async function getQueryChallengeSent(req: Request, res: Response) {
 	res.status(200).send(allChallenges);
 }
 
-/// Query the server for accepted challenges whose result has not been set yet.
+// Query the server for accepted challenges whose result has not been set yet.
 export async function getQueryChallengePendingResult(req: Request, res: Response) {
 	debug(logNow(), `GET ${ROUTES.QUERY_CHALLENGE_PENDING_RESULT}...`);
 
@@ -241,7 +241,7 @@ export async function getQueryChallengePendingResult(req: Request, res: Response
 	res.status(200).send(allChallenges);
 }
 
-/// Query the server for accepted challenges whose result has been set by me
+// Query the server for accepted challenges whose result has been set by me
 export async function getQueryChallengeConfirmResultOther(req: Request, res: Response) {
 	debug(logNow(), `GET ${ROUTES.QUERY_CHALLENGE_CONFIRM_RESULT_OTHER}...`);
 
@@ -344,7 +344,7 @@ export async function getQueryChallengeConfirmResultOther(req: Request, res: Res
 	res.status(200).send(allChallenges);
 }
 
-/// Query the server for accepted challenges whose result has been set by my opponent
+// Query the server for accepted challenges whose result has been set by my opponent
 export async function getQueryChallengeConfirmResultSelf(req: Request, res: Response) {
 	debug(logNow(), `GET ${ROUTES.QUERY_CHALLENGE_CONFIRM_RESULT_SELF}...`);
 

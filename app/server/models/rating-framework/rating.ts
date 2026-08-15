@@ -24,19 +24,19 @@ Contact:
 */
 
 import { z } from 'zod';
-import { InternalError } from '@server/models/error-types/internal-error';
+import { InternalError } from '@app/server/models/error-types/internal-error';
 
-/// Generic class for a rating.
+// Generic class for a rating.
 export class Rating {
-	/// Actual rating
+	// Actual rating
 	public rating: number;
-	/// Number of games
+	// Number of games
 	public numGames: number;
-	/// Number of won games
+	// Number of won games
 	public won: number;
-	/// Number of drawn games
+	// Number of drawn games
 	public drawn: number;
-	/// Number of lost games
+	// Number of lost games
 	public lost: number;
 
 	/**

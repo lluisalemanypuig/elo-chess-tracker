@@ -31,7 +31,7 @@ export const ELO_RATING_KEYS = ['rating', 'numGames', 'won', 'drawn', 'lost', 'K
  * @brief Simple class to encode a rating.
  */
 export class EloRating extends Rating {
-	/// Constant
+	// Constant
 	public K: number;
 	// Ever surpassed 2400
 	public surpassed2400: boolean;
@@ -60,7 +60,7 @@ export class EloRating extends Rating {
 		this.surpassed2400 = surpassed2400;
 	}
 
-	/// Clones the object.
+	// Clones the object.
 	override clone(): EloRating {
 		return new EloRating(this.rating, this.numGames, this.won, this.drawn, this.lost, this.K, this.surpassed2400);
 	}

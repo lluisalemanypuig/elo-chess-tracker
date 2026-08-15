@@ -26,7 +26,7 @@ Contact:
 import { isDefined, isNotDefined } from '@common/utils/is-defined';
 import { User } from '@server/models/user';
 import { searchLinearByKey } from '@server/utils/searching';
-import { InternalError } from '@server/models/error-types/internal-error';
+import { InternalError } from '@app/server/models/error-types/internal-error';
 import { PlayerPrivateId, PlayerPublicId, toPlayerPublicId } from '@common/models/player-id';
 
 interface UserBundle {
@@ -41,7 +41,7 @@ interface UserBundle {
  * Stores things like users session ids.
  */
 export class UsersManager {
-	/// The only instance of this class
+	// The only instance of this class
 	private static instance: UsersManager;
 
 	constructor() {
@@ -56,9 +56,9 @@ export class UsersManager {
 		return UsersManager.instance;
 	}
 
-	/// The list of users in the database
+	// The list of users in the database
 	private users: User[] = [];
-	/// The list of random user IDS for every user.
+	// The list of random user IDS for every user.
 	private publicIds: PlayerPublicId[] = [];
 
 	all(): User[] {

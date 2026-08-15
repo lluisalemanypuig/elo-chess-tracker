@@ -25,7 +25,7 @@ Contact:
 
 import { z } from 'zod';
 import { EdgeMetadataSchema, EdgeMetadata } from '@server/models/graph/edge-metadata';
-import { InternalError } from '@server/models/error-types/internal-error';
+import { InternalError } from '@app/server/models/error-types/internal-error';
 import { PlayerPrivateId, PlayerPrivateIdSchema } from '@common/models/player-id';
 
 export const EdgeSchema = z
@@ -44,10 +44,10 @@ export const EdgeSchema = z
  * Each edge has some metadata associated to it.
  */
 export class Edge {
-	/// The id of B (the target of the edge).
+	// The id of B (the target of the edge).
 	public neighbor: PlayerPrivateId;
 
-	/// The metadata of this edge.
+	// The metadata of this edge.
 	public metadata: EdgeMetadata;
 
 	constructor(neigh: PlayerPrivateId, data: EdgeMetadata) {
@@ -55,7 +55,7 @@ export class Edge {
 		this.metadata = data;
 	}
 
-	/// Merge two edges
+	// Merge two edges
 	merge(other: Edge) {
 		if (this.neighbor !== other.neighbor) {
 			throw new InternalError(
@@ -68,7 +68,7 @@ export class Edge {
 		}
 	}
 
-	/// Is the metadata of this edge all zeroes?
+	// Is the metadata of this edge all zeroes?
 	isEmptyEdge(): boolean {
 		return this.metadata.numGamesDrawn === 0 && this.metadata.numGamesLost === 0 && this.metadata.numGamesWon === 0;
 	}

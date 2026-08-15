@@ -51,7 +51,7 @@ export class GameInfo {
  * the games (@ref gameInfo).
  */
 export class GamesManager {
-	/// The only instance of this class
+	// The only instance of this class
 	private static instance: GamesManager;
 
 	constructor() {
@@ -66,9 +66,9 @@ export class GamesManager {
 		return GamesManager.instance;
 	}
 
-	/// Number of games in the system
+	// Number of games in the system
 	private maxGameId: number = 0;
-	/// Map from game ID to game information
+	// Map from game ID to game information
 	private gameInfo: Map<GameId, GameInfo> = new Map();
 
 	clear() {
@@ -76,7 +76,7 @@ export class GamesManager {
 		this.gameInfo.clear();
 	}
 
-	/// Does a game exist?
+	// Does a game exist?
 	gameExists(gameId: GameId): boolean {
 		return this.gameInfo.has(gameId);
 	}
@@ -93,11 +93,11 @@ export class GamesManager {
 		const strId = numberToString(this.maxGameId, GAMEIDLENGTH);
 		return toGameId(strId);
 	}
-	/// Sets the maximum game ID
+	// Sets the maximum game ID
 	setMaxGameId(id: number) {
 		this.maxGameId = id;
 	}
-	/// Increase current maximum game ID
+	// Increase current maximum game ID
 	newGameId(): GameId {
 		this.maxGameId += 1;
 		const strId = numberToString(this.maxGameId, GAMEIDLENGTH);
@@ -115,12 +115,12 @@ export class GamesManager {
 		this.gameInfo.set(gameId, new GameInfo(when, timeId));
 	}
 
-	/// Returns the information associated to game @e gameId.
+	// Returns the information associated to game @e gameId.
 	getGameInfo(gameId: GameId): GameInfo | undefined {
 		return this.gameInfo.get(gameId);
 	}
 
-	/// Delete a game ID from the manager
+	// Delete a game ID from the manager
 	deleteGameId(id: GameId) {
 		this.gameInfo.delete(id);
 	}

@@ -28,7 +28,7 @@ import { EdgeMetadata } from '@server/models/graph/edge-metadata';
 import { EdgeSchema, Edge } from '@server/models/graph/edge';
 import { searchByKey, whereShouldBeInsertedByKey } from '@server/utils/searching';
 import { isDefined, isNotDefined } from '@common/utils/is-defined';
-import { InternalError } from '@server/models/error-types/internal-error';
+import { InternalError } from '@app/server/models/error-types/internal-error';
 import { PlayerPrivateId } from '@common/models/player-id';
 import { GameResult, oppositeResult } from '@common/models/game-result';
 
@@ -47,20 +47,20 @@ export type Neighborhood = Edge[];
  * @brief Graph abstraction for games between users.
  */
 export class Graph {
-	/// The set of edges from a user A to all other users B against whom
-	/// A played as White. That is, edges of the form (A, B) where A is the
-	/// white player, and B is the black player.
+	// The set of edges from a user A to all other users B against whom
+	// A played as White. That is, edges of the form (A, B) where A is the
+	// white player, and B is the black player.
 	private adjacencyList: Map<PlayerPrivateId, Neighborhood> = new Map();
-	/// The set of edges from a user A to all other users B against whom
-	/// A played as Black. That is, edges of the form (A, B) where A is the
-	/// white player, and B is the black player.
+	// The set of edges from a user A to all other users B against whom
+	// A played as Black. That is, edges of the form (A, B) where A is the
+	// white player, and B is the black player.
 	private inAdjacencyList: Map<PlayerPrivateId, Neighborhood> = new Map();
 
-	/// An iterator to the list of users who played as White.
+	// An iterator to the list of users who played as White.
 	getOutEntries(): MapIterator<PlayerPrivateId> {
 		return this.adjacencyList.keys();
 	}
-	/// An iterator to the list of users who played as Black.
+	// An iterator to the list of users who played as Black.
 	getInEntries(): MapIterator<PlayerPrivateId> {
 		return this.inAdjacencyList.keys();
 	}
@@ -268,7 +268,7 @@ export class Graph {
 		}
 		return uList.length;
 	}
-	/// Returns the list of opponents and the metadata of @e u.
+	// Returns the list of opponents and the metadata of @e u.
 	getOutgoingEdges(u: PlayerPrivateId): Neighborhood | undefined {
 		return this.adjacencyList.get(u);
 	}
@@ -286,12 +286,12 @@ export class Graph {
 		}
 		return (uList as Neighborhood).length;
 	}
-	/// Returns the list of opponents and the metadata of @e u.
+	// Returns the list of opponents and the metadata of @e u.
 	getIncomingEdges(u: PlayerPrivateId): Neighborhood | undefined {
 		return this.inAdjacencyList.get(u);
 	}
 
-	/// Returns the list of Black opponents of @e u.
+	// Returns the list of Black opponents of @e u.
 	getBlackOpponents(u: PlayerPrivateId): PlayerPrivateId[] {
 		const uList = this.adjacencyList.get(u);
 		if (isNotDefined(uList)) {
@@ -302,7 +302,7 @@ export class Graph {
 		});
 	}
 
-	/// Returns the list of White opponents of @e u.
+	// Returns the list of White opponents of @e u.
 	getWhiteOpponents(u: PlayerPrivateId): PlayerPrivateId[] {
 		const uList = this.inAdjacencyList.get(u);
 		if (isNotDefined(uList)) {

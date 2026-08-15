@@ -34,7 +34,7 @@ import { searchLinearByKey } from '@server/utils/searching';
  * the webpage.
  */
 export class SessionIDManager {
-	/// The only instance of this class
+	// The only instance of this class
 	private static instance: SessionIDManager;
 
 	constructor() {
@@ -49,7 +49,7 @@ export class SessionIDManager {
 		return SessionIDManager.instance;
 	}
 
-	/// Session ids of the server.
+	// Session ids of the server.
 	private sessionIds: SessionId[] = [];
 
 	clear() {

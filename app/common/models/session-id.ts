@@ -34,7 +34,6 @@ export const SessionIdSchema = z
 	.strict()
 	.readonly();
 
-// A structure that encodes a session
 export type SessionId = z.infer<typeof SessionIdSchema>;
 
 export const SessionIdTokenFieldName = 'token';

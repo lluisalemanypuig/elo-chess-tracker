@@ -41,11 +41,11 @@ export const EdgeMetadataSchema = z
  * in which A plays as White against B who plays as Black.
  */
 export class EdgeMetadata {
-	/// The number of games in which A beats B.
+	// The number of games in which A beats B.
 	public numGamesWon: number = 0;
-	/// The number of games in which A draws against B.
+	// The number of games in which A draws against B.
 	public numGamesDrawn: number = 0;
-	/// The number of games in which B beats A.
+	// The number of games in which B beats A.
 	public numGamesLost: number = 0;
 
 	constructor(numGamesWon: number, numGamesDrawn: number, numGamesLost: number) {

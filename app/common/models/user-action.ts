@@ -100,7 +100,7 @@ export const ALL_ACTION_IDS = [
 	'SEE_GRAPHS'
 ] as const;
 
-/// All actions as type
+// All actions as type
 export type UserActionId = (typeof ALL_ACTION_IDS)[number];
 
 export const UserActionIDSchema = z.enum(ALL_ACTION_IDS);

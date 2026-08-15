@@ -25,6 +25,8 @@ Contact:
 
 import { z } from 'zod';
 
+// Player public ID
+
 declare const PlayerPublicIdBrand: unique symbol;
 export type PlayerPublicIdLocal = number & {
 	readonly [PlayerPublicIdBrand]: 'PlayerPublicId';

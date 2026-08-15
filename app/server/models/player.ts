@@ -27,7 +27,7 @@ import { copyarray } from '@server/utils/misc';
 import { searchLinearByKey } from '@server/utils/searching';
 import { TimeControlId } from '@common/models/time-control';
 import { TimeControlRating } from '@server/models/time-control-rating';
-import { InternalError } from '@server/models/error-types/internal-error';
+import { InternalError } from '@app/server/models/error-types/internal-error';
 import { PlayerPrivateId } from '@common/models/player-id';
 import { Rating } from '@server/models/rating-framework/rating';
 
@@ -37,10 +37,10 @@ export const PlayerKeys = ['username', 'ratings'];
  * @brief Simple class to encode a Player
  */
 export class Player {
-	/// The user name of the the player
+	// The user name of the the player
 	public readonly username: PlayerPrivateId;
 
-	/// Rating info of the player per time control id
+	// Rating info of the player per time control id
 	public ratings: TimeControlRating[];
 
 	/**
@@ -53,7 +53,7 @@ export class Player {
 		this.ratings = ratings;
 	}
 
-	/// Returns whether the rating under the given time control id exists
+	// Returns whether the rating under the given time control id exists
 	hasRating(id: TimeControlId): boolean {
 		return this.indexTimeControlId(id) !== -1;
 	}
@@ -68,7 +68,7 @@ export class Player {
 		this.ratings.push(new TimeControlRating(id, rating));
 	}
 
-	/// Returns the rating of the player under the given time control id
+	// Returns the rating of the player under the given time control id
 	getRating(id: TimeControlId): Rating {
 		const index = this.indexTimeControlId(id);
 		if (index === -1) {
@@ -77,7 +77,7 @@ export class Player {
 		return this.ratings[index].rating;
 	}
 
-	/// Sets the rating of the player
+	// Sets the rating of the player
 	setRating(id: TimeControlId, rating: Rating) {
 		const index = this.indexTimeControlId(id);
 		if (index === -1) {
@@ -86,7 +86,7 @@ export class Player {
 		this.ratings[index].rating = rating;
 	}
 
-	/// Creates a copy of this player.
+	// Creates a copy of this player.
 	clone(): Player {
 		return new Player(
 			this.username,

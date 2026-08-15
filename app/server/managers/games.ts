@@ -44,7 +44,7 @@ import { TimeControlRating } from '@server/models/time-control-rating';
 import { isDefined, isNotDefined } from '@common/utils/is-defined';
 import { canUserCreateGame, canUserDeleteGame, canUserEditGame } from '@server/managers/user-relationships';
 import { PublicError } from '@server/models/error-types/public-error';
-import { InternalError } from '@server/models/error-types/internal-error';
+import { InternalError } from '@app/server/models/error-types/internal-error';
 import { PlayerPrivateId } from '@common/models/player-id';
 import { Game } from '@server/models/game';
 import { GameResult } from '@common/models/game-result';

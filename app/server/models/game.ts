@@ -56,25 +56,25 @@ export const GameKeys = [
  * the game is played, not after.
  */
 export class Game {
-	/// Identifier of the game
+	// Identifier of the game
 	public readonly id: GameId;
-	/// Name of the game
+	// Name of the game
 	public title: string;
-	/// White player username
+	// White player username
 	public readonly white: PlayerPrivateId;
-	/// White in the state before the game
+	// White in the state before the game
 	public whiteRating: Rating;
-	/// White player username
+	// White player username
 	public readonly black: PlayerPrivateId;
-	/// White in the state before the game
+	// White in the state before the game
 	public blackRating: Rating;
-	/// Result of the game
+	// Result of the game
 	public result: GameResult;
-	/// Time control id
+	// Time control id
 	public timeControlId: TimeControlId;
-	/// Time control name (Classical (90 + 30), Blitz (5 + 3), ...)
+	// Time control name (Classical (90 + 30), Blitz (5 + 3), ...)
 	public timeControlName: TimeControlName;
-	/// Date when the game took place
+	// Date when the game took place
 	public when: DateFull;
 
 	/**
@@ -113,7 +113,7 @@ export class Game {
 		this.when = when;
 	}
 
-	/// Is user 'username' in this game?
+	// Is user 'username' in this game?
 	isUserInvolved(username: PlayerPrivateId): boolean {
 		return this.white === username || this.black === username;
 	}

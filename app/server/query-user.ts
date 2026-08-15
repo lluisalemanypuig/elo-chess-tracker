@@ -46,7 +46,7 @@ import {
 	UserWithoutGames
 } from '@common/api/schemas/query-user';
 
-/// Returns the list of user full names and usernames sorted by name
+// Returns the list of user full names and usernames sorted by name
 export async function getQueryUserList(req: Request, res: Response) {
 	debug(logNow(), `GET ${ROUTES.QUERY_USER_LIST}...`);
 

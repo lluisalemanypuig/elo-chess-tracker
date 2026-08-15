@@ -41,7 +41,7 @@ import { ROUTES } from '@common/api/routes';
 import { inputSchemaOf } from '@common/api/schemas-endpoints';
 import { safeParseRequestBody, safeParseRequestCookies } from '@server/utils/schemas';
 import { EdgeInfo, NodeInfo, QueryGraphOutput } from '@common/api/schemas/query-graphs';
-import { InternalError } from '@server/models/error-types/internal-error';
+import { InternalError } from '@app/server/models/error-types/internal-error';
 import { PlayerPrivateId } from '@common/models/player-id';
 
 function retrieveGraphUser(username: PlayerPrivateId, timeControlId: TimeControlId): QueryGraphOutput {

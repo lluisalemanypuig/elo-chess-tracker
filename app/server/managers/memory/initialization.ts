@@ -55,7 +55,7 @@ import { UserPermissions } from '@server/models/configuration/permissions';
 import { clearServer } from '@server/managers/memory/clear';
 import { initializePermissions } from '@server/managers/user-role-action';
 import { writeUserToFile } from '@server/managers/users';
-import { InternalError } from '@server/models/error-types/internal-error';
+import { InternalError } from '@app/server/models/error-types/internal-error';
 import { RatingFrameworkType } from '@server/models/rating-framework/rating-framework-type';
 import { TimeControl, TimeControlArray } from '@common/models/time-control';
 import { toGameId } from '@common/models/game-id';
@@ -327,7 +327,7 @@ export function serverInitFromData(baseDirectory: string, configuration: Configu
 	initGraphs();
 }
 
-/// Initializes the server memory
+// Initializes the server memory
 export function serverInitFromConfigurationFile(configurationFile: string) {
 	debug(logNow(), `Reading configuration file '${configurationFile}'`);
 

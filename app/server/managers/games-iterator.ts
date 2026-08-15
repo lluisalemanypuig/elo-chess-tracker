@@ -92,11 +92,11 @@ export class GamesIterator {
 	getCurrentRecordIndex(): number {
 		return this.recordIdx;
 	}
-	/// Returns a reference to the whole game set in current record.
+	// Returns a reference to the whole game set in current record.
 	getCurrentGameArray(): Game[] {
 		return this.gameSet;
 	}
-	/// Returns a reference to the current game in the iteration.
+	// Returns a reference to the current game in the iteration.
 	getCurrentGame(): Game {
 		return this.gameSet[this.gameIdx];
 	}
@@ -168,13 +168,13 @@ export class GamesIterator {
 		++this.gameIdx;
 	}
 
-	/// Moves the iterator to the specific location of the iteration
-	/// over the set of games.
+	// Moves the iterator to the specific location of the iteration
+	// over the set of games.
 	setToGame(idx: number) {
 		this.gameIdx = idx;
 	}
 
-	/// Locate the record named 'record'
+	// Locate the record named 'record'
 	locateRecord(record: DateMajor): boolean {
 		const [idx, exists] = whereShouldBeInsertedByKey(this.recordFilesList, (s: DateMajor): number => {
 			return record.localeCompare(s);

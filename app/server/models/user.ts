@@ -34,7 +34,7 @@ import { TimeControlId, TimeControlIdSchema } from '@common/models/time-control'
 import { copyarray } from '@server/utils/misc';
 import { searchByKey, searchLinearByKey, whereShouldBeInsertedByKey } from '@server/utils/searching';
 import { DateMajor, DateMajorSchema } from '@common/utils/time';
-import { InternalError } from '@server/models/error-types/internal-error';
+import { InternalError } from '@app/server/models/error-types/internal-error';
 import { toUserGivenName, UserGivenName } from '@common/models/user-given-name';
 import { PlayerPrivateId } from '@common/models/player-id';
 
@@ -73,13 +73,13 @@ export const UserKeys = ['username', 'firstName', 'lastName', 'password', 'roles
  * strings to store actual name and surnames, and the password of the player.
  */
 export class User extends Player {
-	/// First name
+	// First name
 	public firstName: UserGivenName;
-	/// Last name
+	// Last name
 	public lastName: UserGivenName;
-	/// Password
+	// Password
 	public password: Password;
-	/// Roles of this user
+	// Roles of this user
 	public roles: UserRole[];
 	/**
 	 * @brief The set of games this user has played
@@ -116,7 +116,7 @@ export class User extends Player {
 		this.roles = roles;
 	}
 
-	/// Returns the full name of this user
+	// Returns the full name of this user
 	getFullName(): UserGivenName {
 		return toUserGivenName(`${this.firstName} ${this.lastName}`);
 	}
@@ -184,7 +184,7 @@ export class User extends Player {
 		}
 	}
 
-	/// Returns all actions this user
+	// Returns all actions this user
 	getActions(): UserAction[] {
 		const role_to_action = UserRoleToUserAction.getInstance();
 		const roles = this.roles;
@@ -203,7 +203,7 @@ export class User extends Player {
 		return actions;
 	}
 
-	/// Can a user perform a certain action?
+	// Can a user perform a certain action?
 	canDo(a: UserAction): boolean {
 		const user_role_to_action = UserRoleToUserAction.getInstance();
 
@@ -214,7 +214,7 @@ export class User extends Player {
 		}
 		return false;
 	}
-	/// Does a user have a certain role?
+	// Does a user have a certain role?
 	is(r: UserRole): boolean {
 		return this.roles.includes(r);
 	}
@@ -235,7 +235,7 @@ export class User extends Player {
 		this.ratings = p.ratings;
 	}
 
-	/// Creates a copy of this user
+	// Creates a copy of this user
 	override clone(): User {
 		return new User(
 			this.username,
