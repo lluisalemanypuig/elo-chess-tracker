@@ -49,6 +49,7 @@ import { isNotDefined } from '@common/utils/is-defined';
 import { ROUTES } from '@common/api/routes';
 import { inputSchemaOf } from '@common/api/schemas-endpoints';
 import { safeParseRequestBody, safeParseRequestCookies } from '@server/utils/schemas';
+import { handleError } from '@server/utils/error-handling';
 
 export async function getPageChallenge(req: Request, res: Response) {
 	debug(logNow(), `GET ${ROUTES.PAGE_CHALLENGE}...`);
@@ -131,7 +132,7 @@ export async function postChallengeSend(req: Request, res: Response) {
 	try {
 		challengeSendNew(title, sender, receiver.user, timeControlId, timeControlName, logNow());
 	} catch (e: unknown) {
-		res.status(403).send((e as Error).message);
+		handleError(e as Error, res);
 		return;
 	}
 
@@ -172,7 +173,7 @@ export async function postChallengeAccept(req: Request, res: Response) {
 	try {
 		challengeAccept(c, { by: user.username, when: logNow() });
 	} catch (e: unknown) {
-		res.status(403).send((e as Error).message);
+		handleError(e as Error, res);
 		return;
 	}
 
@@ -213,7 +214,7 @@ export async function postChallengeDecline(req: Request, res: Response) {
 	try {
 		challengeDecline(c, { by: user.username });
 	} catch (e: unknown) {
-		res.status(403).send((e as Error).message);
+		handleError(e as Error, res);
 		return;
 	}
 
@@ -280,7 +281,7 @@ export async function postChallengeSetResult(req: Request, res: Response) {
 			result
 		});
 	} catch (e: unknown) {
-		res.status(403).send((e as Error).message);
+		handleError(e as Error, res);
 		return;
 	}
 
@@ -317,7 +318,7 @@ export async function postChallengeAgree(req: Request, res: Response) {
 	try {
 		challengeAgreeResult(c, { by: user.username, when: logNow() });
 	} catch (e: unknown) {
-		res.status(403).send((e as Error).message);
+		handleError(e as Error, res);
 		return;
 	}
 
@@ -354,7 +355,7 @@ export async function postChallengeDisagree(req: Request, res: Response) {
 	try {
 		challengeDisagreeResult(c, { by: user.username });
 	} catch (e: unknown) {
-		res.status(403).send((e as Error).message);
+		handleError(e as Error, res);
 		return;
 	}
 

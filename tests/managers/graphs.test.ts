@@ -23,7 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { run_command } from '@tests/exec-utils';
+import { runCommand } from '@tests';
 
 import { EdgeMetadata } from '@common/models/graph/edge-metadata';
 import { graphModifyEdge, graphUpdate } from '@server/managers/graphs';
@@ -132,7 +132,7 @@ const C = toPlayerPrivateId('C');
 
 describe('Server setup', () => {
 	test('Load an empty server', async () => {
-		await run_command('./tests/initialize-empty.sh');
+		await runCommand('./tests/initialize-empty.sh');
 		expect(() => serverInitFromData('tests/webpage', configuration)).not.toThrow();
 	});
 });
@@ -272,7 +272,7 @@ describe('Simple construction and query', () => {
 describe('Server reset', () => {
 	test('Clear and reload server', async () => {
 		clearServer();
-		await run_command('./tests/initialize-empty.sh');
+		await runCommand('./tests/initialize-empty.sh');
 		serverInitFromData('tests/webpage', configuration);
 	});
 });

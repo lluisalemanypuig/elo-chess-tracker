@@ -23,16 +23,9 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { exec } from 'child_process';
-
-export function runCommand(command: string): Promise<void> {
-	return new Promise((resolve, reject) => {
-		exec(command, (error, _stdout, _stderr) => {
-			if (error) {
-				reject(error);
-				return;
-			}
-			resolve();
-		});
-	});
+export class PublicError extends Error {
+	constructor(msg: string) {
+		super(msg);
+		Object.setPrototypeOf(this, PublicError.prototype);
+	}
 }

@@ -23,6 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
+import { InternalError } from '@server/utils/error-types/internal-error';
 import { z } from 'zod';
 
 /// Generic class for a rating.
@@ -54,7 +55,7 @@ export class Rating {
 		this.lost = lost;
 
 		if (this.numGames !== this.won + this.drawn + this.lost) {
-			throw new Error(
+			throw new InternalError(
 				`Consistency check: total number of games is not equal to the sum of won, drawn and lost. Total ${this.numGames}; Won: ${this.won}; Drawn: ${this.drawn}, Lost: ${this.lost}`
 			);
 		}

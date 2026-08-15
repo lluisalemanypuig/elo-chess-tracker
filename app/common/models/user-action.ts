@@ -25,6 +25,7 @@ Contact:
 
 import { z } from 'zod';
 import { UserRole } from '@common/models/user-role';
+import { InternalError } from '@server/utils/error-types/internal-error';
 
 /// All actions that can be performed in this web
 export const ALL_ACTIONS = [
@@ -124,7 +125,7 @@ export function getGenericRoleActionName(id: UserActionID): UserAction {
 			return 'SEE_GRAPHS';
 	}
 
-	throw new Error(`Wrong action identifier ${id}`);
+	throw new InternalError(`Wrong action identifier ${id}`);
 }
 
 /**
@@ -149,7 +150,7 @@ export function getRoleActionName(id: UserActionID, r: UserRole): UserAction {
 				case 'STUDENT':
 					return 'CREATE_GAMES_STUDENT';
 			}
-			throw new Error(`Unhandled user role ${r} in ${id}`);
+			throw new InternalError(`Unhandled user role ${r} in ${id}`);
 		case 'EDIT_GAMES':
 			switch (r) {
 				case 'ADMIN':
@@ -161,7 +162,7 @@ export function getRoleActionName(id: UserActionID, r: UserRole): UserAction {
 				case 'STUDENT':
 					return 'EDIT_GAMES_STUDENT';
 			}
-			throw new Error(`Unhandled user role ${r} in ${id}`);
+			throw new InternalError(`Unhandled user role ${r} in ${id}`);
 		case 'DELETE_GAMES':
 			switch (r) {
 				case 'ADMIN':
@@ -173,7 +174,7 @@ export function getRoleActionName(id: UserActionID, r: UserRole): UserAction {
 				case 'STUDENT':
 					return 'DELETE_GAMES_STUDENT';
 			}
-			throw new Error(`Unhandled user role ${r} in ${id}`);
+			throw new InternalError(`Unhandled user role ${r} in ${id}`);
 		case 'SEE_GAMES':
 			switch (r) {
 				case 'ADMIN':
@@ -185,7 +186,7 @@ export function getRoleActionName(id: UserActionID, r: UserRole): UserAction {
 				case 'STUDENT':
 					return 'SEE_GAMES_STUDENT';
 			}
-			throw new Error(`Unhandled user role ${r} in ${id}`);
+			throw new InternalError(`Unhandled user role ${r} in ${id}`);
 		case 'EDIT_USERS':
 			switch (r) {
 				case 'ADMIN':
@@ -197,7 +198,7 @@ export function getRoleActionName(id: UserActionID, r: UserRole): UserAction {
 				case 'STUDENT':
 					return 'EDIT_USER_STUDENT';
 			}
-			throw new Error(`Unhandled user role ${r} in ${id}`);
+			throw new InternalError(`Unhandled user role ${r} in ${id}`);
 		case 'ASSIGN_ROLE_USERS':
 			switch (r) {
 				case 'ADMIN':
@@ -209,7 +210,7 @@ export function getRoleActionName(id: UserActionID, r: UserRole): UserAction {
 				case 'STUDENT':
 					return 'ASSIGN_ROLE_STUDENT';
 			}
-			throw new Error(`Unhandled user role ${r} in ${id}`);
+			throw new InternalError(`Unhandled user role ${r} in ${id}`);
 		case 'CHALLENGE_USERS':
 			switch (r) {
 				case 'ADMIN':
@@ -221,7 +222,7 @@ export function getRoleActionName(id: UserActionID, r: UserRole): UserAction {
 				case 'STUDENT':
 					return 'CHALLENGE_USER_STUDENT';
 			}
-			throw new Error(`Unhandled user role ${r} in ${id}`);
+			throw new InternalError(`Unhandled user role ${r} in ${id}`);
 		case 'SEE_GRAPHS':
 			switch (r) {
 				case 'ADMIN':
@@ -233,8 +234,8 @@ export function getRoleActionName(id: UserActionID, r: UserRole): UserAction {
 				case 'STUDENT':
 					return 'SEE_GRAPHS_STUDENT';
 			}
-			throw new Error(`Unhandled user role ${r} in ${id}`);
+			throw new InternalError(`Unhandled user role ${r} in ${id}`);
 	}
 
-	throw new Error(`Wrong action identifier ${id}`);
+	throw new InternalError(`Wrong action identifier ${id}`);
 }

@@ -34,6 +34,7 @@ import { TimeControlId, TimeControlIdSchema } from '@common/models/time-control'
 import { copyarray } from '@server/utils/misc';
 import { searchByKey, searchLinearByKey, whereShouldBeInsertedByKey } from '@server/utils/searching';
 import { DateMajor, DateMajorSchema } from '@common/utils/time';
+import { InternalError } from '@server/utils/error-types/internal-error';
 
 export const GameNumberSchema = z
 	.object({
@@ -141,7 +142,7 @@ export class User extends Player {
 			return v.timeControl === id;
 		});
 		if (idx === -1) {
-			throw new Error(`Rating with id '${id}' does not exist!`);
+			throw new InternalError(`Rating with id '${id}' does not exist!`);
 		}
 		return this.games[idx].records;
 	}
@@ -158,7 +159,7 @@ export class User extends Player {
 			return p.timeControl === id;
 		});
 		if (idx === -1) {
-			throw new Error(`User does not have time control id '${id}'`);
+			throw new InternalError(`User does not have time control id '${id}'`);
 		}
 
 		const [index, exists] = whereShouldBeInsertedByKey(this.games[idx].records, (s: GameNumber): number => {
@@ -176,14 +177,14 @@ export class User extends Player {
 			return p.timeControl === id;
 		});
 		if (idx === -1) {
-			throw new Error(`User does not have time control id '${id}'`);
+			throw new InternalError(`User does not have time control id '${id}'`);
 		}
 
 		const index = searchByKey(this.games[idx].records, (s: GameNumber): number => {
 			return gameRecord.localeCompare(s.record);
 		});
 		if (index === -1) {
-			throw new Error(
+			throw new InternalError(
 				`User '${this.username}' does not have game record '${gameRecord}' in time control '${id}': '${this.games[idx].records}'.`
 			);
 		}
@@ -236,7 +237,9 @@ export class User extends Player {
 	 */
 	copyPlayerData(p: Player) {
 		if (this.username !== p.username) {
-			throw new Error(`Trying to dump data of user ${p.username} into a different player ${this.username}`);
+			throw new InternalError(
+				`Trying to dump data of user ${p.username} into a different player ${this.username}`
+			);
 		}
 
 		// copy all ratings

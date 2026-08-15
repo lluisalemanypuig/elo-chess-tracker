@@ -36,6 +36,7 @@ import { getExecutionDirectory } from '@server/managers/environment-manager';
 import { isNotDefined } from '@common/utils/is-defined';
 import { ROUTES } from '@common/api/routes';
 import { safeParseRequestCookies } from '@server/utils/schemas';
+import { handleError } from '@server/utils/error-handling';
 
 export async function getPageGraphOwn(req: Request, res: Response) {
 	debug(logNow(), `GET ${ROUTES.PAGE_GRAPH_OWN}...`);
@@ -107,7 +108,7 @@ export async function postRecalculateGraphs(req: Request, res: Response) {
 	try {
 		recalculateAllGraphs(user);
 	} catch (e) {
-		res.status(403).send((e as Error).message);
+		handleError(e as Error, res);
 		return;
 	}
 

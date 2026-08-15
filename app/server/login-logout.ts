@@ -70,7 +70,7 @@ export async function postUserLogin(req: Request, res: Response) {
 	// correct password
 	if (!isPasswordCorrect) {
 		debug(logNow(), `    Password for '${username}' is incorrect`);
-		res.status(404).send('Incorrect user or password.');
+		res.status(404).send('Incorrect username or password.');
 		return;
 	}
 

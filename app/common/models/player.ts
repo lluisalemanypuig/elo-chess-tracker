@@ -29,6 +29,7 @@ import { copyarray } from '@server/utils/misc';
 import { searchLinearByKey } from '@server/utils/searching';
 import { TimeControlId } from '@common/models/time-control';
 import { TimeControlRating } from '@common/models/time-control-rating';
+import { InternalError } from '@server/utils/error-types/internal-error';
 
 export const PlayerKeys = ['username', 'ratings'];
 
@@ -97,7 +98,7 @@ export class Player {
 	getRating(id: TimeControlId): Rating {
 		const index = this.indexTimeControlId(id);
 		if (index === -1) {
-			throw new Error(`Rating with id '${id}' does not exist!`);
+			throw new InternalError(`Rating with id '${id}' does not exist!`);
 		}
 		return this.ratings[index].rating;
 	}
@@ -106,7 +107,7 @@ export class Player {
 	setRating(id: TimeControlId, rating: Rating) {
 		const index = this.indexTimeControlId(id);
 		if (index === -1) {
-			throw new Error(`Rating with id '${id}' does not exist!`);
+			throw new InternalError(`Rating with id '${id}' does not exist!`);
 		}
 		this.ratings[index].rating = rating;
 	}

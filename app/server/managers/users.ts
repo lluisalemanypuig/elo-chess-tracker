@@ -41,9 +41,10 @@ import { UserThin } from '@common/models/user-thin';
 import { isNotDefined } from '@common/utils/is-defined';
 import { TimeControlId } from '@common/models/time-control';
 import { canUserEdit } from '@server/managers/user-relationships';
-import { getRoleActionName } from '@app/common/models/user-action';
+import { getRoleActionName } from '@common/models/user-action';
 import { sessionUserDeleteAll } from '@server/managers/session';
 import { SessionId } from '@common/models/session-id';
+import { PublicError } from '@server/utils/error-types/public-error';
 
 export function writeUserToFile(filename: string, u: User) {
 	fs.writeFileSync(filename, JSON.stringify(u, null, 4));
@@ -66,7 +67,7 @@ export function userEdit(editor: User, edited: User, { firstName, lastName, role
 
 	if (!canUserEdit(editor, edited)) {
 		debug(logNow(), `User '${editor.username}' cannot modify user '${edited.username}'`);
-		throw new Error('You do not have enough permissions to edit this user.');
+		throw new PublicError('You do not have enough permissions to edit this user.');
 	}
 
 	debug(logNow(), `    First name: '${firstName}'`);
@@ -76,7 +77,7 @@ export function userEdit(editor: User, edited: User, { firstName, lastName, role
 	for (const role of roles) {
 		const action = getRoleActionName('ASSIGN_ROLE_USERS', role);
 		if (!editor.canDo(action)) {
-			throw new Error(`You do not have enough permissions to assign role '${role}'.`);
+			throw new PublicError(`You do not have enough permissions to assign role '${role}'.`);
 		}
 	}
 
@@ -100,22 +101,22 @@ export function userAddNew(
 ): User {
 	if (!registerer.canDo('CREATE_USER')) {
 		debug(logNow(), `User '${registerer.username}' cannot create users.`);
-		throw new Error('You cannot create users.');
+		throw new PublicError('You cannot create users.');
 	}
 	if (!registerer.canDo('ASSIGN_ROLE')) {
 		debug(logNow(), `User '${registerer.username}' cannot assign roles to users.`);
-		throw new Error(`You cannot assign roles and thus cannot create users.`);
+		throw new PublicError(`You cannot assign roles and thus cannot create users.`);
 	}
 	for (const r of roles) {
 		const action = getRoleActionName('ASSIGN_ROLE_USERS', r);
 		if (!registerer.canDo(action)) {
-			throw new Error(`You cannot assign role ${r} to users.`);
+			throw new PublicError(`You cannot assign role ${r} to users.`);
 		}
 	}
 
 	const manager = UsersManager.getInstance();
 	if (manager.exists(username)) {
-		throw new Error(`This user already exists`);
+		throw new PublicError(`This user already exists`);
 	}
 
 	const ratingSystem = RatingSystemManager.getInstance();
@@ -171,7 +172,7 @@ export function userUpdateFromPlayerData(players: Player[]) {
 
 		const u = manager.getAllUserDataByPrivateId(username);
 		if (isNotDefined(u)) {
-			throw new Error(`Username is not correct`);
+			throw new PublicError(`Username is not correct`);
 		}
 
 		const ratings_player = player.ratings;
@@ -206,7 +207,7 @@ export function userSelfChangePassword(user: User, { session, oldPassword, newPa
 	// is the password correct?
 	if (!isPasswordCorrect) {
 		debug(logNow(), `    Password for '${user.username}' is incorrect`);
-		throw new Error('Old password is not correct.');
+		throw new PublicError('Old password is not correct.');
 		return;
 	}
 

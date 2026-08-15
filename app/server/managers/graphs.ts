@@ -38,12 +38,13 @@ import { RatingSystemManager } from '@server/managers/rating-system-manager';
 import { PlayerPrivateId } from '@common/models/player';
 import { User } from '@common/models/user';
 import { logNow } from '@common/utils/time';
+import { PublicError } from '@server/utils/error-types/public-error';
 
 export function graphUpdate(w: PlayerPrivateId, b: PlayerPrivateId, result: GameResult, id: TimeControlId) {
 	let manager = GraphsManager.getInstance();
 	let g = manager.getGraph(id);
 	if (isNotDefined(g)) {
-		throw new Error(`Graph of time control id '${id}' does not exist.`);
+		throw new PublicError(`Graph of time control id '${id}' does not exist.`);
 	}
 	g.addEdge(w, b, result);
 
@@ -61,7 +62,7 @@ export function graphModifyEdge(
 	let manager = GraphsManager.getInstance();
 	let g = manager.getGraph(id);
 	if (isNotDefined(g)) {
-		throw new Error(`Graph of time control id '${id}' does not exist.`);
+		throw new PublicError(`Graph of time control id '${id}' does not exist.`);
 	}
 	g.changeGameResult(w, b, oldRes, newRes);
 
@@ -73,7 +74,7 @@ export function graphDeleteEdge(w: PlayerPrivateId, b: PlayerPrivateId, result: 
 	let manager = GraphsManager.getInstance();
 	let g = manager.getGraph(id);
 	if (isNotDefined(g)) {
-		throw new Error(`Graph of time control id '${id}' does not exist.`);
+		throw new PublicError(`Graph of time control id '${id}' does not exist.`);
 	}
 	g.deleteEdge(w, b, result);
 
@@ -84,7 +85,7 @@ export function graphDeleteEdge(w: PlayerPrivateId, b: PlayerPrivateId, result: 
 export function recalculateAllGraphs(user: User) {
 	if (!user.is('ADMIN')) {
 		debug(logNow(), `User '${user.username}' cannot recalculate graphs.`);
-		throw new Error('You cannot recalculate the graphs.');
+		throw new PublicError('You cannot recalculate the graphs.');
 	}
 
 	let manager = GraphsManager.getInstance();

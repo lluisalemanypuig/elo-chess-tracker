@@ -23,6 +23,7 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
+import { TestError } from '@tests';
 import { UsersManager } from '@server/managers/users-manager';
 import { toUserGivenName, User } from '@common/models/user';
 import { toPlayerPrivateId } from '@common/models/player';
@@ -99,7 +100,7 @@ describe('Users Manager', () => {
 		const idx = users.getIndexByPrivateId(bU.username);
 		expect(idx).not.toBeNull();
 		if (isNotDefined(idx)) {
-			throw new Error(`Error in test`);
+			throw new TestError(`Error in test`);
 		}
 		users.replaceUser(dU, idx);
 

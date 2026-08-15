@@ -35,6 +35,7 @@ import { shuffle } from '@server/utils/shuffle-random';
 import { UsersManager } from '@server/managers/users-manager';
 import { isNotDefined } from '@common/utils/is-defined';
 import { PlayerPrivateId } from '@common/models/player';
+import { InternalError } from '@server/utils/error-types/internal-error';
 
 // The original string was
 // "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+-*/ª!·$%&/()=?¿¡'º|@#~€¬^{},;.:_";
@@ -73,7 +74,7 @@ export function sessionIdAdd(username: PlayerPrivateId) {
 	const u = UsersManager.getInstance().getAllUserDataByPrivateId(username);
 	if (isNotDefined(u)) {
 		debug(logNow(), `User '${username}' does not exist.`);
-		throw new Error(`User does not exist.`);
+		throw new InternalError(`Incorrect username ${username}.`);
 	}
 	const token = randomSessionToken(username);
 	const sessionId: SessionId = { token: token, publicId: u.publicId };

@@ -23,16 +23,23 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { exec } from 'child_process';
+import Debug from 'debug';
+const debug = Debug('ELO_CHESS_TRACKER:serverGraphs');
+import { Response } from 'express';
 
-export function runCommand(command: string): Promise<void> {
-	return new Promise((resolve, reject) => {
-		exec(command, (error, _stdout, _stderr) => {
-			if (error) {
-				reject(error);
-				return;
-			}
-			resolve();
-		});
-	});
+import { logNow } from '@common/utils/time';
+import { PublicError } from '@server/utils/error-types/public-error';
+import { InternalError } from '@server/utils/error-types/internal-error';
+
+export function handleError(e: Error, res: Response) {
+	if (e instanceof PublicError) {
+		debug(logNow(), `Sending public error to user.`);
+		const msg = (e as PublicError).message;
+		res.status(403).send(msg);
+	} else if (e instanceof InternalError) {
+		const msg = (e as InternalError).message;
+		debug(logNow(), `Internal server error.`);
+		debug(logNow(), `Message: '${msg}'.`);
+		res.status(403).send('Internal error. Contact your administrator.');
+	}
 }

@@ -29,13 +29,13 @@ import { isUserLoggedIn, sessionIdAdd, sessionIdDelete, sessionUserDeleteAll } f
 import { SessionIDManager } from '@server/managers/session-id-manager';
 import { userAddNew } from '@server/managers/users';
 import { SessionId } from '@common/models/session-id';
-import { run_command } from '@tests/exec-utils';
+import { runCommand, TestError } from '@tests';
 import { Configuration } from '@common/models/configuration/configuration';
 import { toPlayerPrivateId } from '@common/models/player';
 import { toUserGivenName } from '@common/models/user';
 import { toTimeControlId, toTimeControlName } from '@common/models/time-control';
-import { UsersManager } from '@app/server/managers/users-manager';
-import { isNotDefined } from '@app/common/utils/is-defined';
+import { UsersManager } from '@server/managers/users-manager';
+import { isNotDefined } from '@common/utils/is-defined';
 
 const Classical = toTimeControlId('Classical');
 const Classical90p30 = toTimeControlName('Classical (90 + 30)');
@@ -156,13 +156,13 @@ const f = toUserGivenName('f');
 
 describe('Session management via functions', () => {
 	test('Load an empty server', async () => {
-		await run_command('./tests/initialize-empty.sh');
+		await runCommand('./tests/initialize-empty.sh');
 		clearServer();
 		expect(() => serverInitFromData('tests/webpage', configuration)).not.toThrow();
 
 		const admin = UsersManager.getInstance().getAllUserDataByPrivateId(toPlayerPrivateId('admin.default'));
 		if (isNotDefined(admin)) {
-			throw new Error('admin default user could not be retrieved');
+			throw new TestError('admin default user could not be retrieved');
 		}
 
 		userAddNew(admin.user, { username: aa, firstName: A, lastName: a, password: 'pass_a', roles: ['ADMIN'] });

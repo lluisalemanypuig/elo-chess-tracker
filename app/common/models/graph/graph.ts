@@ -30,6 +30,7 @@ import { searchByKey, whereShouldBeInsertedByKey } from '@server/utils/searching
 import { GameResult, oppositeResult } from '@common/models/game';
 import { isDefined, isNotDefined } from '@common/utils/is-defined';
 import { PlayerPrivateId } from '@common/models/player';
+import { InternalError } from '@server/utils/error-types/internal-error';
 
 export const NeighborhoodSchema = z.array(EdgeSchema);
 
@@ -146,7 +147,7 @@ export class Graph {
 		// delete from w's outgoing edges list
 		let wOutList = this.adjacencyList.get(w);
 		if (isNotDefined(wOutList)) {
-			throw new Error(`Player '${w}' does not have any outgoing edge, and so no edge to '${b}'.`);
+			throw new InternalError(`Player '${w}' does not have any outgoing edge, and so no edge to '${b}'.`);
 		}
 		Graph.deleteFromList(w, b, result, wOutList);
 		if (wOutList.length === 0) {
@@ -156,7 +157,7 @@ export class Graph {
 		// delete from b's ingoing edges list
 		let bInList = this.inAdjacencyList.get(b);
 		if (isNotDefined(bInList)) {
-			throw new Error(`Player '${b}' does not have any ingoing edge, and so no edge from '${w}'.`);
+			throw new InternalError(`Player '${b}' does not have any ingoing edge, and so no edge from '${w}'.`);
 		}
 		Graph.deleteFromList(b, w, oppositeResult(result), bInList);
 		if (bInList.length === 0) {
@@ -212,7 +213,7 @@ export class Graph {
 			return v.localeCompare(e.neighbor);
 		});
 		if (bIdx === -1) {
-			throw new Error(`The edge from '${u}' to '${v}' does not exist.`);
+			throw new InternalError(`The edge from '${u}' to '${v}' does not exist.`);
 		}
 
 		if (oldRes === 'white_wins') {

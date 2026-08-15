@@ -26,6 +26,7 @@ Contact:
 import { z } from 'zod';
 import { EdgeMetadataSchema, EdgeMetadata } from '@common/models/graph/edge-metadata';
 import { PlayerPrivateId, PlayerPrivateIdSchema } from '@common/models/player';
+import { InternalError } from '@server/utils/error-types/internal-error';
 
 export const EdgeSchema = z
 	.object({
@@ -57,7 +58,7 @@ export class Edge {
 	/// Merge two edges
 	merge(other: Edge) {
 		if (this.neighbor !== other.neighbor) {
-			throw new Error(
+			throw new InternalError(
 				`The current edge points to '${this.neighbor}' but the new edge points to '${other.neighbor}'.`
 			);
 		}
