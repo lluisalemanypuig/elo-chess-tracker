@@ -92,15 +92,15 @@ export async function postUserCreate(req: Request, res: Response) {
 	}
 
 	const username = userParse.data.u;
-	const firstname = userParse.data.fn;
-	const lastname = userParse.data.ln;
+	const firstName = userParse.data.fn;
+	const lastName = userParse.data.ln;
 	const password = userParse.data.password;
 	const roles = userParse.data.r;
 
 	debug(logNow(), `User '${registerer.username}' is trying to create a new user:`);
 	debug(logNow(), `    Username: '${username}'`);
-	debug(logNow(), `    First name: '${firstname}'`);
-	debug(logNow(), `    Last name: '${lastname}'`);
+	debug(logNow(), `    First name: '${firstName}'`);
+	debug(logNow(), `    Last name: '${lastName}'`);
 	debug(logNow(), `    Roles: '${roles}'`);
 
 	for (const r of roles) {
@@ -111,7 +111,7 @@ export async function postUserCreate(req: Request, res: Response) {
 	}
 
 	try {
-		userAddNew(registerer, { username, firstname, lastname, password, roles });
+		userAddNew(registerer, { username, firstName, lastName, password, roles });
 	} catch (e) {
 		res.status(403).send((e as Error).message);
 		return;

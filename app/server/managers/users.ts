@@ -88,15 +88,15 @@ export function userEdit(editor: User, edited: User, { firstName, lastName, role
 
 interface UserAddNew {
 	username: PlayerPrivateId;
-	firstname: UserGivenName;
-	lastname: UserGivenName;
+	firstName: UserGivenName;
+	lastName: UserGivenName;
 	password: string;
 	roles: UserRole[];
 }
 
 export function userAddNew(
 	registerer: User,
-	{ username, firstname, lastname, password: pass, roles }: UserAddNew
+	{ username, firstName, lastName, password: pass, roles }: UserAddNew
 ): User {
 	if (!registerer.canDo('CREATE_USER')) {
 		debug(logNow(), `User '${registerer.username}' cannot create users.`);
@@ -131,8 +131,8 @@ export function userAddNew(
 
 	const user = new User(
 		username,
-		firstname,
-		lastname,
+		firstName,
+		lastName,
 		{ encrypted: password[0], iv: password[1] },
 		roles,
 		games,
