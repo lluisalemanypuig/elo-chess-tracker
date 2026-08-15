@@ -5,7 +5,7 @@
 	"scripts": {
 		"run": "bun run ./app/main.ts",
 		"debug": "DEBUG=ELO_CHESS_TRACKER:* bun run ./app/main.ts",
-		"test": "jest --runInBand",
+		"check": "bun test --path-ignore-patterns js-full/**",
 		"compile": "./build/compile-deep.sh"
 	},
 	"devDependencies": {
