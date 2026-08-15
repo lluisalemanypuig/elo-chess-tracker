@@ -36,7 +36,6 @@ import { ROUTES } from '@common/api/routes';
 import { inputSchemaOf } from '@common/api/schemas-endpoints';
 import { safeParseRequestBody, safeParseRequestCookies } from '@server/utils/schemas';
 import { userSelfChangePassword } from '@server/managers/users';
-import { PublicError } from '@server/utils/error-types/public-error';
 import { handleError } from '@server/utils/error-handling';
 
 export async function getPageUserPasswordChange(req: Request, res: Response) {
