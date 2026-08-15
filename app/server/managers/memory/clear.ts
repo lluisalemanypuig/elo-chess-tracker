@@ -39,7 +39,7 @@ import { UsersBehavior } from '@server/managers/users-behavior';
  *
  * That is, the RAM memory, not the disk memory.
  */
-export function clearServer(): void {
+export function clearServer() {
 	UsersManager.getInstance().clear();
 	UsersBehavior.getInstance().clear();
 	EnvironmentManager.getInstance().clear();

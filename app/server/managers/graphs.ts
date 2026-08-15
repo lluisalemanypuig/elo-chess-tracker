@@ -39,7 +39,7 @@ import { PlayerPrivateId } from '@common/models/player';
 import { User } from '@common/models/user';
 import { logNow } from '@common/utils/time';
 
-export function graphUpdate(w: PlayerPrivateId, b: PlayerPrivateId, result: GameResult, id: TimeControlId): void {
+export function graphUpdate(w: PlayerPrivateId, b: PlayerPrivateId, result: GameResult, id: TimeControlId) {
 	let manager = GraphsManager.getInstance();
 	let g = manager.getGraph(id);
 	if (isNotDefined(g)) {
@@ -57,7 +57,7 @@ export function graphModifyEdge(
 	oldRes: GameResult,
 	newRes: GameResult,
 	id: TimeControlId
-): void {
+) {
 	let manager = GraphsManager.getInstance();
 	let g = manager.getGraph(id);
 	if (isNotDefined(g)) {
@@ -69,7 +69,7 @@ export function graphModifyEdge(
 	graphToFile(graphsDir, [w], g);
 }
 
-export function graphDeleteEdge(w: PlayerPrivateId, b: PlayerPrivateId, result: GameResult, id: TimeControlId): void {
+export function graphDeleteEdge(w: PlayerPrivateId, b: PlayerPrivateId, result: GameResult, id: TimeControlId) {
 	let manager = GraphsManager.getInstance();
 	let g = manager.getGraph(id);
 	if (isNotDefined(g)) {

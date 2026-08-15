@@ -64,7 +64,7 @@ export class UsersManager {
 		return this.users;
 	}
 
-	clear(): void {
+	clear() {
 		this.users = [];
 		this.publicIds = [];
 	}
@@ -73,7 +73,7 @@ export class UsersManager {
 		return isDefined(this.getIndexByPrivateId(username));
 	}
 
-	addUser(u: User): void {
+	addUser(u: User) {
 		this.users.push(u);
 
 		// stupid and slow way of generating a unique random id
@@ -83,7 +83,7 @@ export class UsersManager {
 		}
 		this.publicIds.push(toPlayerPublicId(publicId));
 	}
-	replaceUser(u: User, idx: number): void {
+	replaceUser(u: User, idx: number) {
 		if (!(0 <= idx && idx < this.users.length)) {
 			throw new Error('Index out of bounds');
 		}

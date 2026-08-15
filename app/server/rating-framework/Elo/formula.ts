@@ -65,7 +65,7 @@ REGULATIONS IN THIS WAY
 
 */
 
-function updateConstantK(elo: EloRating): void {
+function updateConstantK(elo: EloRating) {
 	// the constant should not be changed and stay at 10.
 	if (elo.surpassed2400) {
 		return;

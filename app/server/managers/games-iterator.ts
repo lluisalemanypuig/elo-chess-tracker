@@ -56,7 +56,7 @@ export class GamesIterator {
 	private gameSet: Game[] = [];
 	private gameIdx: number = 0;
 
-	private loadCurrentRecord(): void {
+	private loadCurrentRecord() {
 		const filename = path.join(this.directory, this.recordFilesList[this.recordIdx]);
 		const array = gameArrayFromString(fs.readFileSync(filename, 'utf8'));
 		if (isNotDefined(array)) {
@@ -67,7 +67,7 @@ export class GamesIterator {
 		this.gameIdx = 0;
 	}
 
-	private invalidate(): void {
+	private invalidate() {
 		this.recordFilesList = [];
 		this.recordIdx = 0;
 		this.gameSet = [];
@@ -107,7 +107,7 @@ export class GamesIterator {
 		return this.gameIdx;
 	}
 
-	deleteCurrentGame(): void {
+	deleteCurrentGame() {
 		this.gameSet.splice(this.gameIdx, 1);
 	}
 
@@ -135,7 +135,7 @@ export class GamesIterator {
 	 * @brief Advances one record in the iteration.
 	 * @post Iterator to the game set is set to 0.
 	 */
-	nextRecord(): void {
+	nextRecord() {
 		++this.recordIdx;
 		this.gameIdx = 0;
 		if (this.recordIdx < this.recordFilesList.length) {
@@ -150,7 +150,7 @@ export class GamesIterator {
 	 * If the current record is consumed, the iteration continues to the next
 	 * record.
 	 */
-	nextGame(): void {
+	nextGame() {
 		++this.gameIdx;
 		if (this.gameIdx === this.gameSet.length) {
 			this.gameIdx = 0;
@@ -167,13 +167,13 @@ export class GamesIterator {
 	 *
 	 * The iteration stops at the current record.
 	 */
-	nextGameRecord(): void {
+	nextGameRecord() {
 		++this.gameIdx;
 	}
 
 	/// Moves the iterator to the specific location of the iteration
 	/// over the set of games.
-	setToGame(idx: number): void {
+	setToGame(idx: number) {
 		this.gameIdx = idx;
 	}
 

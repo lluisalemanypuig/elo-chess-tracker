@@ -52,11 +52,11 @@ export class SessionIDManager {
 	/// Session ids of the server.
 	private sessionIds: SessionId[] = [];
 
-	clear(): void {
+	clear() {
 		this.sessionIds = [];
 	}
 
-	addSessionId(id: SessionId): void {
+	addSessionId(id: SessionId) {
 		this.sessionIds.push(id);
 	}
 	numSessionIds(): number {
@@ -70,10 +70,10 @@ export class SessionIDManager {
 	hasSessionId(session: SessionId): boolean {
 		return this.indexSessionId(session) !== -1;
 	}
-	removeSessionId(idx: number): void {
+	removeSessionId(idx: number) {
 		this.sessionIds.splice(idx, 1);
 	}
-	removeUserSessions(publicId: PlayerPublicId): void {
+	removeUserSessions(publicId: PlayerPublicId) {
 		for (let i = this.sessionIds.length - 1; i >= 0; --i) {
 			if (this.sessionIds[i].publicId === publicId) {
 				this.removeSessionId(i);

@@ -64,7 +64,7 @@ export class Graph {
 		return this.inAdjacencyList.keys();
 	}
 
-	private static insertIntoList(_u: PlayerPrivateId, v: PlayerPrivateId, edge: Edge, nU: Neighborhood): void {
+	private static insertIntoList(_u: PlayerPrivateId, v: PlayerPrivateId, edge: Edge, nU: Neighborhood) {
 		const [edgeIdx, exists]: [number, boolean] = whereShouldBeInsertedByKey(nU, (e: Edge): number => {
 			return v.localeCompare(e.neighbor);
 		});
@@ -80,7 +80,7 @@ export class Graph {
 	 * @param b Black player
 	 * @param result Result of the player
 	 */
-	addEdge(w: PlayerPrivateId, b: PlayerPrivateId, result: GameResult): void {
+	addEdge(w: PlayerPrivateId, b: PlayerPrivateId, result: GameResult) {
 		// insert into w's outgoing edges list
 		let wOutList = this.adjacencyList.get(w);
 		if (isNotDefined(wOutList)) {
@@ -105,7 +105,7 @@ export class Graph {
 	 * @param b Black player
 	 * @param result Result of the player
 	 */
-	addEdgeRaw(w: PlayerPrivateId, b: PlayerPrivateId, wEdge: Edge): void {
+	addEdgeRaw(w: PlayerPrivateId, b: PlayerPrivateId, wEdge: Edge) {
 		// insert into w's outgoing edges list
 		let wOutList = this.adjacencyList.get(w);
 		if (isNotDefined(wOutList)) {
@@ -126,7 +126,7 @@ export class Graph {
 		Graph.insertIntoList(b, w, bEdge, bInList as Neighborhood);
 	}
 
-	private static deleteFromList(_u: PlayerPrivateId, v: PlayerPrivateId, result: GameResult, nU: Neighborhood): void {
+	private static deleteFromList(_u: PlayerPrivateId, v: PlayerPrivateId, result: GameResult, nU: Neighborhood) {
 		const index = searchByKey(nU, (e: Edge): number => v.localeCompare(e.neighbor));
 		nU[index].metadata.decrease(result);
 		if (nU[index].metadata.allZero()) {
@@ -142,7 +142,7 @@ export class Graph {
 	 * @param b Black player
 	 * @param result Result of the game.
 	 */
-	deleteEdge(w: PlayerPrivateId, b: PlayerPrivateId, result: GameResult): void {
+	deleteEdge(w: PlayerPrivateId, b: PlayerPrivateId, result: GameResult) {
 		// delete from w's outgoing edges list
 		let wOutList = this.adjacencyList.get(w);
 		if (isNotDefined(wOutList)) {
@@ -207,7 +207,7 @@ export class Graph {
 		oldRes: GameResult,
 		newRes: GameResult,
 		NU: Neighborhood
-	): void {
+	) {
 		const bIdx = searchByKey(NU, function (e: Edge): number {
 			return v.localeCompare(e.neighbor);
 		});
@@ -242,7 +242,7 @@ export class Graph {
 	 * @param newRes New result of the game.
 	 * @pre @e oldRes !== @e newResult.
 	 */
-	changeGameResult(w: PlayerPrivateId, b: PlayerPrivateId, oldRes: GameResult, newRes: GameResult): void {
+	changeGameResult(w: PlayerPrivateId, b: PlayerPrivateId, oldRes: GameResult, newRes: GameResult) {
 		const wList = this.adjacencyList.get(w);
 		if (isDefined(wList)) {
 			this.changeGameResultList(w, b, oldRes, newRes, wList);

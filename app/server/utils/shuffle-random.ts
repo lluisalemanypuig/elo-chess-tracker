@@ -33,7 +33,7 @@ Contact:
  * @param array Input array.
  * @post The input array is shuffled.
  */
-export function shuffle<T>(array: T[]): void {
+export function shuffle<T>(array: T[]) {
 	let curIdx = array.length;
 	let rndIdx = 0;
 

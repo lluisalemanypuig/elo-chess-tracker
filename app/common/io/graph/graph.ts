@@ -45,7 +45,7 @@ import { PlayerPrivateId, toPlayerPrivateId } from '@common/models/player';
  * @param username The actual filename.
  * @param edges The information to save.
  */
-export function neighborhoodToFile(dir: string, username: PlayerPrivateId, edges: Neighborhood): void {
+export function neighborhoodToFile(dir: string, username: PlayerPrivateId, edges: Neighborhood) {
 	const filename = path.join(dir, username);
 	fs.writeFileSync(filename, JSON.stringify(edges, null, 4));
 }
@@ -62,7 +62,7 @@ export function neighborhoodToFile(dir: string, username: PlayerPrivateId, edges
  * @param changes The users for which their portion graph is to be saved.
  * @param g The graph to be saved.
  */
-export function graphToFile(dir: string, changes: PlayerPrivateId[], g: Graph): void {
+export function graphToFile(dir: string, changes: PlayerPrivateId[], g: Graph) {
 	for (const username of changes) {
 		if (g.getOutDegree(username) > 0) {
 			const out = g.getOutgoingEdges(username);
@@ -86,7 +86,7 @@ export function graphToFile(dir: string, changes: PlayerPrivateId[], g: Graph): 
  * @param dir The directory where to save the graph.
  * @param g The graph to be saved.
  */
-export function graphFullToFile(dir: string, g: Graph): void {
+export function graphFullToFile(dir: string, g: Graph) {
 	for (const username of g.getOutEntries()) {
 		const out = g.getOutgoingEdges(username);
 		if (isNotDefined(out)) {

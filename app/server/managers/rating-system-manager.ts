@@ -99,14 +99,14 @@ export class RatingSystemManager {
 	/// All unique rating ids used in the server
 	private allUniqueTimeControls: TimeControlId[] = [];
 
-	setFunctions(formula: Function, newRating: Function, fromString: Function, fromJson: Function): void {
+	setFunctions(formula: Function, newRating: Function, fromString: Function, fromJson: Function) {
 		this.ratingFormulaFunc = formula;
 		this.newRatingFunc = newRating;
 		this.ratingFromStringFunc = fromString;
 		this.ratingFromJsonFunc = fromJson;
 	}
 
-	clearFunctions(): void {
+	clearFunctions() {
 		this.ratingFormulaFunc = () => {
 			throw new Error('Missing formula function for this rating system.');
 		};
@@ -120,16 +120,16 @@ export class RatingSystemManager {
 			throw new Error('Missing JSON object conversion function.');
 		};
 	}
-	clearTimeControls(): void {
+	clearTimeControls() {
 		this.allTimeControls = [];
 		this.allUniqueTimeControls = [];
 	}
-	clear(): void {
+	clear() {
 		this.clearFunctions();
 		this.clearTimeControls();
 	}
 
-	setTimeControls(allRatings: TimeControl[]): void {
+	setTimeControls(allRatings: TimeControl[]) {
 		this.allTimeControls = allRatings;
 
 		this.allUniqueTimeControls = [

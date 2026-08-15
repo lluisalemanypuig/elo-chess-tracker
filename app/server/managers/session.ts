@@ -82,7 +82,7 @@ export function sessionIdAdd(username: PlayerPrivateId) {
 }
 
 /// Deletes a session id.
-export function sessionIdDelete(session: SessionId): void {
+export function sessionIdDelete(session: SessionId) {
 	let mem = SessionIDManager.getInstance();
 
 	debug(logNow(), `Before deleting, '${mem.numSessionIds()}' sessions`);
@@ -98,7 +98,7 @@ export function sessionIdDelete(session: SessionId): void {
 }
 
 /// Deletes a session id.
-export function sessionUserDeleteAll(session: SessionId): void {
+export function sessionUserDeleteAll(session: SessionId) {
 	let mem = SessionIDManager.getInstance();
 
 	debug(logNow(), `Before deleting, '${mem.numSessionIds()}' sessions`);

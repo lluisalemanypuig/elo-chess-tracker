@@ -153,7 +153,7 @@ export class User extends Player {
 	 * @param id Time control id of the game.
 	 * @param gameRecord New game record string.
 	 */
-	addGame(id: TimeControlId, gameRecord: DateMajor): void {
+	addGame(id: TimeControlId, gameRecord: DateMajor) {
 		const idx = searchLinearByKey(this.games, (p: TimeControlGame): boolean => {
 			return p.timeControl === id;
 		});
@@ -171,7 +171,7 @@ export class User extends Player {
 		}
 	}
 
-	deleteGame(id: TimeControlId, gameRecord: DateMajor): void {
+	deleteGame(id: TimeControlId, gameRecord: DateMajor) {
 		const idx = searchLinearByKey(this.games, (p: TimeControlGame): boolean => {
 			return p.timeControl === id;
 		});
@@ -234,7 +234,7 @@ export class User extends Player {
 	 * @param p Input player.
 	 * @pre Usernames are equal
 	 */
-	copyPlayerData(p: Player): void {
+	copyPlayerData(p: Player) {
 		if (this.username !== p.username) {
 			throw new Error(`Trying to dump data of user ${p.username} into a different player ${this.username}`);
 		}

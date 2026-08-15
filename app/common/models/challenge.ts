@@ -157,7 +157,7 @@ export interface ChallengeSetResult {
 }
 
 // Set the result of a challenge. Checks integrity of input parameters.s
-export function setResult(c: Challenge, { by, when, white, black, result }: ChallengeSetResult): void {
+export function setResult(c: Challenge, { by, when, white, black, result }: ChallengeSetResult) {
 	c.resultSetBy = by;
 	c.whenResultSet = when;
 	c.white = white;
@@ -171,7 +171,7 @@ export interface ChallengeDisagreeResult {
 }
 
 // Unset the previous result
-export function disagreeResult(c: Challenge): void {
+export function disagreeResult(c: Challenge) {
 	c.resultSetBy = undefined;
 	c.whenResultSet = undefined;
 	c.white = undefined;

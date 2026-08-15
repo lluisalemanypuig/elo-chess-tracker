@@ -35,7 +35,7 @@ import { RatingFrameworkType } from '@common/models/rating-framework/rating-fram
  * @param name Name of the rating system.
  * @returns True if the name is valid; false if otherwise.
  */
-export function initializeRatingFunctions(name: RatingFrameworkType): void {
+export function initializeRatingFunctions(name: RatingFrameworkType) {
 	let ratingSystem = RatingSystemManager.getInstance();
 	if (name === 'Elo') {
 		ratingSystem.setFunctions(EloPlayerVsPlayer, newRatingElo, ratingFromStringElo, ratingFromJsonElo);
@@ -47,7 +47,7 @@ export function initializeRatingFunctions(name: RatingFrameworkType): void {
  * @param allTimeControls The list of time controls for the system.
  * @pre The RatingSystem must have been initialized via @ref initializeRatingSystem.
  */
-export function initializeRatingTimeControls(allTimeControls: TimeControl[]): void {
+export function initializeRatingTimeControls(allTimeControls: TimeControl[]) {
 	let ratingSystem = RatingSystemManager.getInstance();
 	ratingSystem.setTimeControls(allTimeControls);
 }

@@ -104,12 +104,12 @@ if (serverEnvironment.isSSLInfoValid()) {
 		return https.createServer({ key: privateKey, cert: certificate }, app);
 	})();
 
-	function httpsOnListening(): void {
+	function httpsOnListening() {
 		let addr = httpsServer.address();
 		let bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + (addr as AddressInfo).port;
 		debug(logNow(), 'Listening on ' + bind);
 	}
-	function httpsOnError(error: any): void {
+	function httpsOnError(error: any) {
 		if (error.syscall !== 'listen') {
 			throw error;
 		}
@@ -146,7 +146,7 @@ let port = normalizePort(process.env['PORT'] || portHttp);
 app.set('port', port);
 
 // Event listener for servers "error" event.
-function httpOnError(error: any): void {
+function httpOnError(error: any) {
 	if (error.syscall !== 'listen') {
 		throw error;
 	}
@@ -169,7 +169,7 @@ function httpOnError(error: any): void {
 }
 
 // Event listener for servers "listening" event.
-function httpOnListening(): void {
+function httpOnListening() {
 	let addr = httpServer.address();
 	let bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + (addr as AddressInfo).port;
 	debug(logNow(), 'Listening on ' + bind);

@@ -60,20 +60,20 @@ export class ChallengesManager {
 	/// The challenges in the system
 	private challenges: Challenge[] = [];
 
-	clear(): void {
+	clear() {
 		this.maxChallengeId = 0;
 		this.challenges = [];
 	}
 
-	addChallenge(c: Challenge): void {
+	addChallenge(c: Challenge) {
 		this.challenges.push(c);
 	}
 
-	removeChallenge(c: Challenge): void {
+	removeChallenge(c: Challenge) {
 		const idx = this.getChallengeIndex(c);
 		this.removeChallengeIndex(idx);
 	}
-	removeChallengeIndex(idx: number): void {
+	removeChallengeIndex(idx: number) {
 		this.challenges.splice(idx, 1);
 		if (this.challenges.length === 0) {
 			this.maxChallengeId = 0;
@@ -108,7 +108,7 @@ export class ChallengesManager {
 		return this.maxChallengeId;
 	}
 	/// Sets the maximum challenge ID
-	setMaxChallengeId(id: number): void {
+	setMaxChallengeId(id: number) {
 		this.maxChallengeId = id;
 	}
 	/// Increase current maximum challenge ID

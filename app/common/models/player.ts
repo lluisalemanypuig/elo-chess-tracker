@@ -89,7 +89,7 @@ export class Player {
 	 * @param rating Rating object
 	 * @pre Rating does not exist
 	 */
-	addRating(id: TimeControlId, rating: Rating): void {
+	addRating(id: TimeControlId, rating: Rating) {
 		this.ratings.push(new TimeControlRating(id, rating));
 	}
 
@@ -103,7 +103,7 @@ export class Player {
 	}
 
 	/// Sets the rating of the player
-	setRating(id: TimeControlId, rating: Rating): void {
+	setRating(id: TimeControlId, rating: Rating) {
 		const index = this.indexTimeControlId(id);
 		if (index === -1) {
 			throw new Error(`Rating with id '${id}' does not exist!`);

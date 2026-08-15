@@ -71,7 +71,7 @@ export class GamesManager {
 	/// Map from game ID to game information
 	private gameInfo: Map<GameId, GameInfo> = new Map();
 
-	clear(): void {
+	clear() {
 		this.maxGameId = 0;
 		this.gameInfo.clear();
 	}
@@ -94,7 +94,7 @@ export class GamesManager {
 		return toGameId(strId);
 	}
 	/// Sets the maximum game ID
-	setMaxGameId(id: number): void {
+	setMaxGameId(id: number) {
 		this.maxGameId = id;
 	}
 	/// Increase current maximum game ID
@@ -111,7 +111,7 @@ export class GamesManager {
 	 * @param timeId The time control id of the game (recall, could be 'blitz',
 	 * 'classical', ...)
 	 */
-	addGame(gameId: GameId, when: DateMajor, timeId: TimeControlId): void {
+	addGame(gameId: GameId, when: DateMajor, timeId: TimeControlId) {
 		this.gameInfo.set(gameId, new GameInfo(when, timeId));
 	}
 
@@ -121,7 +121,7 @@ export class GamesManager {
 	}
 
 	/// Delete a game ID from the manager
-	deleteGameId(id: GameId): void {
+	deleteGameId(id: GameId) {
 		this.gameInfo.delete(id);
 	}
 }

@@ -66,7 +66,7 @@ export class UserRoleToUserAction {
 	};
 
 	/// Add action 'action' to role 'role'
-	addToRole(role: UserRole, action: UserAction): void {
+	addToRole(role: UserRole, action: UserAction) {
 		this.relate[role].push(action);
 	}
 
@@ -89,7 +89,7 @@ export class UserRoleToUserAction {
 		return false;
 	}
 
-	addMissingGenericActions(role: UserRole): void {
+	addMissingGenericActions(role: UserRole) {
 		for (const actionId of ALL_ACTION_IDS) {
 			if (this.roleCanDo(role, actionId)) {
 				const genericActionName = getGenericRoleActionName(actionId);
@@ -99,7 +99,7 @@ export class UserRoleToUserAction {
 	}
 
 	/// Clears the relationships contained in this instance.
-	clear(): void {
+	clear() {
 		this.relate = {
 			ADMIN: [],
 			TEACHER: [],
@@ -120,7 +120,7 @@ export class UserRoleToUserAction {
 	}
  * where each "[...]" is a vector of UserAction.
  */
-export function initializePermissions(permissions: UserPermissions): void {
+export function initializePermissions(permissions: UserPermissions) {
 	let actions = UserRoleToUserAction.getInstance();
 
 	// ADMIN

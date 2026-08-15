@@ -53,7 +53,7 @@ export class EnvironmentManager {
 	// execution directory (TS code)
 	private directoryExecution: string = '';
 
-	setExecutionEnvironment(baseDir: string): void {
+	setExecutionEnvironment(baseDir: string) {
 		this.directoryExecution = baseDir;
 	}
 
@@ -68,7 +68,7 @@ export class EnvironmentManager {
 	private directoryDatabaseChallenges: string = '';
 	private directoryDatabaseGraphs: string = '';
 
-	clearDatabase(): void {
+	clearDatabase() {
 		this.directoryDatabase = '';
 		this.directoryDatabaseGames = '';
 		this.directoryDatabaseUsers = '';
@@ -98,7 +98,7 @@ export class EnvironmentManager {
 		return path.join(this.directoryDatabaseGraphs, id);
 	}
 
-	setDatabaseBaseDirectory(baseDir: string): void {
+	setDatabaseBaseDirectory(baseDir: string) {
 		this.directoryDatabase = baseDir;
 		this.directoryDatabaseGames = path.join(this.directoryDatabase, 'games');
 		this.directoryDatabaseUsers = path.join(this.directoryDatabase, 'users');
@@ -112,7 +112,7 @@ export class EnvironmentManager {
 	private sslPrivateKeyFile: string = '';
 	private sslPassphraseFile: string = '';
 
-	clearSsl(): void {
+	clearSsl() {
 		this.directorySsl = '';
 		this.sslPublicKeyFile = '';
 		this.sslPrivateKeyFile = '';
@@ -132,7 +132,7 @@ export class EnvironmentManager {
 		return this.sslPassphraseFile;
 	}
 
-	setSSLInfo(baseDir: string, ssl: SSLCertificate): void {
+	setSSLInfo(baseDir: string, ssl: SSLCertificate) {
 		this.directorySsl = baseDir;
 		if (ssl.publicKeyFile !== '') {
 			this.sslPublicKeyFile = path.join(this.directorySsl, ssl.publicKeyFile);
@@ -155,7 +155,7 @@ export class EnvironmentManager {
 	private iconLoginPage: string = '';
 	private iconHomePage: string = '';
 
-	clearIcons(): void {
+	clearIcons() {
 		this.directoryIcon = '';
 		this.iconFavicon = '';
 		this.iconLoginPage = '';
@@ -186,7 +186,7 @@ export class EnvironmentManager {
 	private titleLoginPage: string = '';
 	private titleHomePage: string = '';
 
-	clearTitles(): void {
+	clearTitles() {
 		this.titleLoginPage = '';
 		this.titleHomePage = '';
 	}
@@ -198,14 +198,14 @@ export class EnvironmentManager {
 		return this.titleHomePage;
 	}
 
-	setTitlesInfo(loginPage: string, homePage: string): void {
+	setTitlesInfo(loginPage: string, homePage: string) {
 		this.titleLoginPage = loginPage;
 		this.titleHomePage = homePage;
 	}
 
 	// --------------------
 
-	clear(): void {
+	clear() {
 		this.clearDatabase();
 		this.clearSsl();
 		this.clearIcons();

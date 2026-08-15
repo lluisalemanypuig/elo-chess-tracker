@@ -55,11 +55,11 @@ export class GraphsManager {
 
 	private graphList: GraphData[] = [];
 
-	clear(): void {
+	clear() {
 		this.graphList = [];
 	}
 
-	addGraph(id: TimeControlId, g: Graph): void {
+	addGraph(id: TimeControlId, g: Graph) {
 		const idx = searchLinearByKey(this.graphList, (pair: GraphData): boolean => {
 			return pair.timeControlId === id;
 		});

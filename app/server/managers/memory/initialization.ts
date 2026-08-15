@@ -58,7 +58,7 @@ import { clearServer } from '@server/managers/memory/clear';
 import { initializePermissions } from '@server/managers/user-role-action';
 import { writeUserToFile } from '../users';
 
-function initEnvironmentDirectories(baseDirectory: string, executionDirectory: string): void {
+function initEnvironmentDirectories(baseDirectory: string, executionDirectory: string) {
 	let serverEnv = EnvironmentManager.getInstance();
 	serverEnv.setDatabaseBaseDirectory(path.join(baseDirectory, '/database'));
 	debug(logNow(), `    Database directory: '${serverEnv.getDirDatabase()}'`);
@@ -70,7 +70,7 @@ function initEnvironmentDirectories(baseDirectory: string, executionDirectory: s
 	serverEnv.setExecutionEnvironment(executionDirectory);
 }
 
-function initEnvironmentSSL(baseDirectory: string, ssl: SSLCertificate): void {
+function initEnvironmentSSL(baseDirectory: string, ssl: SSLCertificate) {
 	let env = EnvironmentManager.getInstance();
 	env.setSSLInfo(path.join(baseDirectory, '/ssl'), ssl);
 	debug(logNow(), `    SSL base directory: '${env.getDirSsl()}'`);
@@ -79,15 +79,15 @@ function initEnvironmentSSL(baseDirectory: string, ssl: SSLCertificate): void {
 	debug(logNow(), `        Passphrase: '${env.getSslPassphraseFile()}'`);
 }
 
-function initEnvironmentIconFilePaths(baseDirectory: string, env: Environment): void {
+function initEnvironmentIconFilePaths(baseDirectory: string, env: Environment) {
 	EnvironmentManager.getInstance().setIconsInfo(path.join(baseDirectory, '/icons'), env);
 }
 
-function initEnvironmentPageTitles(env: Environment): void {
+function initEnvironmentPageTitles(env: Environment) {
 	EnvironmentManager.getInstance().setTitlesInfo(env.loginPage.title, env.homePage.title);
 }
 
-function initEnvironment(baseDirectory: string, env: Environment): void {
+function initEnvironment(baseDirectory: string, env: Environment) {
 	const executionDirectory = process.cwd();
 	initEnvironmentDirectories(baseDirectory, executionDirectory);
 	initEnvironmentSSL(baseDirectory, env.sslCertificate);
@@ -95,7 +95,7 @@ function initEnvironment(baseDirectory: string, env: Environment): void {
 	initEnvironmentIconFilePaths(baseDirectory, env);
 }
 
-function initServerPorts(ports: Ports): void {
+function initServerPorts(ports: Ports) {
 	let serverConf = ConfigurationManager.getInstance();
 	serverConf.setPortHttp(ports.http);
 	serverConf.setPortHttps(ports.https);
@@ -104,7 +104,7 @@ function initServerPorts(ports: Ports): void {
 	debug(logNow(), `        HTTPS: ${serverConf.getPortHttps()}`);
 }
 
-function initServer(conf: ServerConfiguration): void {
+function initServer(conf: ServerConfiguration) {
 	let serverConf = ConfigurationManager.getInstance();
 
 	serverConf.setDomainName(conf.domainName);
@@ -113,19 +113,19 @@ function initServer(conf: ServerConfiguration): void {
 	initServerPorts(conf.ports);
 }
 
-function initUserPermissions(permissions: UserPermissions): void {
+function initUserPermissions(permissions: UserPermissions) {
 	debug(logNow(), 'Initialize permissions...');
 
 	initializePermissions(permissions);
 }
 
-function initRatingFramework(ratingType: RatingFrameworkType): void {
+function initRatingFramework(ratingType: RatingFrameworkType) {
 	debug(logNow(), `    Rating system: '${ratingType}'`);
 
 	initializeRatingFunctions(ratingType);
 }
 
-function initTimeControls(timeControls: TimeControlArray): void {
+function initTimeControls(timeControls: TimeControlArray) {
 	debug(logNow(), 'Initialize time controls...');
 
 	debug(logNow(), `    Found '${timeControls.length}' rating types:`);
@@ -150,24 +150,24 @@ function initTimeControls(timeControls: TimeControlArray): void {
 	}
 }
 
-function initBehaviorChallenges(challenges: ChallengesBehavior): void {
+function initBehaviorChallenges(challenges: ChallengesBehavior) {
 	let behavior = UsersBehavior.getInstance();
 	behavior.setHigherRatedDeclineChallengeLowerRated(
 		challenges.higherRatedPlayerCanDeclineChallengeFromLowerRatedPlayer
 	);
 }
 
-function initBehavior(behavior: Behavior): void {
+function initBehavior(behavior: Behavior) {
 	debug(logNow(), 'Initialize behaviours...');
 
 	initBehaviorChallenges(behavior.challenges);
 }
 
-function initUserSessionIds(): void {
+function initUserSessionIds() {
 	debug(logNow(), 'Initialize sessions...');
 }
 
-function initUsers(): void {
+function initUsers() {
 	debug(logNow(), 'Initialize users...');
 
 	const ratingSystem = RatingSystemManager.getInstance();
@@ -209,7 +209,7 @@ function initUsers(): void {
 	debug(logNow(), `    Found ${userManager.numUsers()} users.`);
 }
 
-function initChallenges(): void {
+function initChallenges() {
 	debug(logNow(), 'Initialize challenges...');
 
 	const challengesDir = EnvironmentManager.getInstance().getDirChallenges();
@@ -240,7 +240,7 @@ function initChallenges(): void {
 	debug(logNow(), `    Maximum challenge id ${maxChallengeId}.`);
 }
 
-function initGames(): void {
+function initGames() {
 	debug(logNow(), 'Initialize games...');
 
 	const ratings = RatingSystemManager.getInstance();
@@ -282,7 +282,7 @@ function initGames(): void {
 	debug(logNow(), `    Maximum game id ${maxGameId}.`);
 }
 
-function initGraphs(): void {
+function initGraphs() {
 	debug(logNow(), 'Initialize graphs...');
 
 	const ratings = RatingSystemManager.getInstance();
@@ -305,7 +305,7 @@ function initGraphs(): void {
 	}
 }
 
-export function serverInitFromData(baseDirectory: string, configuration: Configuration): void {
+export function serverInitFromData(baseDirectory: string, configuration: Configuration) {
 	debug(logNow(), `    Webpage base directory: '${baseDirectory}'`);
 
 	clearServer();
@@ -326,7 +326,7 @@ export function serverInitFromData(baseDirectory: string, configuration: Configu
 }
 
 /// Initializes the server memory
-export function serverInitFromConfigurationFile(configurationFile: string): void {
+export function serverInitFromConfigurationFile(configurationFile: string) {
 	debug(logNow(), `Reading configuration file '${configurationFile}'`);
 
 	const data = fs.readFileSync(configurationFile, 'utf8');
@@ -340,7 +340,7 @@ export function serverInitFromConfigurationFile(configurationFile: string): void
 	serverInitFromData(basePath, configuration);
 }
 
-export function serverInitFromParameters(args: string[]): void {
+export function serverInitFromParameters(args: string[]) {
 	let configurationFile: string = '';
 	for (let i = 0; i < args.length; ++i) {
 		if (args[i] === 'configuration-file') {

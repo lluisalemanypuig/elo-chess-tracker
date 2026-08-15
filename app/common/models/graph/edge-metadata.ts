@@ -54,7 +54,7 @@ export class EdgeMetadata {
 		this.numGamesLost = numGamesLost;
 	}
 
-	merge(other: EdgeMetadata): void {
+	merge(other: EdgeMetadata) {
 		this.numGamesWon += other.numGamesWon;
 		this.numGamesDrawn += other.numGamesDrawn;
 		this.numGamesLost += other.numGamesLost;
@@ -83,7 +83,7 @@ export class EdgeMetadata {
 		return new EdgeMetadata(this.numGamesWon, this.numGamesDrawn, this.numGamesLost);
 	}
 
-	decrease(res: GameResult): void {
+	decrease(res: GameResult) {
 		if (res === 'white_wins') {
 			this.numGamesWon -= 1;
 		} else if (res === 'draw') {

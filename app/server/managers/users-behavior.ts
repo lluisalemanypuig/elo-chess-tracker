@@ -48,7 +48,7 @@ export class UsersBehavior {
 	/// Higher rated player can decline challenge from a lower rated player
 	private hrpDeclineChallengeLrt: boolean = false;
 
-	setHigherRatedDeclineChallengeLowerRated(v: boolean): void {
+	setHigherRatedDeclineChallengeLowerRated(v: boolean) {
 		this.hrpDeclineChallengeLrt = v;
 	}
 

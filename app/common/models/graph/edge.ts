@@ -55,7 +55,7 @@ export class Edge {
 	}
 
 	/// Merge two edges
-	merge(other: Edge): void {
+	merge(other: Edge) {
 		if (this.neighbor !== other.neighbor) {
 			throw new Error(
 				`The current edge points to '${this.neighbor}' but the new edge points to '${other.neighbor}'.`

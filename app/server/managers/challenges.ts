@@ -124,7 +124,7 @@ export function challengeSendNew(
  * @pre The accepter must be either a priviledged user or the receiver
  * of the challenge.
  */
-export function challengeAccept(c: Challenge, { by, when }: ChallengeAccept): void {
+export function challengeAccept(c: Challenge, { by, when }: ChallengeAccept) {
 	debug(logNow(), `Accepting challenge '${c.id}'`);
 
 	if (c.state !== 'PENDING_ACCEPT') {
@@ -152,7 +152,7 @@ export function challengeAccept(c: Challenge, { by, when }: ChallengeAccept): vo
  * @pre The 'decliner' must be either a priviledged user or the receiver
  * of the challenge.
  */
-export function challengeDecline(c: Challenge, { by }: ChallengeDecline): void {
+export function challengeDecline(c: Challenge, { by }: ChallengeDecline) {
 	debug(logNow(), `Declining challenge '${c.id}'`);
 
 	if (c.state !== 'PENDING_ACCEPT') {
@@ -192,7 +192,7 @@ export function challengeDecline(c: Challenge, { by }: ChallengeDecline): void {
  * @param g The game encoding the result of the game. The players in the game contain
  * their rating as specified in the system at the conclusion of the game.
  */
-export function challengeSetResult(c: Challenge, { by, when, white, black, result }: ChallengeSetResult): void {
+export function challengeSetResult(c: Challenge, { by, when, white, black, result }: ChallengeSetResult) {
 	debug(logNow(), `Set the result of the challenge '${c.id}'`);
 
 	if (c.state !== 'PENDING_RESULT') {
@@ -237,7 +237,7 @@ export function challengeSetResult(c: Challenge, { by, when, white, black, resul
  * @param id Identifier string
  * @pre The accepter must be the receiver of the challenge.
  */
-export function challengeAgreeResult(c: Challenge, { by, when }: ChallengeAgreeResult): void {
+export function challengeAgreeResult(c: Challenge, { by, when }: ChallengeAgreeResult) {
 	debug(logNow(), `Agree to result of challenge '${c.id}'...`);
 
 	if (c.state !== 'PENDING_RESULT_AGREE') {
@@ -302,7 +302,7 @@ export function challengeAgreeResult(c: Challenge, { by, when }: ChallengeAgreeR
  * @param g The game encoding the result of the game. The players in the game
  * contain their rating as specified in the system at the conclusion of the game.
  */
-export function challengeDisagreeResult(c: Challenge, { by }: ChallengeDisagreeResult): void {
+export function challengeDisagreeResult(c: Challenge, { by }: ChallengeDisagreeResult) {
 	debug(logNow(), `Disagree to the result of the challenge '${c.id}'`);
 
 	if (c.state !== 'PENDING_RESULT_AGREE') {

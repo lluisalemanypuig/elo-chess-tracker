@@ -46,7 +46,7 @@ export function writeUserToFile(filename: string, u: User) {
 }
 
 /// Dump the data in user @e u into its corresponding file.
-export function userOverwrite(user: User): void {
+export function userOverwrite(user: User) {
 	const userDir = EnvironmentManager.getInstance().getDirUsers();
 	const userFile = path.join(userDir, user.username);
 	writeUserToFile(userFile, user);
@@ -138,7 +138,7 @@ export function userGetAllNamePublicId(): UserThin[] {
  * @param players Set of players to be updated.
  * @post Users in the server (memory and database) are updated.
  */
-export function userUpdateFromPlayerData(players: Player[]): void {
+export function userUpdateFromPlayerData(players: Player[]) {
 	const users_directory = EnvironmentManager.getInstance().getDirUsers();
 	let manager = UsersManager.getInstance();
 	let mem = UsersManager.getInstance();

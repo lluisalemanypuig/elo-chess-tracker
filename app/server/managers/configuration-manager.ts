@@ -49,10 +49,10 @@ export class ConfigurationManager {
 	/// The HTTPS port of the server
 	private portHttps: string = '';
 
-	setPortHttp(http: string): void {
+	setPortHttp(http: string) {
 		this.portHttp = http;
 	}
-	setPortHttps(https: string): void {
+	setPortHttps(https: string) {
 		this.portHttps = https;
 	}
 
@@ -65,14 +65,14 @@ export class ConfigurationManager {
 
 	/// The name of the domain the server can be accessed from
 	private domain: string = '';
-	setDomainName(d: string): void {
+	setDomainName(d: string) {
 		this.domain = d;
 	}
 	getDomainName(): string {
 		return this.domain;
 	}
 
-	clear(): void {
+	clear() {
 		this.portHttp = '';
 		this.portHttps = '';
 		this.domain = '';
