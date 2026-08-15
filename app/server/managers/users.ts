@@ -74,11 +74,9 @@ export function userEdit(editor: User, edited: User, { firstName, lastName, role
 	debug(logNow(), `    Roles: '${roles}'`);
 
 	for (const role of roles) {
-		if (!editor.is(role)) {
-			const action = getRoleActionName('ASSIGN_ROLE_USERS', role);
-			if (!editor.canDo(action)) {
-				throw new Error(`You do not have enough permissions to assign role '${role}'.`);
-			}
+		const action = getRoleActionName('ASSIGN_ROLE_USERS', role);
+		if (!editor.canDo(action)) {
+			throw new Error(`You do not have enough permissions to assign role '${role}'.`);
 		}
 	}
 
