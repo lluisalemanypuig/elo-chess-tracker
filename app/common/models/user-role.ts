@@ -62,13 +62,13 @@ export function stringToRole(r: string): UserRole | undefined {
 }
 
 export function arrayStringToRoles(roles: string[]): UserRole[] | undefined {
-	let actual_roles: UserRole[] = [];
-	for (const role_str of roles) {
-		const res = stringToRole(role_str);
+	let actualRoles: UserRole[] = [];
+	for (const roleStr of roles) {
+		const res = stringToRole(roleStr);
 		if (isNotDefined(res)) {
 			return undefined;
 		}
-		actual_roles.push(res);
+		actualRoles.push(res);
 	}
-	return actual_roles;
+	return actualRoles;
 }

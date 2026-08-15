@@ -41,61 +41,61 @@ export function canUserEdit(editor: User, edited: User): boolean {
 
 // Can a user (@e u) see a game between two players (@e white and @e black)?
 export function canUserSeeGame(u: User, white: User, black: User): boolean {
-	const either_user_is = function (r: UserRole): boolean {
+	const eitherUserIs = function (r: UserRole): boolean {
 		return white.is(r) || black.is(r);
 	};
 
 	return (
 		u.canDo('SEE_GAMES') &&
-		((u.canDo('SEE_GAMES_ADMIN') && either_user_is('ADMIN')) ||
-			(u.canDo('SEE_GAMES_TEACHER') && either_user_is('TEACHER')) ||
-			(u.canDo('SEE_GAMES_STUDENT') && either_user_is('STUDENT')) ||
-			(u.canDo('SEE_GAMES_MEMBER') && either_user_is('MEMBER')))
+		((u.canDo('SEE_GAMES_ADMIN') && eitherUserIs('ADMIN')) ||
+			(u.canDo('SEE_GAMES_TEACHER') && eitherUserIs('TEACHER')) ||
+			(u.canDo('SEE_GAMES_STUDENT') && eitherUserIs('STUDENT')) ||
+			(u.canDo('SEE_GAMES_MEMBER') && eitherUserIs('MEMBER')))
 	);
 }
 
 // Can a user (@e u) create a game between two players (@e white and @e black)?
 export function canUserCreateGame(u: User, white: User, black: User): boolean {
-	const either_user_is = function (r: UserRole): boolean {
+	const eitherUserIs = function (r: UserRole): boolean {
 		return white.is(r) || black.is(r);
 	};
 
 	return (
 		u.canDo('CREATE_GAMES') &&
-		((u.canDo('CREATE_GAMES_ADMIN') && either_user_is('ADMIN')) ||
-			(u.canDo('CREATE_GAMES_TEACHER') && either_user_is('TEACHER')) ||
-			(u.canDo('CREATE_GAMES_STUDENT') && either_user_is('STUDENT')) ||
-			(u.canDo('CREATE_GAMES_MEMBER') && either_user_is('MEMBER')))
+		((u.canDo('CREATE_GAMES_ADMIN') && eitherUserIs('ADMIN')) ||
+			(u.canDo('CREATE_GAMES_TEACHER') && eitherUserIs('TEACHER')) ||
+			(u.canDo('CREATE_GAMES_STUDENT') && eitherUserIs('STUDENT')) ||
+			(u.canDo('CREATE_GAMES_MEMBER') && eitherUserIs('MEMBER')))
 	);
 }
 
 // Can a user (@e u) edit a game between two players (@e white and @e black)?
 export function canUserEditGame(u: User, white: User, black: User): boolean {
-	const either_user_is = function (r: UserRole): boolean {
+	const eitherUserIs = function (r: UserRole): boolean {
 		return white.is(r) || black.is(r);
 	};
 
 	return (
 		u.canDo('EDIT_GAMES') &&
-		((u.canDo('EDIT_GAMES_ADMIN') && either_user_is('ADMIN')) ||
-			(u.canDo('EDIT_GAMES_TEACHER') && either_user_is('TEACHER')) ||
-			(u.canDo('EDIT_GAMES_STUDENT') && either_user_is('STUDENT')) ||
-			(u.canDo('EDIT_GAMES_MEMBER') && either_user_is('MEMBER')))
+		((u.canDo('EDIT_GAMES_ADMIN') && eitherUserIs('ADMIN')) ||
+			(u.canDo('EDIT_GAMES_TEACHER') && eitherUserIs('TEACHER')) ||
+			(u.canDo('EDIT_GAMES_STUDENT') && eitherUserIs('STUDENT')) ||
+			(u.canDo('EDIT_GAMES_MEMBER') && eitherUserIs('MEMBER')))
 	);
 }
 
 // Can a user (@e u) delete a game between two players (@e white and @e black)?
 export function canUserDeleteGame(u: User, white: User, black: User): boolean {
-	const either_user_is = function (r: UserRole): boolean {
+	const eitherUserIs = function (r: UserRole): boolean {
 		return white.is(r) || black.is(r);
 	};
 
 	return (
 		u.canDo('DELETE_GAMES') &&
-		((u.canDo('DELETE_GAMES_ADMIN') && either_user_is('ADMIN')) ||
-			(u.canDo('DELETE_GAMES_TEACHER') && either_user_is('TEACHER')) ||
-			(u.canDo('DELETE_GAMES_STUDENT') && either_user_is('STUDENT')) ||
-			(u.canDo('DELETE_GAMES_MEMBER') && either_user_is('MEMBER')))
+		((u.canDo('DELETE_GAMES_ADMIN') && eitherUserIs('ADMIN')) ||
+			(u.canDo('DELETE_GAMES_TEACHER') && eitherUserIs('TEACHER')) ||
+			(u.canDo('DELETE_GAMES_STUDENT') && eitherUserIs('STUDENT')) ||
+			(u.canDo('DELETE_GAMES_MEMBER') && eitherUserIs('MEMBER')))
 	);
 }
 

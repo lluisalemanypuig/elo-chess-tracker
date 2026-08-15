@@ -186,14 +186,14 @@ export class User extends Player {
 
 	// Returns all actions this user
 	getActions(): UserAction[] {
-		const role_to_action = UserRoleToUserAction.getInstance();
+		const roleToAction = UserRoleToUserAction.getInstance();
 		const roles = this.roles;
 
 		let actions: UserAction[] = [];
 		for (const r of roles) {
-			const actions_from_role = role_to_action.getActionsRole(r);
+			const actionsFromRole = roleToAction.getActionsRole(r);
 
-			for (const action of actions_from_role) {
+			for (const action of actionsFromRole) {
 				if (actions.indexOf(action) === -1) {
 					actions.push(action);
 				}
@@ -205,10 +205,10 @@ export class User extends Player {
 
 	// Can a user perform a certain action?
 	canDo(a: UserAction): boolean {
-		const user_role_to_action = UserRoleToUserAction.getInstance();
+		const userRoleToAction = UserRoleToUserAction.getInstance();
 
 		for (const role of this.roles) {
-			if (user_role_to_action.roleIncludesAction(role, a)) {
+			if (userRoleToAction.roleIncludesAction(role, a)) {
 				return true;
 			}
 		}

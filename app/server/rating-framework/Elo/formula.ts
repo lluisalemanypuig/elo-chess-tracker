@@ -30,8 +30,8 @@ function getExpScore(Ra: number, Rb: number): number {
 	return 1.0 / (1 + 10 ** ((Rb - Ra) / 400));
 }
 
-function ratingAdjustment(k: number, score: number, exp_score: number): number {
-	return k * (score - exp_score);
+function ratingAdjustment(k: number, score: number, expScore: number): number {
+	return k * (score - expScore);
 }
 
 /*
@@ -84,26 +84,26 @@ function updateConstantK(elo: EloRating) {
 }
 
 export function EloPlayerVsPlayer(game: Game): [EloRating, EloRating] {
-	let whiteRating = game.whiteRating.clone() as EloRating;
-	let blackRating = game.blackRating.clone() as EloRating;
+	const whiteRating = game.whiteRating.clone() as EloRating;
+	const blackRating = game.blackRating.clone() as EloRating;
 	const result = game.result;
 
-	let exp_score_a = getExpScore(whiteRating.rating, blackRating.rating);
+	const expScoreA = getExpScore(whiteRating.rating, blackRating.rating);
 	if (result === 'white_wins') {
-		whiteRating.rating += ratingAdjustment(whiteRating.K, 1, exp_score_a);
-		blackRating.rating += ratingAdjustment(blackRating.K, 0, 1 - exp_score_a);
+		whiteRating.rating += ratingAdjustment(whiteRating.K, 1, expScoreA);
+		blackRating.rating += ratingAdjustment(blackRating.K, 0, 1 - expScoreA);
 
 		whiteRating.won += 1;
 		blackRating.lost += 1;
 	} else if (result === 'black_wins') {
-		whiteRating.rating += ratingAdjustment(whiteRating.K, 0, exp_score_a);
-		blackRating.rating += ratingAdjustment(blackRating.K, 1, 1 - exp_score_a);
+		whiteRating.rating += ratingAdjustment(whiteRating.K, 0, expScoreA);
+		blackRating.rating += ratingAdjustment(blackRating.K, 1, 1 - expScoreA);
 
 		whiteRating.lost += 1;
 		blackRating.won += 1;
 	} else if (result === 'draw') {
-		whiteRating.rating += ratingAdjustment(whiteRating.K, 0.5, exp_score_a);
-		blackRating.rating += ratingAdjustment(blackRating.K, 0.5, 1 - exp_score_a);
+		whiteRating.rating += ratingAdjustment(whiteRating.K, 0.5, expScoreA);
+		blackRating.rating += ratingAdjustment(blackRating.K, 0.5, 1 - expScoreA);
 
 		whiteRating.drawn += 1;
 		blackRating.drawn += 1;

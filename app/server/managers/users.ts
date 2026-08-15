@@ -164,7 +164,7 @@ export function userGetAllNamePublicId(): UserThin[] {
 }
 
 export function userUpdateFromPlayerData(players: Player[]) {
-	const users_directory = EnvironmentManager.getInstance().getDirUsers();
+	const usersDirectory = EnvironmentManager.getInstance().getDirUsers();
 	let manager = UsersManager.getInstance();
 	let mem = UsersManager.getInstance();
 
@@ -177,12 +177,12 @@ export function userUpdateFromPlayerData(players: Player[]) {
 			throw new PublicError(`Username is not correct`);
 		}
 
-		const ratings_player = player.ratings;
-		for (const rating of ratings_player) {
+		const ratingsPlayer = player.ratings;
+		for (const rating of ratingsPlayer) {
 			u.user.setRating(rating.timeControl, rating.rating);
 		}
 
-		const userFile = path.join(users_directory, username);
+		const userFile = path.join(usersDirectory, username);
 
 		// update player file
 		debug(logNow(), `    User file '${userFile}'...`);

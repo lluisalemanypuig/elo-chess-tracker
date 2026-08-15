@@ -115,7 +115,7 @@ export async function postChallengeSend(req: Request, res: Response) {
 	}
 	let match: boolean = false;
 	const timeControls = ratsys.getTimeControls();
-	for (let t of timeControls) {
+	for (const t of timeControls) {
 		if (t.id === timeControlId && t.name === timeControlName) {
 			match = true;
 			break;

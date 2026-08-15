@@ -28,20 +28,20 @@ import { encryptPasswordForUser } from '@server/utils/encrypt';
 
 const args = process.argv.slice(2);
 
-const username_index = args.indexOf('--username');
-if (username_index === -1) {
+const usernameIndex = args.indexOf('--username');
+if (usernameIndex === -1) {
 	console.log('Missing --username parameter');
 	process.exit(1);
 }
 
-const password_index = args.indexOf('--password');
-if (password_index === -1) {
+const passwordIndex = args.indexOf('--password');
+if (passwordIndex === -1) {
 	console.log('Missing --password parameter');
 	process.exit(1);
 }
 
-const username = args[username_index + 1] as PlayerPrivateId;
-const password = args[password_index + 1];
+const username = args[usernameIndex + 1] as PlayerPrivateId;
+const password = args[passwordIndex + 1];
 
 console.log(`Username: '${username}'`);
 console.log(`Psasword: '${password}'`);
