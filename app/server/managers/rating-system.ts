@@ -27,7 +27,7 @@ import { EloPlayerVsPlayer } from '@server/rating-framework/Elo/formula';
 import { newRatingElo } from '@server/models/rating-framework/Elo/rating';
 import { RatingSystemManager } from '@server/managers/rating-system-manager';
 import { ratingFromStringElo, ratingFromJsonElo } from '@server/io/ratings/Elo/rating';
-import { RatingFrameworkType } from '@server/models/rating-framework/rating-framework-type';
+import { RatingFrameworkType } from '@app/server/models/rating-framework/rating-framework-type';
 import { TimeControl } from '@common/models/time-control';
 
 /**

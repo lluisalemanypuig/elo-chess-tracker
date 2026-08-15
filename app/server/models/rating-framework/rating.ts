@@ -23,7 +23,6 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { z } from 'zod';
 import { InternalError } from '@app/server/models/error-types/internal-error';
 
 // Generic class for a rating.
@@ -69,15 +68,3 @@ export class Rating {
 		return [this.numGames, this.won, this.drawn, this.lost];
 	}
 }
-
-export const RatingSchema = z
-	.object({
-		rating: z.number(),
-		numGames: z.number(),
-		won: z.number(),
-		drawn: z.number(),
-		lost: z.number()
-	})
-	.strict();
-
-export const RatingArraySchema = z.array(RatingSchema);

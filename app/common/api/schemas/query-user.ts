@@ -29,7 +29,7 @@ import { UserRoleArraySchema } from '@common/models/user-role';
 import { UserActionArraySchema } from '@common/models/user-action';
 import { TimeControlIdSchema } from '@common/models/time-control';
 import { PlayerPublicIdSchema } from '@common/models/player-id';
-import { RatingSchema } from '@server/models/rating-framework/rating';
+import { RatingSchema } from '@common/models/rating-framework/rating';
 import { UserGivenNameSchema } from '@common/models/user-given-name';
 
 // ROUTES.QUERY_USER_LIST

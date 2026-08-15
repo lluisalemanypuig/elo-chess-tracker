@@ -27,7 +27,7 @@ import express from 'express';
 import { Request, Response } from 'express';
 
 import Debug from 'debug';
-const debug = Debug('ELO_CHESS_TRACKER:appRouter');
+const debug = Debug('ELO_CHESS_TRACKER:router');
 import { logNow } from '@common/utils/time';
 
 import { EnvironmentManager, getExecutionDirectory } from '@server/managers/environment-manager';
