@@ -24,7 +24,7 @@ Contact:
 */
 
 import { isNotDefined } from '@common/utils/is-defined';
-import { challengeFromString } from '@common/io/challenge';
+import { challengeFromString } from '@server/io/challenge';
 
 describe('IO conversion', () => {
 	test('string', () => {

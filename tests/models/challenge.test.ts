@@ -23,8 +23,9 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { toPlayerPrivateId } from '@common/models/player';
-import { newChallenge, setResult, disagreeResult, agreeResult, toChallengeId } from '@common/models/challenge';
+import { toChallengeId } from '@common/models/challenge-id';
+import { toPlayerPrivateId } from '@common/models/player-id';
+import { newChallenge, setResult, disagreeResult, agreeResult } from '@server/models/challenge';
 import { toTimeControlId, toTimeControlName } from '@common/models/time-control';
 import { toDateFull } from '@common/utils/time';
 

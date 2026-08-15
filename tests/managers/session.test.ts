@@ -30,12 +30,12 @@ import { SessionIDManager } from '@server/managers/session-id-manager';
 import { userAddNew } from '@server/managers/users';
 import { SessionId } from '@common/models/session-id';
 import { runCommand, TestError } from '@tests';
-import { Configuration } from '@common/models/configuration/configuration';
-import { toPlayerPrivateId } from '@common/models/player';
-import { toUserGivenName } from '@common/models/user';
+import { Configuration } from '@server/models/configuration/configuration';
 import { toTimeControlId, toTimeControlName } from '@common/models/time-control';
 import { UsersManager } from '@server/managers/users-manager';
 import { isNotDefined } from '@common/utils/is-defined';
+import { toPlayerPrivateId } from '@common/models/player-id';
+import { toUserGivenName } from '@common/models/user-given-name';
 
 const Classical = toTimeControlId('Classical');
 const Classical90p30 = toTimeControlName('Classical (90 + 30)');

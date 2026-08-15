@@ -23,7 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-/// Convert a number to a string of d digits
+// Convert a number to a string of d digits
 export function numberToString(n: number, d: number): string {
 	const str = Number(n).toString();
 	return '0'.repeat(d - str.length) + str;

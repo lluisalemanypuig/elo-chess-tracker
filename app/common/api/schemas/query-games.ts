@@ -24,10 +24,10 @@ Contact:
 */
 
 import { z } from 'zod';
-import { UserGivenNameSchema } from '@common/models/user';
 import { TimeControlIdSchema, TimeControlNameSchema } from '@common/models/time-control';
-import { GameIdSchema } from '@common/models/game';
 import { DateFullSchema } from '@common/utils/time';
+import { GameIdSchema } from '@common/models/game-id';
+import { UserGivenNameSchema } from '@common/models/user-given-name';
 
 // ROUTES.QUERY_GAME_LIST_OWN
 

@@ -23,7 +23,8 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { Challenge, ChallengeId, toChallengeId } from '@common/models/challenge';
+import { ChallengeId, toChallengeId } from '@common/models/challenge-id';
+import { Challenge } from '@server/models/challenge';
 import { numberToString } from '@server/utils/misc';
 
 export const CHALLENGEIDLENGTH = 10;
@@ -40,7 +41,7 @@ export function numberToChallengeId(n: number): ChallengeId {
  * of challenges is never expected.
  */
 export class ChallengesManager {
-	/// The only instance of this class
+	// The only instance of this class
 	private static instance: ChallengesManager;
 
 	constructor() {
@@ -55,9 +56,9 @@ export class ChallengesManager {
 		return ChallengesManager.instance;
 	}
 
-	/// Number of games in the system
+	// Number of games in the system
 	private maxChallengeId: number = 0;
-	/// The challenges in the system
+	// The challenges in the system
 	private challenges: Challenge[] = [];
 
 	clear() {
@@ -103,15 +104,15 @@ export class ChallengesManager {
 		return -1;
 	}
 
-	/// Current maximum challenge ID
+	// Current maximum challenge ID
 	getMaxChallengeId(): number {
 		return this.maxChallengeId;
 	}
-	/// Sets the maximum challenge ID
+	// Sets the maximum challenge ID
 	setMaxChallengeId(id: number) {
 		this.maxChallengeId = id;
 	}
-	/// Increase current maximum challenge ID
+	// Increase current maximum challenge ID
 	newChallengeId(): ChallengeId {
 		this.maxChallengeId += 1;
 		const strId = numberToString(this.maxChallengeId, CHALLENGEIDLENGTH);

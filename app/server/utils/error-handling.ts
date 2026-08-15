@@ -28,8 +28,8 @@ const debug = Debug('ELO_CHESS_TRACKER:serverGraphs');
 import { Response } from 'express';
 
 import { logNow } from '@common/utils/time';
-import { PublicError } from '@server/utils/error-types/public-error';
-import { InternalError } from '@server/utils/error-types/internal-error';
+import { PublicError } from '@server/models/error-types/public-error';
+import { InternalError } from '@app/server/models/error-types/internal-error';
 
 export function handleError(e: Error, res: Response) {
 	if (e instanceof PublicError) {

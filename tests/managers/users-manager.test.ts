@@ -25,9 +25,10 @@ Contact:
 
 import { TestError } from '@tests';
 import { UsersManager } from '@server/managers/users-manager';
-import { toUserGivenName, User } from '@common/models/user';
-import { toPlayerPrivateId } from '@common/models/player';
 import { isNotDefined } from '@common//utils/is-defined';
+import { toPlayerPrivateId } from '@common/models/player-id';
+import { toUserGivenName } from '@common/models/user-given-name';
+import { User } from '@server/models/user';
 
 const a = toPlayerPrivateId('a');
 const b = toPlayerPrivateId('b');

@@ -38,9 +38,8 @@ import {
 	challengeAgreeResult
 } from '@server/managers/challenges';
 
-import { ChallengeId } from '@common/models/challenge';
+import { ChallengeId } from '@common/models/challenge-id';
 import { ChallengesManager } from '@server/managers/challenges-manager';
-import { GameResult } from '@common/models/game';
 import { UsersManager } from '@server/managers/users-manager';
 import { ConfigurationManager } from '@server/managers/configuration-manager';
 import { RatingSystemManager } from '@server/managers/rating-system-manager';
@@ -50,6 +49,7 @@ import { ROUTES } from '@common/api/routes';
 import { inputSchemaOf } from '@common/api/schemas-endpoints';
 import { safeParseRequestBody, safeParseRequestCookies } from '@server/utils/schemas';
 import { handleError } from '@server/utils/error-handling';
+import { GameResult } from '@common/models/game-result';
 
 export async function getPageChallenge(req: Request, res: Response) {
 	debug(logNow(), `GET ${ROUTES.PAGE_CHALLENGE}...`);

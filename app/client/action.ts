@@ -82,8 +82,8 @@ export async function serverCall<T extends Route>(
 		};
 	}
 	return {
-		/// TODO: eventually, remove the type assertion so that typescript
-		/// figures out on its own that the type of parse.data is correct
+		// TODO: eventually, remove the type assertion so that typescript
+		// figures out on its own that the type of parse.data is correct
 		value: parse.data as OutputTypeOf<T>,
 		status: 'Success'
 	};

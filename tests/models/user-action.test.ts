@@ -23,19 +23,19 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { ALL_ACTION_IDS, getRoleActionName, UserAction, UserActionID } from '@common/models/user-action';
+import { ALL_ACTION_IDS, getRoleActionName, UserAction, UserActionId } from '@common/models/user-action';
 import { ALL_USER_ROLES, UserRole } from '@common/models/user-role';
 
 describe('Role concatenation', () => {
 	test('Check non-throwing functions', () => {
 		for (const action_id of ALL_ACTION_IDS) {
 			for (const role of ALL_USER_ROLES) {
-				expect(() => getRoleActionName(action_id as UserActionID, role as UserRole)).not.toThrow();
+				expect(() => getRoleActionName(action_id as UserActionId, role as UserRole)).not.toThrow();
 			}
 		}
 	});
 
-	const roles_and_actions: { [key in UserActionID]: UserAction[] } = {
+	const roles_and_actions: { [key in UserActionId]: UserAction[] } = {
 		CREATE_GAMES: ['CREATE_GAMES_ADMIN', 'CREATE_GAMES_TEACHER', 'CREATE_GAMES_MEMBER', 'CREATE_GAMES_STUDENT'],
 		DELETE_GAMES: ['DELETE_GAMES_ADMIN', 'DELETE_GAMES_TEACHER', 'DELETE_GAMES_MEMBER', 'DELETE_GAMES_STUDENT'],
 		EDIT_USERS: ['EDIT_USER_ADMIN', 'EDIT_USER_TEACHER', 'EDIT_USER_MEMBER', 'EDIT_USER_STUDENT'],
@@ -54,10 +54,10 @@ describe('Role concatenation', () => {
 	test('Check correct concatenation', () => {
 		for (let i = 0; i < ALL_ACTION_IDS.length; ++i) {
 			const action_id = ALL_ACTION_IDS[i];
-			const concats = roles_and_actions[action_id as UserActionID];
+			const concats = roles_and_actions[action_id as UserActionId];
 			for (let j = 0; j < ALL_USER_ROLES.length; ++j) {
 				const r = ALL_USER_ROLES[j];
-				expect(getRoleActionName(action_id as UserActionID, r)).toEqual(concats[j]);
+				expect(getRoleActionName(action_id as UserActionId, r)).toEqual(concats[j]);
 			}
 		}
 	});

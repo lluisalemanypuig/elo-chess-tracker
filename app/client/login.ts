@@ -23,7 +23,7 @@ import 'htmx.org';
 
 import { messageFromResponse, serverCall } from '@client/action';
 import { ROUTES } from '@common/api/routes';
-import { PlayerPrivateId } from '@common/models/player';
+import { PlayerPrivateId } from '@common/models/player-id';
 
 async function logIntoWebpage(_event: any) {
 	// username box

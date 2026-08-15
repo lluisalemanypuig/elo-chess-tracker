@@ -23,10 +23,10 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { Game } from '@common/models/game';
-import { Rating } from '@common/models/rating-framework/rating';
+import { Game } from '@server/models/game';
+import { Rating } from '@server/models/rating-framework/rating';
 import { TimeControl, TimeControlId } from '@common/models/time-control';
-import { PublicError } from '@server/utils/error-types/public-error';
+import { PublicError } from '@server/models/error-types/public-error';
 
 /**
  * @brief Rating System Manager singleton class
@@ -35,7 +35,7 @@ import { PublicError } from '@server/utils/error-types/public-error';
  * configuration of the server.
  */
 export class RatingSystemManager {
-	/// The only instance of this class
+	// The only instance of this class
 	private static instance: RatingSystemManager;
 
 	constructor() {
@@ -55,7 +55,7 @@ export class RatingSystemManager {
 		return RatingSystemManager.instance;
 	}
 
-	/// Function to evaluate a game
+	// Function to evaluate a game
 	private ratingFormulaFunc: Function = () => void {};
 
 	getRatingFunction(): Function {
@@ -65,7 +65,7 @@ export class RatingSystemManager {
 		return this.ratingFormulaFunc(game);
 	}
 
-	/// Function to create a new rating
+	// Function to create a new rating
 	private newRatingFunc: Function = () => void {};
 
 	getNewRatingFunction(): Function {
@@ -75,7 +75,7 @@ export class RatingSystemManager {
 		return this.newRatingFunc();
 	}
 
-	/// Function to read a single rating JSON string
+	// Function to read a single rating JSON string
 	private ratingFromStringFunc: Function = () => void {};
 
 	getRatingFromStringFunction(): Function {
@@ -85,7 +85,7 @@ export class RatingSystemManager {
 		return this.ratingFromStringFunc(str);
 	}
 
-	/// Function to read a single rating JSON string
+	// Function to read a single rating JSON string
 	private ratingFromJsonFunc: Function = () => void {};
 
 	getRatingFromJsonFunction(): Function {
@@ -95,9 +95,9 @@ export class RatingSystemManager {
 		return this.ratingFromJsonFunc(json);
 	}
 
-	/// All ratings used in the server
+	// All ratings used in the server
 	private allTimeControls: TimeControl[] = [];
-	/// All unique rating ids used in the server
+	// All unique rating ids used in the server
 	private allUniqueTimeControls: TimeControlId[] = [];
 
 	setFunctions(formula: Function, newRating: Function, fromString: Function, fromJson: Function) {

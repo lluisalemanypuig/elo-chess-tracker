@@ -23,7 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { Rating } from '@common/models/rating-framework/rating';
+import { Rating } from '@server/models/rating-framework/rating';
 
 describe('clone', () => {
 	test('1', () => {

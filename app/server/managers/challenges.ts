@@ -44,14 +44,14 @@ import {
 	agreeResult,
 	ChallengeDisagreeResult,
 	isPartOfChallenge
-} from '@common/models/challenge';
+} from '@server/models/challenge';
 import { gameAddNew } from '@server/managers/games';
 import { TimeControlId, TimeControlName } from '@common/models/time-control';
 import { UsersManager } from '@server/managers/users-manager';
 import { isNotDefined } from '@common/utils/is-defined';
-import { User } from '@common/models/user';
+import { User } from '@server/models/user';
 import { canUserDeclineChallenge, canUserSendChallenge } from '@server/managers/user-relationships';
-import { PublicError } from '@server/utils/error-types/public-error';
+import { PublicError } from '@server/models/error-types/public-error';
 
 export function writeChallengeToFile(filename: string, c: Challenge) {
 	fs.writeFileSync(filename, JSON.stringify(c, null, 4));

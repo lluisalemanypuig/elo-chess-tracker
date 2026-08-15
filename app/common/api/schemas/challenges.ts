@@ -24,10 +24,10 @@ Contact:
 */
 
 import { z } from 'zod';
-import { GameResultSchema } from '@common/models/game';
-import { PlayerPublicIdSchema } from '@common/models/player';
-import { ChallengeIdSchema } from '@common/models/challenge';
 import { TimeControlIdSchema, TimeControlNameSchema } from '@common/models/time-control';
+import { ChallengeIdSchema } from '@common/models/challenge-id';
+import { PlayerPublicIdSchema } from '@common/models/player-id';
+import { GameResultSchema } from '@common/models/game-result';
 
 // ROUTES.CHALLENGE_SEND
 

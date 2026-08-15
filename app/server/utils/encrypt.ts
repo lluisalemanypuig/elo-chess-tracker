@@ -25,8 +25,8 @@ Contact:
 
 import CryptoJS from 'crypto-js';
 import { interleaveStrings } from '@server/utils/misc';
-import { PlayerPrivateId } from '@common/models/player';
-import { Password } from '@common/models/password';
+import { Password } from '@server/models/password';
+import { PlayerPrivateId } from '@common/models/player-id';
 
 // original allowedSymbols string:
 // a!b·c$d%e&f/g(h)i=j?k¿l|m@n#o~p¬qr\'s[¡]t{u}v/w*x-y+zºAªB"C,D.E;F:GHIJKLMNOPQRSTUVWXYZ0123456789
@@ -39,12 +39,12 @@ import { Password } from '@common/models/password';
 // use in order to configure the webpage in their machine.
 const allowedSymbols: string = '$ALLOWED_SYMBOLS_ENCRYPT'.normalize('NFC');
 
-/// Logarithm of 'x' in base 'base'
+// Logarithm of 'x' in base 'base'
 function logBase(x: number, base: number): number {
 	return Math.log(x) / Math.log(base);
 }
 
-/// Next power of 2
+// Next power of 2
 function nextPowerOf_2(n: number): number {
 	return Math.pow(2, Math.floor(logBase(n, 2)) + 1);
 }
@@ -74,17 +74,17 @@ export function normalizeString(str: string): string {
 	return newPassword;
 }
 
-/// Encrypts 'plainMsg' using password 'pwd'
+// Encrypts 'plainMsg' using password 'pwd'
 export function encryptMessage(plainMsg: string, pwd: string): string {
 	return CryptoJS.AES.encrypt(plainMsg, pwd).toString();
 }
 
-/// Decrypts 'encryptedMsg' using password 'pwd'
+// Decrypts 'encryptedMsg' using password 'pwd'
 function decryptBytes(encryptedMsg: string, pwd: string) {
 	return CryptoJS.AES.decrypt(encryptedMsg, pwd);
 }
 
-/// Decrypts 'encryptedMsg' using password 'pwd'
+// Decrypts 'encryptedMsg' using password 'pwd'
 export function decryptMessage(encryptedMsg: string, pwd: string): string {
 	try {
 		return decryptBytes(encryptedMsg, pwd).toString(CryptoJS.enc.Utf8);

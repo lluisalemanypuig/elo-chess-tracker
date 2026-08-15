@@ -26,21 +26,14 @@ Contact:
 import { z } from 'zod';
 import { isNotDefined } from '@common/utils/is-defined';
 
-/**
- * @brief All roles of users as strings.
- *
- * See below for details on
- */
 export const ALL_USER_ROLES = ['ADMIN', 'TEACHER', 'MEMBER', 'STUDENT'] as const;
 
-/// All roles as type
 export type UserRole = (typeof ALL_USER_ROLES)[number];
 
 export const UserRoleSchema = z.enum(ALL_USER_ROLES);
 
 export const UserRoleArraySchema = z.array(UserRoleSchema);
 
-/// Relate each user role to a readable string
 export const USER_ROLE_TO_STRING: { [key in UserRole]: string } = {
 	ADMIN: 'Admin',
 	TEACHER: 'Teacher',
@@ -48,7 +41,6 @@ export const USER_ROLE_TO_STRING: { [key in UserRole]: string } = {
 	STUDENT: 'Student'
 };
 
-/// Does the string parameter encode a valid user role?
 export function isRoleStringCorrect(r: string): boolean {
 	return ALL_USER_ROLES.includes(r as UserRole);
 }

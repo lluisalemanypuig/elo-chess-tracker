@@ -24,8 +24,8 @@ Contact:
 */
 
 import { z } from 'zod';
-import { PlayerPublicIdSchema } from '@common/models/player';
-import { UserGivenNameSchema } from '@common/models/user';
+import { UserGivenNameSchema } from '@common/models/user-given-name';
+import { PlayerPublicIdSchema } from '@common/models/player-id';
 
 export const UserThinSchema = z.object({
 	name: UserGivenNameSchema,

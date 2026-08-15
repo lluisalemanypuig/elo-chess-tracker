@@ -25,10 +25,10 @@ Contact:
 
 // roles used as string literals; no imports needed from user-role
 import { initializeRatingFunctions } from '@server/managers/rating-system';
-import { userFromString } from '@common/io/user';
 import { isNotDefined } from '@common/utils/is-defined';
 import { toDateMajor } from '@common/utils/time';
 import { toTimeControlId } from '@common/models/time-control';
+import { userFromString } from '@server/io/user';
 
 const Classical = toTimeControlId('classical');
 const Rapid = toTimeControlId('rapid');

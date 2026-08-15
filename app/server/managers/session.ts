@@ -26,7 +26,7 @@ Contact:
 import Debug from 'debug';
 
 import { logNow } from '@common/utils/time';
-import { User } from '@common/models/user';
+import { User } from '@server/models/user';
 const debug = Debug('ELO_CHESS_TRACKER:managers/session');
 
 import { SessionIDManager } from '@server/managers/session-id-manager';
@@ -34,8 +34,8 @@ import { SessionId } from '@common/models/session-id';
 import { shuffle } from '@server/utils/shuffle-random';
 import { UsersManager } from '@server/managers/users-manager';
 import { isNotDefined } from '@common/utils/is-defined';
-import { PlayerPrivateId } from '@common/models/player';
-import { InternalError } from '@server/utils/error-types/internal-error';
+import { InternalError } from '@app/server/models/error-types/internal-error';
+import { PlayerPrivateId } from '@common/models/player-id';
 
 // The original string was
 // "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+-*/ª!·$%&/()=?¿¡'º|@#~€¬^{},;.:_";
@@ -48,7 +48,7 @@ import { InternalError } from '@server/utils/error-types/internal-error';
 // use in order to configure the webpage in their machine.
 const characterSamples: string = '$ALLOWED_SYMBOLS_COOKIES';
 
-/// Makes a random session token from a starting string.
+// Makes a random session token from a starting string.
 function randomSessionToken(str: string): string {
 	// convert string to an array
 	let stringArray: string[] = [];
@@ -82,7 +82,7 @@ export function sessionIdAdd(username: PlayerPrivateId) {
 	return sessionId;
 }
 
-/// Deletes a session id.
+// Deletes a session id.
 export function sessionIdDelete(session: SessionId) {
 	let mem = SessionIDManager.getInstance();
 
@@ -98,7 +98,7 @@ export function sessionIdDelete(session: SessionId) {
 	debug(logNow(), `Currently, '${mem.numSessionIds()}' sessions`);
 }
 
-/// Deletes a session id.
+// Deletes a session id.
 export function sessionUserDeleteAll(session: SessionId) {
 	let mem = SessionIDManager.getInstance();
 

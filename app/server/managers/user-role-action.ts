@@ -29,13 +29,13 @@ import {
 	getGenericRoleActionName,
 	getRoleActionName,
 	UserAction,
-	UserActionID
+	UserActionId
 } from '@common/models/user-action';
-import { UserPermissions } from '@common/models/configuration/permissions';
+import { UserPermissions } from '@server/models/configuration/permissions';
 
-/// Relate each user role to a readable string
+// Relate each user role to a readable string
 export class UserRoleToUserAction {
-	/// The only instance of this class
+	// The only instance of this class
 	private static instance: UserRoleToUserAction;
 
 	constructor() {
@@ -57,7 +57,7 @@ export class UserRoleToUserAction {
 		return UserRoleToUserAction.instance;
 	}
 
-	/// The data structure that relates user roles to actions
+	// The data structure that relates user roles to actions
 	private relate: { [key in UserRole]: UserAction[] } = {
 		ADMIN: [],
 		TEACHER: [],
@@ -65,12 +65,12 @@ export class UserRoleToUserAction {
 		STUDENT: []
 	};
 
-	/// Add action 'action' to role 'role'
+	// Add action 'action' to role 'role'
 	addToRole(role: UserRole, action: UserAction) {
 		this.relate[role].push(action);
 	}
 
-	/// Return all actions for role 'role'
+	// Return all actions for role 'role'
 	getActionsRole(role: UserRole): UserAction[] {
 		return this.relate[role];
 	}
@@ -79,7 +79,7 @@ export class UserRoleToUserAction {
 		return this.relate[role].includes(action);
 	}
 
-	roleCanDo(role: UserRole, action: UserActionID): boolean {
+	roleCanDo(role: UserRole, action: UserActionId): boolean {
 		for (const otherRoles of ALL_USER_ROLES) {
 			const userAction = getRoleActionName(action, otherRoles);
 			if (this.roleIncludesAction(role, userAction)) {
@@ -98,7 +98,7 @@ export class UserRoleToUserAction {
 		}
 	}
 
-	/// Clears the relationships contained in this instance.
+	// Clears the relationships contained in this instance.
 	clear() {
 		this.relate = {
 			ADMIN: [],

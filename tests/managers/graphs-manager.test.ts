@@ -25,9 +25,9 @@ Contact:
 
 import { clearServer } from '@server/managers/memory/clear';
 import { GraphsManager } from '@server/managers/graphs-manager';
-import { Graph } from '@common/models/graph/graph';
-import { toPlayerPrivateId } from '@common/models/player';
+import { Graph } from '@server/models/graph/graph';
 import { toTimeControlId } from '@common/models/time-control';
+import { toPlayerPrivateId } from '@common/models/player-id';
 
 const Classical = toTimeControlId('Classical');
 const Rapid = toTimeControlId('Rapid');

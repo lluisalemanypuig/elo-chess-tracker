@@ -24,7 +24,7 @@ Contact:
 */
 
 import { z } from 'zod';
-import { PlayerPublicIdSchema } from '@common/models/player';
+import { PlayerPublicIdSchema } from '@common/models/player-id';
 
 export const SessionIdSchema = z
 	.object({
@@ -34,7 +34,6 @@ export const SessionIdSchema = z
 	.strict()
 	.readonly();
 
-// A structure that encodes a session
 export type SessionId = z.infer<typeof SessionIdSchema>;
 
 export const SessionIdTokenFieldName = 'token';

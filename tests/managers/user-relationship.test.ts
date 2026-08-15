@@ -23,7 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { toUserGivenName, User } from '@common/models/user';
+import { User } from '@server/models/user';
 import { UserRoleToUserAction } from '@server/managers/user-role-action';
 import { initializePermissions } from '@server/managers/user-role-action';
 import {
@@ -34,7 +34,8 @@ import {
 	canUserSendChallenge,
 	canUserSeeGraph
 } from '@server/managers/user-relationships';
-import { toPlayerPrivateId } from '@common/models/player';
+import { toUserGivenName } from '@common/models/user-given-name';
+import { toPlayerPrivateId } from '@common/models/player-id';
 
 const un = toPlayerPrivateId('un');
 const firstName = toUserGivenName('f');

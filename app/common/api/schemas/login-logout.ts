@@ -23,8 +23,8 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
+import { PlayerPrivateIdSchema } from '@common/models/player-id';
 import { z } from 'zod';
-import { PlayerPrivateIdSchema } from '@common/models/player';
 
 // ROUTES.USER_LOGIN
 

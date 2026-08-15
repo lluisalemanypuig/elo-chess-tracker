@@ -26,7 +26,7 @@ Contact:
 import moment from 'moment';
 import { z } from 'zod';
 
-/// DateFull: YYYY-MM-DD..HH:mm:ss:SSS
+// DateFull: YYYY-MM-DD..HH:mm:ss:SSS
 
 declare const DateFullBrand: unique symbol;
 export type DateFullLocal = number & {
@@ -39,7 +39,7 @@ export function toDateFull(s: string): DateFull {
 	return s as DateFull;
 }
 
-/// DateMajor: YYYY-MM-DD
+// DateMajor: YYYY-MM-DD
 
 declare const DateMajorBrand: unique symbol;
 export type DateMajorLocal = number & {
@@ -52,7 +52,7 @@ export function toDateMajor(s: string): DateMajor {
 	return s as DateMajor;
 }
 
-/// HH:mm:ss:SSS
+// DateMinor: HH:mm:ss:SSS
 
 declare const DateMinorBrand: unique symbol;
 export type DateMinorLocal = number & {
@@ -107,7 +107,7 @@ export function dateSplitMajorMinor(date: DateFull): [DateMajor, DateMinor] {
 	return [toDateMajor(s[0]), toDateMinor(s[1])];
 }
 
-/// Returns the current date in string format "YYYY-MM-DD..HH:mm:ss:SSS"
+// Returns the current date in string format "YYYY-MM-DD..HH:mm:ss:SSS"
 export function logNow(): DateFull {
 	return dateToStringFull(new Date());
 }

@@ -27,10 +27,10 @@ Contact:
  * @brief Configuration parameters of the server.
  */
 export class ConfigurationManager {
-	/// The only instance of this class
+	// The only instance of this class
 	private static instance: ConfigurationManager;
 
-	/// Construct the server configuration
+	// Construct the server configuration
 	constructor() {
 		if (ConfigurationManager.instance) {
 			return ConfigurationManager.instance;
@@ -44,9 +44,9 @@ export class ConfigurationManager {
 		return ConfigurationManager.instance;
 	}
 
-	/// The HTTP port of the server
+	// The HTTP port of the server
 	private portHttp: string = '';
-	/// The HTTPS port of the server
+	// The HTTPS port of the server
 	private portHttps: string = '';
 
 	setPortHttp(http: string) {
@@ -63,7 +63,7 @@ export class ConfigurationManager {
 		return this.portHttps;
 	}
 
-	/// The name of the domain the server can be accessed from
+	// The name of the domain the server can be accessed from
 	private domain: string = '';
 	setDomainName(d: string) {
 		this.domain = d;
@@ -78,13 +78,13 @@ export class ConfigurationManager {
 		this.domain = '';
 	}
 
-	/// Cache results of GET/POST methods (e.g., titles and icons)
+	// Cache results of GET/POST methods (e.g., titles and icons)
 	private static readonly cacheData: boolean = false;
 	static shouldCacheData(): boolean {
 		return ConfigurationManager.cacheData;
 	}
 
-	/// Is this server running in production?
+	// Is this server running in production?
 	private static readonly production: boolean = false;
 	static isProduction(): boolean {
 		return ConfigurationManager.production;

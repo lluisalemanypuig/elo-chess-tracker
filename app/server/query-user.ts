@@ -31,7 +31,7 @@ import { logNow } from '@common/utils/time';
 import { userGetAllNamePublicId } from '@server/managers/users';
 import { isUserLoggedIn } from '@server/managers/session';
 import { UsersManager } from '@server/managers/users-manager';
-import { TimeControlRating } from '@common/models/time-control-rating';
+import { TimeControlRating } from '@server/models/time-control-rating';
 import { isNotDefined } from '@common/utils/is-defined';
 import { ROUTES } from '@common/api/routes';
 import { inputSchemaOf } from '@common/api/schemas-endpoints';
@@ -46,7 +46,7 @@ import {
 	UserWithoutGames
 } from '@common/api/schemas/query-user';
 
-/// Returns the list of user full names and usernames sorted by name
+// Returns the list of user full names and usernames sorted by name
 export async function getQueryUserList(req: Request, res: Response) {
 	debug(logNow(), `GET ${ROUTES.QUERY_USER_LIST}...`);
 

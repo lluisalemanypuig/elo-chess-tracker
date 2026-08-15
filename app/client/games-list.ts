@@ -22,10 +22,11 @@ Full source code of elo-chess-tracker:
 import 'htmx.org';
 
 import { isNotDefined } from '@common/utils/is-defined';
-import { GameId, resultFromTextToValue } from '@common/models/game';
 import { messageFromResponse, serverCall } from '@client/action';
 import { ROUTES } from '@common/api/routes';
 import { TimeControlId } from '@common/models/time-control';
+import { resultFromTextToValue } from '@common/models/game-result';
+import { GameId } from '@common/models/game-id';
 
 function newTextCell(text: string) {
 	let cell = document.createElement('td');

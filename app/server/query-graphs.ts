@@ -29,20 +29,20 @@ import { Request, Response } from 'express';
 
 import { logNow } from '@common/utils/time';
 import { isUserLoggedIn } from '@server/managers/session';
-import { User } from '@common/models/user';
+import { User } from '@server/models/user';
 import { GraphsManager } from '@server/managers/graphs-manager';
 import { TimeControlId } from '@common/models/time-control';
 import { searchLinearByKey } from '@server/utils/searching';
 import { UsersManager } from '@server/managers/users-manager';
-import { Edge } from '@common/models/graph/edge';
+import { Edge } from '@server/models/graph/edge';
 import { canUserSeeGraph } from '@server/managers/user-relationships';
 import { isNotDefined } from '@common/utils/is-defined';
 import { ROUTES } from '@common/api/routes';
 import { inputSchemaOf } from '@common/api/schemas-endpoints';
 import { safeParseRequestBody, safeParseRequestCookies } from '@server/utils/schemas';
 import { EdgeInfo, NodeInfo, QueryGraphOutput } from '@common/api/schemas/query-graphs';
-import { PlayerPrivateId } from '@common/models/player';
-import { InternalError } from '@server/utils/error-types/internal-error';
+import { InternalError } from '@app/server/models/error-types/internal-error';
+import { PlayerPrivateId } from '@common/models/player-id';
 
 function retrieveGraphUser(username: PlayerPrivateId, timeControlId: TimeControlId): QueryGraphOutput {
 	const users = UsersManager.getInstance();

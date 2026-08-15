@@ -30,7 +30,7 @@ Contact:
  * user roles.
  */
 export class UsersBehavior {
-	/// The only instance of this class
+	// The only instance of this class
 	private static instance: UsersBehavior;
 
 	constructor() {
@@ -45,7 +45,7 @@ export class UsersBehavior {
 		return UsersBehavior.instance;
 	}
 
-	/// Higher rated player can decline challenge from a lower rated player
+	// Higher rated player can decline challenge from a lower rated player
 	private hrpDeclineChallengeLrt: boolean = false;
 
 	setHigherRatedDeclineChallengeLowerRated(v: boolean) {

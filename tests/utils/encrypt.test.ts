@@ -23,7 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { PlayerPrivateId, toPlayerPrivateId } from '@common/models/player';
+import { PlayerPrivateId, toPlayerPrivateId } from '@common/models/player-id';
 import {
 	decryptMessage,
 	encryptMessage,

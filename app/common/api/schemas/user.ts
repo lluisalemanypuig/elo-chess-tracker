@@ -25,8 +25,8 @@ Contact:
 
 import { z } from 'zod';
 import { UserRoleArraySchema } from '@common/models/user-role';
-import { PlayerPrivateIdSchema, PlayerPublicIdSchema } from '@common/models/player';
-import { UserGivenNameSchema } from '@common/models/user';
+import { PlayerPrivateIdSchema, PlayerPublicIdSchema } from '@common/models/player-id';
+import { UserGivenNameSchema } from '@common/models/user-given-name';
 
 // ROUTES.USER_CREATE
 

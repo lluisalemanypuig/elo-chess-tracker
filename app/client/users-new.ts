@@ -25,8 +25,8 @@ import { messageFromResponse, serverCall } from '@client/action';
 import { isNotDefined } from '@common/utils/is-defined';
 import { UserRole, ALL_USER_ROLES, arrayStringToRoles, USER_ROLE_TO_STRING } from '@common/models/user-role';
 import { ROUTES } from '@common/api/routes';
-import { toPlayerPrivateId } from '@common/models/player';
-import { toUserGivenName } from '@common/models/user';
+import { toPlayerPrivateId } from '@common/models/player-id';
+import { toUserGivenName } from '@common/models/user-given-name';
 
 async function submitNewUserClicked(_event: any) {
 	// username box

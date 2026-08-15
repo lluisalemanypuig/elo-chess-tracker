@@ -37,8 +37,8 @@ import { SessionIDManager } from '@server/managers/session-id-manager';
 import { UsersManager } from '@server/managers/users-manager';
 import { runCommand } from '@tests';
 import { GraphsManager } from '@server/managers/graphs-manager';
-import { Graph } from '@common/models/graph/graph';
-import { Configuration } from '@common/models/configuration/configuration';
+import { Graph } from '@server/models/graph/graph';
+import { Configuration } from '@server/models/configuration/configuration';
 import { toTimeControlId, toTimeControlName } from '@common/models/time-control';
 
 const webpage_dir = 'tests/webpage';
