@@ -45,6 +45,8 @@ import { GamesIterator } from '@server/managers/games-iterator';
 import { TimeControlRating } from '@common/models/time-control-rating';
 import { isDefined, isNotDefined } from '@common/utils/is-defined';
 import { canUserCreateGame, canUserDeleteGame, canUserEditGame } from '@server/managers/user-relationships';
+import { PublicError } from '@server/utils/error-types/public-error';
+import { InternalError } from '@server/utils/error-types/internal-error';
 
 function writeGameArrayToFile(filename: string, gs: Game[]) {
 	fs.writeFileSync(filename, JSON.stringify(gs, null, 4));
@@ -115,7 +117,7 @@ function gameNew(
 		// there is no next game for white
 		const whiteData = UsersManager.getInstance().getAllUserDataByPrivateId(white);
 		if (isNotDefined(whiteData)) {
-			throw new Error(`White user '${white}' is not in the users database`);
+			throw new InternalError(`White user '${white}' is not in the users database`);
 		}
 		whiteToAssign = whiteData.user.getRating(timeControlId).clone();
 	}
@@ -132,7 +134,7 @@ function gameNew(
 	} else {
 		const blackData = UsersManager.getInstance().getAllUserDataByPrivateId(black);
 		if (isNotDefined(blackData)) {
-			throw new Error(`Black user '${black}' is not in the users database`);
+			throw new InternalError(`Black user '${black}' is not in the users database`);
 		}
 		blackToAssign = blackData.user.getRating(timeControlId).clone();
 	}
@@ -282,7 +284,7 @@ function gameInsertInHistory(g: Game, recordId: DateMajor) {
 
 		const [gameIdx, gameExists] = whereShouldBeInsertedByKey(gameSet, gameCompareDates(g));
 		if (gameExists) {
-			throw new Error(`Game of the exact same date field '${g.when}' already exists`);
+			throw new InternalError(`Game of the exact same date field '${g.when}' already exists`);
 		}
 
 		gameSet.splice(gameIdx, 0, g);
@@ -319,14 +321,14 @@ export function gameAddNew(
 	gameTime: DateMinor
 ) {
 	if (white.username === black.username) {
-		throw new Error('The players cannot be the same.');
+		throw new PublicError('The players cannot be the same.');
 	}
 
 	if (gameDate === '') {
-		throw new Error('The selected date is incorrect.');
+		throw new PublicError('The selected date is incorrect.');
 	}
 	if (gameTime === '') {
-		throw new Error('The selected time is incorrect.');
+		throw new PublicError('The selected time is incorrect.');
 	}
 
 	debug(logNow(), `    Title: '${gameTitle}'`);
@@ -365,7 +367,7 @@ export function gameAddNewGuarded(
 ) {
 	if (!canUserCreateGame(creator, white, black)) {
 		debug(logNow(), `User cannot create this game.`);
-		throw new Error('You cannot create this game.');
+		throw new PublicError('You cannot create this game.');
 	}
 	gameAddNew(gameTitle, white, black, result, timeControlId, timeControlName, gameDate, gameTime);
 }
@@ -373,12 +375,12 @@ export function gameAddNewGuarded(
 export function gameEditResult(editor: User, gameId: GameId, newResult: GameResult) {
 	if (!editor.canDo('EDIT_GAMES')) {
 		debug(logNow(), `User '${editor.username}' cannot edit games.`);
-		throw new Error('You cannot edit games');
+		throw new PublicError('You cannot edit games');
 	}
 
 	const info = GamesManager.getInstance().getGameInfo(gameId);
 	if (isNotDefined(info)) {
-		throw new Error(`Could not find information associated to this game.`);
+		throw new PublicError(`Could not find information associated to this game.`);
 	}
 
 	const timeControlId = info.timeControlId;
@@ -388,12 +390,12 @@ export function gameEditResult(editor: User, gameId: GameId, newResult: GameResu
 	const gamesIter = new GamesIterator(gamesDir);
 	const found = gamesIter.locateGame(gameRecord, gameId);
 	if (!found) {
-		throw new Error(`Could not find game '${gameId}'.`);
+		throw new PublicError(`Could not find game '${gameId}'.`);
 	}
 
 	const game = gamesIter.getCurrentGame();
 	if (isNotDefined(game)) {
-		throw new Error(`Game was not found.`);
+		throw new PublicError(`Game was not found.`);
 	}
 
 	const oldResult = game.result;
@@ -408,20 +410,15 @@ export function gameEditResult(editor: User, gameId: GameId, newResult: GameResu
 
 	if (isNotDefined(white)) {
 		debug(logNow(), `Public id '${game.white}' for White is not valid.`);
-		throw new Error('Invalid white user sent to the server.');
+		throw new PublicError('Invalid white user sent to the server.');
 	}
 	if (isNotDefined(black)) {
 		debug(logNow(), `Public id '${game.black}' for Black is not valid.`);
-		throw new Error('Invalid black user sent to the server.');
+		throw new PublicError('Invalid black user sent to the server.');
 	}
 
 	if (!canUserEditGame(editor, white.user, black.user)) {
-		throw new Error(`You lack permissions to edit this game.`);
-	}
-
-	// gameId does not exist
-	if (isNotDefined(info)) {
-		throw new Error(`Game id '${gameId}' does not exist in the Games Manager`);
+		throw new PublicError(`You lack permissions to edit this game.`);
 	}
 
 	debug(logNow(), `Editing game...`);
@@ -460,12 +457,12 @@ export function gameEditResult(editor: User, gameId: GameId, newResult: GameResu
 export function gameEditTitle(editor: User, gameId: GameId, newTitle: string) {
 	if (!editor.canDo('EDIT_GAMES')) {
 		debug(logNow(), `User '${editor.username}' cannot edit games.`);
-		throw new Error('You cannot edit games');
+		throw new PublicError('You cannot edit games');
 	}
 
 	const info = GamesManager.getInstance().getGameInfo(gameId);
 	if (isNotDefined(info)) {
-		throw new Error(`Could not find information associated to this game.`);
+		throw new PublicError(`Could not find information associated to this game.`);
 	}
 
 	const timeControlId = info.timeControlId;
@@ -476,12 +473,12 @@ export function gameEditTitle(editor: User, gameId: GameId, newTitle: string) {
 	const found = gamesIter.locateGame(gameRecord, gameId);
 	if (!found) {
 		debug(logNow(), `Could not find game '${gameId}'.`);
-		throw new Error(`Could not find game.`);
+		throw new PublicError(`Could not find game.`);
 	}
 
 	const game = gamesIter.getCurrentGame();
 	if (isNotDefined(game)) {
-		throw new Error(`Game was not found.`);
+		throw new PublicError(`Game was not found.`);
 	}
 
 	// avoid unnecessary work
@@ -496,11 +493,11 @@ export function gameEditTitle(editor: User, gameId: GameId, newTitle: string) {
 
 	if (isNotDefined(white)) {
 		debug(logNow(), `Public id '${white}' for White is not valid.`);
-		throw new Error('Invalid white user sent to the server.');
+		throw new PublicError('Invalid white user sent to the server.');
 	}
 	if (isNotDefined(black)) {
 		debug(logNow(), `Public id '${black}' for Black is not valid.`);
-		throw new Error('Invalid black user sent to the server.');
+		throw new PublicError('Invalid black user sent to the server.');
 	}
 
 	if (!canUserEditGame(editor, white.user, black.user)) {
@@ -508,7 +505,7 @@ export function gameEditTitle(editor: User, gameId: GameId, newTitle: string) {
 			logNow(),
 			`User ${editor.username} is trying to edit a game with users ${white.user.username} and ${black.user.username}`
 		);
-		throw new Error(`You lack permissions to edit this game.`);
+		throw new PublicError(`You lack permissions to edit this game.`);
 	}
 
 	debug(logNow(), `Editing game...`);
@@ -524,7 +521,7 @@ export function gameEditTitle(editor: User, gameId: GameId, newTitle: string) {
 export function gameDelete(deleter: User, gameId: GameId) {
 	if (!deleter.canDo('DELETE_GAMES')) {
 		debug(logNow(), `User '${deleter.username}' cannot delete games.`);
-		throw new Error('You cannot delete games');
+		throw new PublicError('You cannot delete games');
 	}
 
 	const gamesManager = GamesManager.getInstance();
@@ -532,7 +529,7 @@ export function gameDelete(deleter: User, gameId: GameId) {
 
 	// gameId does not exist
 	if (isNotDefined(info)) {
-		throw new Error(`Game id '${gameId}' does not exist in the Games Manager`);
+		throw new PublicError(`Game id '${gameId}' does not exist in the Games Manager`);
 	}
 
 	const timeControlId = info.timeControlId;
@@ -542,7 +539,7 @@ export function gameDelete(deleter: User, gameId: GameId) {
 	const gamesIter = new GamesIterator(gamesDir);
 	const found = gamesIter.locateGame(gameRecord, gameId);
 	if (!found) {
-		throw new Error(`Could not find game '${gameId}'.`);
+		throw new PublicError(`Could not find game '${gameId}'.`);
 	}
 
 	const game = gamesIter.getCurrentGame();
@@ -554,15 +551,15 @@ export function gameDelete(deleter: User, gameId: GameId) {
 
 	if (isNotDefined(white)) {
 		debug(logNow(), `Random id '${white}' for White is not valid.`);
-		throw new Error('Invalid white user sent to the server.');
+		throw new PublicError('Invalid white user sent to the server.');
 	}
 	if (isNotDefined(black)) {
 		debug(logNow(), `Random id '${black}' for Black is not valid.`);
-		throw new Error('Invalid black user sent to the server.');
+		throw new PublicError('Invalid black user sent to the server.');
 	}
 
 	if (!canUserDeleteGame(deleter, white.user, black.user)) {
-		throw new Error(`You lack permissions to delete this game.`);
+		throw new PublicError(`You lack permissions to delete this game.`);
 	}
 
 	/* Update the graphs */
@@ -628,7 +625,7 @@ export function gameDelete(deleter: User, gameId: GameId) {
 export function recalculateAllRatings(u: User) {
 	if (!u.is('ADMIN')) {
 		debug(logNow(), `User '${u.username}' cannot recalculate ratings.`);
-		throw new Error('You cannot recalculate ratings.');
+		throw new PublicError('You cannot recalculate ratings.');
 	}
 
 	const ratingSystem = RatingSystemManager.getInstance();

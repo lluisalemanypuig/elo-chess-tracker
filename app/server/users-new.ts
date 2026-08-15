@@ -37,6 +37,7 @@ import { isNotDefined } from '@common/utils/is-defined';
 import { ROUTES } from '@common/api/routes';
 import { inputSchemaOf } from '@common/api/schemas-endpoints';
 import { safeParseRequestBody, safeParseRequestCookies } from '@server/utils/schemas';
+import { handleError } from '@server/utils/error-handling';
 
 export async function getPageUserCreate(req: Request, res: Response) {
 	debug(logNow(), `GET ${ROUTES.PAGE_USER_CREATE}...`);
@@ -113,7 +114,7 @@ export async function postUserCreate(req: Request, res: Response) {
 	try {
 		userAddNew(registerer, { username, firstName, lastName, password, roles });
 	} catch (e) {
-		res.status(403).send((e as Error).message);
+		handleError(e as Error, res);
 		return;
 	}
 

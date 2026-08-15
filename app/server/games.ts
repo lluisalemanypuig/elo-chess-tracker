@@ -43,6 +43,7 @@ import { isNotDefined } from '@common/utils/is-defined';
 import { ROUTES } from '@common/api/routes';
 import { inputSchemaOf } from '@common/api/schemas-endpoints';
 import { safeParseRequestCookies, safeParseRequestBody } from '@server/utils/schemas';
+import { handleError } from '@server/utils/error-handling';
 
 export async function getPageGameListOwn(req: Request, res: Response) {
 	debug(logNow(), `GET ${ROUTES.PAGE_GAME_LIST_OWN}...`);
@@ -180,7 +181,7 @@ export async function postGameCreate(req: Request, res: Response) {
 			gameTime
 		);
 	} catch (e) {
-		res.status(403).send((e as Error).message);
+		handleError(e as Error, res);
 		return;
 	}
 
@@ -216,7 +217,7 @@ export async function postGameEditResult(req: Request, res: Response) {
 	try {
 		gameEditResult(editor, gameId, newResult);
 	} catch (e) {
-		res.status(403).send((e as Error).message);
+		handleError(e as Error, res);
 		return;
 	}
 
@@ -252,7 +253,7 @@ export async function postGameEditTitle(req: Request, res: Response) {
 	try {
 		gameEditTitle(editor, gameId, title);
 	} catch (e) {
-		res.status(403).send((e as Error).message);
+		handleError(e as Error, res);
 		return;
 	}
 
@@ -287,7 +288,7 @@ export async function postGameDelete(req: Request, res: Response) {
 	try {
 		gameDelete(deleter, gameId);
 	} catch (e) {
-		res.status(403).send((e as Error).message);
+		handleError(e as Error, res);
 		return;
 	}
 
@@ -314,7 +315,7 @@ export async function postRecalculateRatings(req: Request, res: Response) {
 	try {
 		recalculateAllRatings(user);
 	} catch (e) {
-		res.status(403).send((e as Error).message);
+		handleError(e as Error, res);
 		return;
 	}
 

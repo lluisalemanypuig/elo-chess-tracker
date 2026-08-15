@@ -42,6 +42,7 @@ import { inputSchemaOf } from '@common/api/schemas-endpoints';
 import { safeParseRequestBody, safeParseRequestCookies } from '@server/utils/schemas';
 import { EdgeInfo, NodeInfo, QueryGraphOutput } from '@common/api/schemas/query-graphs';
 import { PlayerPrivateId } from '@common/models/player';
+import { InternalError } from '@server/utils/error-types/internal-error';
 
 function retrieveGraphUser(username: PlayerPrivateId, timeControlId: TimeControlId): QueryGraphOutput {
 	const users = UsersManager.getInstance();
@@ -76,7 +77,7 @@ function retrieveGraphUser(username: PlayerPrivateId, timeControlId: TimeControl
 		const neighbor = users.getAllUserDataByPrivateId(e.neighbor);
 		if (isNotDefined(neighbor)) {
 			debug(logNow(), `Could not find user ${e.neighbor}.`);
-			throw new Error(`Internal error when querying a graph.`);
+			throw new InternalError(`Internal error when querying a graph.`);
 		}
 
 		const node: NodeInfo = {
@@ -104,7 +105,7 @@ function retrieveGraphUser(username: PlayerPrivateId, timeControlId: TimeControl
 		const neighbor = users.getAllUserDataByPrivateId(e.neighbor);
 		if (isNotDefined(neighbor)) {
 			debug(logNow(), `Could not find user ${e.neighbor}.`);
-			throw new Error(`Internal error when querying a graph.`);
+			throw new InternalError(`Internal error when querying a graph.`);
 		}
 
 		const idx = searchLinearByKey(listNodes, (i: NodeInfo): boolean => {

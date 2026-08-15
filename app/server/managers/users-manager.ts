@@ -27,6 +27,7 @@ import { isDefined, isNotDefined } from '@common/utils/is-defined';
 import { User } from '@common/models/user';
 import { searchLinearByKey } from '@server/utils/searching';
 import { PlayerPrivateId, PlayerPublicId, toPlayerPublicId } from '@common/models/player';
+import { InternalError } from '@server/utils/error-types/internal-error';
 
 interface UserBundle {
 	user: User;
@@ -85,7 +86,7 @@ export class UsersManager {
 	}
 	replaceUser(u: User, idx: number) {
 		if (!(0 <= idx && idx < this.users.length)) {
-			throw new Error('Index out of bounds');
+			throw new InternalError('Index out of bounds');
 		}
 		delete this.users[idx];
 		this.users[idx] = u;

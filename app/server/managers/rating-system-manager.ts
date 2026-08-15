@@ -26,6 +26,7 @@ Contact:
 import { Game } from '@common/models/game';
 import { Rating } from '@common/models/rating-framework/rating';
 import { TimeControl, TimeControlId } from '@common/models/time-control';
+import { PublicError } from '@server/utils/error-types/public-error';
 
 /**
  * @brief Rating System Manager singleton class
@@ -108,16 +109,16 @@ export class RatingSystemManager {
 
 	clearFunctions() {
 		this.ratingFormulaFunc = () => {
-			throw new Error('Missing formula function for this rating system.');
+			throw new PublicError('Missing formula function for this rating system.');
 		};
 		this.newRatingFunc = () => {
-			throw new Error('Missing function to create a new rating.');
+			throw new PublicError('Missing function to create a new rating.');
 		};
 		this.ratingFromStringFunc = () => {
-			throw new Error('Missing JSON string conversion function.');
+			throw new PublicError('Missing JSON string conversion function.');
 		};
 		this.ratingFromJsonFunc = () => {
-			throw new Error('Missing JSON object conversion function.');
+			throw new PublicError('Missing JSON object conversion function.');
 		};
 	}
 	clearTimeControls() {

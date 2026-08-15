@@ -56,7 +56,8 @@ import { Ports, ServerConfiguration } from '@common/models/configuration/server'
 import { UserPermissions } from '@common/models/configuration/permissions';
 import { clearServer } from '@server/managers/memory/clear';
 import { initializePermissions } from '@server/managers/user-role-action';
-import { writeUserToFile } from '../users';
+import { writeUserToFile } from '@server/managers/users';
+import { InternalError } from '@server/utils/error-types/internal-error';
 
 function initEnvironmentDirectories(baseDirectory: string, executionDirectory: string) {
 	let serverEnv = EnvironmentManager.getInstance();
@@ -186,7 +187,7 @@ function initUsers() {
 		const userStr = fs.readFileSync(userFile, 'utf8');
 		const user = userFromString(userStr);
 		if (isNotDefined(user)) {
-			throw new Error(`Could not parse user at index '${i}', at file '${userFile}'.`);
+			throw new InternalError(`Could not parse user at index '${i}', at file '${userFile}'.`);
 		}
 		debug(logNow(), `        User '${user.username}' is at index '${i}'`);
 
@@ -226,7 +227,7 @@ function initChallenges() {
 		const challengeData = fs.readFileSync(challengeFile, 'utf8');
 		const c = challengeFromString(challengeData);
 		if (isNotDefined(c)) {
-			throw new Error(`Challenge at index '${i}' could not be parsed.`);
+			throw new InternalError(`Challenge at index '${i}' could not be parsed.`);
 			continue;
 		}
 		challenges.addChallenge(c);
@@ -261,7 +262,7 @@ function initGames() {
 			const gameRecordData = fs.readFileSync(gameRecordFile, 'utf8');
 			const gameSet = gameArrayFromString(gameRecordData);
 			if (isNotDefined(gameSet)) {
-				throw new Error(`File '${gameRecordFile}' could not be parsed.`);
+				throw new InternalError(`File '${gameRecordFile}' could not be parsed.`);
 			}
 
 			for (let j = 0; j < gameSet.length; ++j) {
@@ -298,7 +299,7 @@ function initGraphs() {
 			debug(logNow(), `    Found directory ${graphsDir}`);
 			const graph = graphFromString(graphsDir);
 			if (isNotDefined(graph)) {
-				throw new Error(`Could not read graph from directory '${graphsDir}'.`);
+				throw new InternalError(`Could not read graph from directory '${graphsDir}'.`);
 			}
 			graphManager.addGraph(timeControlId, graph);
 		}

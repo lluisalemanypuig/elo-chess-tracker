@@ -50,7 +50,8 @@ import { TimeControlId, TimeControlName } from '@common/models/time-control';
 import { UsersManager } from '@server/managers/users-manager';
 import { isNotDefined } from '@common/utils/is-defined';
 import { User } from '@common/models/user';
-import { canUserDeclineChallenge, canUserSendChallenge } from './user-relationships';
+import { canUserDeclineChallenge, canUserSendChallenge } from '@server/managers/user-relationships';
+import { PublicError } from '@server/utils/error-types/public-error';
 
 export function writeChallengeToFile(filename: string, c: Challenge) {
 	fs.writeFileSync(filename, JSON.stringify(c, null, 4));
@@ -92,15 +93,15 @@ export function challengeSendNew(
 
 	if (!sender.canDo('CHALLENGE_USER')) {
 		debug(logNow(), `User '${sender.username}' cannot challenge other users.`);
-		throw new Error('You cannot challenge other users');
+		throw new PublicError('You cannot challenge other users');
 	}
 	if (!canUserSendChallenge(sender, receiver)) {
 		debug(logNow(), `Sender '${sender.username}' cannot challenge user '${receiver.username}'.`);
-		throw new Error('You cannot challenge this user.');
+		throw new PublicError('You cannot challenge this user.');
 	}
 	if (receiver === sender) {
 		debug(logNow(), `A challenge cannot be sent to oneself.`);
-		throw new Error('You cannot challenge yourself.');
+		throw new PublicError('You cannot challenge yourself.');
 	}
 
 	let mem = ChallengesManager.getInstance();
@@ -128,14 +129,14 @@ export function challengeAccept(c: Challenge, { by, when }: ChallengeAccept) {
 	debug(logNow(), `Accepting challenge '${c.id}'`);
 
 	if (c.state !== 'PENDING_ACCEPT') {
-		throw new Error(`The challenge cannot be accepted since its state is ${c.state}.`);
+		throw new PublicError(`The challenge cannot be accepted since its state is ${c.state}.`);
 	}
 	if (!isPartOfChallenge(c, by)) {
 		debug(logNow(), `Player '${by}' is not part of this challenge.`);
-		throw new Error(`You cannot disagree to this result.`);
+		throw new PublicError(`You cannot disagree to this result.`);
 	}
 	if (by !== c.sentTo) {
-		throw new Error('You cannot accept this challenge');
+		throw new PublicError('You cannot accept this challenge');
 	}
 
 	accept(c, { by, when });
@@ -156,26 +157,26 @@ export function challengeDecline(c: Challenge, { by }: ChallengeDecline) {
 	debug(logNow(), `Declining challenge '${c.id}'`);
 
 	if (c.state !== 'PENDING_ACCEPT') {
-		throw new Error(`This challenge cannot be declined because its state is ${c.state}`);
+		throw new PublicError(`This challenge cannot be declined because its state is ${c.state}`);
 	}
 	if (!isPartOfChallenge(c, by)) {
 		debug(logNow(), `Player '${by}' is not part of this challenge.`);
-		throw new Error(`You cannot decline this challenge.`);
+		throw new PublicError(`You cannot decline this challenge.`);
 	}
 	if (by !== c.sentTo) {
-		throw new Error('You cannot decline this challenge');
+		throw new PublicError('You cannot decline this challenge');
 	}
 
 	const mem = UsersManager.getInstance();
 	const sentTo = mem.getAllUserDataByPrivateId(c.sentTo);
 	const sentBy = mem.getAllUserDataByPrivateId(by);
 	if (isNotDefined(sentTo) || isNotDefined(sentBy)) {
-		throw new Error('In challenge, either the white or black player do not exist.');
+		throw new PublicError('In challenge, either the white or black player do not exist.');
 	}
 
 	if (!canUserDeclineChallenge(sentTo.user, sentBy.user, c.timeControlId)) {
 		debug(logNow(), `User ${sentTo.user.username} is trying to decline challenge sent by ${sentBy.user.username}`);
-		throw new Error(`You cannot decline this challenge`);
+		throw new PublicError(`You cannot decline this challenge`);
 	}
 
 	ChallengesManager.getInstance().removeChallenge(c);
@@ -196,11 +197,11 @@ export function challengeSetResult(c: Challenge, { by, when, white, black, resul
 	debug(logNow(), `Set the result of the challenge '${c.id}'`);
 
 	if (c.state !== 'PENDING_RESULT') {
-		throw new Error(`The result to the challenge cannot be set since its state is ${c.state}.`);
+		throw new PublicError(`The result to the challenge cannot be set since its state is ${c.state}.`);
 	}
 	if (!isPartOfChallenge(c, by)) {
 		debug(logNow(), `Player '${by}' is not part of this challenge.`);
-		throw new Error(`You cannot set this result.`);
+		throw new PublicError(`You cannot set this result.`);
 	}
 	const originalSetter = c.resultSetBy;
 	if (originalSetter !== undefined && originalSetter !== by) {
@@ -208,20 +209,20 @@ export function challengeSetResult(c: Challenge, { by, when, white, black, resul
 			logNow(),
 			`User '${by}' is trying to override the result of challenge '${c.id}' which was set by '${originalSetter} on '${c.whenResultSet}'`
 		);
-		throw new Error('The result of this challenge has to be set by the original setter, which you are not.');
+		throw new PublicError('The result of this challenge has to be set by the original setter, which you are not.');
 	}
 
 	if (white === black) {
 		debug(logNow(), `White '${white}' and Black '${black}' cannot be the same player.`);
-		throw new Error('White and Black cannot be the same players.');
+		throw new PublicError('White and Black cannot be the same players.');
 	}
 	if (white !== c.sentBy && white !== c.sentTo) {
 		debug(logNow(), `White '${white}' is not part of challenge '${c.id}'.`);
-		throw new Error(`Wrong player data.`);
+		throw new PublicError(`Wrong player data.`);
 	}
 	if (black !== c.sentBy && black !== c.sentTo) {
 		debug(logNow(), `Black '${black}' is not part of challenge '${c.id}'.`);
-		throw new Error(`Wrong player data.`);
+		throw new PublicError(`Wrong player data.`);
 	}
 
 	setResult(c, { by, when, white, black, result });
@@ -241,28 +242,28 @@ export function challengeAgreeResult(c: Challenge, { by, when }: ChallengeAgreeR
 	debug(logNow(), `Agree to result of challenge '${c.id}'...`);
 
 	if (c.state !== 'PENDING_RESULT_AGREE') {
-		throw new Error(`The result to the challenge cannot be agreed to since its state is ${c.state}.`);
+		throw new PublicError(`The result to the challenge cannot be agreed to since its state is ${c.state}.`);
 	}
 	if (!isPartOfChallenge(c, by)) {
 		debug(logNow(), `Player '${by}' is not part of this challenge.`);
-		throw new Error(`You cannot agree to this result.`);
+		throw new PublicError(`You cannot agree to this result.`);
 	}
 	if (isNotDefined(c.whenResultSet)) {
 		debug(logNow(), `Date 'whenResultSet' is not defined`);
-		throw new Error(`Invalid date when the challenge was set.`);
+		throw new PublicError(`Invalid date when the challenge was set.`);
 	}
 	if (isNotDefined(c.white) || isNotDefined(c.black)) {
 		debug(logNow(), `Player 'white' or 'black' is not defined.`);
 		debug(logNow(), `    White: '${c.white}'.`);
 		debug(logNow(), `    Black: '${c.black}'.`);
-		throw new Error(`White or Black player has not been set.`);
+		throw new PublicError(`White or Black player has not been set.`);
 	}
 	if (isNotDefined(c.result)) {
 		debug(logNow(), `Result is not set.`);
-		throw new Error(`Result is not set.`);
+		throw new PublicError(`Result is not set.`);
 	}
 	if (by === c.resultSetBy) {
-		throw new Error('The accepter of the result cannot be the same person who set the result');
+		throw new PublicError('The accepter of the result cannot be the same person who set the result');
 	}
 
 	agreeResult(c, { by, when });
@@ -281,7 +282,7 @@ export function challengeAgreeResult(c: Challenge, { by, when }: ChallengeAgreeR
 	const white = mem.getAllUserDataByPrivateId(c.white);
 	const black = mem.getAllUserDataByPrivateId(c.black);
 	if (isNotDefined(white) || isNotDefined(black)) {
-		throw new Error('In challenge, either the white or black player do not exist.');
+		throw new PublicError('In challenge, either the white or black player do not exist.');
 	}
 
 	const randMilli = `${Math.floor(Math.random() * 999)}`;
@@ -306,15 +307,15 @@ export function challengeDisagreeResult(c: Challenge, { by }: ChallengeDisagreeR
 	debug(logNow(), `Disagree to the result of the challenge '${c.id}'`);
 
 	if (c.state !== 'PENDING_RESULT_AGREE') {
-		throw new Error(`Challenge's result cannot be disagreed to since its state is ${c.state}`);
+		throw new PublicError(`Challenge's result cannot be disagreed to since its state is ${c.state}`);
 	}
 	if (!isPartOfChallenge(c, by)) {
 		debug(logNow(), `Player '${by}' is not part of this challenge.`);
-		throw new Error(`You cannot disagree to this result.`);
+		throw new PublicError(`You cannot disagree to this result.`);
 	}
 	if (c.resultSetBy === by) {
 		debug(logNow(), `Player '${by}' set the result of the challenge and cannot disagree to it.`);
-		throw new Error(`You cannot disagree to this result.`);
+		throw new PublicError(`You cannot disagree to this result.`);
 	}
 
 	disagreeResult(c);
