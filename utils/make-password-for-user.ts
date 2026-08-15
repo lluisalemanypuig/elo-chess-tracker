@@ -23,7 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { PlayerPrivateId } from '@common/models/player';
+import { PlayerPrivateId } from '@common/models/player-id';
 import { encryptPasswordForUser } from '@server/utils/encrypt';
 
 const args = process.argv.slice(2);
