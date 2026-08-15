@@ -46,7 +46,7 @@ import { recalculateAllGraphs } from '@server/managers/graphs';
 import { Configuration } from '@common/models/configuration/configuration';
 import { isNotDefined } from '@common/utils/is-defined';
 import { toTimeControlId, toTimeControlName } from '@common/models/time-control';
-import { UsersManager } from '@app/server/managers/users-manager';
+import { UsersManager } from '@server/managers/users-manager';
 
 const Classical = toTimeControlId('Classical');
 const Classical90p30 = toTimeControlName('Classical (90 + 30)');

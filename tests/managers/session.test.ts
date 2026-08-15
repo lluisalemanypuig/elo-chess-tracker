@@ -34,8 +34,8 @@ import { Configuration } from '@common/models/configuration/configuration';
 import { toPlayerPrivateId } from '@common/models/player';
 import { toUserGivenName } from '@common/models/user';
 import { toTimeControlId, toTimeControlName } from '@common/models/time-control';
-import { UsersManager } from '@app/server/managers/users-manager';
-import { isNotDefined } from '@app/common/utils/is-defined';
+import { UsersManager } from '@server/managers/users-manager';
+import { isNotDefined } from '@common/utils/is-defined';
 
 const Classical = toTimeControlId('Classical');
 const Classical90p30 = toTimeControlName('Classical (90 + 30)');
