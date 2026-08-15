@@ -29,9 +29,7 @@ import { Request, Response } from 'express';
 
 import { logNow } from '@common/utils/time';
 import { isUserLoggedIn } from '@server/managers/session';
-import { userRenameAndReassignRoles } from '@server/managers/users';
-import { getRoleActionName } from '@common/models/user-action';
-import { canUserEdit } from '@server/managers/user-relationships';
+import { userEdit } from '@server/managers/users';
 import { UsersManager } from '@server/managers/users-manager';
 import { ConfigurationManager } from '@server/managers/configuration-manager';
 import { getExecutionDirectory } from '@server/managers/environment-manager';
@@ -98,33 +96,17 @@ export async function postUserEdit(req: Request, res: Response) {
 
 	const edited = mem.getAllUserDataByPublicId(editedPublicId);
 	if (isNotDefined(edited)) {
-		debug(logNow(), `Random id '${editedPublicId}' for user is not valid.`);
+		debug(logNow(), `Public id '${editedPublicId}' for user is not valid.`);
 		res.status(404).send('Invalid user');
 		return;
 	}
 
-	debug(logNow(), `User '${editor.username}' is trying to modify user '${edited.user.username}'`);
-
-	if (!canUserEdit(editor, edited.user)) {
-		res.status(403).send('You do not have enough permissions to edit this user.');
+	try {
+		userEdit(editor, edited.user, { firstName, lastName, roles });
+	} catch (e) {
+		res.status(403).send((e as Error).message);
 		return;
 	}
-
-	debug(logNow(), `    First name: '${firstName}'`);
-	debug(logNow(), `    Last name: '${lastName}'`);
-	debug(logNow(), `    Roles: '${roles}'`);
-
-	for (const role of roles) {
-		if (!editor.is(role)) {
-			const action = getRoleActionName('ASSIGN_ROLE_USERS', role);
-			if (!editor.canDo(action)) {
-				res.status(403).send(`You do not have enough permissions to assign role '${role}'.`);
-				return;
-			}
-		}
-	}
-
-	userRenameAndReassignRoles(edited.user.username, firstName, lastName, roles);
 
 	res.status(200).send();
 }
