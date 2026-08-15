@@ -23,7 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { toPlayerPublicId } from '@common/models/player';
+import { toPlayerPublicId } from '@common/models/player-id';
 import { SessionId } from '@common/models/session-id';
 
 test('Fields contents are correct', () => {

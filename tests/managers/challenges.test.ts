@@ -41,15 +41,16 @@ import {
 	getChallengesBy,
 	challengeDisagreeResult
 } from '@server/managers/challenges';
-import { Challenge } from '@common/models/challenge';
-import { toUserGivenName, User } from '@common/models/user';
-import { challengeFromString } from '@common/io/challenge';
+import { Challenge } from '@server/models/challenge';
+import { User } from '@server/models/user';
+import { challengeFromString } from '@server/io/challenge';
 import { UsersManager } from '@server/managers/users-manager';
-import { Configuration } from '@common/models/configuration/configuration';
-import { PlayerPrivateId, toPlayerPrivateId } from '@common/models/player';
-import { toTimeControlId, toTimeControlName } from '@common/models/time-control';
+import { Configuration } from '@server/models/configuration/configuration';
 import { toDateFull } from '@common/utils/time';
 import { isNotDefined } from '@common//utils/is-defined';
+import { toTimeControlId, toTimeControlName } from '@common/models/time-control';
+import { PlayerPrivateId, toPlayerPrivateId } from '@common/models/player-id';
+import { toUserGivenName } from '@common/models/user-given-name';
 
 const webpage_dir = 'tests/webpage';
 const db_dir = path.join(webpage_dir, 'database');

@@ -23,7 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { timeControlFromString, timeControlArrayFromString } from '@common/io/time-control';
+import { timeControlFromString, timeControlArrayFromString } from '@server/io/time-control';
 
 describe('IO conversion', () => {
 	test('string to TimeControl', () => {

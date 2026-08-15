@@ -23,11 +23,10 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { EdgeMetadata } from '@common/models/graph/edge-metadata';
-import { Edge } from '@common/models/graph/edge';
-
-import { edgeFromString } from '@common/io/graph/edge';
-import { toPlayerPrivateId } from '@common/models/player';
+import { EdgeMetadata } from '@server/models/graph/edge-metadata';
+import { Edge } from '@server/models/graph/edge';
+import { edgeFromString } from '@server/io/graph/edge';
+import { toPlayerPrivateId } from '@common/models/player-id';
 
 describe('IO conversion', () => {
 	test('string', () => {

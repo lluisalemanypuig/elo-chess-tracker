@@ -23,8 +23,8 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
+import { toPlayerPublicId } from '@common/models/player-id';
 import { SessionId } from '@common//models/session-id';
-import { toPlayerPublicId } from '@common/models/player';
 import { SessionIDManager } from '@server/managers/session-id-manager';
 
 function makeSession(token: string, publicId: number): SessionId {

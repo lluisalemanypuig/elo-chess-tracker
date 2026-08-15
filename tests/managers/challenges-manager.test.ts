@@ -23,11 +23,12 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
+import { toChallengeId } from '@common/models/challenge-id';
 import { ChallengesManager, numberToChallengeId } from '@server/managers/challenges-manager';
-import { newChallenge, toChallengeId } from '@common/models/challenge';
-import { toPlayerPrivateId } from '@common/models/player';
+import { newChallenge } from '@server/models/challenge';
 import { toTimeControlId, toTimeControlName } from '@common/models/time-control';
 import { toDateFull } from '@common/utils/time';
+import { toPlayerPrivateId } from '@common/models/player-id';
 
 const Classical = toTimeControlId('Classical');
 const Classical90p30 = toTimeControlName('Classical (90 + 30)');

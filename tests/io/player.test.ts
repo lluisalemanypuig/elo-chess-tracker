@@ -24,9 +24,9 @@ Contact:
 */
 
 import { initializeRatingFunctions } from '@server/managers/rating-system';
-import { playerFromString } from '@common/io/player';
 import { isNotDefined } from '@common/utils/is-defined';
 import { toTimeControlId } from '@common/models/time-control';
+import { playerFromString } from '@server/io/player';
 
 const Classical = toTimeControlId('classical');
 const Blitz = toTimeControlId('blitz');

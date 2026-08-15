@@ -23,8 +23,8 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { EdgeMetadata } from '@common/models/graph/edge-metadata';
-import { edgeMetadataFromString } from '@common/io/graph/edge-metadata';
+import { EdgeMetadata } from '@server/models/graph/edge-metadata';
+import { edgeMetadataFromString } from '@server/io/graph/edge-metadata';
 
 describe('IO conversion', () => {
 	test('string', () => {

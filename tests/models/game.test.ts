@@ -23,9 +23,10 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { toPlayerPrivateId } from '@common/models/player';
-import { Game, toGameId } from '@common/models/game';
-import { EloRating } from '@common/models/rating-framework/Elo/rating';
+import { toGameId } from '@common/models/game-id';
+import { toPlayerPrivateId } from '@common/models/player-id';
+import { Game } from '@server/models/game';
+import { EloRating } from '@server/models/rating-framework/Elo/rating';
 import { toTimeControlId, toTimeControlName } from '@common/models/time-control';
 import { toDateFull } from '@common/utils/time';
 

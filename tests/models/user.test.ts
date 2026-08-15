@@ -23,13 +23,14 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { TimeControlRating } from '@common/models/time-control-rating';
-import { toUserGivenName, User } from '@common/models/user';
+import { TimeControlRating } from '@server/models/time-control-rating';
+import { User } from '@server/models/user';
 import { initializePermissions, UserRoleToUserAction } from '@server/managers/user-role-action';
-import { EloRating } from '@common/models/rating-framework/Elo/rating';
-import { toPlayerPrivateId } from '@common/models/player';
+import { EloRating } from '@server/models/rating-framework/Elo/rating';
 import { toTimeControlId } from '@common/models/time-control';
 import { toDateMajor } from '@common/utils/time';
+import { toPlayerPrivateId } from '@common/models/player-id';
+import { toUserGivenName } from '@common/models/user-given-name';
 
 const Classical = toTimeControlId('Classical');
 const Rapid = toTimeControlId('Rapid');

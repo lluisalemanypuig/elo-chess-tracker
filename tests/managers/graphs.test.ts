@@ -25,16 +25,16 @@ Contact:
 
 import { runCommand } from '@tests';
 
-import { EdgeMetadata } from '@common/models/graph/edge-metadata';
+import { EdgeMetadata } from '@server/models/graph/edge-metadata';
 import { graphModifyEdge, graphUpdate } from '@server/managers/graphs';
 import { serverInitFromData } from '@server/managers/memory/initialization';
 import { clearServer } from '@server/managers/memory/clear';
-import { graphFromString } from '@common/io/graph/graph';
+import { graphFromString } from '@server/io/graph/graph';
 import { EnvironmentManager } from '@server/managers/environment-manager';
-import { Configuration } from '@common/models/configuration/configuration';
+import { Configuration } from '@server/models/configuration/configuration';
 import { isNotDefined } from '@common/utils/is-defined';
-import { toPlayerPrivateId } from '@common/models/player';
 import { toTimeControlId, toTimeControlName } from '@common/models/time-control';
+import { toPlayerPrivateId } from '@common/models/player-id';
 
 const Classical = toTimeControlId('Classical');
 const Classical90p30 = toTimeControlName('Classical (90 + 30)');
