@@ -161,7 +161,7 @@ export async function postQueryUserEdit(req: Request, res: Response) {
 
 	const toEdit = mem.getAllUserDataByPublicId(toEditPublicId);
 	if (isNotDefined(toEdit)) {
-		debug(logNow(), `Random id '${toEditPublicId}' for edited user is not valid.`);
+		debug(logNow(), `Public id '${toEditPublicId}' for edited user is not valid.`);
 		res.status(404).send('Invalid user');
 		return;
 	}

@@ -368,6 +368,11 @@ export function gameAddNewGuarded(
 	gameDate: DateMajor,
 	gameTime: DateMinor
 ) {
+	if (!creator.canDo('CREATE_GAMES')) {
+		debug(logNow(), `User '${creator.username}' cannot create users.`);
+		throw new PublicError('You cannot create games');
+	}
+
 	if (!canUserCreateGame(creator, white, black)) {
 		debug(logNow(), `User cannot create this game.`);
 		throw new PublicError('You cannot create this game.');

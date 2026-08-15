@@ -132,12 +132,6 @@ export async function postGameCreate(req: Request, res: Response) {
 		return;
 	}
 
-	if (!creator.canDo('CREATE_GAMES')) {
-		debug(logNow(), `User '${creator.username}' cannot create users.`);
-		res.status(403).send('You cannot create games');
-		return;
-	}
-
 	const gameParse = safeParseRequestBody(req.body, inputSchemaOf(ROUTES.GAME_CREATE), res, debug);
 	if (gameParse.result === 'Exit') {
 		return;

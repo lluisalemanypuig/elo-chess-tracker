@@ -44,6 +44,7 @@ import {
 	QueryChallengesSentOutput
 } from '@common/api/schemas/query-challenges';
 import { UserGivenName } from '@common/models/user-given-name';
+import { internalErrorMessage } from './utils/error-handling';
 
 // Query the server for challenges received sento to me by other users
 export async function getQueryChallengeReceived(req: Request, res: Response) {
@@ -200,14 +201,14 @@ export async function getQueryChallengePendingResult(req: Request, res: Response
 		const userSentTo = manager.getAllUserDataByPrivateId(c.sentTo);
 		if (isNotDefined(userSentTo)) {
 			debug(logNow(), `User '${c.sentTo}' does not exist.`);
-			res.status(500).send();
+			res.status(500).send(internalErrorMessage);
 			return;
 		}
 
 		const userSentBy = manager.getAllUserDataByPrivateId(c.sentBy);
 		if (isNotDefined(userSentBy)) {
 			debug(logNow(), `User '${c.sentBy}' does not exist.`);
-			res.status(500).send();
+			res.status(500).send(internalErrorMessage);
 			return;
 		}
 
@@ -285,20 +286,20 @@ export async function getQueryChallengeConfirmResultOther(req: Request, res: Res
 		const sentTo = manager.getAllUserDataByPrivateId(c.sentTo);
 		if (isNotDefined(sentTo)) {
 			debug(logNow(), `User '${c.sentTo}' does not exist.`);
-			res.status(500).send();
+			res.status(500).send(internalErrorMessage);
 			return;
 		}
 
 		const sentBy = manager.getAllUserDataByPrivateId(c.sentBy);
 		if (isNotDefined(sentBy)) {
 			debug(logNow(), `User '${c.sentBy}' does not exist.`);
-			res.status(500).send();
+			res.status(500).send(internalErrorMessage);
 			return;
 		}
 
 		if (isNotDefined(c.white) || isNotDefined(c.black)) {
 			debug(logNow(), `White or Black player is not set in challenge.`);
-			res.status(500).send();
+			res.status(500).send(internalErrorMessage);
 			return;
 		}
 
@@ -388,20 +389,20 @@ export async function getQueryChallengeConfirmResultSelf(req: Request, res: Resp
 		const sentTo = manager.getAllUserDataByPrivateId(c.sentTo);
 		if (isNotDefined(sentTo)) {
 			debug(logNow(), `User '${c.sentTo}' does not exist.`);
-			res.status(500).send();
+			res.status(500).send(internalErrorMessage);
 			return;
 		}
 
 		const sentBy = manager.getAllUserDataByPrivateId(c.sentBy);
 		if (isNotDefined(sentBy)) {
 			debug(logNow(), `User '${c.sentBy}' does not exist.`);
-			res.status(500).send();
+			res.status(500).send(internalErrorMessage);
 			return;
 		}
 
 		if (isNotDefined(c.white) || isNotDefined(c.black)) {
 			debug(logNow(), `White or Black player is not set in challenge.`);
-			res.status(500).send();
+			res.status(500).send(internalErrorMessage);
 			return;
 		}
 

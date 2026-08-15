@@ -31,6 +31,8 @@ import { logNow } from '@common/utils/time';
 import { PublicError } from '@server/models/error-types/public-error';
 import { InternalError } from '@app/server/models/error-types/internal-error';
 
+export const internalErrorMessage = 'Internal error. Contact your administrator.';
+
 export function handleError(e: Error, res: Response) {
 	if (e instanceof PublicError) {
 		debug(logNow(), `Sending public error to user.`);
@@ -40,6 +42,6 @@ export function handleError(e: Error, res: Response) {
 		const msg = (e as InternalError).message;
 		debug(logNow(), `Internal server error.`);
 		debug(logNow(), `Message: '${msg}'.`);
-		res.status(403).send('Internal error. Contact your administrator.');
+		res.status(500).send(internalErrorMessage);
 	}
 }

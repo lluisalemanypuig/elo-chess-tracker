@@ -29,7 +29,6 @@ import { Request, Response } from 'express';
 
 import { logNow } from '@common/utils/time';
 import { isUserLoggedIn } from '@server/managers/session';
-
 import { recalculateAllGraphs } from '@server/managers/graphs';
 import { ConfigurationManager } from '@server/managers/configuration-manager';
 import { getExecutionDirectory } from '@server/managers/environment-manager';

@@ -71,7 +71,7 @@ export async function getPageLogin(req: Request, res: Response) {
 		debug(logNow(), 'send /home since the user is logged in');
 		res.sendFile(`${getExecutionDirectory()}/html/home.html`);
 	} else {
-		debug(logNow(), 'send /loginScreen since the user is not logged in');
+		debug(logNow(), 'send /login-screen since the user is not logged in');
 		res.sendFile(`${getExecutionDirectory()}/html/login-screen.html`);
 	}
 }
