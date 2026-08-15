@@ -179,7 +179,7 @@ describe('Configure server', () => {
 
 	test('Check UsersManager', () => {
 		const users_manager = UsersManager.getInstance();
-		expect(users_manager.numUsers()).toBe(0);
+		expect(users_manager.numUsers()).toBe(1 + 0);
 	});
 
 	test('Check ChallengesManager', () => {

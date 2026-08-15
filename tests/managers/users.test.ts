@@ -27,12 +27,7 @@ import path from 'path';
 import fs from 'fs';
 
 import { serverInitFromData } from '@server/managers/memory/initialization';
-import {
-	userAddNew,
-	userGetAllNamePublicId,
-	userRenameAndReassignRoles,
-	userUpdateFromPlayerData
-} from '@server/managers/users';
+import { userAddNew, userEdit, userGetAllNamePublicId, userUpdateFromPlayerData } from '@server/managers/users';
 import { toUserGivenName, User } from '@common/models/user';
 import { UserRole } from '@common/models/user-role';
 import { clearServer } from '@server/managers/memory/clear';
@@ -113,7 +108,19 @@ const classical_rapid_blitz: Configuration = {
 		}
 	},
 	permissions: {
-		admin: [],
+		admin: [
+			'CREATE_USER',
+			'ASSIGN_ROLE',
+			'ASSIGN_ROLE_ADMIN',
+			'ASSIGN_ROLE_TEACHER',
+			'ASSIGN_ROLE_MEMBER',
+			'ASSIGN_ROLE_STUDENT',
+			'EDIT_USER',
+			'EDIT_USER_ADMIN',
+			'EDIT_USER_TEACHER',
+			'EDIT_USER_MEMBER',
+			'EDIT_USER_STUDENT'
+		],
 		teacher: [],
 		member: [],
 		student: []
@@ -173,7 +180,19 @@ const classical_rapid_blitz_bullet: Configuration = {
 		}
 	},
 	permissions: {
-		admin: [],
+		admin: [
+			'CREATE_USER',
+			'ASSIGN_ROLE',
+			'ASSIGN_ROLE_ADMIN',
+			'ASSIGN_ROLE_TEACHER',
+			'ASSIGN_ROLE_MEMBER',
+			'ASSIGN_ROLE_STUDENT',
+			'EDIT_USER',
+			'EDIT_USER_ADMIN',
+			'EDIT_USER_TEACHER',
+			'EDIT_USER_MEMBER',
+			'EDIT_USER_STUDENT'
+		],
 		teacher: [],
 		member: [],
 		student: []
@@ -217,7 +236,19 @@ const classical: Configuration = {
 		}
 	},
 	permissions: {
-		admin: [],
+		admin: [
+			'CREATE_USER',
+			'ASSIGN_ROLE',
+			'ASSIGN_ROLE_ADMIN',
+			'ASSIGN_ROLE_TEACHER',
+			'ASSIGN_ROLE_MEMBER',
+			'ASSIGN_ROLE_STUDENT',
+			'EDIT_USER',
+			'EDIT_USER_ADMIN',
+			'EDIT_USER_TEACHER',
+			'EDIT_USER_MEMBER',
+			'EDIT_USER_STUDENT'
+		],
 		teacher: [],
 		member: [],
 		student: []
@@ -231,7 +262,7 @@ function testUserExists(username: string): boolean {
 function testUserRetrieve(username: string): User | undefined {
 	const d = UsersManager.getInstance().getAllUserDataByPrivateId(toPlayerPrivateId(username));
 	if (isNotDefined(d)) {
-		return undefined;
+		throw new Error(`Could not find user ${username}`);
 	}
 	return d.user;
 }
@@ -241,22 +272,35 @@ function testUserGetAll(): User[] {
 }
 
 function testUserAddNew(username: string, firstName: string, lastName: string, password: string, roles: UserRole[]) {
-	return userAddNew(
-		toPlayerPrivateId(username),
-		toUserGivenName(firstName),
-		toUserGivenName(lastName),
+	const admin = UsersManager.getInstance().getAllUserDataByPrivateId(toPlayerPrivateId('admin.default'));
+	if (isNotDefined(admin)) {
+		throw new Error('admin default user could not be retrieved');
+	}
+	return userAddNew(admin.user, {
+		username: toPlayerPrivateId(username),
+		firstName: toUserGivenName(firstName),
+		lastName: toUserGivenName(lastName),
 		password,
 		roles
-	);
+	});
 }
 
-function testUserRenameAndReassignRoles(username: string, firstName: string, lastName: string, roles: UserRole[]) {
-	return userRenameAndReassignRoles(
-		toPlayerPrivateId(username),
-		toUserGivenName(firstName),
-		toUserGivenName(lastName),
+function testUserEdit(username: string, firstName: string, lastName: string, roles: UserRole[]) {
+	const manager = UsersManager.getInstance();
+	const admin = manager.getAllUserDataByPrivateId(toPlayerPrivateId('admin.default'));
+	if (isNotDefined(admin)) {
+		throw new Error('admin default user could not be retrieved');
+	}
+	const edited = manager.getAllUserDataByPrivateId(toPlayerPrivateId(username));
+	if (isNotDefined(edited)) {
+		throw new Error(`Cannot find user ${username}`);
+	}
+	userEdit(admin.user, edited.user, {
+		firstName: toUserGivenName(firstName),
+		lastName: toUserGivenName(lastName),
 		roles
-	);
+	});
+	return manager.getAllUserDataByPrivateId(toPlayerPrivateId(username))?.user;
 }
 
 const aa = toPlayerPrivateId('aa');
@@ -272,7 +316,7 @@ describe('Create users', () => {
 		clearServer();
 		serverInitFromData('tests/webpage/', classical_rapid_blitz);
 
-		const new_user = testUserAddNew('asdf', 'First', 'Last', 'password', ['ADMIN']);
+		const newUser = testUserAddNew('asdf', 'First', 'Last', 'password', ['ADMIN']);
 
 		{
 			const asdf_user_file = path.join(db_users_dir, 'asdf');
@@ -282,23 +326,23 @@ describe('Create users', () => {
 			if (isNotDefined(u)) {
 				return;
 			}
-			expect(new_user).toEqual(u);
+			expect(newUser).toEqual(u);
 			expect(u.ratings.length).toBe(3);
 		}
 
 		expect(testUserExists('asdf')).toBe(true);
 
-		const all_users = testUserGetAll();
-		expect(all_users.length).toBe(1);
-		expect(all_users[0]).toEqual(new_user);
-		expect(all_users[0].ratings.length).toEqual(3);
-		expect(testUserRetrieve('asdf')).toEqual(new_user);
+		const allUsers = testUserGetAll();
+		expect(allUsers.length).toBe(1 + 1);
+		expect(allUsers[1 + 0]).toEqual(newUser);
+		expect(allUsers[1 + 0].ratings.length).toEqual(3);
+		expect(testUserRetrieve('asdf')).toEqual(newUser);
 
 		expect(
 			userGetAllNamePublicId().map((d: UserThin): string => {
 				return d.name;
 			})
-		).toEqual(['First Last']);
+		).toEqual(['Admin Default', 'First Last']);
 	});
 
 	test('In a non-empty server with different configuration', async () => {
@@ -306,22 +350,22 @@ describe('Create users', () => {
 		serverInitFromData('tests/webpage/', classical_rapid_blitz_bullet);
 
 		{
-			const all_users = testUserGetAll();
-			expect(all_users.length).toBe(1);
-			expect(all_users[0].firstName).toEqual('First');
-			expect(all_users[0].lastName).toEqual('Last');
-			expect(all_users[0].roles).toEqual(['ADMIN']);
-			expect(all_users[0].ratings.length).toBe(4);
+			const allUsers = testUserGetAll();
+			expect(allUsers.length).toBe(1 + 1);
+			expect(allUsers[1 + 0].firstName).toEqual('First');
+			expect(allUsers[1 + 0].lastName).toEqual('Last');
+			expect(allUsers[1 + 0].roles).toEqual(['ADMIN']);
+			expect(allUsers[1 + 0].ratings.length).toBe(4);
 			expect(
 				userGetAllNamePublicId().map((d: UserThin): string => {
 					return d.name;
 				})
-			).toEqual(['First Last']);
+			).toEqual(['Admin Default', 'First Last']);
 
 			// check that the user file was updated with the new rating
-			const asdf_user_file = path.join(db_users_dir, 'asdf');
-			expect(fs.existsSync(asdf_user_file)).toBe(true);
-			const u = userFromString(fs.readFileSync(asdf_user_file, 'utf8'));
+			const asdfUserFile = path.join(db_users_dir, 'asdf');
+			expect(fs.existsSync(asdfUserFile)).toBe(true);
+			const u = userFromString(fs.readFileSync(asdfUserFile, 'utf8'));
 			expect(u).toBeDefined();
 			if (isNotDefined(u)) {
 				return;
@@ -329,31 +373,31 @@ describe('Create users', () => {
 			expect(u.ratings.length).toBe(4);
 		}
 
-		const new_user = testUserAddNew('qwer', 'Perico', 'Palotes', 'password', ['TEACHER']);
+		const newUser = testUserAddNew('qwer', 'Perico', 'Palotes', 'password', ['TEACHER']);
 
-		const qwer_user_file = path.join(db_users_dir, 'qwer');
-		expect(fs.existsSync(qwer_user_file)).toBe(true);
-		const u = userFromString(fs.readFileSync(qwer_user_file, 'utf8'));
+		const qwerUserFile = path.join(db_users_dir, 'qwer');
+		expect(fs.existsSync(qwerUserFile)).toBe(true);
+		const u = userFromString(fs.readFileSync(qwerUserFile, 'utf8'));
 		expect(u).toBeDefined();
 		if (isNotDefined(u)) {
 			return;
 		}
 		expect(u.ratings.length).toBe(4);
 
-		expect(testUserRetrieve('qwer')).toEqual(new_user);
+		expect(testUserRetrieve('qwer')).toEqual(newUser);
 
-		const all_users = testUserGetAll();
+		const allUsers = testUserGetAll();
 
-		expect(all_users.length).toBe(2);
-		expect(all_users[1]).toEqual(new_user);
+		expect(allUsers.length).toBe(1 + 2);
+		expect(allUsers[1 + 1]).toEqual(newUser);
 		expect(
 			userGetAllNamePublicId().map((d: UserThin): string => {
 				return d.name;
 			})
-		).toEqual(['First Last', 'Perico Palotes']);
+		).toEqual(['Admin Default', 'First Last', 'Perico Palotes']);
 
 		expect(
-			all_users
+			allUsers
 				.map((u: User): boolean => {
 					return u.ratings.length === 4;
 				})
@@ -370,10 +414,10 @@ describe('Create users', () => {
 		clearServer();
 		serverInitFromData('tests/webpage/', classical);
 
-		const all_users = testUserGetAll();
+		const allUsers = testUserGetAll();
 
 		expect(
-			all_users
+			allUsers
 				.map((u: User): boolean => {
 					return u.ratings.length === 4;
 				})
@@ -394,34 +438,34 @@ describe('Modify existing users', () => {
 		clearServer();
 		serverInitFromData('tests/webpage/', classical_rapid_blitz);
 
-		const new_user = testUserAddNew('asdf', 'First', 'Last', 'password', ['ADMIN']);
+		const newUser = testUserAddNew('asdf', 'First', 'Last', 'password', ['ADMIN']);
 
-		const asdf_user_file = path.join(db_users_dir, 'asdf');
+		const asdfUserFile = path.join(db_users_dir, 'asdf');
 
 		{
-			expect(fs.existsSync(asdf_user_file)).toBe(true);
-			const u = userFromString(fs.readFileSync(asdf_user_file, 'utf8'));
-			expect(new_user).toEqual(u);
+			expect(fs.existsSync(asdfUserFile)).toBe(true);
+			const u = userFromString(fs.readFileSync(asdfUserFile, 'utf8'));
+			expect(newUser).toEqual(u);
 		}
 
-		const modified_user = testUserRenameAndReassignRoles('asdf', 'QQQ', 'WWW', ['TEACHER']);
+		const modifiedUser = testUserEdit('asdf', 'QQQ', 'WWW', ['TEACHER']);
 
-		expect(testUserRetrieve('asdf')).toEqual(modified_user);
+		expect(testUserRetrieve('asdf')).toEqual(modifiedUser);
 		expect(testUserExists('asdf')).toBe(true);
 		expect(
 			userGetAllNamePublicId().map((d: UserThin): string => {
 				return d.name;
 			})
-		).toEqual(['QQQ WWW']);
+		).toEqual(['Admin Default', 'QQQ WWW']);
 
 		{
-			expect(fs.existsSync(asdf_user_file)).toBe(true);
-			const u = userFromString(fs.readFileSync(asdf_user_file, 'utf8'));
+			expect(fs.existsSync(asdfUserFile)).toBe(true);
+			const u = userFromString(fs.readFileSync(asdfUserFile, 'utf8'));
 			expect(u).not.toBeNull();
 			if (isNotDefined(u)) {
 				return;
 			}
-			expect(modified_user).toEqual(u);
+			expect(modifiedUser).toEqual(u);
 			expect(u.firstName).toEqual('QQQ');
 			expect(u.lastName).toEqual('WWW');
 			expect(u.roles).toEqual(['TEACHER']);
@@ -432,27 +476,27 @@ describe('Modify existing users', () => {
 		clearServer();
 		serverInitFromData('tests/webpage/', classical_rapid_blitz);
 
-		const modified_user = testUserRenameAndReassignRoles('asdf', 'FFF', 'GGG', ['ADMIN', 'MEMBER']);
+		const modifiedUser = testUserEdit('asdf', 'FFF', 'GGG', ['ADMIN', 'MEMBER']);
 
-		const asdf_user_file = path.join(db_users_dir, 'asdf');
-		expect(fs.existsSync(asdf_user_file)).toBe(true);
-		const u = userFromString(fs.readFileSync(asdf_user_file, 'utf8'));
+		const asdfUserFile = path.join(db_users_dir, 'asdf');
+		expect(fs.existsSync(asdfUserFile)).toBe(true);
+		const u = userFromString(fs.readFileSync(asdfUserFile, 'utf8'));
 		expect(u).toBeDefined();
 		if (isNotDefined(u)) {
 			return;
 		}
-		expect(modified_user).toEqual(u);
+		expect(modifiedUser).toEqual(u);
 		expect(u.firstName).toEqual('FFF');
 		expect(u.lastName).toEqual('GGG');
 		expect(u.roles).toEqual(['ADMIN', 'MEMBER']);
 
-		expect(testUserRetrieve('asdf')).toEqual(modified_user);
+		expect(testUserRetrieve('asdf')).toEqual(modifiedUser);
 		expect(testUserExists('asdf')).toBe(true);
 		expect(
 			userGetAllNamePublicId().map((d: UserThin): string => {
 				return d.name;
 			})
-		).toEqual(['FFF GGG']);
+		).toEqual(['Admin Default', 'FFF GGG']);
 	});
 
 	test('Modify users in bulk (', () => {
