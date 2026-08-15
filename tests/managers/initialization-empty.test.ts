@@ -35,7 +35,7 @@ import { ChallengesManager } from '@server/managers/challenges-manager';
 import { GamesManager } from '@server/managers/games-manager';
 import { SessionIDManager } from '@server/managers/session-id-manager';
 import { UsersManager } from '@server/managers/users-manager';
-import { run_command } from '@tests/exec-utils';
+import { runCommand } from '@tests';
 import { GraphsManager } from '@server/managers/graphs-manager';
 import { Graph } from '@common/models/graph/graph';
 import { Configuration } from '@common/models/configuration/configuration';
@@ -146,7 +146,7 @@ const configuration: Configuration = {
 
 describe('Configure server', () => {
 	test('Load an empty server', async () => {
-		await run_command('./tests/initialize-empty.sh');
+		await runCommand('./tests/initialize-empty.sh');
 		expect(() => serverInitFromData('tests/webpage', configuration)).not.toThrow();
 	});
 

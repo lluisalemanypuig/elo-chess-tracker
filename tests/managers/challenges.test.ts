@@ -26,7 +26,7 @@ Contact:
 import path from 'path';
 import fs from 'fs';
 
-import { run_command } from '@tests/exec-utils';
+import { runCommand, TestError } from '@tests';
 import { clearServer } from '@server/managers/memory/clear';
 import { serverInitFromData } from '@server/managers/memory/initialization';
 import { userAddNew } from '@server/managers/users';
@@ -166,7 +166,7 @@ function userRetrieve(username: PlayerPrivateId): User | undefined {
 
 describe('Check initialization', () => {
 	test('In an empty server', async () => {
-		await run_command('./tests/initialize-empty.sh');
+		await runCommand('./tests/initialize-empty.sh');
 		clearServer();
 		serverInitFromData('tests/webpage/', classical_rapid_blitz);
 
@@ -185,7 +185,7 @@ describe('Check challenge communication', () => {
 	test('Add users', () => {
 		const admin = UsersManager.getInstance().getAllUserDataByPrivateId(toPlayerPrivateId('admin.default'));
 		if (isNotDefined(admin)) {
-			throw new Error('admin default user could not be retrieved');
+			throw new TestError('admin default user could not be retrieved');
 		}
 		uA = userAddNew(admin.user, { username: aa, firstName: A, lastName: A, password: 'pass_a', roles: ['ADMIN'] });
 		uB = userAddNew(admin.user, { username: bb, firstName: B, lastName: B, password: 'pass_b', roles: ['MEMBER'] });

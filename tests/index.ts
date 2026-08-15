@@ -23,16 +23,5 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { exec } from 'child_process';
-
-export function runCommand(command: string): Promise<void> {
-	return new Promise((resolve, reject) => {
-		exec(command, (error, _stdout, _stderr) => {
-			if (error) {
-				reject(error);
-				return;
-			}
-			resolve();
-		});
-	});
-}
+export * from '@tests/test-utils';
+export * from '@tests/exec-utils';

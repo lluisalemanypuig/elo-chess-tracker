@@ -31,7 +31,7 @@ import { userAddNew, userEdit, userGetAllNamePublicId, userUpdateFromPlayerData 
 import { toUserGivenName, User } from '@common/models/user';
 import { UserRole } from '@common/models/user-role';
 import { clearServer } from '@server/managers/memory/clear';
-import { run_command } from '@tests/exec-utils';
+import { runCommand, TestError } from '@tests';
 import { Player, toPlayerPrivateId } from '@common/models/player';
 import { EloRating } from '@common/models/rating-framework/Elo/rating';
 import { userFromString } from '@common/io/user';
@@ -262,7 +262,7 @@ function testUserExists(username: string): boolean {
 function testUserRetrieve(username: string): User | undefined {
 	const d = UsersManager.getInstance().getAllUserDataByPrivateId(toPlayerPrivateId(username));
 	if (isNotDefined(d)) {
-		throw new Error(`Could not find user ${username}`);
+		throw new TestError(`Could not find user ${username}`);
 	}
 	return d.user;
 }
@@ -274,7 +274,7 @@ function testUserGetAll(): User[] {
 function testUserAddNew(username: string, firstName: string, lastName: string, password: string, roles: UserRole[]) {
 	const admin = UsersManager.getInstance().getAllUserDataByPrivateId(toPlayerPrivateId('admin.default'));
 	if (isNotDefined(admin)) {
-		throw new Error('admin default user could not be retrieved');
+		throw new TestError('admin default user could not be retrieved');
 	}
 	return userAddNew(admin.user, {
 		username: toPlayerPrivateId(username),
@@ -289,11 +289,11 @@ function testUserEdit(username: string, firstName: string, lastName: string, rol
 	const manager = UsersManager.getInstance();
 	const admin = manager.getAllUserDataByPrivateId(toPlayerPrivateId('admin.default'));
 	if (isNotDefined(admin)) {
-		throw new Error('admin default user could not be retrieved');
+		throw new TestError('admin default user could not be retrieved');
 	}
 	const edited = manager.getAllUserDataByPrivateId(toPlayerPrivateId(username));
 	if (isNotDefined(edited)) {
-		throw new Error(`Cannot find user ${username}`);
+		throw new TestError(`Cannot find user ${username}`);
 	}
 	userEdit(admin.user, edited.user, {
 		firstName: toUserGivenName(firstName),
@@ -312,7 +312,7 @@ const ff = toPlayerPrivateId('ff');
 
 describe('Create users', () => {
 	test('In an empty server', async () => {
-		await run_command('./tests/initialize-empty.sh');
+		await runCommand('./tests/initialize-empty.sh');
 		clearServer();
 		serverInitFromData('tests/webpage/', classical_rapid_blitz);
 
@@ -433,7 +433,7 @@ describe('Create users', () => {
 
 describe('Modify existing users', () => {
 	test('Newly created user', async () => {
-		await run_command('./tests/initialize-empty.sh');
+		await runCommand('./tests/initialize-empty.sh');
 
 		clearServer();
 		serverInitFromData('tests/webpage/', classical_rapid_blitz);

@@ -29,7 +29,7 @@ import path from 'path';
 import { gameAddNew, gameDelete } from '@server/managers/games';
 import { serverInitFromData } from '@server/managers/memory/initialization';
 import { userAddNew } from '@server/managers/users';
-import { run_command } from '@tests/exec-utils';
+import { runCommand, TestError } from '@tests';
 import { toUserGivenName, User } from '@common/models/user';
 import { GamesManager } from '@server/managers/games-manager';
 import { EnvironmentManager } from '@server/managers/environment-manager';
@@ -149,12 +149,12 @@ const ff = toUserGivenName('ff');
 
 describe('Server setup', () => {
 	test('Fill an empty server', async () => {
-		await run_command('./tests/initialize-empty.sh');
+		await runCommand('./tests/initialize-empty.sh');
 		expect(() => serverInitFromData('tests/webpage', configuration)).not.toThrow();
 
 		const admin = UsersManager.getInstance().getAllUserDataByPrivateId(toPlayerPrivateId('admin.default'));
 		if (isNotDefined(admin)) {
-			throw new Error('admin default user could not be retrieved');
+			throw new TestError('admin default user could not be retrieved');
 		}
 
 		aU = userAddNew(admin.user, { username: a, firstName: A, lastName: aa, password: 'aaaa', roles: ['ADMIN'] });
