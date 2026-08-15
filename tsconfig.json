@@ -8,7 +8,8 @@
 		"app/common/schemas",
 		"app/common/models",
 		"**/*.test.ts",
-		"utils"
+		"utils",
+		"tests/"
 	],
 	"compilerOptions": {
 		/* Projects */
@@ -21,7 +22,8 @@
 			"@common/*": ["./app/common/*"],
 			"@schemas/*": ["./app/common/schemas/*"],
 			"@models/*": ["./app/common/models/*"],
-			"@tests/*": ["./tests/*"]
+			"@tests/*": ["./tests/*"],
+			"@tests": ["./tests"]
 		},
 
 		/* Language and Environment */
