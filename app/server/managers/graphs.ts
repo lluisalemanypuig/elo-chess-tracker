@@ -23,6 +23,9 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
+import Debug from 'debug';
+const debug = Debug('ELO_CHESS_TRACKER:managers/graphs');
+
 import { isNotDefined } from '@common/utils/is-defined';
 import { graphFullToFile, graphToFile } from '@common/io/graph/graph';
 import { GameResult } from '@common/models/game';
@@ -33,6 +36,8 @@ import { GamesIterator } from '@server/managers/games-iterator';
 import { GraphsManager } from '@server/managers/graphs-manager';
 import { RatingSystemManager } from '@server/managers/rating-system-manager';
 import { PlayerPrivateId } from '@common/models/player';
+import { User } from '@common/models/user';
+import { logNow } from '@common/utils/time';
 
 export function graphUpdate(w: PlayerPrivateId, b: PlayerPrivateId, result: GameResult, id: TimeControlId): void {
 	let manager = GraphsManager.getInstance();
@@ -76,7 +81,12 @@ export function graphDeleteEdge(w: PlayerPrivateId, b: PlayerPrivateId, result: 
 	graphToFile(graphsDir, [w], g);
 }
 
-export function recalculateAllGraphs() {
+export function recalculateAllGraphs(user: User) {
+	if (!user.is('ADMIN')) {
+		debug(logNow(), `User '${user.username}' cannot recalculate graphs.`);
+		throw new Error('You cannot recalculate the graphs.');
+	}
+
 	let manager = GraphsManager.getInstance();
 	manager.clear();
 

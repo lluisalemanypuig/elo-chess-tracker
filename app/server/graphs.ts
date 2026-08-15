@@ -102,16 +102,14 @@ export async function postRecalculateGraphs(req: Request, res: Response) {
 		return;
 	}
 
-	if (!user.is('ADMIN')) {
-		debug(logNow(), `User '${user.username}' cannot recalculate graphs.`);
-		res.status(403).send('You cannot recalculate the graphs.');
-		return;
-	}
-
 	debug(logNow(), `Recalculating ratings...`);
 
-	// actually recalculating ratings
-	recalculateAllGraphs();
+	try {
+		recalculateAllGraphs(user);
+	} catch (e) {
+		res.status(403).send((e as Error).message);
+		return;
+	}
 
 	res.status(200).send();
 }

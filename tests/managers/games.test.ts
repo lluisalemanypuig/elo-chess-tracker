@@ -2678,7 +2678,7 @@ for (let i = 0; i < N; ++i) {
 		});
 
 		test('Recalculate', () => {
-			recalculateAllGraphs();
+			recalculateAllGraphs(aU);
 		});
 
 		test('Read Blitz and compare', () => {
