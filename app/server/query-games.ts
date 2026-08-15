@@ -32,13 +32,12 @@ import fs from 'fs';
 
 import { DateMajor, logNow } from '@common/utils/time';
 import { isUserLoggedIn } from '@server/managers/session';
-import { GameNumber, User } from '@common/models/user';
-import { Game } from '@common/models/game';
+import { GameNumber, User } from '@server/models/user';
+import { Game } from '@server/models/game';
 import { RatingSystemManager } from '@server/managers/rating-system-manager';
 import { EnvironmentManager } from '@server/managers/environment-manager';
 import { canUserDeleteGame, canUserEditGame, canUserSeeGame } from '@server/managers/user-relationships';
-import { TimeControlId } from '@common/models/time-control';
-import { gameArrayFromString } from '@common/io/game';
+import { gameArrayFromString } from '@server/io/game';
 import { UsersManager } from '@server/managers/users-manager';
 import { searchByKey } from '@server/utils/searching';
 import { readDirectory } from '@server/utils/read-directory';
@@ -47,6 +46,7 @@ import { ROUTES } from '@common/api/routes';
 import { inputSchemaOf } from '@common/api/schemas-endpoints';
 import { safeParseRequestBody, safeParseRequestCookies } from '@server/utils/schemas';
 import { QueryGamesListOutput, QueryGamesListOutputSingle } from '@common/api/schemas/query-games';
+import { TimeControlId } from '@common/models/time-control';
 
 function increment(g: Game): any {
 	const [whiteAfter, blackAfter] = RatingSystemManager.getInstance().applyRatingFunction(g);

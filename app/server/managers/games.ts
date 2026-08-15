@@ -29,24 +29,27 @@ import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:managers/games');
 
 import { DateFull, DateMajor, DateMinor, logNow, dateFullToMajor, toDateFull } from '@common/utils/time';
-import { Player, PlayerPrivateId } from '@common/models/player';
-import { Game, GameId, GameResult } from '@common/models/game';
-import { User } from '@common/models/user';
+import { User } from '@server/models/user';
 import { whereShouldBeInsertedByKey } from '@server/utils/searching';
 import { GamesManager } from '@server/managers/games-manager';
 import { UsersManager } from '@server/managers/users-manager';
 import { RatingSystemManager } from '@server/managers/rating-system-manager';
 import { EnvironmentManager } from '@server/managers/environment-manager';
 import { userUpdateFromPlayerData } from '@server/managers/users';
-import { Rating } from '@common/models/rating-framework/rating';
+import { Rating } from '@server/models/rating-framework/rating';
 import { TimeControlId, TimeControlName } from '@common/models/time-control';
 import { graphDeleteEdge, graphModifyEdge, graphUpdate } from '@server/managers/graphs';
 import { GamesIterator } from '@server/managers/games-iterator';
-import { TimeControlRating } from '@common/models/time-control-rating';
+import { TimeControlRating } from '@server/models/time-control-rating';
 import { isDefined, isNotDefined } from '@common/utils/is-defined';
 import { canUserCreateGame, canUserDeleteGame, canUserEditGame } from '@server/managers/user-relationships';
-import { PublicError } from '@server/utils/error-types/public-error';
-import { InternalError } from '@server/utils/error-types/internal-error';
+import { PublicError } from '@server/models/error-types/public-error';
+import { InternalError } from '@server/models/error-types/internal-error';
+import { PlayerPrivateId } from '@common/models/player-id';
+import { Game } from '@server/models/game';
+import { GameResult } from '@common/models/game-result';
+import { GameId } from '@common/models/game-id';
+import { Player } from '@server/models/player';
 
 function writeGameArrayToFile(filename: string, gs: Game[]) {
 	fs.writeFileSync(filename, JSON.stringify(gs, null, 4));

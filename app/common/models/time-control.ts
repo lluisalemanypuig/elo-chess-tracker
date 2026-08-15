@@ -33,13 +33,6 @@ export type TimeControlIdLocal = string & {
 };
 export const TimeControlIdSchema = z.string().brand<'TimeControlIdLocal'>();
 
-/**
- * @brief A time control ID.
- *
- * A time control ID is a unique name that can represent multiple time controls.
- * For example, a time control ID can be 'blitz' and can represent the usual time
- * controls 5+3, 5+0, 3+2.
- */
 export type TimeControlId = z.infer<typeof TimeControlIdSchema>;
 
 export function toTimeControlId(s: string): TimeControlId {
@@ -54,20 +47,13 @@ export type TimeControlNameLocal = string & {
 };
 export const TimeControlNameSchema = z.string().brand<'TimeControlNameLocal'>();
 
-/**
- * @brief A time control name.
- *
- * A time control name is the human-readable identifier for a time control Id.
- * This may correspond to the same @ref TimeControlId. For example, for the
- * time control id "blitz" we could have multiple time control names, such as
- * - "Blitz (5 + 0)"
- * - "Blitz (5 + 3)"
- */
 export type TimeControlName = z.infer<typeof TimeControlNameSchema>;
 
 export function toTimeControlName(s: string): TimeControlName {
 	return s as TimeControlName;
 }
+
+// A type for time control
 
 export const TimeControlSchema = z
 	.object({
@@ -76,17 +62,6 @@ export const TimeControlSchema = z
 	})
 	.strict();
 
-/**
- * @brief Time control as a tuple.
- *
- * Examples:
- * - id: "blitz_5_P_3", name: "Blitz (5 + 3)"
- * - id: "blitz_5_P_0", name: "Blitz (5 + 0)"
- *
- * Also:
- * - id: "blitz", name: "Blitz (5 + 3)"
- * - id: "blitz", name: "Blitz (5 + 0)"
- */
 export type TimeControl = z.infer<typeof TimeControlSchema>;
 
 export const TimeControlArraySchema = z.array(TimeControlSchema);

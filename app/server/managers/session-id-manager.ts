@@ -23,7 +23,7 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { PlayerPublicId } from '@common/models/player';
+import { PlayerPublicId } from '@common/models/player-id';
 import { SessionId } from '@common/models/session-id';
 import { searchLinearByKey } from '@server/utils/searching';
 

@@ -28,14 +28,14 @@ import path from 'path';
 import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:managers/users');
 
-import { Player, PlayerPrivateId } from '@common/models/player';
-import { UserGivenName, TimeControlGame, User } from '@common/models/user';
+import { Player } from '@server/models/player';
+import { TimeControlGame, User } from '@server/models/user';
 import { EnvironmentManager } from '@server/managers/environment-manager';
 import { UsersManager } from '@server/managers/users-manager';
 import { UserRole } from '@common/models/user-role';
 import { encryptPasswordForUser, isPasswordOfUserCorrect } from '@server/utils/encrypt';
 import { RatingSystemManager } from '@server/managers/rating-system-manager';
-import { TimeControlRating } from '@common/models/time-control-rating';
+import { TimeControlRating } from '@server/models/time-control-rating';
 import { logNow } from '@common/utils/time';
 import { UserThin } from '@common/models/user-thin';
 import { isNotDefined } from '@common/utils/is-defined';
@@ -44,7 +44,9 @@ import { canUserEdit } from '@server/managers/user-relationships';
 import { getRoleActionName } from '@common/models/user-action';
 import { sessionUserDeleteAll } from '@server/managers/session';
 import { SessionId } from '@common/models/session-id';
-import { PublicError } from '@server/utils/error-types/public-error';
+import { PublicError } from '@server/models/error-types/public-error';
+import { UserGivenName } from '@common/models/user-given-name';
+import { PlayerPrivateId } from '@common/models/player-id';
 
 export function writeUserToFile(filename: string, u: User) {
 	fs.writeFileSync(filename, JSON.stringify(u, null, 4));

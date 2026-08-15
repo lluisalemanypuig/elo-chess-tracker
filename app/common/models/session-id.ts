@@ -24,7 +24,7 @@ Contact:
 */
 
 import { z } from 'zod';
-import { PlayerPublicIdSchema } from '@common/models/player';
+import { PlayerPublicIdSchema } from '@common/models/player-id';
 
 export const SessionIdSchema = z
 	.object({

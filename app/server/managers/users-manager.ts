@@ -24,10 +24,10 @@ Contact:
 */
 
 import { isDefined, isNotDefined } from '@common/utils/is-defined';
-import { User } from '@common/models/user';
+import { User } from '@server/models/user';
 import { searchLinearByKey } from '@server/utils/searching';
-import { PlayerPrivateId, PlayerPublicId, toPlayerPublicId } from '@common/models/player';
-import { InternalError } from '@server/utils/error-types/internal-error';
+import { InternalError } from '@server/models/error-types/internal-error';
+import { PlayerPrivateId, PlayerPublicId, toPlayerPublicId } from '@common/models/player-id';
 
 interface UserBundle {
 	user: User;

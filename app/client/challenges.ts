@@ -21,7 +21,6 @@ Full source code of elo-chess-tracker:
 
 import 'htmx.org';
 
-import { GameResult } from '@common/models/game';
 import { messageFromResponse, serverCall } from '@client/action';
 import { ROUTES } from '@common/api/routes';
 import {
@@ -31,8 +30,9 @@ import {
 	QueryChallengesReceivedOutputSingle,
 	QueryChallengesSentOutputSingle
 } from '@common/api/schemas/query-challenges';
-import { PlayerPrivateId, PlayerPublicId, toPlayerPublicId } from '@common/models/player';
 import { TimeControlId, TimeControlName } from '@common/models/time-control';
+import { PlayerPrivateId, PlayerPublicId, toPlayerPublicId } from '@common/models/player-id';
+import { GameResult } from '@common/models/game-result';
 
 function createLabelText(text: string): HTMLLabelElement {
 	let label = document.createElement('label') as HTMLLabelElement;

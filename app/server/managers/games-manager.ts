@@ -23,7 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { GameId, toGameId } from '@common/models/game';
+import { GameId, toGameId } from '@common/models/game-id';
 import { TimeControlId } from '@common/models/time-control';
 import { DateMajor } from '@common/utils/time';
 import { numberToString } from '@server/utils/misc';

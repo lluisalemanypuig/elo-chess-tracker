@@ -26,7 +26,7 @@ Contact:
 import Debug from 'debug';
 
 import { logNow } from '@common/utils/time';
-import { User } from '@common/models/user';
+import { User } from '@server/models/user';
 const debug = Debug('ELO_CHESS_TRACKER:managers/session');
 
 import { SessionIDManager } from '@server/managers/session-id-manager';
@@ -34,8 +34,8 @@ import { SessionId } from '@common/models/session-id';
 import { shuffle } from '@server/utils/shuffle-random';
 import { UsersManager } from '@server/managers/users-manager';
 import { isNotDefined } from '@common/utils/is-defined';
-import { PlayerPrivateId } from '@common/models/player';
-import { InternalError } from '@server/utils/error-types/internal-error';
+import { InternalError } from '@server/models/error-types/internal-error';
+import { PlayerPrivateId } from '@common/models/player-id';
 
 // The original string was
 // "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+-*/ª!·$%&/()=?¿¡'º|@#~€¬^{},;.:_";

@@ -24,11 +24,11 @@ Contact:
 */
 
 import { z } from 'zod';
-import { PlayerPublicIdSchema } from '@common/models/player';
-import { UserGivenNameSchema } from '@common/models/user';
-import { ChallengeIdSchema } from '@common/models/challenge';
+import { ChallengeIdSchema } from '@common/models/challenge-id';
 import { TimeControlNameSchema } from '@common/models/time-control';
 import { DateFullSchema } from '@common/utils/time';
+import { UserGivenNameSchema } from '@common/models/user-given-name';
+import { PlayerPublicIdSchema } from '@common/models/player-id';
 
 // ROUTES.QUERY_CHALLENGE_RECEIVED
 

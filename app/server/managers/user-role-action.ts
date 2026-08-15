@@ -29,9 +29,9 @@ import {
 	getGenericRoleActionName,
 	getRoleActionName,
 	UserAction,
-	UserActionID
+	UserActionId
 } from '@common/models/user-action';
-import { UserPermissions } from '@common/models/configuration/permissions';
+import { UserPermissions } from '@server/models/configuration/permissions';
 
 /// Relate each user role to a readable string
 export class UserRoleToUserAction {
@@ -79,7 +79,7 @@ export class UserRoleToUserAction {
 		return this.relate[role].includes(action);
 	}
 
-	roleCanDo(role: UserRole, action: UserActionID): boolean {
+	roleCanDo(role: UserRole, action: UserActionId): boolean {
 		for (const otherRoles of ALL_USER_ROLES) {
 			const userAction = getRoleActionName(action, otherRoles);
 			if (this.roleIncludesAction(role, userAction)) {

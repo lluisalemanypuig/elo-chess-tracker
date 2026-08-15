@@ -23,7 +23,8 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { Challenge, ChallengeId, toChallengeId } from '@common/models/challenge';
+import { ChallengeId, toChallengeId } from '@common/models/challenge-id';
+import { Challenge } from '@server/models/challenge';
 import { numberToString } from '@server/utils/misc';
 
 export const CHALLENGEIDLENGTH = 10;

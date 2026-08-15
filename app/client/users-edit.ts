@@ -31,8 +31,8 @@ import {
 } from '@common/models/user-role';
 import { isNotDefined } from '@common/utils/is-defined';
 import { ROUTES } from '@common/api/routes';
-import { PlayerPublicId } from '@common/models/player';
-import { toUserGivenName } from '@common/models/user';
+import { PlayerPublicId } from '@common/models/player-id';
+import { toUserGivenName } from '@common/models/user-given-name';
 
 async function userWasChanged(_event: any) {
 	ALL_USER_ROLES.forEach(function (role: string) {

@@ -29,9 +29,8 @@ import { Request, Response } from 'express';
 
 import { logNow } from '@common/utils/time';
 import { isUserLoggedIn } from '@server/managers/session';
-import { UserGivenName } from '@common/models/user';
 import { getChallengesBy } from '@server/managers/challenges';
-import { Challenge } from '@common/models/challenge';
+import { Challenge } from '@server/models/challenge';
 import { UsersManager } from '@server/managers/users-manager';
 import { canUserDeclineChallenge } from '@server/managers/user-relationships';
 import { isDefined, isNotDefined } from '@common/utils/is-defined';
@@ -44,6 +43,7 @@ import {
 	QueryChallengesReceivedOutput,
 	QueryChallengesSentOutput
 } from '@common/api/schemas/query-challenges';
+import { UserGivenName } from '@common/models/user-given-name';
 
 /// Query the server for challenges received sento to me by other users
 export async function getQueryChallengeReceived(req: Request, res: Response) {

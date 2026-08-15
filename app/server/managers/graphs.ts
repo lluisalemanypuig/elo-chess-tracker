@@ -27,18 +27,18 @@ import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:managers/graphs');
 
 import { isNotDefined } from '@common/utils/is-defined';
-import { graphFullToFile, graphToFile } from '@common/io/graph/graph';
-import { GameResult } from '@common/models/game';
-import { Graph } from '@common/models/graph/graph';
-import { TimeControlId } from '@common/models/time-control';
+import { graphFullToFile, graphToFile } from '@server/io/graph/graph';
+import { Graph } from '@server/models/graph/graph';
 import { EnvironmentManager } from '@server/managers/environment-manager';
 import { GamesIterator } from '@server/managers/games-iterator';
 import { GraphsManager } from '@server/managers/graphs-manager';
 import { RatingSystemManager } from '@server/managers/rating-system-manager';
-import { PlayerPrivateId } from '@common/models/player';
-import { User } from '@common/models/user';
+import { User } from '@server/models/user';
 import { logNow } from '@common/utils/time';
-import { PublicError } from '@server/utils/error-types/public-error';
+import { PublicError } from '@server/models/error-types/public-error';
+import { PlayerPrivateId } from '@common/models/player-id';
+import { GameResult } from '@common/models/game-result';
+import { TimeControlId } from '@common/models/time-control';
 
 export function graphUpdate(w: PlayerPrivateId, b: PlayerPrivateId, result: GameResult, id: TimeControlId) {
 	let manager = GraphsManager.getInstance();

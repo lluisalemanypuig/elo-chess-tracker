@@ -25,7 +25,7 @@ Contact:
 
 import { z } from 'zod';
 import { SessionId } from '@common/models/session-id';
-import { toPlayerPublicId } from '@common/models/player';
+import { toPlayerPublicId } from '@common/models/player-id';
 
 export const AuthenticationInputSchema = z.object({
 	token: z.string(),
