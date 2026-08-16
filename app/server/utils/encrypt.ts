@@ -32,12 +32,12 @@ import { PlayerPrivateId } from '@common/models/player-id';
 // a!b·c$d%e&f/g(h)i=j?k¿l|m@n#o~p¬qr\'s[¡]t{u}v/w*x-y+zºAªB"C,D.E;F:GHIJKLMNOPQRSTUVWXYZ0123456789
 
 // In case of accidental overwrite, use:
-// '$ALLOWED-SYMBOLS-ENCRYPT'.normalize('NFC');
+// '$ALLOWED-SYMBOLS-ENCRYPT';
 // (replace the dashes '-' with underscores '_')
 
 // This string is randomized by the build script which the administrator must
 // use in order to configure the webpage in their machine.
-const allowedSymbols: string = '$ALLOWED_SYMBOLS_ENCRYPT'.normalize('NFC');
+const allowedSymbols: string = '$ALLOWED_SYMBOLS_ENCRYPT';
 
 // Logarithm of 'x' in base 'base'
 function logBase(x: number, base: number): number {
@@ -55,7 +55,7 @@ function nextPowerOf_2(n: number): number {
  * @returns A longer string padded with random characters
  */
 export function normalizeString(str: string): string {
-	let newPassword = str.normalize('NFC');
+	let newPassword = str;
 
 	const currentLength = newPassword.length;
 	const nextLength = (function () {
