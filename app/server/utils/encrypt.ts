@@ -27,17 +27,15 @@ import CryptoJS from 'crypto-js';
 import { interleaveStrings } from '@server/utils/misc';
 import { Password } from '@server/models/password';
 import { PlayerPrivateId } from '@common/models/player-id';
-
-// original allowedSymbols string:
-// a!b·c$d%e&f/g(h)i=j?k¿l|m@n#o~p¬qr\'s[¡]t{u}v/w*x-y+zºAªB"C,D.E;F:GHIJKLMNOPQRSTUVWXYZ0123456789
+import { InternalError } from '../models/error-types/internal-error';
 
 // In case of accidental overwrite, use:
-// '$ALLOWED-SYMBOLS-ENCRYPT'.normalize('NFC');
+// '$ALLOWED-SYMBOLS-ENCRYPT';
 // (replace the dashes '-' with underscores '_')
 
 // This string is randomized by the build script which the administrator must
 // use in order to configure the webpage in their machine.
-const allowedSymbols: string = '$ALLOWED_SYMBOLS_ENCRYPT'.normalize('NFC');
+const allowedSymbols: string = '$ALLOWED_SYMBOLS_ENCRYPT';
 
 // Logarithm of 'x' in base 'base'
 function logBase(x: number, base: number): number {
@@ -45,7 +43,7 @@ function logBase(x: number, base: number): number {
 }
 
 // Next power of 2
-function nextPowerOf_2(n: number): number {
+function nextPowerOf2(n: number): number {
 	return Math.pow(2, Math.floor(logBase(n, 2)) + 1);
 }
 
@@ -55,20 +53,26 @@ function nextPowerOf_2(n: number): number {
  * @returns A longer string padded with random characters
  */
 export function normalizeString(str: string): string {
-	let newPassword = str.normalize('NFC');
+	let newPassword = str;
 
 	const currentLength = newPassword.length;
 	const nextLength = (function () {
 		if (newPassword.length < 4) {
-			return nextPowerOf_2(nextPowerOf_2(currentLength));
+			return nextPowerOf2(nextPowerOf2(currentLength));
 		}
-		return nextPowerOf_2(currentLength);
+		return nextPowerOf2(currentLength);
 	})();
 
 	for (let i = currentLength; i < nextLength; ++i) {
-		const randIdx = (i - currentLength) % allowedSymbols.length;
-		const randChar = allowedSymbols.charAt(randIdx);
+		// NOTE: this index cannot be random!
+		const idx = (i - currentLength) % allowedSymbols.length;
+		const randChar = allowedSymbols.charAt(idx);
 		newPassword += randChar;
+	}
+
+	const newLength = newPassword.length;
+	if ((newLength & (newLength - 1)) !== 0) {
+		throw new InternalError(`New password does not have the right length ${newLength}.`);
 	}
 
 	return newPassword;
@@ -89,7 +93,7 @@ export function decryptMessage(encryptedMsg: string, pwd: string): string {
 	try {
 		return decryptBytes(encryptedMsg, pwd).toString(CryptoJS.enc.Utf8);
 	} catch (error) {
-		return '';
+		throw new InternalError('Could not decrypt message');
 	}
 }
 
@@ -104,6 +108,7 @@ export function decryptMessage(encryptedMsg: string, pwd: string): string {
  */
 export function encryptPasswordForUser(username: PlayerPrivateId, password: string): [string, string] {
 	const normalizedPassword = normalizeString(password);
+	console.log(`normalizedPassword: ${normalizedPassword}`);
 	const keyUsedToEncrypt = CryptoJS.SHA256(normalizedPassword);
 
 	const actualPasswordToBeEncrypted = interleaveStrings(username, password);

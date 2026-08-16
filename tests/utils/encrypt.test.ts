@@ -67,8 +67,6 @@ function check_decrypt_good_password(msg: string, pass: string) {
 }
 
 describe('Encryption and decryption of messages with a (correct) plain password', () => {
-	const admin = toPlayerPrivateId('admin');
-
 	test('1', () => {
 		check_decrypt_good_password('', 'admin');
 	});
@@ -86,7 +84,7 @@ describe('Encryption and decryption of messages with a (correct) plain password'
 	});
 
 	test('5', () => {
-		check_decrypt_good_password(admin, '星');
+		check_decrypt_good_password('admin', '星');
 	});
 
 	test('6', () => {
@@ -96,11 +94,15 @@ describe('Encryption and decryption of messages with a (correct) plain password'
 	test('7', () => {
 		check_decrypt_good_password('山田', '山田');
 	});
+
+	test('8', () => {
+		check_decrypt_good_password('山田', 'ç私çç€猫€€a');
+	});
 });
 
-function check_decrypt_wrong_password(msg: string, pass1: string, pass2: string) {
-	const enc = encryptMessage(msg, pass1);
-	expect(decryptMessage(enc, pass2)).not.toBe(msg);
+function check_decrypt_wrong_password(msg: string, correctPassword: string, wrongPassword: string) {
+	const enc = encryptMessage(msg, correctPassword);
+	expect(decryptMessage(enc, wrongPassword)).not.toBe(msg);
 }
 
 describe('Encryption and decryption with a (wrong) plain password', () => {

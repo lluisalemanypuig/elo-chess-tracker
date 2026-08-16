@@ -27,13 +27,10 @@ function shuffle(input: string): string {
 	const arr = Array.from(input); // handles unicode correctly
 	const cryptoObj = globalThis.crypto;
 
+	const rand = new Uint32Array(arr.length);
+	cryptoObj.getRandomValues(rand);
 	for (let i = arr.length - 1; i > 0; i--) {
-		// Generate secure random integer 0 <= j <= i
-		const rand = new Uint32Array(1);
-		cryptoObj.getRandomValues(rand);
-
-		const j = rand[0] % (i + 1);
-
+		const j = rand[i] % (i + 1);
 		[arr[i], arr[j]] = [arr[j], arr[i]];
 	}
 
@@ -41,7 +38,7 @@ function shuffle(input: string): string {
 }
 
 const symbols: string =
-	'a!b·c$d%e&f/g(h)i=j?k¿l|m@n#o~p¬qrs[¡]t{u}v/w*x-y+zºAªB"C,D.E;F:G_HIJKLMNOPQRSTUVWXYZ0123456789 '.normalize('NFC');
+	'a!b·c$d%e&f/g(h)i=j?k¿l|m@n#o~p¬qrs[¡]t{u}v/w*x-y+zºAªB"C,D.E;F:G_HIJKLMNOPQRSTUVWXYZ0123456789 ';
 
 const randomized = shuffle(symbols);
 

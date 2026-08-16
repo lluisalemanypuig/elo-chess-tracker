@@ -23,27 +23,25 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-/*
- * Adapted from post: https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
- * Answer: https://stackoverflow.com/a/2450976/12075306
- */
-
-/**
- * @brief Uses randomness to shuffle an array.
- * @param array Input array.
- * @post The input array is shuffled.
- */
-export function shuffle<T>(array: T[]) {
-	let curIdx = array.length;
-	let rndIdx = 0;
-
-	// While there remain elements to shuffle.
-	while (curIdx !== 0) {
-		// Pick a remaining element
-		rndIdx = Math.floor(Math.random() * curIdx);
-		curIdx--;
-
-		// And swap it with the current element
-		[array[curIdx], array[rndIdx]] = [array[rndIdx], array[curIdx]];
+export function shuffleArray<T>(array: T[]) {
+	const cryptoObj = globalThis.crypto;
+	const rand = new Uint32Array(array.length);
+	cryptoObj.getRandomValues(rand);
+	for (let i = array.length - 1; i > 0; i--) {
+		const j = rand[i] % (i + 1);
+		[array[i], array[j]] = [array[j], array[i]];
 	}
+}
+
+export function shuffleString(input: string): string {
+	const arr = Array.from(input); // handles unicode correctly
+	const cryptoObj = globalThis.crypto;
+	const rand = new Uint32Array(arr.length);
+	cryptoObj.getRandomValues(rand);
+	for (let i = arr.length - 1; i > 0; i--) {
+		const j = rand[i] % (i + 1);
+		[arr[i], arr[j]] = [arr[j], arr[i]];
+	}
+
+	return arr.join('');
 }

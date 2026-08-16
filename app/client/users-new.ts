@@ -27,47 +27,48 @@ import { UserRole, ALL_USER_ROLES, arrayStringToRoles, USER_ROLE_TO_STRING } fro
 import { ROUTES } from '@common/api/routes';
 import { toPlayerPrivateId } from '@common/models/player-id';
 import { toUserGivenName } from '@common/models/user-given-name';
+import { shuffleString } from '@common/utils/shuffle-random';
 
 async function submitNewUserClicked(_event: any) {
 	// username box
-	const UsernameBox = document.getElementById('username-box');
-	if (isNotDefined(UsernameBox)) {
+	const usernameBoxElem = document.getElementById('username-box');
+	if (isNotDefined(usernameBoxElem)) {
 		console.log("Element 'usernameBox' does not exist.");
 		return;
 	}
-	const usernameBox = UsernameBox as HTMLInputElement;
+	const usernameBox = usernameBoxElem as HTMLInputElement;
 
 	// firstName box
-	const BoxFirstName = document.getElementById('box-first-name');
-	if (isNotDefined(BoxFirstName)) {
+	const boxFirstNameElem = document.getElementById('box-first-name');
+	if (isNotDefined(boxFirstNameElem)) {
 		console.log("Element 'boxFirstName' does not exist.");
 		return;
 	}
-	const boxFirstName = BoxFirstName as HTMLInputElement;
+	const boxFirstName = boxFirstNameElem as HTMLInputElement;
 
 	// lastName box
-	const BoxLastName = document.getElementById('box-last-name');
-	if (isNotDefined(BoxLastName)) {
+	const boxLastNameElem = document.getElementById('box-last-name');
+	if (isNotDefined(boxLastNameElem)) {
 		console.log("Element 'boxLastName' does not exist.");
 		return;
 	}
-	const boxLastName = BoxLastName as HTMLInputElement;
+	const boxLastName = boxLastNameElem as HTMLInputElement;
 
 	// password box
-	const PasswordBox = document.getElementById('password-box');
-	if (isNotDefined(PasswordBox)) {
+	const passwordBoxElem = document.getElementById('password-box');
+	if (isNotDefined(passwordBoxElem)) {
 		console.log("Element 'passwordBox' does not exist.");
 		return;
 	}
-	const passwordBox = PasswordBox as HTMLInputElement;
+	const passwordBox = passwordBoxElem as HTMLInputElement;
 
 	const username = usernameBox.value;
 	const firstname = boxFirstName.value;
 	const lastname = boxLastName.value;
 
-	let selectedRolesStr: string[] = [];
+	const selectedRolesStr: string[] = [];
 	ALL_USER_ROLES.forEach(function (role: string) {
-		let checkboxRole = document.getElementById(role) as HTMLInputElement;
+		const checkboxRole = document.getElementById(role) as HTMLInputElement;
 		if (checkboxRole.checked) {
 			selectedRolesStr.push(role);
 		}
@@ -120,27 +121,50 @@ async function submitNewUserClicked(_event: any) {
 	window.location.href = ROUTES.HOME;
 }
 
+function addCheckbox(div: HTMLDivElement, show: string, value: string) {
+	const checkbox = document.createElement('input');
+	checkbox.type = 'checkbox';
+	checkbox.id = value;
+	div.appendChild(checkbox);
+
+	const checkboxLabel = document.createElement('label');
+	checkboxLabel.textContent = show;
+	div.appendChild(checkboxLabel);
+	div.appendChild(document.createElement('br'));
+}
+
+// In case of accidental overwrite, use:
+// '$ALLOWED-SYMBOLS-RANDOM.PASSWORD'
+// (replace the dashes '-' with underscores '_')
+
+// This string is randomized by the build script which the administrator must
+// use in order to configure the webpage in their machine.
+const characterSamples: string = '$ALLOWED_SYMBOLS_RANDOM_PASSWORD';
+
+function generateRandomPassword(_event: Event) {
+	const passwordBoxElem = document.getElementById('password-box');
+	if (isNotDefined(passwordBoxElem)) {
+		console.log("Element 'passwordBox' does not exist.");
+		return;
+	}
+	const passwordBox = passwordBoxElem as HTMLInputElement;
+
+	passwordBox.value = shuffleString(characterSamples).substring(0, 14);
+}
+
 window.onload = function () {
-	let addCheckbox = function (div: HTMLDivElement, show: string, value: string) {
-		let checkbox = document.createElement('input');
-		checkbox.type = 'checkbox';
-		checkbox.id = value;
-		div.appendChild(checkbox);
-
-		let checkboxLabel = document.createElement('label');
-		checkboxLabel.textContent = show;
-		div.appendChild(checkboxLabel);
-		div.appendChild(document.createElement('br'));
-	};
-
 	// fill in select role dropdown with values
-	let roleDiv = document.getElementById('div-role-checkboxes') as HTMLDivElement;
+	const roleDiv = document.getElementById('div-role-checkboxes') as HTMLDivElement;
 	ALL_USER_ROLES.forEach(function (str: string) {
 		addCheckbox(roleDiv, USER_ROLE_TO_STRING[str as UserRole], str);
 	});
 	roleDiv.appendChild(document.createElement('br'));
 
+	// set the onclick event for random password generation
+	const passwordGenerator = document.getElementById('random-password-button') as HTMLDivElement;
+	passwordGenerator.onclick = generateRandomPassword;
+
 	// link button click with function
-	let submitNewUser = document.getElementById('submit-new-user-button') as HTMLLinkElement;
+	const submitNewUser = document.getElementById('submit-new-user-button') as HTMLLinkElement;
 	submitNewUser.onclick = submitNewUserClicked;
 };

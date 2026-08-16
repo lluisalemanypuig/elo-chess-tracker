@@ -31,17 +31,14 @@ const debug = Debug('ELO_CHESS_TRACKER:managers/session');
 
 import { SessionIDManager } from '@server/managers/session-id-manager';
 import { SessionId } from '@common/models/session-id';
-import { shuffle } from '@server/utils/shuffle-random';
+import { shuffleArray } from '@common/utils/shuffle-random';
 import { UsersManager } from '@server/managers/users-manager';
 import { isNotDefined } from '@common/utils/is-defined';
 import { InternalError } from '@app/server/models/error-types/internal-error';
 import { PlayerPrivateId } from '@common/models/player-id';
 
-// The original string was
-// "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+-*/ª!·$%&/()=?¿¡'º|@#~€¬^{},;.:_";
-
 // In case of accidental overwrite, use:
-// '$ALLOWED-SYMBOLS-COOKIES'.normalize('NFC');
+// '$ALLOWED-SYMBOLS-COOKIES'
 // (replace the dashes '-' with underscores '_')
 
 // This string is randomized by the build script which the administrator must
@@ -50,18 +47,22 @@ const characterSamples: string = '$ALLOWED_SYMBOLS_COOKIES';
 
 // Makes a random session token from a starting string.
 function randomSessionToken(str: string): string {
-	// convert string to an array
+	const cryptoObj = globalThis.crypto;
+
 	let stringArray: string[] = [];
 	for (const char of str) {
 		stringArray.push(char);
 	}
-	// put more characters until the array is at least 128 characters
-	while (stringArray.length < 128) {
-		const randIdx = Math.floor(Math.random() * characterSamples.length);
+
+	const rand = new Uint32Array(128 - stringArray.length);
+	cryptoObj.getRandomValues(rand);
+	const currentLength = stringArray.length;
+	for (let i = currentLength; i < 128; ++i) {
+		const randIdx = rand[i - currentLength] % characterSamples.length;
 		stringArray.push(characterSamples.charAt(randIdx));
 	}
 
-	shuffle(stringArray);
+	shuffleArray(stringArray);
 	return stringArray.join('');
 }
 
