@@ -27,6 +27,7 @@ import CryptoJS from 'crypto-js';
 import { interleaveStrings } from '@server/utils/misc';
 import { Password } from '@server/models/password';
 import { PlayerPrivateId } from '@common/models/player-id';
+import { InternalError } from '../models/error-types/internal-error';
 
 // In case of accidental overwrite, use:
 // '$ALLOWED-SYMBOLS-ENCRYPT';
@@ -52,7 +53,6 @@ function nextPowerOf2(n: number): number {
  * @returns A longer string padded with random characters
  */
 export function normalizeString(str: string): string {
-	const cryptoObj = globalThis.crypto;
 	let newPassword = str;
 
 	const currentLength = newPassword.length;
@@ -63,12 +63,16 @@ export function normalizeString(str: string): string {
 		return nextPowerOf2(currentLength);
 	})();
 
-	const rand = new Uint32Array(nextLength - currentLength);
-	cryptoObj.getRandomValues(rand);
 	for (let i = currentLength; i < nextLength; ++i) {
-		const randIdx = rand[i - currentLength] % allowedSymbols.length;
-		const randChar = allowedSymbols.charAt(randIdx);
+		// NOTE: this index cannot be random!
+		const idx = (i - currentLength) % allowedSymbols.length;
+		const randChar = allowedSymbols.charAt(idx);
 		newPassword += randChar;
+	}
+
+	const newLength = newPassword.length;
+	if ((newLength & (newLength - 1)) !== 0) {
+		throw new InternalError(`New password does not have the right length ${newLength}.`);
 	}
 
 	return newPassword;
@@ -89,7 +93,7 @@ export function decryptMessage(encryptedMsg: string, pwd: string): string {
 	try {
 		return decryptBytes(encryptedMsg, pwd).toString(CryptoJS.enc.Utf8);
 	} catch (error) {
-		return '';
+		throw new InternalError('Could not decrypt message');
 	}
 }
 
@@ -104,6 +108,7 @@ export function decryptMessage(encryptedMsg: string, pwd: string): string {
  */
 export function encryptPasswordForUser(username: PlayerPrivateId, password: string): [string, string] {
 	const normalizedPassword = normalizeString(password);
+	console.log(`normalizedPassword: ${normalizedPassword}`);
 	const keyUsedToEncrypt = CryptoJS.SHA256(normalizedPassword);
 
 	const actualPasswordToBeEncrypted = interleaveStrings(username, password);
