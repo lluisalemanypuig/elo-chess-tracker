@@ -2,7 +2,7 @@ import * as esbuild from 'esbuild-wasm';
 
 await esbuild.initialize({});
 
-let filesToBundle = [
+const filesToBundle = [
 	'login.js',
 	'home.js',
 	'users-new.js',
@@ -15,7 +15,7 @@ let filesToBundle = [
 	'graph-display.js'
 ];
 
-for (let file of filesToBundle) {
+for (const file of filesToBundle) {
 	console.log(`Bundling 'js/${file}'...`);
 	await esbuild.build({
 		entryPoints: ['js/' + file],
