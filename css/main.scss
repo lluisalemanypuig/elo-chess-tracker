@@ -180,20 +180,20 @@ body {
 
 /* Label and input text box */
 
-.label-and-input {
+.label-input {
 	@include flex-start;
 
 	gap: 5px;
 	margin-bottom: 10px;
 }
 
-.label-and-input label {
+.label-input label {
 	@include size-long-width;
 
 	text-align: center;
 }
 
-.label-and-input input {
+.label-input input {
 	@include size-long-width;
 
 	max-height: 30px;
@@ -203,20 +203,20 @@ body {
 
 /* Label and dropdown select */
 
-.label-and-select {
+.label-select {
 	@include flex-start;
 
 	gap: 5px;
 	margin-bottom: 15px;
 }
 
-.label-and-select label {
+.label-select label {
 	@include size-long-width;
 
 	text-align: center;
 }
 
-.label-and-select select {
+.label-select select {
 	@include size-long-width;
 
 	max-height: 30px;

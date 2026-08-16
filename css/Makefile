@@ -16,7 +16,7 @@ all: \
 	@npx sass --no-source-map $< $@
 	@if [ "$<" != "css/main.scss" ]; then \
 		echo "    Postprocess $<"; \
-		python3 build/render_styles_prune_main.py $@; \
+		python3 build/render-styles-prune-main.py $@; \
 	fi
 
 clean:
