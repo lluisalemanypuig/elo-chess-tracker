@@ -45,7 +45,7 @@ function logBase(x: number, base: number): number {
 }
 
 // Next power of 2
-function nextPowerOf_2(n: number): number {
+function nextPowerOf2(n: number): number {
 	return Math.pow(2, Math.floor(logBase(n, 2)) + 1);
 }
 
@@ -60,9 +60,9 @@ export function normalizeString(str: string): string {
 	const currentLength = newPassword.length;
 	const nextLength = (function () {
 		if (newPassword.length < 4) {
-			return nextPowerOf_2(nextPowerOf_2(currentLength));
+			return nextPowerOf2(nextPowerOf2(currentLength));
 		}
-		return nextPowerOf_2(currentLength);
+		return nextPowerOf2(currentLength);
 	})();
 
 	for (let i = currentLength; i < nextLength; ++i) {

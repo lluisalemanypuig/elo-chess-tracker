@@ -41,7 +41,7 @@ function shuffle(input: string): string {
 }
 
 const symbols: string =
-	'a!b·c$d%e&f/g(h)i=j?k¿l|m@n#o~p¬qrs[¡]t{u}v/w*x-y+zºAªB"C,D.E;F:G_HIJKLMNOPQRSTUVWXYZ0123456789 '.normalize('NFC');
+	'a!b·c$d%e&f/g(h)i=j?k¿l|m@n#o~p¬qrs[¡]t{u}v/w*x-y+zºAªB"C,D.E;F:G_HIJKLMNOPQRSTUVWXYZ0123456789 ';
 
 const randomized = shuffle(symbols);
 
