@@ -25,11 +25,10 @@ Contact:
 
 export function shuffleArray<T>(array: T[]) {
 	const cryptoObj = globalThis.crypto;
-	const rand = new Uint32Array(1);
-
+	const rand = new Uint32Array(array.length);
+	cryptoObj.getRandomValues(rand);
 	for (let i = array.length - 1; i > 0; i--) {
-		cryptoObj.getRandomValues(rand);
-		const j = rand[0] % (i + 1);
+		const j = rand[i] % (i + 1);
 		[array[i], array[j]] = [array[j], array[i]];
 	}
 }
@@ -37,11 +36,10 @@ export function shuffleArray<T>(array: T[]) {
 export function shuffleString(input: string): string {
 	const arr = Array.from(input); // handles unicode correctly
 	const cryptoObj = globalThis.crypto;
-	const rand = new Uint32Array(1);
-
+	const rand = new Uint32Array(arr.length);
+	cryptoObj.getRandomValues(rand);
 	for (let i = arr.length - 1; i > 0; i--) {
-		cryptoObj.getRandomValues(rand);
-		const j = rand[0] % (i + 1);
+		const j = rand[i] % (i + 1);
 		[arr[i], arr[j]] = [arr[j], arr[i]];
 	}
 

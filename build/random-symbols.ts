@@ -27,13 +27,10 @@ function shuffle(input: string): string {
 	const arr = Array.from(input); // handles unicode correctly
 	const cryptoObj = globalThis.crypto;
 
+	const rand = new Uint32Array(arr.length);
+	cryptoObj.getRandomValues(rand);
 	for (let i = arr.length - 1; i > 0; i--) {
-		// Generate secure random integer 0 <= j <= i
-		const rand = new Uint32Array(1);
-		cryptoObj.getRandomValues(rand);
-
-		const j = rand[0] % (i + 1);
-
+		const j = rand[i] % (i + 1);
 		[arr[i], arr[j]] = [arr[j], arr[i]];
 	}
 

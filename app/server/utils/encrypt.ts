@@ -28,9 +28,6 @@ import { interleaveStrings } from '@server/utils/misc';
 import { Password } from '@server/models/password';
 import { PlayerPrivateId } from '@common/models/player-id';
 
-// original allowedSymbols string:
-// a!b·c$d%e&f/g(h)i=j?k¿l|m@n#o~p¬qr\'s[¡]t{u}v/w*x-y+zºAªB"C,D.E;F:GHIJKLMNOPQRSTUVWXYZ0123456789
-
 // In case of accidental overwrite, use:
 // '$ALLOWED-SYMBOLS-ENCRYPT';
 // (replace the dashes '-' with underscores '_')
@@ -56,7 +53,6 @@ function nextPowerOf2(n: number): number {
  */
 export function normalizeString(str: string): string {
 	const cryptoObj = globalThis.crypto;
-	const rand = new Uint32Array(1);
 	let newPassword = str;
 
 	const currentLength = newPassword.length;
@@ -67,9 +63,10 @@ export function normalizeString(str: string): string {
 		return nextPowerOf2(currentLength);
 	})();
 
+	const rand = new Uint32Array(nextLength - currentLength);
+	cryptoObj.getRandomValues(rand);
 	for (let i = currentLength; i < nextLength; ++i) {
-		cryptoObj.getRandomValues(rand);
-		const randIdx = rand[0] % allowedSymbols.length;
+		const randIdx = rand[i - currentLength] % allowedSymbols.length;
 		const randChar = allowedSymbols.charAt(randIdx);
 		newPassword += randChar;
 	}
