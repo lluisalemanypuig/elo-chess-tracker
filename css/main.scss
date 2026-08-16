@@ -26,6 +26,12 @@ Full source code of elo-chess-tracker:
 @mixin size-long-width {
 	width: 175px;
 }
+@mixin size-mid-width {
+	width: 125px;
+}
+@mixin size-short-width {
+	width: 75px;
+}
 
 // shapes
 
@@ -218,6 +224,37 @@ body {
 
 .label-select select {
 	@include size-long-width;
+
+	max-height: 30px;
+	padding: 5px;
+	box-sizing: border-box;
+}
+
+/* Label, dropdown select, and input */
+
+.label-select-input {
+	@include flex-start;
+
+	gap: 5px;
+	margin-bottom: 15px;
+}
+
+.label-select-input label {
+	@include size-mid-width;
+
+	text-align: center;
+}
+
+.label-select-input select {
+	@include size-long-width;
+
+	max-height: 30px;
+	padding: 5px;
+	box-sizing: border-box;
+}
+
+.label-select-input input {
+	@include size-short-width;
 
 	max-height: 30px;
 	padding: 5px;
