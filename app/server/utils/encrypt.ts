@@ -55,6 +55,8 @@ function nextPowerOf2(n: number): number {
  * @returns A longer string padded with random characters
  */
 export function normalizeString(str: string): string {
+	const cryptoObj = globalThis.crypto;
+	const rand = new Uint32Array(1);
 	let newPassword = str;
 
 	const currentLength = newPassword.length;
@@ -66,7 +68,8 @@ export function normalizeString(str: string): string {
 	})();
 
 	for (let i = currentLength; i < nextLength; ++i) {
-		const randIdx = (i - currentLength) % allowedSymbols.length;
+		cryptoObj.getRandomValues(rand);
+		const randIdx = rand[0] % allowedSymbols.length;
 		const randChar = allowedSymbols.charAt(randIdx);
 		newPassword += randChar;
 	}
