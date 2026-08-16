@@ -31,7 +31,7 @@ const debug = Debug('ELO_CHESS_TRACKER:managers/session');
 
 import { SessionIDManager } from '@server/managers/session-id-manager';
 import { SessionId } from '@common/models/session-id';
-import { shuffle } from '@server/utils/shuffle-random';
+import { shuffleArray } from '@common/utils/shuffle-random';
 import { UsersManager } from '@server/managers/users-manager';
 import { isNotDefined } from '@common/utils/is-defined';
 import { InternalError } from '@app/server/models/error-types/internal-error';
@@ -41,7 +41,7 @@ import { PlayerPrivateId } from '@common/models/player-id';
 // "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+-*/ª!·$%&/()=?¿¡'º|@#~€¬^{},;.:_";
 
 // In case of accidental overwrite, use:
-// '$ALLOWED-SYMBOLS-COOKIES'.normalize('NFC');
+// '$ALLOWED-SYMBOLS-COOKIES'
 // (replace the dashes '-' with underscores '_')
 
 // This string is randomized by the build script which the administrator must
@@ -61,7 +61,7 @@ function randomSessionToken(str: string): string {
 		stringArray.push(characterSamples.charAt(randIdx));
 	}
 
-	shuffle(stringArray);
+	shuffleArray(stringArray);
 	return stringArray.join('');
 }
 
