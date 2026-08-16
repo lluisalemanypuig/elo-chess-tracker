@@ -29,7 +29,7 @@ function configure_sslCertificate {
 function generate_admin_password {
 	echo "Encrypting admin's password..."
 
-	make_password_result=$(bun utils/make_password_for_user.ts --username $admin_username --password $admin_password)
+	make_password_result=$(bun utils/make-password-for-user.ts --username $admin_username --password $admin_password)
 
 	encrypted_admin_password=$(echo "$make_password_result" | jq -r '.password')
 	encrypted_admin_iv=$(echo "$make_password_result" | jq -r '.iv')
