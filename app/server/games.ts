@@ -132,7 +132,7 @@ export async function postGameCreate(req: Request, res: Response) {
 		return;
 	}
 
-	const gameParse = safeParseRequestBody(req.body, inputSchemaOf(ROUTES.GAME_CREATE), res, debug);
+	const gameParse = safeParseRequestBody(req, inputSchemaOf(ROUTES.GAME_CREATE), res, debug);
 	if (gameParse.result === 'Exit') {
 		return;
 	}
@@ -269,7 +269,7 @@ export async function postGameDelete(req: Request, res: Response) {
 		return;
 	}
 
-	const gameParse = safeParseRequestBody(req.body, inputSchemaOf(ROUTES.GAME_DELETE), res, debug);
+	const gameParse = safeParseRequestBody(req, inputSchemaOf(ROUTES.GAME_DELETE), res, debug);
 	if (gameParse.result === 'Exit') {
 		return;
 	}

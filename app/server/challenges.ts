@@ -82,7 +82,7 @@ export async function postChallengeSend(req: Request, res: Response) {
 	}
 	const session = sessionParse.data;
 
-	const challengeParse = safeParseRequestBody(req.body, inputSchemaOf(ROUTES.CHALLENGE_SEND), res, debug);
+	const challengeParse = safeParseRequestBody(req, inputSchemaOf(ROUTES.CHALLENGE_SEND), res, debug);
 	if (challengeParse.result === 'Exit') {
 		return;
 	}
@@ -154,7 +154,7 @@ export async function postChallengeAccept(req: Request, res: Response) {
 		return;
 	}
 
-	const challengeParse = safeParseRequestBody(req.body, inputSchemaOf(ROUTES.CHALLENGE_ACCEPT), res, debug);
+	const challengeParse = safeParseRequestBody(req, inputSchemaOf(ROUTES.CHALLENGE_ACCEPT), res, debug);
 	if (challengeParse.result === 'Exit') {
 		return;
 	}
@@ -195,7 +195,7 @@ export async function postChallengeDecline(req: Request, res: Response) {
 		return;
 	}
 
-	const challengeParse = safeParseRequestBody(req.body, inputSchemaOf(ROUTES.CHALLENGE_DECLINE), res, debug);
+	const challengeParse = safeParseRequestBody(req, inputSchemaOf(ROUTES.CHALLENGE_DECLINE), res, debug);
 	if (challengeParse.result === 'Exit') {
 		return;
 	}
@@ -237,7 +237,7 @@ export async function postChallengeSetResult(req: Request, res: Response) {
 	}
 
 	const setterUser = user.username;
-	const challengeParse = safeParseRequestBody(req.body, inputSchemaOf(ROUTES.CHALLENGE_SET_RESULT), res, debug);
+	const challengeParse = safeParseRequestBody(req, inputSchemaOf(ROUTES.CHALLENGE_SET_RESULT), res, debug);
 	if (challengeParse.result === 'Exit') {
 		return;
 	}
@@ -303,7 +303,7 @@ export async function postChallengeAgree(req: Request, res: Response) {
 		return;
 	}
 
-	const challengeParse = safeParseRequestBody(req.body, inputSchemaOf(ROUTES.CHALLENGE_AGREE), res, debug);
+	const challengeParse = safeParseRequestBody(req, inputSchemaOf(ROUTES.CHALLENGE_AGREE), res, debug);
 	if (challengeParse.result === 'Exit') {
 		return;
 	}
@@ -340,7 +340,7 @@ export async function postChallengeDisagree(req: Request, res: Response) {
 		return;
 	}
 
-	const challengeParse = safeParseRequestBody(req.body, inputSchemaOf(ROUTES.CHALLENGE_DISAGREE), res, debug);
+	const challengeParse = safeParseRequestBody(req, inputSchemaOf(ROUTES.CHALLENGE_DISAGREE), res, debug);
 	if (challengeParse.result === 'Exit') {
 		return;
 	}
