@@ -41,7 +41,8 @@ export const GameKeys = [
 	'result',
 	'timeControlId',
 	'timeControlName',
-	'when'
+	'when',
+	'history'
 ];
 
 /**
@@ -91,7 +92,8 @@ export class Game {
 		result: GameResult,
 		timeControlId: TimeControlId,
 		timeControlName: TimeControlName,
-		when: DateFull
+		when: DateFull,
+		history: GameEditLog[]
 	) {
 		this.id = id;
 		this.title = title;
@@ -103,7 +105,7 @@ export class Game {
 		this.timeControlId = timeControlId;
 		this.timeControlName = timeControlName;
 		this.when = when;
-		this.history = [];
+		this.history = history;
 	}
 
 	// Is user 'username' in this game?
