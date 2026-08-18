@@ -437,6 +437,13 @@ export function gameEditResult(editor: User, gameId: GameId, newResult: GameResu
 
 	/* Update the game files */
 
+	game.history.push({
+		who: editor.username,
+		when: toDateFull(logNow()),
+		field: 'result',
+		oldValue: `${game.result}`,
+		newValue: `${newResult}`
+	});
 	game.result = newResult;
 
 	const updatedPlayers: Player[] = [];
@@ -518,6 +525,13 @@ export function gameEditTitle(editor: User, gameId: GameId, newTitle: string) {
 
 	debug(logNow(), `Editing game...`);
 
+	game.history.push({
+		who: editor.username,
+		when: toDateFull(logNow()),
+		field: 'title',
+		oldValue: `${game.title}`,
+		newValue: `${newTitle}`
+	});
 	game.title = newTitle;
 
 	const gameRecordFile = path.join(gamesDir, gameRecord);
