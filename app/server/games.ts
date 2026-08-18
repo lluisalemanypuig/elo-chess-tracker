@@ -197,7 +197,7 @@ export async function postGameEditResult(req: Request, res: Response) {
 		return;
 	}
 
-	const gameParse = safeParseRequestBody(req.body, inputSchemaOf(ROUTES.GAME_EDIT_RESULT), res, debug);
+	const gameParse = safeParseRequestBody(req, inputSchemaOf(ROUTES.GAME_EDIT_RESULT), res, debug);
 	if (gameParse.result === 'Exit') {
 		return;
 	}
@@ -233,7 +233,7 @@ export async function postGameEditTitle(req: Request, res: Response) {
 		return;
 	}
 
-	const gameParse = safeParseRequestBody(req.body, inputSchemaOf(ROUTES.GAME_EDIT_TITLE), res, debug);
+	const gameParse = safeParseRequestBody(req, inputSchemaOf(ROUTES.GAME_EDIT_TITLE), res, debug);
 	if (gameParse.result === 'Exit') {
 		return;
 	}
