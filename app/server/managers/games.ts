@@ -152,7 +152,8 @@ function gameNew(
 		result,
 		timeControlId,
 		timeControlName,
-		when
+		when,
+		[]
 	);
 }
 
@@ -380,7 +381,7 @@ export function gameAddNewGuarded(
 	gameAddNew(gameTitle, white, black, result, timeControlId, timeControlName, gameDate, gameTime);
 }
 
-export function gameEditResult(editor: User, gameId: GameId, newResult: GameResult) {
+export function gameEditResult(editor: User, when: DateFull, gameId: GameId, newResult: GameResult) {
 	if (!editor.canDo('EDIT_GAMES')) {
 		debug(logNow(), `User '${editor.username}' cannot edit games.`);
 		throw new PublicError('You cannot edit games');
@@ -439,7 +440,7 @@ export function gameEditResult(editor: User, gameId: GameId, newResult: GameResu
 
 	game.history.push({
 		who: editor.username,
-		when: toDateFull(logNow()),
+		when: when,
 		field: 'result',
 		oldValue: `${game.result}`,
 		newValue: `${newResult}`
@@ -469,7 +470,7 @@ export function gameEditResult(editor: User, gameId: GameId, newResult: GameResu
 	userUpdateFromPlayerData(updatedPlayers);
 }
 
-export function gameEditTitle(editor: User, gameId: GameId, newTitle: string) {
+export function gameEditTitle(editor: User, when: DateFull, gameId: GameId, newTitle: string) {
 	if (!editor.canDo('EDIT_GAMES')) {
 		debug(logNow(), `User '${editor.username}' cannot edit games.`);
 		throw new PublicError('You cannot edit games');
@@ -527,7 +528,7 @@ export function gameEditTitle(editor: User, gameId: GameId, newTitle: string) {
 
 	game.history.push({
 		who: editor.username,
-		when: toDateFull(logNow()),
+		when: when,
 		field: 'title',
 		oldValue: `${game.title}`,
 		newValue: `${newTitle}`
