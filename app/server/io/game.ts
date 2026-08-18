@@ -50,7 +50,8 @@ export function gameFromJson(json: any): Game | null {
 		result.data,
 		json.timeControlId,
 		json.timeControlName,
-		json.when
+		json.when,
+		json.history
 	);
 }
 
