@@ -26,14 +26,14 @@ Contact:
 import fs from 'fs';
 import path from 'path';
 
-import { gameAddNew, gameEditResult, recalculateAllRatings } from '@server/managers/games';
+import { gameAddNew, gameEditResult, gameEditTitle, recalculateAllRatings } from '@server/managers/games';
 import { serverInitFromData } from '@server/managers/memory/initialization';
 import { userAddNew } from '@server/managers/users';
 import { runCommand, TestError } from '@tests';
 import { EnvironmentManager } from '@server/managers/environment-manager';
 import { gameArrayFromString } from '@server/io/game';
 import { GamesIterator } from '@server/managers/games-iterator';
-import { dateFullToMajor, toDateMinor, toDateMajor } from '@common/utils/time';
+import { dateFullToMajor, toDateMinor, toDateMajor, toDateFull } from '@common/utils/time';
 import { clearServer } from '@server/managers/memory/clear';
 import { GraphsManager } from '@server/managers/graphs-manager';
 import { Graph } from '@server/models/graph/graph';
@@ -47,8 +47,9 @@ import { toTimeControlId, toTimeControlName } from '@common/models/time-control'
 import { toPlayerPrivateId } from '@common/models/player-id';
 import { User } from '@server/models/user';
 import { toUserGivenName } from '@common/models/user-given-name';
-import { toGameId } from '@common/models/game-id';
+import { GameId, toGameId } from '@common/models/game-id';
 import { Game } from '@server/models/game';
+import { GamesManager } from '@app/server/managers/games-manager';
 
 const Classical = toTimeControlId('Classical');
 const Classical90p30 = toTimeControlName('Classical (90 + 30)');
@@ -155,6 +156,29 @@ const cc = toUserGivenName('cc');
 const dd = toUserGivenName('dd');
 const ee = toUserGivenName('ee');
 const ff = toUserGivenName('ff');
+
+function getGame(gameId: GameId) {
+	const info = GamesManager.getInstance().getGameInfo(gameId);
+	if (isNotDefined(info)) {
+		throw new TestError(`Could not find information associated to this game.`);
+	}
+
+	const timeControlId = info.timeControlId;
+	const gameRecord = info.gameRecord;
+	const gamesDir = EnvironmentManager.getInstance().getDirGamesTimeControl(timeControlId);
+
+	const gamesIter = new GamesIterator(gamesDir);
+	const found = gamesIter.locateGame(gameRecord, gameId);
+	if (!found) {
+		throw new TestError(`Could not find game '${gameId}'.`);
+	}
+
+	const game = gamesIter.getCurrentGame();
+	if (isNotDefined(game)) {
+		throw new TestError(`Game was not found.`);
+	}
+	return game;
+}
 
 describe('Server setup', () => {
 	test('Fill an empty server', async () => {
@@ -2223,18 +2247,24 @@ describe('Test graphs metadata before edition', () => {
 
 const id0000000001 = toGameId('0000000001');
 const id0000000002 = toGameId('0000000002');
-// const id0000000008 = toGameId('0000000008');
 const id0000000013 = toGameId('0000000013');
-// const id0000000015 = toGameId('0000000015');
-// const id0000000020 = toGameId('0000000020');
 const id0000000021 = toGameId('0000000021');
-// const id1200003433 = toGameId('1200003433');
-// const id1288883433 = toGameId('1288883433');
-// const id1299999433 = toGameId('1299999433');
 
 describe('Edition of game results', () => {
 	test('Edit some "Blitz" games', () => {
-		gameEditResult(aU, id0000000001, 'black_wins');
+		expect(getGame(id0000000001).history).toEqual([]);
+
+		gameEditResult(aU, toDateFull('1'), id0000000001, 'black_wins');
+
+		expect(getGame(id0000000001).history).toEqual([
+			{
+				who: aU.username,
+				when: toDateFull('1'),
+				field: 'result',
+				oldValue: 'white_wins',
+				newValue: 'black_wins'
+			}
+		]);
 
 		expect(aU.getRating(Blitz).numWonDrawnLost()).toEqual([8, 1, 4, 3]);
 		expect(bU.getRating(Blitz).numWonDrawnLost()).toEqual([3, 2, 0, 1]);
@@ -2249,7 +2279,24 @@ describe('Edition of game results', () => {
 		expect(eU.getRating(Classical).numWonDrawnLost()).toEqual([3, 0, 3, 0]);
 		expect(fU.getRating(Classical).numWonDrawnLost()).toEqual([6, 1, 5, 0]);
 
-		gameEditResult(aU, id0000000001, 'draw');
+		gameEditResult(aU, toDateFull('2'), id0000000001, 'draw');
+
+		expect(getGame(id0000000001).history).toEqual([
+			{
+				who: aU.username,
+				when: toDateFull('1'),
+				field: 'result',
+				oldValue: 'white_wins',
+				newValue: 'black_wins'
+			},
+			{
+				who: aU.username,
+				when: toDateFull('2'),
+				field: 'result',
+				oldValue: 'black_wins',
+				newValue: 'draw'
+			}
+		]);
 
 		expect(aU.getRating(Blitz).numWonDrawnLost()).toEqual([8, 1, 5, 2]);
 		expect(bU.getRating(Blitz).numWonDrawnLost()).toEqual([3, 1, 1, 1]);
@@ -2264,7 +2311,24 @@ describe('Edition of game results', () => {
 		expect(eU.getRating(Classical).numWonDrawnLost()).toEqual([3, 0, 3, 0]);
 		expect(fU.getRating(Classical).numWonDrawnLost()).toEqual([6, 1, 5, 0]);
 
-		gameEditResult(aU, id0000000001, 'draw');
+		gameEditResult(aU, toDateFull('3'), id0000000001, 'draw');
+
+		expect(getGame(id0000000001).history).toEqual([
+			{
+				who: aU.username,
+				when: toDateFull('1'),
+				field: 'result',
+				oldValue: 'white_wins',
+				newValue: 'black_wins'
+			},
+			{
+				who: aU.username,
+				when: toDateFull('2'),
+				field: 'result',
+				oldValue: 'black_wins',
+				newValue: 'draw'
+			}
+		]);
 
 		expect(aU.getRating(Blitz).numWonDrawnLost()).toEqual([8, 1, 5, 2]);
 		expect(bU.getRating(Blitz).numWonDrawnLost()).toEqual([3, 1, 1, 1]);
@@ -2279,7 +2343,19 @@ describe('Edition of game results', () => {
 		expect(eU.getRating(Classical).numWonDrawnLost()).toEqual([3, 0, 3, 0]);
 		expect(fU.getRating(Classical).numWonDrawnLost()).toEqual([6, 1, 5, 0]);
 
-		gameEditResult(aU, id0000000002, 'draw');
+		expect(getGame(id0000000002).history).toEqual([]);
+
+		gameEditResult(aU, toDateFull('4'), id0000000002, 'draw');
+
+		expect(getGame(id0000000002).history).toEqual([
+			{
+				who: aU.username,
+				when: toDateFull('4'),
+				field: 'result',
+				oldValue: 'black_wins',
+				newValue: 'draw'
+			}
+		]);
 
 		expect(aU.getRating(Blitz).numWonDrawnLost()).toEqual([8, 1, 5, 2]);
 		expect(bU.getRating(Blitz).numWonDrawnLost()).toEqual([3, 1, 1, 1]);
@@ -2296,7 +2372,19 @@ describe('Edition of game results', () => {
 	});
 
 	test('Edit some "Classical" games', () => {
-		gameEditResult(aU, id0000000013, 'black_wins');
+		expect(getGame(id0000000013).history).toEqual([]);
+
+		gameEditResult(aU, toDateFull('5'), id0000000013, 'black_wins');
+
+		expect(getGame(id0000000013).history).toEqual([
+			{
+				who: aU.username,
+				when: toDateFull('5'),
+				field: 'result',
+				oldValue: 'draw',
+				newValue: 'black_wins'
+			}
+		]);
 
 		expect(aU.getRating(Blitz).numWonDrawnLost()).toEqual([8, 1, 5, 2]);
 		expect(bU.getRating(Blitz).numWonDrawnLost()).toEqual([3, 1, 1, 1]);
@@ -2311,7 +2399,24 @@ describe('Edition of game results', () => {
 		expect(eU.getRating(Classical).numWonDrawnLost()).toEqual([3, 0, 3, 0]);
 		expect(fU.getRating(Classical).numWonDrawnLost()).toEqual([6, 2, 4, 0]);
 
-		gameEditResult(aU, id0000000013, 'white_wins');
+		gameEditResult(aU, toDateFull('6'), id0000000013, 'white_wins');
+
+		expect(getGame(id0000000013).history).toEqual([
+			{
+				who: aU.username,
+				when: toDateFull('5'),
+				field: 'result',
+				oldValue: 'draw',
+				newValue: 'black_wins'
+			},
+			{
+				who: aU.username,
+				when: toDateFull('6'),
+				field: 'result',
+				oldValue: 'black_wins',
+				newValue: 'white_wins'
+			}
+		]);
 
 		expect(aU.getRating(Blitz).numWonDrawnLost()).toEqual([8, 1, 5, 2]);
 		expect(bU.getRating(Blitz).numWonDrawnLost()).toEqual([3, 1, 1, 1]);
@@ -2326,7 +2431,31 @@ describe('Edition of game results', () => {
 		expect(eU.getRating(Classical).numWonDrawnLost()).toEqual([3, 0, 3, 0]);
 		expect(fU.getRating(Classical).numWonDrawnLost()).toEqual([6, 1, 4, 1]);
 
-		gameEditResult(aU, id0000000013, 'draw');
+		gameEditResult(aU, toDateFull('7'), id0000000013, 'draw');
+
+		expect(getGame(id0000000013).history).toEqual([
+			{
+				who: aU.username,
+				when: toDateFull('5'),
+				field: 'result',
+				oldValue: 'draw',
+				newValue: 'black_wins'
+			},
+			{
+				who: aU.username,
+				when: toDateFull('6'),
+				field: 'result',
+				oldValue: 'black_wins',
+				newValue: 'white_wins'
+			},
+			{
+				who: aU.username,
+				when: toDateFull('7'),
+				field: 'result',
+				oldValue: 'white_wins',
+				newValue: 'draw'
+			}
+		]);
 
 		expect(aU.getRating(Blitz).numWonDrawnLost()).toEqual([8, 1, 5, 2]);
 		expect(bU.getRating(Blitz).numWonDrawnLost()).toEqual([3, 1, 1, 1]);
@@ -2341,7 +2470,19 @@ describe('Edition of game results', () => {
 		expect(eU.getRating(Classical).numWonDrawnLost()).toEqual([3, 0, 3, 0]);
 		expect(fU.getRating(Classical).numWonDrawnLost()).toEqual([6, 1, 5, 0]);
 
-		gameEditResult(aU, id0000000021, 'black_wins');
+		expect(getGame(id0000000021).history).toEqual([]);
+
+		gameEditResult(aU, toDateFull('8'), id0000000021, 'black_wins');
+
+		expect(getGame(id0000000021).history).toEqual([
+			{
+				who: aU.username,
+				when: toDateFull('8'),
+				field: 'result',
+				oldValue: 'draw',
+				newValue: 'black_wins'
+			}
+		]);
 
 		expect(aU.getRating(Blitz).numWonDrawnLost()).toEqual([8, 1, 5, 2]);
 		expect(bU.getRating(Blitz).numWonDrawnLost()).toEqual([3, 1, 1, 1]);
@@ -2355,6 +2496,53 @@ describe('Edition of game results', () => {
 		expect(dU.getRating(Classical).numWonDrawnLost()).toEqual([3, 2, 0, 1]);
 		expect(eU.getRating(Classical).numWonDrawnLost()).toEqual([3, 0, 3, 0]);
 		expect(fU.getRating(Classical).numWonDrawnLost()).toEqual([6, 2, 4, 0]);
+	});
+});
+
+describe('Edition of game title', () => {
+	test('Edit some "Blitz" games', () => {
+		expect(getGame(id0000000001).history).toEqual([
+			{
+				who: aU.username,
+				when: toDateFull('1'),
+				field: 'result',
+				oldValue: 'white_wins',
+				newValue: 'black_wins'
+			},
+			{
+				who: aU.username,
+				when: toDateFull('2'),
+				field: 'result',
+				oldValue: 'black_wins',
+				newValue: 'draw'
+			}
+		]);
+
+		gameEditTitle(bU, toDateFull('1234'), id0000000001, 'New title');
+
+		expect(getGame(id0000000001).history).toEqual([
+			{
+				who: aU.username,
+				when: toDateFull('1'),
+				field: 'result',
+				oldValue: 'white_wins',
+				newValue: 'black_wins'
+			},
+			{
+				who: aU.username,
+				when: toDateFull('2'),
+				field: 'result',
+				oldValue: 'black_wins',
+				newValue: 'draw'
+			},
+			{
+				who: bU.username,
+				when: toDateFull('1234'),
+				field: 'title',
+				oldValue: 'sample',
+				newValue: 'New title'
+			}
+		]);
 	});
 });
 

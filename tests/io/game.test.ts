@@ -32,7 +32,7 @@ describe('IO conversion -- Elo', () => {
 
 	test('string', () => {
 		const g = gameFromString(
-			'{ "id": "0001", "title": "asdf", "white": "W", "whiteRating": {"rating": 1500.43, "numGames": 100, "won": 50, "drawn": 20, "lost": 30, "K": 40, "surpassed2400": true}, "black": "B", "blackRating" : {"rating": 1500.43, "numGames": 100, "won": 50, "drawn": 20, "lost": 30, "K": 40, "surpassed2400": false}, "result": "black_wins", "timeControlId": "blitz", "timeControlName": "Blitz (5 + 3)", "when": "2024-12-29..12:24:00"}'
+			'{ "id": "0001", "title": "asdf", "white": "W", "whiteRating": {"rating": 1500.43, "numGames": 100, "won": 50, "drawn": 20, "lost": 30, "K": 40, "surpassed2400": true}, "black": "B", "blackRating" : {"rating": 1500.43, "numGames": 100, "won": 50, "drawn": 20, "lost": 30, "K": 40, "surpassed2400": false}, "result": "black_wins", "timeControlId": "blitz", "timeControlName": "Blitz (5 + 3)", "when": "2024-12-29..12:24:00", "history": [{"who": "pepe", "when": "today", "field": "title", "oldValue": "asdf", "newValue": "qwer"}]}'
 		);
 		expect(g).not.toBeNull();
 		if (isNotDefined(g)) {
@@ -64,5 +64,24 @@ describe('IO conversion -- Elo', () => {
 		expect(g.timeControlId).toEqual('blitz');
 		expect(g.timeControlName).toEqual('Blitz (5 + 3)');
 		expect(g.when).toEqual('2024-12-29..12:24:00');
+
+		expect(g.history).toEqual([
+			{
+				who: 'pepe',
+				when: 'today',
+				field: 'title',
+				oldValue: 'asdf',
+				newValue: 'qwer'
+			}
+		]);
+		expect(g.history).not.toEqual([
+			{
+				who: 'pepe',
+				when: 'today',
+				field: 'title',
+				oldValue: 'asdf',
+				newValue: '1234'
+			}
+		]);
 	});
 });
