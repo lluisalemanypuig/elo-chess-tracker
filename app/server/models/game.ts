@@ -29,6 +29,7 @@ import { PlayerPrivateId } from '@common/models/player-id';
 import { GameId } from '@common/models/game-id';
 import { GameResult } from '@common/models/game-result';
 import { Rating } from '@server/models/rating-framework/rating';
+import { GameEditLog } from '@app/common/models/game-edit-history';
 
 export const GameKeys = [
 	'id',
@@ -40,7 +41,8 @@ export const GameKeys = [
 	'result',
 	'timeControlId',
 	'timeControlName',
-	'when'
+	'when',
+	'history'
 ];
 
 /**
@@ -56,26 +58,17 @@ export const GameKeys = [
  * the game is played, not after.
  */
 export class Game {
-	// Identifier of the game
 	public readonly id: GameId;
-	// Name of the game
 	public title: string;
-	// White player username
 	public readonly white: PlayerPrivateId;
-	// White in the state before the game
 	public whiteRating: Rating;
-	// White player username
 	public readonly black: PlayerPrivateId;
-	// White in the state before the game
 	public blackRating: Rating;
-	// Result of the game
 	public result: GameResult;
-	// Time control id
 	public timeControlId: TimeControlId;
-	// Time control name (Classical (90 + 30), Blitz (5 + 3), ...)
 	public timeControlName: TimeControlName;
-	// Date when the game took place
 	public when: DateFull;
+	public history: GameEditLog[];
 
 	/**
 	 * @brief Constructor
@@ -99,7 +92,8 @@ export class Game {
 		result: GameResult,
 		timeControlId: TimeControlId,
 		timeControlName: TimeControlName,
-		when: DateFull
+		when: DateFull,
+		history: GameEditLog[]
 	) {
 		this.id = id;
 		this.title = title;
@@ -111,6 +105,7 @@ export class Game {
 		this.timeControlId = timeControlId;
 		this.timeControlName = timeControlName;
 		this.when = when;
+		this.history = history;
 	}
 
 	// Is user 'username' in this game?

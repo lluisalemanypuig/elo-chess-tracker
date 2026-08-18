@@ -152,7 +152,8 @@ function gameNew(
 		result,
 		timeControlId,
 		timeControlName,
-		when
+		when,
+		[]
 	);
 }
 
@@ -380,7 +381,7 @@ export function gameAddNewGuarded(
 	gameAddNew(gameTitle, white, black, result, timeControlId, timeControlName, gameDate, gameTime);
 }
 
-export function gameEditResult(editor: User, gameId: GameId, newResult: GameResult) {
+export function gameEditResult(editor: User, when: DateFull, gameId: GameId, newResult: GameResult) {
 	if (!editor.canDo('EDIT_GAMES')) {
 		debug(logNow(), `User '${editor.username}' cannot edit games.`);
 		throw new PublicError('You cannot edit games');
@@ -437,6 +438,13 @@ export function gameEditResult(editor: User, gameId: GameId, newResult: GameResu
 
 	/* Update the game files */
 
+	game.history.push({
+		who: editor.username,
+		when: when,
+		field: 'result',
+		oldValue: `${game.result}`,
+		newValue: `${newResult}`
+	});
 	game.result = newResult;
 
 	const updatedPlayers: Player[] = [];
@@ -462,7 +470,7 @@ export function gameEditResult(editor: User, gameId: GameId, newResult: GameResu
 	userUpdateFromPlayerData(updatedPlayers);
 }
 
-export function gameEditTitle(editor: User, gameId: GameId, newTitle: string) {
+export function gameEditTitle(editor: User, when: DateFull, gameId: GameId, newTitle: string) {
 	if (!editor.canDo('EDIT_GAMES')) {
 		debug(logNow(), `User '${editor.username}' cannot edit games.`);
 		throw new PublicError('You cannot edit games');
@@ -518,6 +526,13 @@ export function gameEditTitle(editor: User, gameId: GameId, newTitle: string) {
 
 	debug(logNow(), `Editing game...`);
 
+	game.history.push({
+		who: editor.username,
+		when: when,
+		field: 'title',
+		oldValue: `${game.title}`,
+		newValue: `${newTitle}`
+	});
 	game.title = newTitle;
 
 	const gameRecordFile = path.join(gamesDir, gameRecord);

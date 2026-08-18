@@ -112,7 +112,7 @@ export function safeParseRequestBody<S extends z.ZodTypeAny>(
 ): SafeParseSchemaResult<z.output<S>> {
 	const parse = parseSchema(req.body, schemaObj, debug);
 	if (parse.result !== 'Success') {
-		res.status(401).send(parseErrorMessage(parse));
+		res.status(406).send(parseErrorMessage(parse));
 		return {
 			result: 'Exit',
 			data: undefined

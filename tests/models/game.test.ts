@@ -47,7 +47,8 @@ describe('Setters and Getters -- Elo', () => {
 			'white_wins',
 			Blitz,
 			Blitz5p3,
-			toDateFull('2024-12-29..11:15:00')
+			toDateFull('2024-12-29..11:15:00'),
+			[]
 		);
 
 		expect(g.id).toEqual('1');
@@ -75,7 +76,8 @@ describe('Setters and Getters -- Elo', () => {
 			'white_wins',
 			Blitz,
 			Blitz5p3,
-			toDateFull('2024-12-29..11:15:00')
+			toDateFull('2024-12-29..11:15:00'),
+			[]
 		);
 
 		expect(g.result).toEqual('white_wins');

@@ -197,7 +197,7 @@ export async function postGameEditResult(req: Request, res: Response) {
 		return;
 	}
 
-	const gameParse = safeParseRequestBody(req.body, inputSchemaOf(ROUTES.GAME_EDIT_RESULT), res, debug);
+	const gameParse = safeParseRequestBody(req, inputSchemaOf(ROUTES.GAME_EDIT_RESULT), res, debug);
 	if (gameParse.result === 'Exit') {
 		return;
 	}
@@ -209,7 +209,7 @@ export async function postGameEditResult(req: Request, res: Response) {
 	debug(logNow(), `    New result: '${newResult}'`);
 
 	try {
-		gameEditResult(editor, gameId, newResult);
+		gameEditResult(editor, logNow(), gameId, newResult);
 	} catch (e) {
 		handleError(e as Error, res);
 		return;
@@ -233,7 +233,7 @@ export async function postGameEditTitle(req: Request, res: Response) {
 		return;
 	}
 
-	const gameParse = safeParseRequestBody(req.body, inputSchemaOf(ROUTES.GAME_EDIT_TITLE), res, debug);
+	const gameParse = safeParseRequestBody(req, inputSchemaOf(ROUTES.GAME_EDIT_TITLE), res, debug);
 	if (gameParse.result === 'Exit') {
 		return;
 	}
@@ -245,7 +245,7 @@ export async function postGameEditTitle(req: Request, res: Response) {
 	debug(logNow(), `    New title: '${title}'`);
 
 	try {
-		gameEditTitle(editor, gameId, title);
+		gameEditTitle(editor, logNow(), gameId, title);
 	} catch (e) {
 		handleError(e as Error, res);
 		return;
