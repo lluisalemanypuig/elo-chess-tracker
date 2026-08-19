@@ -34,15 +34,15 @@ import { EmptySchema, inputSchemaOf, methodTypeOf, outputSchemaOf } from '@commo
 import { safeParseRequestBody, safeParseRequestCookies } from '@server/utils/schemas';
 import { isUserLoggedIn } from '@server/managers/session';
 import { isNotDefined } from '@common/utils/is-defined';
-import { User } from '@server/models/user';
 import { handleError } from '@server/utils/error-handling';
 import { InputTypeOf, OutputTypeOf } from '@common/api/types';
 import { ConfigurationManager } from '@server/managers/configuration-manager';
 import { getExecutionDirectory } from '@server/managers/environment-manager';
+import { UserSession } from './server/models/user';
 
 export async function entryPointPage<R extends Route>(
 	route: R,
-	action: (u: User) => Promise<string>,
+	action: (u: UserSession) => Promise<string>,
 	req: Request,
 	res: Response
 ) {
@@ -63,7 +63,7 @@ export async function entryPointPage<R extends Route>(
 	}
 
 	try {
-		const file = await action(user);
+		const file = await action({ user, session });
 		res.status(200);
 		if (ConfigurationManager.shouldCacheData()) {
 			res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
@@ -76,7 +76,7 @@ export async function entryPointPage<R extends Route>(
 
 export async function entryPointHTMX<R extends Route>(
 	route: R,
-	action: (u: User) => Promise<string>,
+	action: (u: UserSession) => Promise<string>,
 	req: Request,
 	res: Response
 ) {
@@ -97,7 +97,7 @@ export async function entryPointHTMX<R extends Route>(
 	}
 
 	try {
-		const html = await action(user);
+		const html = await action({ user, session });
 		res.status(200).send(html);
 	} catch (e) {
 		handleError(e as Error, res);
@@ -106,7 +106,7 @@ export async function entryPointHTMX<R extends Route>(
 
 export async function entryPointAction<R extends Route>(
 	route: R,
-	action: (u: User, data: InputTypeOf<R>) => Promise<OutputTypeOf<R>>,
+	action: (u: UserSession, data: InputTypeOf<R>) => Promise<OutputTypeOf<R>>,
 	req: Request,
 	res: Response
 ) {
@@ -138,7 +138,7 @@ export async function entryPointAction<R extends Route>(
 	const input = inputParse.data as InputTypeOf<R>;
 
 	try {
-		const actionResult = await action(user, input);
+		const actionResult = await action({ user, session }, input);
 		if (outputSchemaOf(route) === EmptySchema) {
 			res.status(204).send();
 		} else {
