@@ -25,17 +25,13 @@ Contact:
 
 import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:serverQueryChallenges');
-import { Request, Response } from 'express';
 
 import { logNow } from '@common/utils/time';
-import { isUserLoggedIn } from '@server/managers/session';
 import { getChallengesBy } from '@server/managers/challenges';
 import { Challenge } from '@server/models/challenge';
 import { UsersManager } from '@server/managers/users-manager';
 import { canUserDeclineChallenge } from '@server/managers/user-relationships';
 import { isDefined, isNotDefined } from '@common/utils/is-defined';
-import { ROUTES } from '@common/api/routes';
-import { safeParseRequestCookies } from '@server/utils/schemas';
 import {
 	QueryChallengesConfirmResultOtherOutput,
 	QueryChallengesConfirmResultSelfOutput,
@@ -44,24 +40,13 @@ import {
 	QueryChallengesSentOutput
 } from '@common/api/schemas/query-challenges';
 import { UserGivenName } from '@common/models/user-given-name';
-import { internalErrorMessage } from './utils/error-handling';
+import { User } from '@server/models/user';
+import { Empty } from '@common/api/schemas-endpoints';
+import { InternalError } from '@server/models/error-types/internal-error';
 
 // Query the server for challenges received sento to me by other users
-export async function getQueryChallengeReceived(req: Request, res: Response) {
-	debug(logNow(), `GET ${ROUTES.QUERY_CHALLENGE_RECEIVED}...`);
-
-	const sessionParse = safeParseRequestCookies(req, res, debug);
-	if (sessionParse.result === 'Exit') {
-		return;
-	}
-	const session = sessionParse.data;
-	const r = isUserLoggedIn(session);
-
-	const sentTo = r[2];
-	if (isNotDefined(sentTo)) {
-		res.status(401).send(r[1]);
-		return;
-	}
+export async function getQueryChallengeReceived(sentTo: User, _i: Empty) {
+	debug(logNow(), 'function getQueryChallengeReceived...');
 
 	// challenges to be returned
 	const toReturn = getChallengesBy((c: Challenge): boolean => {
@@ -81,8 +66,7 @@ export async function getQueryChallengeReceived(req: Request, res: Response) {
 		const sentBy = manager.getAllUserDataByPrivateId(c.sentBy);
 		if (isNotDefined(sentBy)) {
 			debug(logNow(), `User '${c.sentBy}' does not exist.`);
-			res.status(500).send();
-			return;
+			throw new InternalError(`User '${c.sentBy}' from challenge does not exist`);
 		}
 
 		// return only basic information
@@ -98,28 +82,16 @@ export async function getQueryChallengeReceived(req: Request, res: Response) {
 
 	debug(logNow(), `Found '${allChallengesReceived.length}' challenges`);
 
-	res.status(200).send(allChallengesReceived);
+	return allChallengesReceived;
 }
 
 // Query the server for challenges sent to other users by me
-export async function getQueryChallengeSent(req: Request, res: Response) {
-	debug(logNow(), `GET ${ROUTES.QUERY_CHALLENGE_SENT}...`);
-
-	const sessionParse = safeParseRequestCookies(req, res, debug);
-	if (sessionParse.result === 'Exit') {
-		return;
-	}
-	const session = sessionParse.data;
-	const r = isUserLoggedIn(session);
-	const user = r[2];
-	if (isNotDefined(user)) {
-		res.status(401).send(r[1]);
-		return;
-	}
+export async function getQueryChallengeSent(sentBy: User, _i: Empty) {
+	debug(logNow(), 'function getQueryChallengeSent...');
 
 	// challenges to be returned
 	const toReturn = getChallengesBy((c: Challenge): boolean => {
-		if (c.sentBy !== user.username) {
+		if (c.sentBy !== sentBy.username) {
 			return false;
 		}
 		if (isDefined(c.whenChallengeAccepted)) {
@@ -129,20 +101,13 @@ export async function getQueryChallengeSent(req: Request, res: Response) {
 	});
 
 	let manager = UsersManager.getInstance();
-	const sentBy = manager.getAllUserDataByPrivateId(user.username);
-	if (isNotDefined(sentBy)) {
-		debug(logNow(), `User '${user.username}' does not exist.`);
-		res.status(500).send();
-		return;
-	}
 
 	let allChallenges: QueryChallengesSentOutput = [];
 	for (const c of toReturn) {
 		const sentTo = manager.getAllUserDataByPrivateId(c.sentTo);
 		if (isNotDefined(sentTo)) {
 			debug(logNow(), `User '${c.sentTo}' does not exist.`);
-			res.status(500).send();
-			return;
+			throw new InternalError(`User '${c.sentTo}' from challenge does not exist`);
 		}
 
 		// return only basic information
@@ -152,30 +117,18 @@ export async function getQueryChallengeSent(req: Request, res: Response) {
 			sentTo: sentTo.user.getFullName(),
 			sentWhen: c.whenChallengeSent,
 			timeControlName: c.timeControlName,
-			canBeDeclined: canUserDeclineChallenge(sentTo.user, sentBy.user, c.timeControlId)
+			canBeDeclined: canUserDeclineChallenge(sentTo.user, sentBy, c.timeControlId)
 		});
 	}
 
 	debug(logNow(), `Found '${allChallenges.length}' challenges`);
 
-	res.status(200).send(allChallenges);
+	return allChallenges;
 }
 
 // Query the server for accepted challenges whose result has not been set yet.
-export async function getQueryChallengePendingResult(req: Request, res: Response) {
-	debug(logNow(), `GET ${ROUTES.QUERY_CHALLENGE_PENDING_RESULT}...`);
-
-	const sessionParse = safeParseRequestCookies(req, res, debug);
-	if (sessionParse.result === 'Exit') {
-		return;
-	}
-	const session = sessionParse.data;
-	const r = isUserLoggedIn(session);
-	const user = r[2];
-	if (isNotDefined(user)) {
-		res.status(401).send(r[1]);
-		return;
-	}
+export async function getQueryChallengePendingResult(user: User, _i: Empty) {
+	debug(logNow(), 'function getQueryChallengePendingResult...');
 
 	// challenges to be returned
 	const toReturn = getChallengesBy((c: Challenge): boolean => {
@@ -201,15 +154,13 @@ export async function getQueryChallengePendingResult(req: Request, res: Response
 		const userSentTo = manager.getAllUserDataByPrivateId(c.sentTo);
 		if (isNotDefined(userSentTo)) {
 			debug(logNow(), `User '${c.sentTo}' does not exist.`);
-			res.status(500).send(internalErrorMessage);
-			return;
+			throw new InternalError(`User '${c.sentTo}' from challenge does not exist.`);
 		}
 
 		const userSentBy = manager.getAllUserDataByPrivateId(c.sentBy);
 		if (isNotDefined(userSentBy)) {
 			debug(logNow(), `User '${c.sentBy}' does not exist.`);
-			res.status(500).send(internalErrorMessage);
-			return;
+			throw new InternalError(`User '${c.sentBy}' from challenge does not exist.`);
 		}
 
 		const opponent = ((): UserGivenName => {
@@ -239,24 +190,12 @@ export async function getQueryChallengePendingResult(req: Request, res: Response
 
 	debug(logNow(), `Found '${allChallenges.length}' challenges`);
 
-	res.status(200).send(allChallenges);
+	return allChallenges;
 }
 
 // Query the server for accepted challenges whose result has been set by me
-export async function getQueryChallengeConfirmResultOther(req: Request, res: Response) {
-	debug(logNow(), `GET ${ROUTES.QUERY_CHALLENGE_CONFIRM_RESULT_OTHER}...`);
-
-	const sessionParse = safeParseRequestCookies(req, res, debug);
-	if (sessionParse.result === 'Exit') {
-		return;
-	}
-	const session = sessionParse.data;
-	const r = isUserLoggedIn(session);
-	const user = r[2];
-	if (isNotDefined(user)) {
-		res.status(401).send(r[1]);
-		return;
-	}
+export async function getQueryChallengeConfirmResultOther(user: User, _i: Empty) {
+	debug(logNow(), 'function getQueryChallengeConfirmResultOther...');
 
 	// challenges to be returned
 	const toReturn = getChallengesBy((c: Challenge): boolean => {
@@ -286,21 +225,18 @@ export async function getQueryChallengeConfirmResultOther(req: Request, res: Res
 		const sentTo = manager.getAllUserDataByPrivateId(c.sentTo);
 		if (isNotDefined(sentTo)) {
 			debug(logNow(), `User '${c.sentTo}' does not exist.`);
-			res.status(500).send(internalErrorMessage);
-			return;
+			throw new InternalError(`User '${c.sentTo}' from challenge does not exist.`);
 		}
 
 		const sentBy = manager.getAllUserDataByPrivateId(c.sentBy);
 		if (isNotDefined(sentBy)) {
 			debug(logNow(), `User '${c.sentBy}' does not exist.`);
-			res.status(500).send(internalErrorMessage);
-			return;
+			throw new InternalError(`User '${c.sentBy}' from challenge does not exist.`);
 		}
 
 		if (isNotDefined(c.white) || isNotDefined(c.black)) {
 			debug(logNow(), `White or Black player is not set in challenge.`);
-			res.status(500).send(internalErrorMessage);
-			return;
+			throw new InternalError(`White ${isNotDefined(c.white)}. Black: ${isNotDefined(c.black)}.`);
 		}
 
 		const [whiteFullName, blackFullName] = (() => {
@@ -342,24 +278,12 @@ export async function getQueryChallengeConfirmResultOther(req: Request, res: Res
 
 	debug(logNow(), `Found '${allChallenges.length}' challenges`);
 
-	res.status(200).send(allChallenges);
+	return allChallenges;
 }
 
 // Query the server for accepted challenges whose result has been set by my opponent
-export async function getQueryChallengeConfirmResultSelf(req: Request, res: Response) {
-	debug(logNow(), `GET ${ROUTES.QUERY_CHALLENGE_CONFIRM_RESULT_SELF}...`);
-
-	const sessionParse = safeParseRequestCookies(req, res, debug);
-	if (sessionParse.result === 'Exit') {
-		return;
-	}
-	const session = sessionParse.data;
-	const r = isUserLoggedIn(session);
-	const user = r[2];
-	if (isNotDefined(user)) {
-		res.status(401).send(r[1]);
-		return;
-	}
+export async function getQueryChallengeConfirmResultSelf(user: User, _i: Empty) {
+	debug(logNow(), 'function getQueryChallengeConfirmResultSelf...');
 
 	// challenges to be returned
 	const toReturn = getChallengesBy((c: Challenge): boolean => {
@@ -389,21 +313,18 @@ export async function getQueryChallengeConfirmResultSelf(req: Request, res: Resp
 		const sentTo = manager.getAllUserDataByPrivateId(c.sentTo);
 		if (isNotDefined(sentTo)) {
 			debug(logNow(), `User '${c.sentTo}' does not exist.`);
-			res.status(500).send(internalErrorMessage);
-			return;
+			throw new InternalError(`User '${c.sentTo}' from challenge does not exist.`);
 		}
 
 		const sentBy = manager.getAllUserDataByPrivateId(c.sentBy);
 		if (isNotDefined(sentBy)) {
 			debug(logNow(), `User '${c.sentBy}' does not exist.`);
-			res.status(500).send(internalErrorMessage);
-			return;
+			throw new InternalError(`User '${c.sentBy}' from challenge does not exist.`);
 		}
 
 		if (isNotDefined(c.white) || isNotDefined(c.black)) {
 			debug(logNow(), `White or Black player is not set in challenge.`);
-			res.status(500).send(internalErrorMessage);
-			return;
+			throw new InternalError(`White ${isNotDefined(c.white)}. Black: ${isNotDefined(c.black)}.`);
 		}
 
 		const [whiteFullName, blackFullName] = (() => {
@@ -445,5 +366,5 @@ export async function getQueryChallengeConfirmResultSelf(req: Request, res: Resp
 
 	debug(logNow(), `Found '${allChallenges.length}' challenges`);
 
-	res.status(200).send(allChallenges);
+	return allChallenges;
 }

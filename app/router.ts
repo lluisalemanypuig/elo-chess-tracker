@@ -182,11 +182,11 @@ import {
 	getQueryChallengeConfirmResultOther,
 	getQueryChallengeConfirmResultSelf
 } from '@server/query-challenges';
-router.get(ROUTES.QUERY_CHALLENGE_RECEIVED, getQueryChallengeReceived);
-router.get(ROUTES.QUERY_CHALLENGE_SENT, getQueryChallengeSent);
-router.get(ROUTES.QUERY_CHALLENGE_PENDING_RESULT, getQueryChallengePendingResult);
-router.get(ROUTES.QUERY_CHALLENGE_CONFIRM_RESULT_OTHER, getQueryChallengeConfirmResultOther);
-router.get(ROUTES.QUERY_CHALLENGE_CONFIRM_RESULT_SELF, getQueryChallengeConfirmResultSelf);
+defineActionEndpoint(ROUTES.QUERY_CHALLENGE_RECEIVED, getQueryChallengeReceived);
+defineActionEndpoint(ROUTES.QUERY_CHALLENGE_SENT, getQueryChallengeSent);
+defineActionEndpoint(ROUTES.QUERY_CHALLENGE_PENDING_RESULT, getQueryChallengePendingResult);
+defineActionEndpoint(ROUTES.QUERY_CHALLENGE_CONFIRM_RESULT_OTHER, getQueryChallengeConfirmResultOther);
+defineActionEndpoint(ROUTES.QUERY_CHALLENGE_CONFIRM_RESULT_SELF, getQueryChallengeConfirmResultSelf);
 
 import { postQueryGameListOwn, postQueryGameListAll } from '@server/query-games';
 router.post(ROUTES.QUERY_GAME_LIST_OWN, postQueryGameListOwn);
