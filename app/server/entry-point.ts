@@ -74,6 +74,36 @@ export async function entryPointPage<R extends Route>(
 	}
 }
 
+export async function entryPointHTMX<R extends Route>(
+	route: R,
+	action: (u: User) => Promise<string>,
+	req: Request,
+	res: Response
+) {
+	debug(logNow(), `${methodTypeOf(route)} ${route}...`);
+
+	const sessionParse = safeParseRequestCookies(req, debug);
+	if (sessionParse.result === 'Exit') {
+		res.status(401).send(`Failure to parse cookies.`);
+		return;
+	}
+
+	const session = sessionParse.data;
+	const r = isUserLoggedIn(session);
+	const user = r[2];
+	if (isNotDefined(user)) {
+		res.status(401).send(r[1]);
+		return;
+	}
+
+	try {
+		const html = await action(user);
+		res.status(200).send(html);
+	} catch (e) {
+		handleError(e as Error, res);
+	}
+}
+
 export async function entryPointAction<R extends Route>(
 	route: R,
 	action: (u: User, data: InputTypeOf<R>) => Promise<OutputTypeOf<R>>,
