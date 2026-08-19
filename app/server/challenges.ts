@@ -54,7 +54,6 @@ import { PublicError } from '@server/models/error-types/public-error';
 
 export async function getPageChallenge(_u: User) {
 	debug(logNow(), 'function getPageChallenge...');
-
 	return 'html/challenges.html';
 }
 
