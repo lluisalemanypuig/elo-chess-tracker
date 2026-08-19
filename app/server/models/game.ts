@@ -29,7 +29,7 @@ import { PlayerPrivateId } from '@common/models/player-id';
 import { GameId } from '@common/models/game-id';
 import { GameResult } from '@common/models/game-result';
 import { Rating } from '@server/models/rating-framework/rating';
-import { GameEditLog } from '@app/common/models/game-edit-history';
+import { GameEditLog } from '@common/models/game-edit-history';
 
 export const GameKeys = [
 	'id',

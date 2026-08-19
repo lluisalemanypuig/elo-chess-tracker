@@ -49,8 +49,8 @@ import {
 	ChallengeDisagreeResultInput,
 	ChallengeSendInput,
 	ChallengeSetResultInput
-} from '@app/common/api/schemas/challenges';
-import { PublicError } from './models/error-types/public-error';
+} from '@common/api/schemas/challenges';
+import { PublicError } from '@server/models/error-types/public-error';
 
 export async function getPageChallenge(_u: User) {
 	debug(logNow(), 'function getPageChallenge...');
