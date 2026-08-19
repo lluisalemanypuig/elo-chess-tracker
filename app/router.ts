@@ -227,7 +227,7 @@ router.post(ROUTES.USER_PASSWORD_CHANGE, postUserPasswordChange);
 
 // retrieve ranking of players
 import { getPageUserRanking } from '@server/users-ranking';
-router.get(ROUTES.PAGE_USER_RANKING, getPageUserRanking);
+definePageEndpoint(ROUTES.PAGE_USER_RANKING, getPageUserRanking);
 
 import {
 	getPageGameListAll,
