@@ -222,32 +222,24 @@ router.post(ROUTES.USER_PASSWORD_CHANGE, postUserPasswordChange);
 import { getPageUserRanking } from '@server/users-ranking';
 router.get(ROUTES.PAGE_USER_RANKING, getPageUserRanking);
 
-// create a new game
-import { getPageGameCreate, postGameCreate } from '@server/games';
-router.get(ROUTES.PAGE_GAME_CREATE, getPageGameCreate);
-router.post(ROUTES.GAME_CREATE, postGameCreate);
-
-// delete a game
-import { postGameDelete } from '@server/games';
-router.post(ROUTES.GAME_DELETE, postGameDelete);
-
-// edit a game's title
-import { postGameEditTitle } from '@server/games';
-router.post(ROUTES.GAME_EDIT_TITLE, postGameEditTitle);
-
-// editing a game's result
-import { postGameEditResult } from '@server/games';
-router.post(ROUTES.GAME_EDIT_RESULT, postGameEditResult);
-
-// retrieve list of games
-import { getPageGameListAll, getPageGameListOwn } from '@server/games';
-router.get(ROUTES.PAGE_GAME_LIST_OWN, getPageGameListOwn);
-router.get(ROUTES.PAGE_GAME_LIST_ALL, getPageGameListAll);
-
-// retrieve graphs of the webpage
-import { getPageGraphOwn, getPageGraphFull } from '@server/graphs';
-router.get(ROUTES.PAGE_GRAPH_OWN, getPageGraphOwn);
-router.get(ROUTES.PAGE_GRAPH_FULL, getPageGraphFull);
+import {
+	getPageGameListAll,
+	getPageGameListOwn,
+	getPageGameCreate,
+	postGameCreate,
+	postGameDelete,
+	postGameEditTitle,
+	postGameEditResult,
+	postRecalculateRatings
+} from '@server/games';
+definePageEndpoint(ROUTES.PAGE_GAME_LIST_OWN, getPageGameListOwn);
+definePageEndpoint(ROUTES.PAGE_GAME_LIST_ALL, getPageGameListAll);
+definePageEndpoint(ROUTES.PAGE_GAME_CREATE, getPageGameCreate);
+defineActionEndpoint(ROUTES.GAME_CREATE, postGameCreate);
+defineActionEndpoint(ROUTES.GAME_EDIT_TITLE, postGameEditTitle);
+defineActionEndpoint(ROUTES.GAME_EDIT_RESULT, postGameEditResult);
+defineActionEndpoint(ROUTES.GAME_DELETE, postGameDelete);
+defineActionEndpoint(ROUTES.RECALCULATE_RATINGS, postRecalculateRatings);
 
 // challenges management
 import {
@@ -267,9 +259,10 @@ defineActionEndpoint(ROUTES.CHALLENGE_SET_RESULT, postChallengeSetResult);
 defineActionEndpoint(ROUTES.CHALLENGE_AGREE, postChallengeAgree);
 defineActionEndpoint(ROUTES.CHALLENGE_DISAGREE, postChallengeDisagree);
 
-// recalculation of all Elo ratings
-import { postRecalculateRatings } from '@server/games';
-router.post(ROUTES.RECALCULATE_RATINGS, postRecalculateRatings);
+// retrieve graphs of the webpage
+import { getPageGraphOwn, getPageGraphFull } from '@server/graphs';
+router.get(ROUTES.PAGE_GRAPH_OWN, getPageGraphOwn);
+router.get(ROUTES.PAGE_GRAPH_FULL, getPageGraphFull);
 
 // recalculation of all graphs
 import { postRecalculateGraphs } from '@server/graphs';

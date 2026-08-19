@@ -37,281 +37,127 @@ import {
 	recalculateAllRatings
 } from '@server/managers/games';
 import { UsersManager } from '@server/managers/users-manager';
-import { ConfigurationManager } from '@server/managers/configuration-manager';
-import { getExecutionDirectory } from '@server/managers/environment-manager';
 import { isNotDefined } from '@common/utils/is-defined';
 import { ROUTES } from '@common/api/routes';
-import { inputSchemaOf } from '@common/api/schemas-endpoints';
+import { Empty, inputSchemaOf } from '@common/api/schemas-endpoints';
 import { safeParseRequestCookies, safeParseRequestBody } from '@server/utils/schemas';
 import { handleError } from '@server/utils/error-handling';
+import { User } from './models/user';
+import { PublicError } from './models/error-types/public-error';
+import {
+	GameCreateInput,
+	GameDeleteInput,
+	GameEditResultInput,
+	GameEditTitleInput
+} from '@app/common/api/schemas/games';
 
-export async function getPageGameListOwn(req: Request, res: Response) {
-	debug(logNow(), `GET ${ROUTES.PAGE_GAME_LIST_OWN}...`);
-
-	const sessionParse = safeParseRequestCookies(req, res, debug);
-	if (sessionParse.result === 'Exit') {
-		return;
-	}
-	const session = sessionParse.data;
-	const r = isUserLoggedIn(session);
-	const user = r[2];
-	if (isNotDefined(user)) {
-		res.status(401).send(r[1]);
-		return;
-	}
-
-	res.status(200);
-	if (ConfigurationManager.shouldCacheData()) {
-		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
-	}
-	res.sendFile(`${getExecutionDirectory()}/html/game/list/own.html`);
+export async function getPageGameListOwn(_u: User) {
+	debug(logNow(), 'function getPageGameListOwn...');
+	return 'html/game/list/own.html';
 }
 
-export async function getPageGameListAll(req: Request, res: Response) {
-	debug(logNow(), `GET ${ROUTES.PAGE_GAME_LIST_ALL}...`);
-
-	const sessionParse = safeParseRequestCookies(req, res, debug);
-	if (sessionParse.result === 'Exit') {
-		return;
-	}
-	const session = sessionParse.data;
-	const r = isUserLoggedIn(session);
-	const user = r[2];
-	if (isNotDefined(user)) {
-		res.status(401).send(r[1]);
-		return;
-	}
-
-	res.status(200);
-	if (ConfigurationManager.shouldCacheData()) {
-		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
-	}
-	res.sendFile(`${getExecutionDirectory()}/html/game/list/all.html`);
+export async function getPageGameListAll(_u: User) {
+	debug(logNow(), 'function getPageGameListAll...');
+	return 'html/game/list/all.html';
 }
 
-export async function getPageGameCreate(req: Request, res: Response) {
-	debug(logNow(), `GET ${ROUTES.PAGE_GAME_CREATE}...`);
-
-	const sessionParse = safeParseRequestCookies(req, res, debug);
-	if (sessionParse.result === 'Exit') {
-		return;
-	}
-	const session = sessionParse.data;
-	const r = isUserLoggedIn(session);
-	const user = r[2];
-	if (isNotDefined(user)) {
-		res.status(401).send(r[1]);
-		return;
-	}
-
+export async function getPageGameCreate(user: User) {
+	debug(logNow(), 'function getPageGameCreate...');
 	if (!user.canDo('CREATE_GAMES')) {
 		debug(logNow(), `User '${user.username}' cannot create games.`);
-		res.status(403).send('You cannot create games.');
-		return;
+		throw new PublicError('You cannot create games.');
 	}
-
-	res.status(200);
-	if (ConfigurationManager.shouldCacheData()) {
-		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
-	}
-	res.sendFile(`${getExecutionDirectory()}/html/game/create.html`);
+	return 'html/game/create.html';
 }
 
-export async function postGameCreate(req: Request, res: Response) {
-	debug(logNow(), `POST ${ROUTES.GAME_CREATE}...`);
+export async function postGameCreate(creator: User, input: GameCreateInput): Promise<Empty> {
+	debug(logNow(), 'function postGameCreate...');
 
-	const sessionParse = safeParseRequestCookies(req, res, debug);
-	if (sessionParse.result === 'Exit') {
-		return;
-	}
-	const session = sessionParse.data;
-	const r = isUserLoggedIn(session);
-	const creator = r[2];
-	if (isNotDefined(creator)) {
-		res.status(401).send(r[1]);
-		return;
-	}
-
-	const gameParse = safeParseRequestBody(req, inputSchemaOf(ROUTES.GAME_CREATE), res, debug);
-	if (gameParse.result === 'Exit') {
-		return;
-	}
-
-	const whitePublicId = gameParse.data.white;
-	const blackPublicId = gameParse.data.black;
-	const gameTitle = gameParse.data.title;
-	const result = gameParse.data.result;
-	const timeControlId = gameParse.data.timeControlId;
-	const timeControlName = gameParse.data.timeControlName;
-	const gameDate = gameParse.data.whenCreated;
-	const gameTime = gameParse.data.timeCreated;
+	const whitePublicId = input.white;
+	const blackPublicId = input.black;
+	const gameTitle = input.title;
+	const result = input.result;
+	const timeControlId = input.timeControlId;
+	const timeControlName = input.timeControlName;
+	const gameDate = input.whenCreated;
+	const gameTime = input.timeCreated;
 
 	const mem = UsersManager.getInstance();
 
 	const white = mem.getAllUserDataByPublicId(whitePublicId);
 	if (isNotDefined(white)) {
 		debug(logNow(), `Public id '${whitePublicId}' for White is not valid.`);
-		res.status(500).send('Invalid white user sent to the server.');
-		return;
+		throw new PublicError('Invalid white user sent to the server.');
 	}
 
 	const black = mem.getAllUserDataByPublicId(blackPublicId);
 	if (isNotDefined(black)) {
 		debug(logNow(), `Public id '${blackPublicId}' for Black is not valid.`);
-		res.status(500).send('Invalid black user sent to the server.');
-		return;
+		throw new PublicError('Invalid black user sent to the server.');
 	}
 
-	try {
-		gameAddNewGuarded(
-			creator,
-			gameTitle,
-			white.user,
-			black.user,
-			result,
-			timeControlId,
-			timeControlName,
-			gameDate,
-			gameTime
-		);
-	} catch (e) {
-		handleError(e as Error, res);
-		return;
-	}
+	gameAddNewGuarded(
+		creator,
+		gameTitle,
+		white.user,
+		black.user,
+		result,
+		timeControlId,
+		timeControlName,
+		gameDate,
+		gameTime
+	);
 
-	res.status(201).send();
+	return {};
 }
 
-export async function postGameEditResult(req: Request, res: Response) {
-	debug(logNow(), `POST ${ROUTES.GAME_EDIT_RESULT}...`);
+export async function postGameEditResult(editor: User, input: GameEditResultInput): Promise<Empty> {
+	debug(logNow(), 'function postGameEditResult...');
 
-	const sessionParse = safeParseRequestCookies(req, res, debug);
-	if (sessionParse.result === 'Exit') {
-		return;
-	}
-	const session = sessionParse.data;
-	const r = isUserLoggedIn(session);
-	const editor = r[2];
-	if (isNotDefined(editor)) {
-		res.status(401).send(r[1]);
-		return;
-	}
-
-	const gameParse = safeParseRequestBody(req, inputSchemaOf(ROUTES.GAME_EDIT_RESULT), res, debug);
-	if (gameParse.result === 'Exit') {
-		return;
-	}
-
-	const gameId = gameParse.data.id;
-	const newResult = gameParse.data.newResult;
+	const gameId = input.id;
+	const newResult = input.newResult;
 
 	debug(logNow(), `    Game ID: '${gameId}'`);
 	debug(logNow(), `    New result: '${newResult}'`);
 
-	try {
-		gameEditResult(editor, logNow(), gameId, newResult);
-	} catch (e) {
-		handleError(e as Error, res);
-		return;
-	}
+	gameEditResult(editor, logNow(), gameId, newResult);
 
-	res.status(200).send();
+	return {};
 }
 
-export async function postGameEditTitle(req: Request, res: Response) {
-	debug(logNow(), `POST ${ROUTES.GAME_EDIT_TITLE}...`);
+export async function postGameEditTitle(editor: User, input: GameEditTitleInput): Promise<Empty> {
+	debug(logNow(), 'function postGameEditTitle...');
 
-	const sessionParse = safeParseRequestCookies(req, res, debug);
-	if (sessionParse.result === 'Exit') {
-		return;
-	}
-	const session = sessionParse.data;
-	const r = isUserLoggedIn(session);
-	const editor = r[2];
-	if (isNotDefined(editor)) {
-		res.status(401).send(r[1]);
-		return;
-	}
-
-	const gameParse = safeParseRequestBody(req, inputSchemaOf(ROUTES.GAME_EDIT_TITLE), res, debug);
-	if (gameParse.result === 'Exit') {
-		return;
-	}
-
-	const gameId = gameParse.data.id;
-	const title = gameParse.data.title;
+	const gameId = input.id;
+	const title = input.title;
 
 	debug(logNow(), `    Game ID: '${gameId}'`);
 	debug(logNow(), `    New title: '${title}'`);
 
-	try {
-		gameEditTitle(editor, logNow(), gameId, title);
-	} catch (e) {
-		handleError(e as Error, res);
-		return;
-	}
+	gameEditTitle(editor, logNow(), gameId, title);
 
-	res.status(200).send();
+	return {};
 }
 
-export async function postGameDelete(req: Request, res: Response) {
-	debug(logNow(), `POST ${ROUTES.GAME_DELETE}...`);
+export async function postGameDelete(deleter: User, input: GameDeleteInput): Promise<Empty> {
+	debug(logNow(), 'function postGameDelete...');
 
-	const sessionParse = safeParseRequestCookies(req, res, debug);
-	if (sessionParse.result === 'Exit') {
-		return;
-	}
-	const session = sessionParse.data;
-	const r = isUserLoggedIn(session);
-	const deleter = r[2];
-	if (isNotDefined(deleter)) {
-		res.status(401).send(r[1]);
-		return;
-	}
-
-	const gameParse = safeParseRequestBody(req, inputSchemaOf(ROUTES.GAME_DELETE), res, debug);
-	if (gameParse.result === 'Exit') {
-		return;
-	}
-
-	const gameId = gameParse.data.id;
+	const gameId = input.id;
 
 	debug(logNow(), `Game ID: '${gameId}'`);
 	debug(logNow(), `Deleting game...`);
 
-	try {
-		gameDelete(deleter, gameId);
-	} catch (e) {
-		handleError(e as Error, res);
-		return;
-	}
+	gameDelete(deleter, gameId);
 
-	res.status(200).send();
+	return {};
 }
 
-export async function postRecalculateRatings(req: Request, res: Response) {
-	debug(logNow(), `POST ${ROUTES.RECALCULATE_RATINGS}...`);
-
-	const sessionParse = safeParseRequestCookies(req, res, debug);
-	if (sessionParse.result === 'Exit') {
-		return;
-	}
-	const session = sessionParse.data;
-	const r = isUserLoggedIn(session);
-	const user = r[2];
-	if (isNotDefined(user)) {
-		res.status(401).send(r[1]);
-		return;
-	}
+export async function postRecalculateRatings(user: User, _input: Empty): Promise<Empty> {
+	debug(logNow(), 'function postRecalculateRatings...');
 
 	debug(logNow(), `Recalculating ratings...`);
 
-	try {
-		recalculateAllRatings(user);
-	} catch (e) {
-		handleError(e as Error, res);
-		return;
-	}
+	recalculateAllRatings(user);
 
-	res.status(200).send();
+	return {};
 }
