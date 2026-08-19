@@ -25,10 +25,8 @@ Contact:
 
 import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:serverGames');
-import { Request, Response } from 'express';
 
 import { logNow } from '@common/utils/time';
-import { isUserLoggedIn } from '@server/managers/session';
 import {
 	gameAddNewGuarded,
 	gameDelete,
@@ -38,10 +36,7 @@ import {
 } from '@server/managers/games';
 import { UsersManager } from '@server/managers/users-manager';
 import { isNotDefined } from '@common/utils/is-defined';
-import { ROUTES } from '@common/api/routes';
-import { Empty, inputSchemaOf } from '@common/api/schemas-endpoints';
-import { safeParseRequestCookies, safeParseRequestBody } from '@server/utils/schemas';
-import { handleError } from '@server/utils/error-handling';
+import { Empty } from '@common/api/schemas-endpoints';
 import { User } from './models/user';
 import { PublicError } from './models/error-types/public-error';
 import {
