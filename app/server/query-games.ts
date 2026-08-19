@@ -25,13 +25,11 @@ Contact:
 
 import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:serverQueryGames');
-import { Request, Response } from 'express';
 
 import path from 'path';
 import fs from 'fs';
 
 import { DateMajor, logNow } from '@common/utils/time';
-import { isUserLoggedIn } from '@server/managers/session';
 import { GameNumber, User } from '@server/models/user';
 import { Game } from '@server/models/game';
 import { RatingSystemManager } from '@server/managers/rating-system-manager';
@@ -42,9 +40,6 @@ import { UsersManager } from '@server/managers/users-manager';
 import { searchByKey } from '@server/utils/searching';
 import { readDirectory } from '@server/utils/read-directory';
 import { isNotDefined } from '@common/utils/is-defined';
-import { ROUTES } from '@common/api/routes';
-import { inputSchemaOf } from '@common/api/schemas-endpoints';
-import { safeParseRequestBody, safeParseRequestCookies } from '@server/utils/schemas';
 import {
 	QueryGamesListAllInput,
 	QueryGamesListOutput,
