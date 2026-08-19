@@ -30,7 +30,7 @@ import { logNow } from '@common/utils/time';
 import { userAddNew } from '@server/managers/users';
 import { isRoleStringCorrect } from '@common/models/user-role';
 import { Empty } from '@common/api/schemas-endpoints';
-import { User, UserSession } from '@server/models/user';
+import { UserSession } from '@server/models/user';
 import { PublicError } from '@server/models/error-types/public-error';
 import { UserCreateInput } from '@common/api/schemas/user';
 

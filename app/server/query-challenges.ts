@@ -40,7 +40,7 @@ import {
 	QueryChallengesSentOutput
 } from '@common/api/schemas/query-challenges';
 import { UserGivenName } from '@common/models/user-given-name';
-import { User, UserSession } from '@server/models/user';
+import { UserSession } from '@server/models/user';
 import { Empty } from '@common/api/schemas-endpoints';
 import { InternalError } from '@server/models/error-types/internal-error';
 
