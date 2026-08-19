@@ -193,7 +193,7 @@ router.get(ROUTES.TITLE_HOME_PAGE, (_req: Request, res: Response) => {
 // route the login page and the home page
 import { getPageHome, getPageLogin } from '@server/home';
 router.get(ROUTES.ROOT, getPageLogin);
-router.get(ROUTES.HOME, getPageHome);
+definePageEndpoint(ROUTES.HOME, getPageHome);
 
 // serve all javascript files!
 router.get(ROUTES.JS_ALL, (req: Request, res: Response) => {
