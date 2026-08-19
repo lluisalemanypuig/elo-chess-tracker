@@ -25,65 +25,42 @@ Contact:
 
 import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:serverQueryUsers');
-import { Request, Response } from 'express';
 
 import { logNow } from '@common/utils/time';
 import { userGetAllNamePublicId } from '@server/managers/users';
-import { isUserLoggedIn } from '@server/managers/session';
 import { UsersManager } from '@server/managers/users-manager';
 import { TimeControlRating } from '@server/models/time-control-rating';
 import { isNotDefined } from '@common/utils/is-defined';
-import { ROUTES } from '@common/api/routes';
-import { inputSchemaOf } from '@common/api/schemas-endpoints';
-import { safeParseRequestBody, safeParseRequestCookies } from '@server/utils/schemas';
+import { Empty } from '@common/api/schemas-endpoints';
 import { UserThin } from '@common/models/user-thin';
 import {
+	QueryUserEditInput,
 	QueryUserEditOutput,
 	QueryUserHomeOutput,
+	QueryUserRankingInput,
 	QueryUserRankingOutput,
 	TimeControlAndRating,
 	UserWithGames,
 	UserWithoutGames
 } from '@common/api/schemas/query-user';
+import { User } from './models/user';
+import { PublicError } from './models/error-types/public-error';
+import { canUserEditUser } from './managers/user-relationships';
 
 // Returns the list of user full names and usernames sorted by name
-export async function getQueryUserList(req: Request, res: Response) {
-	debug(logNow(), `GET ${ROUTES.QUERY_USER_LIST}...`);
-
-	const sessionParse = safeParseRequestCookies(req, res, debug);
-	if (sessionParse.result === 'Exit') {
-		return;
-	}
-	const session = sessionParse.data;
-	const r = isUserLoggedIn(session);
-
-	if (isNotDefined(r[2])) {
-		res.status(401).send(r[1]);
-		return;
-	}
+export async function getQueryUserList(_u: User, _i: Empty) {
+	debug(logNow(), 'function getQueryUserList...');
 
 	let list = userGetAllNamePublicId();
 	list.sort(function (a: UserThin, b: UserThin): number {
 		return a.name.localeCompare(b.name);
 	});
 
-	res.status(200).send(list);
+	return list;
 }
 
-export async function getQueryHtmlUserList(req: Request, res: Response) {
-	debug(logNow(), `GET ${ROUTES.QUERY_HTML_USER_LIST}...`);
-
-	const sessionParse = safeParseRequestCookies(req, res, debug);
-	if (sessionParse.result === 'Exit') {
-		return;
-	}
-	const session = sessionParse.data;
-	const r = isUserLoggedIn(session);
-
-	if (isNotDefined(r[2])) {
-		res.status(401).send(r[1]);
-		return;
-	}
+export async function getQueryHtmlUserList(_u: User) {
+	debug(logNow(), 'function getQueryHtmlUserList...');
 
 	let list = userGetAllNamePublicId();
 	list.sort(function (a: UserThin, b: UserThin): number {
@@ -94,24 +71,11 @@ export async function getQueryHtmlUserList(req: Request, res: Response) {
 	for (const u of list) {
 		data += `<option value="${u.name}" id="${u.id}">`;
 	}
-	res.status(200).send(data);
+	return data;
 }
 
-export async function getQueryUserHome(req: Request, res: Response) {
-	debug(logNow(), `GET ${ROUTES.QUERY_USER_HOME}...`);
-
-	const sessionParse = safeParseRequestCookies(req, res, debug);
-	if (sessionParse.result === 'Exit') {
-		return;
-	}
-	const session = sessionParse.data;
-	const r = isUserLoggedIn(session);
-
-	const user = r[2];
-	if (isNotDefined(user)) {
-		res.status(401).send(r[1]);
-		return;
-	}
+export async function getQueryUserHome(user: User, _i: Empty) {
+	debug(logNow(), 'function getQueryUserHome...');
 
 	const ratingsUser = user.ratings.map((value: TimeControlRating): TimeControlAndRating => {
 		return {
@@ -132,38 +96,30 @@ export async function getQueryUserHome(req: Request, res: Response) {
 		actions: user.getActions(),
 		ratings: ratingsUser
 	};
-	res.status(200).send(output);
+	return output;
 }
 
-export async function postQueryUserEdit(req: Request, res: Response) {
-	debug(logNow(), `POST ${ROUTES.QUERY_USER_EDIT}...`);
+export async function postQueryUserEdit(user: User, input: QueryUserEditInput) {
+	debug(logNow(), 'function postQueryUserEdit...');
 
-	const sessionParse = safeParseRequestCookies(req, res, debug);
-	if (sessionParse.result === 'Exit') {
-		return;
-	}
-	const session = sessionParse.data;
-	const r = isUserLoggedIn(session);
-
-	if (isNotDefined(r[2])) {
-		res.status(401).send(r[1]);
-		return;
+	if (!user.canDo('EDIT_USER')) {
+		throw new PublicError(`You do not have enough permissions to edit users.`);
 	}
 
-	const userQuery = safeParseRequestBody(req, inputSchemaOf(ROUTES.QUERY_USER_EDIT), res, debug);
-	if (userQuery.result === 'Exit') {
-		return;
-	}
+	const toEditPublicId = input.u;
 
-	const toEditPublicId = userQuery.data.u;
-
-	const mem = UsersManager.getInstance();
-
-	const toEdit = mem.getAllUserDataByPublicId(toEditPublicId);
+	const toEdit = UsersManager.getInstance().getAllUserDataByPublicId(toEditPublicId);
 	if (isNotDefined(toEdit)) {
 		debug(logNow(), `Public id '${toEditPublicId}' for edited user is not valid.`);
-		res.status(404).send('Invalid user');
-		return;
+		throw new PublicError('Cannot edit invalid user.');
+	}
+
+	if (!canUserEditUser(user, toEdit.user)) {
+		debug(
+			logNow(),
+			`User '${user.username}' is querying information of user '${toEdit.user.username}' to edit it.`
+		);
+		throw new PublicError('You cannot edit this user.');
 	}
 
 	const output: QueryUserEditOutput = {
@@ -171,30 +127,13 @@ export async function postQueryUserEdit(req: Request, res: Response) {
 		lastName: toEdit.user.lastName,
 		roles: toEdit.user.roles
 	};
-	res.status(200).send(output);
+	return output;
 }
 
-export async function postQueryUserRanking(req: Request, res: Response) {
-	debug(logNow(), `POST ${ROUTES.QUERY_USER_RANKING}...`);
+export async function postQueryUserRanking(_u: User, input: QueryUserRankingInput) {
+	debug(logNow(), 'function postQueryUserRanking...');
 
-	const sessionParse = safeParseRequestCookies(req, res, debug);
-	if (sessionParse.result === 'Exit') {
-		return;
-	}
-	const session = sessionParse.data;
-	const r = isUserLoggedIn(session);
-
-	if (isNotDefined(r[2])) {
-		res.status(401).send(r[1]);
-		return;
-	}
-
-	const userQuery = safeParseRequestBody(req, inputSchemaOf(ROUTES.QUERY_USER_RANKING), res, debug);
-	if (userQuery.result === 'Exit') {
-		return;
-	}
-
-	const timeControlId = userQuery.data.timeControlId;
+	const timeControlId = input.timeControlId;
 
 	let usersWithoutGames: UserWithoutGames[] = [];
 	let usersWithGames: UserWithGames[] = [];
@@ -235,5 +174,5 @@ export async function postQueryUserRanking(req: Request, res: Response) {
 	debug(logNow(), `    Found ${usersWithoutGames.length} users without games.`);
 
 	const output: QueryUserRankingOutput = { withGames: usersWithGames, withoutGames: usersWithoutGames };
-	res.status(200).send(output);
+	return output;
 }

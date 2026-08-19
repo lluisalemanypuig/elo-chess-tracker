@@ -171,14 +171,11 @@ import {
 	postQueryUserRanking,
 	getQueryHtmlUserList
 } from '@server/query-user';
-router.get(ROUTES.QUERY_USER_LIST, getQueryUserList);
-router.get(ROUTES.QUERY_HTML_USER_LIST, getQueryHtmlUserList);
-router.get(ROUTES.QUERY_USER_HOME, getQueryUserHome);
-
-// these queries need to be 'post'-ed because we
-// need to send (post) information to the server
-router.post(ROUTES.QUERY_USER_EDIT, postQueryUserEdit);
-router.post(ROUTES.QUERY_USER_RANKING, postQueryUserRanking);
+defineActionEndpoint(ROUTES.QUERY_USER_HOME, getQueryUserHome);
+defineActionEndpoint(ROUTES.QUERY_USER_LIST, getQueryUserList);
+defineHTMXEndpoint(ROUTES.QUERY_HTML_USER_LIST, getQueryHtmlUserList);
+defineActionEndpoint(ROUTES.QUERY_USER_EDIT, postQueryUserEdit);
+defineActionEndpoint(ROUTES.QUERY_USER_RANKING, postQueryUserRanking);
 
 // sending, receiving, accepting, setting result of challenges
 import {
