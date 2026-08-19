@@ -34,6 +34,9 @@ import { EnvironmentManager, getExecutionDirectory } from '@server/managers/envi
 import { ConfigurationManager } from '@server/managers/configuration-manager';
 import { Route, ROUTES } from '@common/api/routes';
 import { entryPointAction, entryPointPage } from '@server/entry-point';
+import { User } from '@server/models/user';
+import { InputTypeOf, OutputTypeOf } from '@common/api/types';
+import { methodTypeOf } from '@common/api/schemas-endpoints';
 
 let router = express.Router();
 
@@ -259,16 +262,10 @@ defineActionEndpoint(ROUTES.CHALLENGE_SET_RESULT, postChallengeSetResult);
 defineActionEndpoint(ROUTES.CHALLENGE_AGREE, postChallengeAgree);
 defineActionEndpoint(ROUTES.CHALLENGE_DISAGREE, postChallengeDisagree);
 
-// retrieve graphs of the webpage
-import { getPageGraphOwn, getPageGraphFull } from '@server/graphs';
-router.get(ROUTES.PAGE_GRAPH_OWN, getPageGraphOwn);
-router.get(ROUTES.PAGE_GRAPH_FULL, getPageGraphFull);
-
-// recalculation of all graphs
-import { postRecalculateGraphs } from '@server/graphs';
-import { User } from './server/models/user';
-import { InputTypeOf, OutputTypeOf } from './common/api/types';
-import { methodTypeOf } from './common/api/schemas-endpoints';
-router.post(ROUTES.RECALCULATE_GRAPHS, postRecalculateGraphs);
+// graphs management
+import { getPageGraphOwn, getPageGraphFull, postRecalculateGraphs } from '@server/graphs';
+definePageEndpoint(ROUTES.PAGE_GRAPH_OWN, getPageGraphOwn);
+definePageEndpoint(ROUTES.PAGE_GRAPH_FULL, getPageGraphFull);
+defineActionEndpoint(ROUTES.RECALCULATE_GRAPHS, postRecalculateGraphs);
 
 export { router };

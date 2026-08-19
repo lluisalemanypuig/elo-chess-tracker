@@ -25,91 +25,32 @@ Contact:
 
 import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:serverGraphs');
-import { Request, Response } from 'express';
 
 import { logNow } from '@common/utils/time';
-import { isUserLoggedIn } from '@server/managers/session';
 import { recalculateAllGraphs } from '@server/managers/graphs';
-import { ConfigurationManager } from '@server/managers/configuration-manager';
-import { getExecutionDirectory } from '@server/managers/environment-manager';
-import { isNotDefined } from '@common/utils/is-defined';
-import { ROUTES } from '@common/api/routes';
-import { safeParseRequestCookies } from '@server/utils/schemas';
-import { handleError } from '@server/utils/error-handling';
+import { User } from '@server/models/user';
+import { PublicError } from './models/error-types/public-error';
+import { Empty } from '@app/common/api/schemas-endpoints';
 
-export async function getPageGraphOwn(req: Request, res: Response) {
-	debug(logNow(), `GET ${ROUTES.PAGE_GRAPH_OWN}...`);
-
-	const sessionParse = safeParseRequestCookies(req, res, debug);
-	if (sessionParse.result === 'Exit') {
-		return;
-	}
-	const session = sessionParse.data;
-	const r = isUserLoggedIn(session);
-	const user = r[2];
-	if (isNotDefined(user)) {
-		res.status(401).send(r[1]);
-		return;
-	}
-
-	res.status(200);
-	if (ConfigurationManager.shouldCacheData()) {
-		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
-	}
-	res.sendFile(`${getExecutionDirectory()}/html/graph/own.html`);
+export async function getPageGraphOwn(_u: User) {
+	debug(logNow(), 'function getPageGraphOwn...');
+	return 'html/graph/own.html';
 }
 
-export async function getPageGraphFull(req: Request, res: Response) {
-	debug(logNow(), `GET ${ROUTES.PAGE_GRAPH_FULL}...`);
-
-	const sessionParse = safeParseRequestCookies(req, res, debug);
-	if (sessionParse.result === 'Exit') {
-		return;
-	}
-	const session = sessionParse.data;
-	const r = isUserLoggedIn(session);
-	const user = r[2];
-	if (isNotDefined(user)) {
-		res.status(401).send(r[1]);
-		return;
-	}
+export async function getPageGraphFull(user: User) {
+	debug(logNow(), 'function getPageGraphFull...');
 
 	if (!user.canDo('SEE_GRAPHS')) {
 		debug(logNow(), `User '${user.username}' cannot see the whole graph.`);
-		res.status(403).send('You cannot see the whole graph.');
-		return;
+		throw new PublicError('You cannot see the whole graph.');
 	}
 
-	res.status(200);
-	if (ConfigurationManager.shouldCacheData()) {
-		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
-	}
-	res.sendFile(`${getExecutionDirectory()}/html/graph/full.html`);
+	return 'html/graph/full.html';
 }
 
-export async function postRecalculateGraphs(req: Request, res: Response) {
-	debug(logNow(), `POST ${ROUTES.RECALCULATE_GRAPHS}...`);
-
-	const sessionParse = safeParseRequestCookies(req, res, debug);
-	if (sessionParse.result === 'Exit') {
-		return;
-	}
-	const session = sessionParse.data;
-	const r = isUserLoggedIn(session);
-	const user = r[2];
-	if (isNotDefined(user)) {
-		res.status(401).send(r[1]);
-		return;
-	}
-
+export async function postRecalculateGraphs(user: User, _input: Empty) {
+	debug(logNow(), 'function postRecalculateGraphs...');
 	debug(logNow(), `Recalculating ratings...`);
-
-	try {
-		recalculateAllGraphs(user);
-	} catch (e) {
-		handleError(e as Error, res);
-		return;
-	}
-
-	res.status(200).send();
+	recalculateAllGraphs(user);
+	return {};
 }
