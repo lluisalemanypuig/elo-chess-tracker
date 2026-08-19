@@ -38,6 +38,51 @@ import { User } from '@server/models/user';
 import { InputTypeOf, OutputTypeOf } from '@common/api/types';
 import { methodTypeOf } from '@common/api/schemas-endpoints';
 
+import { postUserLogin, postUserLogout } from '@server/login-logout';
+import {
+	postQueryUserEdit,
+	getQueryUserList,
+	getQueryUserHome,
+	postQueryUserRanking,
+	getQueryHtmlUserList
+} from '@server/query-user';
+import {
+	getQueryChallengeReceived,
+	getQueryChallengeSent,
+	getQueryChallengePendingResult,
+	getQueryChallengeConfirmResultOther,
+	getQueryChallengeConfirmResultSelf
+} from '@server/query-challenges';
+import { getQueryHtmlTimeControls, getQueryHtmlTimeControlsUnique } from '@server/query-time-control';
+import { postQueryGraphFull, postQueryGraphOwn } from '@server/query-graphs';
+import { postQueryGameListOwn, postQueryGameListAll } from '@server/query-games';
+import { postUserCreate, getPageUserCreate } from '@server/users-new';
+import { postUserEdit, getPageUserEdit } from '@server/users-edit';
+import { getPageUserPasswordChange, postUserPasswordChange } from '@server/users-password-change';
+import { getPageUserRanking } from '@server/users-ranking';
+import {
+	getPageGameListAll,
+	getPageGameListOwn,
+	getPageGameCreate,
+	postGameCreate,
+	postGameDelete,
+	postGameEditTitle,
+	postGameEditResult,
+	postRecalculateRatings
+} from '@server/games';
+import { getPageGraphOwn, getPageGraphFull, postRecalculateGraphs } from '@server/graphs';
+import {
+	getPageChallenge,
+	postChallengeAccept,
+	postChallengeAgree,
+	postChallengeDecline,
+	postChallengeDisagree,
+	postChallengeSend,
+	postChallengeSetResult
+} from '@server/challenges';
+
+// ROUTER CONFIGURATION STARTS HERE
+
 let router = express.Router();
 
 async function definePageEndpoint(route: Route, action: (u: User) => Promise<string>) {
@@ -164,13 +209,6 @@ router.get(ROUTES.JS_ALL, (req: Request, res: Response) => {
 	res.sendFile(filepath);
 });
 
-import {
-	postQueryUserEdit,
-	getQueryUserList,
-	getQueryUserHome,
-	postQueryUserRanking,
-	getQueryHtmlUserList
-} from '@server/query-user';
 defineActionEndpoint(ROUTES.QUERY_USER_HOME, getQueryUserHome);
 defineActionEndpoint(ROUTES.QUERY_USER_LIST, getQueryUserList);
 defineHTMXEndpoint(ROUTES.QUERY_HTML_USER_LIST, getQueryHtmlUserList);
@@ -178,64 +216,39 @@ defineActionEndpoint(ROUTES.QUERY_USER_EDIT, postQueryUserEdit);
 defineActionEndpoint(ROUTES.QUERY_USER_RANKING, postQueryUserRanking);
 
 // sending, receiving, accepting, setting result of challenges
-import {
-	getQueryChallengeReceived,
-	getQueryChallengeSent,
-	getQueryChallengePendingResult,
-	getQueryChallengeConfirmResultOther,
-	getQueryChallengeConfirmResultSelf
-} from '@server/query-challenges';
 defineActionEndpoint(ROUTES.QUERY_CHALLENGE_RECEIVED, getQueryChallengeReceived);
 defineActionEndpoint(ROUTES.QUERY_CHALLENGE_SENT, getQueryChallengeSent);
 defineActionEndpoint(ROUTES.QUERY_CHALLENGE_PENDING_RESULT, getQueryChallengePendingResult);
 defineActionEndpoint(ROUTES.QUERY_CHALLENGE_CONFIRM_RESULT_OTHER, getQueryChallengeConfirmResultOther);
 defineActionEndpoint(ROUTES.QUERY_CHALLENGE_CONFIRM_RESULT_SELF, getQueryChallengeConfirmResultSelf);
 
-import { postQueryGameListOwn, postQueryGameListAll } from '@server/query-games';
 defineActionEndpoint(ROUTES.QUERY_GAME_LIST_OWN, postQueryGameListOwn);
 defineActionEndpoint(ROUTES.QUERY_GAME_LIST_ALL, postQueryGameListAll);
 
-import { postQueryGraphFull, postQueryGraphOwn } from '@server/query-graphs';
 defineActionEndpoint(ROUTES.QUERY_GRAPH_OWN, postQueryGraphOwn);
 defineActionEndpoint(ROUTES.QUERY_GRAPH_FULL, postQueryGraphFull);
 
 // query time controls
-import { getQueryHtmlTimeControls, getQueryHtmlTimeControlsUnique } from '@server/query-time-control';
 defineHTMXEndpoint(ROUTES.QUERY_HTML_TIME_CONTROLS, getQueryHtmlTimeControls);
 defineHTMXEndpoint(ROUTES.QUERY_HTML_TIME_CONTROLS_UNIQUE, getQueryHtmlTimeControlsUnique);
 
 // user login and logout
-import { postUserLogin, postUserLogout } from '@server/login-logout';
 router.post(ROUTES.USER_LOGIN, postUserLogin);
 router.post(ROUTES.USER_LOGOUT, postUserLogout);
 
 // user management
-import { postUserCreate, getPageUserCreate } from '@server/users-new';
-import { postUserEdit, getPageUserEdit } from '@server/users-edit';
 definePageEndpoint(ROUTES.PAGE_USER_CREATE, getPageUserCreate);
 defineActionEndpoint(ROUTES.USER_CREATE, postUserCreate);
 definePageEndpoint(ROUTES.PAGE_USER_EDIT, getPageUserEdit);
 defineActionEndpoint(ROUTES.USER_EDIT, postUserEdit);
 
 // change of password
-import { getPageUserPasswordChange, postUserPasswordChange } from '@server/users-password-change';
 router.get(ROUTES.PAGE_USER_PASSWORD_CHANGE, getPageUserPasswordChange);
 router.post(ROUTES.USER_PASSWORD_CHANGE, postUserPasswordChange);
 
 // retrieve ranking of players
-import { getPageUserRanking } from '@server/users-ranking';
 definePageEndpoint(ROUTES.PAGE_USER_RANKING, getPageUserRanking);
 
-import {
-	getPageGameListAll,
-	getPageGameListOwn,
-	getPageGameCreate,
-	postGameCreate,
-	postGameDelete,
-	postGameEditTitle,
-	postGameEditResult,
-	postRecalculateRatings
-} from '@server/games';
 definePageEndpoint(ROUTES.PAGE_GAME_LIST_OWN, getPageGameListOwn);
 definePageEndpoint(ROUTES.PAGE_GAME_LIST_ALL, getPageGameListAll);
 definePageEndpoint(ROUTES.PAGE_GAME_CREATE, getPageGameCreate);
@@ -246,15 +259,6 @@ defineActionEndpoint(ROUTES.GAME_DELETE, postGameDelete);
 defineActionEndpoint(ROUTES.RECALCULATE_RATINGS, postRecalculateRatings);
 
 // challenges management
-import {
-	getPageChallenge,
-	postChallengeAccept,
-	postChallengeAgree,
-	postChallengeDecline,
-	postChallengeDisagree,
-	postChallengeSend,
-	postChallengeSetResult
-} from '@server/challenges';
 definePageEndpoint(ROUTES.PAGE_CHALLENGE, getPageChallenge);
 defineActionEndpoint(ROUTES.CHALLENGE_SEND, postChallengeSend);
 defineActionEndpoint(ROUTES.CHALLENGE_ACCEPT, postChallengeAccept);
@@ -264,7 +268,6 @@ defineActionEndpoint(ROUTES.CHALLENGE_AGREE, postChallengeAgree);
 defineActionEndpoint(ROUTES.CHALLENGE_DISAGREE, postChallengeDisagree);
 
 // graphs management
-import { getPageGraphOwn, getPageGraphFull, postRecalculateGraphs } from '@server/graphs';
 definePageEndpoint(ROUTES.PAGE_GRAPH_OWN, getPageGraphOwn);
 definePageEndpoint(ROUTES.PAGE_GRAPH_FULL, getPageGraphFull);
 defineActionEndpoint(ROUTES.RECALCULATE_GRAPHS, postRecalculateGraphs);
