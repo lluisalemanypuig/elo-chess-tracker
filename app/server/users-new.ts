@@ -24,79 +24,39 @@ Contact:
 */
 
 import Debug from 'debug';
-const debug = Debug('ELO_CHESS_TRACKER:serverUsersNew');
-import { Request, Response } from 'express';
+const debug = Debug('ELO_CHESS_TRACKER:users-new');
 
 import { logNow } from '@common/utils/time';
-import { isUserLoggedIn } from '@server/managers/session';
 import { userAddNew } from '@server/managers/users';
 import { isRoleStringCorrect } from '@common/models/user-role';
-import { ConfigurationManager } from '@server/managers/configuration-manager';
-import { getExecutionDirectory } from '@server/managers/environment-manager';
-import { isNotDefined } from '@common/utils/is-defined';
-import { ROUTES } from '@common/api/routes';
-import { inputSchemaOf } from '@common/api/schemas-endpoints';
-import { safeParseRequestBody, safeParseRequestCookies } from '@server/utils/schemas';
-import { handleError } from '@server/utils/error-handling';
+import { Empty } from '@common/api/schemas-endpoints';
+import { User } from './models/user';
+import { PublicError } from './models/error-types/public-error';
+import { UserCreateInput } from '@app/common/api/schemas/user';
 
-export async function getPageUserCreate(req: Request, res: Response) {
-	debug(logNow(), `GET ${ROUTES.PAGE_USER_CREATE}...`);
-
-	const sessionParse = safeParseRequestCookies(req, res, debug);
-	if (sessionParse.result === 'Exit') {
-		return;
-	}
-	const session = sessionParse.data;
-	const r = isUserLoggedIn(session);
-	const user = r[2];
-	if (isNotDefined(user)) {
-		res.status(401).send(r[1]);
-		return;
-	}
+export async function getPageUserCreate(user: User) {
+	debug(logNow(), 'function getPageUserCreate...');
 
 	if (!user.canDo('CREATE_USER')) {
 		debug(logNow(), `User '${user.username}' cannot create users.`);
-		res.status(403).send('You cannot create users.');
-		return;
+		throw new PublicError('You cannot create users.');
 	}
 	if (!user.canDo('ASSIGN_ROLE')) {
 		debug(logNow(), `User '${user.username}' cannot assign roles to users.`);
-		res.status(403).send(`You cannot assign roles and thus cannot create users.`);
-		return;
+		throw new PublicError(`You cannot assign roles and thus cannot create users.`);
 	}
 
-	res.status(200);
-	if (ConfigurationManager.shouldCacheData()) {
-		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
-	}
-	res.sendFile(`${getExecutionDirectory()}/html/user/new.html`);
+	return 'html/user/new.html';
 }
 
-export async function postUserCreate(req: Request, res: Response) {
-	debug(logNow(), `POST ${ROUTES.USER_CREATE}`);
+export async function postUserCreate(registerer: User, input: UserCreateInput): Promise<Empty> {
+	debug(logNow(), 'function postUserCreate...');
 
-	const sessionParse = safeParseRequestCookies(req, res, debug);
-	if (sessionParse.result === 'Exit') {
-		return;
-	}
-	const session = sessionParse.data;
-	const r = isUserLoggedIn(session);
-	const registerer = r[2];
-	if (isNotDefined(registerer)) {
-		res.status(401).send(r[1]);
-		return;
-	}
-
-	const userParse = safeParseRequestBody(req, inputSchemaOf(ROUTES.USER_CREATE), res, debug);
-	if (userParse.result === 'Exit') {
-		return;
-	}
-
-	const username = userParse.data.u;
-	const firstName = userParse.data.fn;
-	const lastName = userParse.data.ln;
-	const password = userParse.data.password;
-	const roles = userParse.data.r;
+	const username = input.u;
+	const firstName = input.fn;
+	const lastName = input.ln;
+	const password = input.password;
+	const roles = input.r;
 
 	debug(logNow(), `User '${registerer.username}' is trying to create a new user:`);
 	debug(logNow(), `    Username: '${username}'`);
@@ -106,17 +66,11 @@ export async function postUserCreate(req: Request, res: Response) {
 
 	for (const r of roles) {
 		if (!isRoleStringCorrect(r)) {
-			res.status(500).send(`Role string '${r}' is not correct.`);
-			return;
+			throw new PublicError(`Role string '${r}' is not correct.`);
 		}
 	}
 
-	try {
-		userAddNew(registerer, { username, firstName, lastName, password, roles });
-	} catch (e) {
-		handleError(e as Error, res);
-		return;
-	}
+	userAddNew(registerer, { username, firstName, lastName, password, roles });
 
-	res.status(201).send();
+	return {};
 }

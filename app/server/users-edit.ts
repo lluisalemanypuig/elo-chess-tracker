@@ -24,90 +24,45 @@ Contact:
 */
 
 import Debug from 'debug';
-const debug = Debug('ELO_CHESS_TRACKER:serverUsersEdit');
-import { Request, Response } from 'express';
+const debug = Debug('ELO_CHESS_TRACKER:users-edit');
 
 import { logNow } from '@common/utils/time';
-import { isUserLoggedIn } from '@server/managers/session';
 import { userEdit } from '@server/managers/users';
 import { UsersManager } from '@server/managers/users-manager';
-import { ConfigurationManager } from '@server/managers/configuration-manager';
-import { getExecutionDirectory } from '@server/managers/environment-manager';
 import { isNotDefined } from '@common/utils/is-defined';
-import { ROUTES } from '@common/api/routes';
-import { inputSchemaOf } from '@common/api/schemas-endpoints';
-import { safeParseRequestBody, safeParseRequestCookies } from '@server/utils/schemas';
-import { handleError } from '@server/utils/error-handling';
+import { Empty } from '@common/api/schemas-endpoints';
+import { User } from './models/user';
+import { PublicError } from './models/error-types/public-error';
+import { UserEditInput } from '@app/common/api/schemas/user';
 
-export async function getPageUserEdit(req: Request, res: Response) {
-	debug(logNow(), `GET ${ROUTES.PAGE_USER_EDIT}...`);
-
-	const sessionParse = safeParseRequestCookies(req, res, debug);
-	if (sessionParse.result === 'Exit') {
-		return;
-	}
-	const session = sessionParse.data;
-	const r = isUserLoggedIn(session);
-	const user = r[2];
-	if (isNotDefined(user)) {
-		res.status(401).send(r[1]);
-		return;
-	}
+export async function getPageUserEdit(user: User) {
+	debug(logNow(), 'function getPageUserEdit...');
 
 	if (!user.canDo('EDIT_USER')) {
 		debug(logNow(), `    User '${user.username}' does not have sufficient permissions.`);
-		res.status(403).send('You cannot edit users');
-		return;
+		throw new PublicError('You cannot edit users');
 	}
 
-	res.status(200);
-	if (ConfigurationManager.shouldCacheData()) {
-		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
-	}
-	res.sendFile(`${getExecutionDirectory()}/html/user/edit.html`);
+	return 'html/user/edit.html';
 }
 
-export async function postUserEdit(req: Request, res: Response) {
-	debug(logNow(), `POST ${ROUTES.USER_EDIT}...`);
+export async function postUserEdit(editor: User, input: UserEditInput): Promise<Empty> {
+	debug(logNow(), 'function postUserEdit...');
 
-	const sessionParse = safeParseRequestCookies(req, res, debug);
-	if (sessionParse.result === 'Exit') {
-		return;
-	}
-	const session = sessionParse.data;
-	const r = isUserLoggedIn(session);
-
-	const editor = r[2];
-	if (isNotDefined(editor)) {
-		res.status(401).send(r[1]);
-		return;
-	}
-
-	const userParse = safeParseRequestBody(req, inputSchemaOf(ROUTES.USER_EDIT), res, debug);
-	if (userParse.result === 'Exit') {
-		return;
-	}
-
-	const editedPublicId = userParse.data.u;
-	const firstName = userParse.data.f;
-	const lastName = userParse.data.l;
-	const roles = userParse.data.r;
+	const editedPublicId = input.u;
+	const firstName = input.f;
+	const lastName = input.l;
+	const roles = input.r;
 
 	const mem = UsersManager.getInstance();
 
 	const edited = mem.getAllUserDataByPublicId(editedPublicId);
 	if (isNotDefined(edited)) {
 		debug(logNow(), `Public id '${editedPublicId}' for user is not valid.`);
-		res.status(404).send('Invalid user');
-		return;
+		throw new PublicError('Invalid user');
 	}
 
-	try {
-		userEdit(editor, edited.user, { firstName, lastName, roles });
-	} catch (e) {
-		handleError(e as Error, res);
-		return;
-	}
+	userEdit(editor, edited.user, { firstName, lastName, roles });
 
-	res.status(200).send();
+	return {};
 }

@@ -206,15 +206,13 @@ import { postUserLogin, postUserLogout } from '@server/login-logout';
 router.post(ROUTES.USER_LOGIN, postUserLogin);
 router.post(ROUTES.USER_LOGOUT, postUserLogout);
 
-// creation of a new user
+// user management
 import { postUserCreate, getPageUserCreate } from '@server/users-new';
-router.get(ROUTES.PAGE_USER_CREATE, getPageUserCreate);
-router.post(ROUTES.USER_CREATE, postUserCreate);
-
-// edition of an existing user
 import { postUserEdit, getPageUserEdit } from '@server/users-edit';
-router.get(ROUTES.PAGE_USER_EDIT, getPageUserEdit);
-router.post(ROUTES.USER_EDIT, postUserEdit);
+definePageEndpoint(ROUTES.PAGE_USER_CREATE, getPageUserCreate);
+defineActionEndpoint(ROUTES.USER_CREATE, postUserCreate);
+definePageEndpoint(ROUTES.PAGE_USER_EDIT, getPageUserEdit);
+defineActionEndpoint(ROUTES.USER_EDIT, postUserEdit);
 
 // change of password
 import { getPageUserPasswordChange, postUserPasswordChange } from '@server/users-password-change';
