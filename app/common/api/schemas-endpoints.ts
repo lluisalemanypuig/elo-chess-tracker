@@ -69,6 +69,8 @@ import {
 } from '@common/api/schemas/query-challenges';
 
 export const EmptySchema = z.object({}).strict();
+export type Empty = z.infer<typeof EmptySchema>;
+
 export const StringSchema = z.string();
 
 export type ApiMethod = 'GET' | 'POST';
