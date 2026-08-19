@@ -37,7 +37,7 @@ import {
 import { UsersManager } from '@server/managers/users-manager';
 import { isNotDefined } from '@common/utils/is-defined';
 import { Empty } from '@common/api/schemas-endpoints';
-import { User, UserSession } from '@server/models/user';
+import { UserSession } from '@server/models/user';
 import { PublicError } from './models/error-types/public-error';
 import {
 	GameCreateInput,

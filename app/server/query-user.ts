@@ -43,7 +43,7 @@ import {
 	UserWithGames,
 	UserWithoutGames
 } from '@common/api/schemas/query-user';
-import { User, UserSession } from '@server/models/user';
+import { UserSession } from '@server/models/user';
 import { PublicError } from './models/error-types/public-error';
 import { canUserEditUser } from './managers/user-relationships';
 

@@ -41,7 +41,7 @@ import { UsersManager } from '@server/managers/users-manager';
 import { RatingSystemManager } from '@server/managers/rating-system-manager';
 import { isNotDefined } from '@common/utils/is-defined';
 import { Empty } from '@common/api/schemas-endpoints';
-import { User, UserSession } from '@server/models/user';
+import { UserSession } from '@server/models/user';
 import {
 	ChallengeAcceptInput,
 	ChallengeAgreeResultInput,
