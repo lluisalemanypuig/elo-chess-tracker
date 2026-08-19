@@ -234,7 +234,7 @@ defineHTMXEndpoint(ROUTES.QUERY_HTML_TIME_CONTROLS_UNIQUE, getQueryHtmlTimeContr
 
 // user login and logout
 router.post(ROUTES.USER_LOGIN, postUserLogin);
-router.post(ROUTES.USER_LOGOUT, postUserLogout);
+defineActionEndpoint(ROUTES.USER_LOGOUT, postUserLogout);
 
 // user management
 definePageEndpoint(ROUTES.PAGE_USER_CREATE, getPageUserCreate);
