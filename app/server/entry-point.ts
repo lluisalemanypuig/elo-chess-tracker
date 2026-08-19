@@ -37,10 +37,12 @@ import { isNotDefined } from '@common/utils/is-defined';
 import { User } from '@server/models/user';
 import { handleError } from '@server/utils/error-handling';
 import { InputTypeOf, OutputTypeOf } from '@common/api/types';
+import { ConfigurationManager } from '@server/managers/configuration-manager';
+import { getExecutionDirectory } from '@server/managers/environment-manager';
 
 export async function entryPointPage<R extends Route>(
 	route: R,
-	action: (res: Response) => Promise<void>,
+	action: (u: User) => Promise<string>,
 	req: Request,
 	res: Response
 ) {
@@ -61,7 +63,12 @@ export async function entryPointPage<R extends Route>(
 	}
 
 	try {
-		await action(res);
+		const file = await action(user);
+		res.status(200);
+		if (ConfigurationManager.shouldCacheData()) {
+			res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
+		}
+		res.sendFile(`${getExecutionDirectory()}/${file}`);
 	} catch (e) {
 		handleError(e as Error, res);
 	}
