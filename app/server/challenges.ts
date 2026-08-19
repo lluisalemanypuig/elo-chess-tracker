@@ -46,25 +46,23 @@ import { RatingSystemManager } from '@server/managers/rating-system-manager';
 import { getExecutionDirectory } from '@server/managers/environment-manager';
 import { isNotDefined } from '@common/utils/is-defined';
 import { ROUTES } from '@common/api/routes';
-import { inputSchemaOf } from '@common/api/schemas-endpoints';
+import { Empty, inputSchemaOf } from '@common/api/schemas-endpoints';
 import { safeParseRequestBody, safeParseRequestCookies } from '@server/utils/schemas';
 import { handleError } from '@server/utils/error-handling';
 import { GameResult } from '@common/models/game-result';
+import { User } from '@server/models/user';
+import {
+	ChallengeAcceptInput,
+	ChallengeAgreeResultInput,
+	ChallengeDeclineInput,
+	ChallengeDisagreeResultInput,
+	ChallengeSendInput,
+	ChallengeSetResultInput
+} from '@app/common/api/schemas/challenges';
+import { PublicError } from './models/error-types/public-error';
 
-export async function getPageChallenge(req: Request, res: Response) {
+export async function getPageChallenge(res: Response) {
 	debug(logNow(), `GET ${ROUTES.PAGE_CHALLENGE}...`);
-
-	const sessionParse = safeParseRequestCookies(req, res, debug);
-	if (sessionParse.result === 'Exit') {
-		return;
-	}
-	const session = sessionParse.data;
-	const r = isUserLoggedIn(session);
-	const user = r[2];
-	if (isNotDefined(user)) {
-		res.status(401).send(r[1]);
-		return;
-	}
 
 	res.status(200);
 	if (ConfigurationManager.shouldCacheData()) {
@@ -73,29 +71,13 @@ export async function getPageChallenge(req: Request, res: Response) {
 	res.sendFile(`${getExecutionDirectory()}/html/challenges.html`);
 }
 
-export async function postChallengeSend(req: Request, res: Response) {
-	debug(logNow(), `POST ${ROUTES.CHALLENGE_SEND}...`);
+export async function postChallengeSend(sender: User, input: ChallengeSendInput): Promise<Empty> {
+	debug(logNow(), `function postChallengeSend...`);
 
-	const sessionParse = safeParseRequestCookies(req, res, debug);
-	if (sessionParse.result === 'Exit') {
-		return;
-	}
-	const session = sessionParse.data;
-
-	const challengeParse = safeParseRequestBody(req, inputSchemaOf(ROUTES.CHALLENGE_SEND), res, debug);
-	if (challengeParse.result === 'Exit') {
-		return;
-	}
-	const receiverPublicId = challengeParse.data.to;
-	const timeControlId = challengeParse.data.timeControlId;
-	const timeControlName = challengeParse.data.timeControlName;
-	const title = challengeParse.data.title;
-	const r = isUserLoggedIn(session);
-	const sender = r[2];
-	if (isNotDefined(sender)) {
-		res.status(401).send(r[1]);
-		return;
-	}
+	const receiverPublicId = input.to;
+	const timeControlId = input.timeControlId;
+	const timeControlName = input.timeControlName;
+	const title = input.title;
 
 	debug(logNow(), `Trying to send challenge from '${sender.username}' to '${receiverPublicId}'.`);
 
@@ -103,16 +85,15 @@ export async function postChallengeSend(req: Request, res: Response) {
 
 	if (isNotDefined(receiver)) {
 		debug(logNow(), `User receiver of the challenge '${receiverPublicId}' does not exist.`);
-		res.status(404).send('User receiver of the challenge does not exist');
-		return;
+		throw new PublicError('User receiver of the challenge does not exist');
 	}
 
 	const ratsys = RatingSystemManager.getInstance();
 	if (!ratsys.isTimeControlIdValid(timeControlId)) {
 		debug(logNow(), `Time control id ${timeControlId} is not valid.`);
-		res.status(500).send('The chosen time control id is not valid.');
-		return;
+		throw new PublicError('The chosen time control id is not valid.');
 	}
+
 	let match: boolean = false;
 	const timeControls = ratsys.getTimeControls();
 	for (const t of timeControls) {
@@ -123,241 +104,123 @@ export async function postChallengeSend(req: Request, res: Response) {
 	}
 	if (!match) {
 		debug(logNow(), `Time control id ${timeControlId} is not valid.`);
-		res.status(500).send('The chosen time control name does not correspond to the given time control id.');
-		return;
+		throw new PublicError('The chosen time control name does not correspond to the given time control id.');
 	}
 
 	debug(logNow(), `Send challenge from '${sender.username}' to '${receiver.user.username}'`);
 
-	try {
-		challengeSendNew(title, sender, receiver.user, timeControlId, timeControlName, logNow());
-	} catch (e: unknown) {
-		handleError(e as Error, res);
-		return;
-	}
+	challengeSendNew(title, sender, receiver.user, timeControlId, timeControlName, logNow());
 
-	res.status(200).send();
+	return {};
 }
 
-export async function postChallengeAccept(req: Request, res: Response) {
-	debug(logNow(), `POST ${ROUTES.CHALLENGE_ACCEPT}...`);
+export async function postChallengeAccept(user: User, input: ChallengeAcceptInput): Promise<Empty> {
+	debug(logNow(), `function postChallengeAccept...`);
 
-	const sessionParse = safeParseRequestCookies(req, res, debug);
-	if (sessionParse.result === 'Exit') {
-		return;
-	}
-	const session = sessionParse.data;
-	const r = isUserLoggedIn(session);
-	const user = r[2];
-	if (isNotDefined(user)) {
-		res.status(401).send(r[1]);
-		return;
-	}
+	const challengeId = input.id;
 
-	const challengeParse = safeParseRequestBody(req, inputSchemaOf(ROUTES.CHALLENGE_ACCEPT), res, debug);
-	if (challengeParse.result === 'Exit') {
-		return;
-	}
-	const challengeId = challengeParse.data.id;
-
-	debug(logNow(), `User '${session.publicId}' wants to accept challenge '${challengeParse}'`);
+	debug(logNow(), `User '${user.username}' wants to accept challenge '${challengeId}'`);
 
 	const c = ChallengesManager.getInstance().getChallengeById(challengeId);
 	if (isNotDefined(c)) {
-		res.status(404).send('Challenge does not exist');
-		return;
+		throw new PublicError('Challenge does not exist');
 	}
 
 	debug(logNow(), `Challenge '${challengeId}' involves players '${c.sentBy}' and '${c.sentTo}'`);
 
-	try {
-		challengeAccept(c, { by: user.username, when: logNow() });
-	} catch (e: unknown) {
-		handleError(e as Error, res);
-		return;
-	}
+	challengeAccept(c, { by: user.username, when: logNow() });
 
-	res.status(200).send();
+	return {};
 }
 
-export async function postChallengeDecline(req: Request, res: Response) {
-	debug(logNow(), `POST ${ROUTES.CHALLENGE_DECLINE}...`);
+export async function postChallengeDecline(user: User, input: ChallengeDeclineInput): Promise<Empty> {
+	debug(logNow(), `function postChallengeDecline...`);
 
-	const sessionParse = safeParseRequestCookies(req, res, debug);
-	if (sessionParse.result === 'Exit') {
-		return;
-	}
-	const session = sessionParse.data;
-	const r = isUserLoggedIn(session);
-	const user = r[2];
-	if (isNotDefined(user)) {
-		res.status(401).send(r[1]);
-		return;
-	}
+	const challengeId = input.id;
 
-	const challengeParse = safeParseRequestBody(req, inputSchemaOf(ROUTES.CHALLENGE_DECLINE), res, debug);
-	if (challengeParse.result === 'Exit') {
-		return;
-	}
-	const challengeId = challengeParse.data.id;
-
-	debug(logNow(), `User '${session.publicId}' wants to decline challenge '${challengeId}'`);
+	debug(logNow(), `User '${user.username}' wants to decline challenge '${challengeId}'`);
 
 	const c = ChallengesManager.getInstance().getChallengeById(challengeId);
 	if (isNotDefined(c)) {
-		res.status(404).send('Challenge does not exist');
-		return;
+		throw new PublicError('Challenge does not exist');
 	}
 
 	debug(logNow(), `Challenge '${challengeId}' involves players '${c.sentBy}' and '${c.sentTo}'`);
 
-	try {
-		challengeDecline(c, { by: user.username });
-	} catch (e: unknown) {
-		handleError(e as Error, res);
-		return;
-	}
+	challengeDecline(c, { by: user.username });
 
-	res.status(200).send();
+	return {};
 }
 
-export async function postChallengeSetResult(req: Request, res: Response) {
-	debug(logNow(), `POST ${ROUTES.CHALLENGE_SET_RESULT}...`);
-
-	const sessionParse = safeParseRequestCookies(req, res, debug);
-	if (sessionParse.result === 'Exit') {
-		return;
-	}
-	const session = sessionParse.data;
-	const r = isUserLoggedIn(session);
-	const user = r[2];
-	if (isNotDefined(user)) {
-		res.status(401).send(r[1]);
-		return;
-	}
+export async function postChallengeSetResult(user: User, input: ChallengeSetResultInput): Promise<Empty> {
+	debug(logNow(), `function postChallengeSetResult...`);
 
 	const setterUser = user.username;
-	const challengeParse = safeParseRequestBody(req, inputSchemaOf(ROUTES.CHALLENGE_SET_RESULT), res, debug);
-	if (challengeParse.result === 'Exit') {
-		return;
-	}
 
-	const challengeId: ChallengeId = challengeParse.data.id;
-	const whitePublicId = challengeParse.data.white;
-	const blackPublicId = challengeParse.data.black;
-	const result: GameResult = challengeParse.data.result;
+	const challengeId = input.id;
+	const whitePublicId = input.white;
+	const blackPublicId = input.black;
+	const gameResult = input.result;
 
 	debug(logNow(), `User '${setterUser}' is trying to set the result of a challenge`);
 	debug(logNow(), `    Challenge id: '${challengeId}'`);
 	debug(logNow(), `    White: '${whitePublicId}'`);
 	debug(logNow(), `    Black: '${blackPublicId}'`);
-	debug(logNow(), `    Result: '${result}'`);
+	debug(logNow(), `    Result: '${gameResult}'`);
 
 	const manager = UsersManager.getInstance();
 	const white = manager.getAllUserDataByPublicId(whitePublicId);
 	const black = manager.getAllUserDataByPublicId(blackPublicId);
 
 	if (isNotDefined(white)) {
-		res.status(404).send(`White user does not exist.`);
-		return;
+		throw new PublicError(`White user does not exist.`);
 	}
 	if (isNotDefined(black)) {
-		res.status(404).send(`Black user does not exist.`);
-		return;
+		throw new PublicError(`Black user does not exist.`);
 	}
 
 	let c = ChallengesManager.getInstance().getChallengeById(challengeId);
 	if (isNotDefined(c)) {
-		res.status(404).send(`Challenge does not exist.`);
-		return;
+		throw new PublicError(`Challenge does not exist.`);
 	}
 
-	try {
-		challengeSetResult(c, {
-			by: setterUser,
-			when: logNow(),
-			white: white.user.username,
-			black: black.user.username,
-			result
-		});
-	} catch (e: unknown) {
-		handleError(e as Error, res);
-		return;
-	}
+	challengeSetResult(c, {
+		by: setterUser,
+		when: logNow(),
+		white: white.user.username,
+		black: black.user.username,
+		result: gameResult
+	});
 
-	res.status(200).send();
+	return {};
 }
 
-export async function postChallengeAgree(req: Request, res: Response) {
-	debug(logNow(), `POST ${ROUTES.CHALLENGE_AGREE}...`);
+export async function postChallengeAgree(user: User, input: ChallengeAgreeResultInput): Promise<Empty> {
+	debug(logNow(), `function postChallengeAgree...`);
 
-	const sessionParse = safeParseRequestCookies(req, res, debug);
-	if (sessionParse.result === 'Exit') {
-		return;
-	}
-	const session = sessionParse.data;
-	const r = isUserLoggedIn(session);
-	const user = r[2];
-	if (isNotDefined(user)) {
-		res.status(401).send(r[1]);
-		return;
-	}
-
-	const challengeParse = safeParseRequestBody(req, inputSchemaOf(ROUTES.CHALLENGE_AGREE), res, debug);
-	if (challengeParse.result === 'Exit') {
-		return;
-	}
-	const challengeId = challengeParse.data.id;
+	const challengeId = input.id;
 
 	let c = ChallengesManager.getInstance().getChallengeById(challengeId);
 	if (isNotDefined(c)) {
-		res.status(404).send('Challenge does not exist');
-		return;
+		throw new PublicError('Challenge does not exist');
 	}
 
-	try {
-		challengeAgreeResult(c, { by: user.username, when: logNow() });
-	} catch (e: unknown) {
-		handleError(e as Error, res);
-		return;
-	}
+	challengeAgreeResult(c, { by: user.username, when: logNow() });
 
-	res.status(200).send();
+	return {};
 }
 
-export async function postChallengeDisagree(req: Request, res: Response) {
+export async function postChallengeDisagree(user: User, input: ChallengeDisagreeResultInput): Promise<Empty> {
 	debug(logNow(), `POST ${ROUTES.CHALLENGE_DISAGREE}...`);
 
-	const sessionParse = safeParseRequestCookies(req, res, debug);
-	if (sessionParse.result === 'Exit') {
-		return;
-	}
-	const session = sessionParse.data;
-	const r = isUserLoggedIn(session);
-	const user = r[2];
-	if (isNotDefined(user)) {
-		res.status(401).send(r[1]);
-		return;
-	}
-
-	const challengeParse = safeParseRequestBody(req, inputSchemaOf(ROUTES.CHALLENGE_DISAGREE), res, debug);
-	if (challengeParse.result === 'Exit') {
-		return;
-	}
-	const challengeId = challengeParse.data.id;
+	const challengeId = input.id;
 
 	let c = ChallengesManager.getInstance().getChallengeById(challengeId);
 	if (isNotDefined(c)) {
-		res.status(404).send('Challenge does not exist');
-		return;
+		throw new PublicError('Challenge does not exist');
 	}
 
-	try {
-		challengeDisagreeResult(c, { by: user.username });
-	} catch (e: unknown) {
-		handleError(e as Error, res);
-		return;
-	}
+	challengeDisagreeResult(c, { by: user.username });
 
-	res.status(200).send();
+	return {};
 }

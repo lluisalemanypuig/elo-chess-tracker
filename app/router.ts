@@ -32,9 +32,32 @@ import { logNow } from '@common/utils/time';
 
 import { EnvironmentManager, getExecutionDirectory } from '@server/managers/environment-manager';
 import { ConfigurationManager } from '@server/managers/configuration-manager';
-import { ROUTES } from '@common/api/routes';
+import { Route, ROUTES } from '@common/api/routes';
+import { entryPointAction, entryPointPage } from '@server/entry-point';
 
 let router = express.Router();
+
+async function definePageEndpoint(route: Route, action: (res: Response) => Promise<void>) {
+	router.get(route, (req: Request, res: Response) => {
+		return entryPointPage(route, action, req, res);
+	});
+}
+
+async function defineActionEndpoint<R extends Route>(
+	route: R,
+	action: (u: User, data: InputTypeOf<R>) => Promise<OutputTypeOf<R>>
+) {
+	const method = methodTypeOf(route);
+	if (method === 'POST') {
+		router.post(route, (req: Request, res: Response) => {
+			entryPointAction(route, action, req, res);
+		});
+	} else if (method === 'GET') {
+		router.get(route, (req: Request, res: Response) => {
+			entryPointAction(route, action, req, res);
+		});
+	}
+}
 
 // serve all *.css files
 router.get(ROUTES.CSS_ALL, (req: Request, res: Response) => {
@@ -227,18 +250,22 @@ router.get(ROUTES.PAGE_GRAPH_OWN, getPageGraphOwn);
 router.get(ROUTES.PAGE_GRAPH_FULL, getPageGraphFull);
 
 // challenges management
-import { getPageChallenge } from '@server/challenges';
-router.get(ROUTES.PAGE_CHALLENGE, getPageChallenge);
-import { postChallengeSend } from '@server/challenges';
-router.post(ROUTES.CHALLENGE_SEND, postChallengeSend);
-import { postChallengeAccept, postChallengeDecline } from '@server/challenges';
-router.post(ROUTES.CHALLENGE_ACCEPT, postChallengeAccept);
-router.post(ROUTES.CHALLENGE_DECLINE, postChallengeDecline);
-import { postChallengeSetResult } from '@server/challenges';
-router.post(ROUTES.CHALLENGE_SET_RESULT, postChallengeSetResult);
-import { postChallengeAgree, postChallengeDisagree } from '@server/challenges';
-router.post(ROUTES.CHALLENGE_AGREE, postChallengeAgree);
-router.post(ROUTES.CHALLENGE_DISAGREE, postChallengeDisagree);
+import {
+	getPageChallenge,
+	postChallengeAccept,
+	postChallengeAgree,
+	postChallengeDecline,
+	postChallengeDisagree,
+	postChallengeSend,
+	postChallengeSetResult
+} from '@server/challenges';
+definePageEndpoint(ROUTES.PAGE_CHALLENGE, getPageChallenge);
+defineActionEndpoint(ROUTES.CHALLENGE_SEND, postChallengeSend);
+defineActionEndpoint(ROUTES.CHALLENGE_ACCEPT, postChallengeAccept);
+defineActionEndpoint(ROUTES.CHALLENGE_DECLINE, postChallengeDecline);
+defineActionEndpoint(ROUTES.CHALLENGE_SET_RESULT, postChallengeSetResult);
+defineActionEndpoint(ROUTES.CHALLENGE_AGREE, postChallengeAgree);
+defineActionEndpoint(ROUTES.CHALLENGE_DISAGREE, postChallengeDisagree);
 
 // recalculation of all Elo ratings
 import { postRecalculateRatings } from '@server/games';
@@ -246,6 +273,9 @@ router.post(ROUTES.RECALCULATE_RATINGS, postRecalculateRatings);
 
 // recalculation of all graphs
 import { postRecalculateGraphs } from '@server/graphs';
+import { User } from './server/models/user';
+import { InputTypeOf, OutputTypeOf } from './common/api/types';
+import { methodTypeOf } from './common/api/schemas-endpoints';
 router.post(ROUTES.RECALCULATE_GRAPHS, postRecalculateGraphs);
 
 export { router };
