@@ -189,8 +189,8 @@ defineActionEndpoint(ROUTES.QUERY_CHALLENGE_CONFIRM_RESULT_OTHER, getQueryChalle
 defineActionEndpoint(ROUTES.QUERY_CHALLENGE_CONFIRM_RESULT_SELF, getQueryChallengeConfirmResultSelf);
 
 import { postQueryGameListOwn, postQueryGameListAll } from '@server/query-games';
-router.post(ROUTES.QUERY_GAME_LIST_OWN, postQueryGameListOwn);
-router.post(ROUTES.QUERY_GAME_LIST_ALL, postQueryGameListAll);
+defineActionEndpoint(ROUTES.QUERY_GAME_LIST_OWN, postQueryGameListOwn);
+defineActionEndpoint(ROUTES.QUERY_GAME_LIST_ALL, postQueryGameListAll);
 
 import { postQueryGraphFull, postQueryGraphOwn } from '@server/query-graphs';
 router.post(ROUTES.QUERY_GRAPH_OWN, postQueryGraphOwn);

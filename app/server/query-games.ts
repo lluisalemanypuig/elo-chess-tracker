@@ -45,10 +45,17 @@ import { isNotDefined } from '@common/utils/is-defined';
 import { ROUTES } from '@common/api/routes';
 import { inputSchemaOf } from '@common/api/schemas-endpoints';
 import { safeParseRequestBody, safeParseRequestCookies } from '@server/utils/schemas';
-import { QueryGamesListOutput, QueryGamesListOutputSingle } from '@common/api/schemas/query-games';
+import {
+	QueryGamesListAllInput,
+	QueryGamesListOutput,
+	QueryGamesListOutputSingle,
+	QueryGamesListOwnInput
+} from '@common/api/schemas/query-games';
 import { TimeControlId } from '@common/models/time-control';
+import { InternalError } from './models/error-types/internal-error';
+import { PublicError } from './models/error-types/public-error';
 
-function increment(g: Game): any {
+function increment(g: Game) {
 	const [whiteAfter, blackAfter] = RatingSystemManager.getInstance().applyRatingFunction(g);
 	return {
 		whiteIncrement: Math.round(whiteAfter.rating - g.whiteRating.rating),
@@ -56,13 +63,6 @@ function increment(g: Game): any {
 	};
 }
 
-/**
- * @brief Returns a list of games guided by the filter functions
- *
- * The filter functions return true when a game should be accepted.
- * @param filterGameRecord Filters game record files
- * @param filterGame Filters games
- */
 function filterGameList(
 	user: User,
 	timeControlId: TimeControlId,
@@ -95,7 +95,7 @@ function filterGameList(
 		const gameSet = gameArrayFromString(data);
 		if (isNotDefined(gameSet)) {
 			debug(logNow(), `        Game record '${gameRecordFile}' could not be parsed.`);
-			continue;
+			throw new InternalError(`Game record '${gameRecordFile}' could not be parsed.`);
 		}
 
 		for (let j = gameSet.length - 1; j >= 0; --j) {
@@ -120,12 +120,12 @@ function filterGameList(
 			const white = manager.getAllUserDataByPrivateId(g.white);
 			if (isNotDefined(white)) {
 				debug(logNow(), `User with username '${g.white}' could not be found.`);
-				return [];
+				throw new InternalError(`User with username '${g.white}' could not be found.`);
 			}
 			const black = manager.getAllUserDataByPrivateId(g.black);
 			if (isNotDefined(black)) {
 				debug(logNow(), `User with username '${g.black}' could not be found.`);
-				return [];
+				throw new InternalError(`User with username '${g.black}' could not be found.`);
 			}
 
 			const isEditable: boolean = canUserEditGame(user, white.user, black.user);
@@ -152,26 +152,10 @@ function filterGameList(
 	return dataToReturn;
 }
 
-export async function postQueryGameListOwn(req: Request, res: Response) {
-	debug(logNow(), `POST ${ROUTES.QUERY_GAME_LIST_OWN}...`);
+export async function postQueryGameListOwn(user: User, input: QueryGamesListOwnInput) {
+	debug(logNow(), 'function postQueryGameListOwn...');
 
-	const sessionParse = safeParseRequestCookies(req, res, debug);
-	if (sessionParse.result === 'Exit') {
-		return;
-	}
-	const session = sessionParse.data;
-	const r = isUserLoggedIn(session);
-	const user = r[2];
-	if (isNotDefined(user)) {
-		res.status(401).send(r[1]);
-		return;
-	}
-
-	const gameParse = safeParseRequestBody(req, inputSchemaOf(ROUTES.QUERY_GAME_LIST_OWN), res, debug);
-	if (gameParse.result === 'Exit') {
-		return;
-	}
-	const timeControlId = gameParse.data.timeControlId;
+	const timeControlId = input.timeControlId;
 
 	const filterGameFunction = (g: Game): boolean => {
 		return g.isUserInvolved(user.username);
@@ -214,7 +198,7 @@ export async function postQueryGameListOwn(req: Request, res: Response) {
 
 	debug(logNow(), `Found '${dataToReturn.length}' games involving '${user.username}'`);
 
-	res.status(200).send(dataToReturn);
+	return dataToReturn;
 }
 
 function mergeByDate(v1: QueryGamesListOutputSingle[], v2: QueryGamesListOutputSingle[]): QueryGamesListOutputSingle[] {
@@ -247,36 +231,19 @@ function mergeByDate(v1: QueryGamesListOutputSingle[], v2: QueryGamesListOutputS
 	return v3;
 }
 
-export async function postQueryGameListAll(req: Request, res: Response) {
-	debug(logNow(), `POST ${ROUTES.QUERY_GAME_LIST_ALL}...`);
-
-	const sessionParse = safeParseRequestCookies(req, res, debug);
-	if (sessionParse.result === 'Exit') {
-		return;
-	}
-	const session = sessionParse.data;
-	const r = isUserLoggedIn(session);
-	const user = r[2];
-	if (isNotDefined(user)) {
-		res.status(401).send(r[1]);
-		return;
-	}
+export async function postQueryGameListAll(user: User, input: QueryGamesListAllInput) {
+	debug(logNow(), 'function postQueryGameListAll...');
 
 	if (!user.canDo('SEE_GAMES')) {
-		res.status(403).send('You cannot see the entire list of games in the web.');
-		return;
+		throw new PublicError('You cannot see the entire list of games in the web.');
 	}
 
-	const gameParse = safeParseRequestBody(req, inputSchemaOf(ROUTES.QUERY_GAME_LIST_ALL), res, debug);
-	if (gameParse.result === 'Exit') {
-		return;
-	}
-	const timeControlId = gameParse.data.timeControlId;
+	const timeControlId = input.timeControlId;
 
 	let manager = UsersManager.getInstance();
-	let dataToReturn: QueryGamesListOutput = [];
+
 	if (timeControlId !== '') {
-		dataToReturn = filterGameList(
+		return filterGameList(
 			user,
 			timeControlId,
 			(_: DateMajor): boolean => {
@@ -286,44 +253,43 @@ export async function postQueryGameListAll(req: Request, res: Response) {
 				const white = manager.getAllUserDataByPrivateId(g.white);
 				if (isNotDefined(white)) {
 					debug(logNow(), `User with username '${g.white}' could not be found.`);
-					res.status(500).send('Invalid white user sent to the server.');
-					return false;
+					throw new InternalError(`User with username '${g.white}' could not be found.`);
 				}
 				const black = manager.getAllUserDataByPrivateId(g.black);
 				if (isNotDefined(black)) {
 					debug(logNow(), `User with username '${g.black}' could not be found.`);
-					res.status(500).send('Invalid black user sent to the server.');
-					return false;
+					throw new InternalError(`User with username '${g.black}' could not be found.`);
 				}
 				return canUserSeeGame(user, white.user, black.user);
 			}
 		);
-	} else {
-		const ratings = RatingSystemManager.getInstance();
-		for (const tid of ratings.getUniqueTimeControlsIds()) {
-			const data = filterGameList(
-				user,
-				tid,
-				(_: DateMajor): boolean => {
-					return true;
-				},
-				(g: Game): boolean => {
-					const white = manager.getAllUserDataByPrivateId(g.white);
-					if (isNotDefined(white)) {
-						debug(logNow(), `User with username '${g.white}' could not be found.`);
-						return false;
-					}
-					const black = manager.getAllUserDataByPrivateId(g.black);
-					if (isNotDefined(black)) {
-						debug(logNow(), `User with username '${g.black}' could not be found.`);
-						return false;
-					}
-					return canUserSeeGame(user, white.user, black.user);
-				}
-			);
-			dataToReturn = mergeByDate(dataToReturn, data);
-		}
 	}
 
-	res.status(200).send(dataToReturn);
+	let dataToReturn: QueryGamesListOutputSingle[] = [];
+	const ratings = RatingSystemManager.getInstance();
+	for (const tid of ratings.getUniqueTimeControlsIds()) {
+		const data = filterGameList(
+			user,
+			tid,
+			(_: DateMajor): boolean => {
+				return true;
+			},
+			(g: Game): boolean => {
+				const white = manager.getAllUserDataByPrivateId(g.white);
+				if (isNotDefined(white)) {
+					debug(logNow(), `User with username '${g.white}' could not be found.`);
+					throw new InternalError(`User with username '${g.white}' could not be found.`);
+				}
+				const black = manager.getAllUserDataByPrivateId(g.black);
+				if (isNotDefined(black)) {
+					debug(logNow(), `User with username '${g.black}' could not be found.`);
+					throw new InternalError(`User with username '${g.black}' could not be found.`);
+				}
+				return canUserSeeGame(user, white.user, black.user);
+			}
+		);
+		dataToReturn = mergeByDate(dataToReturn, data);
+	}
+
+	return dataToReturn;
 }
