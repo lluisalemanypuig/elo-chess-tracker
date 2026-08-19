@@ -37,7 +37,7 @@ import { DateMajor, DateMajorSchema } from '@common/utils/time';
 import { InternalError } from '@server/models/error-types/internal-error';
 import { toUserGivenName, UserGivenName } from '@common/models/user-given-name';
 import { PlayerPrivateId } from '@common/models/player-id';
-import { SessionId } from '@app/common/models/session-id';
+import { SessionId } from '@common/models/session-id';
 
 export const GameNumberSchema = z
 	.object({

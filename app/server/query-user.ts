@@ -44,8 +44,8 @@ import {
 	UserWithoutGames
 } from '@common/api/schemas/query-user';
 import { UserSession } from '@server/models/user';
-import { PublicError } from './models/error-types/public-error';
-import { canUserEditUser } from './managers/user-relationships';
+import { PublicError } from '@server/models/error-types/public-error';
+import { canUserEditUser } from '@server/managers/user-relationships';
 
 // Returns the list of user full names and usernames sorted by name
 export async function getQueryUserList(_u: UserSession, _i: Empty) {

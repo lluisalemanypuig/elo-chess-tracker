@@ -29,8 +29,8 @@ const debug = Debug('ELO_CHESS_TRACKER:serverGraphs');
 import { logNow } from '@common/utils/time';
 import { recalculateAllGraphs } from '@server/managers/graphs';
 import { UserSession } from '@server/models/user';
-import { PublicError } from './models/error-types/public-error';
-import { Empty } from '@app/common/api/schemas-endpoints';
+import { PublicError } from '@server/models/error-types/public-error';
+import { Empty } from '@common/api/schemas-endpoints';
 
 export async function getPageGraphOwn(_u: UserSession) {
 	debug(logNow(), 'function getPageGraphOwn...');

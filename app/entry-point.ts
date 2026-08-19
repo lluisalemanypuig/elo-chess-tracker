@@ -38,7 +38,7 @@ import { handleError } from '@server/utils/error-handling';
 import { InputTypeOf, OutputTypeOf } from '@common/api/types';
 import { ConfigurationManager } from '@server/managers/configuration-manager';
 import { getExecutionDirectory } from '@server/managers/environment-manager';
-import { UserSession } from './server/models/user';
+import { UserSession } from '@server/models/user';
 
 export async function entryPointPage<R extends Route>(
 	route: R,

@@ -38,13 +38,8 @@ import { UsersManager } from '@server/managers/users-manager';
 import { isNotDefined } from '@common/utils/is-defined';
 import { Empty } from '@common/api/schemas-endpoints';
 import { UserSession } from '@server/models/user';
-import { PublicError } from './models/error-types/public-error';
-import {
-	GameCreateInput,
-	GameDeleteInput,
-	GameEditResultInput,
-	GameEditTitleInput
-} from '@app/common/api/schemas/games';
+import { PublicError } from '@server/models/error-types/public-error';
+import { GameCreateInput, GameDeleteInput, GameEditResultInput, GameEditTitleInput } from '@common/api/schemas/games';
 
 export async function getPageGameListOwn(_u: UserSession) {
 	debug(logNow(), 'function getPageGameListOwn...');

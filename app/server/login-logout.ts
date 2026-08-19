@@ -38,8 +38,8 @@ import { isNotDefined } from '@common/utils/is-defined';
 import { UserLoginInputSchema } from '@common/api/schemas/login-logout';
 import { ROUTES } from '@common/api/routes';
 import { safeParseRequestBody } from '@server/utils/schemas';
-import { UserSession } from './models/user';
-import { Empty } from '@app/common/api/schemas-endpoints';
+import { UserSession } from '@server/models/user';
+import { Empty } from '@common/api/schemas-endpoints';
 
 export async function postUserLogin(req: Request, res: Response) {
 	debug(logNow(), `POST ${ROUTES.USER_LOGIN}`);

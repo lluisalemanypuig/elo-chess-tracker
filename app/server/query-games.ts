@@ -47,8 +47,8 @@ import {
 	QueryGamesListOwnInput
 } from '@common/api/schemas/query-games';
 import { TimeControlId } from '@common/models/time-control';
-import { InternalError } from './models/error-types/internal-error';
-import { PublicError } from './models/error-types/public-error';
+import { InternalError } from '@server/models/error-types/internal-error';
+import { PublicError } from '@server/models/error-types/public-error';
 
 function increment(g: Game) {
 	const [whiteAfter, blackAfter] = RatingSystemManager.getInstance().applyRatingFunction(g);

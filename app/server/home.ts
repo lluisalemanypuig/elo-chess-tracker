@@ -35,7 +35,7 @@ import { isDefined } from '@common/utils/is-defined';
 import { ROUTES } from '@common/api/routes';
 import { parseSchema } from '@server/utils/schemas';
 import { AuthenticationInputSchema, authenticationInputSchemaToSessionId } from '@common/api/schemas/authentication';
-import { UserSession } from './models/user';
+import { UserSession } from '@server/models/user';
 
 export async function getPageLogin(req: Request, res: Response) {
 	let sendHome: boolean;
