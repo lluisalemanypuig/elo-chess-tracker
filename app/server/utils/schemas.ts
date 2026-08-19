@@ -25,7 +25,7 @@ Contact:
 
 import Debug from 'debug';
 import { z } from 'zod';
-import { Request, Response } from 'express';
+import { Request } from 'express';
 
 import { isDefined, isNotDefined } from '@common/utils/is-defined';
 import { logNow } from '@common/utils/time';
@@ -85,14 +85,9 @@ export type SafeParseSchemaResult<T> =
 			data: T;
 	  };
 
-export function safeParseRequestCookies(
-	req: Request,
-	res: Response,
-	debug: Debug.Debugger
-): SafeParseSchemaResult<SessionId> {
+export function safeParseRequestCookies(req: Request, debug: Debug.Debugger): SafeParseSchemaResult<SessionId> {
 	const parse = parseSchema(req.cookies, AuthenticationInputSchema, debug);
 	if (parse.result !== 'Success') {
-		res.status(401).send(`Failure to parse cookies.`);
 		return {
 			result: 'Exit',
 			data: undefined
@@ -107,12 +102,10 @@ export function safeParseRequestCookies(
 export function safeParseRequestBody<S extends z.ZodTypeAny>(
 	req: Request,
 	schemaObj: S,
-	res: Response,
 	debug: Debug.Debugger
 ): SafeParseSchemaResult<z.output<S>> {
 	const parse = parseSchema(req.body, schemaObj, debug);
 	if (parse.result !== 'Success') {
-		res.status(406).send(parseErrorMessage(parse));
 		return {
 			result: 'Exit',
 			data: undefined
@@ -122,8 +115,4 @@ export function safeParseRequestBody<S extends z.ZodTypeAny>(
 		result: 'Continue',
 		data: parse.data
 	};
-}
-
-function parseErrorMessage<T>(res: ParseSchemaResult<T>) {
-	return `Request input data (body) sent from client is malformed ${res.result}`;
 }
