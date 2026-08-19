@@ -193,8 +193,8 @@ defineActionEndpoint(ROUTES.QUERY_GAME_LIST_OWN, postQueryGameListOwn);
 defineActionEndpoint(ROUTES.QUERY_GAME_LIST_ALL, postQueryGameListAll);
 
 import { postQueryGraphFull, postQueryGraphOwn } from '@server/query-graphs';
-router.post(ROUTES.QUERY_GRAPH_OWN, postQueryGraphOwn);
-router.post(ROUTES.QUERY_GRAPH_FULL, postQueryGraphFull);
+defineActionEndpoint(ROUTES.QUERY_GRAPH_OWN, postQueryGraphOwn);
+defineActionEndpoint(ROUTES.QUERY_GRAPH_FULL, postQueryGraphFull);
 
 // query time controls
 import { getQueryHtmlTimeControls, getQueryHtmlTimeControlsUnique } from '@server/query-time-control';

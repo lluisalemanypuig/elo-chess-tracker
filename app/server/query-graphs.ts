@@ -25,10 +25,8 @@ Contact:
 
 import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:serverQueryGraphs');
-import { Request, Response } from 'express';
 
 import { logNow } from '@common/utils/time';
-import { isUserLoggedIn } from '@server/managers/session';
 import { User } from '@server/models/user';
 import { GraphsManager } from '@server/managers/graphs-manager';
 import { TimeControlId } from '@common/models/time-control';
@@ -37,12 +35,16 @@ import { UsersManager } from '@server/managers/users-manager';
 import { Edge } from '@server/models/graph/edge';
 import { canUserSeeGraph } from '@server/managers/user-relationships';
 import { isNotDefined } from '@common/utils/is-defined';
-import { ROUTES } from '@common/api/routes';
-import { inputSchemaOf } from '@common/api/schemas-endpoints';
-import { safeParseRequestBody, safeParseRequestCookies } from '@server/utils/schemas';
-import { EdgeInfo, NodeInfo, QueryGraphOutput } from '@common/api/schemas/query-graphs';
-import { InternalError } from '@app/server/models/error-types/internal-error';
+import {
+	EdgeInfo,
+	NodeInfo,
+	QueryGraphFullInput,
+	QueryGraphOutput,
+	QueryGraphOwnInput
+} from '@common/api/schemas/query-graphs';
+import { InternalError } from '@server/models/error-types/internal-error';
 import { PlayerPrivateId } from '@common/models/player-id';
+import { PublicError } from '@server/models/error-types/public-error';
 
 function retrieveGraphUser(username: PlayerPrivateId, timeControlId: TimeControlId): QueryGraphOutput {
 	const users = UsersManager.getInstance();
@@ -105,7 +107,7 @@ function retrieveGraphUser(username: PlayerPrivateId, timeControlId: TimeControl
 		const neighbor = users.getAllUserDataByPrivateId(e.neighbor);
 		if (isNotDefined(neighbor)) {
 			debug(logNow(), `Could not find user ${e.neighbor}.`);
-			throw new InternalError(`Internal error when querying a graph.`);
+			throw new InternalError(`Could not find user ${e.neighbor}.`);
 		}
 
 		const idx = searchLinearByKey(listNodes, (i: NodeInfo): boolean => {
@@ -199,64 +201,29 @@ function retrieveGraphFull(querier: User, timeControlId: TimeControlId): QueryGr
 	return { nodes: listNodes, edges: listEdges };
 }
 
-export async function postQueryGraphOwn(req: Request, res: Response) {
-	debug(logNow(), `POST ${ROUTES.QUERY_GRAPH_OWN}...`);
+export async function postQueryGraphOwn(user: User, input: QueryGraphOwnInput) {
+	debug(logNow(), 'function postQueryGraphOwn...');
 
-	const sessionParse = safeParseRequestCookies(req, res, debug);
-	if (sessionParse.result === 'Exit') {
-		return;
-	}
-	const session = sessionParse.data;
-	const r = isUserLoggedIn(session);
-	const user = r[2];
-	if (isNotDefined(user)) {
-		res.status(401).send(r[1]);
-		return;
-	}
-
-	const graphParse = safeParseRequestBody(req, inputSchemaOf(ROUTES.QUERY_GRAPH_OWN), res, debug);
-	if (graphParse.result === 'Exit') {
-		return;
-	}
-	const timeControlId = graphParse.data.timeControlId;
+	const timeControlId = input.timeControlId;
 
 	debug(logNow(), `User ${user.username} is querying their own graph of time control ${timeControlId}.`);
 
-	const graph = retrieveGraphUser(user.username, timeControlId);
-	res.status(200).send(graph);
+	return retrieveGraphUser(user.username, timeControlId);
 }
 
-export async function postQueryGraphFull(req: Request, res: Response) {
-	debug(logNow(), `POST ${ROUTES.QUERY_GRAPH_FULL}...`);
-
-	const sessionParse = safeParseRequestCookies(req, res, debug);
-	if (sessionParse.result === 'Exit') {
-		return;
-	}
-	const session = sessionParse.data;
-	const r = isUserLoggedIn(session);
-	const user = r[2];
-	if (isNotDefined(user)) {
-		res.status(401).send(r[1]);
-		return;
-	}
+export async function postQueryGraphFull(user: User, input: QueryGraphFullInput) {
+	debug(logNow(), 'function postQueryGraphFull...');
 
 	if (!user.canDo('SEE_GRAPHS')) {
-		res.status(403).send('You do not have enough permissions.');
-		return;
+		throw new PublicError('You do not have enough permissions to see the full graph.');
 	}
 
-	const graphParse = safeParseRequestBody(req, inputSchemaOf(ROUTES.QUERY_GRAPH_FULL), res, debug);
-	if (graphParse.result === 'Exit') {
-		return;
-	}
-	const timeControlId = graphParse.data.timeControlId;
+	const timeControlId = input.timeControlId;
 
 	debug(
 		logNow(),
 		`User ${user.username} is querying the graph of the entire server of time control ${timeControlId}.`
 	);
 
-	const graph = retrieveGraphFull(user, timeControlId);
-	res.status(200).send(graph);
+	return retrieveGraphFull(user, timeControlId);
 }
