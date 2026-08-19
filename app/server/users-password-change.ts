@@ -25,71 +25,28 @@ Contact:
 
 import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:serverUsersPasswordChanges');
-import { Request, Response } from 'express';
 
 import { logNow } from '@common/utils/time';
-import { isUserLoggedIn } from '@server/managers/session';
-import { ConfigurationManager } from '@server/managers/configuration-manager';
-import { getExecutionDirectory } from '@server/managers/environment-manager';
-import { isNotDefined } from '@common/utils/is-defined';
-import { ROUTES } from '@common/api/routes';
-import { inputSchemaOf } from '@common/api/schemas-endpoints';
-import { safeParseRequestBody, safeParseRequestCookies } from '@server/utils/schemas';
+import { Empty } from '@common/api/schemas-endpoints';
 import { userSelfChangePassword } from '@server/managers/users';
-import { handleError } from '@server/utils/error-handling';
+import { User, UserSession } from './models/user';
+import { UserPasswordChangeInput } from '@app/common/api/schemas/user';
 
-export async function getPageUserPasswordChange(req: Request, res: Response) {
-	debug(logNow(), `GET ${ROUTES.PAGE_USER_PASSWORD_CHANGE}...`);
-
-	const sessionParse = safeParseRequestCookies(req, res, debug);
-	if (sessionParse.result === 'Exit') {
-		return;
-	}
-	const session = sessionParse.data;
-
-	const r = isUserLoggedIn(session);
-	if (isNotDefined(r[2])) {
-		res.status(401).send(r[1]);
-		return;
-	}
-
-	res.status(200);
-	if (ConfigurationManager.shouldCacheData()) {
-		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
-	}
-	res.sendFile(`${getExecutionDirectory()}/html/user/password-change.html`);
+export async function getPageUserPasswordChange(_u: UserSession, _i: Empty) {
+	debug(logNow(), 'function getPageUserPasswordChange...');
+	return 'html/user/password-change.html';
 }
 
-export async function postUserPasswordChange(req: Request, res: Response) {
-	debug(logNow(), `POST ${ROUTES.USER_PASSWORD_CHANGE}...`);
+export async function postUserPasswordChange(
+	{ user, session }: UserSession,
+	input: UserPasswordChangeInput
+): Promise<Empty> {
+	debug(logNow(), 'function postUserPasswordChange...');
 
-	const sessionParse = safeParseRequestCookies(req, res, debug);
-	if (sessionParse.result === 'Exit') {
-		return;
-	}
-	const session = sessionParse.data;
+	const oldPassword = input.old;
+	const newPassword = input.new;
 
-	const passwordParse = safeParseRequestBody(req, inputSchemaOf(ROUTES.USER_PASSWORD_CHANGE), res, debug);
-	if (passwordParse.result === 'Exit') {
-		return;
-	}
+	userSelfChangePassword(user, { session, oldPassword, newPassword });
 
-	const oldPassword = passwordParse.data.old;
-	const newPassword = passwordParse.data.new;
-
-	const r = isUserLoggedIn(session);
-	const user = r[2];
-	if (isNotDefined(user)) {
-		res.status(200).send(r[1]);
-		return;
-	}
-
-	try {
-		userSelfChangePassword(user, { session, oldPassword, newPassword });
-	} catch (e) {
-		handleError(e as Error, res);
-		return;
-	}
-
-	res.status(200).send();
+	return {};
 }

@@ -33,8 +33,8 @@ import { logNow } from '@common/utils/time';
 import { EnvironmentManager, getExecutionDirectory } from '@server/managers/environment-manager';
 import { ConfigurationManager } from '@server/managers/configuration-manager';
 import { Route, ROUTES } from '@common/api/routes';
-import { entryPointAction, entryPointHTMX, entryPointPage } from '@server/entry-point';
-import { User } from '@server/models/user';
+import { entryPointAction, entryPointHTMX, entryPointPage } from '@app/entry-point';
+import { UserSession } from '@server/models/user';
 import { InputTypeOf, OutputTypeOf } from '@common/api/types';
 import { methodTypeOf } from '@common/api/schemas-endpoints';
 
@@ -85,13 +85,13 @@ import {
 
 let router = express.Router();
 
-async function definePageEndpoint(route: Route, action: (u: User) => Promise<string>) {
+async function definePageEndpoint(route: Route, action: (u: UserSession) => Promise<string>) {
 	router.get(route, (req: Request, res: Response) => {
 		return entryPointPage(route, action, req, res);
 	});
 }
 
-async function defineHTMXEndpoint<R extends Route>(route: R, action: (u: User) => Promise<string>) {
+async function defineHTMXEndpoint<R extends Route>(route: R, action: (u: UserSession) => Promise<string>) {
 	router.post(route, (req: Request, res: Response) => {
 		return entryPointHTMX(route, action, req, res);
 	});
@@ -99,7 +99,7 @@ async function defineHTMXEndpoint<R extends Route>(route: R, action: (u: User) =
 
 async function defineActionEndpoint<R extends Route>(
 	route: R,
-	action: (u: User, data: InputTypeOf<R>) => Promise<OutputTypeOf<R>>
+	action: (u: UserSession, data: InputTypeOf<R>) => Promise<OutputTypeOf<R>>
 ) {
 	const method = methodTypeOf(route);
 	if (method === 'POST') {
