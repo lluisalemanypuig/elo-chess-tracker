@@ -37,6 +37,7 @@ import { DateMajor, DateMajorSchema } from '@common/utils/time';
 import { InternalError } from '@server/models/error-types/internal-error';
 import { toUserGivenName, UserGivenName } from '@common/models/user-given-name';
 import { PlayerPrivateId } from '@common/models/player-id';
+import { SessionId } from '@app/common/models/session-id';
 
 export const GameNumberSchema = z
 	.object({
@@ -65,6 +66,11 @@ export const TimeControlGameArraySchema = z.array(TimeControlGameSchema);
 export type TimeControlGameArray = z.infer<typeof TimeControlGameArraySchema>;
 
 export const UserKeys = ['username', 'firstName', 'lastName', 'password', 'roles', 'games', 'ratings'];
+
+export interface UserSession {
+	user: User;
+	session: SessionId;
+}
 
 /**
  * @brief Simple class to encode a User
