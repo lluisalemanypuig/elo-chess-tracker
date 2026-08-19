@@ -41,7 +41,7 @@ import { UsersManager } from '@server/managers/users-manager';
 import { RatingSystemManager } from '@server/managers/rating-system-manager';
 import { isNotDefined } from '@common/utils/is-defined';
 import { Empty } from '@common/api/schemas-endpoints';
-import { User } from '@server/models/user';
+import { User, UserSession } from '@server/models/user';
 import {
 	ChallengeAcceptInput,
 	ChallengeAgreeResultInput,
@@ -52,12 +52,15 @@ import {
 } from '@common/api/schemas/challenges';
 import { PublicError } from '@server/models/error-types/public-error';
 
-export async function getPageChallenge(_u: User) {
+export async function getPageChallenge(_u: UserSession) {
 	debug(logNow(), 'function getPageChallenge...');
 	return 'html/challenges.html';
 }
 
-export async function postChallengeSend(sender: User, input: ChallengeSendInput): Promise<Empty> {
+export async function postChallengeSend(
+	{ user: sender, session: _session }: UserSession,
+	input: ChallengeSendInput
+): Promise<Empty> {
 	debug(logNow(), 'function postChallengeSend...');
 
 	const receiverPublicId = input.to;
@@ -100,7 +103,10 @@ export async function postChallengeSend(sender: User, input: ChallengeSendInput)
 	return {};
 }
 
-export async function postChallengeAccept(user: User, input: ChallengeAcceptInput): Promise<Empty> {
+export async function postChallengeAccept(
+	{ user, session: _session }: UserSession,
+	input: ChallengeAcceptInput
+): Promise<Empty> {
 	debug(logNow(), 'function postChallengeAccept...');
 
 	const challengeId = input.id;
@@ -119,7 +125,10 @@ export async function postChallengeAccept(user: User, input: ChallengeAcceptInpu
 	return {};
 }
 
-export async function postChallengeDecline(user: User, input: ChallengeDeclineInput): Promise<Empty> {
+export async function postChallengeDecline(
+	{ user, session: _session }: UserSession,
+	input: ChallengeDeclineInput
+): Promise<Empty> {
 	debug(logNow(), 'function postChallengeDecline...');
 
 	const challengeId = input.id;
@@ -138,7 +147,10 @@ export async function postChallengeDecline(user: User, input: ChallengeDeclineIn
 	return {};
 }
 
-export async function postChallengeSetResult(user: User, input: ChallengeSetResultInput): Promise<Empty> {
+export async function postChallengeSetResult(
+	{ user, session: _session }: UserSession,
+	input: ChallengeSetResultInput
+): Promise<Empty> {
 	debug(logNow(), 'function postChallengeSetResult...');
 
 	const setterUser = user.username;
@@ -181,7 +193,10 @@ export async function postChallengeSetResult(user: User, input: ChallengeSetResu
 	return {};
 }
 
-export async function postChallengeAgree(user: User, input: ChallengeAgreeResultInput): Promise<Empty> {
+export async function postChallengeAgree(
+	{ user, session: _session }: UserSession,
+	input: ChallengeAgreeResultInput
+): Promise<Empty> {
 	debug(logNow(), 'function postChallengeAgree...');
 
 	const challengeId = input.id;
@@ -196,7 +211,10 @@ export async function postChallengeAgree(user: User, input: ChallengeAgreeResult
 	return {};
 }
 
-export async function postChallengeDisagree(user: User, input: ChallengeDisagreeResultInput): Promise<Empty> {
+export async function postChallengeDisagree(
+	{ user, session: _session }: UserSession,
+	input: ChallengeDisagreeResultInput
+): Promise<Empty> {
 	debug(logNow(), 'function postChallengeDisagree...');
 
 	const challengeId = input.id;

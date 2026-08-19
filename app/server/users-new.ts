@@ -30,11 +30,11 @@ import { logNow } from '@common/utils/time';
 import { userAddNew } from '@server/managers/users';
 import { isRoleStringCorrect } from '@common/models/user-role';
 import { Empty } from '@common/api/schemas-endpoints';
-import { User } from '@server/models/user';
+import { User, UserSession } from '@server/models/user';
 import { PublicError } from '@server/models/error-types/public-error';
 import { UserCreateInput } from '@common/api/schemas/user';
 
-export async function getPageUserCreate(user: User) {
+export async function getPageUserCreate({ user, session: _session }: UserSession) {
 	debug(logNow(), 'function getPageUserCreate...');
 
 	if (!user.canDo('CREATE_USER')) {
@@ -49,7 +49,10 @@ export async function getPageUserCreate(user: User) {
 	return 'html/user/new.html';
 }
 
-export async function postUserCreate(registerer: User, input: UserCreateInput): Promise<Empty> {
+export async function postUserCreate(
+	{ user: registerer, session: _session }: UserSession,
+	input: UserCreateInput
+): Promise<Empty> {
 	debug(logNow(), 'function postUserCreate...');
 
 	debug(logNow(), `User '${registerer.username}' is trying to create a new user:`);

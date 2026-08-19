@@ -27,7 +27,7 @@ import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:serverQueryGraphs');
 
 import { logNow } from '@common/utils/time';
-import { User } from '@server/models/user';
+import { User, UserSession } from '@server/models/user';
 import { GraphsManager } from '@server/managers/graphs-manager';
 import { TimeControlId } from '@common/models/time-control';
 import { searchLinearByKey } from '@server/utils/searching';
@@ -201,7 +201,7 @@ function retrieveGraphFull(querier: User, timeControlId: TimeControlId): QueryGr
 	return { nodes: listNodes, edges: listEdges };
 }
 
-export async function postQueryGraphOwn(user: User, input: QueryGraphOwnInput) {
+export async function postQueryGraphOwn({ user, session: _session }: UserSession, input: QueryGraphOwnInput) {
 	debug(logNow(), 'function postQueryGraphOwn...');
 
 	const timeControlId = input.timeControlId;
@@ -211,7 +211,7 @@ export async function postQueryGraphOwn(user: User, input: QueryGraphOwnInput) {
 	return retrieveGraphUser(user.username, timeControlId);
 }
 
-export async function postQueryGraphFull(user: User, input: QueryGraphFullInput) {
+export async function postQueryGraphFull({ user, session: _session }: UserSession, input: QueryGraphFullInput) {
 	debug(logNow(), 'function postQueryGraphFull...');
 
 	if (!user.canDo('SEE_GRAPHS')) {

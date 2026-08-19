@@ -29,10 +29,10 @@ const debug = Debug('ELO_CHESS_TRACKER:serverUsersPasswordChanges');
 import { logNow } from '@common/utils/time';
 import { Empty } from '@common/api/schemas-endpoints';
 import { userSelfChangePassword } from '@server/managers/users';
-import { User, UserSession } from './models/user';
+import { UserSession } from '@server/models/user';
 import { UserPasswordChangeInput } from '@app/common/api/schemas/user';
 
-export async function getPageUserPasswordChange(_u: UserSession, _i: Empty) {
+export async function getPageUserPasswordChange(_u: UserSession) {
 	debug(logNow(), 'function getPageUserPasswordChange...');
 	return 'html/user/password-change.html';
 }

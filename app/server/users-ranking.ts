@@ -27,9 +27,9 @@ import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:users-ranking');
 
 import { logNow } from '@common/utils/time';
-import { User } from '@server/models/user';
+import { UserSession } from '@server/models/user';
 
-export async function getPageUserRanking(_u: User) {
+export async function getPageUserRanking(_u: UserSession) {
 	debug(logNow(), 'function getPageUserRanking...');
 
 	return 'html/user/ranking.html';

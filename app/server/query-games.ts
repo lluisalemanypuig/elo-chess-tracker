@@ -30,7 +30,7 @@ import path from 'path';
 import fs from 'fs';
 
 import { DateMajor, logNow } from '@common/utils/time';
-import { GameNumber, User } from '@server/models/user';
+import { GameNumber, User, UserSession } from '@server/models/user';
 import { Game } from '@server/models/game';
 import { RatingSystemManager } from '@server/managers/rating-system-manager';
 import { EnvironmentManager } from '@server/managers/environment-manager';
@@ -147,7 +147,7 @@ function filterGameList(
 	return dataToReturn;
 }
 
-export async function postQueryGameListOwn(user: User, input: QueryGamesListOwnInput) {
+export async function postQueryGameListOwn({ user, session: _session }: UserSession, input: QueryGamesListOwnInput) {
 	debug(logNow(), 'function postQueryGameListOwn...');
 
 	const timeControlId = input.timeControlId;
@@ -226,7 +226,7 @@ function mergeByDate(v1: QueryGamesListOutputSingle[], v2: QueryGamesListOutputS
 	return v3;
 }
 
-export async function postQueryGameListAll(user: User, input: QueryGamesListAllInput) {
+export async function postQueryGameListAll({ user, session: _session }: UserSession, input: QueryGamesListAllInput) {
 	debug(logNow(), 'function postQueryGameListAll...');
 
 	if (!user.canDo('SEE_GAMES')) {

@@ -243,8 +243,8 @@ definePageEndpoint(ROUTES.PAGE_USER_EDIT, getPageUserEdit);
 defineActionEndpoint(ROUTES.USER_EDIT, postUserEdit);
 
 // change of password
-router.get(ROUTES.PAGE_USER_PASSWORD_CHANGE, getPageUserPasswordChange);
-router.post(ROUTES.USER_PASSWORD_CHANGE, postUserPasswordChange);
+definePageEndpoint(ROUTES.PAGE_USER_PASSWORD_CHANGE, getPageUserPasswordChange);
+defineActionEndpoint(ROUTES.USER_PASSWORD_CHANGE, postUserPasswordChange);
 
 // retrieve ranking of players
 definePageEndpoint(ROUTES.PAGE_USER_RANKING, getPageUserRanking);

@@ -40,12 +40,12 @@ import {
 	QueryChallengesSentOutput
 } from '@common/api/schemas/query-challenges';
 import { UserGivenName } from '@common/models/user-given-name';
-import { User } from '@server/models/user';
+import { User, UserSession } from '@server/models/user';
 import { Empty } from '@common/api/schemas-endpoints';
 import { InternalError } from '@server/models/error-types/internal-error';
 
 // Query the server for challenges received sento to me by other users
-export async function getQueryChallengeReceived(sentTo: User, _i: Empty) {
+export async function getQueryChallengeReceived({ user: sentTo, session: _session }: UserSession, _i: Empty) {
 	debug(logNow(), 'function getQueryChallengeReceived...');
 
 	// challenges to be returned
@@ -86,7 +86,7 @@ export async function getQueryChallengeReceived(sentTo: User, _i: Empty) {
 }
 
 // Query the server for challenges sent to other users by me
-export async function getQueryChallengeSent(sentBy: User, _i: Empty) {
+export async function getQueryChallengeSent({ user: sentBy, session: _session }: UserSession, _i: Empty) {
 	debug(logNow(), 'function getQueryChallengeSent...');
 
 	// challenges to be returned
@@ -127,7 +127,7 @@ export async function getQueryChallengeSent(sentBy: User, _i: Empty) {
 }
 
 // Query the server for accepted challenges whose result has not been set yet.
-export async function getQueryChallengePendingResult(user: User, _i: Empty) {
+export async function getQueryChallengePendingResult({ user, session: _session }: UserSession, _i: Empty) {
 	debug(logNow(), 'function getQueryChallengePendingResult...');
 
 	// challenges to be returned
@@ -194,7 +194,7 @@ export async function getQueryChallengePendingResult(user: User, _i: Empty) {
 }
 
 // Query the server for accepted challenges whose result has been set by me
-export async function getQueryChallengeConfirmResultOther(user: User, _i: Empty) {
+export async function getQueryChallengeConfirmResultOther({ user, session: _session }: UserSession, _i: Empty) {
 	debug(logNow(), 'function getQueryChallengeConfirmResultOther...');
 
 	// challenges to be returned
@@ -282,7 +282,7 @@ export async function getQueryChallengeConfirmResultOther(user: User, _i: Empty)
 }
 
 // Query the server for accepted challenges whose result has been set by my opponent
-export async function getQueryChallengeConfirmResultSelf(user: User, _i: Empty) {
+export async function getQueryChallengeConfirmResultSelf({ user, session: _session }: UserSession, _i: Empty) {
 	debug(logNow(), 'function getQueryChallengeConfirmResultSelf...');
 
 	// challenges to be returned

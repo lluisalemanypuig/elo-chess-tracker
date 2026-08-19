@@ -37,7 +37,7 @@ import {
 import { UsersManager } from '@server/managers/users-manager';
 import { isNotDefined } from '@common/utils/is-defined';
 import { Empty } from '@common/api/schemas-endpoints';
-import { User } from './models/user';
+import { User, UserSession } from '@server/models/user';
 import { PublicError } from './models/error-types/public-error';
 import {
 	GameCreateInput,
@@ -46,17 +46,17 @@ import {
 	GameEditTitleInput
 } from '@app/common/api/schemas/games';
 
-export async function getPageGameListOwn(_u: User) {
+export async function getPageGameListOwn(_u: UserSession) {
 	debug(logNow(), 'function getPageGameListOwn...');
 	return 'html/game/list/own.html';
 }
 
-export async function getPageGameListAll(_u: User) {
+export async function getPageGameListAll(_u: UserSession) {
 	debug(logNow(), 'function getPageGameListAll...');
 	return 'html/game/list/all.html';
 }
 
-export async function getPageGameCreate(user: User) {
+export async function getPageGameCreate({ user, session: _session }: UserSession) {
 	debug(logNow(), 'function getPageGameCreate...');
 	if (!user.canDo('CREATE_GAMES')) {
 		debug(logNow(), `User '${user.username}' cannot create games.`);
@@ -65,7 +65,10 @@ export async function getPageGameCreate(user: User) {
 	return 'html/game/create.html';
 }
 
-export async function postGameCreate(creator: User, input: GameCreateInput): Promise<Empty> {
+export async function postGameCreate(
+	{ user: creator, session: _session }: UserSession,
+	input: GameCreateInput
+): Promise<Empty> {
 	debug(logNow(), 'function postGameCreate...');
 
 	const whitePublicId = input.white;
@@ -106,7 +109,10 @@ export async function postGameCreate(creator: User, input: GameCreateInput): Pro
 	return {};
 }
 
-export async function postGameEditResult(editor: User, input: GameEditResultInput): Promise<Empty> {
+export async function postGameEditResult(
+	{ user: editor, session: _session }: UserSession,
+	input: GameEditResultInput
+): Promise<Empty> {
 	debug(logNow(), 'function postGameEditResult...');
 
 	const gameId = input.id;
@@ -120,7 +126,10 @@ export async function postGameEditResult(editor: User, input: GameEditResultInpu
 	return {};
 }
 
-export async function postGameEditTitle(editor: User, input: GameEditTitleInput): Promise<Empty> {
+export async function postGameEditTitle(
+	{ user: editor, session: _session }: UserSession,
+	input: GameEditTitleInput
+): Promise<Empty> {
 	debug(logNow(), 'function postGameEditTitle...');
 
 	const gameId = input.id;
@@ -134,7 +143,10 @@ export async function postGameEditTitle(editor: User, input: GameEditTitleInput)
 	return {};
 }
 
-export async function postGameDelete(deleter: User, input: GameDeleteInput): Promise<Empty> {
+export async function postGameDelete(
+	{ user: deleter, session: _session }: UserSession,
+	input: GameDeleteInput
+): Promise<Empty> {
 	debug(logNow(), 'function postGameDelete...');
 
 	const gameId = input.id;
@@ -147,7 +159,7 @@ export async function postGameDelete(deleter: User, input: GameDeleteInput): Pro
 	return {};
 }
 
-export async function postRecalculateRatings(user: User, _input: Empty): Promise<Empty> {
+export async function postRecalculateRatings({ user, session: _session }: UserSession, _input: Empty): Promise<Empty> {
 	debug(logNow(), 'function postRecalculateRatings...');
 	debug(logNow(), `Recalculating ratings...`);
 	recalculateAllRatings(user);

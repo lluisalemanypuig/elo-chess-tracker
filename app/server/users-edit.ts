@@ -31,11 +31,11 @@ import { userEdit } from '@server/managers/users';
 import { UsersManager } from '@server/managers/users-manager';
 import { isNotDefined } from '@common/utils/is-defined';
 import { Empty } from '@common/api/schemas-endpoints';
-import { User } from '@server/models/user';
+import { UserSession } from '@server/models/user';
 import { PublicError } from '@server/models/error-types/public-error';
 import { UserEditInput } from '@common/api/schemas/user';
 
-export async function getPageUserEdit(user: User) {
+export async function getPageUserEdit({ user, session: _session }: UserSession) {
 	debug(logNow(), 'function getPageUserEdit...');
 
 	if (!user.canDo('EDIT_USER')) {
@@ -46,7 +46,10 @@ export async function getPageUserEdit(user: User) {
 	return 'html/user/edit.html';
 }
 
-export async function postUserEdit(editor: User, input: UserEditInput): Promise<Empty> {
+export async function postUserEdit(
+	{ user: editor, session: _session }: UserSession,
+	input: UserEditInput
+): Promise<Empty> {
 	debug(logNow(), 'function postUserEdit...');
 
 	const mem = UsersManager.getInstance();

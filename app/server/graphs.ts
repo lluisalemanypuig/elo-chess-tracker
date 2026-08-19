@@ -28,16 +28,16 @@ const debug = Debug('ELO_CHESS_TRACKER:serverGraphs');
 
 import { logNow } from '@common/utils/time';
 import { recalculateAllGraphs } from '@server/managers/graphs';
-import { User } from '@server/models/user';
+import { User, UserSession } from '@server/models/user';
 import { PublicError } from './models/error-types/public-error';
 import { Empty } from '@app/common/api/schemas-endpoints';
 
-export async function getPageGraphOwn(_u: User) {
+export async function getPageGraphOwn(_u: UserSession) {
 	debug(logNow(), 'function getPageGraphOwn...');
 	return 'html/graph/own.html';
 }
 
-export async function getPageGraphFull(user: User) {
+export async function getPageGraphFull({ user, session: _session }: UserSession) {
 	debug(logNow(), 'function getPageGraphFull...');
 
 	if (!user.canDo('SEE_GRAPHS')) {
@@ -48,7 +48,7 @@ export async function getPageGraphFull(user: User) {
 	return 'html/graph/full.html';
 }
 
-export async function postRecalculateGraphs(user: User, _input: Empty) {
+export async function postRecalculateGraphs({ user, session: _session }: UserSession, _input: Empty) {
 	debug(logNow(), 'function postRecalculateGraphs...');
 	debug(logNow(), `Recalculating ratings...`);
 	recalculateAllGraphs(user);

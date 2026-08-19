@@ -43,12 +43,12 @@ import {
 	UserWithGames,
 	UserWithoutGames
 } from '@common/api/schemas/query-user';
-import { User } from './models/user';
+import { User, UserSession } from '@server/models/user';
 import { PublicError } from './models/error-types/public-error';
 import { canUserEditUser } from './managers/user-relationships';
 
 // Returns the list of user full names and usernames sorted by name
-export async function getQueryUserList(_u: User, _i: Empty) {
+export async function getQueryUserList(_u: UserSession, _i: Empty) {
 	debug(logNow(), 'function getQueryUserList...');
 
 	let list = userGetAllNamePublicId();
@@ -59,7 +59,7 @@ export async function getQueryUserList(_u: User, _i: Empty) {
 	return list;
 }
 
-export async function getQueryHtmlUserList(_u: User) {
+export async function getQueryHtmlUserList(_u: UserSession) {
 	debug(logNow(), 'function getQueryHtmlUserList...');
 
 	let list = userGetAllNamePublicId();
@@ -74,7 +74,7 @@ export async function getQueryHtmlUserList(_u: User) {
 	return data;
 }
 
-export async function getQueryUserHome(user: User, _i: Empty) {
+export async function getQueryUserHome({ user, session: _session }: UserSession, _i: Empty) {
 	debug(logNow(), 'function getQueryUserHome...');
 
 	const ratingsUser = user.ratings.map((value: TimeControlRating): TimeControlAndRating => {
@@ -99,7 +99,7 @@ export async function getQueryUserHome(user: User, _i: Empty) {
 	return output;
 }
 
-export async function postQueryUserEdit(user: User, input: QueryUserEditInput) {
+export async function postQueryUserEdit({ user, session: _session }: UserSession, input: QueryUserEditInput) {
 	debug(logNow(), 'function postQueryUserEdit...');
 
 	if (!user.canDo('EDIT_USER')) {
@@ -130,7 +130,7 @@ export async function postQueryUserEdit(user: User, input: QueryUserEditInput) {
 	return output;
 }
 
-export async function postQueryUserRanking(_u: User, input: QueryUserRankingInput) {
+export async function postQueryUserRanking(_u: UserSession, input: QueryUserRankingInput) {
 	debug(logNow(), 'function postQueryUserRanking...');
 
 	const timeControlId = input.timeControlId;
