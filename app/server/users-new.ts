@@ -30,9 +30,9 @@ import { logNow } from '@common/utils/time';
 import { userAddNew } from '@server/managers/users';
 import { isRoleStringCorrect } from '@common/models/user-role';
 import { Empty } from '@common/api/schemas-endpoints';
-import { User } from './models/user';
-import { PublicError } from './models/error-types/public-error';
-import { UserCreateInput } from '@app/common/api/schemas/user';
+import { User } from '@server/models/user';
+import { PublicError } from '@server/models/error-types/public-error';
+import { UserCreateInput } from '@common/api/schemas/user';
 
 export async function getPageUserCreate(user: User) {
 	debug(logNow(), 'function getPageUserCreate...');
@@ -52,25 +52,19 @@ export async function getPageUserCreate(user: User) {
 export async function postUserCreate(registerer: User, input: UserCreateInput): Promise<Empty> {
 	debug(logNow(), 'function postUserCreate...');
 
-	const username = input.u;
-	const firstName = input.fn;
-	const lastName = input.ln;
-	const password = input.password;
-	const roles = input.r;
-
 	debug(logNow(), `User '${registerer.username}' is trying to create a new user:`);
-	debug(logNow(), `    Username: '${username}'`);
-	debug(logNow(), `    First name: '${firstName}'`);
-	debug(logNow(), `    Last name: '${lastName}'`);
-	debug(logNow(), `    Roles: '${roles}'`);
+	debug(logNow(), `    Username: '${input.username}'`);
+	debug(logNow(), `    First name: '${input.firstName}'`);
+	debug(logNow(), `    Last name: '${input.lastName}'`);
+	debug(logNow(), `    Roles: '${input.roles}'`);
 
-	for (const r of roles) {
+	for (const r of input.roles) {
 		if (!isRoleStringCorrect(r)) {
 			throw new PublicError(`Role string '${r}' is not correct.`);
 		}
 	}
 
-	userAddNew(registerer, { username, firstName, lastName, password, roles });
+	userAddNew(registerer, input);
 
 	return {};
 }

@@ -31,9 +31,9 @@ import { userEdit } from '@server/managers/users';
 import { UsersManager } from '@server/managers/users-manager';
 import { isNotDefined } from '@common/utils/is-defined';
 import { Empty } from '@common/api/schemas-endpoints';
-import { User } from './models/user';
-import { PublicError } from './models/error-types/public-error';
-import { UserEditInput } from '@app/common/api/schemas/user';
+import { User } from '@server/models/user';
+import { PublicError } from '@server/models/error-types/public-error';
+import { UserEditInput } from '@common/api/schemas/user';
 
 export async function getPageUserEdit(user: User) {
 	debug(logNow(), 'function getPageUserEdit...');
@@ -49,20 +49,15 @@ export async function getPageUserEdit(user: User) {
 export async function postUserEdit(editor: User, input: UserEditInput): Promise<Empty> {
 	debug(logNow(), 'function postUserEdit...');
 
-	const editedPublicId = input.u;
-	const firstName = input.f;
-	const lastName = input.l;
-	const roles = input.r;
-
 	const mem = UsersManager.getInstance();
 
-	const edited = mem.getAllUserDataByPublicId(editedPublicId);
+	const edited = mem.getAllUserDataByPublicId(input.publicId);
 	if (isNotDefined(edited)) {
-		debug(logNow(), `Public id '${editedPublicId}' for user is not valid.`);
+		debug(logNow(), `Public id '${input.publicId}' for user is not valid.`);
 		throw new PublicError('Invalid user');
 	}
 
-	userEdit(editor, edited.user, { firstName, lastName, roles });
+	userEdit(editor, edited.user, { firstName: input.firstName, lastName: input.lastName, roles: input.roles });
 
 	return {};
 }
