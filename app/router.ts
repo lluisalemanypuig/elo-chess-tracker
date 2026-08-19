@@ -33,7 +33,7 @@ import { logNow } from '@common/utils/time';
 import { EnvironmentManager, getExecutionDirectory } from '@server/managers/environment-manager';
 import { ConfigurationManager } from '@server/managers/configuration-manager';
 import { Route, ROUTES } from '@common/api/routes';
-import { entryPointAction, entryPointPage } from '@server/entry-point';
+import { entryPointAction, entryPointHTMX, entryPointPage } from '@server/entry-point';
 import { User } from '@server/models/user';
 import { InputTypeOf, OutputTypeOf } from '@common/api/types';
 import { methodTypeOf } from '@common/api/schemas-endpoints';
@@ -43,6 +43,12 @@ let router = express.Router();
 async function definePageEndpoint(route: Route, action: (u: User) => Promise<string>) {
 	router.get(route, (req: Request, res: Response) => {
 		return entryPointPage(route, action, req, res);
+	});
+}
+
+async function defineHTMXEndpoint<R extends Route>(route: R, action: (u: User) => Promise<string>) {
+	router.post(route, (req: Request, res: Response) => {
+		return entryPointHTMX(route, action, req, res);
 	});
 }
 
@@ -198,8 +204,8 @@ defineActionEndpoint(ROUTES.QUERY_GRAPH_FULL, postQueryGraphFull);
 
 // query time controls
 import { getQueryHtmlTimeControls, getQueryHtmlTimeControlsUnique } from '@server/query-time-control';
-router.get(ROUTES.QUERY_HTML_TIME_CONTROLS, getQueryHtmlTimeControls);
-router.get(ROUTES.QUERY_HTML_TIME_CONTROLS_UNIQUE, getQueryHtmlTimeControlsUnique);
+defineHTMXEndpoint(ROUTES.QUERY_HTML_TIME_CONTROLS, getQueryHtmlTimeControls);
+defineHTMXEndpoint(ROUTES.QUERY_HTML_TIME_CONTROLS_UNIQUE, getQueryHtmlTimeControlsUnique);
 
 // user login and logout
 import { postUserLogin, postUserLogout } from '@server/login-logout';

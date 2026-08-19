@@ -25,57 +25,30 @@ Contact:
 
 import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:serverQueryTimeControl');
-import { Request, Response } from 'express';
 
 import { logNow } from '@common/utils/time';
-import { isUserLoggedIn } from '@server/managers/session';
 import { RatingSystemManager } from '@server/managers/rating-system-manager';
-import { isNotDefined } from '@common/utils/is-defined';
 import { ROUTES } from '@common/api/routes';
-import { safeParseRequestCookies } from '@server/utils/schemas';
+import { User } from '@server/models/user';
 
-export async function getQueryHtmlTimeControls(req: Request, res: Response) {
+export async function getQueryHtmlTimeControls(_u: User) {
 	debug(logNow(), `GET ${ROUTES.QUERY_HTML_TIME_CONTROLS}...`);
-
-	const sessionParse = safeParseRequestCookies(req, res, debug);
-	if (sessionParse.result === 'Exit') {
-		return;
-	}
-	const session = sessionParse.data;
-	const r = isUserLoggedIn(session);
-
-	if (isNotDefined(r[2])) {
-		res.status(401).send(r[1]);
-		return;
-	}
 
 	let html: string = '';
 	const tcs = RatingSystemManager.getInstance().getTimeControls();
 	for (const tc of tcs) {
 		html += `<option value="${tc.id}">${tc.name}</option>`;
 	}
-	res.status(200).send(html);
+	return html;
 }
 
-export async function getQueryHtmlTimeControlsUnique(req: Request, res: Response) {
+export async function getQueryHtmlTimeControlsUnique(_u: User) {
 	debug(logNow(), `GET ${ROUTES.QUERY_HTML_TIME_CONTROLS_UNIQUE}...`);
-
-	const sessionParse = safeParseRequestCookies(req, res, debug);
-	if (sessionParse.result === 'Exit') {
-		return;
-	}
-	const session = sessionParse.data;
-	const r = isUserLoggedIn(session);
-
-	if (isNotDefined(r[2])) {
-		res.status(401).send(r[1]);
-		return;
-	}
 
 	let html: string = '';
 	const tcs = RatingSystemManager.getInstance().getUniqueTimeControlsIds();
 	for (const tc of tcs) {
 		html += `<option value="${tc}">${tc}</option>`;
 	}
-	res.status(200).send(html);
+	return html;
 }
