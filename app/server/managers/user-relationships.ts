@@ -28,8 +28,7 @@ import { User } from '@server/models/user';
 import { UserRole } from '@common/models/user-role';
 import { UsersBehavior } from '@server/managers/users-behavior';
 
-// Can a user (@e editor) edit another user (@e edited)?
-export function canUserEdit(editor: User, edited: User): boolean {
+export function canUserEditUser(editor: User, edited: User): boolean {
 	return (
 		editor.canDo('EDIT_USER') &&
 		((editor.canDo('EDIT_USER_ADMIN') && edited.is('ADMIN')) ||
@@ -39,7 +38,8 @@ export function canUserEdit(editor: User, edited: User): boolean {
 	);
 }
 
-// Can a user (@e u) see a game between two players (@e white and @e black)?
+// GAMES
+
 export function canUserSeeGame(u: User, white: User, black: User): boolean {
 	const eitherUserIs = function (r: UserRole): boolean {
 		return white.is(r) || black.is(r);
@@ -54,7 +54,6 @@ export function canUserSeeGame(u: User, white: User, black: User): boolean {
 	);
 }
 
-// Can a user (@e u) create a game between two players (@e white and @e black)?
 export function canUserCreateGame(u: User, white: User, black: User): boolean {
 	const eitherUserIs = function (r: UserRole): boolean {
 		return white.is(r) || black.is(r);
@@ -69,7 +68,6 @@ export function canUserCreateGame(u: User, white: User, black: User): boolean {
 	);
 }
 
-// Can a user (@e u) edit a game between two players (@e white and @e black)?
 export function canUserEditGame(u: User, white: User, black: User): boolean {
 	const eitherUserIs = function (r: UserRole): boolean {
 		return white.is(r) || black.is(r);
@@ -84,7 +82,6 @@ export function canUserEditGame(u: User, white: User, black: User): boolean {
 	);
 }
 
-// Can a user (@e u) delete a game between two players (@e white and @e black)?
 export function canUserDeleteGame(u: User, white: User, black: User): boolean {
 	const eitherUserIs = function (r: UserRole): boolean {
 		return white.is(r) || black.is(r);
@@ -99,12 +96,8 @@ export function canUserDeleteGame(u: User, white: User, black: User): boolean {
 	);
 }
 
-/**
- * @brief Challenge sent from 'sender' to 'receiver'
- * @param sender User that sends the challenge.
- * @param receiver User that receives the challenge.
- * @returns Can the sender actually challenge the receiver?
- */
+// CHALLENGES
+
 export function canUserSendChallenge(sender: User, receiver: User): boolean {
 	return (
 		sender.canDo('CHALLENGE_USER') &&
@@ -115,7 +108,15 @@ export function canUserSendChallenge(sender: User, receiver: User): boolean {
 	);
 }
 
-// Can a user (@e u) see another user's graph (@e other)?
+export function canUserDeclineChallenge(u1: User, u2: User, id: TimeControlId): boolean {
+	if (u1.getRating(id).rating > u2.getRating(id).rating) {
+		return UsersBehavior.getInstance().canHigherRatedDeclineChallengeLowerRated();
+	}
+	return true;
+}
+
+// GRAPHS
+
 export function canUserSeeGraph(u: User, other: User): boolean {
 	return (
 		u.canDo('SEE_GRAPHS') &&
@@ -124,12 +125,4 @@ export function canUserSeeGraph(u: User, other: User): boolean {
 			(other.is('STUDENT') && u.canDo('SEE_GRAPHS_STUDENT')) ||
 			(other.is('TEACHER') && u.canDo('SEE_GRAPHS_TEACHER')))
 	);
-}
-
-// Can user 'u1' decline the challenge sent by user 'u2'?
-export function canUserDeclineChallenge(u1: User, u2: User, id: TimeControlId): boolean {
-	if (u1.getRating(id).rating > u2.getRating(id).rating) {
-		return UsersBehavior.getInstance().canHigherRatedDeclineChallengeLowerRated();
-	}
-	return true;
 }

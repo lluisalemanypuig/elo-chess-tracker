@@ -27,7 +27,7 @@ import { User } from '@server/models/user';
 import { UserRoleToUserAction } from '@server/managers/user-role-action';
 import { initializePermissions } from '@server/managers/user-role-action';
 import {
-	canUserEdit,
+	canUserEditUser,
 	canUserEditGame,
 	canUserCreateGame,
 	canUserSeeGame,
@@ -62,10 +62,10 @@ describe('Edition', () => {
 			member: []
 		});
 
-		expect(canUserEdit(editor_admin, edited_admin)).toBe(false);
-		expect(canUserEdit(editor_admin, edited_teacher)).toBe(true);
-		expect(canUserEdit(editor_admin, edited_member)).toBe(false);
-		expect(canUserEdit(editor_admin, edited_student)).toBe(false);
+		expect(canUserEditUser(editor_admin, edited_admin)).toBe(false);
+		expect(canUserEditUser(editor_admin, edited_teacher)).toBe(true);
+		expect(canUserEditUser(editor_admin, edited_member)).toBe(false);
+		expect(canUserEditUser(editor_admin, edited_student)).toBe(false);
 	});
 
 	test('Admin -> Teacher + Student', () => {
@@ -78,10 +78,10 @@ describe('Edition', () => {
 			member: []
 		});
 
-		expect(canUserEdit(editor_admin, edited_admin)).toBe(false);
-		expect(canUserEdit(editor_admin, edited_teacher)).toBe(true);
-		expect(canUserEdit(editor_admin, edited_member)).toBe(false);
-		expect(canUserEdit(editor_admin, edited_student)).toBe(true);
+		expect(canUserEditUser(editor_admin, edited_admin)).toBe(false);
+		expect(canUserEditUser(editor_admin, edited_teacher)).toBe(true);
+		expect(canUserEditUser(editor_admin, edited_member)).toBe(false);
+		expect(canUserEditUser(editor_admin, edited_student)).toBe(true);
 	});
 
 	test('Teacher -> Teacher', () => {
@@ -94,10 +94,10 @@ describe('Edition', () => {
 			member: []
 		});
 
-		expect(canUserEdit(editor_teacher, edited_admin)).toBe(false);
-		expect(canUserEdit(editor_teacher, edited_teacher)).toBe(true);
-		expect(canUserEdit(editor_teacher, edited_member)).toBe(false);
-		expect(canUserEdit(editor_teacher, edited_student)).toBe(false);
+		expect(canUserEditUser(editor_teacher, edited_admin)).toBe(false);
+		expect(canUserEditUser(editor_teacher, edited_teacher)).toBe(true);
+		expect(canUserEditUser(editor_teacher, edited_member)).toBe(false);
+		expect(canUserEditUser(editor_teacher, edited_student)).toBe(false);
 	});
 
 	test('Teacher -> Teacher + Student', () => {
@@ -110,10 +110,10 @@ describe('Edition', () => {
 			member: []
 		});
 
-		expect(canUserEdit(editor_teacher, edited_admin)).toBe(false);
-		expect(canUserEdit(editor_teacher, edited_teacher)).toBe(true);
-		expect(canUserEdit(editor_teacher, edited_member)).toBe(false);
-		expect(canUserEdit(editor_teacher, edited_student)).toBe(true);
+		expect(canUserEditUser(editor_teacher, edited_admin)).toBe(false);
+		expect(canUserEditUser(editor_teacher, edited_teacher)).toBe(true);
+		expect(canUserEditUser(editor_teacher, edited_member)).toBe(false);
+		expect(canUserEditUser(editor_teacher, edited_student)).toBe(true);
 	});
 
 	test('Student -> Teacher', () => {
@@ -126,10 +126,10 @@ describe('Edition', () => {
 			member: []
 		});
 
-		expect(canUserEdit(editor_student, edited_admin)).toBe(false);
-		expect(canUserEdit(editor_student, edited_teacher)).toBe(true);
-		expect(canUserEdit(editor_student, edited_member)).toBe(false);
-		expect(canUserEdit(editor_student, edited_student)).toBe(false);
+		expect(canUserEditUser(editor_student, edited_admin)).toBe(false);
+		expect(canUserEditUser(editor_student, edited_teacher)).toBe(true);
+		expect(canUserEditUser(editor_student, edited_member)).toBe(false);
+		expect(canUserEditUser(editor_student, edited_student)).toBe(false);
 	});
 
 	test('Student -> Teacher + Student', () => {
@@ -142,10 +142,10 @@ describe('Edition', () => {
 			member: []
 		});
 
-		expect(canUserEdit(editor_student, edited_admin)).toBe(false);
-		expect(canUserEdit(editor_student, edited_teacher)).toBe(true);
-		expect(canUserEdit(editor_student, edited_member)).toBe(false);
-		expect(canUserEdit(editor_student, edited_student)).toBe(true);
+		expect(canUserEditUser(editor_student, edited_admin)).toBe(false);
+		expect(canUserEditUser(editor_student, edited_teacher)).toBe(true);
+		expect(canUserEditUser(editor_student, edited_member)).toBe(false);
+		expect(canUserEditUser(editor_student, edited_student)).toBe(true);
 	});
 
 	test('Member -> Teacher', () => {
@@ -158,10 +158,10 @@ describe('Edition', () => {
 			member: ['EDIT_USER_TEACHER']
 		});
 
-		expect(canUserEdit(editor_member, edited_admin)).toBe(false);
-		expect(canUserEdit(editor_member, edited_teacher)).toBe(true);
-		expect(canUserEdit(editor_member, edited_member)).toBe(false);
-		expect(canUserEdit(editor_member, edited_student)).toBe(false);
+		expect(canUserEditUser(editor_member, edited_admin)).toBe(false);
+		expect(canUserEditUser(editor_member, edited_teacher)).toBe(true);
+		expect(canUserEditUser(editor_member, edited_member)).toBe(false);
+		expect(canUserEditUser(editor_member, edited_student)).toBe(false);
 	});
 
 	test('Member -> Teacher + Student', () => {
@@ -174,10 +174,10 @@ describe('Edition', () => {
 			member: ['EDIT_USER_TEACHER', 'EDIT_USER_STUDENT']
 		});
 
-		expect(canUserEdit(editor_member, edited_admin)).toBe(false);
-		expect(canUserEdit(editor_member, edited_teacher)).toBe(true);
-		expect(canUserEdit(editor_member, edited_member)).toBe(false);
-		expect(canUserEdit(editor_member, edited_student)).toBe(true);
+		expect(canUserEditUser(editor_member, edited_admin)).toBe(false);
+		expect(canUserEditUser(editor_member, edited_teacher)).toBe(true);
+		expect(canUserEditUser(editor_member, edited_member)).toBe(false);
+		expect(canUserEditUser(editor_member, edited_student)).toBe(true);
 	});
 });
 
