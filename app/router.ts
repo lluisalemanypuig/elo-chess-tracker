@@ -37,7 +37,7 @@ import { entryPointAction, entryPointPage } from '@server/entry-point';
 
 let router = express.Router();
 
-async function definePageEndpoint(route: Route, action: (res: Response) => Promise<void>) {
+async function definePageEndpoint(route: Route, action: (u: User) => Promise<string>) {
 	router.get(route, (req: Request, res: Response) => {
 		return entryPointPage(route, action, req, res);
 	});

@@ -25,10 +25,8 @@ Contact:
 
 import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:serverChallenges');
-import { Request, Response } from 'express';
 
 import { logNow } from '@common/utils/time';
-import { isUserLoggedIn } from '@server/managers/session';
 import {
 	challengeAccept,
 	challengeDecline,
@@ -38,18 +36,11 @@ import {
 	challengeAgreeResult
 } from '@server/managers/challenges';
 
-import { ChallengeId } from '@common/models/challenge-id';
 import { ChallengesManager } from '@server/managers/challenges-manager';
 import { UsersManager } from '@server/managers/users-manager';
-import { ConfigurationManager } from '@server/managers/configuration-manager';
 import { RatingSystemManager } from '@server/managers/rating-system-manager';
-import { getExecutionDirectory } from '@server/managers/environment-manager';
 import { isNotDefined } from '@common/utils/is-defined';
-import { ROUTES } from '@common/api/routes';
-import { Empty, inputSchemaOf } from '@common/api/schemas-endpoints';
-import { safeParseRequestBody, safeParseRequestCookies } from '@server/utils/schemas';
-import { handleError } from '@server/utils/error-handling';
-import { GameResult } from '@common/models/game-result';
+import { Empty } from '@common/api/schemas-endpoints';
 import { User } from '@server/models/user';
 import {
 	ChallengeAcceptInput,
@@ -61,18 +52,14 @@ import {
 } from '@app/common/api/schemas/challenges';
 import { PublicError } from './models/error-types/public-error';
 
-export async function getPageChallenge(res: Response) {
-	debug(logNow(), `GET ${ROUTES.PAGE_CHALLENGE}...`);
+export async function getPageChallenge(_u: User) {
+	debug(logNow(), 'function getPageChallenge...');
 
-	res.status(200);
-	if (ConfigurationManager.shouldCacheData()) {
-		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
-	}
-	res.sendFile(`${getExecutionDirectory()}/html/challenges.html`);
+	return 'html/challenges.html';
 }
 
 export async function postChallengeSend(sender: User, input: ChallengeSendInput): Promise<Empty> {
-	debug(logNow(), `function postChallengeSend...`);
+	debug(logNow(), 'function postChallengeSend...');
 
 	const receiverPublicId = input.to;
 	const timeControlId = input.timeControlId;
@@ -115,7 +102,7 @@ export async function postChallengeSend(sender: User, input: ChallengeSendInput)
 }
 
 export async function postChallengeAccept(user: User, input: ChallengeAcceptInput): Promise<Empty> {
-	debug(logNow(), `function postChallengeAccept...`);
+	debug(logNow(), 'function postChallengeAccept...');
 
 	const challengeId = input.id;
 
@@ -134,7 +121,7 @@ export async function postChallengeAccept(user: User, input: ChallengeAcceptInpu
 }
 
 export async function postChallengeDecline(user: User, input: ChallengeDeclineInput): Promise<Empty> {
-	debug(logNow(), `function postChallengeDecline...`);
+	debug(logNow(), 'function postChallengeDecline...');
 
 	const challengeId = input.id;
 
@@ -153,7 +140,7 @@ export async function postChallengeDecline(user: User, input: ChallengeDeclineIn
 }
 
 export async function postChallengeSetResult(user: User, input: ChallengeSetResultInput): Promise<Empty> {
-	debug(logNow(), `function postChallengeSetResult...`);
+	debug(logNow(), 'function postChallengeSetResult...');
 
 	const setterUser = user.username;
 
@@ -196,7 +183,7 @@ export async function postChallengeSetResult(user: User, input: ChallengeSetResu
 }
 
 export async function postChallengeAgree(user: User, input: ChallengeAgreeResultInput): Promise<Empty> {
-	debug(logNow(), `function postChallengeAgree...`);
+	debug(logNow(), 'function postChallengeAgree...');
 
 	const challengeId = input.id;
 
@@ -211,7 +198,7 @@ export async function postChallengeAgree(user: User, input: ChallengeAgreeResult
 }
 
 export async function postChallengeDisagree(user: User, input: ChallengeDisagreeResultInput): Promise<Empty> {
-	debug(logNow(), `POST ${ROUTES.CHALLENGE_DISAGREE}...`);
+	debug(logNow(), 'function postChallengeDisagree...');
 
 	const challengeId = input.id;
 
