@@ -149,10 +149,7 @@ export async function postGameDelete(deleter: User, input: GameDeleteInput): Pro
 
 export async function postRecalculateRatings(user: User, _input: Empty): Promise<Empty> {
 	debug(logNow(), 'function postRecalculateRatings...');
-
 	debug(logNow(), `Recalculating ratings...`);
-
 	recalculateAllRatings(user);
-
 	return {};
 }
