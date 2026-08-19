@@ -34,7 +34,7 @@ import { TimeControlId, TimeControlIdSchema } from '@common/models/time-control'
 import { copyarray } from '@server/utils/misc';
 import { searchByKey, searchLinearByKey, whereShouldBeInsertedByKey } from '@server/utils/searching';
 import { DateMajor, DateMajorSchema } from '@common/utils/time';
-import { InternalError } from '@app/server/models/error-types/internal-error';
+import { InternalError } from '@server/models/error-types/internal-error';
 import { toUserGivenName, UserGivenName } from '@common/models/user-given-name';
 import { PlayerPrivateId } from '@common/models/player-id';
 

@@ -34,7 +34,7 @@ import { SessionId } from '@common/models/session-id';
 import { shuffleArray } from '@common/utils/shuffle-random';
 import { UsersManager } from '@server/managers/users-manager';
 import { isNotDefined } from '@common/utils/is-defined';
-import { InternalError } from '@app/server/models/error-types/internal-error';
+import { InternalError } from '@server/models/error-types/internal-error';
 import { PlayerPrivateId } from '@common/models/player-id';
 
 // In case of accidental overwrite, use:

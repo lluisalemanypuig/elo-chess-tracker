@@ -55,8 +55,8 @@ import { UserPermissions } from '@server/models/configuration/permissions';
 import { clearServer } from '@server/managers/memory/clear';
 import { initializePermissions } from '@server/managers/user-role-action';
 import { writeUserToFile } from '@server/managers/users';
-import { InternalError } from '@app/server/models/error-types/internal-error';
-import { RatingFrameworkType } from '@app/server/models/rating-framework/rating-framework-type';
+import { InternalError } from '@server/models/error-types/internal-error';
+import { RatingFrameworkType } from '@server/models/rating-framework/rating-framework-type';
 import { TimeControl, TimeControlArray } from '@common/models/time-control';
 import { toGameId } from '@common/models/game-id';
 

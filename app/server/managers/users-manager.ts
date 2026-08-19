@@ -26,7 +26,7 @@ Contact:
 import { isDefined, isNotDefined } from '@common/utils/is-defined';
 import { User } from '@server/models/user';
 import { searchLinearByKey } from '@server/utils/searching';
-import { InternalError } from '@app/server/models/error-types/internal-error';
+import { InternalError } from '@server/models/error-types/internal-error';
 import { PlayerPrivateId, PlayerPublicId, toPlayerPublicId } from '@common/models/player-id';
 
 interface UserBundle {

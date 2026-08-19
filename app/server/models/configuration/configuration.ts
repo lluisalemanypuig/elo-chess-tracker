@@ -29,7 +29,7 @@ import { ServerConfigurationSchema } from '@server/models/configuration/server';
 import { TimeControlArraySchema } from '@server/models/configuration/time-controls';
 import { BehaviorSchema } from '@server/models/configuration/behavior';
 import { UserPermissionsSchema } from '@server/models/configuration/permissions';
-import { RatingFrameworkTypeSchema } from '@app/server/models/rating-framework/rating-framework-type';
+import { RatingFrameworkTypeSchema } from '@server/models/rating-framework/rating-framework-type';
 
 export const ConfigurationSchema = z
 	.object({

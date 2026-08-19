@@ -23,7 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { InternalError } from '@app/server/models/error-types/internal-error';
+import { InternalError } from '@server/models/error-types/internal-error';
 
 // Generic class for a rating.
 export class Rating {

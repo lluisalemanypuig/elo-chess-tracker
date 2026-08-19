@@ -27,7 +27,7 @@ import { copyarray } from '@server/utils/misc';
 import { searchLinearByKey } from '@server/utils/searching';
 import { TimeControlId } from '@common/models/time-control';
 import { TimeControlRating } from '@server/models/time-control-rating';
-import { InternalError } from '@app/server/models/error-types/internal-error';
+import { InternalError } from '@server/models/error-types/internal-error';
 import { PlayerPrivateId } from '@common/models/player-id';
 import { Rating } from '@server/models/rating-framework/rating';
 

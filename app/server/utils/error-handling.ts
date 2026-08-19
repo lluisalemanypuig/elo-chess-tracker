@@ -29,7 +29,7 @@ import { Response } from 'express';
 
 import { logNow } from '@common/utils/time';
 import { PublicError } from '@server/models/error-types/public-error';
-import { InternalError } from '@app/server/models/error-types/internal-error';
+import { InternalError } from '@server/models/error-types/internal-error';
 
 export const internalErrorMessage = 'Internal error. Contact your administrator.';
 
