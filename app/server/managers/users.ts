@@ -210,7 +210,6 @@ export function userSelfChangePassword(user: User, { session, oldPassword, newPa
 	if (!isPasswordCorrect) {
 		debug(logNow(), `    Password for '${user.username}' is incorrect`);
 		throw new PublicError('Old password is not correct.');
-		return;
 	}
 
 	// delete all session ids of this user
