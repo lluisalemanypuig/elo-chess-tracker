@@ -30,7 +30,7 @@ const debug = Debug('ELO_CHESS_TRACKER:entry-point');
 import { logNow } from '@common/utils/time';
 
 import { Route } from '@common/api/routes';
-import { EmptySchema, inputSchemaOf, methodTypeOf, outputSchemaOf } from '@common/api/schemas-endpoints';
+import { Empty, EmptySchema, inputSchemaOf, methodTypeOf, outputSchemaOf } from '@common/api/schemas-endpoints';
 import { safeParseRequestBody, safeParseRequestCookies } from '@server/utils/schemas';
 import { isUserLoggedIn } from '@server/managers/session';
 import { isNotDefined } from '@common/utils/is-defined';
@@ -47,6 +47,7 @@ export async function entryPointPage<R extends Route>(
 	res: Response
 ) {
 	debug(logNow(), `${methodTypeOf(route)} ${route}...`);
+	debug(logNow(), 'Entry point page');
 
 	const sessionParse = safeParseRequestCookies(req, debug);
 	if (sessionParse.result === 'Exit') {
@@ -81,6 +82,7 @@ export async function entryPointHTMX<R extends Route>(
 	res: Response
 ) {
 	debug(logNow(), `${methodTypeOf(route)} ${route}...`);
+	debug(logNow(), 'Entry point HTMX');
 
 	const sessionParse = safeParseRequestCookies(req, debug);
 	if (sessionParse.result === 'Exit') {
@@ -111,6 +113,7 @@ export async function entryPointAction<R extends Route>(
 	res: Response
 ) {
 	debug(logNow(), `${methodTypeOf(route)} ${route}...`);
+	debug(logNow(), 'Entry point action');
 
 	const sessionParse = safeParseRequestCookies(req, debug);
 	if (sessionParse.result === 'Exit') {
@@ -126,23 +129,33 @@ export async function entryPointAction<R extends Route>(
 		return;
 	}
 
-	const inputParse = safeParseRequestBody(req, inputSchemaOf(route), debug);
-	if (inputParse.result === 'Exit') {
-		debug(logNow(), 'Data sent by client:');
-		console.log(JSON.stringify(req.body, null, 2));
-		res.status(401).send('Request input data (body) sent from client is malformed');
-		return;
-	}
-
-	// TODO: eventually remove type assertion
-	const input = inputParse.data as InputTypeOf<R>;
-
 	try {
-		const actionResult = await action({ user, session }, input);
-		if (outputSchemaOf(route) === EmptySchema) {
-			res.status(204).send();
+		const inputSchema = inputSchemaOf(route);
+		if (inputSchema !== EmptySchema) {
+			const inputParse = safeParseRequestBody(req, inputSchema, debug);
+			if (inputParse.result === 'Exit') {
+				debug(logNow(), 'Data sent by client:');
+				console.log(JSON.stringify(req.body, null, 2));
+				res.status(401).send('Request input data (body) sent from client is malformed');
+				return;
+			}
+
+			// TODO: eventually remove type assertion
+			const input = inputParse.data as InputTypeOf<R>;
+
+			const actionResult = await action({ user, session }, input);
+			if (outputSchemaOf(route) === EmptySchema) {
+				res.status(204).send();
+			} else {
+				res.status(200).send(actionResult);
+			}
 		} else {
-			res.status(200).send(actionResult);
+			const actionResult = await action({ user, session }, {} as InputTypeOf<R>);
+			if (outputSchemaOf(route) === EmptySchema) {
+				res.status(204).send();
+			} else {
+				res.status(200).send(actionResult);
+			}
 		}
 	} catch (e) {
 		handleError(e as Error, res);

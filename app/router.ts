@@ -81,7 +81,8 @@ import {
 	postChallengeSetResult
 } from '@server/challenges';
 
-// ROUTER CONFIGURATION STARTS HERE
+/* ************************************************************************** */
+// ROUTER OBJECT
 
 let router = express.Router();
 
@@ -112,6 +113,9 @@ async function defineEndpointAction<R extends Route>(
 		});
 	}
 }
+
+/* ************************************************************************** */
+// ROUTER CONFIGURATION STARTS HERE
 
 // serve all *.css files
 router.get(ROUTES.CSS_ALL, (req: Request, res: Response) => {
