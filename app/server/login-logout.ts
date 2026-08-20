@@ -45,7 +45,7 @@ export async function postUserLogin(req: Request, res: Response) {
 	debug(logNow(), `POST ${ROUTES.USER_LOGIN}`);
 
 	const loginParse = safeParseRequestBody(req, UserLoginInputSchema, debug);
-	if (loginParse.result === 'Exit') {
+	if (loginParse.result === 'bad') {
 		res.status(400).send('Could not parse input data from client.');
 		return;
 	}

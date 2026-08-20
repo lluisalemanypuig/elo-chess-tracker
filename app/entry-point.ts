@@ -50,7 +50,7 @@ export async function entryPointPage<R extends Route>(
 	debug(logNow(), 'Entry point page');
 
 	const sessionParse = safeParseRequestCookies(req, debug);
-	if (sessionParse.result === 'Exit') {
+	if (sessionParse.result === 'bad') {
 		res.status(401).send(`Failure to parse cookies.`);
 		return;
 	}
@@ -85,7 +85,7 @@ export async function entryPointHTMX<R extends Route>(
 	debug(logNow(), 'Entry point HTMX');
 
 	const sessionParse = safeParseRequestCookies(req, debug);
-	if (sessionParse.result === 'Exit') {
+	if (sessionParse.result === 'bad') {
 		res.status(401).send(`Failure to parse cookies.`);
 		return;
 	}
@@ -116,7 +116,7 @@ export async function entryPointAction<R extends Route>(
 	debug(logNow(), 'Entry point action');
 
 	const sessionParse = safeParseRequestCookies(req, debug);
-	if (sessionParse.result === 'Exit') {
+	if (sessionParse.result === 'bad') {
 		res.status(401).send(`Failure to parse cookies.`);
 		return;
 	}
@@ -133,7 +133,7 @@ export async function entryPointAction<R extends Route>(
 		const inputSchema = inputSchemaOf(route);
 		if (inputSchema !== EmptySchema) {
 			const inputParse = safeParseRequestBody(req, inputSchema, debug);
-			if (inputParse.result === 'Exit') {
+			if (inputParse.result === 'bad') {
 				debug(logNow(), 'Data sent by client:');
 				console.log(JSON.stringify(req.body, null, 2));
 				res.status(401).send('Request input data (body) sent from client is malformed');

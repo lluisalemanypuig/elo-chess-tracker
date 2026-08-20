@@ -32,7 +32,7 @@ import { logNow } from '@common/utils/time';
 import { AuthenticationInputSchema, authenticationInputSchemaToSessionId } from '@common/api/schemas/authentication';
 import { SessionId } from '@common//models/session-id';
 
-export type ParseResult = 'JsonDataNotProvided' | 'Error' | 'Success';
+export type ParseResult = 'jsonDataNotProvided' | 'error' | 'success';
 
 export type ParseSchemaResult<T> =
 	| {
@@ -77,11 +77,11 @@ export function parseSchema<S extends z.ZodTypeAny>(
 
 export type SafeParseSchemaResult<T> =
 	| {
-			result: 'Exit';
+			result: 'bad';
 			data: undefined;
 	  }
 	| {
-			result: 'Continue';
+			result: 'good';
 			data: T;
 	  };
 
@@ -89,12 +89,12 @@ export function safeParseRequestCookies(req: Request, debug: Debug.Debugger): Sa
 	const parse = parseSchema(req.cookies, AuthenticationInputSchema, debug);
 	if (parse.result !== 'Success') {
 		return {
-			result: 'Exit',
+			result: 'bad',
 			data: undefined
 		};
 	}
 	return {
-		result: 'Continue',
+		result: 'good',
 		data: authenticationInputSchemaToSessionId(parse.data)
 	};
 }
@@ -107,12 +107,12 @@ export function safeParseRequestBody<S extends z.ZodTypeAny>(
 	const parse = parseSchema(req.body, schemaObj, debug);
 	if (parse.result !== 'Success') {
 		return {
-			result: 'Exit',
+			result: 'bad',
 			data: undefined
 		};
 	}
 	return {
-		result: 'Continue',
+		result: 'good',
 		data: parse.data
 	};
 }
