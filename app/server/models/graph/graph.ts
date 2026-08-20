@@ -28,7 +28,7 @@ import { EdgeMetadata } from '@server/models/graph/edge-metadata';
 import { EdgeSchema, Edge } from '@server/models/graph/edge';
 import { searchByKey, whereShouldBeInsertedByKey } from '@server/utils/searching';
 import { isDefined, isNotDefined } from '@common/utils/is-defined';
-import { InternalError } from '@app/server/models/error-types/internal-error';
+import { InternalError } from '@server/models/error-types/internal-error';
 import { PlayerPrivateId } from '@common/models/player-id';
 import { GameResult, oppositeResult } from '@common/models/game-result';
 

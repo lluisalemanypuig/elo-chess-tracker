@@ -32,9 +32,90 @@ import { logNow } from '@common/utils/time';
 
 import { EnvironmentManager, getExecutionDirectory } from '@server/managers/environment-manager';
 import { ConfigurationManager } from '@server/managers/configuration-manager';
-import { ROUTES } from '@common/api/routes';
+import { Route, ROUTES } from '@common/api/routes';
+import { entryPointAction, entryPointHTMX, entryPointPage } from '@app/entry-point';
+import { UserSession } from '@server/models/user';
+import { InputTypeOf, OutputTypeOf } from '@common/api/types';
+import { methodTypeOf } from '@common/api/schemas-endpoints';
+
+import { postUserLogin, postUserLogout } from '@server/login-logout';
+import {
+	postQueryUserEdit,
+	getQueryUserList,
+	getQueryUserHome,
+	postQueryUserRanking,
+	getQueryHtmlUserList
+} from '@server/query-user';
+import {
+	getQueryChallengeReceived,
+	getQueryChallengeSent,
+	getQueryChallengePendingResult,
+	getQueryChallengeConfirmResultOther,
+	getQueryChallengeConfirmResultSelf
+} from '@server/query-challenges';
+import { getQueryHtmlTimeControls, getQueryHtmlTimeControlsUnique } from '@server/query-time-control';
+import { postQueryGraphFull, postQueryGraphOwn } from '@server/query-graphs';
+import { postQueryGameListOwn, postQueryGameListAll } from '@server/query-games';
+import { postUserCreate, getPageUserCreate } from '@server/users-new';
+import { postUserEdit, getPageUserEdit } from '@server/users-edit';
+import { getPageUserPasswordChange, postUserPasswordChange } from '@server/users-password-change';
+import { getPageUserRanking } from '@server/users-ranking';
+import {
+	getPageGameListAll,
+	getPageGameListOwn,
+	getPageGameCreate,
+	postGameCreate,
+	postGameDelete,
+	postGameEditTitle,
+	postGameEditResult,
+	postRecalculateRatings
+} from '@server/games';
+import { getPageGraphOwn, getPageGraphFull, postRecalculateGraphs } from '@server/graphs';
+import {
+	getPageChallenge,
+	postChallengeAccept,
+	postChallengeAgree,
+	postChallengeDecline,
+	postChallengeDisagree,
+	postChallengeSend,
+	postChallengeSetResult
+} from '@server/challenges';
+
+/* ************************************************************************** */
+// ROUTER OBJECT
 
 let router = express.Router();
+
+async function defineEndpointPage(route: Route, action: (u: UserSession) => Promise<string>) {
+	router.get(route, (req: Request, res: Response) => {
+		return entryPointPage(route, action, req, res);
+	});
+}
+
+async function defineEndpointHTMX<R extends Route>(route: R, action: (u: UserSession) => Promise<string>) {
+	router.post(route, (req: Request, res: Response) => {
+		return entryPointHTMX(route, action, req, res);
+	});
+}
+
+async function defineEndpointAction<R extends Route>(
+	route: R,
+	action: (u: UserSession, data: InputTypeOf<R>) => Promise<OutputTypeOf<R>>
+) {
+	const method = methodTypeOf(route);
+	if (method === 'POST') {
+		router.post(route, (req: Request, res: Response) => {
+			entryPointAction(route, action, req, res);
+		});
+	} else if (method === 'GET') {
+		router.get(route, (req: Request, res: Response) => {
+			entryPointAction(route, action, req, res);
+		});
+	}
+}
+
+/* ************************************************************************** */
+// ROUTER CONFIGURATION STARTS HERE
 
 // serve all *.css files
 router.get(ROUTES.CSS_ALL, (req: Request, res: Response) => {
@@ -116,7 +197,7 @@ router.get(ROUTES.TITLE_HOME_PAGE, (_req: Request, res: Response) => {
 // route the login page and the home page
 import { getPageHome, getPageLogin } from '@server/home';
 router.get(ROUTES.ROOT, getPageLogin);
-router.get(ROUTES.HOME, getPageHome);
+defineEndpointPage(ROUTES.HOME, getPageHome);
 
 // serve all javascript files!
 router.get(ROUTES.JS_ALL, (req: Request, res: Response) => {
@@ -132,120 +213,67 @@ router.get(ROUTES.JS_ALL, (req: Request, res: Response) => {
 	res.sendFile(filepath);
 });
 
-import {
-	postQueryUserEdit,
-	getQueryUserList,
-	getQueryUserHome,
-	postQueryUserRanking,
-	getQueryHtmlUserList
-} from '@server/query-user';
-router.get(ROUTES.QUERY_USER_LIST, getQueryUserList);
-router.get(ROUTES.QUERY_HTML_USER_LIST, getQueryHtmlUserList);
-router.get(ROUTES.QUERY_USER_HOME, getQueryUserHome);
-
-// these queries need to be 'post'-ed because we
-// need to send (post) information to the server
-router.post(ROUTES.QUERY_USER_EDIT, postQueryUserEdit);
-router.post(ROUTES.QUERY_USER_RANKING, postQueryUserRanking);
+defineEndpointAction(ROUTES.QUERY_USER_HOME, getQueryUserHome);
+defineEndpointAction(ROUTES.QUERY_USER_LIST, getQueryUserList);
+defineEndpointHTMX(ROUTES.QUERY_HTML_USER_LIST, getQueryHtmlUserList);
+defineEndpointAction(ROUTES.QUERY_USER_EDIT, postQueryUserEdit);
+defineEndpointAction(ROUTES.QUERY_USER_RANKING, postQueryUserRanking);
 
 // sending, receiving, accepting, setting result of challenges
-import {
-	getQueryChallengeReceived,
-	getQueryChallengeSent,
-	getQueryChallengePendingResult,
-	getQueryChallengeConfirmResultOther,
-	getQueryChallengeConfirmResultSelf
-} from '@server/query-challenges';
-router.get(ROUTES.QUERY_CHALLENGE_RECEIVED, getQueryChallengeReceived);
-router.get(ROUTES.QUERY_CHALLENGE_SENT, getQueryChallengeSent);
-router.get(ROUTES.QUERY_CHALLENGE_PENDING_RESULT, getQueryChallengePendingResult);
-router.get(ROUTES.QUERY_CHALLENGE_CONFIRM_RESULT_OTHER, getQueryChallengeConfirmResultOther);
-router.get(ROUTES.QUERY_CHALLENGE_CONFIRM_RESULT_SELF, getQueryChallengeConfirmResultSelf);
+defineEndpointAction(ROUTES.QUERY_CHALLENGE_RECEIVED, getQueryChallengeReceived);
+defineEndpointAction(ROUTES.QUERY_CHALLENGE_SENT, getQueryChallengeSent);
+defineEndpointAction(ROUTES.QUERY_CHALLENGE_PENDING_RESULT, getQueryChallengePendingResult);
+defineEndpointAction(ROUTES.QUERY_CHALLENGE_CONFIRM_RESULT_OTHER, getQueryChallengeConfirmResultOther);
+defineEndpointAction(ROUTES.QUERY_CHALLENGE_CONFIRM_RESULT_SELF, getQueryChallengeConfirmResultSelf);
 
-import { postQueryGameListOwn, postQueryGameListAll } from '@server/query-games';
-router.post(ROUTES.QUERY_GAME_LIST_OWN, postQueryGameListOwn);
-router.post(ROUTES.QUERY_GAME_LIST_ALL, postQueryGameListAll);
+defineEndpointAction(ROUTES.QUERY_GAME_LIST_OWN, postQueryGameListOwn);
+defineEndpointAction(ROUTES.QUERY_GAME_LIST_ALL, postQueryGameListAll);
 
-import { postQueryGraphFull, postQueryGraphOwn } from '@server/query-graphs';
-router.post(ROUTES.QUERY_GRAPH_OWN, postQueryGraphOwn);
-router.post(ROUTES.QUERY_GRAPH_FULL, postQueryGraphFull);
+defineEndpointAction(ROUTES.QUERY_GRAPH_OWN, postQueryGraphOwn);
+defineEndpointAction(ROUTES.QUERY_GRAPH_FULL, postQueryGraphFull);
 
 // query time controls
-import { getQueryHtmlTimeControls, getQueryHtmlTimeControlsUnique } from '@server/query-time-control';
-router.get(ROUTES.QUERY_HTML_TIME_CONTROLS, getQueryHtmlTimeControls);
-router.get(ROUTES.QUERY_HTML_TIME_CONTROLS_UNIQUE, getQueryHtmlTimeControlsUnique);
+defineEndpointHTMX(ROUTES.QUERY_HTML_TIME_CONTROLS, getQueryHtmlTimeControls);
+defineEndpointHTMX(ROUTES.QUERY_HTML_TIME_CONTROLS_UNIQUE, getQueryHtmlTimeControlsUnique);
 
 // user login and logout
-import { postUserLogin, postUserLogout } from '@server/login-logout';
 router.post(ROUTES.USER_LOGIN, postUserLogin);
-router.post(ROUTES.USER_LOGOUT, postUserLogout);
+defineEndpointAction(ROUTES.USER_LOGOUT, postUserLogout);
 
-// creation of a new user
-import { postUserCreate, getPageUserCreate } from '@server/users-new';
-router.get(ROUTES.PAGE_USER_CREATE, getPageUserCreate);
-router.post(ROUTES.USER_CREATE, postUserCreate);
-
-// edition of an existing user
-import { postUserEdit, getPageUserEdit } from '@server/users-edit';
-router.get(ROUTES.PAGE_USER_EDIT, getPageUserEdit);
-router.post(ROUTES.USER_EDIT, postUserEdit);
+// user management
+defineEndpointPage(ROUTES.PAGE_USER_CREATE, getPageUserCreate);
+defineEndpointAction(ROUTES.USER_CREATE, postUserCreate);
+defineEndpointPage(ROUTES.PAGE_USER_EDIT, getPageUserEdit);
+defineEndpointAction(ROUTES.USER_EDIT, postUserEdit);
 
 // change of password
-import { getPageUserPasswordChange, postUserPasswordChange } from '@server/users-password-change';
-router.get(ROUTES.PAGE_USER_PASSWORD_CHANGE, getPageUserPasswordChange);
-router.post(ROUTES.USER_PASSWORD_CHANGE, postUserPasswordChange);
+defineEndpointPage(ROUTES.PAGE_USER_PASSWORD_CHANGE, getPageUserPasswordChange);
+defineEndpointAction(ROUTES.USER_PASSWORD_CHANGE, postUserPasswordChange);
 
 // retrieve ranking of players
-import { getPageUserRanking } from '@server/users-ranking';
-router.get(ROUTES.PAGE_USER_RANKING, getPageUserRanking);
+defineEndpointPage(ROUTES.PAGE_USER_RANKING, getPageUserRanking);
 
-// create a new game
-import { getPageGameCreate, postGameCreate } from '@server/games';
-router.get(ROUTES.PAGE_GAME_CREATE, getPageGameCreate);
-router.post(ROUTES.GAME_CREATE, postGameCreate);
-
-// delete a game
-import { postGameDelete } from '@server/games';
-router.post(ROUTES.GAME_DELETE, postGameDelete);
-
-// edit a game's title
-import { postGameEditTitle } from '@server/games';
-router.post(ROUTES.GAME_EDIT_TITLE, postGameEditTitle);
-
-// editing a game's result
-import { postGameEditResult } from '@server/games';
-router.post(ROUTES.GAME_EDIT_RESULT, postGameEditResult);
-
-// retrieve list of games
-import { getPageGameListAll, getPageGameListOwn } from '@server/games';
-router.get(ROUTES.PAGE_GAME_LIST_OWN, getPageGameListOwn);
-router.get(ROUTES.PAGE_GAME_LIST_ALL, getPageGameListAll);
-
-// retrieve graphs of the webpage
-import { getPageGraphOwn, getPageGraphFull } from '@server/graphs';
-router.get(ROUTES.PAGE_GRAPH_OWN, getPageGraphOwn);
-router.get(ROUTES.PAGE_GRAPH_FULL, getPageGraphFull);
+defineEndpointPage(ROUTES.PAGE_GAME_LIST_OWN, getPageGameListOwn);
+defineEndpointPage(ROUTES.PAGE_GAME_LIST_ALL, getPageGameListAll);
+defineEndpointPage(ROUTES.PAGE_GAME_CREATE, getPageGameCreate);
+defineEndpointAction(ROUTES.GAME_CREATE, postGameCreate);
+defineEndpointAction(ROUTES.GAME_EDIT_TITLE, postGameEditTitle);
+defineEndpointAction(ROUTES.GAME_EDIT_RESULT, postGameEditResult);
+defineEndpointAction(ROUTES.GAME_DELETE, postGameDelete);
+defineEndpointAction(ROUTES.RECALCULATE_RATINGS, postRecalculateRatings);
 
 // challenges management
-import { getPageChallenge } from '@server/challenges';
-router.get(ROUTES.PAGE_CHALLENGE, getPageChallenge);
-import { postChallengeSend } from '@server/challenges';
-router.post(ROUTES.CHALLENGE_SEND, postChallengeSend);
-import { postChallengeAccept, postChallengeDecline } from '@server/challenges';
-router.post(ROUTES.CHALLENGE_ACCEPT, postChallengeAccept);
-router.post(ROUTES.CHALLENGE_DECLINE, postChallengeDecline);
-import { postChallengeSetResult } from '@server/challenges';
-router.post(ROUTES.CHALLENGE_SET_RESULT, postChallengeSetResult);
-import { postChallengeAgree, postChallengeDisagree } from '@server/challenges';
-router.post(ROUTES.CHALLENGE_AGREE, postChallengeAgree);
-router.post(ROUTES.CHALLENGE_DISAGREE, postChallengeDisagree);
+defineEndpointPage(ROUTES.PAGE_CHALLENGE, getPageChallenge);
+defineEndpointAction(ROUTES.CHALLENGE_SEND, postChallengeSend);
+defineEndpointAction(ROUTES.CHALLENGE_ACCEPT, postChallengeAccept);
+defineEndpointAction(ROUTES.CHALLENGE_DECLINE, postChallengeDecline);
+defineEndpointAction(ROUTES.CHALLENGE_SET_RESULT, postChallengeSetResult);
+defineEndpointAction(ROUTES.CHALLENGE_AGREE, postChallengeAgree);
+defineEndpointAction(ROUTES.CHALLENGE_DISAGREE, postChallengeDisagree);
 
-// recalculation of all Elo ratings
-import { postRecalculateRatings } from '@server/games';
-router.post(ROUTES.RECALCULATE_RATINGS, postRecalculateRatings);
-
-// recalculation of all graphs
-import { postRecalculateGraphs } from '@server/graphs';
-router.post(ROUTES.RECALCULATE_GRAPHS, postRecalculateGraphs);
+// graphs management
+defineEndpointPage(ROUTES.PAGE_GRAPH_OWN, getPageGraphOwn);
+defineEndpointPage(ROUTES.PAGE_GRAPH_FULL, getPageGraphFull);
+defineEndpointAction(ROUTES.RECALCULATE_GRAPHS, postRecalculateGraphs);
 
 export { router };

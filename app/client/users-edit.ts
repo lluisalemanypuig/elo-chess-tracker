@@ -96,10 +96,10 @@ async function submitWasClicked(_event: any) {
 	}
 
 	const response = await serverCall(ROUTES.USER_EDIT, {
-		u: Number(userRid) as PlayerPublicId,
-		f: toUserGivenName(firstName),
-		l: toUserGivenName(lastName),
-		r: selectedRoles
+		publicId: Number(userRid) as PlayerPublicId,
+		firstName: toUserGivenName(firstName),
+		lastName: toUserGivenName(lastName),
+		roles: selectedRoles
 	});
 	if (response.status === 'Error') {
 		alert(messageFromResponse(response));

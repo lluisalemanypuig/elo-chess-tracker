@@ -40,7 +40,7 @@ import { logNow } from '@common/utils/time';
 import { UserThin } from '@common/models/user-thin';
 import { isNotDefined } from '@common/utils/is-defined';
 import { TimeControlId } from '@common/models/time-control';
-import { canUserEdit } from '@server/managers/user-relationships';
+import { canUserEditUser } from '@server/managers/user-relationships';
 import { getRoleActionName } from '@common/models/user-action';
 import { sessionUserDeleteAll } from '@server/managers/session';
 import { SessionId } from '@common/models/session-id';
@@ -67,7 +67,7 @@ interface UserEdit {
 export function userEdit(editor: User, edited: User, { firstName, lastName, roles }: UserEdit) {
 	debug(logNow(), `User '${editor.username}' is trying to modify user '${edited.username}'`);
 
-	if (!canUserEdit(editor, edited)) {
+	if (!canUserEditUser(editor, edited)) {
 		debug(logNow(), `User '${editor.username}' cannot modify user '${edited.username}'`);
 		throw new PublicError('You do not have enough permissions to edit this user.');
 	}
@@ -210,7 +210,6 @@ export function userSelfChangePassword(user: User, { session, oldPassword, newPa
 	if (!isPasswordCorrect) {
 		debug(logNow(), `    Password for '${user.username}' is incorrect`);
 		throw new PublicError('Old password is not correct.');
-		return;
 	}
 
 	// delete all session ids of this user

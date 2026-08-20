@@ -32,11 +32,11 @@ import { UserGivenNameSchema } from '@common/models/user-given-name';
 
 export const UserCreateInputSchema = z
 	.object({
-		u: PlayerPrivateIdSchema,
-		fn: UserGivenNameSchema,
-		ln: UserGivenNameSchema,
+		username: PlayerPrivateIdSchema,
+		firstName: UserGivenNameSchema,
+		lastName: UserGivenNameSchema,
 		password: z.string(),
-		r: UserRoleArraySchema
+		roles: UserRoleArraySchema
 	})
 	.strict();
 
@@ -46,10 +46,10 @@ export type UserCreateInput = z.infer<typeof UserCreateInputSchema>;
 
 export const UserEditInputSchema = z
 	.object({
-		u: PlayerPublicIdSchema,
-		f: UserGivenNameSchema,
-		l: UserGivenNameSchema,
-		r: UserRoleArraySchema
+		publicId: PlayerPublicIdSchema,
+		firstName: UserGivenNameSchema,
+		lastName: UserGivenNameSchema,
+		roles: UserRoleArraySchema
 	})
 	.strict();
 

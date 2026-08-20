@@ -25,7 +25,7 @@ Contact:
 
 import { z } from 'zod';
 import { EdgeMetadataSchema, EdgeMetadata } from '@server/models/graph/edge-metadata';
-import { InternalError } from '@app/server/models/error-types/internal-error';
+import { InternalError } from '@server/models/error-types/internal-error';
 import { PlayerPrivateId, PlayerPrivateIdSchema } from '@common/models/player-id';
 
 export const EdgeSchema = z

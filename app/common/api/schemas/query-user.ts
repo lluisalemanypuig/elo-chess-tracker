@@ -34,11 +34,11 @@ import { UserGivenNameSchema } from '@common/models/user-given-name';
 
 // ROUTES.QUERY_USER_LIST
 
-export const QueryUserListOutputSchema = UserThinSchema;
+export const QueryUserListOutputSchema = z.array(UserThinSchema);
 
 export type QueryUserListOutput = z.infer<typeof QueryUserListOutputSchema>;
 
-// ROUTES.QUERY_USER_LIST
+// ROUTES.QUERY_USER_EDIT
 
 export const QueryUserEditInputSchema = z
 	.object({

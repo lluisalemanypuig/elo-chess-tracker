@@ -31,10 +31,11 @@ import { logNow } from '@common/utils/time';
 import { isUserLoggedIn } from '@server/managers/session';
 import { ConfigurationManager } from '@server/managers/configuration-manager';
 import { getExecutionDirectory } from '@server/managers/environment-manager';
-import { isDefined, isNotDefined } from '@common/utils/is-defined';
+import { isDefined } from '@common/utils/is-defined';
 import { ROUTES } from '@common/api/routes';
-import { safeParseRequestCookies, parseSchema } from '@server/utils/schemas';
+import { parseSchema } from '@server/utils/schemas';
 import { AuthenticationInputSchema, authenticationInputSchemaToSessionId } from '@common/api/schemas/authentication';
+import { UserSession } from '@server/models/user';
 
 export async function getPageLogin(req: Request, res: Response) {
 	let sendHome: boolean;
@@ -76,27 +77,7 @@ export async function getPageLogin(req: Request, res: Response) {
 	}
 }
 
-export async function getPageHome(req: Request, res: Response) {
+export async function getPageHome(_u: UserSession) {
 	debug(logNow(), `GET ${ROUTES.HOME}`);
-
-	const sessionParse = safeParseRequestCookies(req, res, debug);
-	if (sessionParse.result === 'Exit') {
-		debug(logNow(), req.cookies);
-		debug(logNow(), 'asdf');
-		return;
-	}
-	const session = sessionParse.data;
-	const r = isUserLoggedIn(session);
-	if (isNotDefined(r[2])) {
-		debug(logNow(), `    User ${session.publicId} is not logged in.`);
-		res.status(401).send(r[1]);
-		return;
-	}
-
-	debug(logNow(), `    User ${session.publicId} is logged in. Access granted.`);
-	res.status(200);
-	if (ConfigurationManager.shouldCacheData()) {
-		res.setHeader('Cache-Control', 'public, max-age=864000, immutable');
-	}
-	res.sendFile(`${getExecutionDirectory()}/html/home.html`);
+	return 'html/home.html';
 }

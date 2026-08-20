@@ -107,10 +107,10 @@ async function submitNewUserClicked(_event: any) {
 	}
 
 	const response = await serverCall(ROUTES.USER_CREATE, {
-		u: toPlayerPrivateId(username),
-		fn: toUserGivenName(firstname),
-		ln: toUserGivenName(lastname),
-		r: selectedRoles,
+		username: toPlayerPrivateId(username),
+		firstName: toUserGivenName(firstname),
+		lastName: toUserGivenName(lastname),
+		roles: selectedRoles,
 		password: password
 	});
 	if (response.status === 'Error') {

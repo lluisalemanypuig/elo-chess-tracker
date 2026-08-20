@@ -49,7 +49,7 @@ import { User } from '@server/models/user';
 import { toUserGivenName } from '@common/models/user-given-name';
 import { GameId, toGameId } from '@common/models/game-id';
 import { Game } from '@server/models/game';
-import { GamesManager } from '@app/server/managers/games-manager';
+import { GamesManager } from '@server/managers/games-manager';
 
 const Classical = toTimeControlId('Classical');
 const Classical90p30 = toTimeControlName('Classical (90 + 30)');

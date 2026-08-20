@@ -37,13 +37,16 @@ import { UsersManager } from '@server/managers/users-manager';
 import { isNotDefined } from '@common/utils/is-defined';
 import { UserLoginInputSchema } from '@common/api/schemas/login-logout';
 import { ROUTES } from '@common/api/routes';
-import { safeParseRequestBody, safeParseRequestCookies } from '@server/utils/schemas';
+import { safeParseRequestBody } from '@server/utils/schemas';
+import { UserSession } from '@server/models/user';
+import { Empty } from '@common/api/schemas-endpoints';
 
 export async function postUserLogin(req: Request, res: Response) {
 	debug(logNow(), `POST ${ROUTES.USER_LOGIN}`);
 
-	const loginParse = safeParseRequestBody(req, UserLoginInputSchema, res, debug);
-	if (loginParse.result === 'Exit') {
+	const loginParse = safeParseRequestBody(req, UserLoginInputSchema, debug);
+	if (loginParse.result === 'bad') {
+		res.status(400).send('Could not parse input data from client.');
 		return;
 	}
 
@@ -87,14 +90,8 @@ export async function postUserLogin(req: Request, res: Response) {
 	});
 }
 
-export async function postUserLogout(req: Request, res: Response) {
-	debug(logNow(), `POST ${ROUTES.USER_LOGOUT}`);
-
-	const sessionParse = safeParseRequestCookies(req, res, debug);
-	if (sessionParse.result === 'Exit') {
-		return;
-	}
-	const session = sessionParse.data;
+export async function postUserLogout({ user: _u, session }: UserSession, _i: Empty) {
+	debug(logNow(), 'function postUserLogout...');
 
 	debug(logNow(), `    Cookie:`);
 	debug(logNow(), `        Public Id:   '${session.publicId}'`);
@@ -111,7 +108,7 @@ export async function postUserLogout(req: Request, res: Response) {
 		sessionIdDelete(session);
 		debug(logNow(), `        Deleted.`);
 	}
-	res.status(200).send({
+	return {
 		cookies: [emptySessionIdCookie(SessionIdTokenFieldName), emptySessionIdCookie(SessionIdPublicIdFieldName)]
-	});
+	};
 }
