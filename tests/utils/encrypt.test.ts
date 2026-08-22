@@ -24,13 +24,7 @@ Contact:
 */
 
 import { PlayerPrivateId, toPlayerPrivateId } from '@common/models/player-id';
-import {
-	decryptMessage,
-	encryptMessage,
-	encryptPasswordForUser,
-	isPasswordOfUserCorrect,
-	normalizeString
-} from '@server/utils/encrypt';
+import { encryptPasswordForUser, isPasswordOfUserCorrect, normalizeString } from '@server/utils/encrypt';
 
 describe('Password normalization', () => {
 	test('1', () => {
@@ -61,85 +55,7 @@ describe('Password normalization', () => {
 	});
 });
 
-function check_decrypt_good_password(msg: string, pass: string) {
-	const enc = encryptMessage(msg, pass);
-	expect(decryptMessage(enc, pass)).toBe(msg);
-}
-
-describe('Encryption and decryption of messages with a (correct) plain password', () => {
-	test('1', () => {
-		check_decrypt_good_password('', 'admin');
-	});
-
-	test('2', () => {
-		check_decrypt_good_password('as', 'admin');
-	});
-
-	test('3', () => {
-		check_decrypt_good_password('asdf fqrfwrf', 'admin');
-	});
-
-	test('4', () => {
-		check_decrypt_good_password('QW  2424guhgnj gk rfr', 'admin');
-	});
-
-	test('5', () => {
-		check_decrypt_good_password('admin', '星');
-	});
-
-	test('6', () => {
-		check_decrypt_good_password('山田', '星');
-	});
-
-	test('7', () => {
-		check_decrypt_good_password('山田', '山田');
-	});
-
-	test('8', () => {
-		check_decrypt_good_password('山田', 'ç私çç€猫€€a');
-	});
-});
-
-function check_decrypt_wrong_password(msg: string, correctPassword: string, wrongPassword: string) {
-	const enc = encryptMessage(msg, correctPassword);
-	expect(decryptMessage(enc, wrongPassword)).not.toBe(msg);
-}
-
-describe('Encryption and decryption with a (wrong) plain password', () => {
-	test('1', () => {
-		const enc1 = encryptMessage('', 'admin');
-
-		expect(decryptMessage(enc1, 'admin!')).toBe('');
-		expect(decryptMessage(enc1, 'admi')).toBe('');
-	});
-
-	test('2', () => {
-		check_decrypt_wrong_password('a', 'admin', 'admin!');
-		check_decrypt_wrong_password('a', 'admin', 'admi');
-	});
-
-	test('3', () => {
-		check_decrypt_wrong_password('as', 'admin', 'admin!');
-		check_decrypt_wrong_password('as', 'admin', 'admi');
-	});
-
-	test('4', () => {
-		check_decrypt_wrong_password('asdf fqrfwrf', 'admin', 'admin!');
-		check_decrypt_wrong_password('asdf fqrfwrf', 'admin', 'admi');
-	});
-
-	test('5', () => {
-		check_decrypt_wrong_password('QW  2424guhgnj gk rfr', 'admin', 'admin!');
-		check_decrypt_wrong_password('QW  2424guhgnj gk rfr', 'admin', 'admi');
-	});
-
-	test('5', () => {
-		check_decrypt_wrong_password('QW  2424guhgnj gk rfr', 'admin', '山田');
-		check_decrypt_wrong_password('QW  2424guhgnj gk rfr', 'admin', '星');
-	});
-});
-
-function check_encrypt_user_password(user: PlayerPrivateId, pass: string) {
+function checkEncryptUserPassword(user: PlayerPrivateId, pass: string) {
 	const [encrypted, iv] = encryptPasswordForUser(user, pass);
 	expect(isPasswordOfUserCorrect(user, pass, { encrypted, iv })).toBe(true);
 }
@@ -148,27 +64,27 @@ describe('Encrypt password for users', () => {
 	const admin = toPlayerPrivateId('admin');
 
 	test('admin - pass', () => {
-		check_encrypt_user_password(admin, 'pass');
+		checkEncryptUserPassword(admin, 'pass');
 	});
 
 	test('admin - admin', () => {
-		check_encrypt_user_password(admin, 'admin');
+		checkEncryptUserPassword(admin, 'admin');
 	});
 
 	test('admin - QQQQQQQ', () => {
-		check_encrypt_user_password(admin, 'QQQQQQQ');
+		checkEncryptUserPassword(admin, 'QQQQQQQ');
 	});
 
 	test('admin - Q', () => {
-		check_encrypt_user_password(admin, 'Q');
+		checkEncryptUserPassword(admin, 'Q');
 	});
 
 	test('admin - ·', () => {
-		check_encrypt_user_password(admin, '·');
+		checkEncryptUserPassword(admin, '·');
 	});
 
 	test('admin - a·', () => {
-		check_encrypt_user_password(admin, 'a·');
+		checkEncryptUserPassword(admin, 'a·');
 	});
 
 	test('Several users', () => {
@@ -176,28 +92,66 @@ describe('Encrypt password for users', () => {
 			toPlayerPrivateId(s)
 		);
 		for (const user of user_array) {
-			check_encrypt_user_password(user, 'QQQQQQQ');
+			checkEncryptUserPassword(user, 'QQQQQQQ');
 		}
 	});
 
-	const yamada = toPlayerPrivateId('山田');
 	test('Use Kanji - 1', () => {
-		check_encrypt_user_password(yamada, 'QQQQQQQ');
+		checkEncryptUserPassword(admin, 'QQQQQQQ');
+		checkEncryptUserPassword(admin, 'QQQ Q Q QQ');
+		checkEncryptUserPassword(admin, ' QQQ QQQQ ');
 	});
 
 	test('Use Kanji - 2', () => {
-		check_encrypt_user_password(admin, '星');
+		checkEncryptUserPassword(admin, '星');
+		checkEncryptUserPassword(admin, ' 星');
+		checkEncryptUserPassword(admin, '星 ');
+		checkEncryptUserPassword(admin, ' 星 ');
 	});
 
 	test('Use Kanji - 3', () => {
-		check_encrypt_user_password(admin, '山田');
+		checkEncryptUserPassword(admin, '山田');
+		checkEncryptUserPassword(admin, '山 田');
+		checkEncryptUserPassword(admin, ' 山 田 ');
 	});
 
 	test('Use Kanji - 4', () => {
-		check_encrypt_user_password(admin, '私は一番有名な人です');
+		checkEncryptUserPassword(admin, '私は一番有名な人です');
+		checkEncryptUserPassword(admin, '私は 一番有 名な人で す');
+		checkEncryptUserPassword(admin, '私 は 一 番 有 名 な 人 で す');
 	});
 
 	test('Use Kanji - 5', () => {
-		check_encrypt_user_password(admin, '私');
+		checkEncryptUserPassword(admin, '私');
+	});
+
+	const yamada = toPlayerPrivateId('山田');
+	test('Use Kanji - 6', () => {
+		checkEncryptUserPassword(yamada, 'QQQQQQQ');
+		checkEncryptUserPassword(yamada, 'QQQ Q Q QQ');
+		checkEncryptUserPassword(yamada, ' QQQ QQQQ ');
+	});
+
+	test('Use Kanji - 7', () => {
+		checkEncryptUserPassword(yamada, '星');
+		checkEncryptUserPassword(yamada, ' 星');
+		checkEncryptUserPassword(yamada, '星 ');
+		checkEncryptUserPassword(yamada, ' 星 ');
+	});
+
+	test('Use Kanji - 8', () => {
+		checkEncryptUserPassword(yamada, '山田');
+		checkEncryptUserPassword(yamada, '山 田');
+		checkEncryptUserPassword(yamada, ' 山 田 ');
+	});
+
+	test('Use Kanji - 9', () => {
+		checkEncryptUserPassword(yamada, '私は一番有名な人です');
+		checkEncryptUserPassword(yamada, '私は 一番有 名な人で す');
+		checkEncryptUserPassword(yamada, '私 は 一 番 有 名 な 人 で す');
+	});
+
+	test('Use Kanji - 10', () => {
+		checkEncryptUserPassword(yamada, '私');
 	});
 });
