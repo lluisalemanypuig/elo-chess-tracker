@@ -66,8 +66,8 @@ export function normalizeString(str: string): string {
 	for (let i = currentLength; i < nextLength; ++i) {
 		// NOTE: this index cannot be random!
 		const idx = (i - currentLength) % allowedSymbols.length;
-		const randChar = allowedSymbols.charAt(idx);
-		newPassword += randChar;
+		const nextChar = allowedSymbols.charAt(idx);
+		newPassword += nextChar;
 	}
 
 	const newLength = newPassword.length;
@@ -76,25 +76,6 @@ export function normalizeString(str: string): string {
 	}
 
 	return newPassword;
-}
-
-// Encrypts 'plainMsg' using password 'pwd'
-export function encryptMessage(plainMsg: string, pwd: string): string {
-	return CryptoJS.AES.encrypt(plainMsg, pwd).toString();
-}
-
-// Decrypts 'encryptedMsg' using password 'pwd'
-function decryptBytes(encryptedMsg: string, pwd: string) {
-	return CryptoJS.AES.decrypt(encryptedMsg, pwd);
-}
-
-// Decrypts 'encryptedMsg' using password 'pwd'
-export function decryptMessage(encryptedMsg: string, pwd: string): string {
-	try {
-		return decryptBytes(encryptedMsg, pwd).toString(CryptoJS.enc.Utf8);
-	} catch (error) {
-		throw new InternalError('Could not decrypt message');
-	}
 }
 
 /**
@@ -108,7 +89,6 @@ export function decryptMessage(encryptedMsg: string, pwd: string): string {
  */
 export function encryptPasswordForUser(username: PlayerPrivateId, password: string): [string, string] {
 	const normalizedPassword = normalizeString(password);
-	console.log(`normalizedPassword: ${normalizedPassword}`);
 	const keyUsedToEncrypt = CryptoJS.SHA256(normalizedPassword);
 
 	const actualPasswordToBeEncrypted = interleaveStrings(username, password);
@@ -135,13 +115,16 @@ export function decryptPasswordForUser(password: string, { encrypted, iv }: Pass
 	const normalizedPassword = normalizeString(password);
 	const keyUsedToDecrypt = CryptoJS.SHA256(normalizedPassword);
 
+	const decrypted = CryptoJS.AES.decrypt(encrypted, keyUsedToDecrypt, {
+		iv: CryptoJS.enc.Base64.parse(iv),
+		mode: CryptoJS.mode.CBC,
+		padding: CryptoJS.pad.Pkcs7
+	});
+
 	try {
-		return CryptoJS.AES.decrypt(encrypted, keyUsedToDecrypt, {
-			iv: CryptoJS.enc.Base64.parse(iv),
-			mode: CryptoJS.mode.CBC,
-			padding: CryptoJS.pad.Pkcs7
-		}).toString(CryptoJS.enc.Utf8);
+		return decrypted.toString(CryptoJS.enc.Utf8);
 	} catch (e) {
+		// the data used to decrypt the 'encrypted' password is wrong
 		return '';
 	}
 }
