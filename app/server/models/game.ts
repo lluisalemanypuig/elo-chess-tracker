@@ -23,13 +23,13 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { TimeControlId, TimeControlName } from '@common/models/time-control';
-import { DateFull } from '@common/utils/time';
-import { PlayerPrivateId } from '@common/models/player-id';
+import { GameEditLog } from '@common/models/game-edit-history';
 import { GameId } from '@common/models/game-id';
 import { GameResult } from '@common/models/game-result';
+import { PlayerPrivateId } from '@common/models/player-id';
+import { TimeControlId, TimeControlName } from '@common/models/time-control';
+import { DateFull } from '@common/utils/time';
 import { Rating } from '@server/models/rating-framework/rating';
-import { GameEditLog } from '@common/models/game-edit-history';
 
 export const GameKeys = [
 	'id',
@@ -42,7 +42,7 @@ export const GameKeys = [
 	'timeControlId',
 	'timeControlName',
 	'when',
-	'history'
+	'history',
 ];
 
 /**
@@ -93,7 +93,7 @@ export class Game {
 		timeControlId: TimeControlId,
 		timeControlName: TimeControlName,
 		when: DateFull,
-		history: GameEditLog[]
+		history: GameEditLog[],
 	) {
 		this.id = id;
 		this.title = title;

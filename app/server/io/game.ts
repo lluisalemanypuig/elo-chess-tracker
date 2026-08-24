@@ -24,9 +24,9 @@ Contact:
 */
 
 import { GameResultSchema } from '@common/models/game-result';
-import { Game, GameKeys } from '@server/models/game';
 import { readJsonArrayString, readJsonObjectString } from '@server/io/generic';
 import { RatingSystemManager } from '@server/managers/rating-system-manager';
+import { Game, GameKeys } from '@server/models/game';
 
 /**
  * @brief Creates a Player object from a plain json object.
@@ -51,7 +51,7 @@ export function gameFromJson(json: any): Game | null {
 		json.timeControlId,
 		json.timeControlName,
 		json.when,
-		json.history
+		json.history,
 	);
 }
 

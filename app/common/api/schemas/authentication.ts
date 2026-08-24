@@ -23,8 +23,8 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { z } from 'zod';
 import { SessionIdSchema } from '@common/models/session-id';
+import { z } from 'zod';
 
 export const AuthenticationInputSchema = SessionIdSchema;
 

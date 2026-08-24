@@ -12,7 +12,7 @@ const filesToBundle = [
 	'challenges.js',
 	'games-list.js',
 	'games-create.js',
-	'graph-display.js'
+	'graph-display.js',
 ];
 
 for (const file of filesToBundle) {
@@ -22,7 +22,7 @@ for (const file of filesToBundle) {
 		bundle: true,
 		outfile: 'js/bdl--' + file,
 		format: 'esm',
-		minify: true
+		minify: true,
 	});
 }
 

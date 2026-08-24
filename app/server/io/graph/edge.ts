@@ -23,9 +23,9 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { Edge, EdgeArraySchema, EdgeSchema } from '@server/models/graph/edge';
-import { readSchema } from '@server/io/generic';
 import { isNotDefined } from '@common/utils/is-defined';
+import { readSchema } from '@server/io/generic';
+import { Edge, EdgeArraySchema, EdgeSchema } from '@server/models/graph/edge';
 import { EdgeMetadata } from '@server/models/graph/edge-metadata';
 
 /**
@@ -40,7 +40,11 @@ export function edgeFromString(str: string): Edge | null {
 	}
 	return new Edge(
 		data.neighbor,
-		new EdgeMetadata(data.metadata.numGamesWon, data.metadata.numGamesDrawn, data.metadata.numGamesLost)
+		new EdgeMetadata(
+			data.metadata.numGamesWon,
+			data.metadata.numGamesDrawn,
+			data.metadata.numGamesLost,
+		),
 	);
 }
 
@@ -60,8 +64,12 @@ export function edgeArrayFromString(str: string): Edge[] | null {
 		edges.push(
 			new Edge(
 				edge.neighbor,
-				new EdgeMetadata(edge.metadata.numGamesWon, edge.metadata.numGamesDrawn, edge.metadata.numGamesLost)
-			)
+				new EdgeMetadata(
+					edge.metadata.numGamesWon,
+					edge.metadata.numGamesDrawn,
+					edge.metadata.numGamesLost,
+				),
+			),
 		);
 	}
 	return edges;

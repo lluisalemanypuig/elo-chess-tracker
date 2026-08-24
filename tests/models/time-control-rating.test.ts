@@ -23,13 +23,16 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { TimeControlRating } from '@server/models/time-control-rating';
-import { EloRating } from '@server/models/rating-framework/Elo/rating';
 import { toTimeControlId } from '@common/models/time-control';
+import { EloRating } from '@server/models/rating-framework/Elo/rating';
+import { TimeControlRating } from '@server/models/time-control-rating';
 
 describe('clone', () => {
 	test('', () => {
-		const tcr = new TimeControlRating(toTimeControlId('blitz'), new EloRating(1500.43, 100, 50, 20, 30, 40, true));
+		const tcr = new TimeControlRating(
+			toTimeControlId('blitz'),
+			new EloRating(1500.43, 100, 50, 20, 30, 40, true),
+		);
 		const tcrc = tcr.clone();
 
 		expect(tcr).not.toBe(tcrc);

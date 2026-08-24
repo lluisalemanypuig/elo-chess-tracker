@@ -23,18 +23,17 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
+import { PlayerPrivateId, toPlayerPrivateId } from '@common/models/player-id';
+import { isNotDefined } from '@common/utils/is-defined';
+import { logNow } from '@common/utils/time';
+import { edgeArrayFromString } from '@server/io/graph/edge';
+import { Graph, Neighborhood } from '@server/models/graph/graph';
+import { readDirectory } from '@server/utils/read-directory';
 import Debug from 'debug';
-const debug = Debug('ELO_CHESS_TRACKER:io');
-
 import fs from 'fs';
 import path from 'path';
 
-import { Neighborhood, Graph } from '@server/models/graph/graph';
-import { edgeArrayFromString } from '@server/io/graph/edge';
-import { readDirectory } from '@server/utils/read-directory';
-import { isNotDefined } from '@common/utils/is-defined';
-import { logNow } from '@common/utils/time';
-import { PlayerPrivateId, toPlayerPrivateId } from '@common/models/player-id';
+const debug = Debug('ELO_CHESS_TRACKER:io');
 
 /**
  * @brief Save a portion of the graph from a file.
@@ -45,7 +44,11 @@ import { PlayerPrivateId, toPlayerPrivateId } from '@common/models/player-id';
  * @param username The actual filename.
  * @param edges The information to save.
  */
-export function neighborhoodToFile(dir: string, username: PlayerPrivateId, edges: Neighborhood) {
+export function neighborhoodToFile(
+	dir: string,
+	username: PlayerPrivateId,
+	edges: Neighborhood,
+) {
 	const filename = path.join(dir, username);
 	fs.writeFileSync(filename, JSON.stringify(edges, null, 4));
 }

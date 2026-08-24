@@ -23,8 +23,8 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { EdgeMetadata } from '@server/models/graph/edge-metadata';
 import { edgeMetadataFromString } from '@server/io/graph/edge-metadata';
+import { EdgeMetadata } from '@server/models/graph/edge-metadata';
 
 describe('IO conversion', () => {
 	test('string', () => {
@@ -34,8 +34,8 @@ describe('IO conversion', () => {
 					"numGamesWon": 1,\
 					"numGamesDrawn": 0,\
 					"numGamesLost": 5\
-				}'
-			)
+				}',
+			),
 		).toEqual(new EdgeMetadata(1, 0, 5));
 
 		expect(
@@ -45,8 +45,8 @@ describe('IO conversion', () => {
 					"numGamesDrawn": 0,\
 					"numGamesLost": 66,\
 					"other": 1234\
-				}'
-			)
+				}',
+			),
 		).toBeNull();
 
 		expect(
@@ -54,8 +54,8 @@ describe('IO conversion', () => {
 				'{\
 					"numGamesWon": 1,\
 					"numGamesDrawn": 0\
-				}'
-			)
+				}',
+			),
 		).toBeNull();
 	});
 });

@@ -23,54 +23,15 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import express from 'express';
-import { Request, Response } from 'express';
-
-import Debug from 'debug';
-const debug = Debug('ELO_CHESS_TRACKER:router');
-import { logNow } from '@common/utils/time';
-
-import { EnvironmentManager, getExecutionDirectory } from '@server/managers/environment-manager';
-import { ConfigurationManager } from '@server/managers/configuration-manager';
+import {
+	entryPointAction,
+	entryPointHTMX,
+	entryPointPage,
+} from '@app/entry-point';
 import { Route, ROUTES } from '@common/api/routes';
-import { entryPointAction, entryPointHTMX, entryPointPage } from '@app/entry-point';
-import { UserSession } from '@server/models/user';
-import { InputTypeOf, OutputTypeOf } from '@common/api/types';
 import { methodTypeOf } from '@common/api/schemas-endpoints';
-
-import { postUserLogin, postUserLogout } from '@server/login-logout';
-import {
-	postQueryUserEdit,
-	getQueryUserList,
-	getQueryUserHome,
-	postQueryUserRanking,
-	getQueryHtmlUserList
-} from '@server/query-user';
-import {
-	getQueryChallengeReceived,
-	getQueryChallengeSent,
-	getQueryChallengePendingResult,
-	getQueryChallengeConfirmResultOther,
-	getQueryChallengeConfirmResultSelf
-} from '@server/query-challenges';
-import { getQueryHtmlTimeControls, getQueryHtmlTimeControlsUnique } from '@server/query-time-control';
-import { postQueryGraphFull, postQueryGraphOwn } from '@server/query-graphs';
-import { postQueryGameListOwn, postQueryGameListAll } from '@server/query-games';
-import { postUserCreate, getPageUserCreate } from '@server/users-new';
-import { postUserEdit, getPageUserEdit } from '@server/users-edit';
-import { getPageUserPasswordChange, postUserPasswordChange } from '@server/users-password-change';
-import { getPageUserRanking } from '@server/users-ranking';
-import {
-	getPageGameListAll,
-	getPageGameListOwn,
-	getPageGameCreate,
-	postGameCreate,
-	postGameDelete,
-	postGameEditTitle,
-	postGameEditResult,
-	postRecalculateRatings
-} from '@server/games';
-import { getPageGraphOwn, getPageGraphFull, postRecalculateGraphs } from '@server/graphs';
+import { InputTypeOf, OutputTypeOf } from '@common/api/types';
+import { logNow } from '@common/utils/time';
 import {
 	getPageChallenge,
 	postChallengeAccept,
@@ -78,29 +39,91 @@ import {
 	postChallengeDecline,
 	postChallengeDisagree,
 	postChallengeSend,
-	postChallengeSetResult
+	postChallengeSetResult,
 } from '@server/challenges';
+import {
+	getPageGameCreate,
+	getPageGameListAll,
+	getPageGameListOwn,
+	postGameCreate,
+	postGameDelete,
+	postGameEditResult,
+	postGameEditTitle,
+	postRecalculateRatings,
+} from '@server/games';
+import {
+	getPageGraphFull,
+	getPageGraphOwn,
+	postRecalculateGraphs,
+} from '@server/graphs';
+import { postUserLogin, postUserLogout } from '@server/login-logout';
+import { ConfigurationManager } from '@server/managers/configuration-manager';
+import {
+	EnvironmentManager,
+	getExecutionDirectory,
+} from '@server/managers/environment-manager';
+import { UserSession } from '@server/models/user';
+import {
+	getQueryChallengeConfirmResultOther,
+	getQueryChallengeConfirmResultSelf,
+	getQueryChallengePendingResult,
+	getQueryChallengeReceived,
+	getQueryChallengeSent,
+} from '@server/query-challenges';
+import {
+	postQueryGameListAll,
+	postQueryGameListOwn,
+} from '@server/query-games';
+import { postQueryGraphFull, postQueryGraphOwn } from '@server/query-graphs';
+import {
+	getQueryHtmlTimeControls,
+	getQueryHtmlTimeControlsUnique,
+} from '@server/query-time-control';
+import {
+	getQueryHtmlUserList,
+	getQueryUserHome,
+	getQueryUserList,
+	postQueryUserEdit,
+	postQueryUserRanking,
+} from '@server/query-user';
+import { getPageUserEdit, postUserEdit } from '@server/users-edit';
+import { getPageUserCreate, postUserCreate } from '@server/users-new';
+import {
+	getPageUserPasswordChange,
+	postUserPasswordChange,
+} from '@server/users-password-change';
+import { getPageUserRanking } from '@server/users-ranking';
+import Debug from 'debug';
+import express, { Request, Response } from 'express';
+
+const debug = Debug('ELO_CHESS_TRACKER:router');
 
 /* ************************************************************************** */
 // ROUTER OBJECT
 
 let router = express.Router();
 
-async function defineEndpointPage(route: Route, action: (u: UserSession) => Promise<string>) {
+async function defineEndpointPage(
+	route: Route,
+	action: (u: UserSession) => Promise<string>,
+) {
 	router.get(route, (req: Request, res: Response) => {
 		return entryPointPage(route, action, req, res);
 	});
 }
 
-async function defineEndpointHTMX<R extends Route>(route: R, action: (u: UserSession) => Promise<string>) {
-	router.post(route, (req: Request, res: Response) => {
+async function defineEndpointHTMX<R extends Route>(
+	route: R,
+	action: (u: UserSession) => Promise<string>,
+) {
+	router.get(route, (req: Request, res: Response) => {
 		return entryPointHTMX(route, action, req, res);
 	});
 }
 
 async function defineEndpointAction<R extends Route>(
 	route: R,
-	action: (u: UserSession, data: InputTypeOf<R>) => Promise<OutputTypeOf<R>>
+	action: (u: UserSession, data: InputTypeOf<R>) => Promise<OutputTypeOf<R>>,
 ) {
 	const method = methodTypeOf(route);
 	if (method === 'POST') {
@@ -220,11 +243,23 @@ defineEndpointAction(ROUTES.QUERY_USER_EDIT, postQueryUserEdit);
 defineEndpointAction(ROUTES.QUERY_USER_RANKING, postQueryUserRanking);
 
 // sending, receiving, accepting, setting result of challenges
-defineEndpointAction(ROUTES.QUERY_CHALLENGE_RECEIVED, getQueryChallengeReceived);
+defineEndpointAction(
+	ROUTES.QUERY_CHALLENGE_RECEIVED,
+	getQueryChallengeReceived,
+);
 defineEndpointAction(ROUTES.QUERY_CHALLENGE_SENT, getQueryChallengeSent);
-defineEndpointAction(ROUTES.QUERY_CHALLENGE_PENDING_RESULT, getQueryChallengePendingResult);
-defineEndpointAction(ROUTES.QUERY_CHALLENGE_CONFIRM_RESULT_OTHER, getQueryChallengeConfirmResultOther);
-defineEndpointAction(ROUTES.QUERY_CHALLENGE_CONFIRM_RESULT_SELF, getQueryChallengeConfirmResultSelf);
+defineEndpointAction(
+	ROUTES.QUERY_CHALLENGE_PENDING_RESULT,
+	getQueryChallengePendingResult,
+);
+defineEndpointAction(
+	ROUTES.QUERY_CHALLENGE_CONFIRM_RESULT_OTHER,
+	getQueryChallengeConfirmResultOther,
+);
+defineEndpointAction(
+	ROUTES.QUERY_CHALLENGE_CONFIRM_RESULT_SELF,
+	getQueryChallengeConfirmResultSelf,
+);
 
 defineEndpointAction(ROUTES.QUERY_GAME_LIST_OWN, postQueryGameListOwn);
 defineEndpointAction(ROUTES.QUERY_GAME_LIST_ALL, postQueryGameListAll);
@@ -234,7 +269,10 @@ defineEndpointAction(ROUTES.QUERY_GRAPH_FULL, postQueryGraphFull);
 
 // query time controls
 defineEndpointHTMX(ROUTES.QUERY_HTML_TIME_CONTROLS, getQueryHtmlTimeControls);
-defineEndpointHTMX(ROUTES.QUERY_HTML_TIME_CONTROLS_UNIQUE, getQueryHtmlTimeControlsUnique);
+defineEndpointHTMX(
+	ROUTES.QUERY_HTML_TIME_CONTROLS_UNIQUE,
+	getQueryHtmlTimeControlsUnique,
+);
 
 // user login and logout
 router.post(ROUTES.USER_LOGIN, postUserLogin);

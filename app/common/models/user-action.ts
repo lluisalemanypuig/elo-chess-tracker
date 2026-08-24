@@ -23,9 +23,9 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { z } from 'zod';
-import { UserRole } from '@common/models/user-role';
 import { CommonError } from '@common/models/error-types/common-error';
+import { UserRole } from '@common/models/user-role';
+import { z } from 'zod';
 
 // -----------------------------------------------------------------------------
 
@@ -78,7 +78,7 @@ export const ALL_ACTIONS = [
 	'CHALLENGE_USER_ADMIN',
 	'CHALLENGE_USER_TEACHER',
 	'CHALLENGE_USER_MEMBER',
-	'CHALLENGE_USER_STUDENT'
+	'CHALLENGE_USER_STUDENT',
 ] as const;
 
 export type UserAction = (typeof ALL_ACTIONS)[number];
@@ -97,7 +97,7 @@ export const ALL_ACTION_IDS = [
 	'ASSIGN_ROLE_USERS',
 	'CHALLENGE_USERS',
 	'SEE_GAMES',
-	'SEE_GRAPHS'
+	'SEE_GRAPHS',
 ] as const;
 
 // All actions as type

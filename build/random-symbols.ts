@@ -43,7 +43,7 @@ const symbols: string =
 const randomized = shuffle(symbols);
 
 const result = {
-	symbols: `${randomized}`
+	symbols: `${randomized}`,
 };
 
 console.log(JSON.stringify(result));

@@ -23,23 +23,25 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import fs from 'fs';
-import path from 'path';
-
-import { serverInitFromData } from '@server/managers/memory/initialization';
-import { clearServer } from '@server/managers/memory/clear';
-import { RatingSystemManager } from '@server/managers/rating-system-manager';
-import { EnvironmentManager } from '@server/managers/environment-manager';
-import { ConfigurationManager } from '@server/managers/configuration-manager';
+import {
+	toTimeControlId,
+	toTimeControlName,
+} from '@common/models/time-control';
 import { ChallengesManager } from '@server/managers/challenges-manager';
+import { ConfigurationManager } from '@server/managers/configuration-manager';
+import { EnvironmentManager } from '@server/managers/environment-manager';
 import { GamesManager } from '@server/managers/games-manager';
+import { GraphsManager } from '@server/managers/graphs-manager';
+import { clearServer } from '@server/managers/memory/clear';
+import { serverInitFromData } from '@server/managers/memory/initialization';
+import { RatingSystemManager } from '@server/managers/rating-system-manager';
 import { SessionIDManager } from '@server/managers/session-id-manager';
 import { UsersManager } from '@server/managers/users-manager';
-import { runCommand } from '@tests';
-import { GraphsManager } from '@server/managers/graphs-manager';
-import { Graph } from '@server/models/graph/graph';
 import { Configuration } from '@server/models/configuration/configuration';
-import { toTimeControlId, toTimeControlName } from '@common/models/time-control';
+import { Graph } from '@server/models/graph/graph';
+import { runCommand } from '@tests';
+import fs from 'fs';
+import path from 'path';
 
 const webpage_dir = 'tests/webpage';
 const icons_dir = path.join(webpage_dir, 'icons');
@@ -67,50 +69,50 @@ const configuration: Configuration = {
 		sslCertificate: {
 			publicKeyFile: 'sadf',
 			privateKeyFile: 'qwer',
-			passphraseFile: 'kgj68'
+			passphraseFile: 'kgj68',
 		},
 		favicon: 'favicon.png',
 		loginPage: {
 			title: 'Login title',
-			icon: 'login.png'
+			icon: 'login.png',
 		},
 		homePage: {
 			title: 'Home title',
-			icon: 'home.png'
-		}
+			icon: 'home.png',
+		},
 	},
 
 	server: {
 		domainName: 'my_domain',
 		ports: {
 			http: '8080',
-			https: '8443'
-		}
+			https: '8443',
+		},
 	},
 
 	ratingSystem: 'Elo',
 	timeControls: [
 		{
 			id: Classical,
-			name: Classical90p30
+			name: Classical90p30,
 		},
 		{
 			id: Rapid,
-			name: Rapid12p5
+			name: Rapid12p5,
 		},
 		{
 			id: Rapid,
-			name: Rapid10p0
+			name: Rapid10p0,
 		},
 		{
 			id: Blitz,
-			name: Blitz5p3
-		}
+			name: Blitz5p3,
+		},
 	],
 	behavior: {
 		challenges: {
-			higherRatedPlayerCanDeclineChallengeFromLowerRatedPlayer: false
-		}
+			higherRatedPlayerCanDeclineChallengeFromLowerRatedPlayer: false,
+		},
 	},
 	permissions: {
 		admin: [
@@ -118,59 +120,67 @@ const configuration: Configuration = {
 			'CHALLENGE_USER_ADMIN',
 			'CHALLENGE_USER_MEMBER',
 			'CHALLENGE_USER_TEACHER',
-			'CHALLENGE_USER_STUDENT'
+			'CHALLENGE_USER_STUDENT',
 		],
 		teacher: [
 			'CHALLENGE_USER',
 			'CHALLENGE_USER_ADMIN',
 			'CHALLENGE_USER_MEMBER',
 			'CHALLENGE_USER_TEACHER',
-			'CHALLENGE_USER_STUDENT'
+			'CHALLENGE_USER_STUDENT',
 		],
 		member: [
 			'CHALLENGE_USER',
 			'CHALLENGE_USER_ADMIN',
 			'CHALLENGE_USER_MEMBER',
 			'CHALLENGE_USER_TEACHER',
-			'CHALLENGE_USER_STUDENT'
+			'CHALLENGE_USER_STUDENT',
 		],
 		student: [
 			'CHALLENGE_USER',
 			'CHALLENGE_USER_ADMIN',
 			'CHALLENGE_USER_MEMBER',
 			'CHALLENGE_USER_TEACHER',
-			'CHALLENGE_USER_STUDENT'
-		]
-	}
+			'CHALLENGE_USER_STUDENT',
+		],
+	},
 };
 
 describe('Configure server', () => {
 	test('Load an empty server', async () => {
 		await runCommand('./tests/initialize-empty.sh');
-		expect(() => serverInitFromData('tests/webpage', configuration)).not.toThrow();
+		expect(() =>
+			serverInitFromData('tests/webpage', configuration),
+		).not.toThrow();
 	});
 
 	test('Check RatingSystemManager', () => {
 		const ratingSystem_manager = RatingSystemManager.getInstance();
 
 		expect(ratingSystem_manager.isTimeControlIdValid(Classical)).toBe(true);
-		expect(ratingSystem_manager.isTimeControlIdValid(toTimeControlId('classical'))).toBe(false);
+		expect(
+			ratingSystem_manager.isTimeControlIdValid(toTimeControlId('classical')),
+		).toBe(false);
 		expect(ratingSystem_manager.isTimeControlIdValid(Rapid)).toBe(true);
-		expect(ratingSystem_manager.isTimeControlIdValid(toTimeControlId('rapid'))).toBe(false);
+		expect(
+			ratingSystem_manager.isTimeControlIdValid(toTimeControlId('rapid')),
+		).toBe(false);
 		expect(ratingSystem_manager.isTimeControlIdValid(Blitz)).toBe(true);
-		expect(ratingSystem_manager.isTimeControlIdValid(toTimeControlId('blitz'))).toBe(false);
+		expect(
+			ratingSystem_manager.isTimeControlIdValid(toTimeControlId('blitz')),
+		).toBe(false);
 
 		const unique_ids = ratingSystem_manager.getUniqueTimeControlsIds();
 		expect(
 			unique_ids.find((val: string): boolean => {
 				return val === Rapid;
-			})
+			}),
 		).toEqual(Rapid);
 
 		expect(
 			unique_ids.find((val: string): boolean => {
 				return val === Blitz;
-			})
+			}),
 		).toEqual(Blitz);
 
 		expect(ratingSystem_manager.getTimeControls().length).toBe(4);
@@ -209,9 +219,15 @@ describe('Configure server', () => {
 
 		expect(environment_manager.getDirDatabase()).toEqual(db_dir);
 		expect(environment_manager.getDirGames()).toEqual(db_games_dir);
-		expect(environment_manager.getDirGamesTimeControl(Classical)).toEqual(db_games_Classical_dir);
-		expect(environment_manager.getDirGamesTimeControl(Rapid)).toEqual(db_games_Rapid_dir);
-		expect(environment_manager.getDirGamesTimeControl(Blitz)).toEqual(db_games_Blitz_dir);
+		expect(environment_manager.getDirGamesTimeControl(Classical)).toEqual(
+			db_games_Classical_dir,
+		);
+		expect(environment_manager.getDirGamesTimeControl(Rapid)).toEqual(
+			db_games_Rapid_dir,
+		);
+		expect(environment_manager.getDirGamesTimeControl(Blitz)).toEqual(
+			db_games_Blitz_dir,
+		);
 		expect(environment_manager.getDirUsers()).toEqual(db_users_dir);
 		expect(environment_manager.getDirChallenges()).toEqual(db_challenges_dir);
 
@@ -220,14 +236,26 @@ describe('Configure server', () => {
 		expect(fs.existsSync(db_games_Blitz_dir)).toBe(true);
 
 		expect(environment_manager.getDirSsl()).toEqual(ssl_dir);
-		expect(environment_manager.getSslPublicKeyFile()).toEqual(path.join(ssl_dir, 'sadf'));
-		expect(environment_manager.getSslPrivateKeyFile()).toEqual(path.join(ssl_dir, 'qwer'));
-		expect(environment_manager.getSslPassphraseFile()).toEqual(path.join(ssl_dir, 'kgj68'));
+		expect(environment_manager.getSslPublicKeyFile()).toEqual(
+			path.join(ssl_dir, 'sadf'),
+		);
+		expect(environment_manager.getSslPrivateKeyFile()).toEqual(
+			path.join(ssl_dir, 'qwer'),
+		);
+		expect(environment_manager.getSslPassphraseFile()).toEqual(
+			path.join(ssl_dir, 'kgj68'),
+		);
 
 		expect(environment_manager.getDirIcons()).toEqual(icons_dir);
-		expect(environment_manager.getIconFavicon()).toEqual(path.join(icons_dir, 'favicon.png'));
-		expect(environment_manager.getIconLoginPage()).toEqual(path.join(icons_dir, 'login.png'));
-		expect(environment_manager.getIconHomePage()).toEqual(path.join(icons_dir, 'home.png'));
+		expect(environment_manager.getIconFavicon()).toEqual(
+			path.join(icons_dir, 'favicon.png'),
+		);
+		expect(environment_manager.getIconLoginPage()).toEqual(
+			path.join(icons_dir, 'login.png'),
+		);
+		expect(environment_manager.getIconHomePage()).toEqual(
+			path.join(icons_dir, 'home.png'),
+		);
 
 		expect(environment_manager.getTitleLoginPage()).toEqual('Login title');
 		expect(environment_manager.getTitleHomePage()).toEqual('Home title');
@@ -258,13 +286,13 @@ describe('Configure server', () => {
 		expect(
 			unique_ids.find((val: string): boolean => {
 				return val === Rapid;
-			})
+			}),
 		).toEqual(undefined);
 
 		expect(
 			unique_ids.find((val: string): boolean => {
 				return val === Blitz;
-			})
+			}),
 		).toEqual(undefined);
 
 		expect(ratingSystem_manager.getTimeControls().length).toBe(0);

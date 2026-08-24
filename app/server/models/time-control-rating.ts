@@ -23,8 +23,8 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { Rating } from '@server/models/rating-framework/rating';
 import { TimeControlId } from '@common/models/time-control';
+import { Rating } from '@server/models/rating-framework/rating';
 
 /**
  * @brief A pair of time control id and rating

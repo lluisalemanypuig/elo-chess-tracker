@@ -23,23 +23,29 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import Debug from 'debug';
-const debug = Debug('ELO_CHESS_TRACKER:users-edit');
-
+import { Empty } from '@common/api/schemas-endpoints';
+import { UserEditInput } from '@common/api/schemas/user';
+import { isNotDefined } from '@common/utils/is-defined';
 import { logNow } from '@common/utils/time';
 import { userEdit } from '@server/managers/users';
 import { UsersManager } from '@server/managers/users-manager';
-import { isNotDefined } from '@common/utils/is-defined';
-import { Empty } from '@common/api/schemas-endpoints';
-import { UserSession } from '@server/models/user';
 import { PublicError } from '@server/models/error-types/public-error';
-import { UserEditInput } from '@common/api/schemas/user';
+import { UserSession } from '@server/models/user';
+import Debug from 'debug';
 
-export async function getPageUserEdit({ user, session: _session }: UserSession) {
+const debug = Debug('ELO_CHESS_TRACKER:users-edit');
+
+export async function getPageUserEdit({
+	user,
+	session: _session,
+}: UserSession) {
 	debug(logNow(), 'function getPageUserEdit...');
 
 	if (!user.canDo('EDIT_USER')) {
-		debug(logNow(), `    User '${user.username}' does not have sufficient permissions.`);
+		debug(
+			logNow(),
+			`    User '${user.username}' does not have sufficient permissions.`,
+		);
 		throw new PublicError('You cannot edit users');
 	}
 
@@ -48,7 +54,7 @@ export async function getPageUserEdit({ user, session: _session }: UserSession) 
 
 export async function postUserEdit(
 	{ user: editor, session: _session }: UserSession,
-	input: UserEditInput
+	input: UserEditInput,
 ): Promise<Empty> {
 	debug(logNow(), 'function postUserEdit...');
 
@@ -60,7 +66,11 @@ export async function postUserEdit(
 		throw new PublicError('Invalid user');
 	}
 
-	userEdit(editor, edited.user, { firstName: input.firstName, lastName: input.lastName, roles: input.roles });
+	userEdit(editor, edited.user, {
+		firstName: input.firstName,
+		lastName: input.lastName,
+		roles: input.roles,
+	});
 
 	return {};
 }

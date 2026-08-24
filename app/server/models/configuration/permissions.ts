@@ -23,15 +23,15 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { z } from 'zod';
 import { UserActionArraySchema } from '@common/models/user-action';
+import { z } from 'zod';
 
 export const UserPermissionsSchema = z
 	.object({
 		admin: UserActionArraySchema,
 		teacher: UserActionArraySchema,
 		member: UserActionArraySchema,
-		student: UserActionArraySchema
+		student: UserActionArraySchema,
 	})
 	.strict();
 

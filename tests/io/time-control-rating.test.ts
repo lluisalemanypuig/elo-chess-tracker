@@ -24,7 +24,10 @@ Contact:
 */
 
 import { isNotDefined } from '@common/utils/is-defined';
-import { timeControlRatingArrayFromString, timeControlRatingFromString } from '@server/io/time-control-rating';
+import {
+	timeControlRatingArrayFromString,
+	timeControlRatingFromString,
+} from '@server/io/time-control-rating';
 import { initializeRatingFunctions } from '@server/managers/rating-system';
 
 describe('IO conversion -- Elo', () => {
@@ -32,7 +35,7 @@ describe('IO conversion -- Elo', () => {
 
 	test('string', () => {
 		const tcr = timeControlRatingFromString(
-			'{ "timeControl": "blitz", "rating": { "rating": 1500.43, "numGames": 100, "won": 50, "drawn": 20, "lost": 30, "K": 40, "surpassed2400": true } }'
+			'{ "timeControl": "blitz", "rating": { "rating": 1500.43, "numGames": 100, "won": 50, "drawn": 20, "lost": 30, "K": 40, "surpassed2400": true } }',
 		);
 		expect(tcr).not.toBeNull();
 		if (isNotDefined(tcr)) {
@@ -45,14 +48,14 @@ describe('IO conversion -- Elo', () => {
 			drawn: 20,
 			lost: 30,
 			K: 40,
-			surpassed2400: true
+			surpassed2400: true,
 		});
 		expect(tcr.timeControl).toEqual('blitz');
 	});
 
 	test('string -- set', () => {
 		const tcr = timeControlRatingArrayFromString(
-			'[{ "timeControl": "blitz", "rating": { "rating": 1500.43, "numGames": 100, "won": 50, "drawn": 20, "lost": 30, "K": 40, "surpassed2400": true } }]'
+			'[{ "timeControl": "blitz", "rating": { "rating": 1500.43, "numGames": 100, "won": 50, "drawn": 20, "lost": 30, "K": 40, "surpassed2400": true } }]',
 		);
 		expect(tcr).not.toBeNull();
 		if (isNotDefined(tcr)) {
@@ -65,7 +68,7 @@ describe('IO conversion -- Elo', () => {
 			drawn: 20,
 			lost: 30,
 			K: 40,
-			surpassed2400: true
+			surpassed2400: true,
 		});
 		expect(tcr[0].timeControl).toEqual('blitz');
 	});

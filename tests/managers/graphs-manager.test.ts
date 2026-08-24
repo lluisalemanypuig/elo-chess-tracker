@@ -23,11 +23,11 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { clearServer } from '@server/managers/memory/clear';
-import { GraphsManager } from '@server/managers/graphs-manager';
-import { Graph } from '@server/models/graph/graph';
-import { toTimeControlId } from '@common/models/time-control';
 import { toPlayerPrivateId } from '@common/models/player-id';
+import { toTimeControlId } from '@common/models/time-control';
+import { GraphsManager } from '@server/managers/graphs-manager';
+import { clearServer } from '@server/managers/memory/clear';
+import { Graph } from '@server/models/graph/graph';
 
 const Classical = toTimeControlId('Classical');
 const Rapid = toTimeControlId('Rapid');

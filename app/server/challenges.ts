@@ -23,34 +23,34 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import Debug from 'debug';
-const debug = Debug('ELO_CHESS_TRACKER:serverChallenges');
-
 import { logNow } from '@common/utils/time';
 import {
 	challengeAccept,
+	challengeAgreeResult,
 	challengeDecline,
+	challengeDisagreeResult,
 	challengeSendNew,
 	challengeSetResult,
-	challengeDisagreeResult,
-	challengeAgreeResult
 } from '@server/managers/challenges';
+import Debug from 'debug';
 
-import { ChallengesManager } from '@server/managers/challenges-manager';
-import { UsersManager } from '@server/managers/users-manager';
-import { RatingSystemManager } from '@server/managers/rating-system-manager';
-import { isNotDefined } from '@common/utils/is-defined';
 import { Empty } from '@common/api/schemas-endpoints';
-import { UserSession } from '@server/models/user';
 import {
 	ChallengeAcceptInput,
 	ChallengeAgreeResultInput,
 	ChallengeDeclineInput,
 	ChallengeDisagreeResultInput,
 	ChallengeSendInput,
-	ChallengeSetResultInput
+	ChallengeSetResultInput,
 } from '@common/api/schemas/challenges';
+import { isNotDefined } from '@common/utils/is-defined';
+import { ChallengesManager } from '@server/managers/challenges-manager';
+import { RatingSystemManager } from '@server/managers/rating-system-manager';
+import { UsersManager } from '@server/managers/users-manager';
 import { PublicError } from '@server/models/error-types/public-error';
+import { UserSession } from '@server/models/user';
+
+const debug = Debug('ELO_CHESS_TRACKER:serverChallenges');
 
 export async function getPageChallenge(_u: UserSession) {
 	debug(logNow(), 'function getPageChallenge...');
@@ -59,7 +59,7 @@ export async function getPageChallenge(_u: UserSession) {
 
 export async function postChallengeSend(
 	{ user: sender, session: _session }: UserSession,
-	input: ChallengeSendInput
+	input: ChallengeSendInput,
 ): Promise<Empty> {
 	debug(logNow(), 'function postChallengeSend...');
 
@@ -68,12 +68,19 @@ export async function postChallengeSend(
 	const timeControlName = input.timeControlName;
 	const title = input.title;
 
-	debug(logNow(), `Trying to send challenge from '${sender.username}' to '${receiverPublicId}'.`);
+	debug(
+		logNow(),
+		`Trying to send challenge from '${sender.username}' to '${receiverPublicId}'.`,
+	);
 
-	const receiver = UsersManager.getInstance().getAllUserDataByPublicId(receiverPublicId);
+	const receiver =
+		UsersManager.getInstance().getAllUserDataByPublicId(receiverPublicId);
 
 	if (isNotDefined(receiver)) {
-		debug(logNow(), `User receiver of the challenge '${receiverPublicId}' does not exist.`);
+		debug(
+			logNow(),
+			`User receiver of the challenge '${receiverPublicId}' does not exist.`,
+		);
 		throw new PublicError('User receiver of the challenge does not exist');
 	}
 
@@ -93,32 +100,50 @@ export async function postChallengeSend(
 	}
 	if (!match) {
 		debug(logNow(), `Time control id ${timeControlId} is not valid.`);
-		throw new PublicError('The chosen time control name does not correspond to the given time control id.');
+		throw new PublicError(
+			'The chosen time control name does not correspond to the given time control id.',
+		);
 	}
 
-	debug(logNow(), `Send challenge from '${sender.username}' to '${receiver.user.username}'`);
+	debug(
+		logNow(),
+		`Send challenge from '${sender.username}' to '${receiver.user.username}'`,
+	);
 
-	challengeSendNew(title, sender, receiver.user, timeControlId, timeControlName, logNow());
+	challengeSendNew(
+		title,
+		sender,
+		receiver.user,
+		timeControlId,
+		timeControlName,
+		logNow(),
+	);
 
 	return {};
 }
 
 export async function postChallengeAccept(
 	{ user, session: _session }: UserSession,
-	input: ChallengeAcceptInput
+	input: ChallengeAcceptInput,
 ): Promise<Empty> {
 	debug(logNow(), 'function postChallengeAccept...');
 
 	const challengeId = input.id;
 
-	debug(logNow(), `User '${user.username}' wants to accept challenge '${challengeId}'`);
+	debug(
+		logNow(),
+		`User '${user.username}' wants to accept challenge '${challengeId}'`,
+	);
 
 	const c = ChallengesManager.getInstance().getChallengeById(challengeId);
 	if (isNotDefined(c)) {
 		throw new PublicError('Challenge does not exist');
 	}
 
-	debug(logNow(), `Challenge '${challengeId}' involves players '${c.sentBy}' and '${c.sentTo}'`);
+	debug(
+		logNow(),
+		`Challenge '${challengeId}' involves players '${c.sentBy}' and '${c.sentTo}'`,
+	);
 
 	challengeAccept(c, { by: user.username, when: logNow() });
 
@@ -127,20 +152,26 @@ export async function postChallengeAccept(
 
 export async function postChallengeDecline(
 	{ user, session: _session }: UserSession,
-	input: ChallengeDeclineInput
+	input: ChallengeDeclineInput,
 ): Promise<Empty> {
 	debug(logNow(), 'function postChallengeDecline...');
 
 	const challengeId = input.id;
 
-	debug(logNow(), `User '${user.username}' wants to decline challenge '${challengeId}'`);
+	debug(
+		logNow(),
+		`User '${user.username}' wants to decline challenge '${challengeId}'`,
+	);
 
 	const c = ChallengesManager.getInstance().getChallengeById(challengeId);
 	if (isNotDefined(c)) {
 		throw new PublicError('Challenge does not exist');
 	}
 
-	debug(logNow(), `Challenge '${challengeId}' involves players '${c.sentBy}' and '${c.sentTo}'`);
+	debug(
+		logNow(),
+		`Challenge '${challengeId}' involves players '${c.sentBy}' and '${c.sentTo}'`,
+	);
 
 	challengeDecline(c, { by: user.username });
 
@@ -149,7 +180,7 @@ export async function postChallengeDecline(
 
 export async function postChallengeSetResult(
 	{ user, session: _session }: UserSession,
-	input: ChallengeSetResultInput
+	input: ChallengeSetResultInput,
 ): Promise<Empty> {
 	debug(logNow(), 'function postChallengeSetResult...');
 
@@ -160,7 +191,10 @@ export async function postChallengeSetResult(
 	const blackPublicId = input.black;
 	const gameResult = input.result;
 
-	debug(logNow(), `User '${setterUser}' is trying to set the result of a challenge`);
+	debug(
+		logNow(),
+		`User '${setterUser}' is trying to set the result of a challenge`,
+	);
 	debug(logNow(), `    Challenge id: '${challengeId}'`);
 	debug(logNow(), `    White: '${whitePublicId}'`);
 	debug(logNow(), `    Black: '${blackPublicId}'`);
@@ -187,7 +221,7 @@ export async function postChallengeSetResult(
 		when: logNow(),
 		white: white.user.username,
 		black: black.user.username,
-		result: gameResult
+		result: gameResult,
 	});
 
 	return {};
@@ -195,7 +229,7 @@ export async function postChallengeSetResult(
 
 export async function postChallengeAgree(
 	{ user, session: _session }: UserSession,
-	input: ChallengeAgreeResultInput
+	input: ChallengeAgreeResultInput,
 ): Promise<Empty> {
 	debug(logNow(), 'function postChallengeAgree...');
 
@@ -213,7 +247,7 @@ export async function postChallengeAgree(
 
 export async function postChallengeDisagree(
 	{ user, session: _session }: UserSession,
-	input: ChallengeDisagreeResultInput
+	input: ChallengeDisagreeResultInput,
 ): Promise<Empty> {
 	debug(logNow(), 'function postChallengeDisagree...');
 

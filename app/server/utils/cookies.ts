@@ -37,7 +37,15 @@ interface CookiesParams {
 	secure: boolean;
 }
 
-function makeCookie({ name, value, days, path, samesite, domain, secure }: CookiesParams): string {
+function makeCookie({
+	name,
+	value,
+	days,
+	path,
+	samesite,
+	domain,
+	secure,
+}: CookiesParams): string {
 	let cookie: string = '';
 
 	cookie += encodeURIComponent(name) + '=' + encodeURIComponent(value);
@@ -76,14 +84,18 @@ function makeCookie({ name, value, days, path, samesite, domain, secure }: Cooki
  * @param days Expiry date of the cookie.
  * @pre Parameter @e values must have entries: 'name' and 'values'.
  */
-export function makeSessionIdCookie(name: string, value: string, days: number): string {
+export function makeSessionIdCookie(
+	name: string,
+	value: string,
+	days: number,
+): string {
 	return makeCookie({
 		name: name,
 		value: value,
 		days: days,
 		path: '/',
 		samesite: 'Lax',
-		secure: true
+		secure: true,
 	});
 }
 
@@ -99,6 +111,6 @@ export function emptySessionIdCookie(name: string): string {
 		days: 1,
 		path: '/',
 		samesite: 'Lax',
-		secure: true
+		secure: true,
 	});
 }

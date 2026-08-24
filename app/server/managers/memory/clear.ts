@@ -23,16 +23,16 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { UserRoleToUserAction } from '@server/managers/user-role-action';
-import { EnvironmentManager } from '@server/managers/environment-manager';
-import { ConfigurationManager } from '@server/managers/configuration-manager';
 import { ChallengesManager } from '@server/managers/challenges-manager';
+import { ConfigurationManager } from '@server/managers/configuration-manager';
+import { EnvironmentManager } from '@server/managers/environment-manager';
 import { GamesManager } from '@server/managers/games-manager';
-import { UsersManager } from '@server/managers/users-manager';
-import { SessionIDManager } from '@server/managers/session-id-manager';
-import { RatingSystemManager } from '@server/managers/rating-system-manager';
 import { GraphsManager } from '@server/managers/graphs-manager';
+import { RatingSystemManager } from '@server/managers/rating-system-manager';
+import { SessionIDManager } from '@server/managers/session-id-manager';
+import { UserRoleToUserAction } from '@server/managers/user-role-action';
 import { UsersBehavior } from '@server/managers/users-behavior';
+import { UsersManager } from '@server/managers/users-manager';
 
 /**
  * @brief Clear the memory of the server

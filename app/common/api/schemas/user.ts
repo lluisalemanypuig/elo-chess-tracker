@@ -23,10 +23,13 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { z } from 'zod';
-import { UserRoleArraySchema } from '@common/models/user-role';
-import { PlayerPrivateIdSchema, PlayerPublicIdSchema } from '@common/models/player-id';
+import {
+	PlayerPrivateIdSchema,
+	PlayerPublicIdSchema,
+} from '@common/models/player-id';
 import { UserGivenNameSchema } from '@common/models/user-given-name';
+import { UserRoleArraySchema } from '@common/models/user-role';
+import { z } from 'zod';
 
 // ROUTES.USER_CREATE
 
@@ -36,7 +39,7 @@ export const UserCreateInputSchema = z
 		firstName: UserGivenNameSchema,
 		lastName: UserGivenNameSchema,
 		password: z.string(),
-		roles: UserRoleArraySchema
+		roles: UserRoleArraySchema,
 	})
 	.strict();
 
@@ -49,7 +52,7 @@ export const UserEditInputSchema = z
 		publicId: PlayerPublicIdSchema,
 		firstName: UserGivenNameSchema,
 		lastName: UserGivenNameSchema,
-		roles: UserRoleArraySchema
+		roles: UserRoleArraySchema,
 	})
 	.strict();
 
@@ -58,8 +61,10 @@ export type UserEditInput = z.infer<typeof UserEditInputSchema>;
 export const UserPasswordChangeInputSchema = z
 	.object({
 		old: z.string(),
-		new: z.string()
+		new: z.string(),
 	})
 	.strict();
 
-export type UserPasswordChangeInput = z.infer<typeof UserPasswordChangeInputSchema>;
+export type UserPasswordChangeInput = z.infer<
+	typeof UserPasswordChangeInputSchema
+>;

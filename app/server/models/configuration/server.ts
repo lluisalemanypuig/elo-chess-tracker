@@ -28,7 +28,7 @@ import { z } from 'zod';
 const PortsSchema = z
 	.object({
 		http: z.string(),
-		https: z.string()
+		https: z.string(),
 	})
 	.strict();
 
@@ -37,7 +37,7 @@ export type Ports = z.infer<typeof PortsSchema>;
 export const ServerConfigurationSchema = z
 	.object({
 		domainName: z.string(),
-		ports: PortsSchema
+		ports: PortsSchema,
 	})
 	.strict();
 

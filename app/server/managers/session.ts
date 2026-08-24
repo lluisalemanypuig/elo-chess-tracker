@@ -23,19 +23,18 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
+import { PlayerPrivateId } from '@common/models/player-id';
+import { SessionId } from '@common/models/session-id';
+import { isNotDefined } from '@common/utils/is-defined';
+import { shuffleArray } from '@common/utils/shuffle-random';
+import { logNow } from '@common/utils/time';
+import { SessionIDManager } from '@server/managers/session-id-manager';
+import { UsersManager } from '@server/managers/users-manager';
+import { InternalError } from '@server/models/error-types/internal-error';
+import { User } from '@server/models/user';
 import Debug from 'debug';
 
-import { logNow } from '@common/utils/time';
-import { User } from '@server/models/user';
 const debug = Debug('ELO_CHESS_TRACKER:managers/session');
-
-import { SessionIDManager } from '@server/managers/session-id-manager';
-import { SessionId } from '@common/models/session-id';
-import { shuffleArray } from '@common/utils/shuffle-random';
-import { UsersManager } from '@server/managers/users-manager';
-import { isNotDefined } from '@common/utils/is-defined';
-import { InternalError } from '@server/models/error-types/internal-error';
-import { PlayerPrivateId } from '@common/models/player-id';
 
 // In case of accidental overwrite, use:
 // '$ALLOWED-SYMBOLS-COOKIES'
@@ -90,7 +89,10 @@ export function sessionIdDelete(session: SessionId) {
 	debug(logNow(), `Before deleting, '${mem.numSessionIds()}' sessions`);
 	const idx = mem.indexSessionId(session);
 	if (idx !== -1) {
-		debug(logNow(), `    Session of user '${session.publicId}' was found. Deleting...`);
+		debug(
+			logNow(),
+			`    Session of user '${session.publicId}' was found. Deleting...`,
+		);
 		mem.removeSessionId(idx);
 	} else {
 		debug(logNow(), `    Session of user '${session.publicId}' was not found.`);
@@ -115,8 +117,12 @@ export function sessionUserDeleteAll(session: SessionId) {
  *
  * Checks that a user logged in or not using the cookies.
  */
-export function isUserLoggedIn(session: SessionId): [boolean, string, User | undefined] {
-	const user = UsersManager.getInstance().getAllUserDataByPublicId(session.publicId);
+export function isUserLoggedIn(
+	session: SessionId,
+): [boolean, string, User | undefined] {
+	const user = UsersManager.getInstance().getAllUserDataByPublicId(
+		session.publicId,
+	);
 	if (isNotDefined(user)) {
 		debug(logNow(), `User does not exist.`);
 		return [false, 'Forbidden access. <a href="/">Go home</a>.', undefined];
@@ -128,7 +134,10 @@ export function isUserLoggedIn(session: SessionId): [boolean, string, User | und
 	// at this point, the user exists --> check if the session id received exists
 	if (!SessionIDManager.getInstance().hasSessionId(session)) {
 		debug(logNow(), `    The session ID received for user does not exist.`);
-		debug(logNow(), '    This means that the user is not logged into the web in');
+		debug(
+			logNow(),
+			'    This means that the user is not logged into the web in',
+		);
 		debug(logNow(), '    the device they are trying to access the web from.');
 		return [false, 'Forbidden access. <a href="/">Go home</a>.', undefined];
 	} else {

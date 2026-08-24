@@ -23,30 +23,33 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import fs from 'fs';
-import path from 'path';
-import Debug from 'debug';
-const debug = Debug('ELO_CHESS_TRACKER:managers/users');
-
-import { Player } from '@server/models/player';
-import { TimeControlGame, User } from '@server/models/user';
-import { EnvironmentManager } from '@server/managers/environment-manager';
-import { UsersManager } from '@server/managers/users-manager';
+import { PlayerPrivateId } from '@common/models/player-id';
+import { SessionId } from '@common/models/session-id';
+import { TimeControlId } from '@common/models/time-control';
+import { getRoleActionName } from '@common/models/user-action';
+import { UserGivenName } from '@common/models/user-given-name';
 import { UserRole } from '@common/models/user-role';
-import { encryptPasswordForUser, isPasswordOfUserCorrect } from '@server/utils/encrypt';
-import { RatingSystemManager } from '@server/managers/rating-system-manager';
-import { TimeControlRating } from '@server/models/time-control-rating';
-import { logNow } from '@common/utils/time';
 import { UserThin } from '@common/models/user-thin';
 import { isNotDefined } from '@common/utils/is-defined';
-import { TimeControlId } from '@common/models/time-control';
-import { canUserEditUser } from '@server/managers/user-relationships';
-import { getRoleActionName } from '@common/models/user-action';
+import { logNow } from '@common/utils/time';
+import { EnvironmentManager } from '@server/managers/environment-manager';
+import { RatingSystemManager } from '@server/managers/rating-system-manager';
 import { sessionUserDeleteAll } from '@server/managers/session';
-import { SessionId } from '@common/models/session-id';
+import { canUserEditUser } from '@server/managers/user-relationships';
+import { UsersManager } from '@server/managers/users-manager';
 import { PublicError } from '@server/models/error-types/public-error';
-import { UserGivenName } from '@common/models/user-given-name';
-import { PlayerPrivateId } from '@common/models/player-id';
+import { Player } from '@server/models/player';
+import { TimeControlRating } from '@server/models/time-control-rating';
+import { TimeControlGame, User } from '@server/models/user';
+import {
+	encryptPasswordForUser,
+	isPasswordOfUserCorrect,
+} from '@server/utils/encrypt';
+import Debug from 'debug';
+import fs from 'fs';
+import path from 'path';
+
+const debug = Debug('ELO_CHESS_TRACKER:managers/users');
 
 export function writeUserToFile(filename: string, u: User) {
 	fs.writeFileSync(filename, JSON.stringify(u, null, 4));
@@ -64,12 +67,24 @@ interface UserEdit {
 	roles: UserRole[];
 }
 
-export function userEdit(editor: User, edited: User, { firstName, lastName, roles }: UserEdit) {
-	debug(logNow(), `User '${editor.username}' is trying to modify user '${edited.username}'`);
+export function userEdit(
+	editor: User,
+	edited: User,
+	{ firstName, lastName, roles }: UserEdit,
+) {
+	debug(
+		logNow(),
+		`User '${editor.username}' is trying to modify user '${edited.username}'`,
+	);
 
 	if (!canUserEditUser(editor, edited)) {
-		debug(logNow(), `User '${editor.username}' cannot modify user '${edited.username}'`);
-		throw new PublicError('You do not have enough permissions to edit this user.');
+		debug(
+			logNow(),
+			`User '${editor.username}' cannot modify user '${edited.username}'`,
+		);
+		throw new PublicError(
+			'You do not have enough permissions to edit this user.',
+		);
 	}
 
 	debug(logNow(), `    First name: '${firstName}'`);
@@ -79,7 +94,9 @@ export function userEdit(editor: User, edited: User, { firstName, lastName, role
 	for (const role of roles) {
 		const action = getRoleActionName('ASSIGN_ROLE_USERS', role);
 		if (!editor.canDo(action)) {
-			throw new PublicError(`You do not have enough permissions to assign role '${role}'.`);
+			throw new PublicError(
+				`You do not have enough permissions to assign role '${role}'.`,
+			);
 		}
 	}
 
@@ -99,15 +116,20 @@ interface UserAddNew {
 
 export function userAddNew(
 	registerer: User,
-	{ username, firstName, lastName, password: pass, roles }: UserAddNew
+	{ username, firstName, lastName, password: pass, roles }: UserAddNew,
 ): User {
 	if (!registerer.canDo('CREATE_USER')) {
 		debug(logNow(), `User '${registerer.username}' cannot create users.`);
 		throw new PublicError('You cannot create users.');
 	}
 	if (!registerer.canDo('ASSIGN_ROLE')) {
-		debug(logNow(), `User '${registerer.username}' cannot assign roles to users.`);
-		throw new PublicError(`You cannot assign roles and thus cannot create users.`);
+		debug(
+			logNow(),
+			`User '${registerer.username}' cannot assign roles to users.`,
+		);
+		throw new PublicError(
+			`You cannot assign roles and thus cannot create users.`,
+		);
 	}
 	for (const r of roles) {
 		const action = getRoleActionName('ASSIGN_ROLE_USERS', r);
@@ -139,7 +161,7 @@ export function userAddNew(
 		{ encrypted: password[0], iv: password[1] },
 		roles,
 		games,
-		ratings
+		ratings,
 	);
 
 	const userDir = EnvironmentManager.getInstance().getDirUsers();
@@ -190,7 +212,10 @@ export function userUpdateFromPlayerData(players: Player[]) {
 		debug(logNow(), `        User file '${userFile}' written.`);
 
 		debug(logNow(), '    Server memory...');
-		debug(logNow(), `        User '${u.user.username}' is at index '${u.index}'`);
+		debug(
+			logNow(),
+			`        User '${u.user.username}' is at index '${u.index}'`,
+		);
 		mem.replaceUser(u.user, u.index);
 	}
 }
@@ -201,10 +226,17 @@ interface UserSelfChangePassword {
 	newPassword: string;
 }
 
-export function userSelfChangePassword(user: User, { session, oldPassword, newPassword }: UserSelfChangePassword) {
+export function userSelfChangePassword(
+	user: User,
+	{ session, oldPassword, newPassword }: UserSelfChangePassword,
+) {
 	// check if password is correct
 	const oldPwd = user.password;
-	const isPasswordCorrect = isPasswordOfUserCorrect(user.username, oldPassword, oldPwd);
+	const isPasswordCorrect = isPasswordOfUserCorrect(
+		user.username,
+		oldPassword,
+		oldPwd,
+	);
 
 	// is the password correct?
 	if (!isPasswordCorrect) {

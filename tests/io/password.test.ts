@@ -27,6 +27,9 @@ import { passwordFromString } from '@server/io/password';
 
 describe('From string', () => {
 	test('creates a Password from a string', () => {
-		expect(passwordFromString('{"encrypted": "1234", "iv": "asdf"}')).toEqual({ encrypted: '1234', iv: 'asdf' });
+		expect(passwordFromString('{"encrypted": "1234", "iv": "asdf"}')).toEqual({
+			encrypted: '1234',
+			iv: 'asdf',
+		});
 	});
 });

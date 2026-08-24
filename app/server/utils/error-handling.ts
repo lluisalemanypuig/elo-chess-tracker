@@ -23,15 +23,16 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
+import { logNow } from '@common/utils/time';
+import { InternalError } from '@server/models/error-types/internal-error';
+import { PublicError } from '@server/models/error-types/public-error';
 import Debug from 'debug';
-const debug = Debug('ELO_CHESS_TRACKER:serverGraphs');
 import { Response } from 'express';
 
-import { logNow } from '@common/utils/time';
-import { PublicError } from '@server/models/error-types/public-error';
-import { InternalError } from '@server/models/error-types/internal-error';
+const debug = Debug('ELO_CHESS_TRACKER:serverGraphs');
 
-export const internalErrorMessage = 'Internal error. Contact your administrator.';
+export const internalErrorMessage =
+	'Internal error. Contact your administrator.';
 
 export function handleError(e: Error, res: Response) {
 	if (e instanceof PublicError) {

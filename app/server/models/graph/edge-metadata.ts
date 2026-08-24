@@ -30,7 +30,7 @@ export const EdgeMetadataSchema = z
 	.object({
 		numGamesWon: z.number().gte(0),
 		numGamesDrawn: z.number().gte(0),
-		numGamesLost: z.number().gte(0)
+		numGamesLost: z.number().gte(0),
 	})
 	.strict();
 
@@ -48,7 +48,11 @@ export class EdgeMetadata {
 	// The number of games in which B beats A.
 	public numGamesLost: number = 0;
 
-	constructor(numGamesWon: number, numGamesDrawn: number, numGamesLost: number) {
+	constructor(
+		numGamesWon: number,
+		numGamesDrawn: number,
+		numGamesLost: number,
+	) {
 		this.numGamesWon = numGamesWon;
 		this.numGamesDrawn = numGamesDrawn;
 		this.numGamesLost = numGamesLost;
@@ -68,7 +72,7 @@ export class EdgeMetadata {
 		return new EdgeMetadata(
 			result === 'white_wins' ? 1 : 0,
 			result === 'draw' ? 1 : 0,
-			result === 'black_wins' ? 1 : 0
+			result === 'black_wins' ? 1 : 0,
 		);
 	}
 
@@ -80,7 +84,11 @@ export class EdgeMetadata {
 	}
 
 	clone(): EdgeMetadata {
-		return new EdgeMetadata(this.numGamesWon, this.numGamesDrawn, this.numGamesLost);
+		return new EdgeMetadata(
+			this.numGamesWon,
+			this.numGamesDrawn,
+			this.numGamesLost,
+		);
 	}
 
 	decrease(res: GameResult) {
@@ -94,7 +102,11 @@ export class EdgeMetadata {
 	}
 
 	allZero(): boolean {
-		return this.numGamesDrawn === 0 && this.numGamesLost === 0 && this.numGamesWon === 0;
+		return (
+			this.numGamesDrawn === 0 &&
+			this.numGamesLost === 0 &&
+			this.numGamesWon === 0
+		);
 	}
 
 	static empty(): EdgeMetadata {

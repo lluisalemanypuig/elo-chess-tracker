@@ -23,21 +23,29 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { z } from 'zod';
-import { DateFull, DateFullSchema } from '@common/utils/time';
+import { ChallengeId, ChallengeIdSchema } from '@common/models/challenge-id';
+import { GameResult, GameResultSchema } from '@common/models/game-result';
+import {
+	PlayerPrivateId,
+	PlayerPrivateIdSchema,
+} from '@common/models/player-id';
 import {
 	TimeControlId,
 	TimeControlIdSchema,
 	TimeControlName,
-	TimeControlNameSchema
+	TimeControlNameSchema,
 } from '@common/models/time-control';
-import { ChallengeId, ChallengeIdSchema } from '@common/models/challenge-id';
-import { PlayerPrivateId, PlayerPrivateIdSchema } from '@common/models/player-id';
-import { GameResult, GameResultSchema } from '@common/models/game-result';
+import { DateFull, DateFullSchema } from '@common/utils/time';
+import { z } from 'zod';
 
 // Challenge state
 
-export const CHALLENGE_STATE = ['PENDING_ACCEPT', 'PENDING_RESULT', 'PENDING_RESULT_AGREE', 'COMPLETED'] as const;
+export const CHALLENGE_STATE = [
+	'PENDING_ACCEPT',
+	'PENDING_RESULT',
+	'PENDING_RESULT_AGREE',
+	'COMPLETED',
+] as const;
 
 export const ChallengeStateSchema = z.enum(CHALLENGE_STATE);
 export type ChallengeState = z.infer<typeof ChallengeStateSchema>;
@@ -78,7 +86,7 @@ export const ChallengeSchema = z
 		result: GameResultSchema.optional(),
 
 		// the state of the challenge
-		state: ChallengeStateSchema
+		state: ChallengeStateSchema,
 	})
 	.strict();
 
@@ -100,7 +108,7 @@ export function newChallenge(
 	sentTo: PlayerPrivateId,
 	timeControlId: TimeControlId,
 	timeControlName: TimeControlName,
-	whenChallengeSent: DateFull
+	whenChallengeSent: DateFull,
 ): Challenge {
 	return {
 		id: id,
@@ -118,7 +126,7 @@ export function newChallenge(
 		white: undefined,
 		black: undefined,
 		result: undefined,
-		state: 'PENDING_ACCEPT'
+		state: 'PENDING_ACCEPT',
 	};
 }
 
@@ -145,7 +153,10 @@ export interface ChallengeSetResult {
 }
 
 // Set the result of a challenge. Checks integrity of input parameters.s
-export function setResult(c: Challenge, { by, when, white, black, result }: ChallengeSetResult) {
+export function setResult(
+	c: Challenge,
+	{ by, when, white, black, result }: ChallengeSetResult,
+) {
 	c.resultSetBy = by;
 	c.whenResultSet = when;
 	c.white = white;

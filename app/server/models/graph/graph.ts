@@ -23,21 +23,24 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { z } from 'zod';
-import { EdgeMetadata } from '@server/models/graph/edge-metadata';
-import { EdgeSchema, Edge } from '@server/models/graph/edge';
-import { searchByKey, whereShouldBeInsertedByKey } from '@server/utils/searching';
+import { GameResult, oppositeResult } from '@common/models/game-result';
+import { PlayerPrivateId } from '@common/models/player-id';
 import { isDefined, isNotDefined } from '@common/utils/is-defined';
 import { InternalError } from '@server/models/error-types/internal-error';
-import { PlayerPrivateId } from '@common/models/player-id';
-import { GameResult, oppositeResult } from '@common/models/game-result';
+import { Edge, EdgeSchema } from '@server/models/graph/edge';
+import { EdgeMetadata } from '@server/models/graph/edge-metadata';
+import {
+	searchByKey,
+	whereShouldBeInsertedByKey,
+} from '@server/utils/searching';
+import { z } from 'zod';
 
 export const NeighborhoodSchema = z.array(EdgeSchema);
 
 export const GraphSchema = z
 	.object({
 		adjacencyList: z.map(z.string(), NeighborhoodSchema),
-		inAdjacencyList: z.map(z.string(), NeighborhoodSchema)
+		inAdjacencyList: z.map(z.string(), NeighborhoodSchema),
 	})
 	.strict();
 
@@ -65,10 +68,18 @@ export class Graph {
 		return this.inAdjacencyList.keys();
 	}
 
-	private static insertIntoList(_u: PlayerPrivateId, v: PlayerPrivateId, edge: Edge, nU: Neighborhood) {
-		const [edgeIdx, exists]: [number, boolean] = whereShouldBeInsertedByKey(nU, (e: Edge): number => {
-			return v.localeCompare(e.neighbor);
-		});
+	private static insertIntoList(
+		_u: PlayerPrivateId,
+		v: PlayerPrivateId,
+		edge: Edge,
+		nU: Neighborhood,
+	) {
+		const [edgeIdx, exists]: [number, boolean] = whereShouldBeInsertedByKey(
+			nU,
+			(e: Edge): number => {
+				return v.localeCompare(e.neighbor);
+			},
+		);
 		if (exists) {
 			nU[edgeIdx].merge(edge);
 		} else {
@@ -127,8 +138,15 @@ export class Graph {
 		Graph.insertIntoList(b, w, bEdge, bInList as Neighborhood);
 	}
 
-	private static deleteFromList(_u: PlayerPrivateId, v: PlayerPrivateId, result: GameResult, nU: Neighborhood) {
-		const index = searchByKey(nU, (e: Edge): number => v.localeCompare(e.neighbor));
+	private static deleteFromList(
+		_u: PlayerPrivateId,
+		v: PlayerPrivateId,
+		result: GameResult,
+		nU: Neighborhood,
+	) {
+		const index = searchByKey(nU, (e: Edge): number =>
+			v.localeCompare(e.neighbor),
+		);
 		nU[index].metadata.decrease(result);
 		if (nU[index].metadata.allZero()) {
 			nU.splice(index, 1);
@@ -147,7 +165,9 @@ export class Graph {
 		// delete from w's outgoing edges list
 		let wOutList = this.adjacencyList.get(w);
 		if (isNotDefined(wOutList)) {
-			throw new InternalError(`Player '${w}' does not have any outgoing edge, and so no edge to '${b}'.`);
+			throw new InternalError(
+				`Player '${w}' does not have any outgoing edge, and so no edge to '${b}'.`,
+			);
 		}
 		Graph.deleteFromList(w, b, result, wOutList);
 		if (wOutList.length === 0) {
@@ -157,7 +177,9 @@ export class Graph {
 		// delete from b's ingoing edges list
 		let bInList = this.inAdjacencyList.get(b);
 		if (isNotDefined(bInList)) {
-			throw new InternalError(`Player '${b}' does not have any ingoing edge, and so no edge from '${w}'.`);
+			throw new InternalError(
+				`Player '${b}' does not have any ingoing edge, and so no edge from '${w}'.`,
+			);
 		}
 		Graph.deleteFromList(b, w, oppositeResult(result), bInList);
 		if (bInList.length === 0) {
@@ -172,7 +194,10 @@ export class Graph {
 	 * @returns The summary of the games between @e u and @e v when @e u plays
 	 * as white.
 	 */
-	getDataAsWhite(u: PlayerPrivateId, v: PlayerPrivateId): EdgeMetadata | undefined {
+	getDataAsWhite(
+		u: PlayerPrivateId,
+		v: PlayerPrivateId,
+	): EdgeMetadata | undefined {
 		const wList = this.adjacencyList.get(u);
 		if (isNotDefined(wList)) {
 			return undefined;
@@ -190,7 +215,10 @@ export class Graph {
 	 * @returns The summary of the games between @e u and @e v when @e u plays
 	 * as black.
 	 */
-	getDataAsBlack(u: PlayerPrivateId, v: PlayerPrivateId): EdgeMetadata | undefined {
+	getDataAsBlack(
+		u: PlayerPrivateId,
+		v: PlayerPrivateId,
+	): EdgeMetadata | undefined {
 		const uList = this.inAdjacencyList.get(u);
 		if (isNotDefined(uList)) {
 			return undefined;
@@ -207,7 +235,7 @@ export class Graph {
 		v: PlayerPrivateId,
 		oldRes: GameResult,
 		newRes: GameResult,
-		NU: Neighborhood
+		NU: Neighborhood,
 	) {
 		const bIdx = searchByKey(NU, function (e: Edge): number {
 			return v.localeCompare(e.neighbor);
@@ -243,7 +271,12 @@ export class Graph {
 	 * @param newRes New result of the game.
 	 * @pre @e oldRes !== @e newResult.
 	 */
-	changeGameResult(w: PlayerPrivateId, b: PlayerPrivateId, oldRes: GameResult, newRes: GameResult) {
+	changeGameResult(
+		w: PlayerPrivateId,
+		b: PlayerPrivateId,
+		oldRes: GameResult,
+		newRes: GameResult,
+	) {
 		const wList = this.adjacencyList.get(w);
 		if (isDefined(wList)) {
 			this.changeGameResultList(w, b, oldRes, newRes, wList);
@@ -251,7 +284,13 @@ export class Graph {
 
 		const bList = this.inAdjacencyList.get(b);
 		if (isDefined(bList)) {
-			this.changeGameResultList(b, w, oppositeResult(oldRes), oppositeResult(newRes), bList);
+			this.changeGameResultList(
+				b,
+				w,
+				oppositeResult(oldRes),
+				oppositeResult(newRes),
+				bList,
+			);
 		}
 	}
 

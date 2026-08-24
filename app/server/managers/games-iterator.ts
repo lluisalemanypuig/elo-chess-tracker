@@ -23,19 +23,21 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import Debug from 'debug';
-const debug = Debug('ELO_CHESS_TRACKER:managers/challenges');
-
-import path from 'path';
-import fs from 'fs';
-
-import { Game } from '@server/models/game';
+import { GameId } from '@common/models/game-id';
+import { isNotDefined } from '@common/utils/is-defined';
 import { DateFull, DateMajor, logNow, toDateMajor } from '@common/utils/time';
 import { gameArrayFromString } from '@server/io/game';
-import { searchByKey, whereShouldBeInsertedByKey } from '@server/utils/searching';
+import { Game } from '@server/models/game';
 import { readDirectory } from '@server/utils/read-directory';
-import { isNotDefined } from '@common/utils/is-defined';
-import { GameId } from '@common/models/game-id';
+import {
+	searchByKey,
+	whereShouldBeInsertedByKey,
+} from '@server/utils/searching';
+import Debug from 'debug';
+import fs from 'fs';
+import path from 'path';
+
+const debug = Debug('ELO_CHESS_TRACKER:managers/challenges');
 
 /**
  * @brief Game database iterator
@@ -54,10 +56,16 @@ export class GamesIterator {
 	private gameIdx: number = 0;
 
 	private loadCurrentRecord() {
-		const filename = path.join(this.directory, this.recordFilesList[this.recordIdx]);
+		const filename = path.join(
+			this.directory,
+			this.recordFilesList[this.recordIdx],
+		);
 		const array = gameArrayFromString(fs.readFileSync(filename, 'utf8'));
 		if (isNotDefined(array)) {
-			debug(logNow(), `File '${filename}' does not contain a valid game array.`);
+			debug(
+				logNow(),
+				`File '${filename}' does not contain a valid game array.`,
+			);
 			return;
 		}
 		this.gameSet = array;
@@ -176,9 +184,12 @@ export class GamesIterator {
 
 	// Locate the record named 'record'
 	locateRecord(record: DateMajor): boolean {
-		const [idx, exists] = whereShouldBeInsertedByKey(this.recordFilesList, (s: DateMajor): number => {
-			return record.localeCompare(s);
-		});
+		const [idx, exists] = whereShouldBeInsertedByKey(
+			this.recordFilesList,
+			(s: DateMajor): number => {
+				return record.localeCompare(s);
+			},
+		);
 		this.recordIdx = idx;
 		this.gameIdx = 0;
 		if (this.recordIdx < this.recordFilesList.length) {
@@ -202,9 +213,12 @@ export class GamesIterator {
 	 * @post The iterator is left in an invalid state in case of failure.
 	 */
 	locateFirstGameAfter(record: DateMajor, when: DateFull): boolean {
-		const [recordIdx, recordExists] = whereShouldBeInsertedByKey(this.recordFilesList, (s: DateMajor): number => {
-			return record.localeCompare(s);
-		});
+		const [recordIdx, recordExists] = whereShouldBeInsertedByKey(
+			this.recordFilesList,
+			(s: DateMajor): number => {
+				return record.localeCompare(s);
+			},
+		);
 		if (!recordExists) {
 			this.recordIdx = recordIdx;
 			this.gameIdx = 0;
@@ -233,9 +247,12 @@ export class GamesIterator {
 	 * @post The iterator is left in an invalid state in case of failure.
 	 */
 	locateGame(record: DateMajor, id: GameId): boolean {
-		this.recordIdx = searchByKey(this.recordFilesList, (s: DateMajor): number => {
-			return record.localeCompare(s);
-		});
+		this.recordIdx = searchByKey(
+			this.recordFilesList,
+			(s: DateMajor): number => {
+				return record.localeCompare(s);
+			},
+		);
 		if (this.recordIdx === -1) {
 			this.recordIdx = this.recordFilesList.length;
 			return false;

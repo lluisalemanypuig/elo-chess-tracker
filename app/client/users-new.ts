@@ -19,15 +19,19 @@ Full source code of elo-chess-tracker:
 	https://github.com/lluisalemanypuig/elo-chess-tracker
 */
 
-import 'htmx.org';
-
 import { messageFromResponse, serverCall } from '@client/action';
-import { isNotDefined } from '@common/utils/is-defined';
-import { UserRole, ALL_USER_ROLES, arrayStringToRoles, USER_ROLE_TO_STRING } from '@common/models/user-role';
 import { ROUTES } from '@common/api/routes';
 import { toPlayerPrivateId } from '@common/models/player-id';
 import { toUserGivenName } from '@common/models/user-given-name';
+import {
+	ALL_USER_ROLES,
+	arrayStringToRoles,
+	USER_ROLE_TO_STRING,
+	UserRole,
+} from '@common/models/user-role';
+import { isNotDefined } from '@common/utils/is-defined';
 import { shuffleString } from '@common/utils/shuffle-random';
+import 'htmx.org';
 
 async function submitNewUserClicked(_event: any) {
 	// username box
@@ -111,7 +115,7 @@ async function submitNewUserClicked(_event: any) {
 		firstName: toUserGivenName(firstname),
 		lastName: toUserGivenName(lastname),
 		roles: selectedRoles,
-		password: password
+		password: password,
 	});
 	if (response.status === 'Error') {
 		alert(messageFromResponse(response));
@@ -154,17 +158,23 @@ function generateRandomPassword(_event: Event) {
 
 window.onload = function () {
 	// fill in select role dropdown with values
-	const roleDiv = document.getElementById('div-role-checkboxes') as HTMLDivElement;
+	const roleDiv = document.getElementById(
+		'div-role-checkboxes',
+	) as HTMLDivElement;
 	ALL_USER_ROLES.forEach(function (str: string) {
 		addCheckbox(roleDiv, USER_ROLE_TO_STRING[str as UserRole], str);
 	});
 	roleDiv.appendChild(document.createElement('br'));
 
 	// set the onclick event for random password generation
-	const passwordGenerator = document.getElementById('random-password-button') as HTMLDivElement;
+	const passwordGenerator = document.getElementById(
+		'random-password-button',
+	) as HTMLDivElement;
 	passwordGenerator.onclick = generateRandomPassword;
 
 	// link button click with function
-	const submitNewUser = document.getElementById('submit-new-user-button') as HTMLLinkElement;
+	const submitNewUser = document.getElementById(
+		'submit-new-user-button',
+	) as HTMLLinkElement;
 	submitNewUser.onclick = submitNewUserClicked;
 };

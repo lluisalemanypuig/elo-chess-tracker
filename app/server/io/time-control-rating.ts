@@ -23,19 +23,36 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { RatingSystemManager } from '@server/managers/rating-system-manager';
-import { TimeControlRating, TimeControlRatingKeys } from '@server/models/time-control-rating';
 import { readJsonArrayString, readJsonObjectString } from '@server/io/generic';
+import { RatingSystemManager } from '@server/managers/rating-system-manager';
+import {
+	TimeControlRating,
+	TimeControlRatingKeys,
+} from '@server/models/time-control-rating';
 
 function timeControlRatingFromJson(json: any) {
-	const rating = RatingSystemManager.getInstance().getRatingFromJson(json.rating);
+	const rating = RatingSystemManager.getInstance().getRatingFromJson(
+		json.rating,
+	);
 	return new TimeControlRating(json.timeControl, rating);
 }
 
-export function timeControlRatingFromString(str: string): TimeControlRating | null {
-	return readJsonObjectString(str, TimeControlRatingKeys, timeControlRatingFromJson);
+export function timeControlRatingFromString(
+	str: string,
+): TimeControlRating | null {
+	return readJsonObjectString(
+		str,
+		TimeControlRatingKeys,
+		timeControlRatingFromJson,
+	);
 }
 
-export function timeControlRatingArrayFromString(str: string): TimeControlRating[] | null {
-	return readJsonArrayString(str, TimeControlRatingKeys, timeControlRatingFromJson);
+export function timeControlRatingArrayFromString(
+	str: string,
+): TimeControlRating[] | null {
+	return readJsonArrayString(
+		str,
+		TimeControlRatingKeys,
+		timeControlRatingFromJson,
+	);
 }

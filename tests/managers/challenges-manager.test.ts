@@ -24,11 +24,17 @@ Contact:
 */
 
 import { toChallengeId } from '@common/models/challenge-id';
-import { ChallengesManager, numberToChallengeId } from '@server/managers/challenges-manager';
-import { newChallenge } from '@server/models/challenge';
-import { toTimeControlId, toTimeControlName } from '@common/models/time-control';
-import { toDateFull } from '@common/utils/time';
 import { toPlayerPrivateId } from '@common/models/player-id';
+import {
+	toTimeControlId,
+	toTimeControlName,
+} from '@common/models/time-control';
+import { toDateFull } from '@common/utils/time';
+import {
+	ChallengesManager,
+	numberToChallengeId,
+} from '@server/managers/challenges-manager';
+import { newChallenge } from '@server/models/challenge';
 
 const Classical = toTimeControlId('Classical');
 const Classical90p30 = toTimeControlName('Classical (90 + 30)');
@@ -51,7 +57,7 @@ describe('Challenges Manager', () => {
 			toPlayerPrivateId('b'),
 			Classical,
 			Classical90p30,
-			toDateFull('2025-01-07..17:49:20:000')
+			toDateFull('2025-01-07..17:49:20:000'),
 		);
 		expect(challenges.getChallengeIndex(c)).toBe(-1);
 		expect(challenges.getChallengeIndexById(id00001)).toBe(-1);
@@ -86,7 +92,7 @@ describe('Challenges Manager', () => {
 			toPlayerPrivateId('b'),
 			Classical,
 			Classical90p30,
-			toDateFull('yesterday')
+			toDateFull('yesterday'),
 		);
 
 		const today_id = challenges.newChallengeId();
@@ -98,7 +104,7 @@ describe('Challenges Manager', () => {
 			toPlayerPrivateId('b'),
 			Classical,
 			Classical90p30,
-			toDateFull('today')
+			toDateFull('today'),
 		);
 
 		const tomorrow_id = challenges.newChallengeId();
@@ -110,7 +116,7 @@ describe('Challenges Manager', () => {
 			toPlayerPrivateId('b'),
 			Classical,
 			Classical90p30,
-			toDateFull('tomorrow')
+			toDateFull('tomorrow'),
 		);
 
 		challenges.addChallenge(yesterday);
@@ -149,7 +155,7 @@ describe('Challenges Manager', () => {
 			toPlayerPrivateId('b'),
 			Classical,
 			Classical90p30,
-			toDateFull('yesterday')
+			toDateFull('yesterday'),
 		);
 
 		const today_id = challenges.newChallengeId();
@@ -161,7 +167,7 @@ describe('Challenges Manager', () => {
 			toPlayerPrivateId('b'),
 			Classical,
 			Classical90p30,
-			toDateFull('today')
+			toDateFull('today'),
 		);
 
 		const tomorrow_id = challenges.newChallengeId();
@@ -173,7 +179,7 @@ describe('Challenges Manager', () => {
 			toPlayerPrivateId('b'),
 			Classical,
 			Classical90p30,
-			toDateFull('tomorrow')
+			toDateFull('tomorrow'),
 		);
 
 		const day_after_tomorrow_id = challenges.newChallengeId();
@@ -185,7 +191,7 @@ describe('Challenges Manager', () => {
 			toPlayerPrivateId('b'),
 			Classical,
 			Classical90p30,
-			toDateFull('day_after_tomorrow')
+			toDateFull('day_after_tomorrow'),
 		);
 
 		challenges.addChallenge(yesterday);
@@ -233,7 +239,9 @@ describe('Challenges Manager', () => {
 
 		expect(challenges.getChallengeIndex(day_after_tomorrow)).toBe(2);
 		expect(challenges.getChallengeIndexById(day_after_tomorrow.id)).toBe(2);
-		expect(challenges.getChallengeById(day_after_tomorrow.id)).toEqual(day_after_tomorrow);
+		expect(challenges.getChallengeById(day_after_tomorrow.id)).toEqual(
+			day_after_tomorrow,
+		);
 
 		expect(challenges.getChallengeAt(0)).toEqual(today);
 		expect(challenges.getChallengeAt(1)).toEqual(tomorrow);
@@ -259,7 +267,9 @@ describe('Challenges Manager', () => {
 
 		expect(challenges.getChallengeIndex(day_after_tomorrow)).toBe(1);
 		expect(challenges.getChallengeIndexById(day_after_tomorrow.id)).toBe(1);
-		expect(challenges.getChallengeById(day_after_tomorrow.id)).toEqual(day_after_tomorrow);
+		expect(challenges.getChallengeById(day_after_tomorrow.id)).toEqual(
+			day_after_tomorrow,
+		);
 
 		expect(challenges.getChallengeAt(0)).toEqual(today);
 		expect(challenges.getChallengeAt(1)).toEqual(day_after_tomorrow);
@@ -285,7 +295,9 @@ describe('Challenges Manager', () => {
 
 		expect(challenges.getChallengeIndex(day_after_tomorrow)).toBe(0);
 		expect(challenges.getChallengeIndexById(day_after_tomorrow.id)).toBe(0);
-		expect(challenges.getChallengeById(day_after_tomorrow.id)).toEqual(day_after_tomorrow);
+		expect(challenges.getChallengeById(day_after_tomorrow.id)).toEqual(
+			day_after_tomorrow,
+		);
 
 		expect(challenges.getChallengeAt(0)).toEqual(day_after_tomorrow);
 		expect(challenges.getChallengeAt(1)).toEqual(undefined);
@@ -311,7 +323,9 @@ describe('Challenges Manager', () => {
 
 		expect(challenges.getChallengeIndex(day_after_tomorrow)).toBe(-1);
 		expect(challenges.getChallengeIndexById(day_after_tomorrow.id)).toBe(-1);
-		expect(challenges.getChallengeById(day_after_tomorrow.id)).toEqual(undefined);
+		expect(challenges.getChallengeById(day_after_tomorrow.id)).toEqual(
+			undefined,
+		);
 
 		expect(challenges.getChallengeAt(0)).toEqual(undefined);
 		expect(challenges.getChallengeAt(1)).toEqual(undefined);

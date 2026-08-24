@@ -23,27 +23,29 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import fs from 'fs';
-import path from 'path';
-
+import { toGameId } from '@common/models/game-id';
+import { toPlayerPrivateId } from '@common/models/player-id';
+import {
+	toTimeControlId,
+	toTimeControlName,
+} from '@common/models/time-control';
+import { toUserGivenName } from '@common/models/user-given-name';
+import { isNotDefined } from '@common/utils/is-defined';
+import { toDateMajor, toDateMinor } from '@common/utils/time';
+import { EnvironmentManager } from '@server/managers/environment-manager';
 import { gameAddNew, gameDelete } from '@server/managers/games';
+import { GamesManager } from '@server/managers/games-manager';
+import { GraphsManager } from '@server/managers/graphs-manager';
 import { serverInitFromData } from '@server/managers/memory/initialization';
 import { userAddNew } from '@server/managers/users';
-import { runCommand, TestError } from '@tests';
-import { User } from '@server/models/user';
-import { GamesManager } from '@server/managers/games-manager';
-import { EnvironmentManager } from '@server/managers/environment-manager';
-import { EdgeMetadata } from '@server/models/graph/edge-metadata';
-import { GraphsManager } from '@server/managers/graphs-manager';
-import { Graph } from '@server/models/graph/graph';
-import { Configuration } from '@server/models/configuration/configuration';
-import { toTimeControlId, toTimeControlName } from '@common/models/time-control';
-import { toDateMajor, toDateMinor } from '@common/utils/time';
 import { UsersManager } from '@server/managers/users-manager';
-import { isNotDefined } from '@common/utils/is-defined';
-import { toPlayerPrivateId } from '@common/models/player-id';
-import { toUserGivenName } from '@common/models/user-given-name';
-import { toGameId } from '@common/models/game-id';
+import { Configuration } from '@server/models/configuration/configuration';
+import { EdgeMetadata } from '@server/models/graph/edge-metadata';
+import { Graph } from '@server/models/graph/graph';
+import { User } from '@server/models/user';
+import { runCommand, TestError } from '@tests';
+import fs from 'fs';
+import path from 'path';
 
 const Classical = toTimeControlId('Classical');
 const Classical90p30 = toTimeControlName('Classical (90 + 30)');
@@ -60,48 +62,48 @@ const configuration: Configuration = {
 		sslCertificate: {
 			publicKeyFile: 'sadf',
 			privateKeyFile: 'qwer',
-			passphraseFile: 'kgj68'
+			passphraseFile: 'kgj68',
 		},
 		favicon: 'favicon.png',
 		loginPage: {
 			title: 'Login title',
-			icon: 'login.png'
+			icon: 'login.png',
 		},
 		homePage: {
 			title: 'Home title',
-			icon: 'home.png'
-		}
+			icon: 'home.png',
+		},
 	},
 	server: {
 		domainName: '$DOMAIN_NAME',
 		ports: {
 			http: '8080',
-			https: '8443'
-		}
+			https: '8443',
+		},
 	},
 	ratingSystem: 'Elo',
 	timeControls: [
 		{
 			id: Classical,
-			name: Classical90p30
+			name: Classical90p30,
 		},
 		{
 			id: Rapid,
-			name: Rapid12p5
+			name: Rapid12p5,
 		},
 		{
 			id: Rapid,
-			name: Rapid10p0
+			name: Rapid10p0,
 		},
 		{
 			id: Blitz,
-			name: Blitz5p3
-		}
+			name: Blitz5p3,
+		},
 	],
 	behavior: {
 		challenges: {
-			higherRatedPlayerCanDeclineChallengeFromLowerRatedPlayer: false
-		}
+			higherRatedPlayerCanDeclineChallengeFromLowerRatedPlayer: false,
+		},
 	},
 	permissions: {
 		admin: [
@@ -112,12 +114,12 @@ const configuration: Configuration = {
 			'ASSIGN_ROLE_MEMBER',
 			'ASSIGN_ROLE_STUDENT',
 			'DELETE_GAMES',
-			'DELETE_GAMES_ADMIN'
+			'DELETE_GAMES_ADMIN',
 		],
 		teacher: [],
 		member: [],
-		student: []
-	}
+		student: [],
+	},
 };
 
 let aU: User;
@@ -151,19 +153,59 @@ const ff = toUserGivenName('ff');
 describe('Server setup', () => {
 	test('Fill an empty server', async () => {
 		await runCommand('./tests/initialize-empty.sh');
-		expect(() => serverInitFromData('tests/webpage', configuration)).not.toThrow();
+		expect(() =>
+			serverInitFromData('tests/webpage', configuration),
+		).not.toThrow();
 
-		const admin = UsersManager.getInstance().getAllUserDataByPrivateId(toPlayerPrivateId('admin.default'));
+		const admin = UsersManager.getInstance().getAllUserDataByPrivateId(
+			toPlayerPrivateId('admin.default'),
+		);
 		if (isNotDefined(admin)) {
 			throw new TestError('admin default user could not be retrieved');
 		}
 
-		aU = userAddNew(admin.user, { username: a, firstName: A, lastName: aa, password: 'aaaa', roles: ['ADMIN'] });
-		bU = userAddNew(admin.user, { username: b, firstName: B, lastName: bb, password: 'dddd', roles: ['ADMIN'] });
-		cU = userAddNew(admin.user, { username: c, firstName: C, lastName: cc, password: 'cccc', roles: ['ADMIN'] });
-		dU = userAddNew(admin.user, { username: d, firstName: D, lastName: dd, password: 'dddd', roles: ['ADMIN'] });
-		eU = userAddNew(admin.user, { username: e, firstName: E, lastName: ee, password: 'eeee', roles: ['ADMIN'] });
-		fU = userAddNew(admin.user, { username: f, firstName: F, lastName: ff, password: 'ffff', roles: ['ADMIN'] });
+		aU = userAddNew(admin.user, {
+			username: a,
+			firstName: A,
+			lastName: aa,
+			password: 'aaaa',
+			roles: ['ADMIN'],
+		});
+		bU = userAddNew(admin.user, {
+			username: b,
+			firstName: B,
+			lastName: bb,
+			password: 'dddd',
+			roles: ['ADMIN'],
+		});
+		cU = userAddNew(admin.user, {
+			username: c,
+			firstName: C,
+			lastName: cc,
+			password: 'cccc',
+			roles: ['ADMIN'],
+		});
+		dU = userAddNew(admin.user, {
+			username: d,
+			firstName: D,
+			lastName: dd,
+			password: 'dddd',
+			roles: ['ADMIN'],
+		});
+		eU = userAddNew(admin.user, {
+			username: e,
+			firstName: E,
+			lastName: ee,
+			password: 'eeee',
+			roles: ['ADMIN'],
+		});
+		fU = userAddNew(admin.user, {
+			username: f,
+			firstName: F,
+			lastName: ff,
+			password: 'ffff',
+			roles: ['ADMIN'],
+		});
 	});
 });
 
@@ -177,7 +219,7 @@ describe('Sequential game creation', () => {
 			Blitz,
 			Blitz5p3,
 			toDateMajor('2025-01-19'),
-			toDateMinor('17:06:00:000')
+			toDateMinor('17:06:00:000'),
 		);
 		gameAddNew(
 			'sample',
@@ -187,9 +229,18 @@ describe('Sequential game creation', () => {
 			Blitz,
 			Blitz5p3,
 			toDateMajor('2025-01-19'),
-			toDateMinor('17:06:10:000')
+			toDateMinor('17:06:10:000'),
 		);
-		gameAddNew('sample', eU, fU, 'draw', Blitz, Blitz5p3, toDateMajor('2025-01-19'), toDateMinor('17:06:20:000'));
+		gameAddNew(
+			'sample',
+			eU,
+			fU,
+			'draw',
+			Blitz,
+			Blitz5p3,
+			toDateMajor('2025-01-19'),
+			toDateMinor('17:06:20:000'),
+		);
 		gameAddNew(
 			'sample',
 			aU,
@@ -198,7 +249,7 @@ describe('Sequential game creation', () => {
 			Blitz,
 			Blitz5p3,
 			toDateMajor('2025-01-19'),
-			toDateMinor('17:06:30:000')
+			toDateMinor('17:06:30:000'),
 		);
 		gameAddNew(
 			'sample',
@@ -208,7 +259,7 @@ describe('Sequential game creation', () => {
 			Blitz,
 			Blitz5p3,
 			toDateMajor('2025-01-19'),
-			toDateMinor('17:06:40:000')
+			toDateMinor('17:06:40:000'),
 		);
 
 		expect(aU.getGames(Blitz).length).toBe(1);
@@ -306,7 +357,8 @@ describe('Sequential game creation', () => {
 		expect(g.getDataAsBlack(f, d)).toEqual(undefined);
 		expect(g.getDataAsBlack(f, e)).toEqual(new EdgeMetadata(0, 1, 0));
 
-		const blitz_dir = EnvironmentManager.getInstance().getDirGraphsTimeControl(Blitz);
+		const blitz_dir =
+			EnvironmentManager.getInstance().getDirGraphsTimeControl(Blitz);
 		expect(fs.existsSync(path.join(blitz_dir, 'a'))).toBe(true);
 		expect(fs.existsSync(path.join(blitz_dir, 'b'))).toBe(true);
 		expect(fs.existsSync(path.join(blitz_dir, 'c'))).toBe(true);
@@ -343,7 +395,8 @@ describe('Sequential game creation', () => {
 		expect(eU.getRating(Blitz).numWonDrawnLost()).toEqual([1, 0, 1, 0]);
 		expect(fU.getRating(Blitz).numWonDrawnLost()).toEqual([2, 1, 1, 0]);
 
-		const blitz_dir = EnvironmentManager.getInstance().getDirGamesTimeControl(Blitz);
+		const blitz_dir =
+			EnvironmentManager.getInstance().getDirGamesTimeControl(Blitz);
 		expect(fs.existsSync(path.join(blitz_dir, '2025-01-19'))).toBe(true);
 	});
 
@@ -427,7 +480,8 @@ describe('Sequential game creation', () => {
 		expect(g.getDataAsBlack(f, d)).toEqual(undefined);
 		expect(g.getDataAsBlack(f, e)).toEqual(new EdgeMetadata(0, 1, 0));
 
-		const blitz_dir = EnvironmentManager.getInstance().getDirGraphsTimeControl(Blitz);
+		const blitz_dir =
+			EnvironmentManager.getInstance().getDirGraphsTimeControl(Blitz);
 		expect(fs.existsSync(path.join(blitz_dir, 'a'))).toBe(true);
 		expect(fs.existsSync(path.join(blitz_dir, 'b'))).toBe(true);
 		expect(fs.existsSync(path.join(blitz_dir, 'c'))).toBe(true);
@@ -458,7 +512,8 @@ describe('Sequential game creation', () => {
 		expect(eU.getRating(Blitz).numWonDrawnLost()).toEqual([1, 0, 1, 0]);
 		expect(fU.getRating(Blitz).numWonDrawnLost()).toEqual([1, 0, 1, 0]);
 
-		const blitz_dir = EnvironmentManager.getInstance().getDirGamesTimeControl(Blitz);
+		const blitz_dir =
+			EnvironmentManager.getInstance().getDirGamesTimeControl(Blitz);
 		expect(fs.existsSync(path.join(blitz_dir, '2025-01-19'))).toBe(true);
 	});
 
@@ -542,7 +597,8 @@ describe('Sequential game creation', () => {
 		expect(g.getDataAsBlack(f, d)).toEqual(undefined);
 		expect(g.getDataAsBlack(f, e)).toEqual(new EdgeMetadata(0, 1, 0));
 
-		const blitz_dir = EnvironmentManager.getInstance().getDirGraphsTimeControl(Blitz);
+		const blitz_dir =
+			EnvironmentManager.getInstance().getDirGraphsTimeControl(Blitz);
 		expect(fs.existsSync(path.join(blitz_dir, 'a'))).toBe(false);
 		expect(fs.existsSync(path.join(blitz_dir, 'b'))).toBe(true);
 		expect(fs.existsSync(path.join(blitz_dir, 'c'))).toBe(true);
@@ -573,7 +629,8 @@ describe('Sequential game creation', () => {
 		expect(eU.getRating(Blitz).numWonDrawnLost()).toEqual([0, 0, 0, 0]);
 		expect(fU.getRating(Blitz).numWonDrawnLost()).toEqual([0, 0, 0, 0]);
 
-		const blitz_dir = EnvironmentManager.getInstance().getDirGamesTimeControl(Blitz);
+		const blitz_dir =
+			EnvironmentManager.getInstance().getDirGamesTimeControl(Blitz);
 		expect(fs.existsSync(path.join(blitz_dir, '2025-01-19'))).toBe(true);
 	});
 
@@ -657,7 +714,8 @@ describe('Sequential game creation', () => {
 		expect(g.getDataAsBlack(f, d)).toEqual(undefined);
 		expect(g.getDataAsBlack(f, e)).toEqual(undefined);
 
-		const blitz_dir = EnvironmentManager.getInstance().getDirGraphsTimeControl(Blitz);
+		const blitz_dir =
+			EnvironmentManager.getInstance().getDirGraphsTimeControl(Blitz);
 		expect(fs.existsSync(path.join(blitz_dir, 'a'))).toBe(false);
 		expect(fs.existsSync(path.join(blitz_dir, 'b'))).toBe(true);
 		expect(fs.existsSync(path.join(blitz_dir, 'c'))).toBe(true);
@@ -688,7 +746,8 @@ describe('Sequential game creation', () => {
 		expect(eU.getRating(Blitz).numWonDrawnLost()).toEqual([0, 0, 0, 0]);
 		expect(fU.getRating(Blitz).numWonDrawnLost()).toEqual([0, 0, 0, 0]);
 
-		const blitz_dir = EnvironmentManager.getInstance().getDirGamesTimeControl(Blitz);
+		const blitz_dir =
+			EnvironmentManager.getInstance().getDirGamesTimeControl(Blitz);
 		expect(fs.existsSync(path.join(blitz_dir, '2025-01-19'))).toBe(true);
 	});
 
@@ -772,7 +831,8 @@ describe('Sequential game creation', () => {
 		expect(g.getDataAsBlack(f, d)).toEqual(undefined);
 		expect(g.getDataAsBlack(f, e)).toEqual(undefined);
 
-		const blitz_dir = EnvironmentManager.getInstance().getDirGraphsTimeControl(Blitz);
+		const blitz_dir =
+			EnvironmentManager.getInstance().getDirGraphsTimeControl(Blitz);
 		expect(fs.existsSync(path.join(blitz_dir, 'a'))).toBe(false);
 		expect(fs.existsSync(path.join(blitz_dir, 'b'))).toBe(true);
 		expect(fs.existsSync(path.join(blitz_dir, 'c'))).toBe(false);
@@ -803,7 +863,8 @@ describe('Sequential game creation', () => {
 		expect(eU.getRating(Blitz).numWonDrawnLost()).toEqual([0, 0, 0, 0]);
 		expect(fU.getRating(Blitz).numWonDrawnLost()).toEqual([0, 0, 0, 0]);
 
-		const blitz_dir = EnvironmentManager.getInstance().getDirGamesTimeControl(Blitz);
+		const blitz_dir =
+			EnvironmentManager.getInstance().getDirGamesTimeControl(Blitz);
 		expect(fs.existsSync(path.join(blitz_dir, '2025-01-19'))).toBe(false);
 	});
 
@@ -887,7 +948,8 @@ describe('Sequential game creation', () => {
 		expect(g.getDataAsBlack(f, d)).toEqual(undefined);
 		expect(g.getDataAsBlack(f, e)).toEqual(undefined);
 
-		const blitz_dir = EnvironmentManager.getInstance().getDirGraphsTimeControl(Blitz);
+		const blitz_dir =
+			EnvironmentManager.getInstance().getDirGraphsTimeControl(Blitz);
 		expect(fs.existsSync(path.join(blitz_dir, 'a'))).toBe(false);
 		expect(fs.existsSync(path.join(blitz_dir, 'b'))).toBe(false);
 		expect(fs.existsSync(path.join(blitz_dir, 'c'))).toBe(false);

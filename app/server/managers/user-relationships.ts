@@ -24,9 +24,9 @@ Contact:
 */
 
 import { TimeControlId } from '@common/models/time-control';
-import { User } from '@server/models/user';
 import { UserRole } from '@common/models/user-role';
 import { UsersBehavior } from '@server/managers/users-behavior';
+import { User } from '@server/models/user';
 
 export function canUserEditUser(editor: User, edited: User): boolean {
 	return (
@@ -108,7 +108,11 @@ export function canUserSendChallenge(sender: User, receiver: User): boolean {
 	);
 }
 
-export function canUserDeclineChallenge(u1: User, u2: User, id: TimeControlId): boolean {
+export function canUserDeclineChallenge(
+	u1: User,
+	u2: User,
+	id: TimeControlId,
+): boolean {
 	if (u1.getRating(id).rating > u2.getRating(id).rating) {
 		return UsersBehavior.getInstance().canHigherRatedDeclineChallengeLowerRated();
 	}

@@ -46,7 +46,13 @@ export class Rating {
 	 * @param drawn Number of drawn games
 	 * @param lost Number of lost games
 	 */
-	constructor(rating: number, numGames: number, won: number, drawn: number, lost: number) {
+	constructor(
+		rating: number,
+		numGames: number,
+		won: number,
+		drawn: number,
+		lost: number,
+	) {
 		this.rating = rating;
 		this.numGames = numGames;
 		this.won = won;
@@ -55,13 +61,19 @@ export class Rating {
 
 		if (this.numGames !== this.won + this.drawn + this.lost) {
 			throw new InternalError(
-				`Consistency check: total number of games is not equal to the sum of won, drawn and lost. Total ${this.numGames}; Won: ${this.won}; Drawn: ${this.drawn}, Lost: ${this.lost}`
+				`Consistency check: total number of games is not equal to the sum of won, drawn and lost. Total ${this.numGames}; Won: ${this.won}; Drawn: ${this.drawn}, Lost: ${this.lost}`,
 			);
 		}
 	}
 
 	clone(): Rating {
-		return new Rating(this.rating, this.numGames, this.won, this.drawn, this.lost);
+		return new Rating(
+			this.rating,
+			this.numGames,
+			this.won,
+			this.drawn,
+			this.lost,
+		);
 	}
 
 	numWonDrawnLost(): [number, number, number, number] {

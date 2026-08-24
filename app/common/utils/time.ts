@@ -73,7 +73,9 @@ export function toDateMinor(s: string): DateMinor {
  * @returns A string.
  */
 export function dateToStringFull(date: Date): DateFull {
-	return toDateFull(moment.utc(date).local().format('YYYY-MM-DD..HH:mm:ss:SSS'));
+	return toDateFull(
+		moment.utc(date).local().format('YYYY-MM-DD..HH:mm:ss:SSS'),
+	);
 }
 
 /**

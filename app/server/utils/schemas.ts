@@ -23,14 +23,13 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import Debug from 'debug';
-import { z } from 'zod';
-import { Request } from 'express';
-
+import { AuthenticationInputSchema } from '@common/api/schemas/authentication';
+import { SessionId } from '@common/models/session-id';
 import { isDefined, isNotDefined } from '@common/utils/is-defined';
 import { logNow } from '@common/utils/time';
-import { AuthenticationInputSchema } from '@common/api/schemas/authentication';
-import { SessionId } from '@common//models/session-id';
+import Debug from 'debug';
+import { Request } from 'express';
+import { z } from 'zod';
 
 export type ParseResult = 'jsonDataNotProvided' | 'error' | 'success';
 
@@ -47,7 +46,7 @@ export type ParseSchemaResult<T> =
 export function parseSchema<S extends z.ZodTypeAny>(
 	json: unknown | undefined | null,
 	schemaObj: S,
-	debug: Debug.Debugger
+	debug: Debug.Debugger,
 ): ParseSchemaResult<z.output<S>> {
 	const isEmptyPlainObject = (v: unknown) =>
 		typeof v === 'object' &&
@@ -58,7 +57,7 @@ export function parseSchema<S extends z.ZodTypeAny>(
 	if (isNotDefined(json) || isEmptyPlainObject(json)) {
 		return {
 			result: 'JsonDataNotProvided',
-			data: undefined
+			data: undefined,
 		};
 	}
 	const parse = schemaObj.safeParse(json);
@@ -66,12 +65,12 @@ export function parseSchema<S extends z.ZodTypeAny>(
 		debug(logNow(), `Failed to parse schema: ${schemaObj.constructor.name}`);
 		return {
 			result: 'Error',
-			data: undefined
+			data: undefined,
 		};
 	}
 	return {
 		result: 'Success',
-		data: parse.data
+		data: parse.data,
 	};
 }
 
@@ -85,34 +84,37 @@ export type SafeParseSchemaResult<T> =
 			data: T;
 	  };
 
-export function safeParseRequestCookies(req: Request, debug: Debug.Debugger): SafeParseSchemaResult<SessionId> {
+export function safeParseRequestCookies(
+	req: Request,
+	debug: Debug.Debugger,
+): SafeParseSchemaResult<SessionId> {
 	const parse = parseSchema(req.cookies, AuthenticationInputSchema, debug);
 	if (parse.result !== 'Success') {
 		return {
 			result: 'bad',
-			data: undefined
+			data: undefined,
 		};
 	}
 	return {
 		result: 'good',
-		data: parse.data
+		data: parse.data,
 	};
 }
 
 export function safeParseRequestBody<S extends z.ZodTypeAny>(
 	req: Request,
 	schemaObj: S,
-	debug: Debug.Debugger
+	debug: Debug.Debugger,
 ): SafeParseSchemaResult<z.output<S>> {
 	const parse = parseSchema(req.body, schemaObj, debug);
 	if (parse.result !== 'Success') {
 		return {
 			result: 'bad',
-			data: undefined
+			data: undefined,
 		};
 	}
 	return {
 		result: 'good',
-		data: parse.data
+		data: parse.data,
 	};
 }

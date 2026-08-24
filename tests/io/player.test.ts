@@ -23,17 +23,25 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { initializeRatingFunctions } from '@server/managers/rating-system';
-import { isNotDefined } from '@common/utils/is-defined';
 import { toTimeControlId } from '@common/models/time-control';
+import { isNotDefined } from '@common/utils/is-defined';
 import { playerFromString } from '@server/io/player';
+import { initializeRatingFunctions } from '@server/managers/rating-system';
 
 const Classical = toTimeControlId('classical');
 const Blitz = toTimeControlId('blitz');
 
 describe('IO conversion -- Elo', () => {
 	initializeRatingFunctions('Elo');
-	const classical = { rating: 1700, numGames: 0, won: 0, drawn: 0, lost: 0, K: 40, surpassed2400: false };
+	const classical = {
+		rating: 1700,
+		numGames: 0,
+		won: 0,
+		drawn: 0,
+		lost: 0,
+		K: 40,
+		surpassed2400: false,
+	};
 
 	test('string', () => {
 		const p = playerFromString(
@@ -65,7 +73,7 @@ describe('IO conversion -- Elo', () => {
 						}\
 					}\
 				]\
-			}'
+			}',
 		);
 
 		expect(p).not.toBeNull();

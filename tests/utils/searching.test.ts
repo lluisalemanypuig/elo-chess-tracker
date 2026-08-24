@@ -23,7 +23,13 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { search, searchByKey, searchLinear, searchLinearByKey, whereShouldBeInserted } from '@server/utils/searching';
+import {
+	search,
+	searchByKey,
+	searchLinear,
+	searchLinearByKey,
+	whereShouldBeInserted,
+} from '@server/utils/searching';
 
 describe('Searching in an array of numbers -- locate a number', () => {
 	test('Empty', () => {
@@ -142,17 +148,17 @@ describe('Searching in an array of structs -- locate an element', () => {
 		expect(
 			searchLinearByKey(arr, (p: pair): boolean => {
 				return p.name === 'A';
-			})
+			}),
 		).toBe(-1);
 		expect(
 			searchLinearByKey(arr, (p: pair): boolean => {
 				return p.name === 'B';
-			})
+			}),
 		).toBe(-1);
 		expect(
 			searchLinearByKey(arr, (p: pair): boolean => {
 				return p.name === 'C';
-			})
+			}),
 		).toBe(-1);
 	});
 
@@ -163,7 +169,7 @@ describe('Searching in an array of structs -- locate an element', () => {
 			new pair('C', 1),
 			new pair('D', 0),
 			new pair('M', 100),
-			new pair('Z', -9)
+			new pair('Z', -9),
 		];
 		const search_func = (p: pair) => {
 			return (q: pair): number => {
@@ -204,7 +210,7 @@ describe('Searching in an array of structs -- locate an element', () => {
 			new pair('C', 1),
 			new pair('D', 0),
 			new pair('M', 100),
-			new pair('Z', -9)
+			new pair('Z', -9),
 		];
 		const search_func = (name: string) => {
 			return (q: pair): number => {
@@ -230,68 +236,68 @@ describe('Searching in an array of structs -- locate an element', () => {
 		expect(
 			searchLinearByKey(arr, (p: pair): boolean => {
 				return p.name === 'A';
-			})
+			}),
 		).toBe(0);
 		expect(
 			searchLinearByKey(arr, (p: pair): boolean => {
 				return p.name === 'B';
-			})
+			}),
 		).toBe(1);
 		expect(
 			searchLinearByKey(arr, (p: pair): boolean => {
 				return p.name === 'C';
-			})
+			}),
 		).toBe(2);
 		expect(
 			searchLinearByKey(arr, (p: pair): boolean => {
 				return p.name === 'D';
-			})
+			}),
 		).toBe(3);
 		expect(
 			searchLinearByKey(arr, (p: pair): boolean => {
 				return p.name === 'M';
-			})
+			}),
 		).toBe(4);
 		expect(
 			searchLinearByKey(arr, (p: pair): boolean => {
 				return p.name === 'Z';
-			})
+			}),
 		).toBe(5);
 
 		expect(
 			searchLinearByKey(arr, (p: pair): boolean => {
 				return p.name === 'a';
-			})
+			}),
 		).toBe(-1);
 		expect(
 			searchLinearByKey(arr, (p: pair): boolean => {
 				return p.name === 'E';
-			})
+			}),
 		).toBe(-1);
 		expect(
 			searchLinearByKey(arr, (p: pair): boolean => {
 				return p.name === 'F';
-			})
+			}),
 		).toBe(-1);
 		expect(
 			searchLinearByKey(arr, (p: pair): boolean => {
 				return p.name === 'G';
-			})
+			}),
 		).toBe(-1);
 		expect(
 			searchLinearByKey(arr, (p: pair): boolean => {
 				return p.name === 'H';
-			})
+			}),
 		).toBe(-1);
 		expect(
 			searchLinearByKey(arr, (p: pair): boolean => {
 				return p.name === 'Q';
-			})
+			}),
 		).toBe(-1);
 		expect(
 			searchLinearByKey(arr, (p: pair): boolean => {
 				return p.name === 'z';
-			})
+			}),
 		).toBe(-1);
 	});
 });

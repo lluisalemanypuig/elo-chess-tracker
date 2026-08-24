@@ -19,37 +19,48 @@ Full source code of elo-chess-tracker:
 	https://github.com/lluisalemanypuig/elo-chess-tracker
 */
 
-import 'htmx.org';
-
 import { messageFromResponse, serverCall } from '@client/action';
-import {
-	UserRole,
-	ALL_USER_ROLES,
-	USER_ROLE_TO_STRING,
-	arrayStringToRoles,
-	stringToRole
-} from '@common/models/user-role';
-import { isNotDefined } from '@common/utils/is-defined';
 import { ROUTES } from '@common/api/routes';
 import { toPlayerPublicId } from '@common/models/player-id';
 import { toUserGivenName } from '@common/models/user-given-name';
+import {
+	ALL_USER_ROLES,
+	USER_ROLE_TO_STRING,
+	UserRole,
+	arrayStringToRoles,
+	stringToRole,
+} from '@common/models/user-role';
+import { isNotDefined } from '@common/utils/is-defined';
+import 'htmx.org';
 
 async function userWasChanged(_event: any) {
 	ALL_USER_ROLES.forEach(function (role: string) {
-		let checkboxRole = document.getElementById('checkbox-' + role) as HTMLInputElement;
+		let checkboxRole = document.getElementById(
+			'checkbox-' + role,
+		) as HTMLInputElement;
 		checkboxRole.checked = false;
 	});
-	let boxFirstName = document.getElementById('box-first-name') as HTMLInputElement;
-	let boxLastName = document.getElementById('box-last-name') as HTMLInputElement;
+	let boxFirstName = document.getElementById(
+		'box-first-name',
+	) as HTMLInputElement;
+	let boxLastName = document.getElementById(
+		'box-last-name',
+	) as HTMLInputElement;
 	boxFirstName.value = '';
 	boxLastName.value = '';
 
-	let usernameListInput = document.getElementById('username-list') as HTMLInputElement;
-	const usernameOption = document.querySelector('option[value="' + usernameListInput.value + '"]');
+	let usernameListInput = document.getElementById(
+		'username-list',
+	) as HTMLInputElement;
+	const usernameOption = document.querySelector(
+		'option[value="' + usernameListInput.value + '"]',
+	);
 
 	if (usernameOption !== null) {
 		const userId = (usernameOption as HTMLOptionElement).id;
-		const response = await serverCall(ROUTES.QUERY_USER_EDIT, { u: toPlayerPublicId(userId) });
+		const response = await serverCall(ROUTES.QUERY_USER_EDIT, {
+			u: toPlayerPublicId(userId),
+		});
 		if (response.status === 'Error') {
 			alert(messageFromResponse(response));
 			return;
@@ -60,7 +71,9 @@ async function userWasChanged(_event: any) {
 		boxLastName.value = data.lastName;
 
 		ALL_USER_ROLES.forEach(function (role: string) {
-			let checkboxRole = document.getElementById('checkbox-' + role) as HTMLInputElement;
+			let checkboxRole = document.getElementById(
+				'checkbox-' + role,
+			) as HTMLInputElement;
 			const properRole = stringToRole(role);
 			if (isNotDefined(properRole)) {
 				console.log(`Role '${role}' could not be converted to a proper role.`);
@@ -75,19 +88,29 @@ async function userWasChanged(_event: any) {
 
 async function submitWasClicked(_event: any) {
 	// username
-	let usernameListInput = document.getElementById('username-list') as HTMLInputElement;
+	let usernameListInput = document.getElementById(
+		'username-list',
+	) as HTMLInputElement;
 	const userPublicId = (
-		document.querySelector('option[value="' + usernameListInput.value + '"]') as HTMLOptionElement
+		document.querySelector(
+			'option[value="' + usernameListInput.value + '"]',
+		) as HTMLOptionElement
 	).id;
 
 	// first and last name
-	const firstName = (document.getElementById('box-first-name') as HTMLInputElement).value;
-	const lastName = (document.getElementById('box-last-name') as HTMLInputElement).value;
+	const firstName = (
+		document.getElementById('box-first-name') as HTMLInputElement
+	).value;
+	const lastName = (
+		document.getElementById('box-last-name') as HTMLInputElement
+	).value;
 
 	// retrieve selected role
 	let selectedRolesStr: string[] = [];
 	ALL_USER_ROLES.forEach(function (role: string) {
-		let checkboxRole = document.getElementById('checkbox-' + role) as HTMLInputElement;
+		let checkboxRole = document.getElementById(
+			'checkbox-' + role,
+		) as HTMLInputElement;
 		if (checkboxRole.checked) {
 			selectedRolesStr.push(role);
 		}
@@ -101,7 +124,7 @@ async function submitWasClicked(_event: any) {
 		publicId: toPlayerPublicId(userPublicId),
 		firstName: toUserGivenName(firstName),
 		lastName: toUserGivenName(lastName),
-		roles: selectedRoles
+		roles: selectedRoles,
 	});
 	if (response.status === 'Error') {
 		alert(messageFromResponse(response));
@@ -113,15 +136,23 @@ async function submitWasClicked(_event: any) {
 
 window.onload = function () {
 	// imlement behaviour of data list
-	let datalistUsernameInput = document.getElementById('username-list') as HTMLInputElement;
+	let datalistUsernameInput = document.getElementById(
+		'username-list',
+	) as HTMLInputElement;
 	datalistUsernameInput.onselectionchange = userWasChanged;
 
 	// imlement behaviour of submit button
-	let submitChangesButton = document.getElementById('submit-changes-button') as HTMLButtonElement;
+	let submitChangesButton = document.getElementById(
+		'submit-changes-button',
+	) as HTMLButtonElement;
 	submitChangesButton.onclick = submitWasClicked;
 
 	// fill in role checkboxes with values
-	let addCheckbox = function (div: HTMLDivElement, show: string, value: string) {
+	let addCheckbox = function (
+		div: HTMLDivElement,
+		show: string,
+		value: string,
+	) {
 		let checkbox = document.createElement('input');
 		checkbox.type = 'checkbox';
 		checkbox.id = 'checkbox-' + value;
@@ -132,7 +163,9 @@ window.onload = function () {
 		div.appendChild(checkboxLabel);
 		div.appendChild(document.createElement('br'));
 	};
-	let roleDiv = document.getElementById('div-role-checkboxes') as HTMLDivElement;
+	let roleDiv = document.getElementById(
+		'div-role-checkboxes',
+	) as HTMLDivElement;
 	ALL_USER_ROLES.forEach(function (role: string) {
 		addCheckbox(roleDiv, USER_ROLE_TO_STRING[role as UserRole], role);
 	});

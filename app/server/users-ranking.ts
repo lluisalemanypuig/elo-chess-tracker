@@ -23,11 +23,11 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import Debug from 'debug';
-const debug = Debug('ELO_CHESS_TRACKER:users-ranking');
-
 import { logNow } from '@common/utils/time';
 import { UserSession } from '@server/models/user';
+import Debug from 'debug';
+
+const debug = Debug('ELO_CHESS_TRACKER:users-ranking');
 
 export async function getPageUserRanking(_u: UserSession) {
 	debug(logNow(), 'function getPageUserRanking...');

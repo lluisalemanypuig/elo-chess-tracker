@@ -23,13 +23,13 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { z } from 'zod';
-import { UserGivenNameSchema } from '@common/models/user-given-name';
 import { PlayerPublicIdSchema } from '@common/models/player-id';
+import { UserGivenNameSchema } from '@common/models/user-given-name';
+import { z } from 'zod';
 
 export const UserThinSchema = z.object({
 	name: UserGivenNameSchema,
-	id: PlayerPublicIdSchema
+	id: PlayerPublicIdSchema,
 });
 
 export type UserThin = z.infer<typeof UserThinSchema>;

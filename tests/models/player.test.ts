@@ -23,11 +23,11 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { Player } from '@server/models/player';
-import { TimeControlRating } from '@server/models/time-control-rating';
-import { EloRating } from '@server/models/rating-framework/Elo/rating';
-import { toTimeControlId } from '@common/models/time-control';
 import { toPlayerPrivateId } from '@common/models/player-id';
+import { toTimeControlId } from '@common/models/time-control';
+import { Player } from '@server/models/player';
+import { EloRating } from '@server/models/rating-framework/Elo/rating';
+import { TimeControlRating } from '@server/models/time-control-rating';
 
 const Classical = toTimeControlId('Classical');
 const Rapid = toTimeControlId('Rapid');
@@ -48,7 +48,7 @@ describe('construct', () => {
 		let p = new Player(toPlayerPrivateId('user.name'), [
 			new TimeControlRating(Blitz, blitz),
 			new TimeControlRating(Rapid, rapid),
-			new TimeControlRating(Classical, classical)
+			new TimeControlRating(Classical, classical),
 		]);
 
 		expect(p.username).toEqual('user.name');
@@ -102,7 +102,7 @@ describe('construct', () => {
 		let p = new Player(toPlayerPrivateId('user.name'), [
 			new TimeControlRating(Blitz, blitz),
 			new TimeControlRating(Rapid, rapid),
-			new TimeControlRating(Classical, classical)
+			new TimeControlRating(Classical, classical),
 		]);
 		let pc = p.clone();
 

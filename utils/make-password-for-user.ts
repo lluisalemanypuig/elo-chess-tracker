@@ -50,7 +50,7 @@ let [encrypted_password, iv] = encryptPasswordForUser(username, password);
 
 const result = {
 	encrypted: `${encrypted_password}`,
-	iv: `${iv}`
+	iv: `${iv}`,
 };
 
 console.log(JSON.stringify(result));

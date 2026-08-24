@@ -27,7 +27,7 @@ import { z } from 'zod';
 
 const ChallengesBehaviorSchema = z
 	.object({
-		higherRatedPlayerCanDeclineChallengeFromLowerRatedPlayer: z.boolean()
+		higherRatedPlayerCanDeclineChallengeFromLowerRatedPlayer: z.boolean(),
 	})
 	.strict();
 
@@ -35,7 +35,7 @@ export type ChallengesBehavior = z.infer<typeof ChallengesBehaviorSchema>;
 
 export const BehaviorSchema = z
 	.object({
-		challenges: ChallengesBehaviorSchema
+		challenges: ChallengesBehaviorSchema,
 	})
 	.strict();
 

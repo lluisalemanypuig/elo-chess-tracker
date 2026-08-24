@@ -23,7 +23,11 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { ALL_USER_ROLES, isRoleStringCorrect, USER_ROLE_TO_STRING } from '@common/models/user-role';
+import {
+	ALL_USER_ROLES,
+	isRoleStringCorrect,
+	USER_ROLE_TO_STRING,
+} from '@common/models/user-role';
 
 test('Array of all roles', () => {
 	expect(ALL_USER_ROLES.length).toBe(4);

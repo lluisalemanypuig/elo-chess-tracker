@@ -19,14 +19,13 @@ Full source code of elo-chess-tracker:
 	https://github.com/lluisalemanypuig/elo-chess-tracker
 */
 
-import 'htmx.org';
-
-import { isNotDefined } from '@common/utils/is-defined';
 import { messageFromResponse, serverCall } from '@client/action';
 import { ROUTES } from '@common/api/routes';
-import { TimeControlId } from '@common/models/time-control';
-import { resultFromTextToValue } from '@common/models/game-result';
 import { GameId } from '@common/models/game-id';
+import { resultFromTextToValue } from '@common/models/game-result';
+import { TimeControlId } from '@common/models/time-control';
+import { isNotDefined } from '@common/utils/is-defined';
+import 'htmx.org';
 
 function newTextCell(text: string) {
 	let cell = document.createElement('td');
@@ -67,7 +66,7 @@ async function selectResultGameOnChange(event: any) {
 
 	const response = await serverCall(ROUTES.GAME_EDIT_RESULT, {
 		id: gameId,
-		newResult: newResult
+		newResult: newResult,
 	});
 
 	if (response.status === 'Error') {
@@ -96,7 +95,10 @@ function newCellSelectResult(originalResult: string, gameId: string) {
 	select.className = 'select-edit-game';
 	select.value = resultFromTextToValue(originalResult) ?? '???';
 	select.onchange = selectResultGameOnChange;
-	select.setAttribute('originalValue', resultFromTextToValue(originalResult) ?? '???');
+	select.setAttribute(
+		'originalValue',
+		resultFromTextToValue(originalResult) ?? '???',
+	);
 	select.setAttribute('gameId', gameId);
 
 	let cell = document.createElement('td');
@@ -107,8 +109,12 @@ function newCellSelectResult(originalResult: string, gameId: string) {
 async function buttonDeleteGameOnClick(event: any) {
 	const button = event.target;
 
-	let selectTimeControl = document.getElementById('select-time-control') as HTMLSelectElement;
-	let previousTimeControlId = selectTimeControl.options[selectTimeControl.selectedIndex].value as TimeControlId;
+	let selectTimeControl = document.getElementById(
+		'select-time-control',
+	) as HTMLSelectElement;
+	let previousTimeControlId = selectTimeControl.options[
+		selectTimeControl.selectedIndex
+	].value as TimeControlId;
 
 	const gameId = button.getAttribute('gameId');
 	const response = await serverCall(ROUTES.GAME_DELETE, { id: gameId });
@@ -149,7 +155,7 @@ async function triggerEditGameTitle(event: Event) {
 
 	const response = await serverCall(ROUTES.GAME_EDIT_TITLE, {
 		id: gameId,
-		title: newTitle
+		title: newTitle,
 	});
 	if (response.status === 'Error') {
 		alert(messageFromResponse(response));
@@ -195,11 +201,11 @@ async function fillGamesListTimeControl(timeControlId: TimeControlId) {
 	let response;
 	if (val === 'all') {
 		response = await serverCall(ROUTES.QUERY_GAME_LIST_ALL, {
-			timeControlId: timeControlId
+			timeControlId: timeControlId,
 		});
 	} else if (val === 'own') {
 		response = await serverCall(ROUTES.QUERY_GAME_LIST_OWN, {
-			timeControlId: timeControlId
+			timeControlId: timeControlId,
 		});
 	} else {
 		alert(`Wrong value for list '${val}'.`);
@@ -229,11 +235,14 @@ async function fillGamesListTimeControl(timeControlId: TimeControlId) {
 
 		row.appendChild(newTextCell(g.timeControlName));
 
-		const when = g.date.substring(0, g.date.length - (3 + 1 + 2 + 1)).replace('..', ' ');
+		const when = g.date
+			.substring(0, g.date.length - (3 + 1 + 2 + 1))
+			.replace('..', ' ');
 		row.appendChild(newTextCell(when));
 
 		const whiteRatingStr = `${g.whiteRating}`;
-		const whiteIncrementStr = g.whiteIncrement < 0 ? `${g.whiteIncrement}` : `+${g.whiteIncrement}`;
+		const whiteIncrementStr =
+			g.whiteIncrement < 0 ? `${g.whiteIncrement}` : `+${g.whiteIncrement}`;
 		row.appendChild(newRatingCell(whiteRatingStr, whiteIncrementStr));
 		row.appendChild(newTextCell(g.white));
 
@@ -244,7 +253,8 @@ async function fillGamesListTimeControl(timeControlId: TimeControlId) {
 		}
 
 		const blackRatingStr = `${g.blackRating}`;
-		const blackIncrementStr = g.blackIncrement < 0 ? `${g.blackIncrement}` : `+${g.blackIncrement}`;
+		const blackIncrementStr =
+			g.blackIncrement < 0 ? `${g.blackIncrement}` : `+${g.blackIncrement}`;
 		row.appendChild(newTextCell(g.black));
 		row.appendChild(newRatingCell(blackRatingStr, blackIncrementStr));
 
@@ -260,14 +270,20 @@ async function fillGamesListTimeControl(timeControlId: TimeControlId) {
 }
 
 async function fillGamesList(_event: any) {
-	const selectTimeControl = document.getElementById('select-time-control') as HTMLSelectElement;
-	const timeControlId = selectTimeControl.options[selectTimeControl.selectedIndex].value as TimeControlId;
+	const selectTimeControl = document.getElementById(
+		'select-time-control',
+	) as HTMLSelectElement;
+	const timeControlId = selectTimeControl.options[
+		selectTimeControl.selectedIndex
+	].value as TimeControlId;
 	fillGamesListTimeControl(timeControlId);
 }
 
 window.onload = async function () {
 	fillGamesListTimeControl('' as TimeControlId);
 
-	let timeControl = document.getElementById('select-time-control') as HTMLSelectElement;
+	let timeControl = document.getElementById(
+		'select-time-control',
+	) as HTMLSelectElement;
 	timeControl.onchange = fillGamesList;
 };

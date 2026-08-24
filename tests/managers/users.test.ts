@@ -23,26 +23,33 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import path from 'path';
-import fs from 'fs';
-
-import { serverInitFromData } from '@server/managers/memory/initialization';
-import { userAddNew, userEdit, userGetAllNamePublicId, userUpdateFromPlayerData } from '@server/managers/users';
-import { clearServer } from '@server/managers/memory/clear';
-import { runCommand, TestError } from '@tests';
-import { EloRating } from '@server/models/rating-framework/Elo/rating';
-import { userFromString } from '@server/io/user';
-import { UsersManager } from '@server/managers/users-manager';
-import { isNotDefined } from '@common/utils/is-defined';
-import { Configuration } from '@server/models/configuration/configuration';
-import { TimeControlRating } from '@server/models/time-control-rating';
-import { toTimeControlId, toTimeControlName } from '@common/models/time-control';
 import { toPlayerPrivateId } from '@common/models/player-id';
-import { UserRole } from '@common/models/user-role';
+import {
+	toTimeControlId,
+	toTimeControlName,
+} from '@common/models/time-control';
 import { toUserGivenName } from '@common/models/user-given-name';
-import { User } from '@server/models/user';
+import { UserRole } from '@common/models/user-role';
 import { UserThin } from '@common/models/user-thin';
+import { isNotDefined } from '@common/utils/is-defined';
+import { userFromString } from '@server/io/user';
+import { clearServer } from '@server/managers/memory/clear';
+import { serverInitFromData } from '@server/managers/memory/initialization';
+import {
+	userAddNew,
+	userEdit,
+	userGetAllNamePublicId,
+	userUpdateFromPlayerData,
+} from '@server/managers/users';
+import { UsersManager } from '@server/managers/users-manager';
+import { Configuration } from '@server/models/configuration/configuration';
 import { Player } from '@server/models/player';
+import { EloRating } from '@server/models/rating-framework/Elo/rating';
+import { TimeControlRating } from '@server/models/time-control-rating';
+import { User } from '@server/models/user';
+import { runCommand, TestError } from '@tests';
+import fs from 'fs';
+import path from 'path';
 
 const Classical = toTimeControlId('Classical');
 const Classical90p30 = toTimeControlName('Classical (90 + 30)');
@@ -66,48 +73,48 @@ const classical_rapid_blitz: Configuration = {
 		sslCertificate: {
 			publicKeyFile: 'sadf',
 			privateKeyFile: 'qwer',
-			passphraseFile: 'kgj68'
+			passphraseFile: 'kgj68',
 		},
 		favicon: 'favicon.png',
 		loginPage: {
 			title: 'Login title',
-			icon: 'login.png'
+			icon: 'login.png',
 		},
 		homePage: {
 			title: 'Home title',
-			icon: 'home.png'
-		}
+			icon: 'home.png',
+		},
 	},
 	server: {
 		domainName: '',
 		ports: {
 			http: '8080',
-			https: '8443'
-		}
+			https: '8443',
+		},
 	},
 	ratingSystem: 'Elo',
 	timeControls: [
 		{
 			id: Classical,
-			name: Classical90p30
+			name: Classical90p30,
 		},
 		{
 			id: Rapid,
-			name: Rapid12p5
+			name: Rapid12p5,
 		},
 		{
 			id: Rapid,
-			name: Rapid10p0
+			name: Rapid10p0,
 		},
 		{
 			id: Blitz,
-			name: Blitz5p3
-		}
+			name: Blitz5p3,
+		},
 	],
 	behavior: {
 		challenges: {
-			higherRatedPlayerCanDeclineChallengeFromLowerRatedPlayer: false
-		}
+			higherRatedPlayerCanDeclineChallengeFromLowerRatedPlayer: false,
+		},
 	},
 	permissions: {
 		admin: [
@@ -121,12 +128,12 @@ const classical_rapid_blitz: Configuration = {
 			'EDIT_USER_ADMIN',
 			'EDIT_USER_TEACHER',
 			'EDIT_USER_MEMBER',
-			'EDIT_USER_STUDENT'
+			'EDIT_USER_STUDENT',
 		],
 		teacher: [],
 		member: [],
-		student: []
-	}
+		student: [],
+	},
 };
 
 const classical_rapid_blitz_bullet: Configuration = {
@@ -134,52 +141,52 @@ const classical_rapid_blitz_bullet: Configuration = {
 		sslCertificate: {
 			publicKeyFile: 'sadf',
 			privateKeyFile: 'qwer',
-			passphraseFile: 'kgj68'
+			passphraseFile: 'kgj68',
 		},
 		favicon: 'favicon.png',
 		loginPage: {
 			title: 'Login title',
-			icon: 'login.png'
+			icon: 'login.png',
 		},
 		homePage: {
 			title: 'Home title',
-			icon: 'home.png'
-		}
+			icon: 'home.png',
+		},
 	},
 	server: {
 		domainName: '',
 		ports: {
 			http: '8080',
-			https: '8443'
-		}
+			https: '8443',
+		},
 	},
 	ratingSystem: 'Elo',
 	timeControls: [
 		{
 			id: Classical,
-			name: Classical90p30
+			name: Classical90p30,
 		},
 		{
 			id: Rapid,
-			name: Rapid12p5
+			name: Rapid12p5,
 		},
 		{
 			id: Rapid,
-			name: Rapid10p0
+			name: Rapid10p0,
 		},
 		{
 			id: Blitz,
-			name: Blitz5p3
+			name: Blitz5p3,
 		},
 		{
 			id: Bullet,
-			name: Bullet2p1
-		}
+			name: Bullet2p1,
+		},
 	],
 	behavior: {
 		challenges: {
-			higherRatedPlayerCanDeclineChallengeFromLowerRatedPlayer: false
-		}
+			higherRatedPlayerCanDeclineChallengeFromLowerRatedPlayer: false,
+		},
 	},
 	permissions: {
 		admin: [
@@ -193,12 +200,12 @@ const classical_rapid_blitz_bullet: Configuration = {
 			'EDIT_USER_ADMIN',
 			'EDIT_USER_TEACHER',
 			'EDIT_USER_MEMBER',
-			'EDIT_USER_STUDENT'
+			'EDIT_USER_STUDENT',
 		],
 		teacher: [],
 		member: [],
-		student: []
-	}
+		student: [],
+	},
 };
 
 const classical: Configuration = {
@@ -206,36 +213,36 @@ const classical: Configuration = {
 		sslCertificate: {
 			publicKeyFile: 'sadf',
 			privateKeyFile: 'qwer',
-			passphraseFile: 'kgj68'
+			passphraseFile: 'kgj68',
 		},
 		favicon: 'favicon.png',
 		loginPage: {
 			title: 'Login title',
-			icon: 'login.png'
+			icon: 'login.png',
 		},
 		homePage: {
 			title: 'Home title',
-			icon: 'home.png'
-		}
+			icon: 'home.png',
+		},
 	},
 	server: {
 		domainName: '',
 		ports: {
 			http: '8080',
-			https: '8443'
-		}
+			https: '8443',
+		},
 	},
 	ratingSystem: 'Elo',
 	timeControls: [
 		{
 			id: Classical,
-			name: Classical90p30
-		}
+			name: Classical90p30,
+		},
 	],
 	behavior: {
 		challenges: {
-			higherRatedPlayerCanDeclineChallengeFromLowerRatedPlayer: false
-		}
+			higherRatedPlayerCanDeclineChallengeFromLowerRatedPlayer: false,
+		},
 	},
 	permissions: {
 		admin: [
@@ -249,12 +256,12 @@ const classical: Configuration = {
 			'EDIT_USER_ADMIN',
 			'EDIT_USER_TEACHER',
 			'EDIT_USER_MEMBER',
-			'EDIT_USER_STUDENT'
+			'EDIT_USER_STUDENT',
 		],
 		teacher: [],
 		member: [],
-		student: []
-	}
+		student: [],
+	},
 };
 
 function testUserExists(username: string): boolean {
@@ -262,7 +269,9 @@ function testUserExists(username: string): boolean {
 }
 
 function testUserRetrieve(username: string): User | undefined {
-	const d = UsersManager.getInstance().getAllUserDataByPrivateId(toPlayerPrivateId(username));
+	const d = UsersManager.getInstance().getAllUserDataByPrivateId(
+		toPlayerPrivateId(username),
+	);
 	if (isNotDefined(d)) {
 		throw new TestError(`Could not find user ${username}`);
 	}
@@ -273,8 +282,16 @@ function testUserGetAll(): User[] {
 	return UsersManager.getInstance().all();
 }
 
-function testUserAddNew(username: string, firstName: string, lastName: string, password: string, roles: UserRole[]) {
-	const admin = UsersManager.getInstance().getAllUserDataByPrivateId(toPlayerPrivateId('admin.default'));
+function testUserAddNew(
+	username: string,
+	firstName: string,
+	lastName: string,
+	password: string,
+	roles: UserRole[],
+) {
+	const admin = UsersManager.getInstance().getAllUserDataByPrivateId(
+		toPlayerPrivateId('admin.default'),
+	);
 	if (isNotDefined(admin)) {
 		throw new TestError('admin default user could not be retrieved');
 	}
@@ -283,13 +300,20 @@ function testUserAddNew(username: string, firstName: string, lastName: string, p
 		firstName: toUserGivenName(firstName),
 		lastName: toUserGivenName(lastName),
 		password,
-		roles
+		roles,
 	});
 }
 
-function testUserEdit(username: string, firstName: string, lastName: string, roles: UserRole[]) {
+function testUserEdit(
+	username: string,
+	firstName: string,
+	lastName: string,
+	roles: UserRole[],
+) {
 	const manager = UsersManager.getInstance();
-	const admin = manager.getAllUserDataByPrivateId(toPlayerPrivateId('admin.default'));
+	const admin = manager.getAllUserDataByPrivateId(
+		toPlayerPrivateId('admin.default'),
+	);
 	if (isNotDefined(admin)) {
 		throw new TestError('admin default user could not be retrieved');
 	}
@@ -300,7 +324,7 @@ function testUserEdit(username: string, firstName: string, lastName: string, rol
 	userEdit(admin.user, edited.user, {
 		firstName: toUserGivenName(firstName),
 		lastName: toUserGivenName(lastName),
-		roles
+		roles,
 	});
 	return manager.getAllUserDataByPrivateId(toPlayerPrivateId(username))?.user;
 }
@@ -318,7 +342,9 @@ describe('Create users', () => {
 		clearServer();
 		serverInitFromData('tests/webpage/', classical_rapid_blitz);
 
-		const newUser = testUserAddNew('asdf', 'First', 'Last', 'password', ['ADMIN']);
+		const newUser = testUserAddNew('asdf', 'First', 'Last', 'password', [
+			'ADMIN',
+		]);
 
 		{
 			const asdf_user_file = path.join(db_users_dir, 'asdf');
@@ -343,7 +369,7 @@ describe('Create users', () => {
 		expect(
 			userGetAllNamePublicId().map((d: UserThin): string => {
 				return d.name;
-			})
+			}),
 		).toEqual(['Admin Default', 'First Last']);
 	});
 
@@ -361,7 +387,7 @@ describe('Create users', () => {
 			expect(
 				userGetAllNamePublicId().map((d: UserThin): string => {
 					return d.name;
-				})
+				}),
 			).toEqual(['Admin Default', 'First Last']);
 
 			// check that the user file was updated with the new rating
@@ -375,7 +401,9 @@ describe('Create users', () => {
 			expect(u.ratings.length).toBe(4);
 		}
 
-		const newUser = testUserAddNew('qwer', 'Perico', 'Palotes', 'password', ['TEACHER']);
+		const newUser = testUserAddNew('qwer', 'Perico', 'Palotes', 'password', [
+			'TEACHER',
+		]);
 
 		const qwerUserFile = path.join(db_users_dir, 'qwer');
 		expect(fs.existsSync(qwerUserFile)).toBe(true);
@@ -395,7 +423,7 @@ describe('Create users', () => {
 		expect(
 			userGetAllNamePublicId().map((d: UserThin): string => {
 				return d.name;
-			})
+			}),
 		).toEqual(['Admin Default', 'First Last', 'Perico Palotes']);
 
 		expect(
@@ -405,7 +433,7 @@ describe('Create users', () => {
 				})
 				.reduce((pre: boolean, cur: boolean): boolean => {
 					return pre && cur;
-				}, true)
+				}, true),
 		).toEqual(true);
 
 		expect(testUserExists(toPlayerPrivateId('asdf'))).toBe(true);
@@ -425,7 +453,7 @@ describe('Create users', () => {
 				})
 				.reduce((pre: boolean, cur: boolean): boolean => {
 					return pre && cur;
-				}, true)
+				}, true),
 		).toEqual(true);
 
 		expect(testUserExists(toPlayerPrivateId('asdf'))).toBe(true);
@@ -440,7 +468,9 @@ describe('Modify existing users', () => {
 		clearServer();
 		serverInitFromData('tests/webpage/', classical_rapid_blitz);
 
-		const newUser = testUserAddNew('asdf', 'First', 'Last', 'password', ['ADMIN']);
+		const newUser = testUserAddNew('asdf', 'First', 'Last', 'password', [
+			'ADMIN',
+		]);
 
 		const asdfUserFile = path.join(db_users_dir, 'asdf');
 
@@ -457,7 +487,7 @@ describe('Modify existing users', () => {
 		expect(
 			userGetAllNamePublicId().map((d: UserThin): string => {
 				return d.name;
-			})
+			}),
 		).toEqual(['Admin Default', 'QQQ WWW']);
 
 		{
@@ -478,7 +508,10 @@ describe('Modify existing users', () => {
 		clearServer();
 		serverInitFromData('tests/webpage/', classical_rapid_blitz);
 
-		const modifiedUser = testUserEdit('asdf', 'FFF', 'GGG', ['ADMIN', 'MEMBER']);
+		const modifiedUser = testUserEdit('asdf', 'FFF', 'GGG', [
+			'ADMIN',
+			'MEMBER',
+		]);
 
 		const asdfUserFile = path.join(db_users_dir, 'asdf');
 		expect(fs.existsSync(asdfUserFile)).toBe(true);
@@ -497,7 +530,7 @@ describe('Modify existing users', () => {
 		expect(
 			userGetAllNamePublicId().map((d: UserThin): string => {
 				return d.name;
-			})
+			}),
 		).toEqual(['Admin Default', 'FFF GGG']);
 	});
 
@@ -512,31 +545,76 @@ describe('Modify existing users', () => {
 		testUserAddNew(ee, 'E', 'e', 'pass_e', ['STUDENT']);
 		testUserAddNew(ff, 'F', 'f', 'pass_f', ['STUDENT']);
 
-		const aa_Classical = new TimeControlRating(Classical, new EloRating(2000, 10, 10, 0, 0, 40, false));
-		const aa_Blitz = new TimeControlRating(Blitz, new EloRating(300, 100, 0, 0, 100, 40, false));
-		const aa_Rapid = new TimeControlRating(Rapid, new EloRating(1000, 100, 0, 50, 50, 40, false));
+		const aa_Classical = new TimeControlRating(
+			Classical,
+			new EloRating(2000, 10, 10, 0, 0, 40, false),
+		);
+		const aa_Blitz = new TimeControlRating(
+			Blitz,
+			new EloRating(300, 100, 0, 0, 100, 40, false),
+		);
+		const aa_Rapid = new TimeControlRating(
+			Rapid,
+			new EloRating(1000, 100, 0, 50, 50, 40, false),
+		);
 		const rating_aa = [aa_Classical, aa_Blitz, aa_Rapid];
 
-		const bb_Classical = new TimeControlRating(Classical, new EloRating(2500, 2000, 1999, 0, 1, 10, true));
-		const bb_Blitz = new TimeControlRating(Blitz, new EloRating(2000, 10, 10, 0, 0, 40, false));
-		const bb_Rapid = new TimeControlRating(Rapid, new EloRating(1000, 100, 0, 0, 100, 40, false));
+		const bb_Classical = new TimeControlRating(
+			Classical,
+			new EloRating(2500, 2000, 1999, 0, 1, 10, true),
+		);
+		const bb_Blitz = new TimeControlRating(
+			Blitz,
+			new EloRating(2000, 10, 10, 0, 0, 40, false),
+		);
+		const bb_Rapid = new TimeControlRating(
+			Rapid,
+			new EloRating(1000, 100, 0, 0, 100, 40, false),
+		);
 		const rating_bb = [bb_Classical, bb_Blitz, bb_Rapid];
 
-		const cc_Classical = new TimeControlRating(Classical, new EloRating(2000, 10, 10, 0, 0, 40, false));
-		const cc_Blitz = new TimeControlRating(Blitz, new EloRating(300, 100, 0, 0, 100, 40, false));
-		const cc_Rapid = new TimeControlRating(Rapid, new EloRating(2000, 10, 10, 0, 0, 40, false));
+		const cc_Classical = new TimeControlRating(
+			Classical,
+			new EloRating(2000, 10, 10, 0, 0, 40, false),
+		);
+		const cc_Blitz = new TimeControlRating(
+			Blitz,
+			new EloRating(300, 100, 0, 0, 100, 40, false),
+		);
+		const cc_Rapid = new TimeControlRating(
+			Rapid,
+			new EloRating(2000, 10, 10, 0, 0, 40, false),
+		);
 		const rating_cc = [cc_Classical, cc_Blitz, cc_Rapid];
 
-		const dd_Classical = new TimeControlRating(Classical, new EloRating(2500, 2000, 1999, 0, 1, 10, true));
-		const dd_Rapid = new TimeControlRating(Rapid, new EloRating(1000, 100, 0, 0, 100, 40, false));
+		const dd_Classical = new TimeControlRating(
+			Classical,
+			new EloRating(2500, 2000, 1999, 0, 1, 10, true),
+		);
+		const dd_Rapid = new TimeControlRating(
+			Rapid,
+			new EloRating(1000, 100, 0, 0, 100, 40, false),
+		);
 		const rating_dd = [dd_Classical, dd_Rapid];
 
-		const ee_Blitz = new TimeControlRating(Blitz, new EloRating(300, 100, 0, 0, 100, 40, false));
-		const ee_Rapid = new TimeControlRating(Rapid, new EloRating(2000, 10, 10, 0, 0, 40, false));
+		const ee_Blitz = new TimeControlRating(
+			Blitz,
+			new EloRating(300, 100, 0, 0, 100, 40, false),
+		);
+		const ee_Rapid = new TimeControlRating(
+			Rapid,
+			new EloRating(2000, 10, 10, 0, 0, 40, false),
+		);
 		const rating_ee = [ee_Blitz, ee_Rapid];
 
-		const ff_Classical = new TimeControlRating(Classical, new EloRating(2500, 2000, 1999, 0, 1, 10, true));
-		const ff_Blitz = new TimeControlRating(Blitz, new EloRating(2000, 10, 10, 0, 0, 40, false));
+		const ff_Classical = new TimeControlRating(
+			Classical,
+			new EloRating(2500, 2000, 1999, 0, 1, 10, true),
+		);
+		const ff_Blitz = new TimeControlRating(
+			Blitz,
+			new EloRating(2000, 10, 10, 0, 0, 40, false),
+		);
 		const rating_ff = [ff_Classical, ff_Blitz];
 
 		userUpdateFromPlayerData([
@@ -545,7 +623,7 @@ describe('Modify existing users', () => {
 			new Player(cc, rating_cc),
 			new Player(dd, rating_dd),
 			new Player(ee, rating_ee),
-			new Player(ff, rating_ff)
+			new Player(ff, rating_ff),
 		]);
 
 		const user_aa = testUserRetrieve(aa) as User;

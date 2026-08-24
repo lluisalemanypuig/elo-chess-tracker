@@ -8,5 +8,10 @@
 	},
 	"[jsonc]": {
 		"editor.defaultFormatter": "esbenp.prettier-vscode"
-	}
+	},
+	"editor.codeActionsOnSave": {
+		"source.organizeImports": "always",
+		"source.fixAll.eslint": "explicit"
+	},
+	"editor.tabSize": 2
 }

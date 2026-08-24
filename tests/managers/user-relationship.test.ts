@@ -23,34 +23,100 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { User } from '@server/models/user';
-import { UserRoleToUserAction } from '@server/managers/user-role-action';
-import { initializePermissions } from '@server/managers/user-role-action';
-import {
-	canUserEditUser,
-	canUserEditGame,
-	canUserCreateGame,
-	canUserSeeGame,
-	canUserSendChallenge,
-	canUserSeeGraph
-} from '@server/managers/user-relationships';
-import { toUserGivenName } from '@common/models/user-given-name';
 import { toPlayerPrivateId } from '@common/models/player-id';
+import { toUserGivenName } from '@common/models/user-given-name';
+import {
+	canUserCreateGame,
+	canUserEditGame,
+	canUserEditUser,
+	canUserSeeGame,
+	canUserSeeGraph,
+	canUserSendChallenge,
+} from '@server/managers/user-relationships';
+import {
+	initializePermissions,
+	UserRoleToUserAction,
+} from '@server/managers/user-role-action';
+import { User } from '@server/models/user';
 
 const un = toPlayerPrivateId('un');
 const firstName = toUserGivenName('f');
 const lastName = toUserGivenName('l');
 
 describe('Edition', () => {
-	const editor_admin = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, ['ADMIN'], [], []);
-	const editor_teacher = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, ['TEACHER'], [], []);
-	const editor_member = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, ['MEMBER'], [], []);
-	const editor_student = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, ['STUDENT'], [], []);
+	const editor_admin = new User(
+		un,
+		firstName,
+		lastName,
+		{ encrypted: 'a', iv: 'b' },
+		['ADMIN'],
+		[],
+		[],
+	);
+	const editor_teacher = new User(
+		un,
+		firstName,
+		lastName,
+		{ encrypted: 'a', iv: 'b' },
+		['TEACHER'],
+		[],
+		[],
+	);
+	const editor_member = new User(
+		un,
+		firstName,
+		lastName,
+		{ encrypted: 'a', iv: 'b' },
+		['MEMBER'],
+		[],
+		[],
+	);
+	const editor_student = new User(
+		un,
+		firstName,
+		lastName,
+		{ encrypted: 'a', iv: 'b' },
+		['STUDENT'],
+		[],
+		[],
+	);
 
-	const edited_admin = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, ['ADMIN'], [], []);
-	const edited_teacher = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, ['TEACHER'], [], []);
-	const edited_member = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, ['MEMBER'], [], []);
-	const edited_student = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, ['STUDENT'], [], []);
+	const edited_admin = new User(
+		un,
+		firstName,
+		lastName,
+		{ encrypted: 'a', iv: 'b' },
+		['ADMIN'],
+		[],
+		[],
+	);
+	const edited_teacher = new User(
+		un,
+		firstName,
+		lastName,
+		{ encrypted: 'a', iv: 'b' },
+		['TEACHER'],
+		[],
+		[],
+	);
+	const edited_member = new User(
+		un,
+		firstName,
+		lastName,
+		{ encrypted: 'a', iv: 'b' },
+		['MEMBER'],
+		[],
+		[],
+	);
+	const edited_student = new User(
+		un,
+		firstName,
+		lastName,
+		{ encrypted: 'a', iv: 'b' },
+		['STUDENT'],
+		[],
+		[],
+	);
 
 	test('Admin -> Teacher', () => {
 		let rel = UserRoleToUserAction.getInstance();
@@ -59,7 +125,7 @@ describe('Edition', () => {
 			admin: ['EDIT_USER_TEACHER'],
 			teacher: [],
 			student: [],
-			member: []
+			member: [],
 		});
 
 		expect(canUserEditUser(editor_admin, edited_admin)).toBe(false);
@@ -75,7 +141,7 @@ describe('Edition', () => {
 			admin: ['EDIT_USER_TEACHER', 'EDIT_USER_STUDENT'],
 			teacher: [],
 			student: [],
-			member: []
+			member: [],
 		});
 
 		expect(canUserEditUser(editor_admin, edited_admin)).toBe(false);
@@ -91,7 +157,7 @@ describe('Edition', () => {
 			admin: [],
 			teacher: ['EDIT_USER_TEACHER'],
 			student: [],
-			member: []
+			member: [],
 		});
 
 		expect(canUserEditUser(editor_teacher, edited_admin)).toBe(false);
@@ -107,7 +173,7 @@ describe('Edition', () => {
 			admin: [],
 			teacher: ['EDIT_USER_TEACHER', 'EDIT_USER_STUDENT'],
 			student: [],
-			member: []
+			member: [],
 		});
 
 		expect(canUserEditUser(editor_teacher, edited_admin)).toBe(false);
@@ -123,7 +189,7 @@ describe('Edition', () => {
 			admin: [],
 			teacher: [],
 			student: ['EDIT_USER_TEACHER'],
-			member: []
+			member: [],
 		});
 
 		expect(canUserEditUser(editor_student, edited_admin)).toBe(false);
@@ -139,7 +205,7 @@ describe('Edition', () => {
 			admin: [],
 			teacher: [],
 			student: ['EDIT_USER_TEACHER', 'EDIT_USER_STUDENT'],
-			member: []
+			member: [],
 		});
 
 		expect(canUserEditUser(editor_student, edited_admin)).toBe(false);
@@ -155,7 +221,7 @@ describe('Edition', () => {
 			admin: [],
 			teacher: [],
 			student: [],
-			member: ['EDIT_USER_TEACHER']
+			member: ['EDIT_USER_TEACHER'],
 		});
 
 		expect(canUserEditUser(editor_member, edited_admin)).toBe(false);
@@ -171,7 +237,7 @@ describe('Edition', () => {
 			admin: [],
 			teacher: [],
 			student: [],
-			member: ['EDIT_USER_TEACHER', 'EDIT_USER_STUDENT']
+			member: ['EDIT_USER_TEACHER', 'EDIT_USER_STUDENT'],
 		});
 
 		expect(canUserEditUser(editor_member, edited_admin)).toBe(false);
@@ -182,10 +248,42 @@ describe('Edition', () => {
 });
 
 describe('Can a user see a game?', () => {
-	const admin = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, ['ADMIN'], [], []);
-	const teacher = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, ['TEACHER'], [], []);
-	const member = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, ['MEMBER'], [], []);
-	const student = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, ['STUDENT'], [], []);
+	const admin = new User(
+		un,
+		firstName,
+		lastName,
+		{ encrypted: 'a', iv: 'b' },
+		['ADMIN'],
+		[],
+		[],
+	);
+	const teacher = new User(
+		un,
+		firstName,
+		lastName,
+		{ encrypted: 'a', iv: 'b' },
+		['TEACHER'],
+		[],
+		[],
+	);
+	const member = new User(
+		un,
+		firstName,
+		lastName,
+		{ encrypted: 'a', iv: 'b' },
+		['MEMBER'],
+		[],
+		[],
+	);
+	const student = new User(
+		un,
+		firstName,
+		lastName,
+		{ encrypted: 'a', iv: 'b' },
+		['STUDENT'],
+		[],
+		[],
+	);
 
 	test('Admin', () => {
 		let rel = UserRoleToUserAction.getInstance();
@@ -194,7 +292,7 @@ describe('Can a user see a game?', () => {
 			admin: ['SEE_GAMES_ADMIN', 'SEE_GAMES_MEMBER'],
 			teacher: [],
 			student: [],
-			member: []
+			member: [],
 		});
 
 		expect(canUserSeeGame(admin, teacher, member)).toBe(true);
@@ -210,7 +308,7 @@ describe('Can a user see a game?', () => {
 			admin: [],
 			teacher: ['SEE_GAMES_ADMIN', 'SEE_GAMES_STUDENT'],
 			student: [],
-			member: []
+			member: [],
 		});
 
 		expect(canUserSeeGame(teacher, teacher, member)).toBe(false);
@@ -221,10 +319,42 @@ describe('Can a user see a game?', () => {
 });
 
 describe('Can a user edit a game?', () => {
-	const admin = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, ['ADMIN'], [], []);
-	const teacher = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, ['TEACHER'], [], []);
-	const member = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, ['MEMBER'], [], []);
-	const student = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, ['STUDENT'], [], []);
+	const admin = new User(
+		un,
+		firstName,
+		lastName,
+		{ encrypted: 'a', iv: 'b' },
+		['ADMIN'],
+		[],
+		[],
+	);
+	const teacher = new User(
+		un,
+		firstName,
+		lastName,
+		{ encrypted: 'a', iv: 'b' },
+		['TEACHER'],
+		[],
+		[],
+	);
+	const member = new User(
+		un,
+		firstName,
+		lastName,
+		{ encrypted: 'a', iv: 'b' },
+		['MEMBER'],
+		[],
+		[],
+	);
+	const student = new User(
+		un,
+		firstName,
+		lastName,
+		{ encrypted: 'a', iv: 'b' },
+		['STUDENT'],
+		[],
+		[],
+	);
 
 	test('Admin', () => {
 		let rel = UserRoleToUserAction.getInstance();
@@ -233,7 +363,7 @@ describe('Can a user edit a game?', () => {
 			admin: ['EDIT_GAMES_ADMIN', 'EDIT_GAMES_MEMBER'],
 			teacher: [],
 			student: [],
-			member: []
+			member: [],
 		});
 
 		expect(canUserEditGame(admin, teacher, member)).toBe(true);
@@ -249,7 +379,7 @@ describe('Can a user edit a game?', () => {
 			admin: [],
 			teacher: ['EDIT_GAMES_ADMIN', 'EDIT_GAMES_STUDENT'],
 			student: [],
-			member: []
+			member: [],
 		});
 
 		expect(canUserEditGame(teacher, teacher, member)).toBe(false);
@@ -265,7 +395,7 @@ describe('Can a user edit a game?', () => {
 			admin: [],
 			teacher: ['EDIT_GAMES_ADMIN', 'EDIT_GAMES_TEACHER'],
 			student: [],
-			member: []
+			member: [],
 		});
 
 		expect(canUserEditGame(teacher, teacher, member)).toBe(true);
@@ -276,10 +406,42 @@ describe('Can a user edit a game?', () => {
 });
 
 describe('Can a user create a game?', () => {
-	const admin = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, ['ADMIN'], [], []);
-	const teacher = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, ['TEACHER'], [], []);
-	const member = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, ['MEMBER'], [], []);
-	const student = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, ['STUDENT'], [], []);
+	const admin = new User(
+		un,
+		firstName,
+		lastName,
+		{ encrypted: 'a', iv: 'b' },
+		['ADMIN'],
+		[],
+		[],
+	);
+	const teacher = new User(
+		un,
+		firstName,
+		lastName,
+		{ encrypted: 'a', iv: 'b' },
+		['TEACHER'],
+		[],
+		[],
+	);
+	const member = new User(
+		un,
+		firstName,
+		lastName,
+		{ encrypted: 'a', iv: 'b' },
+		['MEMBER'],
+		[],
+		[],
+	);
+	const student = new User(
+		un,
+		firstName,
+		lastName,
+		{ encrypted: 'a', iv: 'b' },
+		['STUDENT'],
+		[],
+		[],
+	);
 
 	test('Admin', () => {
 		let rel = UserRoleToUserAction.getInstance();
@@ -288,7 +450,7 @@ describe('Can a user create a game?', () => {
 			admin: ['CREATE_GAMES_ADMIN', 'CREATE_GAMES_MEMBER'],
 			teacher: [],
 			student: [],
-			member: []
+			member: [],
 		});
 
 		expect(canUserCreateGame(admin, teacher, member)).toBe(true);
@@ -304,7 +466,7 @@ describe('Can a user create a game?', () => {
 			admin: [],
 			teacher: ['CREATE_GAMES_ADMIN', 'CREATE_GAMES_STUDENT'],
 			student: [],
-			member: []
+			member: [],
 		});
 
 		expect(canUserCreateGame(teacher, teacher, member)).toBe(false);
@@ -320,7 +482,7 @@ describe('Can a user create a game?', () => {
 			admin: [],
 			teacher: ['CREATE_GAMES_ADMIN', 'CREATE_GAMES_TEACHER'],
 			student: [],
-			member: []
+			member: [],
 		});
 
 		expect(canUserCreateGame(teacher, teacher, member)).toBe(true);
@@ -331,10 +493,42 @@ describe('Can a user create a game?', () => {
 });
 
 describe('Can a user challenge?', () => {
-	const admin = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, ['ADMIN'], [], []);
-	const teacher = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, ['TEACHER'], [], []);
-	const member = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, ['MEMBER'], [], []);
-	const student = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, ['STUDENT'], [], []);
+	const admin = new User(
+		un,
+		firstName,
+		lastName,
+		{ encrypted: 'a', iv: 'b' },
+		['ADMIN'],
+		[],
+		[],
+	);
+	const teacher = new User(
+		un,
+		firstName,
+		lastName,
+		{ encrypted: 'a', iv: 'b' },
+		['TEACHER'],
+		[],
+		[],
+	);
+	const member = new User(
+		un,
+		firstName,
+		lastName,
+		{ encrypted: 'a', iv: 'b' },
+		['MEMBER'],
+		[],
+		[],
+	);
+	const student = new User(
+		un,
+		firstName,
+		lastName,
+		{ encrypted: 'a', iv: 'b' },
+		['STUDENT'],
+		[],
+		[],
+	);
 
 	test('Admin', () => {
 		let rel = UserRoleToUserAction.getInstance();
@@ -343,7 +537,7 @@ describe('Can a user challenge?', () => {
 			admin: ['CHALLENGE_USER_ADMIN', 'CHALLENGE_USER_STUDENT'],
 			teacher: [],
 			student: [],
-			member: []
+			member: [],
 		});
 
 		expect(canUserSendChallenge(admin, admin)).toBe(true);
@@ -359,7 +553,7 @@ describe('Can a user challenge?', () => {
 			admin: [],
 			teacher: ['CHALLENGE_USER_ADMIN', 'CHALLENGE_USER_STUDENT'],
 			student: [],
-			member: []
+			member: [],
 		});
 
 		expect(canUserSendChallenge(teacher, admin)).toBe(true);
@@ -373,9 +567,13 @@ describe('Can a user challenge?', () => {
 		rel.clear();
 		initializePermissions({
 			admin: [],
-			teacher: ['CHALLENGE_USER_ADMIN', 'CHALLENGE_USER_STUDENT', 'CHALLENGE_USER_MEMBER'],
+			teacher: [
+				'CHALLENGE_USER_ADMIN',
+				'CHALLENGE_USER_STUDENT',
+				'CHALLENGE_USER_MEMBER',
+			],
 			student: [],
-			member: []
+			member: [],
 		});
 
 		expect(canUserSendChallenge(teacher, admin)).toBe(true);
@@ -386,10 +584,42 @@ describe('Can a user challenge?', () => {
 });
 
 describe('Can a user see a graph?', () => {
-	const admin = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, ['ADMIN'], [], []);
-	const teacher = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, ['TEACHER'], [], []);
-	const member = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, ['MEMBER'], [], []);
-	const student = new User(un, firstName, lastName, { encrypted: 'a', iv: 'b' }, ['STUDENT'], [], []);
+	const admin = new User(
+		un,
+		firstName,
+		lastName,
+		{ encrypted: 'a', iv: 'b' },
+		['ADMIN'],
+		[],
+		[],
+	);
+	const teacher = new User(
+		un,
+		firstName,
+		lastName,
+		{ encrypted: 'a', iv: 'b' },
+		['TEACHER'],
+		[],
+		[],
+	);
+	const member = new User(
+		un,
+		firstName,
+		lastName,
+		{ encrypted: 'a', iv: 'b' },
+		['MEMBER'],
+		[],
+		[],
+	);
+	const student = new User(
+		un,
+		firstName,
+		lastName,
+		{ encrypted: 'a', iv: 'b' },
+		['STUDENT'],
+		[],
+		[],
+	);
 
 	test('Admin', () => {
 		let rel = UserRoleToUserAction.getInstance();
@@ -398,7 +628,7 @@ describe('Can a user see a graph?', () => {
 			admin: ['SEE_GRAPHS_ADMIN', 'SEE_GRAPHS_STUDENT'],
 			teacher: [],
 			student: [],
-			member: []
+			member: [],
 		});
 
 		expect(canUserSeeGraph(admin, admin)).toBe(true);
@@ -414,7 +644,7 @@ describe('Can a user see a graph?', () => {
 			admin: [],
 			teacher: ['SEE_GRAPHS_ADMIN', 'SEE_GRAPHS_STUDENT'],
 			student: [],
-			member: []
+			member: [],
 		});
 
 		expect(canUserSeeGraph(teacher, admin)).toBe(true);
@@ -430,7 +660,7 @@ describe('Can a user see a graph?', () => {
 			admin: [],
 			teacher: ['SEE_GRAPHS_ADMIN', 'SEE_GRAPHS_STUDENT', 'SEE_GRAPHS_MEMBER'],
 			student: [],
-			member: []
+			member: [],
 		});
 
 		expect(canUserSeeGraph(teacher, admin)).toBe(true);

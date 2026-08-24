@@ -23,11 +23,9 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { z } from 'zod';
-
 import { Route } from '@common/api/routes';
-
 import { API_SCHEMA } from '@common/api/schemas-endpoints';
+import { z } from 'zod';
 
 export type Empty = undefined;
 

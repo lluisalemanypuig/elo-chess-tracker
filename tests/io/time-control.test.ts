@@ -23,19 +23,36 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { timeControlFromString, timeControlArrayFromString } from '@server/io/time-control';
+import {
+	timeControlArrayFromString,
+	timeControlFromString,
+} from '@server/io/time-control';
 
 describe('IO conversion', () => {
 	test('string to TimeControl', () => {
-		expect(timeControlFromString('{ "id": "A", "name": "B" }')).toEqual({ id: 'A', name: 'B' });
-		expect(timeControlFromString('{ "id": "", "name": "" }')).toEqual({ id: '', name: '' });
+		expect(timeControlFromString('{ "id": "A", "name": "B" }')).toEqual({
+			id: 'A',
+			name: 'B',
+		});
+		expect(timeControlFromString('{ "id": "", "name": "" }')).toEqual({
+			id: '',
+			name: '',
+		});
 	});
 	test('string to TimeControl[]', () => {
-		expect(timeControlArrayFromString('[{ "id": "A", "name": "B" }]')).toEqual([{ id: 'A', name: 'B' }]);
-		expect(timeControlArrayFromString('[{ "id": "", "name": "" }]')).toEqual([{ id: '', name: '' }]);
-		expect(timeControlArrayFromString('[{ "id": "A", "name": "B" }, { "id": "", "name": "" }]')).toEqual([
+		expect(timeControlArrayFromString('[{ "id": "A", "name": "B" }]')).toEqual([
 			{ id: 'A', name: 'B' },
-			{ id: '', name: '' }
+		]);
+		expect(timeControlArrayFromString('[{ "id": "", "name": "" }]')).toEqual([
+			{ id: '', name: '' },
+		]);
+		expect(
+			timeControlArrayFromString(
+				'[{ "id": "A", "name": "B" }, { "id": "", "name": "" }]',
+			),
+		).toEqual([
+			{ id: 'A', name: 'B' },
+			{ id: '', name: '' },
 		]);
 	});
 });

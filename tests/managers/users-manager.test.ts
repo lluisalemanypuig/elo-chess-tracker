@@ -23,12 +23,12 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { TestError } from '@tests';
-import { UsersManager } from '@server/managers/users-manager';
 import { isNotDefined } from '@common//utils/is-defined';
 import { toPlayerPrivateId } from '@common/models/player-id';
 import { toUserGivenName } from '@common/models/user-given-name';
+import { UsersManager } from '@server/managers/users-manager';
 import { User } from '@server/models/user';
+import { TestError } from '@tests';
 
 const a = toPlayerPrivateId('a');
 const b = toPlayerPrivateId('b');

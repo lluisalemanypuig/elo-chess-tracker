@@ -25,10 +25,13 @@ Contact:
 
 import { toGameId } from '@common/models/game-id';
 import { toPlayerPrivateId } from '@common/models/player-id';
+import {
+	toTimeControlId,
+	toTimeControlName,
+} from '@common/models/time-control';
+import { toDateFull } from '@common/utils/time';
 import { Game } from '@server/models/game';
 import { EloRating } from '@server/models/rating-framework/Elo/rating';
-import { toTimeControlId, toTimeControlName } from '@common/models/time-control';
-import { toDateFull } from '@common/utils/time';
 
 const Blitz = toTimeControlId('Blitz');
 const Blitz5p3 = toTimeControlName('Blitz (5 + 3)');
@@ -48,7 +51,7 @@ describe('Setters and Getters -- Elo', () => {
 			Blitz,
 			Blitz5p3,
 			toDateFull('2024-12-29..11:15:00'),
-			[]
+			[],
 		);
 
 		expect(g.id).toEqual('1');
@@ -77,7 +80,7 @@ describe('Setters and Getters -- Elo', () => {
 			Blitz,
 			Blitz5p3,
 			toDateFull('2024-12-29..11:15:00'),
-			[]
+			[],
 		);
 
 		expect(g.result).toEqual('white_wins');

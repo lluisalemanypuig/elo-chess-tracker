@@ -23,8 +23,13 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
+import {
+	dateFullToMajor,
+	dateFullToMinor,
+	dateSplitMajorMinor,
+	toDateFull,
+} from '@common/utils/time';
 import { numberToString } from '@server/utils/misc';
-import { dateSplitMajorMinor, dateFullToMajor, dateFullToMinor, toDateFull } from '@common/utils/time';
 
 describe('Number to string', () => {
 	test('1 digit', () => {
@@ -117,28 +122,61 @@ describe('Number to string', () => {
 
 describe('date-to-string conversions', () => {
 	test('long date to short date', () => {
-		expect(dateFullToMajor(toDateFull('2022-10-01..01:01:01'))).toBe('2022-10-01');
-		expect(dateFullToMajor(toDateFull('2022-10-01..01:01:10'))).toBe('2022-10-01');
-		expect(dateFullToMajor(toDateFull('2022-10-21..10:01:10'))).toBe('2022-10-21');
+		expect(dateFullToMajor(toDateFull('2022-10-01..01:01:01'))).toBe(
+			'2022-10-01',
+		);
+		expect(dateFullToMajor(toDateFull('2022-10-01..01:01:10'))).toBe(
+			'2022-10-01',
+		);
+		expect(dateFullToMajor(toDateFull('2022-10-21..10:01:10'))).toBe(
+			'2022-10-21',
+		);
 	});
 
 	test('long date to tiny date', () => {
-		expect(dateFullToMinor(toDateFull('2022-10-01..01:01:01'))).toBe('01:01:01');
-		expect(dateFullToMinor(toDateFull('2022-10-01..01:01:10'))).toBe('01:01:10');
-		expect(dateFullToMinor(toDateFull('2022-10-21..10:01:10'))).toBe('10:01:10');
+		expect(dateFullToMinor(toDateFull('2022-10-01..01:01:01'))).toBe(
+			'01:01:01',
+		);
+		expect(dateFullToMinor(toDateFull('2022-10-01..01:01:10'))).toBe(
+			'01:01:10',
+		);
+		expect(dateFullToMinor(toDateFull('2022-10-21..10:01:10'))).toBe(
+			'10:01:10',
+		);
 
-		expect(dateFullToMinor(toDateFull('2022-10-01..01:01:01:111'))).toBe('01:01:01:111');
-		expect(dateFullToMinor(toDateFull('2022-10-01..01:01:10:222'))).toBe('01:01:10:222');
-		expect(dateFullToMinor(toDateFull('2022-10-21..10:01:10:333'))).toBe('10:01:10:333');
+		expect(dateFullToMinor(toDateFull('2022-10-01..01:01:01:111'))).toBe(
+			'01:01:01:111',
+		);
+		expect(dateFullToMinor(toDateFull('2022-10-01..01:01:10:222'))).toBe(
+			'01:01:10:222',
+		);
+		expect(dateFullToMinor(toDateFull('2022-10-21..10:01:10:333'))).toBe(
+			'10:01:10:333',
+		);
 	});
 
 	test('long date to short and tiny date', () => {
-		expect(dateSplitMajorMinor(toDateFull('2022-10-01..01:01:01'))).toEqual(['2022-10-01', '01:01:01']);
-		expect(dateSplitMajorMinor(toDateFull('2022-10-01..01:01:10'))).toEqual(['2022-10-01', '01:01:10']);
-		expect(dateSplitMajorMinor(toDateFull('2022-10-21..10:01:10'))).toEqual(['2022-10-21', '10:01:10']);
+		expect(dateSplitMajorMinor(toDateFull('2022-10-01..01:01:01'))).toEqual([
+			'2022-10-01',
+			'01:01:01',
+		]);
+		expect(dateSplitMajorMinor(toDateFull('2022-10-01..01:01:10'))).toEqual([
+			'2022-10-01',
+			'01:01:10',
+		]);
+		expect(dateSplitMajorMinor(toDateFull('2022-10-21..10:01:10'))).toEqual([
+			'2022-10-21',
+			'10:01:10',
+		]);
 
-		expect(dateSplitMajorMinor(toDateFull('2022-10-01..01:01:01:111'))).toEqual(['2022-10-01', '01:01:01:111']);
-		expect(dateSplitMajorMinor(toDateFull('2022-10-01..01:01:10:222'))).toEqual(['2022-10-01', '01:01:10:222']);
-		expect(dateSplitMajorMinor(toDateFull('2022-10-21..10:01:10:333'))).toEqual(['2022-10-21', '10:01:10:333']);
+		expect(dateSplitMajorMinor(toDateFull('2022-10-01..01:01:01:111'))).toEqual(
+			['2022-10-01', '01:01:01:111'],
+		);
+		expect(dateSplitMajorMinor(toDateFull('2022-10-01..01:01:10:222'))).toEqual(
+			['2022-10-01', '01:01:10:222'],
+		);
+		expect(dateSplitMajorMinor(toDateFull('2022-10-21..10:01:10:333'))).toEqual(
+			['2022-10-21', '10:01:10:333'],
+		);
 	});
 });

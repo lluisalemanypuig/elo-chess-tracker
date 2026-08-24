@@ -36,6 +36,11 @@ describe('clone', () => {
 		expect(rc.drawn).toBe(r.drawn);
 		expect(rc.lost).toBe(r.lost);
 
-		expect(rc.numWonDrawnLost()).toEqual([rc.numGames, rc.won, rc.drawn, rc.lost]);
+		expect(rc.numWonDrawnLost()).toEqual([
+			rc.numGames,
+			rc.won,
+			rc.drawn,
+			rc.lost,
+		]);
 	});
 });

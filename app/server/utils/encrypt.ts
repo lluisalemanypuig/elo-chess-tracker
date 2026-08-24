@@ -23,10 +23,10 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import CryptoJS from 'crypto-js';
-import { interleaveStrings } from '@server/utils/misc';
-import { Password } from '@server/models/password';
 import { PlayerPrivateId } from '@common/models/player-id';
+import { Password } from '@server/models/password';
+import { interleaveStrings } from '@server/utils/misc';
+import CryptoJS from 'crypto-js';
 import { InternalError } from '../models/error-types/internal-error';
 
 // In case of accidental overwrite, use:
@@ -72,7 +72,9 @@ export function normalizeString(str: string): string {
 
 	const newLength = newPassword.length;
 	if ((newLength & (newLength - 1)) !== 0) {
-		throw new InternalError(`New password does not have the right length ${newLength}.`);
+		throw new InternalError(
+			`New password does not have the right length ${newLength}.`,
+		);
 	}
 
 	return newPassword;
@@ -87,7 +89,10 @@ export function normalizeString(str: string): string {
  * @param password Password in plain text set by the user.
  * @returns A pair of strings: encrypted text, and random initialization vector of AES (length 16 bytes)
  */
-export function encryptPasswordForUser(username: PlayerPrivateId, password: string): [string, string] {
+export function encryptPasswordForUser(
+	username: PlayerPrivateId,
+	password: string,
+): [string, string] {
 	const normalizedPassword = normalizeString(password);
 	const keyUsedToEncrypt = CryptoJS.SHA256(normalizedPassword);
 
@@ -95,11 +100,15 @@ export function encryptPasswordForUser(username: PlayerPrivateId, password: stri
 
 	const iv = CryptoJS.lib.WordArray.random(16);
 
-	const encrypted = CryptoJS.AES.encrypt(actualPasswordToBeEncrypted, keyUsedToEncrypt, {
-		iv: iv,
-		mode: CryptoJS.mode.CBC,
-		padding: CryptoJS.pad.Pkcs7
-	});
+	const encrypted = CryptoJS.AES.encrypt(
+		actualPasswordToBeEncrypted,
+		keyUsedToEncrypt,
+		{
+			iv: iv,
+			mode: CryptoJS.mode.CBC,
+			padding: CryptoJS.pad.Pkcs7,
+		},
+	);
 
 	return [encrypted.toString(), iv.toString(CryptoJS.enc.Base64)];
 }
@@ -111,14 +120,17 @@ export function encryptPasswordForUser(username: PlayerPrivateId, password: stri
  * @param iv Initialization vector of AES.
  * @returns A string resulting of decrypting @e encryptedMsg.
  */
-export function decryptPasswordForUser(password: string, { encrypted, iv }: Password): string {
+export function decryptPasswordForUser(
+	password: string,
+	{ encrypted, iv }: Password,
+): string {
 	const normalizedPassword = normalizeString(password);
 	const keyUsedToDecrypt = CryptoJS.SHA256(normalizedPassword);
 
 	const decrypted = CryptoJS.AES.decrypt(encrypted, keyUsedToDecrypt, {
 		iv: CryptoJS.enc.Base64.parse(iv),
 		mode: CryptoJS.mode.CBC,
-		padding: CryptoJS.pad.Pkcs7
+		padding: CryptoJS.pad.Pkcs7,
 	});
 
 	try {
@@ -143,7 +155,7 @@ export function decryptPasswordForUser(password: string, { encrypted, iv }: Pass
 export function isPasswordOfUserCorrect(
 	username: PlayerPrivateId,
 	password: string,
-	actualPassword: Password
+	actualPassword: Password,
 ): boolean {
 	const decrypted = decryptPasswordForUser(password, actualPassword);
 	const interleave = interleaveStrings(username, password);

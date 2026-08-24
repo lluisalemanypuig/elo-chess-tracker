@@ -23,16 +23,19 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { Player, PlayerKeys } from '@server/models/player';
 import { readJsonArrayString, readJsonObjectString } from '@server/io/generic';
 import { RatingSystemManager } from '@server/managers/rating-system-manager';
+import { Player, PlayerKeys } from '@server/models/player';
 import { TimeControlRating } from '@server/models/time-control-rating';
 
 export function playerFromJson(json: any): Player {
 	const manager = RatingSystemManager.getInstance();
 	let ratings: TimeControlRating[] = [];
 	for (const r of json.ratings) {
-		const rating = new TimeControlRating(r.timeControl, manager.getRatingFromJson(r.rating));
+		const rating = new TimeControlRating(
+			r.timeControl,
+			manager.getRatingFromJson(r.rating),
+		);
 		ratings.push(rating);
 	}
 

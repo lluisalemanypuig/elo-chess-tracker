@@ -29,7 +29,7 @@ const SSLCertificateSchema = z
 	.object({
 		publicKeyFile: z.string(),
 		privateKeyFile: z.string(),
-		passphraseFile: z.string()
+		passphraseFile: z.string(),
 	})
 	.strict();
 
@@ -38,14 +38,14 @@ export type SSLCertificate = z.infer<typeof SSLCertificateSchema>;
 const LoginPageSchema = z
 	.object({
 		title: z.string(),
-		icon: z.string()
+		icon: z.string(),
 	})
 	.strict();
 
 const HomePageSchema = z
 	.object({
 		title: z.string(),
-		icon: z.string()
+		icon: z.string(),
 	})
 	.strict();
 
@@ -54,7 +54,7 @@ export const EnvironmentSchema = z
 		sslCertificate: SSLCertificateSchema,
 		favicon: z.string(),
 		loginPage: LoginPageSchema,
-		homePage: HomePageSchema
+		homePage: HomePageSchema,
 	})
 	.strict();
 

@@ -23,7 +23,7 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { z } from 'zod';
 import { TimeControlSchema } from '@common/models/time-control';
+import { z } from 'zod';
 
 export const TimeControlArraySchema = z.array(TimeControlSchema);

@@ -26,11 +26,14 @@ Contact:
 import Debug from 'debug';
 const debug = Debug(`ELO_CHESS_TRACKER:io`);
 
+import { isNotDefined } from '@common/utils/is-defined';
 import { logNow } from '@common/utils/time';
 import { z } from 'zod';
-import { isNotDefined } from '@common/utils/is-defined';
 
-export function readSchema<T extends z.ZodTypeAny>(schema: T, str: string): z.output<T> | null {
+export function readSchema<T extends z.ZodTypeAny>(
+	schema: T,
+	str: string,
+): z.output<T> | null {
 	const parse = JSON.parse(str);
 	if (isNotDefined(parse)) {
 		debug(logNow(), `JSON Failed to parse schema.`);
@@ -45,7 +48,10 @@ export function readSchema<T extends z.ZodTypeAny>(schema: T, str: string): z.ou
 	return res.data;
 }
 
-export function checkJsonKeys<Key extends string>(json: any, expectedKeys: readonly Key[]): boolean {
+export function checkJsonKeys<Key extends string>(
+	json: any,
+	expectedKeys: readonly Key[],
+): boolean {
 	let allKeys: Key[] = [];
 	for (const key of expectedKeys) {
 		allKeys.push(key);
@@ -56,7 +62,10 @@ export function checkJsonKeys<Key extends string>(json: any, expectedKeys: reado
 	}
 
 	if (allKeys.length !== expectedKeys.length) {
-		debug(logNow(), `Expected '${expectedKeys.length}'; found '${allKeys.length}' instead.`);
+		debug(
+			logNow(),
+			`Expected '${expectedKeys.length}'; found '${allKeys.length}' instead.`,
+		);
 		return false;
 	}
 
@@ -66,7 +75,7 @@ export function checkJsonKeys<Key extends string>(json: any, expectedKeys: reado
 export function readJsonObjectString<T, Key extends string>(
 	str: string,
 	expectedKeys: readonly Key[],
-	conversion: (json: any) => T | null
+	conversion: (json: any) => T | null,
 ): T | null {
 	let json: any;
 
@@ -93,7 +102,7 @@ export function readJsonObjectString<T, Key extends string>(
 export function readJsonArrayString<T, Key extends string>(
 	str: string,
 	expectedKeys: readonly Key[],
-	conversion: (json: any) => T | null
+	conversion: (json: any) => T | null,
 ): T[] | null {
 	let json: any;
 

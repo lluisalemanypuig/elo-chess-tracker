@@ -19,11 +19,10 @@ Full source code of elo-chess-tracker:
 	https://github.com/lluisalemanypuig/elo-chess-tracker
 */
 
-import 'htmx.org';
-
 import { messageFromResponse, serverCall } from '@client/action';
 import { ROUTES } from '@common/api/routes';
 import { PlayerPrivateId } from '@common/models/player-id';
+import 'htmx.org';
 
 async function logIntoWebpage(_event: any) {
 	// username box
@@ -48,7 +47,10 @@ async function logIntoWebpage(_event: any) {
 	}
 
 	// "query" the server
-	const response = await serverCall(ROUTES.USER_LOGIN, { u: username, p: password });
+	const response = await serverCall(ROUTES.USER_LOGIN, {
+		u: username,
+		p: password,
+	});
 	if (response.status === 'Error') {
 		alert(messageFromResponse(response));
 		return;
@@ -72,7 +74,9 @@ async function passwordBoxKeyDown(event: any) {
 
 window.onload = function () {
 	// define behaviour of login button
-	let loginButton = document.getElementById('login-button') as HTMLButtonElement;
+	let loginButton = document.getElementById(
+		'login-button',
+	) as HTMLButtonElement;
 	loginButton.onclick = logIntoWebpage;
 
 	let passwordBox = document.getElementById('password-box') as HTMLInputElement;

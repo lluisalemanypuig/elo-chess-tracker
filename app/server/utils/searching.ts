@@ -144,7 +144,10 @@ export function whereShouldBeInserted<T>(arr: T[], x: T): [number, boolean] {
  * @pre Element @e x does not exist in @e arr, that is, function
  * 'search(arr, x, F)' returns false.
  */
-export function whereShouldBeInsertedByKey<T>(arr: T[], F: Function): [number, boolean] {
+export function whereShouldBeInsertedByKey<T>(
+	arr: T[],
+	F: Function,
+): [number, boolean] {
 	if (arr.length === 0) {
 		return [1, false];
 	}

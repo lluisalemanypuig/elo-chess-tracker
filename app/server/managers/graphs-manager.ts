@@ -23,8 +23,8 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { Graph } from '@server/models/graph/graph';
 import { TimeControlId } from '@common/models/time-control';
+import { Graph } from '@server/models/graph/graph';
 import { searchLinearByKey } from '@server/utils/searching';
 
 interface GraphData {
@@ -60,18 +60,24 @@ export class GraphsManager {
 	}
 
 	addGraph(id: TimeControlId, g: Graph) {
-		const idx = searchLinearByKey(this.graphList, (pair: GraphData): boolean => {
-			return pair.timeControlId === id;
-		});
+		const idx = searchLinearByKey(
+			this.graphList,
+			(pair: GraphData): boolean => {
+				return pair.timeControlId === id;
+			},
+		);
 		if (idx === -1) {
 			this.graphList.push({ timeControlId: id, graph: g });
 		}
 	}
 
 	getGraph(id: TimeControlId): Graph | undefined {
-		const idx = searchLinearByKey(this.graphList, (pair: GraphData): boolean => {
-			return pair.timeControlId === id;
-		});
+		const idx = searchLinearByKey(
+			this.graphList,
+			(pair: GraphData): boolean => {
+				return pair.timeControlId === id;
+			},
+		);
 		return idx !== -1 ? this.graphList[idx].graph : undefined;
 	}
 }

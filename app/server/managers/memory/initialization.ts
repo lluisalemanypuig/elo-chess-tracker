@@ -23,50 +23,68 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import fs from 'fs';
-import path from 'path';
-import Debug from 'debug';
-const debug = Debug('ELO_CHESS_TRACKER:managers/initialization');
-
-import { logNow, toDateMajor } from '@common/utils/time';
-import { EnvironmentManager } from '@server/managers/environment-manager';
-import { ConfigurationManager } from '@server/managers/configuration-manager';
-import { ChallengesManager } from '@server/managers/challenges-manager';
-import { GamesManager } from '@server/managers/games-manager';
-import { UsersManager } from '@server/managers/users-manager';
-import { initializeRatingTimeControls, initializeRatingFunctions } from '@server/managers/rating-system';
-import { RatingSystemManager } from '@server/managers/rating-system-manager';
-import { Game } from '@server/models/game';
-import { Graph } from '@server/models/graph/graph';
-import { GraphsManager } from '@server/managers/graphs-manager';
-import { gameArrayFromString } from '@server/io/game';
-import { challengeFromString } from '@server/io/challenge';
-import { userFromString } from '@server/io/user';
-import { graphFromString } from '@server/io/graph/graph';
-import { UsersBehavior } from '@server/managers/users-behavior';
-import { readDirectory } from '@server/utils/read-directory';
+import { toGameId } from '@common/models/game-id';
+import { TimeControl, TimeControlArray } from '@common/models/time-control';
 import { isNotDefined } from '@common/utils/is-defined';
+import { logNow, toDateMajor } from '@common/utils/time';
+import { challengeFromString } from '@server/io/challenge';
 import { configurationFromString } from '@server/io/configuration';
-import { Configuration } from '@server/models/configuration/configuration';
-import { Behavior, ChallengesBehavior } from '@server/models/configuration/behavior';
-import { Environment, SSLCertificate } from '@server/models/configuration/environment';
-import { Ports, ServerConfiguration } from '@server/models/configuration/server';
-import { UserPermissions } from '@server/models/configuration/permissions';
+import { gameArrayFromString } from '@server/io/game';
+import { graphFromString } from '@server/io/graph/graph';
+import { userFromString } from '@server/io/user';
+import { ChallengesManager } from '@server/managers/challenges-manager';
+import { ConfigurationManager } from '@server/managers/configuration-manager';
+import { EnvironmentManager } from '@server/managers/environment-manager';
+import { GamesManager } from '@server/managers/games-manager';
+import { GraphsManager } from '@server/managers/graphs-manager';
 import { clearServer } from '@server/managers/memory/clear';
+import {
+	initializeRatingFunctions,
+	initializeRatingTimeControls,
+} from '@server/managers/rating-system';
+import { RatingSystemManager } from '@server/managers/rating-system-manager';
 import { initializePermissions } from '@server/managers/user-role-action';
 import { writeUserToFile } from '@server/managers/users';
+import { UsersBehavior } from '@server/managers/users-behavior';
+import { UsersManager } from '@server/managers/users-manager';
+import {
+	Behavior,
+	ChallengesBehavior,
+} from '@server/models/configuration/behavior';
+import { Configuration } from '@server/models/configuration/configuration';
+import {
+	Environment,
+	SSLCertificate,
+} from '@server/models/configuration/environment';
+import { UserPermissions } from '@server/models/configuration/permissions';
+import {
+	Ports,
+	ServerConfiguration,
+} from '@server/models/configuration/server';
 import { InternalError } from '@server/models/error-types/internal-error';
+import { Game } from '@server/models/game';
+import { Graph } from '@server/models/graph/graph';
 import { RatingFrameworkType } from '@server/models/rating-framework/rating-framework-type';
-import { TimeControl, TimeControlArray } from '@common/models/time-control';
-import { toGameId } from '@common/models/game-id';
+import { readDirectory } from '@server/utils/read-directory';
+import Debug from 'debug';
+import fs from 'fs';
+import path from 'path';
 
-function initEnvironmentDirectories(baseDirectory: string, executionDirectory: string) {
+const debug = Debug('ELO_CHESS_TRACKER:managers/initialization');
+
+function initEnvironmentDirectories(
+	baseDirectory: string,
+	executionDirectory: string,
+) {
 	let serverEnv = EnvironmentManager.getInstance();
 	serverEnv.setDatabaseBaseDirectory(path.join(baseDirectory, '/database'));
 	debug(logNow(), `    Database directory: '${serverEnv.getDirDatabase()}'`);
 	debug(logNow(), `        Games directory: '${serverEnv.getDirGames()}'`);
 	debug(logNow(), `        Users directory: '${serverEnv.getDirUsers()}'`);
-	debug(logNow(), `        Challenges directory: '${serverEnv.getDirChallenges()}'`);
+	debug(
+		logNow(),
+		`        Challenges directory: '${serverEnv.getDirChallenges()}'`,
+	);
 	debug(logNow(), `        Graphs directory: '${serverEnv.getDirGraphs()}'`);
 
 	serverEnv.setExecutionEnvironment(executionDirectory);
@@ -82,11 +100,17 @@ function initEnvironmentSSL(baseDirectory: string, ssl: SSLCertificate) {
 }
 
 function initEnvironmentIconFilePaths(baseDirectory: string, env: Environment) {
-	EnvironmentManager.getInstance().setIconsInfo(path.join(baseDirectory, '/icons'), env);
+	EnvironmentManager.getInstance().setIconsInfo(
+		path.join(baseDirectory, '/icons'),
+		env,
+	);
 }
 
 function initEnvironmentPageTitles(env: Environment) {
-	EnvironmentManager.getInstance().setTitlesInfo(env.loginPage.title, env.homePage.title);
+	EnvironmentManager.getInstance().setTitlesInfo(
+		env.loginPage.title,
+		env.homePage.title,
+	);
 }
 
 function initEnvironment(baseDirectory: string, env: Environment) {
@@ -155,7 +179,7 @@ function initTimeControls(timeControls: TimeControlArray) {
 function initBehaviorChallenges(challenges: ChallengesBehavior) {
 	let behavior = UsersBehavior.getInstance();
 	behavior.setHigherRatedDeclineChallengeLowerRated(
-		challenges.higherRatedPlayerCanDeclineChallengeFromLowerRatedPlayer
+		challenges.higherRatedPlayerCanDeclineChallengeFromLowerRatedPlayer,
 	);
 }
 
@@ -188,7 +212,9 @@ function initUsers() {
 		const userStr = fs.readFileSync(userFile, 'utf8');
 		const user = userFromString(userStr);
 		if (isNotDefined(user)) {
-			throw new InternalError(`Could not parse user at index '${i}', at file '${userFile}'.`);
+			throw new InternalError(
+				`Could not parse user at index '${i}', at file '${userFile}'.`,
+			);
 		}
 		debug(logNow(), `        User '${user.username}' is at index '${i}'`);
 
@@ -204,7 +230,10 @@ function initUsers() {
 
 		userManager.addUser(user);
 		if (updateUserFile) {
-			debug(logNow(), `Overwriting file '${userFile}' of user '${user.username}'`);
+			debug(
+				logNow(),
+				`Overwriting file '${userFile}' of user '${user.username}'`,
+			);
 			writeUserToFile(userFile, user);
 		}
 	}
@@ -251,7 +280,8 @@ function initGames() {
 	let maxGameId = toGameId('0');
 
 	for (const id of ratings.getUniqueTimeControlsIds()) {
-		const gamesDir = EnvironmentManager.getInstance().getDirGamesTimeControl(id);
+		const gamesDir =
+			EnvironmentManager.getInstance().getDirGamesTimeControl(id);
 
 		debug(logNow(), `    Reading directory '${gamesDir}'`);
 		const allDateRecordFiles = readDirectory(gamesDir).map(toDateMajor);
@@ -263,7 +293,9 @@ function initGames() {
 			const gameRecordData = fs.readFileSync(gameRecordFile, 'utf8');
 			const gameSet = gameArrayFromString(gameRecordData);
 			if (isNotDefined(gameSet)) {
-				throw new InternalError(`File '${gameRecordFile}' could not be parsed.`);
+				throw new InternalError(
+					`File '${gameRecordFile}' could not be parsed.`,
+				);
 			}
 
 			for (let j = 0; j < gameSet.length; ++j) {
@@ -291,7 +323,8 @@ function initGraphs() {
 	let graphManager = GraphsManager.getInstance();
 
 	for (const timeControlId of ratings.getUniqueTimeControlsIds()) {
-		const graphsDir = EnvironmentManager.getInstance().getDirGraphsTimeControl(timeControlId);
+		const graphsDir =
+			EnvironmentManager.getInstance().getDirGraphsTimeControl(timeControlId);
 
 		if (!fs.existsSync(graphsDir)) {
 			fs.mkdirSync(graphsDir);
@@ -300,14 +333,19 @@ function initGraphs() {
 			debug(logNow(), `    Found directory ${graphsDir}`);
 			const graph = graphFromString(graphsDir);
 			if (isNotDefined(graph)) {
-				throw new InternalError(`Could not read graph from directory '${graphsDir}'.`);
+				throw new InternalError(
+					`Could not read graph from directory '${graphsDir}'.`,
+				);
 			}
 			graphManager.addGraph(timeControlId, graph);
 		}
 	}
 }
 
-export function serverInitFromData(baseDirectory: string, configuration: Configuration) {
+export function serverInitFromData(
+	baseDirectory: string,
+	configuration: Configuration,
+) {
 	debug(logNow(), `    Webpage base directory: '${baseDirectory}'`);
 
 	clearServer();
@@ -338,7 +376,10 @@ export function serverInitFromConfigurationFile(configurationFile: string) {
 		return;
 	}
 
-	const basePath = configurationFile.substring(0, configurationFile.lastIndexOf('/'));
+	const basePath = configurationFile.substring(
+		0,
+		configurationFile.lastIndexOf('/'),
+	);
 	serverInitFromData(basePath, configuration);
 }
 

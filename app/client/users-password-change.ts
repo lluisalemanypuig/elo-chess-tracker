@@ -19,15 +19,20 @@ Full source code of elo-chess-tracker:
 	https://github.com/lluisalemanypuig/elo-chess-tracker
 */
 
-import 'htmx.org';
-
 import { messageFromResponse, serverCall } from '@client/action';
 import { ROUTES } from '@common/api/routes';
+import 'htmx.org';
 
 async function buttonSubmitClicked() {
-	let boxOldPassword = document.getElementById('box-old-password') as HTMLInputElement;
-	let boxNewPassword = document.getElementById('box-new-password') as HTMLInputElement;
-	let boxRepeatPassword = document.getElementById('box-repeat-password') as HTMLInputElement;
+	let boxOldPassword = document.getElementById(
+		'box-old-password',
+	) as HTMLInputElement;
+	let boxNewPassword = document.getElementById(
+		'box-new-password',
+	) as HTMLInputElement;
+	let boxRepeatPassword = document.getElementById(
+		'box-repeat-password',
+	) as HTMLInputElement;
 
 	if (boxNewPassword.value !== boxRepeatPassword.value) {
 		alert('The passwords must coincide');
@@ -36,7 +41,7 @@ async function buttonSubmitClicked() {
 
 	const response = await serverCall(ROUTES.USER_PASSWORD_CHANGE, {
 		old: boxOldPassword.value,
-		new: boxNewPassword.value
+		new: boxNewPassword.value,
 	});
 	if (response.status === 'Error') {
 		alert(messageFromResponse(response));
@@ -48,6 +53,8 @@ async function buttonSubmitClicked() {
 }
 
 window.onload = function () {
-	let buttonSubmit = document.getElementById('button-submit') as HTMLButtonElement;
+	let buttonSubmit = document.getElementById(
+		'button-submit',
+	) as HTMLButtonElement;
 	buttonSubmit.onclick = buttonSubmitClicked;
 };

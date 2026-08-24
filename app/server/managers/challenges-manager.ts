@@ -52,7 +52,8 @@ export class ChallengesManager {
 	}
 
 	static getInstance(): ChallengesManager {
-		ChallengesManager.instance = ChallengesManager.instance || new ChallengesManager();
+		ChallengesManager.instance =
+			ChallengesManager.instance || new ChallengesManager();
 		return ChallengesManager.instance;
 	}
 
@@ -86,7 +87,9 @@ export class ChallengesManager {
 	}
 
 	getChallengeAt(idx: number): Challenge | undefined {
-		return 0 <= idx && idx < this.challenges.length ? this.challenges[idx] : undefined;
+		return 0 <= idx && idx < this.challenges.length
+			? this.challenges[idx]
+			: undefined;
 	}
 	getChallengeById(id: ChallengeId): Challenge | undefined {
 		return this.getChallengeAt(this.getChallengeIndexById(id));

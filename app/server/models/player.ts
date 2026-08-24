@@ -23,13 +23,13 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
+import { PlayerPrivateId } from '@common/models/player-id';
+import { TimeControlId } from '@common/models/time-control';
+import { InternalError } from '@server/models/error-types/internal-error';
+import { Rating } from '@server/models/rating-framework/rating';
+import { TimeControlRating } from '@server/models/time-control-rating';
 import { copyarray } from '@server/utils/misc';
 import { searchLinearByKey } from '@server/utils/searching';
-import { TimeControlId } from '@common/models/time-control';
-import { TimeControlRating } from '@server/models/time-control-rating';
-import { InternalError } from '@server/models/error-types/internal-error';
-import { PlayerPrivateId } from '@common/models/player-id';
-import { Rating } from '@server/models/rating-framework/rating';
 
 export const PlayerKeys = ['username', 'ratings'];
 
@@ -92,7 +92,7 @@ export class Player {
 			this.username,
 			copyarray(this.ratings, (tcr: TimeControlRating): TimeControlRating => {
 				return tcr.clone();
-			})
+			}),
 		);
 	}
 
