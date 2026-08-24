@@ -28,7 +28,7 @@ import { SessionId } from '@common//models/session-id';
 import { SessionIDManager } from '@server/managers/session-id-manager';
 
 function makeSession(token: string, publicId: number): SessionId {
-	return { token, publicId: toPlayerPublicId(publicId) };
+	return { token, publicId: toPlayerPublicId(`${publicId}`) };
 }
 
 describe('Session ID Manager', () => {
@@ -236,7 +236,7 @@ describe('Session ID Manager', () => {
 		expect(sessions.hasSessionId(s43)).toBe(true);
 		expect(sessions.hasSessionId(s44)).toBe(true);
 
-		sessions.removeUserSessions(toPlayerPublicId(1111));
+		sessions.removeUserSessions(toPlayerPublicId('1111'));
 		expect(sessions.numSessionIds()).toBe(12);
 
 		expect(sessions.hasSessionId(s11)).toBe(false);
@@ -256,7 +256,7 @@ describe('Session ID Manager', () => {
 		expect(sessions.hasSessionId(s43)).toBe(true);
 		expect(sessions.hasSessionId(s44)).toBe(true);
 
-		sessions.removeUserSessions(toPlayerPublicId(4444));
+		sessions.removeUserSessions(toPlayerPublicId('4444'));
 		expect(sessions.numSessionIds()).toBe(8);
 
 		expect(sessions.hasSessionId(s11)).toBe(false);
@@ -276,7 +276,7 @@ describe('Session ID Manager', () => {
 		expect(sessions.hasSessionId(s43)).toBe(false);
 		expect(sessions.hasSessionId(s44)).toBe(false);
 
-		sessions.removeUserSessions(toPlayerPublicId(2222));
+		sessions.removeUserSessions(toPlayerPublicId('2222'));
 		expect(sessions.numSessionIds()).toBe(4);
 
 		expect(sessions.hasSessionId(s11)).toBe(false);
@@ -296,7 +296,7 @@ describe('Session ID Manager', () => {
 		expect(sessions.hasSessionId(s43)).toBe(false);
 		expect(sessions.hasSessionId(s44)).toBe(false);
 
-		sessions.removeUserSessions(toPlayerPublicId(3333));
+		sessions.removeUserSessions(toPlayerPublicId('3333'));
 		expect(sessions.numSessionIds()).toBe(0);
 
 		expect(sessions.hasSessionId(s11)).toBe(false);
@@ -371,7 +371,7 @@ describe('Session ID Manager', () => {
 		expect(sessions.hasSessionId(s43)).toBe(true);
 		expect(sessions.hasSessionId(s44)).toBe(true);
 
-		sessions.removeUserSessions(toPlayerPublicId(1111));
+		sessions.removeUserSessions(toPlayerPublicId('1111'));
 		expect(sessions.numSessionIds()).toBe(12);
 
 		expect(sessions.hasSessionId(s11)).toBe(false);
@@ -391,7 +391,7 @@ describe('Session ID Manager', () => {
 		expect(sessions.hasSessionId(s43)).toBe(true);
 		expect(sessions.hasSessionId(s44)).toBe(true);
 
-		sessions.removeUserSessions(toPlayerPublicId(4444));
+		sessions.removeUserSessions(toPlayerPublicId('4444'));
 		expect(sessions.numSessionIds()).toBe(8);
 
 		expect(sessions.hasSessionId(s11)).toBe(false);
@@ -411,7 +411,7 @@ describe('Session ID Manager', () => {
 		expect(sessions.hasSessionId(s43)).toBe(false);
 		expect(sessions.hasSessionId(s44)).toBe(false);
 
-		sessions.removeUserSessions(toPlayerPublicId(2222));
+		sessions.removeUserSessions(toPlayerPublicId('2222'));
 		expect(sessions.numSessionIds()).toBe(4);
 
 		expect(sessions.hasSessionId(s11)).toBe(false);
@@ -431,7 +431,7 @@ describe('Session ID Manager', () => {
 		expect(sessions.hasSessionId(s43)).toBe(false);
 		expect(sessions.hasSessionId(s44)).toBe(false);
 
-		sessions.removeUserSessions(toPlayerPublicId(3333));
+		sessions.removeUserSessions(toPlayerPublicId('3333'));
 		expect(sessions.numSessionIds()).toBe(0);
 
 		expect(sessions.hasSessionId(s11)).toBe(false);
