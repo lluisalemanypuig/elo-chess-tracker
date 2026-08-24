@@ -34,7 +34,7 @@ import { getExecutionDirectory } from '@server/managers/environment-manager';
 import { isDefined } from '@common/utils/is-defined';
 import { ROUTES } from '@common/api/routes';
 import { parseSchema } from '@server/utils/schemas';
-import { AuthenticationInputSchema, authenticationInputSchemaToSessionId } from '@common/api/schemas/authentication';
+import { AuthenticationInputSchema } from '@common/api/schemas/authentication';
 import { UserSession } from '@server/models/user';
 
 export async function getPageLogin(req: Request, res: Response) {
@@ -48,7 +48,7 @@ export async function getPageLogin(req: Request, res: Response) {
 	}
 
 	if (isDefined(sessionParse.data)) {
-		const session = authenticationInputSchemaToSessionId(sessionParse.data);
+		const session = sessionParse.data;
 
 		debug(logNow(), 'There is a username key in the cookies received.');
 		debug(logNow(), `    Value: ${session.publicId}`);
