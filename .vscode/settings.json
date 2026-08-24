@@ -12,5 +12,6 @@
 	"editor.codeActionsOnSave": {
 		"source.organizeImports": "always",
 		"source.fixAll.eslint": "explicit"
-	}
+	},
+	"editor.tabSize": 2
 }
