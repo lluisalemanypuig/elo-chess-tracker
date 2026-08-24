@@ -23,13 +23,13 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
+import { toGameId } from '@common/models/game-id';
+import { toPlayerPrivateId } from '@common/models/player-id';
 import { toTimeControlId, toTimeControlName } from '@common/models/time-control';
+import { toDateFull } from '@common/utils/time';
 import { Game } from '@server/models/game';
 import { EloRating } from '@server/models/rating-framework/Elo/rating';
 import { EloPlayerVsPlayer } from '@server/rating-framework/Elo/formula';
-import { toDateFull } from '@common/utils/time';
-import { toGameId } from '@common/models/game-id';
-import { toPlayerPrivateId } from '@common/models/player-id';
 
 const Blitz = toTimeControlId('Blitz');
 const Blitz5p3 = toTimeControlName('Blitz (5 + 3)');
@@ -49,7 +49,7 @@ describe('Simple games', () => {
 			Blitz,
 			Blitz5p3,
 			toDateFull('2024-12-28..16:41:00'),
-			[]
+			[],
 		);
 
 		const [aW, aB] = EloPlayerVsPlayer(game);
@@ -83,7 +83,7 @@ describe('Simple games', () => {
 			Blitz,
 			Blitz5p3,
 			toDateFull('2024-12-28..16:41:00'),
-			[]
+			[],
 		);
 
 		const [aW, aB] = EloPlayerVsPlayer(game);
@@ -115,7 +115,7 @@ describe('Simple games', () => {
 			Blitz,
 			Blitz5p3,
 			toDateFull('2024-12-28..16:41:00'),
-			[]
+			[],
 		);
 
 		const [aW, aB] = EloPlayerVsPlayer(game);
@@ -153,7 +153,7 @@ describe('Series of games', () => {
 				Blitz,
 				Blitz5p3,
 				toDateFull('2024-12-28..16:41:00'),
-				[]
+				[],
 			);
 			[W, B] = EloPlayerVsPlayer(game);
 		}
@@ -170,7 +170,7 @@ describe('Series of games', () => {
 			Blitz,
 			Blitz5p3,
 			toDateFull('2024-12-28..16:41:00'),
-			[]
+			[],
 		);
 		[W, B] = EloPlayerVsPlayer(game);
 
@@ -193,7 +193,7 @@ describe('Series of games', () => {
 				Blitz,
 				Blitz5p3,
 				toDateFull('2024-12-28..16:41:00'),
-				[]
+				[],
 			);
 			[W, B] = EloPlayerVsPlayer(game);
 			B.rating = 2000;
@@ -214,7 +214,7 @@ describe('Series of games', () => {
 				Blitz,
 				Blitz5p3,
 				toDateFull('2024-12-28..16:41:00'),
-				[]
+				[],
 			);
 			[W, B] = EloPlayerVsPlayer(game);
 			B.rating = 2000;
@@ -237,7 +237,7 @@ describe('Series of games', () => {
 				Blitz,
 				Blitz5p3,
 				toDateFull('2024-12-28..16:41:00'),
-				[]
+				[],
 			);
 			[W, B] = EloPlayerVsPlayer(game);
 			B.rating = 2000;
@@ -260,7 +260,7 @@ describe('Series of games', () => {
 				Blitz,
 				Blitz5p3,
 				toDateFull('2024-12-28..16:41:00'),
-				[]
+				[],
 			);
 			[W, B] = EloPlayerVsPlayer(game);
 			B.rating = 2000;
@@ -281,7 +281,7 @@ describe('Series of games', () => {
 				Blitz,
 				Blitz5p3,
 				toDateFull('2024-12-28..16:41:00'),
-				[]
+				[],
 			);
 			[W, B] = EloPlayerVsPlayer(game);
 			B.rating = 2000;

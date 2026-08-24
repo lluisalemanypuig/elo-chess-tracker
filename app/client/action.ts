@@ -23,9 +23,9 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
+import { Route } from '@common/api/routes';
 import { methodTypeOf, outputSchemaOf } from '@common/api/schemas-endpoints';
 import { InputTypeOf, OutputTypeOf } from '@common/api/types';
-import { Route } from '@common/api/routes';
 import { isNotDefined } from '@common/utils/is-defined';
 
 type ResponseResultError = {
@@ -43,7 +43,7 @@ type ResponseResult<T> =
 
 export async function serverCall<T extends Route>(
 	route: T,
-	body: InputTypeOf<T> | undefined | null
+	body: InputTypeOf<T> | undefined | null,
 ): Promise<ResponseResult<OutputTypeOf<T>>> {
 	const method = methodTypeOf(route);
 	let response: Response;
@@ -51,13 +51,13 @@ export async function serverCall<T extends Route>(
 	if (isNotDefined(body)) {
 		response = await fetch(route, {
 			method: method,
-			headers: { 'Content-type': 'application/json; charset=UTF-8' }
+			headers: { 'Content-type': 'application/json; charset=UTF-8' },
 		});
 	} else {
 		response = await fetch(route, {
 			method: method,
 			body: JSON.stringify(body, null, ''),
-			headers: { 'Content-type': 'application/json; charset=UTF-8' }
+			headers: { 'Content-type': 'application/json; charset=UTF-8' },
 		});
 	}
 
@@ -66,7 +66,7 @@ export async function serverCall<T extends Route>(
 		return {
 			message: msg,
 			statusCode: response.status,
-			status: 'Error'
+			status: 'Error',
 		};
 	}
 
@@ -77,14 +77,14 @@ export async function serverCall<T extends Route>(
 		return {
 			message: `Failed to parse schema '${schemaObject.constructor.name}', at route '${route}'. Reason: ${parse.error}`,
 			statusCode: 900,
-			status: 'Error'
+			status: 'Error',
 		};
 	}
 	return {
 		// TODO: eventually, remove the type assertion so that typescript
 		// figures out on its own that the type of parse.data is correct
 		value: parse.data as OutputTypeOf<T>,
-		status: 'Success'
+		status: 'Success',
 	};
 }
 

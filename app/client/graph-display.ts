@@ -19,15 +19,14 @@ Full source code of elo-chess-tracker:
 	https://github.com/lluisalemanypuig/elo-chess-tracker
 */
 
-import 'htmx.org';
-
 import { EdgeCurvedArrowProgram } from '@sigma/edge-curve';
+import { interpolateRgb } from 'd3-interpolate';
+import { scaleLinear } from 'd3-scale';
 import Graph from 'graphology';
+import forceAtlas2 from 'graphology-layout-forceatlas2';
+import 'htmx.org';
 import Sigma from 'sigma';
 import { EdgeArrowProgram } from 'sigma/rendering';
-import forceAtlas2 from 'graphology-layout-forceatlas2';
-import { scaleLinear } from 'd3-scale';
-import { interpolateRgb } from 'd3-interpolate';
 
 import { messageFromResponse, serverCall } from '@client/action';
 import { Route, ROUTES } from '@common/api/routes';
@@ -73,8 +72,8 @@ function initializeSigma() {
 		renderEdgeLabels: true,
 		edgeProgramClasses: {
 			straight: EdgeArrowProgram,
-			curvedArrow: EdgeCurvedArrowProgram
-		}
+			curvedArrow: EdgeCurvedArrowProgram,
+		},
 	});
 }
 

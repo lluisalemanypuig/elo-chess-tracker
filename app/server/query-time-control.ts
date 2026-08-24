@@ -23,12 +23,12 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import Debug from 'debug';
-const debug = Debug('ELO_CHESS_TRACKER:serverQueryTimeControl');
-
 import { logNow } from '@common/utils/time';
 import { RatingSystemManager } from '@server/managers/rating-system-manager';
 import { UserSession } from '@server/models/user';
+import Debug from 'debug';
+
+const debug = Debug('ELO_CHESS_TRACKER:serverQueryTimeControl');
 
 export async function getQueryHtmlTimeControls(_u: UserSession) {
 	debug(logNow(), 'function getQueryHtmlTimeControls...');

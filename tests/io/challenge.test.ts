@@ -46,7 +46,7 @@ describe('IO conversion', () => {
 				"black": "B",\
 				"result": "draw",\
 				"state": "PENDING_ACCEPT"\
-			}'
+			}',
 		);
 		expect(c).not.toBeNull();
 		if (isNotDefined(c)) {

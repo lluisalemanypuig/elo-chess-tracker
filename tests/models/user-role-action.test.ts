@@ -33,7 +33,7 @@ describe('Actions allowed per user (single role)', () => {
 			admin: ['EDIT_USER_TEACHER'],
 			teacher: [],
 			student: [],
-			member: []
+			member: [],
 		});
 
 		expect(rel.roleIncludesAction('ADMIN', 'CREATE_USER')).toBe(false);
@@ -72,7 +72,7 @@ describe('Actions allowed per user (single role)', () => {
 			admin: [],
 			teacher: ['ASSIGN_ROLE_MEMBER'],
 			student: [],
-			member: []
+			member: [],
 		});
 
 		expect(rel.roleIncludesAction('TEACHER', 'CREATE_USER')).toBe(false);
@@ -111,7 +111,7 @@ describe('Actions allowed per user (single role)', () => {
 			admin: [],
 			teacher: [],
 			student: ['CREATE_USER', 'CREATE_GAMES'],
-			member: []
+			member: [],
 		});
 
 		expect(rel.roleIncludesAction('STUDENT', 'CREATE_USER')).toBe(true);
@@ -150,7 +150,7 @@ describe('Actions allowed per user (single role)', () => {
 			admin: [],
 			teacher: [],
 			student: [],
-			member: ['CHALLENGE_USER_ADMIN', 'CHALLENGE_USER_STUDENT']
+			member: ['CHALLENGE_USER_ADMIN', 'CHALLENGE_USER_STUDENT'],
 		});
 
 		expect(rel.roleIncludesAction('MEMBER', 'CREATE_USER')).toBe(false);
@@ -191,7 +191,7 @@ describe('Actions allowed per user (multiple roles)', () => {
 			admin: ['EDIT_USER_TEACHER'],
 			teacher: [],
 			student: ['CHALLENGE_USER_STUDENT'],
-			member: []
+			member: [],
 		});
 
 		expect(rel.roleIncludesAction('ADMIN', 'CREATE_USER')).toBe(false);
@@ -258,7 +258,7 @@ describe('Actions allowed per user (multiple roles)', () => {
 			admin: [],
 			teacher: ['ASSIGN_ROLE_STUDENT', 'SEE_GAMES_MEMBER'],
 			student: [],
-			member: ['CHALLENGE_USER_STUDENT', 'CHALLENGE_USER_TEACHER']
+			member: ['CHALLENGE_USER_STUDENT', 'CHALLENGE_USER_TEACHER'],
 		});
 
 		expect(rel.roleIncludesAction('TEACHER', 'CREATE_USER')).toBe(false);

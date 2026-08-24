@@ -23,13 +23,13 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { z } from 'zod';
 import { PlayerPublicIdSchema } from '@common/models/player-id';
+import { z } from 'zod';
 
 export const SessionIdSchema = z
 	.object({
 		token: z.string(),
-		publicId: PlayerPublicIdSchema
+		publicId: PlayerPublicIdSchema,
 	})
 	.strict()
 	.readonly();

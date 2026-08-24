@@ -23,14 +23,14 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { UserRole, ALL_USER_ROLES } from '@common/models/user-role';
 import {
 	ALL_ACTION_IDS,
 	getGenericRoleActionName,
 	getRoleActionName,
 	UserAction,
-	UserActionId
+	UserActionId,
 } from '@common/models/user-action';
+import { ALL_USER_ROLES, UserRole } from '@common/models/user-role';
 import { UserPermissions } from '@server/models/configuration/permissions';
 
 // Relate each user role to a readable string
@@ -62,7 +62,7 @@ export class UserRoleToUserAction {
 		ADMIN: [],
 		TEACHER: [],
 		MEMBER: [],
-		STUDENT: []
+		STUDENT: [],
 	};
 
 	// Add action 'action' to role 'role'
@@ -104,7 +104,7 @@ export class UserRoleToUserAction {
 			ADMIN: [],
 			TEACHER: [],
 			MEMBER: [],
-			STUDENT: []
+			STUDENT: [],
 		};
 	}
 }

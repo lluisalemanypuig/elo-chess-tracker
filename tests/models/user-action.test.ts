@@ -47,8 +47,8 @@ describe('Role concatenation', () => {
 			'CHALLENGE_USER_ADMIN',
 			'CHALLENGE_USER_TEACHER',
 			'CHALLENGE_USER_MEMBER',
-			'CHALLENGE_USER_STUDENT'
-		]
+			'CHALLENGE_USER_STUDENT',
+		],
 	};
 
 	test('Check correct concatenation', () => {

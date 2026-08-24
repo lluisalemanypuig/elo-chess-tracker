@@ -23,15 +23,15 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { EdgeMetadata } from '@server/models/graph/edge-metadata';
-import { Edge } from '@server/models/graph/edge';
-import { edgeFromString } from '@server/io/graph/edge';
 import { toPlayerPrivateId } from '@common/models/player-id';
+import { edgeFromString } from '@server/io/graph/edge';
+import { Edge } from '@server/models/graph/edge';
+import { EdgeMetadata } from '@server/models/graph/edge-metadata';
 
 describe('IO conversion', () => {
 	test('string', () => {
 		expect(
-			edgeFromString('{"neighbor": "A", "metadata": {"numGamesWon": 1, "numGamesDrawn": 0, "numGamesLost": 300}}')
+			edgeFromString('{"neighbor": "A", "metadata": {"numGamesWon": 1, "numGamesDrawn": 0, "numGamesLost": 300}}'),
 		).toEqual(new Edge(toPlayerPrivateId('A'), new EdgeMetadata(1, 0, 300)));
 	});
 });

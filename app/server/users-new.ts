@@ -23,16 +23,16 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import Debug from 'debug';
-const debug = Debug('ELO_CHESS_TRACKER:users-new');
-
+import { Empty } from '@common/api/schemas-endpoints';
+import { UserCreateInput } from '@common/api/schemas/user';
+import { isRoleStringCorrect } from '@common/models/user-role';
 import { logNow } from '@common/utils/time';
 import { userAddNew } from '@server/managers/users';
-import { isRoleStringCorrect } from '@common/models/user-role';
-import { Empty } from '@common/api/schemas-endpoints';
-import { UserSession } from '@server/models/user';
 import { PublicError } from '@server/models/error-types/public-error';
-import { UserCreateInput } from '@common/api/schemas/user';
+import { UserSession } from '@server/models/user';
+import Debug from 'debug';
+
+const debug = Debug('ELO_CHESS_TRACKER:users-new');
 
 export async function getPageUserCreate({ user, session: _session }: UserSession) {
 	debug(logNow(), 'function getPageUserCreate...');
@@ -51,7 +51,7 @@ export async function getPageUserCreate({ user, session: _session }: UserSession
 
 export async function postUserCreate(
 	{ user: registerer, session: _session }: UserSession,
-	input: UserCreateInput
+	input: UserCreateInput,
 ): Promise<Empty> {
 	debug(logNow(), 'function postUserCreate...');
 

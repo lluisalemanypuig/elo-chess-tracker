@@ -29,14 +29,13 @@ Contact:
  * File: https://github.com/mdn/express-locallibrary-tutorial/blob/main/bin/ww
  */
 
-import Debug from 'debug';
-const debug = Debug('ELO_CHESS_TRACKER:appMain');
-
-import fs from 'fs';
 import { logNow } from '@common/utils/time';
-
-import { serverInitFromParameters } from '@server/managers/memory/initialization';
 import { ConfigurationManager } from '@server/managers/configuration-manager';
+import { serverInitFromParameters } from '@server/managers/memory/initialization';
+import Debug from 'debug';
+import fs from 'fs';
+
+const debug = Debug('ELO_CHESS_TRACKER:appMain');
 
 debug(logNow(), 'Initialize server memory...');
 
@@ -48,10 +47,10 @@ import { app } from '@app/build';
 
 debug(logNow(), '    Imported!');
 
+import { EnvironmentManager } from '@server/managers/environment-manager';
 import http from 'http';
 import https from 'https';
 import { AddressInfo } from 'net';
-import { EnvironmentManager } from '@server/managers/environment-manager';
 
 // Normalize a port into a number, string, or false.
 function normalizePort(val: any): any {
@@ -94,9 +93,9 @@ if (serverEnvironment.isSSLInfoValid()) {
 				{
 					key: privateKey,
 					cert: certificate,
-					passphrase: passphrase.substring(0, passphrase.length - 1)
+					passphrase: passphrase.substring(0, passphrase.length - 1),
 				},
-				app
+				app,
 			);
 		}
 

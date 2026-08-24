@@ -23,16 +23,16 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { z } from 'zod';
-import { DateFullSchema } from '@common/utils/time';
 import { PlayerPrivateIdSchema } from '@common/models/player-id';
+import { DateFullSchema } from '@common/utils/time';
+import { z } from 'zod';
 
 export const GameEditLogSchema = z.object({
 	who: PlayerPrivateIdSchema,
 	when: DateFullSchema,
 	field: z.string(),
 	oldValue: z.string(),
-	newValue: z.string()
+	newValue: z.string(),
 });
 
 export type GameEditLog = z.infer<typeof GameEditLogSchema>;

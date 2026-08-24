@@ -23,16 +23,16 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { initializeRatingFunctions } from '@server/managers/rating-system';
-import { gameFromString } from '@server/io/game';
 import { isNotDefined } from '@common/utils/is-defined';
+import { gameFromString } from '@server/io/game';
+import { initializeRatingFunctions } from '@server/managers/rating-system';
 
 describe('IO conversion -- Elo', () => {
 	initializeRatingFunctions('Elo');
 
 	test('string', () => {
 		const g = gameFromString(
-			'{ "id": "0001", "title": "asdf", "white": "W", "whiteRating": {"rating": 1500.43, "numGames": 100, "won": 50, "drawn": 20, "lost": 30, "K": 40, "surpassed2400": true}, "black": "B", "blackRating" : {"rating": 1500.43, "numGames": 100, "won": 50, "drawn": 20, "lost": 30, "K": 40, "surpassed2400": false}, "result": "black_wins", "timeControlId": "blitz", "timeControlName": "Blitz (5 + 3)", "when": "2024-12-29..12:24:00", "history": [{"who": "pepe", "when": "today", "field": "title", "oldValue": "asdf", "newValue": "qwer"}]}'
+			'{ "id": "0001", "title": "asdf", "white": "W", "whiteRating": {"rating": 1500.43, "numGames": 100, "won": 50, "drawn": 20, "lost": 30, "K": 40, "surpassed2400": true}, "black": "B", "blackRating" : {"rating": 1500.43, "numGames": 100, "won": 50, "drawn": 20, "lost": 30, "K": 40, "surpassed2400": false}, "result": "black_wins", "timeControlId": "blitz", "timeControlName": "Blitz (5 + 3)", "when": "2024-12-29..12:24:00", "history": [{"who": "pepe", "when": "today", "field": "title", "oldValue": "asdf", "newValue": "qwer"}]}',
 		);
 		expect(g).not.toBeNull();
 		if (isNotDefined(g)) {
@@ -48,7 +48,7 @@ describe('IO conversion -- Elo', () => {
 			drawn: 20,
 			lost: 30,
 			K: 40,
-			surpassed2400: true
+			surpassed2400: true,
 		});
 		expect(g.black).toEqual('B');
 		expect(g.blackRating).toEqual({
@@ -58,7 +58,7 @@ describe('IO conversion -- Elo', () => {
 			drawn: 20,
 			lost: 30,
 			K: 40,
-			surpassed2400: false
+			surpassed2400: false,
 		});
 		expect(g.result).toEqual('black_wins');
 		expect(g.timeControlId).toEqual('blitz');
@@ -71,8 +71,8 @@ describe('IO conversion -- Elo', () => {
 				when: 'today',
 				field: 'title',
 				oldValue: 'asdf',
-				newValue: 'qwer'
-			}
+				newValue: 'qwer',
+			},
 		]);
 		expect(g.history).not.toEqual([
 			{
@@ -80,8 +80,8 @@ describe('IO conversion -- Elo', () => {
 				when: 'today',
 				field: 'title',
 				oldValue: 'asdf',
-				newValue: '1234'
-			}
+				newValue: '1234',
+			},
 		]);
 	});
 });

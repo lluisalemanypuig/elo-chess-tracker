@@ -23,9 +23,9 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
+import { readJsonArrayString, readJsonObjectString } from '@server/io/generic';
 import { RatingSystemManager } from '@server/managers/rating-system-manager';
 import { TimeControlRating, TimeControlRatingKeys } from '@server/models/time-control-rating';
-import { readJsonArrayString, readJsonObjectString } from '@server/io/generic';
 
 function timeControlRatingFromJson(json: any) {
 	const rating = RatingSystemManager.getInstance().getRatingFromJson(json.rating);

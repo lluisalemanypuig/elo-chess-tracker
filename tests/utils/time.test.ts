@@ -23,8 +23,8 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
+import { dateFullToMajor, dateFullToMinor, dateSplitMajorMinor, toDateFull } from '@common/utils/time';
 import { numberToString } from '@server/utils/misc';
-import { dateSplitMajorMinor, dateFullToMajor, dateFullToMinor, toDateFull } from '@common/utils/time';
 
 describe('Number to string', () => {
 	test('1 digit', () => {

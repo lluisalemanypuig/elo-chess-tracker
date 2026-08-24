@@ -23,25 +23,25 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import Debug from 'debug';
-const debug = Debug(`ELO_CHESS_TRACKER:io`);
-
+import { UserRoleArraySchema } from '@common/models/user-role';
 import { logNow } from '@common/utils/time';
-import {
-	GameNumberSchema,
-	GameNumberArraySchema,
-	GameNumber,
-	User,
-	TimeControlGameSchema,
-	TimeControlGameArraySchema,
-	UserKeys
-} from '@server/models/user';
-import { TimeControlGame } from '@server/models/user';
 import { readJsonArrayString, readJsonObjectString, readSchema } from '@server/io/generic';
 import { RatingSystemManager } from '@server/managers/rating-system-manager';
-import { TimeControlRating } from '@server/models/time-control-rating';
-import { UserRoleArraySchema } from '@common/models/user-role';
 import { PasswordSchema } from '@server/models/password';
+import { TimeControlRating } from '@server/models/time-control-rating';
+import {
+	GameNumber,
+	GameNumberArraySchema,
+	GameNumberSchema,
+	TimeControlGame,
+	TimeControlGameArraySchema,
+	TimeControlGameSchema,
+	User,
+	UserKeys,
+} from '@server/models/user';
+import Debug from 'debug';
+
+const debug = Debug(`ELO_CHESS_TRACKER:io`);
 
 /**
  * @brief Parses a JSON string and returns a GameNumber.

@@ -23,14 +23,14 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import Debug from 'debug';
-const debug = Debug('ELO_CHESS_TRACKER:serverGraphs');
-
+import { Empty } from '@common/api/schemas-endpoints';
 import { logNow } from '@common/utils/time';
 import { recalculateAllGraphs } from '@server/managers/graphs';
-import { UserSession } from '@server/models/user';
 import { PublicError } from '@server/models/error-types/public-error';
-import { Empty } from '@common/api/schemas-endpoints';
+import { UserSession } from '@server/models/user';
+import Debug from 'debug';
+
+const debug = Debug('ELO_CHESS_TRACKER:serverGraphs');
 
 export async function getPageGraphOwn(_u: UserSession) {
 	debug(logNow(), 'function getPageGraphOwn...');

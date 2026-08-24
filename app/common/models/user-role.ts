@@ -23,8 +23,8 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { z } from 'zod';
 import { isNotDefined } from '@common/utils/is-defined';
+import { z } from 'zod';
 
 export const ALL_USER_ROLES = ['ADMIN', 'TEACHER', 'MEMBER', 'STUDENT'] as const;
 
@@ -38,7 +38,7 @@ export const USER_ROLE_TO_STRING: { [key in UserRole]: string } = {
 	ADMIN: 'Admin',
 	TEACHER: 'Teacher',
 	MEMBER: 'Member',
-	STUDENT: 'Student'
+	STUDENT: 'Student',
 };
 
 export function isRoleStringCorrect(r: string): boolean {

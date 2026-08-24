@@ -23,26 +23,26 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import Debug from 'debug';
-const debug = Debug('ELO_CHESS_TRACKER:serverQueryChallenges');
-
-import { logNow } from '@common/utils/time';
-import { getChallengesBy } from '@server/managers/challenges';
-import { Challenge } from '@server/models/challenge';
-import { UsersManager } from '@server/managers/users-manager';
-import { canUserDeclineChallenge } from '@server/managers/user-relationships';
-import { isDefined, isNotDefined } from '@common/utils/is-defined';
+import { Empty } from '@common/api/schemas-endpoints';
 import {
 	QueryChallengesConfirmResultOtherOutput,
 	QueryChallengesConfirmResultSelfOutput,
 	QueryChallengesPendingResultOutput,
 	QueryChallengesReceivedOutput,
-	QueryChallengesSentOutput
+	QueryChallengesSentOutput,
 } from '@common/api/schemas/query-challenges';
 import { UserGivenName } from '@common/models/user-given-name';
-import { UserSession } from '@server/models/user';
-import { Empty } from '@common/api/schemas-endpoints';
+import { isDefined, isNotDefined } from '@common/utils/is-defined';
+import { logNow } from '@common/utils/time';
+import { getChallengesBy } from '@server/managers/challenges';
+import { canUserDeclineChallenge } from '@server/managers/user-relationships';
+import { UsersManager } from '@server/managers/users-manager';
+import { Challenge } from '@server/models/challenge';
 import { InternalError } from '@server/models/error-types/internal-error';
+import { UserSession } from '@server/models/user';
+import Debug from 'debug';
+
+const debug = Debug('ELO_CHESS_TRACKER:serverQueryChallenges');
 
 // Query the server for challenges received sento to me by other users
 export async function getQueryChallengeReceived({ user: sentTo, session: _session }: UserSession, _i: Empty) {
@@ -76,7 +76,7 @@ export async function getQueryChallengeReceived({ user: sentTo, session: _sessio
 			sentBy: sentBy.user.getFullName(),
 			sentWhen: c.whenChallengeSent,
 			timeControlName: c.timeControlName,
-			canBeDeclined: canUserDeclineChallenge(sentTo, sentBy.user, c.timeControlId)
+			canBeDeclined: canUserDeclineChallenge(sentTo, sentBy.user, c.timeControlId),
 		});
 	}
 
@@ -117,7 +117,7 @@ export async function getQueryChallengeSent({ user: sentBy, session: _session }:
 			sentTo: sentTo.user.getFullName(),
 			sentWhen: c.whenChallengeSent,
 			timeControlName: c.timeControlName,
-			canBeDeclined: canUserDeclineChallenge(sentTo.user, sentBy, c.timeControlId)
+			canBeDeclined: canUserDeclineChallenge(sentTo.user, sentBy, c.timeControlId),
 		});
 	}
 
@@ -176,15 +176,15 @@ export async function getQueryChallengePendingResult({ user, session: _session }
 			title: c.title,
 			sentBy: {
 				name: userSentBy.user.getFullName(),
-				publicId: userSentBy.publicId
+				publicId: userSentBy.publicId,
 			},
 			sentTo: {
 				name: userSentTo.user.getFullName(),
-				publicId: userSentTo.publicId
+				publicId: userSentTo.publicId,
 			},
 			opponent: opponent,
 			sentWhen: c.whenChallengeSent,
-			timeControlName: c.timeControlName
+			timeControlName: c.timeControlName,
 		});
 	}
 
@@ -272,7 +272,7 @@ export async function getQueryChallengeConfirmResultOther({ user, session: _sess
 			white: whiteFullName,
 			black: blackFullName,
 			result: niceResult,
-			timeControlName: c.timeControlName
+			timeControlName: c.timeControlName,
 		});
 	}
 
@@ -360,7 +360,7 @@ export async function getQueryChallengeConfirmResultSelf({ user, session: _sessi
 			white: whiteFullName,
 			black: blackFullName,
 			result: niceResult,
-			timeControlName: c.timeControlName
+			timeControlName: c.timeControlName,
 		});
 	}
 

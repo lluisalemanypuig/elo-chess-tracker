@@ -23,42 +23,42 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import fs from 'fs';
-import path from 'path';
-import Debug from 'debug';
-const debug = Debug('ELO_CHESS_TRACKER:managers/initialization');
-
-import { logNow, toDateMajor } from '@common/utils/time';
-import { EnvironmentManager } from '@server/managers/environment-manager';
-import { ConfigurationManager } from '@server/managers/configuration-manager';
-import { ChallengesManager } from '@server/managers/challenges-manager';
-import { GamesManager } from '@server/managers/games-manager';
-import { UsersManager } from '@server/managers/users-manager';
-import { initializeRatingTimeControls, initializeRatingFunctions } from '@server/managers/rating-system';
-import { RatingSystemManager } from '@server/managers/rating-system-manager';
-import { Game } from '@server/models/game';
-import { Graph } from '@server/models/graph/graph';
-import { GraphsManager } from '@server/managers/graphs-manager';
-import { gameArrayFromString } from '@server/io/game';
-import { challengeFromString } from '@server/io/challenge';
-import { userFromString } from '@server/io/user';
-import { graphFromString } from '@server/io/graph/graph';
-import { UsersBehavior } from '@server/managers/users-behavior';
-import { readDirectory } from '@server/utils/read-directory';
+import { toGameId } from '@common/models/game-id';
+import { TimeControl, TimeControlArray } from '@common/models/time-control';
 import { isNotDefined } from '@common/utils/is-defined';
+import { logNow, toDateMajor } from '@common/utils/time';
+import { challengeFromString } from '@server/io/challenge';
 import { configurationFromString } from '@server/io/configuration';
-import { Configuration } from '@server/models/configuration/configuration';
-import { Behavior, ChallengesBehavior } from '@server/models/configuration/behavior';
-import { Environment, SSLCertificate } from '@server/models/configuration/environment';
-import { Ports, ServerConfiguration } from '@server/models/configuration/server';
-import { UserPermissions } from '@server/models/configuration/permissions';
+import { gameArrayFromString } from '@server/io/game';
+import { graphFromString } from '@server/io/graph/graph';
+import { userFromString } from '@server/io/user';
+import { ChallengesManager } from '@server/managers/challenges-manager';
+import { ConfigurationManager } from '@server/managers/configuration-manager';
+import { EnvironmentManager } from '@server/managers/environment-manager';
+import { GamesManager } from '@server/managers/games-manager';
+import { GraphsManager } from '@server/managers/graphs-manager';
 import { clearServer } from '@server/managers/memory/clear';
+import { initializeRatingFunctions, initializeRatingTimeControls } from '@server/managers/rating-system';
+import { RatingSystemManager } from '@server/managers/rating-system-manager';
 import { initializePermissions } from '@server/managers/user-role-action';
 import { writeUserToFile } from '@server/managers/users';
+import { UsersBehavior } from '@server/managers/users-behavior';
+import { UsersManager } from '@server/managers/users-manager';
+import { Behavior, ChallengesBehavior } from '@server/models/configuration/behavior';
+import { Configuration } from '@server/models/configuration/configuration';
+import { Environment, SSLCertificate } from '@server/models/configuration/environment';
+import { UserPermissions } from '@server/models/configuration/permissions';
+import { Ports, ServerConfiguration } from '@server/models/configuration/server';
 import { InternalError } from '@server/models/error-types/internal-error';
+import { Game } from '@server/models/game';
+import { Graph } from '@server/models/graph/graph';
 import { RatingFrameworkType } from '@server/models/rating-framework/rating-framework-type';
-import { TimeControl, TimeControlArray } from '@common/models/time-control';
-import { toGameId } from '@common/models/game-id';
+import { readDirectory } from '@server/utils/read-directory';
+import Debug from 'debug';
+import fs from 'fs';
+import path from 'path';
+
+const debug = Debug('ELO_CHESS_TRACKER:managers/initialization');
 
 function initEnvironmentDirectories(baseDirectory: string, executionDirectory: string) {
 	let serverEnv = EnvironmentManager.getInstance();
@@ -155,7 +155,7 @@ function initTimeControls(timeControls: TimeControlArray) {
 function initBehaviorChallenges(challenges: ChallengesBehavior) {
 	let behavior = UsersBehavior.getInstance();
 	behavior.setHigherRatedDeclineChallengeLowerRated(
-		challenges.higherRatedPlayerCanDeclineChallengeFromLowerRatedPlayer
+		challenges.higherRatedPlayerCanDeclineChallengeFromLowerRatedPlayer,
 	);
 }
 

@@ -23,7 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { timeControlFromString, timeControlArrayFromString } from '@server/io/time-control';
+import { timeControlArrayFromString, timeControlFromString } from '@server/io/time-control';
 
 describe('IO conversion', () => {
 	test('string to TimeControl', () => {
@@ -35,7 +35,7 @@ describe('IO conversion', () => {
 		expect(timeControlArrayFromString('[{ "id": "", "name": "" }]')).toEqual([{ id: '', name: '' }]);
 		expect(timeControlArrayFromString('[{ "id": "A", "name": "B" }, { "id": "", "name": "" }]')).toEqual([
 			{ id: 'A', name: 'B' },
-			{ id: '', name: '' }
+			{ id: '', name: '' },
 		]);
 	});
 });

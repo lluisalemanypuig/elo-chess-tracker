@@ -23,19 +23,19 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
+import { toPlayerPrivateId } from '@common/models/player-id';
+import { SessionId } from '@common/models/session-id';
+import { toTimeControlId, toTimeControlName } from '@common/models/time-control';
+import { toUserGivenName } from '@common/models/user-given-name';
+import { isNotDefined } from '@common/utils/is-defined';
 import { clearServer } from '@server/managers/memory/clear';
 import { serverInitFromData } from '@server/managers/memory/initialization';
 import { isUserLoggedIn, sessionIdAdd, sessionIdDelete, sessionUserDeleteAll } from '@server/managers/session';
 import { SessionIDManager } from '@server/managers/session-id-manager';
 import { userAddNew } from '@server/managers/users';
-import { SessionId } from '@common/models/session-id';
-import { runCommand, TestError } from '@tests';
-import { Configuration } from '@server/models/configuration/configuration';
-import { toTimeControlId, toTimeControlName } from '@common/models/time-control';
 import { UsersManager } from '@server/managers/users-manager';
-import { isNotDefined } from '@common/utils/is-defined';
-import { toPlayerPrivateId } from '@common/models/player-id';
-import { toUserGivenName } from '@common/models/user-given-name';
+import { Configuration } from '@server/models/configuration/configuration';
+import { runCommand, TestError } from '@tests';
 
 const Classical = toTimeControlId('Classical');
 const Classical90p30 = toTimeControlName('Classical (90 + 30)');
@@ -52,48 +52,48 @@ const configuration: Configuration = {
 		sslCertificate: {
 			publicKeyFile: 'sadf',
 			privateKeyFile: 'qwer',
-			passphraseFile: 'kgj68'
+			passphraseFile: 'kgj68',
 		},
 		favicon: 'favicon.png',
 		loginPage: {
 			title: 'Login title',
-			icon: 'login.png'
+			icon: 'login.png',
 		},
 		homePage: {
 			title: 'Home title',
-			icon: 'home.png'
-		}
+			icon: 'home.png',
+		},
 	},
 	server: {
 		domainName: '',
 		ports: {
 			http: '8080',
-			https: '8443'
-		}
+			https: '8443',
+		},
 	},
 	ratingSystem: 'Elo',
 	timeControls: [
 		{
 			id: Classical,
-			name: Classical90p30
+			name: Classical90p30,
 		},
 		{
 			id: Rapid,
-			name: Rapid12p5
+			name: Rapid12p5,
 		},
 		{
 			id: Rapid,
-			name: Rapid10p0
+			name: Rapid10p0,
 		},
 		{
 			id: Blitz,
-			name: Blitz5p3
-		}
+			name: Blitz5p3,
+		},
 	],
 	behavior: {
 		challenges: {
-			higherRatedPlayerCanDeclineChallengeFromLowerRatedPlayer: false
-		}
+			higherRatedPlayerCanDeclineChallengeFromLowerRatedPlayer: false,
+		},
 	},
 	permissions: {
 		admin: [
@@ -107,30 +107,30 @@ const configuration: Configuration = {
 			'CHALLENGE_USER_ADMIN',
 			'CHALLENGE_USER_MEMBER',
 			'CHALLENGE_USER_TEACHER',
-			'CHALLENGE_USER_STUDENT'
+			'CHALLENGE_USER_STUDENT',
 		],
 		teacher: [
 			'CHALLENGE_USER',
 			'CHALLENGE_USER_ADMIN',
 			'CHALLENGE_USER_MEMBER',
 			'CHALLENGE_USER_TEACHER',
-			'CHALLENGE_USER_STUDENT'
+			'CHALLENGE_USER_STUDENT',
 		],
 		member: [
 			'CHALLENGE_USER',
 			'CHALLENGE_USER_ADMIN',
 			'CHALLENGE_USER_MEMBER',
 			'CHALLENGE_USER_TEACHER',
-			'CHALLENGE_USER_STUDENT'
+			'CHALLENGE_USER_STUDENT',
 		],
 		student: [
 			'CHALLENGE_USER',
 			'CHALLENGE_USER_ADMIN',
 			'CHALLENGE_USER_MEMBER',
 			'CHALLENGE_USER_TEACHER',
-			'CHALLENGE_USER_STUDENT'
-		]
-	}
+			'CHALLENGE_USER_STUDENT',
+		],
+	},
 };
 
 const aa = toPlayerPrivateId('aa');
@@ -173,21 +173,21 @@ describe('Session management via functions', () => {
 			firstName: D,
 			lastName: d,
 			password: 'pass_d',
-			roles: ['STUDENT']
+			roles: ['STUDENT'],
 		});
 		userAddNew(admin.user, {
 			username: ee,
 			firstName: E,
 			lastName: e,
 			password: 'pass_e',
-			roles: ['STUDENT']
+			roles: ['STUDENT'],
 		});
 		userAddNew(admin.user, {
 			username: ff,
 			firstName: F,
 			lastName: f,
 			password: 'pass_f',
-			roles: ['STUDENT']
+			roles: ['STUDENT'],
 		});
 	});
 

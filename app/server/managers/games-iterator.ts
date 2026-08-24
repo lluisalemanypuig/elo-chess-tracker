@@ -23,19 +23,18 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import Debug from 'debug';
-const debug = Debug('ELO_CHESS_TRACKER:managers/challenges');
-
-import path from 'path';
-import fs from 'fs';
-
-import { Game } from '@server/models/game';
+import { GameId } from '@common/models/game-id';
+import { isNotDefined } from '@common/utils/is-defined';
 import { DateFull, DateMajor, logNow, toDateMajor } from '@common/utils/time';
 import { gameArrayFromString } from '@server/io/game';
-import { searchByKey, whereShouldBeInsertedByKey } from '@server/utils/searching';
+import { Game } from '@server/models/game';
 import { readDirectory } from '@server/utils/read-directory';
-import { isNotDefined } from '@common/utils/is-defined';
-import { GameId } from '@common/models/game-id';
+import { searchByKey, whereShouldBeInsertedByKey } from '@server/utils/searching';
+import Debug from 'debug';
+import fs from 'fs';
+import path from 'path';
+
+const debug = Debug('ELO_CHESS_TRACKER:managers/challenges');
 
 /**
  * @brief Game database iterator

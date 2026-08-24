@@ -23,12 +23,12 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { z } from 'zod';
+import { GameIdSchema } from '@common/models/game-id';
+import { GameResultSchema } from '@common/models/game-result';
+import { PlayerPublicIdSchema } from '@common/models/player-id';
 import { TimeControlIdSchema, TimeControlNameSchema } from '@common/models/time-control';
 import { DateMajorSchema, DateMinorSchema } from '@common/utils/time';
-import { PlayerPublicIdSchema } from '@common/models/player-id';
-import { GameResultSchema } from '@common/models/game-result';
-import { GameIdSchema } from '@common/models/game-id';
+import { z } from 'zod';
 
 // ROUTES.GAME_CREATE
 
@@ -41,7 +41,7 @@ export const GameCreateInputSchema = z
 		timeControlId: TimeControlIdSchema,
 		timeControlName: TimeControlNameSchema,
 		whenCreated: DateMajorSchema,
-		timeCreated: DateMinorSchema
+		timeCreated: DateMinorSchema,
 	})
 	.strict();
 
@@ -52,7 +52,7 @@ export type GameCreateInput = z.infer<typeof GameCreateInputSchema>;
 export const GameEditResultInputSchema = z
 	.object({
 		id: GameIdSchema,
-		newResult: GameResultSchema
+		newResult: GameResultSchema,
 	})
 	.strict();
 
@@ -63,7 +63,7 @@ export type GameEditResultInput = z.infer<typeof GameEditResultInputSchema>;
 export const GameEditTitleInputSchema = z
 	.object({
 		id: GameIdSchema,
-		title: z.string()
+		title: z.string(),
 	})
 	.strict();
 
@@ -73,7 +73,7 @@ export type GameEditTitleInput = z.infer<typeof GameEditTitleInputSchema>;
 
 export const GameDeleteInputSchema = z
 	.object({
-		id: GameIdSchema
+		id: GameIdSchema,
 	})
 	.strict();
 

@@ -23,22 +23,22 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import Debug from 'debug';
-const debug = Debug('ELO_CHESS_TRACKER:managers/graphs');
-
+import { GameResult } from '@common/models/game-result';
+import { PlayerPrivateId } from '@common/models/player-id';
+import { TimeControlId } from '@common/models/time-control';
 import { isNotDefined } from '@common/utils/is-defined';
+import { logNow } from '@common/utils/time';
 import { graphFullToFile, graphToFile } from '@server/io/graph/graph';
-import { Graph } from '@server/models/graph/graph';
 import { EnvironmentManager } from '@server/managers/environment-manager';
 import { GamesIterator } from '@server/managers/games-iterator';
 import { GraphsManager } from '@server/managers/graphs-manager';
 import { RatingSystemManager } from '@server/managers/rating-system-manager';
-import { User } from '@server/models/user';
-import { logNow } from '@common/utils/time';
 import { PublicError } from '@server/models/error-types/public-error';
-import { PlayerPrivateId } from '@common/models/player-id';
-import { GameResult } from '@common/models/game-result';
-import { TimeControlId } from '@common/models/time-control';
+import { Graph } from '@server/models/graph/graph';
+import { User } from '@server/models/user';
+import Debug from 'debug';
+
+const debug = Debug('ELO_CHESS_TRACKER:managers/graphs');
 
 export function graphUpdate(w: PlayerPrivateId, b: PlayerPrivateId, result: GameResult, id: TimeControlId) {
 	let manager = GraphsManager.getInstance();
@@ -57,7 +57,7 @@ export function graphModifyEdge(
 	b: PlayerPrivateId,
 	oldRes: GameResult,
 	newRes: GameResult,
-	id: TimeControlId
+	id: TimeControlId,
 ) {
 	let manager = GraphsManager.getInstance();
 	let g = manager.getGraph(id);

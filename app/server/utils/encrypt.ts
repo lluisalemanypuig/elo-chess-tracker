@@ -23,10 +23,10 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import CryptoJS from 'crypto-js';
-import { interleaveStrings } from '@server/utils/misc';
-import { Password } from '@server/models/password';
 import { PlayerPrivateId } from '@common/models/player-id';
+import { Password } from '@server/models/password';
+import { interleaveStrings } from '@server/utils/misc';
+import CryptoJS from 'crypto-js';
 import { InternalError } from '../models/error-types/internal-error';
 
 // In case of accidental overwrite, use:
@@ -98,7 +98,7 @@ export function encryptPasswordForUser(username: PlayerPrivateId, password: stri
 	const encrypted = CryptoJS.AES.encrypt(actualPasswordToBeEncrypted, keyUsedToEncrypt, {
 		iv: iv,
 		mode: CryptoJS.mode.CBC,
-		padding: CryptoJS.pad.Pkcs7
+		padding: CryptoJS.pad.Pkcs7,
 	});
 
 	return [encrypted.toString(), iv.toString(CryptoJS.enc.Base64)];
@@ -118,7 +118,7 @@ export function decryptPasswordForUser(password: string, { encrypted, iv }: Pass
 	const decrypted = CryptoJS.AES.decrypt(encrypted, keyUsedToDecrypt, {
 		iv: CryptoJS.enc.Base64.parse(iv),
 		mode: CryptoJS.mode.CBC,
-		padding: CryptoJS.pad.Pkcs7
+		padding: CryptoJS.pad.Pkcs7,
 	});
 
 	try {
@@ -143,7 +143,7 @@ export function decryptPasswordForUser(password: string, { encrypted, iv }: Pass
 export function isPasswordOfUserCorrect(
 	username: PlayerPrivateId,
 	password: string,
-	actualPassword: Password
+	actualPassword: Password,
 ): boolean {
 	const decrypted = decryptPasswordForUser(password, actualPassword);
 	const interleave = interleaveStrings(username, password);

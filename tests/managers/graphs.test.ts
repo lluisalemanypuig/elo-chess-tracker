@@ -23,18 +23,17 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { runCommand } from '@tests';
-
-import { EdgeMetadata } from '@server/models/graph/edge-metadata';
-import { graphModifyEdge, graphUpdate } from '@server/managers/graphs';
-import { serverInitFromData } from '@server/managers/memory/initialization';
-import { clearServer } from '@server/managers/memory/clear';
+import { toPlayerPrivateId } from '@common/models/player-id';
+import { toTimeControlId, toTimeControlName } from '@common/models/time-control';
+import { isNotDefined } from '@common/utils/is-defined';
 import { graphFromString } from '@server/io/graph/graph';
 import { EnvironmentManager } from '@server/managers/environment-manager';
+import { graphModifyEdge, graphUpdate } from '@server/managers/graphs';
+import { clearServer } from '@server/managers/memory/clear';
+import { serverInitFromData } from '@server/managers/memory/initialization';
 import { Configuration } from '@server/models/configuration/configuration';
-import { isNotDefined } from '@common/utils/is-defined';
-import { toTimeControlId, toTimeControlName } from '@common/models/time-control';
-import { toPlayerPrivateId } from '@common/models/player-id';
+import { EdgeMetadata } from '@server/models/graph/edge-metadata';
+import { runCommand } from '@tests';
 
 const Classical = toTimeControlId('Classical');
 const Classical90p30 = toTimeControlName('Classical (90 + 30)');
@@ -51,48 +50,48 @@ const configuration: Configuration = {
 		sslCertificate: {
 			publicKeyFile: 'sadf',
 			privateKeyFile: 'qwer',
-			passphraseFile: 'kgj68'
+			passphraseFile: 'kgj68',
 		},
 		favicon: 'favicon.png',
 		loginPage: {
 			title: 'Login title',
-			icon: 'login.png'
+			icon: 'login.png',
 		},
 		homePage: {
 			title: 'Home title',
-			icon: 'home.png'
-		}
+			icon: 'home.png',
+		},
 	},
 	server: {
 		domainName: '',
 		ports: {
 			http: '8080',
-			https: '8443'
-		}
+			https: '8443',
+		},
 	},
 	ratingSystem: 'Elo',
 	timeControls: [
 		{
 			id: Classical,
-			name: Classical90p30
+			name: Classical90p30,
 		},
 		{
 			id: Rapid,
-			name: Rapid12p5
+			name: Rapid12p5,
 		},
 		{
 			id: Rapid,
-			name: Rapid10p0
+			name: Rapid10p0,
 		},
 		{
 			id: Blitz,
-			name: Blitz5p3
-		}
+			name: Blitz5p3,
+		},
 	],
 	behavior: {
 		challenges: {
-			higherRatedPlayerCanDeclineChallengeFromLowerRatedPlayer: false
-		}
+			higherRatedPlayerCanDeclineChallengeFromLowerRatedPlayer: false,
+		},
 	},
 	permissions: {
 		admin: [
@@ -100,30 +99,30 @@ const configuration: Configuration = {
 			'CHALLENGE_USER_ADMIN',
 			'CHALLENGE_USER_MEMBER',
 			'CHALLENGE_USER_TEACHER',
-			'CHALLENGE_USER_STUDENT'
+			'CHALLENGE_USER_STUDENT',
 		],
 		teacher: [
 			'CHALLENGE_USER',
 			'CHALLENGE_USER_ADMIN',
 			'CHALLENGE_USER_MEMBER',
 			'CHALLENGE_USER_TEACHER',
-			'CHALLENGE_USER_STUDENT'
+			'CHALLENGE_USER_STUDENT',
 		],
 		member: [
 			'CHALLENGE_USER',
 			'CHALLENGE_USER_ADMIN',
 			'CHALLENGE_USER_MEMBER',
 			'CHALLENGE_USER_TEACHER',
-			'CHALLENGE_USER_STUDENT'
+			'CHALLENGE_USER_STUDENT',
 		],
 		student: [
 			'CHALLENGE_USER',
 			'CHALLENGE_USER_ADMIN',
 			'CHALLENGE_USER_MEMBER',
 			'CHALLENGE_USER_TEACHER',
-			'CHALLENGE_USER_STUDENT'
-		]
-	}
+			'CHALLENGE_USER_STUDENT',
+		],
+	},
 };
 
 const A = toPlayerPrivateId('A');

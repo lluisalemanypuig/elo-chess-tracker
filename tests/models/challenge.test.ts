@@ -25,9 +25,9 @@ Contact:
 
 import { toChallengeId } from '@common/models/challenge-id';
 import { toPlayerPrivateId } from '@common/models/player-id';
-import { newChallenge, setResult, disagreeResult, agreeResult } from '@server/models/challenge';
 import { toTimeControlId, toTimeControlName } from '@common/models/time-control';
 import { toDateFull } from '@common/utils/time';
+import { agreeResult, disagreeResult, newChallenge, setResult } from '@server/models/challenge';
 
 const Blitz = toTimeControlId('Blitz');
 const Blitz5p3 = toTimeControlName('Blitz (5 + 3)');
@@ -67,7 +67,7 @@ describe('Sets and gets', () => {
 			when: toDateFull('2024-12-29..14:00:02'),
 			white: A,
 			black: B,
-			result: 'black_wins'
+			result: 'black_wins',
 		});
 
 		expect(c.resultSetBy).toBe('A');
@@ -102,7 +102,7 @@ describe('Sets and gets', () => {
 			when: toDateFull('2024-12-29..14:00:02'),
 			white: B,
 			black: A,
-			result: 'draw'
+			result: 'draw',
 		});
 
 		expect(c.resultSetBy).toBe('A');
@@ -137,7 +137,7 @@ describe('Sets and gets', () => {
 			when: toDateFull('2024-12-29..14:00:02'),
 			white: B,
 			black: A,
-			result: 'draw'
+			result: 'draw',
 		});
 
 		expect(c.resultSetBy).toBe('A');
@@ -189,21 +189,21 @@ describe('Sets and gets', () => {
 			when: toDateFull('2024-12-29..14:00:02'),
 			white: A,
 			black: B,
-			result: 'black_wins'
+			result: 'black_wins',
 		});
 		setResult(c, {
 			by: A,
 			when: toDateFull('2024-12-29..14:00:02'),
 			white: a,
 			black: B,
-			result: 'black_wins'
+			result: 'black_wins',
 		});
 		setResult(c, {
 			by: A,
 			when: toDateFull('2024-12-29..14:00:02'),
 			white: A,
 			black: b,
-			result: 'black_wins'
+			result: 'black_wins',
 		});
 
 		expect(c.resultSetBy).toBe(A);
@@ -232,7 +232,7 @@ describe('Sets and gets', () => {
 			when: toDateFull('2024-12-29..14:00:02'),
 			white: A,
 			black: B,
-			result: 'black_wins'
+			result: 'black_wins',
 		});
 
 		expect(c.resultSetBy).toBe('A');

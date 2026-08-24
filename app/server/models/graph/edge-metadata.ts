@@ -30,7 +30,7 @@ export const EdgeMetadataSchema = z
 	.object({
 		numGamesWon: z.number().gte(0),
 		numGamesDrawn: z.number().gte(0),
-		numGamesLost: z.number().gte(0)
+		numGamesLost: z.number().gte(0),
 	})
 	.strict();
 
@@ -68,7 +68,7 @@ export class EdgeMetadata {
 		return new EdgeMetadata(
 			result === 'white_wins' ? 1 : 0,
 			result === 'draw' ? 1 : 0,
-			result === 'black_wins' ? 1 : 0
+			result === 'black_wins' ? 1 : 0,
 		);
 	}
 

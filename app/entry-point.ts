@@ -23,28 +23,27 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { Request, Response } from 'express';
-
-import Debug from 'debug';
-const debug = Debug('ELO_CHESS_TRACKER:entry-point');
-import { logNow } from '@common/utils/time';
-
 import { Route } from '@common/api/routes';
 import { EmptySchema, inputSchemaOf, methodTypeOf, outputSchemaOf } from '@common/api/schemas-endpoints';
-import { safeParseRequestBody, safeParseRequestCookies } from '@server/utils/schemas';
-import { isUserLoggedIn } from '@server/managers/session';
-import { isNotDefined } from '@common/utils/is-defined';
-import { handleError } from '@server/utils/error-handling';
 import { InputTypeOf, OutputTypeOf } from '@common/api/types';
+import { isNotDefined } from '@common/utils/is-defined';
+import { logNow } from '@common/utils/time';
 import { ConfigurationManager } from '@server/managers/configuration-manager';
 import { getExecutionDirectory } from '@server/managers/environment-manager';
+import { isUserLoggedIn } from '@server/managers/session';
 import { UserSession } from '@server/models/user';
+import { handleError } from '@server/utils/error-handling';
+import { safeParseRequestBody, safeParseRequestCookies } from '@server/utils/schemas';
+import Debug from 'debug';
+import { Request, Response } from 'express';
+
+const debug = Debug('ELO_CHESS_TRACKER:entry-point');
 
 export async function entryPointPage<R extends Route>(
 	route: R,
 	action: (u: UserSession) => Promise<string>,
 	req: Request,
-	res: Response
+	res: Response,
 ) {
 	debug(logNow(), `${methodTypeOf(route)} ${route}...`);
 	debug(logNow(), 'Entry point page');
@@ -79,7 +78,7 @@ export async function entryPointHTMX<R extends Route>(
 	route: R,
 	action: (u: UserSession) => Promise<string>,
 	req: Request,
-	res: Response
+	res: Response,
 ) {
 	debug(logNow(), `${methodTypeOf(route)} ${route}...`);
 	debug(logNow(), 'Entry point HTMX');
@@ -110,7 +109,7 @@ export async function entryPointAction<R extends Route>(
 	route: R,
 	action: (u: UserSession, data: InputTypeOf<R>) => Promise<OutputTypeOf<R>>,
 	req: Request,
-	res: Response
+	res: Response,
 ) {
 	debug(logNow(), `${methodTypeOf(route)} ${route}...`);
 	debug(logNow(), 'Entry point action');

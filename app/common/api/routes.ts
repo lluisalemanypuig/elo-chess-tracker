@@ -82,7 +82,7 @@ export const ROUTES = {
 	CHALLENGE_DISAGREE: '/challenge/disagree',
 
 	RECALCULATE_RATINGS: '/recalculate/ratings',
-	RECALCULATE_GRAPHS: '/recalculate/graphs'
+	RECALCULATE_GRAPHS: '/recalculate/graphs',
 } as const satisfies Record<string, string>;
 
 export type Route = (typeof ROUTES)[keyof typeof ROUTES];

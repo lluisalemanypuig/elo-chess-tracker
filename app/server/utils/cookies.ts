@@ -83,7 +83,7 @@ export function makeSessionIdCookie(name: string, value: string, days: number): 
 		days: days,
 		path: '/',
 		samesite: 'Lax',
-		secure: true
+		secure: true,
 	});
 }
 
@@ -99,6 +99,6 @@ export function emptySessionIdCookie(name: string): string {
 		days: 1,
 		path: '/',
 		samesite: 'Lax',
-		secure: true
+		secure: true,
 	});
 }

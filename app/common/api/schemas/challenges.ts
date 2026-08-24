@@ -23,11 +23,11 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { z } from 'zod';
-import { TimeControlIdSchema, TimeControlNameSchema } from '@common/models/time-control';
 import { ChallengeIdSchema } from '@common/models/challenge-id';
-import { PlayerPublicIdSchema } from '@common/models/player-id';
 import { GameResultSchema } from '@common/models/game-result';
+import { PlayerPublicIdSchema } from '@common/models/player-id';
+import { TimeControlIdSchema, TimeControlNameSchema } from '@common/models/time-control';
+import { z } from 'zod';
 
 // ROUTES.CHALLENGE_SEND
 
@@ -36,7 +36,7 @@ export const ChallengeSendInputSchema = z
 		to: PlayerPublicIdSchema,
 		timeControlId: TimeControlIdSchema,
 		timeControlName: TimeControlNameSchema,
-		title: z.string()
+		title: z.string(),
 	})
 	.strict();
 
@@ -46,7 +46,7 @@ export type ChallengeSendInput = z.infer<typeof ChallengeSendInputSchema>;
 
 export const ChallengeAcceptInputSchema = z
 	.object({
-		id: ChallengeIdSchema
+		id: ChallengeIdSchema,
 	})
 	.strict();
 
@@ -56,7 +56,7 @@ export type ChallengeAcceptInput = z.infer<typeof ChallengeAcceptInputSchema>;
 
 export const ChallengeDeclineInputSchema = z
 	.object({
-		id: ChallengeIdSchema
+		id: ChallengeIdSchema,
 	})
 	.strict();
 
@@ -69,7 +69,7 @@ export const ChallengeSetResultInputSchema = z
 		id: ChallengeIdSchema,
 		white: PlayerPublicIdSchema,
 		black: PlayerPublicIdSchema,
-		result: GameResultSchema
+		result: GameResultSchema,
 	})
 	.strict();
 
@@ -79,7 +79,7 @@ export type ChallengeSetResultInput = z.infer<typeof ChallengeSetResultInputSche
 
 export const ChallengeAgreeResultInputSchema = z
 	.object({
-		id: ChallengeIdSchema
+		id: ChallengeIdSchema,
 	})
 	.strict();
 
@@ -89,7 +89,7 @@ export type ChallengeAgreeResultInput = z.infer<typeof ChallengeAgreeResultInput
 
 export const ChallengeDisagreeResultInputSchema = z
 	.object({
-		id: ChallengeIdSchema
+		id: ChallengeIdSchema,
 	})
 	.strict();
 

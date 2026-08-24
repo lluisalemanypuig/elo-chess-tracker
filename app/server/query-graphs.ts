@@ -23,28 +23,28 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import Debug from 'debug';
-const debug = Debug('ELO_CHESS_TRACKER:serverQueryGraphs');
-
-import { logNow } from '@common/utils/time';
-import { User, UserSession } from '@server/models/user';
-import { GraphsManager } from '@server/managers/graphs-manager';
-import { TimeControlId } from '@common/models/time-control';
-import { searchLinearByKey } from '@server/utils/searching';
-import { UsersManager } from '@server/managers/users-manager';
-import { Edge } from '@server/models/graph/edge';
-import { canUserSeeGraph } from '@server/managers/user-relationships';
-import { isNotDefined } from '@common/utils/is-defined';
 import {
 	EdgeInfo,
 	NodeInfo,
 	QueryGraphFullInput,
 	QueryGraphOutput,
-	QueryGraphOwnInput
+	QueryGraphOwnInput,
 } from '@common/api/schemas/query-graphs';
-import { InternalError } from '@server/models/error-types/internal-error';
 import { PlayerPrivateId } from '@common/models/player-id';
+import { TimeControlId } from '@common/models/time-control';
+import { isNotDefined } from '@common/utils/is-defined';
+import { logNow } from '@common/utils/time';
+import { GraphsManager } from '@server/managers/graphs-manager';
+import { canUserSeeGraph } from '@server/managers/user-relationships';
+import { UsersManager } from '@server/managers/users-manager';
+import { InternalError } from '@server/models/error-types/internal-error';
 import { PublicError } from '@server/models/error-types/public-error';
+import { Edge } from '@server/models/graph/edge';
+import { User, UserSession } from '@server/models/user';
+import { searchLinearByKey } from '@server/utils/searching';
+import Debug from 'debug';
+
+const debug = Debug('ELO_CHESS_TRACKER:serverQueryGraphs');
 
 function retrieveGraphUser(username: PlayerPrivateId, timeControlId: TimeControlId): QueryGraphOutput {
 	const users = UsersManager.getInstance();
@@ -68,8 +68,8 @@ function retrieveGraphUser(username: PlayerPrivateId, timeControlId: TimeControl
 			id: thisUser.publicId,
 			fullName: thisUser.user.getFullName(),
 			weight: {
-				rating: thisUser.user.getRating(timeControlId).rating
-			}
+				rating: thisUser.user.getRating(timeControlId).rating,
+			},
 		};
 		listNodes = [node];
 	}
@@ -86,8 +86,8 @@ function retrieveGraphUser(username: PlayerPrivateId, timeControlId: TimeControl
 			id: neighbor.publicId,
 			fullName: neighbor.user.getFullName(),
 			weight: {
-				rating: neighbor.user.getRating(timeControlId).rating
-			}
+				rating: neighbor.user.getRating(timeControlId).rating,
+			},
 		};
 		listNodes.push(node);
 
@@ -98,8 +98,8 @@ function retrieveGraphUser(username: PlayerPrivateId, timeControlId: TimeControl
 			weight: {
 				wins: e.metadata.numGamesWon,
 				draws: e.metadata.numGamesDrawn,
-				losses: e.metadata.numGamesLost
-			}
+				losses: e.metadata.numGamesLost,
+			},
 		};
 		listEdges.push(edge);
 	});
@@ -119,8 +119,8 @@ function retrieveGraphUser(username: PlayerPrivateId, timeControlId: TimeControl
 				id: neighbor.publicId,
 				fullName: neighbor.user.getFullName(),
 				weight: {
-					rating: neighbor.user.getRating(timeControlId).rating
-				}
+					rating: neighbor.user.getRating(timeControlId).rating,
+				},
 			};
 			listNodes.push(node);
 		}
@@ -132,8 +132,8 @@ function retrieveGraphUser(username: PlayerPrivateId, timeControlId: TimeControl
 			weight: {
 				wins: e.metadata.numGamesLost,
 				draws: e.metadata.numGamesDrawn,
-				losses: e.metadata.numGamesWon
-			}
+				losses: e.metadata.numGamesWon,
+			},
 		};
 		listEdges.push(edge);
 	});
@@ -178,8 +178,8 @@ function retrieveGraphFull(querier: User, timeControlId: TimeControlId): QueryGr
 				weight: {
 					wins: e.metadata.numGamesWon,
 					draws: e.metadata.numGamesDrawn,
-					losses: e.metadata.numGamesLost
-				}
+					losses: e.metadata.numGamesLost,
+				},
 			};
 			listEdges.push(edge);
 			++outDegree;
@@ -191,8 +191,8 @@ function retrieveGraphFull(querier: User, timeControlId: TimeControlId): QueryGr
 				id: currentUser.publicId,
 				fullName: currentUser.user.getFullName(),
 				weight: {
-					rating: currentUser.user.getRating(timeControlId).rating
-				}
+					rating: currentUser.user.getRating(timeControlId).rating,
+				},
 			};
 			listNodes.push(node);
 		}
@@ -220,10 +220,7 @@ export async function postQueryGraphFull({ user, session: _session }: UserSessio
 
 	const timeControlId = input.timeControlId;
 
-	debug(
-		logNow(),
-		`User ${user.username} is querying the graph of the entire server of time control ${timeControlId}.`
-	);
+	debug(logNow(), `User ${user.username} is querying the graph of the entire server of time control ${timeControlId}.`);
 
 	return retrieveGraphFull(user, timeControlId);
 }

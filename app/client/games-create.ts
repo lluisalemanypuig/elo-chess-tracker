@@ -19,15 +19,14 @@ Full source code of elo-chess-tracker:
 	https://github.com/lluisalemanypuig/elo-chess-tracker
 */
 
-import 'htmx.org';
-
-import { isNotDefined } from '@common/utils/is-defined';
 import { messageFromResponse, serverCall } from '@client/action';
 import { ROUTES } from '@common/api/routes';
-import { TimeControlId, TimeControlName } from '@common/models/time-control';
-import { toDateMajor, toDateMinor } from '@common/utils/time';
 import { resultFromTextToValue } from '@common/models/game-result';
 import { toPlayerPublicId } from '@common/models/player-id';
+import { TimeControlId, TimeControlName } from '@common/models/time-control';
+import { isNotDefined } from '@common/utils/is-defined';
+import { toDateMajor, toDateMinor } from '@common/utils/time';
+import 'htmx.org';
 
 async function initializeWindowClientGamesCreate() {
 	let datalistWhiteUsers = document.getElementById('datalist-white-users') as HTMLDataListElement;
@@ -96,7 +95,7 @@ async function submitNewGame(_event: any) {
 			randSec +
 			':' +
 			(randMilli.length === 1 ? '00' : randMilli.length === 2 ? '0' : '') +
-			randMilli
+			randMilli,
 	);
 
 	const response = await serverCall(ROUTES.GAME_CREATE, {
@@ -107,7 +106,7 @@ async function submitNewGame(_event: any) {
 		timeControlId: timeControlId,
 		timeControlName: timeControlName,
 		whenCreated: whenCreated,
-		timeCreated: timeCreated
+		timeCreated: timeCreated,
 	});
 	if (response.status === 'Error') {
 		alert(messageFromResponse(response));

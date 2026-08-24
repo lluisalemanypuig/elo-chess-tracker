@@ -23,15 +23,15 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { z } from 'zod';
-import { EdgeMetadataSchema, EdgeMetadata } from '@server/models/graph/edge-metadata';
-import { InternalError } from '@server/models/error-types/internal-error';
 import { PlayerPrivateId, PlayerPrivateIdSchema } from '@common/models/player-id';
+import { InternalError } from '@server/models/error-types/internal-error';
+import { EdgeMetadata, EdgeMetadataSchema } from '@server/models/graph/edge-metadata';
+import { z } from 'zod';
 
 export const EdgeSchema = z
 	.object({
 		neighbor: PlayerPrivateIdSchema,
-		metadata: EdgeMetadataSchema
+		metadata: EdgeMetadataSchema,
 	})
 	.strict();
 
@@ -59,7 +59,7 @@ export class Edge {
 	merge(other: Edge) {
 		if (this.neighbor !== other.neighbor) {
 			throw new InternalError(
-				`The current edge points to '${this.neighbor}' but the new edge points to '${other.neighbor}'.`
+				`The current edge points to '${this.neighbor}' but the new edge points to '${other.neighbor}'.`,
 			);
 		}
 

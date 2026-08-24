@@ -24,11 +24,11 @@ Contact:
 */
 
 // roles used as string literals; no imports needed from user-role
-import { initializeRatingFunctions } from '@server/managers/rating-system';
+import { toTimeControlId } from '@common/models/time-control';
 import { isNotDefined } from '@common/utils/is-defined';
 import { toDateMajor } from '@common/utils/time';
-import { toTimeControlId } from '@common/models/time-control';
 import { userFromString } from '@server/io/user';
+import { initializeRatingFunctions } from '@server/managers/rating-system';
 
 const Classical = toTimeControlId('classical');
 const Rapid = toTimeControlId('rapid');
@@ -63,7 +63,7 @@ describe('IO conversion (Elo)', () => {
 					}\
 				],\
 				"ratings": []\
-			}'
+			}',
 		);
 
 		expect(u).not.toBeNull();
@@ -84,7 +84,7 @@ describe('IO conversion (Elo)', () => {
 
 	test('string (2)', () => {
 		const u1 = userFromString(
-			'{ "username": "u", "firstName": "f", "lastName": "l", "password": { "encrypted": "a", "iv": "b" }, "roles": ["ADMIN", "STUDENT"], "games": [ { "timeControl": "rapid", "records": [{ "record": "2025-01-01", "amount": 1 }] } ], "ratings": [] }'
+			'{ "username": "u", "firstName": "f", "lastName": "l", "password": { "encrypted": "a", "iv": "b" }, "roles": ["ADMIN", "STUDENT"], "games": [ { "timeControl": "rapid", "records": [{ "record": "2025-01-01", "amount": 1 }] } ], "ratings": [] }',
 		);
 
 		expect(u1).not.toBeNull();
@@ -119,7 +119,7 @@ describe('IO conversion (Elo)', () => {
 					}\
 				],\
 				"ratings": []\
-			}'
+			}',
 		);
 		expect(u2).not.toBeNull();
 		if (isNotDefined(u2)) {
@@ -131,7 +131,7 @@ describe('IO conversion (Elo)', () => {
 
 	test('string (3)', () => {
 		const u = userFromString(
-			'{ "username": "u", "firstName": "f", "lastName": "l", "password": { "encrypted": "a", "iv": "b" }, "roles": ["STUDENT", "ADMIN"], "games": [ {"timeControl": "blitz", "records": [{ "record": "2024-12-31", "amount": 1 }]}, {"timeControl": "rapid", "records": [{ "record": "2025-01-01", "amount": 1 }]} ], "ratings": [ { "timeControl": "blitz", "rating": { "rating": 1500, "numGames": 0, "won": 0, "drawn": 0, "lost": 0, "K": 40, "surpassed2400": false } }, { "timeControl": "classical", "rating": { "rating": 1700, "numGames": 0, "won": 0, "drawn": 0, "lost": 0, "K": 40, "surpassed2400": false } } ] }'
+			'{ "username": "u", "firstName": "f", "lastName": "l", "password": { "encrypted": "a", "iv": "b" }, "roles": ["STUDENT", "ADMIN"], "games": [ {"timeControl": "blitz", "records": [{ "record": "2024-12-31", "amount": 1 }]}, {"timeControl": "rapid", "records": [{ "record": "2025-01-01", "amount": 1 }]} ], "ratings": [ { "timeControl": "blitz", "rating": { "rating": 1500, "numGames": 0, "won": 0, "drawn": 0, "lost": 0, "K": 40, "surpassed2400": false } }, { "timeControl": "classical", "rating": { "rating": 1700, "numGames": 0, "won": 0, "drawn": 0, "lost": 0, "K": 40, "surpassed2400": false } } ] }',
 		);
 		expect(u).not.toBeNull();
 		if (isNotDefined(u)) {

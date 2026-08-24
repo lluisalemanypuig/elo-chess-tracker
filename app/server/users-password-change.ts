@@ -23,14 +23,14 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import Debug from 'debug';
-const debug = Debug('ELO_CHESS_TRACKER:serverUsersPasswordChanges');
-
-import { logNow } from '@common/utils/time';
 import { Empty } from '@common/api/schemas-endpoints';
+import { UserPasswordChangeInput } from '@common/api/schemas/user';
+import { logNow } from '@common/utils/time';
 import { userSelfChangePassword } from '@server/managers/users';
 import { UserSession } from '@server/models/user';
-import { UserPasswordChangeInput } from '@common/api/schemas/user';
+import Debug from 'debug';
+
+const debug = Debug('ELO_CHESS_TRACKER:serverUsersPasswordChanges');
 
 export async function getPageUserPasswordChange(_u: UserSession) {
 	debug(logNow(), 'function getPageUserPasswordChange...');
@@ -39,7 +39,7 @@ export async function getPageUserPasswordChange(_u: UserSession) {
 
 export async function postUserPasswordChange(
 	{ user, session }: UserSession,
-	input: UserPasswordChangeInput
+	input: UserPasswordChangeInput,
 ): Promise<Empty> {
 	debug(logNow(), 'function postUserPasswordChange...');
 

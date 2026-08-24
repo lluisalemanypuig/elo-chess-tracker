@@ -23,38 +23,37 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import Debug from 'debug';
-const debug = Debug('ELO_CHESS_TRACKER:serverQueryGames');
-
-import path from 'path';
-import fs from 'fs';
-
-import { DateMajor, logNow } from '@common/utils/time';
-import { GameNumber, User, UserSession } from '@server/models/user';
-import { Game } from '@server/models/game';
-import { RatingSystemManager } from '@server/managers/rating-system-manager';
-import { EnvironmentManager } from '@server/managers/environment-manager';
-import { canUserDeleteGame, canUserEditGame, canUserSeeGame } from '@server/managers/user-relationships';
-import { gameArrayFromString } from '@server/io/game';
-import { UsersManager } from '@server/managers/users-manager';
-import { searchByKey } from '@server/utils/searching';
-import { readDirectory } from '@server/utils/read-directory';
-import { isNotDefined } from '@common/utils/is-defined';
 import {
 	QueryGamesListAllInput,
 	QueryGamesListOutput,
 	QueryGamesListOutputSingle,
-	QueryGamesListOwnInput
+	QueryGamesListOwnInput,
 } from '@common/api/schemas/query-games';
 import { TimeControlId } from '@common/models/time-control';
+import { isNotDefined } from '@common/utils/is-defined';
+import { DateMajor, logNow } from '@common/utils/time';
+import { gameArrayFromString } from '@server/io/game';
+import { EnvironmentManager } from '@server/managers/environment-manager';
+import { RatingSystemManager } from '@server/managers/rating-system-manager';
+import { canUserDeleteGame, canUserEditGame, canUserSeeGame } from '@server/managers/user-relationships';
+import { UsersManager } from '@server/managers/users-manager';
 import { InternalError } from '@server/models/error-types/internal-error';
 import { PublicError } from '@server/models/error-types/public-error';
+import { Game } from '@server/models/game';
+import { GameNumber, User, UserSession } from '@server/models/user';
+import { readDirectory } from '@server/utils/read-directory';
+import { searchByKey } from '@server/utils/searching';
+import Debug from 'debug';
+import fs from 'fs';
+import path from 'path';
+
+const debug = Debug('ELO_CHESS_TRACKER:serverQueryGames');
 
 function increment(g: Game) {
 	const [whiteAfter, blackAfter] = RatingSystemManager.getInstance().applyRatingFunction(g);
 	return {
 		whiteIncrement: Math.round(whiteAfter.rating - g.whiteRating.rating),
-		blackIncrement: Math.round(blackAfter.rating - g.blackRating.rating)
+		blackIncrement: Math.round(blackAfter.rating - g.blackRating.rating),
 	};
 }
 
@@ -62,7 +61,7 @@ function filterGameList(
 	user: User,
 	timeControlId: TimeControlId,
 	filterGameRecord: Function,
-	filterGame: Function
+	filterGame: Function,
 ): QueryGamesListOutputSingle[] {
 	let dataToReturn: QueryGamesListOutputSingle[] = [];
 
@@ -139,7 +138,7 @@ function filterGameList(
 				whiteIncrement: inc.whiteIncrement,
 				blackIncrement: inc.blackIncrement,
 				editable: isEditable,
-				deleteable: isDeleteable
+				deleteable: isDeleteable,
 			});
 		}
 	}
@@ -169,7 +168,7 @@ export async function postQueryGameListOwn({ user, session: _session }: UserSess
 					}) !== -1
 				);
 			},
-			filterGameFunction
+			filterGameFunction,
 		);
 	} else {
 		const ratings = RatingSystemManager.getInstance();
@@ -185,7 +184,7 @@ export async function postQueryGameListOwn({ user, session: _session }: UserSess
 						}) !== -1
 					);
 				},
-				filterGameFunction
+				filterGameFunction,
 			);
 			dataToReturn = dataToReturn.concat(data);
 		}
@@ -256,7 +255,7 @@ export async function postQueryGameListAll({ user, session: _session }: UserSess
 					throw new InternalError(`User with username '${g.black}' could not be found.`);
 				}
 				return canUserSeeGame(user, white.user, black.user);
-			}
+			},
 		);
 	}
 
@@ -281,7 +280,7 @@ export async function postQueryGameListAll({ user, session: _session }: UserSess
 					throw new InternalError(`User with username '${g.black}' could not be found.`);
 				}
 				return canUserSeeGame(user, white.user, black.user);
-			}
+			},
 		);
 		dataToReturn = mergeByDate(dataToReturn, data);
 	}

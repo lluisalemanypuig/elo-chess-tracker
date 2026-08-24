@@ -23,9 +23,9 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import path from 'path';
 import { TimeControlId } from '@common/models/time-control';
 import { Environment, SSLCertificate } from '@server/models/configuration/environment';
+import path from 'path';
 
 /**
  * @brief Directories and other parameters of the server's environment

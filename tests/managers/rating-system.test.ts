@@ -23,12 +23,12 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { RatingSystemManager } from '@server/managers/rating-system-manager';
-import { initializeRatingFunctions, initializeRatingTimeControls } from '@server/managers/rating-system';
-import { EloPlayerVsPlayer } from '@server/rating-framework/Elo/formula';
-import { newRatingElo } from '@server/models/rating-framework/Elo/rating';
-import { ratingFromStringElo } from '@server/io/ratings/Elo/rating';
 import { toTimeControlId, toTimeControlName } from '@common/models/time-control';
+import { ratingFromStringElo } from '@server/io/ratings/Elo/rating';
+import { initializeRatingFunctions, initializeRatingTimeControls } from '@server/managers/rating-system';
+import { RatingSystemManager } from '@server/managers/rating-system-manager';
+import { newRatingElo } from '@server/models/rating-framework/Elo/rating';
+import { EloPlayerVsPlayer } from '@server/rating-framework/Elo/formula';
 
 const Classical = toTimeControlId('Classical');
 const Classical90p30 = toTimeControlName('Classical (90 + 30)');
@@ -66,7 +66,7 @@ describe('Rating System Manager', () => {
 			{ id: Rapid, name: Rapid10p0 },
 			{ id: Blitz, name: Blitz5p3 },
 			{ id: Blitz, name: Blitz5p0 },
-			{ id: Blitz, name: Blitz3p2 }
+			{ id: Blitz, name: Blitz3p2 },
 		]);
 
 		expect(rating.getTimeControls().length).toBe(7);
@@ -79,17 +79,17 @@ describe('Rating System Manager', () => {
 		expect(
 			unique_ids.findIndex((val: string): boolean => {
 				return val === Classical;
-			})
+			}),
 		).not.toEqual(-1);
 		expect(
 			unique_ids.findIndex((val: string): boolean => {
 				return val === Rapid;
-			})
+			}),
 		).not.toEqual(-1);
 		expect(
 			unique_ids.findIndex((val: string): boolean => {
 				return val === Blitz;
-			})
+			}),
 		).not.toEqual(-1);
 	});
 });

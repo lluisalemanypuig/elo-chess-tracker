@@ -31,7 +31,7 @@ export const RatingSchema = z
 		numGames: z.number(),
 		won: z.number(),
 		drawn: z.number(),
-		lost: z.number()
+		lost: z.number(),
 	})
 	.strict();
 

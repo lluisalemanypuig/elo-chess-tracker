@@ -23,16 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import Debug from 'debug';
-const debug = Debug('ELO_CHESS_TRACKER:serverQueryUsers');
-
-import { logNow } from '@common/utils/time';
-import { userGetAllNamePublicId } from '@server/managers/users';
-import { UsersManager } from '@server/managers/users-manager';
-import { TimeControlRating } from '@server/models/time-control-rating';
-import { isNotDefined } from '@common/utils/is-defined';
 import { Empty } from '@common/api/schemas-endpoints';
-import { UserThin } from '@common/models/user-thin';
 import {
 	QueryUserEditInput,
 	QueryUserEditOutput,
@@ -41,11 +32,20 @@ import {
 	QueryUserRankingOutput,
 	TimeControlAndRating,
 	UserWithGames,
-	UserWithoutGames
+	UserWithoutGames,
 } from '@common/api/schemas/query-user';
-import { UserSession } from '@server/models/user';
-import { PublicError } from '@server/models/error-types/public-error';
+import { UserThin } from '@common/models/user-thin';
+import { isNotDefined } from '@common/utils/is-defined';
+import { logNow } from '@common/utils/time';
 import { canUserEditUser } from '@server/managers/user-relationships';
+import { userGetAllNamePublicId } from '@server/managers/users';
+import { UsersManager } from '@server/managers/users-manager';
+import { PublicError } from '@server/models/error-types/public-error';
+import { TimeControlRating } from '@server/models/time-control-rating';
+import { UserSession } from '@server/models/user';
+import Debug from 'debug';
+
+const debug = Debug('ELO_CHESS_TRACKER:serverQueryUsers');
 
 // Returns the list of user full names and usernames sorted by name
 export async function getQueryUserList(_u: UserSession, _i: Empty) {
@@ -85,8 +85,8 @@ export async function getQueryUserHome({ user, session: _session }: UserSession,
 				numGames: value.rating.numGames,
 				won: value.rating.won,
 				drawn: value.rating.drawn,
-				lost: value.rating.lost
-			}
+				lost: value.rating.lost,
+			},
 		};
 	});
 
@@ -94,7 +94,7 @@ export async function getQueryUserHome({ user, session: _session }: UserSession,
 		fullname: user.getFullName(),
 		roles: user.roles,
 		actions: user.getActions(),
-		ratings: ratingsUser
+		ratings: ratingsUser,
 	};
 	return output;
 }
@@ -115,17 +115,14 @@ export async function postQueryUserEdit({ user, session: _session }: UserSession
 	}
 
 	if (!canUserEditUser(user, toEdit.user)) {
-		debug(
-			logNow(),
-			`User '${user.username}' is querying information of user '${toEdit.user.username}' to edit it.`
-		);
+		debug(logNow(), `User '${user.username}' is querying information of user '${toEdit.user.username}' to edit it.`);
 		throw new PublicError('You cannot edit this user.');
 	}
 
 	const output: QueryUserEditOutput = {
 		firstName: toEdit.user.firstName,
 		lastName: toEdit.user.lastName,
-		roles: toEdit.user.roles
+		roles: toEdit.user.roles,
 	};
 	return output;
 }
@@ -149,12 +146,12 @@ export async function postQueryUserRanking(_u: UserSession, input: QueryUserRank
 					totalGames: user.getRating(timeControlId).numGames,
 					won: user.getRating(timeControlId).won,
 					drawn: user.getRating(timeControlId).drawn,
-					lost: user.getRating(timeControlId).lost
+					lost: user.getRating(timeControlId).lost,
 				});
 			} else {
 				usersWithoutGames.push({
 					name: user.getFullName(),
-					rating: Math.round(user.getRating(timeControlId).rating)
+					rating: Math.round(user.getRating(timeControlId).rating),
 				});
 			}
 		}

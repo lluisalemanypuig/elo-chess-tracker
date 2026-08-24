@@ -19,12 +19,11 @@ Full source code of elo-chess-tracker:
 	https://github.com/lluisalemanypuig/elo-chess-tracker
 */
 
-import 'htmx.org';
-
 import { messageFromResponse, serverCall } from '@client/action';
 import { ROUTES } from '@common/api/routes';
 import { TimeControlId } from '@common/models/time-control';
 import { isDefined } from '@common/utils/is-defined';
+import 'htmx.org';
 
 async function fillRanking(_event: any) {
 	const selectTimeControl = document.getElementById('select-time-control') as HTMLSelectElement;

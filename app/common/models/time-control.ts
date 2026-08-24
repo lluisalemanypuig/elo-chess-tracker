@@ -58,7 +58,7 @@ export function toTimeControlName(s: string): TimeControlName {
 export const TimeControlSchema = z
 	.object({
 		id: TimeControlIdSchema,
-		name: TimeControlNameSchema
+		name: TimeControlNameSchema,
 	})
 	.strict();
 

@@ -19,11 +19,10 @@ Full source code of elo-chess-tracker:
 	https://github.com/lluisalemanypuig/elo-chess-tracker
 */
 
-import 'htmx.org';
-
 import { messageFromResponse, serverCall } from '@client/action';
-import { USER_ROLE_TO_STRING, UserRole } from '@common/models/user-role';
 import { ROUTES } from '@common/api/routes';
+import { USER_ROLE_TO_STRING, UserRole } from '@common/models/user-role';
+import 'htmx.org';
 
 export async function logoutLinkClicked(_event: any) {
 	// "query" the server

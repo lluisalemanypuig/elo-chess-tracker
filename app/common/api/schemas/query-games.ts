@@ -23,17 +23,17 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { z } from 'zod';
-import { TimeControlIdSchema, TimeControlNameSchema } from '@common/models/time-control';
-import { DateFullSchema } from '@common/utils/time';
 import { GameIdSchema } from '@common/models/game-id';
+import { TimeControlIdSchema, TimeControlNameSchema } from '@common/models/time-control';
 import { UserGivenNameSchema } from '@common/models/user-given-name';
+import { DateFullSchema } from '@common/utils/time';
+import { z } from 'zod';
 
 // ROUTES.QUERY_GAME_LIST_OWN
 
 export const QueryGamesListOwnInputSchema = z
 	.object({
-		timeControlId: TimeControlIdSchema
+		timeControlId: TimeControlIdSchema,
 	})
 	.strict();
 
@@ -43,7 +43,7 @@ export type QueryGamesListOwnInput = z.infer<typeof QueryGamesListOwnInputSchema
 
 export const QueryGamesListAllInputSchema = z
 	.object({
-		timeControlId: TimeControlIdSchema
+		timeControlId: TimeControlIdSchema,
 	})
 	.strict();
 
@@ -65,7 +65,7 @@ export const QueryGamesListOutputSingleSchema = z
 		whiteIncrement: z.number(),
 		blackIncrement: z.number(),
 		editable: z.boolean(),
-		deleteable: z.boolean()
+		deleteable: z.boolean(),
 	})
 	.strict();
 

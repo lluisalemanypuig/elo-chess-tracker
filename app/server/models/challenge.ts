@@ -23,17 +23,17 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { z } from 'zod';
-import { DateFull, DateFullSchema } from '@common/utils/time';
+import { ChallengeId, ChallengeIdSchema } from '@common/models/challenge-id';
+import { GameResult, GameResultSchema } from '@common/models/game-result';
+import { PlayerPrivateId, PlayerPrivateIdSchema } from '@common/models/player-id';
 import {
 	TimeControlId,
 	TimeControlIdSchema,
 	TimeControlName,
-	TimeControlNameSchema
+	TimeControlNameSchema,
 } from '@common/models/time-control';
-import { ChallengeId, ChallengeIdSchema } from '@common/models/challenge-id';
-import { PlayerPrivateId, PlayerPrivateIdSchema } from '@common/models/player-id';
-import { GameResult, GameResultSchema } from '@common/models/game-result';
+import { DateFull, DateFullSchema } from '@common/utils/time';
+import { z } from 'zod';
 
 // Challenge state
 
@@ -78,7 +78,7 @@ export const ChallengeSchema = z
 		result: GameResultSchema.optional(),
 
 		// the state of the challenge
-		state: ChallengeStateSchema
+		state: ChallengeStateSchema,
 	})
 	.strict();
 
@@ -100,7 +100,7 @@ export function newChallenge(
 	sentTo: PlayerPrivateId,
 	timeControlId: TimeControlId,
 	timeControlName: TimeControlName,
-	whenChallengeSent: DateFull
+	whenChallengeSent: DateFull,
 ): Challenge {
 	return {
 		id: id,
@@ -118,7 +118,7 @@ export function newChallenge(
 		white: undefined,
 		black: undefined,
 		result: undefined,
-		state: 'PENDING_ACCEPT'
+		state: 'PENDING_ACCEPT',
 	};
 }
 

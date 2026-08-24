@@ -23,26 +23,25 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import path from 'path';
-import fs from 'fs';
-
+import { toPlayerPrivateId } from '@common/models/player-id';
+import { toTimeControlId, toTimeControlName } from '@common/models/time-control';
+import { toUserGivenName } from '@common/models/user-given-name';
+import { UserRole } from '@common/models/user-role';
+import { UserThin } from '@common/models/user-thin';
+import { isNotDefined } from '@common/utils/is-defined';
+import { userFromString } from '@server/io/user';
+import { clearServer } from '@server/managers/memory/clear';
 import { serverInitFromData } from '@server/managers/memory/initialization';
 import { userAddNew, userEdit, userGetAllNamePublicId, userUpdateFromPlayerData } from '@server/managers/users';
-import { clearServer } from '@server/managers/memory/clear';
-import { runCommand, TestError } from '@tests';
-import { EloRating } from '@server/models/rating-framework/Elo/rating';
-import { userFromString } from '@server/io/user';
 import { UsersManager } from '@server/managers/users-manager';
-import { isNotDefined } from '@common/utils/is-defined';
 import { Configuration } from '@server/models/configuration/configuration';
-import { TimeControlRating } from '@server/models/time-control-rating';
-import { toTimeControlId, toTimeControlName } from '@common/models/time-control';
-import { toPlayerPrivateId } from '@common/models/player-id';
-import { UserRole } from '@common/models/user-role';
-import { toUserGivenName } from '@common/models/user-given-name';
-import { User } from '@server/models/user';
-import { UserThin } from '@common/models/user-thin';
 import { Player } from '@server/models/player';
+import { EloRating } from '@server/models/rating-framework/Elo/rating';
+import { TimeControlRating } from '@server/models/time-control-rating';
+import { User } from '@server/models/user';
+import { runCommand, TestError } from '@tests';
+import fs from 'fs';
+import path from 'path';
 
 const Classical = toTimeControlId('Classical');
 const Classical90p30 = toTimeControlName('Classical (90 + 30)');
@@ -66,48 +65,48 @@ const classical_rapid_blitz: Configuration = {
 		sslCertificate: {
 			publicKeyFile: 'sadf',
 			privateKeyFile: 'qwer',
-			passphraseFile: 'kgj68'
+			passphraseFile: 'kgj68',
 		},
 		favicon: 'favicon.png',
 		loginPage: {
 			title: 'Login title',
-			icon: 'login.png'
+			icon: 'login.png',
 		},
 		homePage: {
 			title: 'Home title',
-			icon: 'home.png'
-		}
+			icon: 'home.png',
+		},
 	},
 	server: {
 		domainName: '',
 		ports: {
 			http: '8080',
-			https: '8443'
-		}
+			https: '8443',
+		},
 	},
 	ratingSystem: 'Elo',
 	timeControls: [
 		{
 			id: Classical,
-			name: Classical90p30
+			name: Classical90p30,
 		},
 		{
 			id: Rapid,
-			name: Rapid12p5
+			name: Rapid12p5,
 		},
 		{
 			id: Rapid,
-			name: Rapid10p0
+			name: Rapid10p0,
 		},
 		{
 			id: Blitz,
-			name: Blitz5p3
-		}
+			name: Blitz5p3,
+		},
 	],
 	behavior: {
 		challenges: {
-			higherRatedPlayerCanDeclineChallengeFromLowerRatedPlayer: false
-		}
+			higherRatedPlayerCanDeclineChallengeFromLowerRatedPlayer: false,
+		},
 	},
 	permissions: {
 		admin: [
@@ -121,12 +120,12 @@ const classical_rapid_blitz: Configuration = {
 			'EDIT_USER_ADMIN',
 			'EDIT_USER_TEACHER',
 			'EDIT_USER_MEMBER',
-			'EDIT_USER_STUDENT'
+			'EDIT_USER_STUDENT',
 		],
 		teacher: [],
 		member: [],
-		student: []
-	}
+		student: [],
+	},
 };
 
 const classical_rapid_blitz_bullet: Configuration = {
@@ -134,52 +133,52 @@ const classical_rapid_blitz_bullet: Configuration = {
 		sslCertificate: {
 			publicKeyFile: 'sadf',
 			privateKeyFile: 'qwer',
-			passphraseFile: 'kgj68'
+			passphraseFile: 'kgj68',
 		},
 		favicon: 'favicon.png',
 		loginPage: {
 			title: 'Login title',
-			icon: 'login.png'
+			icon: 'login.png',
 		},
 		homePage: {
 			title: 'Home title',
-			icon: 'home.png'
-		}
+			icon: 'home.png',
+		},
 	},
 	server: {
 		domainName: '',
 		ports: {
 			http: '8080',
-			https: '8443'
-		}
+			https: '8443',
+		},
 	},
 	ratingSystem: 'Elo',
 	timeControls: [
 		{
 			id: Classical,
-			name: Classical90p30
+			name: Classical90p30,
 		},
 		{
 			id: Rapid,
-			name: Rapid12p5
+			name: Rapid12p5,
 		},
 		{
 			id: Rapid,
-			name: Rapid10p0
+			name: Rapid10p0,
 		},
 		{
 			id: Blitz,
-			name: Blitz5p3
+			name: Blitz5p3,
 		},
 		{
 			id: Bullet,
-			name: Bullet2p1
-		}
+			name: Bullet2p1,
+		},
 	],
 	behavior: {
 		challenges: {
-			higherRatedPlayerCanDeclineChallengeFromLowerRatedPlayer: false
-		}
+			higherRatedPlayerCanDeclineChallengeFromLowerRatedPlayer: false,
+		},
 	},
 	permissions: {
 		admin: [
@@ -193,12 +192,12 @@ const classical_rapid_blitz_bullet: Configuration = {
 			'EDIT_USER_ADMIN',
 			'EDIT_USER_TEACHER',
 			'EDIT_USER_MEMBER',
-			'EDIT_USER_STUDENT'
+			'EDIT_USER_STUDENT',
 		],
 		teacher: [],
 		member: [],
-		student: []
-	}
+		student: [],
+	},
 };
 
 const classical: Configuration = {
@@ -206,36 +205,36 @@ const classical: Configuration = {
 		sslCertificate: {
 			publicKeyFile: 'sadf',
 			privateKeyFile: 'qwer',
-			passphraseFile: 'kgj68'
+			passphraseFile: 'kgj68',
 		},
 		favicon: 'favicon.png',
 		loginPage: {
 			title: 'Login title',
-			icon: 'login.png'
+			icon: 'login.png',
 		},
 		homePage: {
 			title: 'Home title',
-			icon: 'home.png'
-		}
+			icon: 'home.png',
+		},
 	},
 	server: {
 		domainName: '',
 		ports: {
 			http: '8080',
-			https: '8443'
-		}
+			https: '8443',
+		},
 	},
 	ratingSystem: 'Elo',
 	timeControls: [
 		{
 			id: Classical,
-			name: Classical90p30
-		}
+			name: Classical90p30,
+		},
 	],
 	behavior: {
 		challenges: {
-			higherRatedPlayerCanDeclineChallengeFromLowerRatedPlayer: false
-		}
+			higherRatedPlayerCanDeclineChallengeFromLowerRatedPlayer: false,
+		},
 	},
 	permissions: {
 		admin: [
@@ -249,12 +248,12 @@ const classical: Configuration = {
 			'EDIT_USER_ADMIN',
 			'EDIT_USER_TEACHER',
 			'EDIT_USER_MEMBER',
-			'EDIT_USER_STUDENT'
+			'EDIT_USER_STUDENT',
 		],
 		teacher: [],
 		member: [],
-		student: []
-	}
+		student: [],
+	},
 };
 
 function testUserExists(username: string): boolean {
@@ -283,7 +282,7 @@ function testUserAddNew(username: string, firstName: string, lastName: string, p
 		firstName: toUserGivenName(firstName),
 		lastName: toUserGivenName(lastName),
 		password,
-		roles
+		roles,
 	});
 }
 
@@ -300,7 +299,7 @@ function testUserEdit(username: string, firstName: string, lastName: string, rol
 	userEdit(admin.user, edited.user, {
 		firstName: toUserGivenName(firstName),
 		lastName: toUserGivenName(lastName),
-		roles
+		roles,
 	});
 	return manager.getAllUserDataByPrivateId(toPlayerPrivateId(username))?.user;
 }
@@ -343,7 +342,7 @@ describe('Create users', () => {
 		expect(
 			userGetAllNamePublicId().map((d: UserThin): string => {
 				return d.name;
-			})
+			}),
 		).toEqual(['Admin Default', 'First Last']);
 	});
 
@@ -361,7 +360,7 @@ describe('Create users', () => {
 			expect(
 				userGetAllNamePublicId().map((d: UserThin): string => {
 					return d.name;
-				})
+				}),
 			).toEqual(['Admin Default', 'First Last']);
 
 			// check that the user file was updated with the new rating
@@ -395,7 +394,7 @@ describe('Create users', () => {
 		expect(
 			userGetAllNamePublicId().map((d: UserThin): string => {
 				return d.name;
-			})
+			}),
 		).toEqual(['Admin Default', 'First Last', 'Perico Palotes']);
 
 		expect(
@@ -405,7 +404,7 @@ describe('Create users', () => {
 				})
 				.reduce((pre: boolean, cur: boolean): boolean => {
 					return pre && cur;
-				}, true)
+				}, true),
 		).toEqual(true);
 
 		expect(testUserExists(toPlayerPrivateId('asdf'))).toBe(true);
@@ -425,7 +424,7 @@ describe('Create users', () => {
 				})
 				.reduce((pre: boolean, cur: boolean): boolean => {
 					return pre && cur;
-				}, true)
+				}, true),
 		).toEqual(true);
 
 		expect(testUserExists(toPlayerPrivateId('asdf'))).toBe(true);
@@ -457,7 +456,7 @@ describe('Modify existing users', () => {
 		expect(
 			userGetAllNamePublicId().map((d: UserThin): string => {
 				return d.name;
-			})
+			}),
 		).toEqual(['Admin Default', 'QQQ WWW']);
 
 		{
@@ -497,7 +496,7 @@ describe('Modify existing users', () => {
 		expect(
 			userGetAllNamePublicId().map((d: UserThin): string => {
 				return d.name;
-			})
+			}),
 		).toEqual(['Admin Default', 'FFF GGG']);
 	});
 
@@ -545,7 +544,7 @@ describe('Modify existing users', () => {
 			new Player(cc, rating_cc),
 			new Player(dd, rating_dd),
 			new Player(ee, rating_ee),
-			new Player(ff, rating_ff)
+			new Player(ff, rating_ff),
 		]);
 
 		const user_aa = testUserRetrieve(aa) as User;

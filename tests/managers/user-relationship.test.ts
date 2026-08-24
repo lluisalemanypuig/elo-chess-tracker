@@ -23,19 +23,18 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { User } from '@server/models/user';
-import { UserRoleToUserAction } from '@server/managers/user-role-action';
-import { initializePermissions } from '@server/managers/user-role-action';
-import {
-	canUserEditUser,
-	canUserEditGame,
-	canUserCreateGame,
-	canUserSeeGame,
-	canUserSendChallenge,
-	canUserSeeGraph
-} from '@server/managers/user-relationships';
-import { toUserGivenName } from '@common/models/user-given-name';
 import { toPlayerPrivateId } from '@common/models/player-id';
+import { toUserGivenName } from '@common/models/user-given-name';
+import {
+	canUserCreateGame,
+	canUserEditGame,
+	canUserEditUser,
+	canUserSeeGame,
+	canUserSeeGraph,
+	canUserSendChallenge,
+} from '@server/managers/user-relationships';
+import { initializePermissions, UserRoleToUserAction } from '@server/managers/user-role-action';
+import { User } from '@server/models/user';
 
 const un = toPlayerPrivateId('un');
 const firstName = toUserGivenName('f');
@@ -59,7 +58,7 @@ describe('Edition', () => {
 			admin: ['EDIT_USER_TEACHER'],
 			teacher: [],
 			student: [],
-			member: []
+			member: [],
 		});
 
 		expect(canUserEditUser(editor_admin, edited_admin)).toBe(false);
@@ -75,7 +74,7 @@ describe('Edition', () => {
 			admin: ['EDIT_USER_TEACHER', 'EDIT_USER_STUDENT'],
 			teacher: [],
 			student: [],
-			member: []
+			member: [],
 		});
 
 		expect(canUserEditUser(editor_admin, edited_admin)).toBe(false);
@@ -91,7 +90,7 @@ describe('Edition', () => {
 			admin: [],
 			teacher: ['EDIT_USER_TEACHER'],
 			student: [],
-			member: []
+			member: [],
 		});
 
 		expect(canUserEditUser(editor_teacher, edited_admin)).toBe(false);
@@ -107,7 +106,7 @@ describe('Edition', () => {
 			admin: [],
 			teacher: ['EDIT_USER_TEACHER', 'EDIT_USER_STUDENT'],
 			student: [],
-			member: []
+			member: [],
 		});
 
 		expect(canUserEditUser(editor_teacher, edited_admin)).toBe(false);
@@ -123,7 +122,7 @@ describe('Edition', () => {
 			admin: [],
 			teacher: [],
 			student: ['EDIT_USER_TEACHER'],
-			member: []
+			member: [],
 		});
 
 		expect(canUserEditUser(editor_student, edited_admin)).toBe(false);
@@ -139,7 +138,7 @@ describe('Edition', () => {
 			admin: [],
 			teacher: [],
 			student: ['EDIT_USER_TEACHER', 'EDIT_USER_STUDENT'],
-			member: []
+			member: [],
 		});
 
 		expect(canUserEditUser(editor_student, edited_admin)).toBe(false);
@@ -155,7 +154,7 @@ describe('Edition', () => {
 			admin: [],
 			teacher: [],
 			student: [],
-			member: ['EDIT_USER_TEACHER']
+			member: ['EDIT_USER_TEACHER'],
 		});
 
 		expect(canUserEditUser(editor_member, edited_admin)).toBe(false);
@@ -171,7 +170,7 @@ describe('Edition', () => {
 			admin: [],
 			teacher: [],
 			student: [],
-			member: ['EDIT_USER_TEACHER', 'EDIT_USER_STUDENT']
+			member: ['EDIT_USER_TEACHER', 'EDIT_USER_STUDENT'],
 		});
 
 		expect(canUserEditUser(editor_member, edited_admin)).toBe(false);
@@ -194,7 +193,7 @@ describe('Can a user see a game?', () => {
 			admin: ['SEE_GAMES_ADMIN', 'SEE_GAMES_MEMBER'],
 			teacher: [],
 			student: [],
-			member: []
+			member: [],
 		});
 
 		expect(canUserSeeGame(admin, teacher, member)).toBe(true);
@@ -210,7 +209,7 @@ describe('Can a user see a game?', () => {
 			admin: [],
 			teacher: ['SEE_GAMES_ADMIN', 'SEE_GAMES_STUDENT'],
 			student: [],
-			member: []
+			member: [],
 		});
 
 		expect(canUserSeeGame(teacher, teacher, member)).toBe(false);
@@ -233,7 +232,7 @@ describe('Can a user edit a game?', () => {
 			admin: ['EDIT_GAMES_ADMIN', 'EDIT_GAMES_MEMBER'],
 			teacher: [],
 			student: [],
-			member: []
+			member: [],
 		});
 
 		expect(canUserEditGame(admin, teacher, member)).toBe(true);
@@ -249,7 +248,7 @@ describe('Can a user edit a game?', () => {
 			admin: [],
 			teacher: ['EDIT_GAMES_ADMIN', 'EDIT_GAMES_STUDENT'],
 			student: [],
-			member: []
+			member: [],
 		});
 
 		expect(canUserEditGame(teacher, teacher, member)).toBe(false);
@@ -265,7 +264,7 @@ describe('Can a user edit a game?', () => {
 			admin: [],
 			teacher: ['EDIT_GAMES_ADMIN', 'EDIT_GAMES_TEACHER'],
 			student: [],
-			member: []
+			member: [],
 		});
 
 		expect(canUserEditGame(teacher, teacher, member)).toBe(true);
@@ -288,7 +287,7 @@ describe('Can a user create a game?', () => {
 			admin: ['CREATE_GAMES_ADMIN', 'CREATE_GAMES_MEMBER'],
 			teacher: [],
 			student: [],
-			member: []
+			member: [],
 		});
 
 		expect(canUserCreateGame(admin, teacher, member)).toBe(true);
@@ -304,7 +303,7 @@ describe('Can a user create a game?', () => {
 			admin: [],
 			teacher: ['CREATE_GAMES_ADMIN', 'CREATE_GAMES_STUDENT'],
 			student: [],
-			member: []
+			member: [],
 		});
 
 		expect(canUserCreateGame(teacher, teacher, member)).toBe(false);
@@ -320,7 +319,7 @@ describe('Can a user create a game?', () => {
 			admin: [],
 			teacher: ['CREATE_GAMES_ADMIN', 'CREATE_GAMES_TEACHER'],
 			student: [],
-			member: []
+			member: [],
 		});
 
 		expect(canUserCreateGame(teacher, teacher, member)).toBe(true);
@@ -343,7 +342,7 @@ describe('Can a user challenge?', () => {
 			admin: ['CHALLENGE_USER_ADMIN', 'CHALLENGE_USER_STUDENT'],
 			teacher: [],
 			student: [],
-			member: []
+			member: [],
 		});
 
 		expect(canUserSendChallenge(admin, admin)).toBe(true);
@@ -359,7 +358,7 @@ describe('Can a user challenge?', () => {
 			admin: [],
 			teacher: ['CHALLENGE_USER_ADMIN', 'CHALLENGE_USER_STUDENT'],
 			student: [],
-			member: []
+			member: [],
 		});
 
 		expect(canUserSendChallenge(teacher, admin)).toBe(true);
@@ -375,7 +374,7 @@ describe('Can a user challenge?', () => {
 			admin: [],
 			teacher: ['CHALLENGE_USER_ADMIN', 'CHALLENGE_USER_STUDENT', 'CHALLENGE_USER_MEMBER'],
 			student: [],
-			member: []
+			member: [],
 		});
 
 		expect(canUserSendChallenge(teacher, admin)).toBe(true);
@@ -398,7 +397,7 @@ describe('Can a user see a graph?', () => {
 			admin: ['SEE_GRAPHS_ADMIN', 'SEE_GRAPHS_STUDENT'],
 			teacher: [],
 			student: [],
-			member: []
+			member: [],
 		});
 
 		expect(canUserSeeGraph(admin, admin)).toBe(true);
@@ -414,7 +413,7 @@ describe('Can a user see a graph?', () => {
 			admin: [],
 			teacher: ['SEE_GRAPHS_ADMIN', 'SEE_GRAPHS_STUDENT'],
 			student: [],
-			member: []
+			member: [],
 		});
 
 		expect(canUserSeeGraph(teacher, admin)).toBe(true);
@@ -430,7 +429,7 @@ describe('Can a user see a graph?', () => {
 			admin: [],
 			teacher: ['SEE_GRAPHS_ADMIN', 'SEE_GRAPHS_STUDENT', 'SEE_GRAPHS_MEMBER'],
 			student: [],
-			member: []
+			member: [],
 		});
 
 		expect(canUserSeeGraph(teacher, admin)).toBe(true);

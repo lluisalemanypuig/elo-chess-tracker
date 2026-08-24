@@ -23,12 +23,12 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
+import { PLAYER_PUBLIC_ID_LENGTH, PlayerPrivateId, PlayerPublicId, toPlayerPublicId } from '@common/models/player-id';
 import { isDefined, isNotDefined } from '@common/utils/is-defined';
+import { shuffleArray } from '@common/utils/shuffle-random';
+import { InternalError } from '@server/models/error-types/internal-error';
 import { User } from '@server/models/user';
 import { searchLinearByKey } from '@server/utils/searching';
-import { InternalError } from '@server/models/error-types/internal-error';
-import { PLAYER_PUBLIC_ID_LENGTH, PlayerPrivateId, PlayerPublicId, toPlayerPublicId } from '@common/models/player-id';
-import { shuffleArray } from '@common/utils/shuffle-random';
 
 interface UserBundle {
 	user: User;
@@ -158,7 +158,7 @@ export class UsersManager {
 		return {
 			user: this.users[idx],
 			publicId: this.publicIds[idx],
-			index: idx
+			index: idx,
 		};
 	}
 

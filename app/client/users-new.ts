@@ -19,15 +19,14 @@ Full source code of elo-chess-tracker:
 	https://github.com/lluisalemanypuig/elo-chess-tracker
 */
 
-import 'htmx.org';
-
 import { messageFromResponse, serverCall } from '@client/action';
-import { isNotDefined } from '@common/utils/is-defined';
-import { UserRole, ALL_USER_ROLES, arrayStringToRoles, USER_ROLE_TO_STRING } from '@common/models/user-role';
 import { ROUTES } from '@common/api/routes';
 import { toPlayerPrivateId } from '@common/models/player-id';
 import { toUserGivenName } from '@common/models/user-given-name';
+import { ALL_USER_ROLES, arrayStringToRoles, USER_ROLE_TO_STRING, UserRole } from '@common/models/user-role';
+import { isNotDefined } from '@common/utils/is-defined';
 import { shuffleString } from '@common/utils/shuffle-random';
+import 'htmx.org';
 
 async function submitNewUserClicked(_event: any) {
 	// username box
@@ -111,7 +110,7 @@ async function submitNewUserClicked(_event: any) {
 		firstName: toUserGivenName(firstname),
 		lastName: toUserGivenName(lastname),
 		roles: selectedRoles,
-		password: password
+		password: password,
 	});
 	if (response.status === 'Error') {
 		alert(messageFromResponse(response));

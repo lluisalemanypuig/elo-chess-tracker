@@ -23,10 +23,10 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { toTimeControlId } from '@common/models/time-control';
-import { GamesManager } from '@server/managers/games-manager';
-import { toDateMajor } from '@common/utils/time';
 import { toGameId } from '@common/models/game-id';
+import { toTimeControlId } from '@common/models/time-control';
+import { toDateMajor } from '@common/utils/time';
+import { GamesManager } from '@server/managers/games-manager';
 
 const Classical = toTimeControlId('classical');
 const Rapid = toTimeControlId('rapid');

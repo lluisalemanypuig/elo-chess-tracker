@@ -23,23 +23,22 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import fs from 'fs';
-import path from 'path';
-
-import { serverInitFromData } from '@server/managers/memory/initialization';
-import { clearServer } from '@server/managers/memory/clear';
-import { RatingSystemManager } from '@server/managers/rating-system-manager';
-import { EnvironmentManager } from '@server/managers/environment-manager';
-import { ConfigurationManager } from '@server/managers/configuration-manager';
+import { toTimeControlId, toTimeControlName } from '@common/models/time-control';
 import { ChallengesManager } from '@server/managers/challenges-manager';
+import { ConfigurationManager } from '@server/managers/configuration-manager';
+import { EnvironmentManager } from '@server/managers/environment-manager';
 import { GamesManager } from '@server/managers/games-manager';
+import { GraphsManager } from '@server/managers/graphs-manager';
+import { clearServer } from '@server/managers/memory/clear';
+import { serverInitFromData } from '@server/managers/memory/initialization';
+import { RatingSystemManager } from '@server/managers/rating-system-manager';
 import { SessionIDManager } from '@server/managers/session-id-manager';
 import { UsersManager } from '@server/managers/users-manager';
-import { runCommand } from '@tests';
-import { GraphsManager } from '@server/managers/graphs-manager';
-import { Graph } from '@server/models/graph/graph';
 import { Configuration } from '@server/models/configuration/configuration';
-import { toTimeControlId, toTimeControlName } from '@common/models/time-control';
+import { Graph } from '@server/models/graph/graph';
+import { runCommand } from '@tests';
+import fs from 'fs';
+import path from 'path';
 
 const webpage_dir = 'tests/webpage';
 const icons_dir = path.join(webpage_dir, 'icons');
@@ -67,50 +66,50 @@ const configuration: Configuration = {
 		sslCertificate: {
 			publicKeyFile: 'sadf',
 			privateKeyFile: 'qwer',
-			passphraseFile: 'kgj68'
+			passphraseFile: 'kgj68',
 		},
 		favicon: 'favicon.png',
 		loginPage: {
 			title: 'Login title',
-			icon: 'login.png'
+			icon: 'login.png',
 		},
 		homePage: {
 			title: 'Home title',
-			icon: 'home.png'
-		}
+			icon: 'home.png',
+		},
 	},
 
 	server: {
 		domainName: 'my_domain',
 		ports: {
 			http: '8080',
-			https: '8443'
-		}
+			https: '8443',
+		},
 	},
 
 	ratingSystem: 'Elo',
 	timeControls: [
 		{
 			id: Classical,
-			name: Classical90p30
+			name: Classical90p30,
 		},
 		{
 			id: Rapid,
-			name: Rapid12p5
+			name: Rapid12p5,
 		},
 		{
 			id: Rapid,
-			name: Rapid10p0
+			name: Rapid10p0,
 		},
 		{
 			id: Blitz,
-			name: Blitz5p3
-		}
+			name: Blitz5p3,
+		},
 	],
 	behavior: {
 		challenges: {
-			higherRatedPlayerCanDeclineChallengeFromLowerRatedPlayer: false
-		}
+			higherRatedPlayerCanDeclineChallengeFromLowerRatedPlayer: false,
+		},
 	},
 	permissions: {
 		admin: [
@@ -118,30 +117,30 @@ const configuration: Configuration = {
 			'CHALLENGE_USER_ADMIN',
 			'CHALLENGE_USER_MEMBER',
 			'CHALLENGE_USER_TEACHER',
-			'CHALLENGE_USER_STUDENT'
+			'CHALLENGE_USER_STUDENT',
 		],
 		teacher: [
 			'CHALLENGE_USER',
 			'CHALLENGE_USER_ADMIN',
 			'CHALLENGE_USER_MEMBER',
 			'CHALLENGE_USER_TEACHER',
-			'CHALLENGE_USER_STUDENT'
+			'CHALLENGE_USER_STUDENT',
 		],
 		member: [
 			'CHALLENGE_USER',
 			'CHALLENGE_USER_ADMIN',
 			'CHALLENGE_USER_MEMBER',
 			'CHALLENGE_USER_TEACHER',
-			'CHALLENGE_USER_STUDENT'
+			'CHALLENGE_USER_STUDENT',
 		],
 		student: [
 			'CHALLENGE_USER',
 			'CHALLENGE_USER_ADMIN',
 			'CHALLENGE_USER_MEMBER',
 			'CHALLENGE_USER_TEACHER',
-			'CHALLENGE_USER_STUDENT'
-		]
-	}
+			'CHALLENGE_USER_STUDENT',
+		],
+	},
 };
 
 describe('Configure server', () => {
@@ -164,13 +163,13 @@ describe('Configure server', () => {
 		expect(
 			unique_ids.find((val: string): boolean => {
 				return val === Rapid;
-			})
+			}),
 		).toEqual(Rapid);
 
 		expect(
 			unique_ids.find((val: string): boolean => {
 				return val === Blitz;
-			})
+			}),
 		).toEqual(Blitz);
 
 		expect(ratingSystem_manager.getTimeControls().length).toBe(4);
@@ -258,13 +257,13 @@ describe('Configure server', () => {
 		expect(
 			unique_ids.find((val: string): boolean => {
 				return val === Rapid;
-			})
+			}),
 		).toEqual(undefined);
 
 		expect(
 			unique_ids.find((val: string): boolean => {
 				return val === Blitz;
-			})
+			}),
 		).toEqual(undefined);
 
 		expect(ratingSystem_manager.getTimeControls().length).toBe(0);

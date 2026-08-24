@@ -28,7 +28,7 @@ import { z } from 'zod';
 export const PasswordSchema = z
 	.object({
 		encrypted: z.string(),
-		iv: z.string()
+		iv: z.string(),
 	})
 	.strict()
 	.readonly();

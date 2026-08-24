@@ -23,33 +23,33 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import path from 'path';
-import fs from 'fs';
-import Debug from 'debug';
-const debug = Debug('ELO_CHESS_TRACKER:managers/games');
-
-import { DateFull, DateMajor, DateMinor, logNow, dateFullToMajor, toDateFull } from '@common/utils/time';
+import { GameId } from '@common/models/game-id';
+import { GameResult } from '@common/models/game-result';
+import { PlayerPrivateId } from '@common/models/player-id';
+import { TimeControlId, TimeControlName } from '@common/models/time-control';
+import { isDefined, isNotDefined } from '@common/utils/is-defined';
+import { DateFull, dateFullToMajor, DateMajor, DateMinor, logNow, toDateFull } from '@common/utils/time';
+import { EnvironmentManager } from '@server/managers/environment-manager';
+import { GamesIterator } from '@server/managers/games-iterator';
+import { GamesManager } from '@server/managers/games-manager';
+import { graphDeleteEdge, graphModifyEdge, graphUpdate } from '@server/managers/graphs';
+import { RatingSystemManager } from '@server/managers/rating-system-manager';
+import { canUserCreateGame, canUserDeleteGame, canUserEditGame } from '@server/managers/user-relationships';
+import { userUpdateFromPlayerData } from '@server/managers/users';
+import { UsersManager } from '@server/managers/users-manager';
+import { InternalError } from '@server/models/error-types/internal-error';
+import { PublicError } from '@server/models/error-types/public-error';
+import { Game } from '@server/models/game';
+import { Player } from '@server/models/player';
+import { Rating } from '@server/models/rating-framework/rating';
+import { TimeControlRating } from '@server/models/time-control-rating';
 import { User } from '@server/models/user';
 import { whereShouldBeInsertedByKey } from '@server/utils/searching';
-import { GamesManager } from '@server/managers/games-manager';
-import { UsersManager } from '@server/managers/users-manager';
-import { RatingSystemManager } from '@server/managers/rating-system-manager';
-import { EnvironmentManager } from '@server/managers/environment-manager';
-import { userUpdateFromPlayerData } from '@server/managers/users';
-import { Rating } from '@server/models/rating-framework/rating';
-import { TimeControlId, TimeControlName } from '@common/models/time-control';
-import { graphDeleteEdge, graphModifyEdge, graphUpdate } from '@server/managers/graphs';
-import { GamesIterator } from '@server/managers/games-iterator';
-import { TimeControlRating } from '@server/models/time-control-rating';
-import { isDefined, isNotDefined } from '@common/utils/is-defined';
-import { canUserCreateGame, canUserDeleteGame, canUserEditGame } from '@server/managers/user-relationships';
-import { PublicError } from '@server/models/error-types/public-error';
-import { InternalError } from '@server/models/error-types/internal-error';
-import { PlayerPrivateId } from '@common/models/player-id';
-import { Game } from '@server/models/game';
-import { GameResult } from '@common/models/game-result';
-import { GameId } from '@common/models/game-id';
-import { Player } from '@server/models/player';
+import Debug from 'debug';
+import fs from 'fs';
+import path from 'path';
+
+const debug = Debug('ELO_CHESS_TRACKER:managers/games');
 
 function writeGameArrayToFile(filename: string, gs: Game[]) {
 	fs.writeFileSync(filename, JSON.stringify(gs, null, 4));
@@ -98,7 +98,7 @@ function gameNew(
 	result: GameResult,
 	timeControlId: TimeControlId,
 	timeControlName: TimeControlName,
-	when: DateFull
+	when: DateFull,
 ): Game {
 	// retrieve next id and increment maximum id
 	const idStr: GameId = GamesManager.getInstance().newGameId();
@@ -153,7 +153,7 @@ function gameNew(
 		timeControlId,
 		timeControlName,
 		when,
-		[]
+		[],
 	);
 }
 
@@ -165,7 +165,7 @@ function updateGameRecord(
 	gamesIter: GamesIterator,
 	timeControlId: TimeControlId,
 	updatedPlayers: Player[],
-	playerToIndex: Map<string, number>
+	playerToIndex: Map<string, number>,
 ) {
 	debug(logNow(), `    Updating '${gamesIter.getCurrentRecordName()}'...`);
 	debug(logNow(), `    Before update:`);
@@ -322,7 +322,7 @@ export function gameAddNew(
 	timeControlId: TimeControlId,
 	timeControlName: TimeControlName,
 	gameDate: DateMajor,
-	gameTime: DateMinor
+	gameTime: DateMinor,
 ) {
 	if (white.username === black.username) {
 		throw new PublicError('The players cannot be the same.');
@@ -367,7 +367,7 @@ export function gameAddNewGuarded(
 	timeControlId: TimeControlId,
 	timeControlName: TimeControlName,
 	gameDate: DateMajor,
-	gameTime: DateMinor
+	gameTime: DateMinor,
 ) {
 	if (!creator.canDo('CREATE_GAMES')) {
 		debug(logNow(), `User '${creator.username}' cannot create users.`);
@@ -443,7 +443,7 @@ export function gameEditResult(editor: User, when: DateFull, gameId: GameId, new
 		when: when,
 		field: 'result',
 		oldValue: `${game.result}`,
-		newValue: `${newResult}`
+		newValue: `${newResult}`,
 	});
 	game.result = newResult;
 
@@ -519,7 +519,7 @@ export function gameEditTitle(editor: User, when: DateFull, gameId: GameId, newT
 	if (!canUserEditGame(editor, white.user, black.user)) {
 		debug(
 			logNow(),
-			`User ${editor.username} is trying to edit a game with users ${white.user.username} and ${black.user.username}`
+			`User ${editor.username} is trying to edit a game with users ${white.user.username} and ${black.user.username}`,
 		);
 		throw new PublicError(`You lack permissions to edit this game.`);
 	}
@@ -531,7 +531,7 @@ export function gameEditTitle(editor: User, when: DateFull, gameId: GameId, newT
 		when: when,
 		field: 'title',
 		oldValue: `${game.title}`,
-		newValue: `${newTitle}`
+		newValue: `${newTitle}`,
 	});
 	game.title = newTitle;
 
@@ -679,10 +679,7 @@ export function recalculateAllRatings(u: User) {
 		while (!gamesIter.endRecordList()) {
 			updateGameRecord(gamesIter, timeControl, updatedPlayers, playerToIndex);
 
-			writeGameArrayToFile(
-				path.join(gamesDir, gamesIter.getCurrentRecordName()),
-				gamesIter.getCurrentGameArray()
-			);
+			writeGameArrayToFile(path.join(gamesDir, gamesIter.getCurrentRecordName()), gamesIter.getCurrentGameArray());
 
 			gamesIter.nextRecord();
 		}

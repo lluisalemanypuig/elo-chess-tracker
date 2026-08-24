@@ -23,13 +23,13 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { newRatingElo } from '@server/models/rating-framework/Elo/rating';
 import { ratingFromStringElo } from '@server/io/ratings/Elo/rating';
+import { newRatingElo } from '@server/models/rating-framework/Elo/rating';
 
 describe('JSON conversion', () => {
 	test('from string to rating', () => {
 		const elo = ratingFromStringElo(
-			'{"rating": 1500.43, "numGames": 100, "won": 50, "drawn": 20, "lost": 30, "K": 40, "surpassed2400": true}'
+			'{"rating": 1500.43, "numGames": 100, "won": 50, "drawn": 20, "lost": 30, "K": 40, "surpassed2400": true}',
 		);
 		expect(elo).toEqual({
 			rating: 1500.43,
@@ -38,7 +38,7 @@ describe('JSON conversion', () => {
 			drawn: 20,
 			lost: 30,
 			K: 40,
-			surpassed2400: true
+			surpassed2400: true,
 		});
 	});
 });
@@ -65,7 +65,7 @@ describe('Clone', () => {
 			drawn: 20,
 			lost: 30,
 			K: 40,
-			surpassed2400: true
+			surpassed2400: true,
 		};
 		const rc = { ...r };
 

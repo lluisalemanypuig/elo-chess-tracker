@@ -26,9 +26,9 @@ Contact:
 import Debug from 'debug';
 const debug = Debug(`ELO_CHESS_TRACKER:io`);
 
+import { isNotDefined } from '@common/utils/is-defined';
 import { logNow } from '@common/utils/time';
 import { z } from 'zod';
-import { isNotDefined } from '@common/utils/is-defined';
 
 export function readSchema<T extends z.ZodTypeAny>(schema: T, str: string): z.output<T> | null {
 	const parse = JSON.parse(str);
@@ -66,7 +66,7 @@ export function checkJsonKeys<Key extends string>(json: any, expectedKeys: reado
 export function readJsonObjectString<T, Key extends string>(
 	str: string,
 	expectedKeys: readonly Key[],
-	conversion: (json: any) => T | null
+	conversion: (json: any) => T | null,
 ): T | null {
 	let json: any;
 
@@ -93,7 +93,7 @@ export function readJsonObjectString<T, Key extends string>(
 export function readJsonArrayString<T, Key extends string>(
 	str: string,
 	expectedKeys: readonly Key[],
-	conversion: (json: any) => T | null
+	conversion: (json: any) => T | null,
 ): T[] | null {
 	let json: any;
 

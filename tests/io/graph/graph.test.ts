@@ -23,13 +23,12 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import fs from 'fs';
-
+import { toPlayerPrivateId } from '@common/models/player-id';
+import { isNotDefined } from '@common/utils/is-defined';
+import { graphFromString, graphFullToFile } from '@server/io/graph/graph';
 import { EdgeMetadata } from '@server/models/graph/edge-metadata';
 import { Graph } from '@server/models/graph/graph';
-import { graphFromString, graphFullToFile } from '@server/io/graph/graph';
-import { isNotDefined } from '@common/utils/is-defined';
-import { toPlayerPrivateId } from '@common/models/player-id';
+import fs from 'fs';
 
 const A = toPlayerPrivateId('A');
 const B = toPlayerPrivateId('B');

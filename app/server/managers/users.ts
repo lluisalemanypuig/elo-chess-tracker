@@ -23,30 +23,30 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import fs from 'fs';
-import path from 'path';
-import Debug from 'debug';
-const debug = Debug('ELO_CHESS_TRACKER:managers/users');
-
-import { Player } from '@server/models/player';
-import { TimeControlGame, User } from '@server/models/user';
-import { EnvironmentManager } from '@server/managers/environment-manager';
-import { UsersManager } from '@server/managers/users-manager';
+import { PlayerPrivateId } from '@common/models/player-id';
+import { SessionId } from '@common/models/session-id';
+import { TimeControlId } from '@common/models/time-control';
+import { getRoleActionName } from '@common/models/user-action';
+import { UserGivenName } from '@common/models/user-given-name';
 import { UserRole } from '@common/models/user-role';
-import { encryptPasswordForUser, isPasswordOfUserCorrect } from '@server/utils/encrypt';
-import { RatingSystemManager } from '@server/managers/rating-system-manager';
-import { TimeControlRating } from '@server/models/time-control-rating';
-import { logNow } from '@common/utils/time';
 import { UserThin } from '@common/models/user-thin';
 import { isNotDefined } from '@common/utils/is-defined';
-import { TimeControlId } from '@common/models/time-control';
-import { canUserEditUser } from '@server/managers/user-relationships';
-import { getRoleActionName } from '@common/models/user-action';
+import { logNow } from '@common/utils/time';
+import { EnvironmentManager } from '@server/managers/environment-manager';
+import { RatingSystemManager } from '@server/managers/rating-system-manager';
 import { sessionUserDeleteAll } from '@server/managers/session';
-import { SessionId } from '@common/models/session-id';
+import { canUserEditUser } from '@server/managers/user-relationships';
+import { UsersManager } from '@server/managers/users-manager';
 import { PublicError } from '@server/models/error-types/public-error';
-import { UserGivenName } from '@common/models/user-given-name';
-import { PlayerPrivateId } from '@common/models/player-id';
+import { Player } from '@server/models/player';
+import { TimeControlRating } from '@server/models/time-control-rating';
+import { TimeControlGame, User } from '@server/models/user';
+import { encryptPasswordForUser, isPasswordOfUserCorrect } from '@server/utils/encrypt';
+import Debug from 'debug';
+import fs from 'fs';
+import path from 'path';
+
+const debug = Debug('ELO_CHESS_TRACKER:managers/users');
 
 export function writeUserToFile(filename: string, u: User) {
 	fs.writeFileSync(filename, JSON.stringify(u, null, 4));
@@ -99,7 +99,7 @@ interface UserAddNew {
 
 export function userAddNew(
 	registerer: User,
-	{ username, firstName, lastName, password: pass, roles }: UserAddNew
+	{ username, firstName, lastName, password: pass, roles }: UserAddNew,
 ): User {
 	if (!registerer.canDo('CREATE_USER')) {
 		debug(logNow(), `User '${registerer.username}' cannot create users.`);
@@ -139,7 +139,7 @@ export function userAddNew(
 		{ encrypted: password[0], iv: password[1] },
 		roles,
 		games,
-		ratings
+		ratings,
 	);
 
 	const userDir = EnvironmentManager.getInstance().getDirUsers();

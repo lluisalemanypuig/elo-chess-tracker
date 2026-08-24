@@ -23,16 +23,16 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { z } from 'zod';
-import { TimeControlIdSchema } from '@common/models/time-control';
 import { PlayerPublicIdSchema } from '@common/models/player-id';
+import { TimeControlIdSchema } from '@common/models/time-control';
 import { UserGivenNameSchema } from '@common/models/user-given-name';
+import { z } from 'zod';
 
 // utils
 
 export const NodeWeightSchema = z
 	.object({
-		rating: z.number()
+		rating: z.number(),
 	})
 	.strict();
 
@@ -42,7 +42,7 @@ export const NodeInfoSchema = z
 	.object({
 		id: PlayerPublicIdSchema,
 		fullName: UserGivenNameSchema,
-		weight: NodeWeightSchema
+		weight: NodeWeightSchema,
 	})
 	.strict();
 
@@ -52,7 +52,7 @@ export const EdgeWeightSchema = z
 	.object({
 		wins: z.number(),
 		draws: z.number(),
-		losses: z.number()
+		losses: z.number(),
 	})
 	.strict();
 
@@ -63,7 +63,7 @@ export const EdgeInfoSchema = z
 		source: PlayerPublicIdSchema,
 		target: PlayerPublicIdSchema,
 		label: z.string(),
-		weight: EdgeWeightSchema
+		weight: EdgeWeightSchema,
 	})
 	.strict();
 
@@ -72,7 +72,7 @@ export type EdgeInfo = z.infer<typeof EdgeInfoSchema>;
 export const QueryGraphOutputSchema = z
 	.object({
 		nodes: z.array(NodeInfoSchema),
-		edges: z.array(EdgeInfoSchema)
+		edges: z.array(EdgeInfoSchema),
 	})
 	.strict();
 
@@ -82,7 +82,7 @@ export type QueryGraphOutput = z.infer<typeof QueryGraphOutputSchema>;
 
 export const QueryGraphInputOwnSchema = z
 	.object({
-		timeControlId: TimeControlIdSchema
+		timeControlId: TimeControlIdSchema,
 	})
 	.strict();
 
@@ -92,7 +92,7 @@ export type QueryGraphOwnInput = z.infer<typeof QueryGraphInputOwnSchema>;
 
 export const QueryGraphInputFullSchema = z
 	.object({
-		timeControlId: TimeControlIdSchema
+		timeControlId: TimeControlIdSchema,
 	})
 	.strict();
 

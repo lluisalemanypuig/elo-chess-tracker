@@ -23,9 +23,9 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { EdgeMetadata, EdgeMetadataSchema } from '@server/models/graph/edge-metadata';
-import { readSchema } from '@server/io/generic';
 import { isNotDefined } from '@common/utils/is-defined';
+import { readSchema } from '@server/io/generic';
+import { EdgeMetadata, EdgeMetadataSchema } from '@server/models/graph/edge-metadata';
 
 /**
  * @brief Parses a JSON string and returns an EdgeMetadata.

@@ -23,17 +23,16 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import createError from 'http-errors';
-import express from 'express';
-import cookieParser from 'cookie-parser';
-import logger from 'morgan';
-import compression from 'compression';
-import helmet from 'helmet';
-import { Request, Response } from 'express';
-
-import Debug from 'debug';
-const debug = Debug('ELO_CHESS_TRACKER:appBuild');
 import { logNow } from '@common/utils/time';
+import compression from 'compression';
+import cookieParser from 'cookie-parser';
+import Debug from 'debug';
+import express, { Request, Response } from 'express';
+import helmet from 'helmet';
+import createError from 'http-errors';
+import logger from 'morgan';
+
+const debug = Debug('ELO_CHESS_TRACKER:appBuild');
 
 debug(logNow(), 'Create app object');
 

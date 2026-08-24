@@ -23,33 +23,32 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import fs from 'fs';
-import path from 'path';
-
+import { GameId, toGameId } from '@common/models/game-id';
+import { toPlayerPrivateId } from '@common/models/player-id';
+import { toTimeControlId, toTimeControlName } from '@common/models/time-control';
+import { toUserGivenName } from '@common/models/user-given-name';
+import { isNotDefined } from '@common/utils/is-defined';
+import { dateFullToMajor, toDateFull, toDateMajor, toDateMinor } from '@common/utils/time';
+import { gameArrayFromString } from '@server/io/game';
+import { graphFromString } from '@server/io/graph/graph';
+import { EnvironmentManager } from '@server/managers/environment-manager';
 import { gameAddNew, gameEditResult, gameEditTitle, recalculateAllRatings } from '@server/managers/games';
+import { GamesIterator } from '@server/managers/games-iterator';
+import { GamesManager } from '@server/managers/games-manager';
+import { recalculateAllGraphs } from '@server/managers/graphs';
+import { GraphsManager } from '@server/managers/graphs-manager';
+import { clearServer } from '@server/managers/memory/clear';
 import { serverInitFromData } from '@server/managers/memory/initialization';
 import { userAddNew } from '@server/managers/users';
-import { runCommand, TestError } from '@tests';
-import { EnvironmentManager } from '@server/managers/environment-manager';
-import { gameArrayFromString } from '@server/io/game';
-import { GamesIterator } from '@server/managers/games-iterator';
-import { dateFullToMajor, toDateMinor, toDateMajor, toDateFull } from '@common/utils/time';
-import { clearServer } from '@server/managers/memory/clear';
-import { GraphsManager } from '@server/managers/graphs-manager';
-import { Graph } from '@server/models/graph/graph';
-import { EdgeMetadata } from '@server/models/graph/edge-metadata';
-import { graphFromString } from '@server/io/graph/graph';
-import { recalculateAllGraphs } from '@server/managers/graphs';
-import { Configuration } from '@server/models/configuration/configuration';
-import { isNotDefined } from '@common/utils/is-defined';
 import { UsersManager } from '@server/managers/users-manager';
-import { toTimeControlId, toTimeControlName } from '@common/models/time-control';
-import { toPlayerPrivateId } from '@common/models/player-id';
-import { User } from '@server/models/user';
-import { toUserGivenName } from '@common/models/user-given-name';
-import { GameId, toGameId } from '@common/models/game-id';
+import { Configuration } from '@server/models/configuration/configuration';
 import { Game } from '@server/models/game';
-import { GamesManager } from '@server/managers/games-manager';
+import { EdgeMetadata } from '@server/models/graph/edge-metadata';
+import { Graph } from '@server/models/graph/graph';
+import { User } from '@server/models/user';
+import { runCommand, TestError } from '@tests';
+import fs from 'fs';
+import path from 'path';
 
 const Classical = toTimeControlId('Classical');
 const Classical90p30 = toTimeControlName('Classical (90 + 30)');
@@ -67,48 +66,48 @@ const configuration: Configuration = {
 		sslCertificate: {
 			publicKeyFile: 'sadf',
 			privateKeyFile: 'qwer',
-			passphraseFile: 'kgj68'
+			passphraseFile: 'kgj68',
 		},
 		favicon: 'favicon.png',
 		loginPage: {
 			title: 'Login title',
-			icon: 'login.png'
+			icon: 'login.png',
 		},
 		homePage: {
 			title: 'Home title',
-			icon: 'home.png'
-		}
+			icon: 'home.png',
+		},
 	},
 	server: {
 		domainName: '',
 		ports: {
 			http: '8080',
-			https: '8443'
-		}
+			https: '8443',
+		},
 	},
 	ratingSystem: 'Elo',
 	timeControls: [
 		{
 			id: Classical,
-			name: Classical90p30
+			name: Classical90p30,
 		},
 		{
 			id: Rapid,
-			name: Rapid12p5
+			name: Rapid12p5,
 		},
 		{
 			id: Rapid,
-			name: Rapid10p0
+			name: Rapid10p0,
 		},
 		{
 			id: Blitz,
-			name: Blitz5p3
-		}
+			name: Blitz5p3,
+		},
 	],
 	behavior: {
 		challenges: {
-			higherRatedPlayerCanDeclineChallengeFromLowerRatedPlayer: false
-		}
+			higherRatedPlayerCanDeclineChallengeFromLowerRatedPlayer: false,
+		},
 	},
 	permissions: {
 		admin: [
@@ -121,12 +120,12 @@ const configuration: Configuration = {
 			'CREATE_GAMES',
 			'CREATE_GAMES_ADMIN',
 			'EDIT_GAMES',
-			'EDIT_GAMES_ADMIN'
+			'EDIT_GAMES_ADMIN',
 		],
 		teacher: [],
 		member: [],
-		student: []
-	}
+		student: [],
+	},
 };
 
 let aU: User;
@@ -203,16 +202,7 @@ describe('Sequential game creation', () => {
 	test('Add "Blitz" games', () => {
 		const blitz_dir = EnvironmentManager.getInstance().getDirGamesTimeControl(Blitz);
 
-		gameAddNew(
-			'sample',
-			aU,
-			bU,
-			'white_wins',
-			Blitz,
-			Blitz5p3,
-			toDateMajor('2025-01-19'),
-			toDateMinor('17:06:00:000')
-		);
+		gameAddNew('sample', aU, bU, 'white_wins', Blitz, Blitz5p3, toDateMajor('2025-01-19'), toDateMinor('17:06:00:000'));
 		{
 			const game_array = gameArrayFromString(fs.readFileSync(path.join(blitz_dir, '2025-01-19'), 'utf8'));
 			expect(game_array).not.toBeNull();
@@ -256,16 +246,7 @@ describe('Sequential game creation', () => {
 			expect(fU.getRating(Classical).numWonDrawnLost()).toEqual([0, 0, 0, 0]);
 		}
 
-		gameAddNew(
-			'sample',
-			cU,
-			dU,
-			'black_wins',
-			Blitz,
-			Blitz5p3,
-			toDateMajor('2025-01-19'),
-			toDateMinor('17:06:10:000')
-		);
+		gameAddNew('sample', cU, dU, 'black_wins', Blitz, Blitz5p3, toDateMajor('2025-01-19'), toDateMinor('17:06:10:000'));
 		{
 			const game_array = gameArrayFromString(fs.readFileSync(path.join(blitz_dir, '2025-01-19'), 'utf8'));
 			expect(game_array).not.toBeNull();
@@ -377,16 +358,7 @@ describe('Sequential game creation', () => {
 			expect(fU.getRating(Classical).numWonDrawnLost()).toEqual([0, 0, 0, 0]);
 		}
 
-		gameAddNew(
-			'sample',
-			aU,
-			fU,
-			'black_wins',
-			Blitz,
-			Blitz5p3,
-			toDateMajor('2025-01-19'),
-			toDateMinor('17:06:30:000')
-		);
+		gameAddNew('sample', aU, fU, 'black_wins', Blitz, Blitz5p3, toDateMajor('2025-01-19'), toDateMinor('17:06:30:000'));
 		{
 			const game_array = gameArrayFromString(fs.readFileSync(path.join(blitz_dir, '2025-01-19'), 'utf8'));
 			expect(game_array).not.toBeNull();
@@ -466,7 +438,7 @@ describe('Sequential game creation', () => {
 			Classical,
 			Classical90p30,
 			toDateMajor('2025-01-09'),
-			toDateMinor('17:06:00:000')
+			toDateMinor('17:06:00:000'),
 		);
 		{
 			const game_array = gameArrayFromString(fs.readFileSync(path.join(classical_dir, '2025-01-09'), 'utf8'));
@@ -519,7 +491,7 @@ describe('Sequential game creation', () => {
 			Classical,
 			Classical90p30,
 			toDateMajor('2025-01-09'),
-			toDateMinor('17:06:10:000')
+			toDateMinor('17:06:10:000'),
 		);
 		{
 			const game_array = gameArrayFromString(fs.readFileSync(path.join(classical_dir, '2025-01-09'), 'utf8'));
@@ -580,7 +552,7 @@ describe('Sequential game creation', () => {
 			Classical,
 			Classical90p30,
 			toDateMajor('2025-01-09'),
-			toDateMinor('17:06:20:000')
+			toDateMinor('17:06:20:000'),
 		);
 		{
 			const game_array = gameArrayFromString(fs.readFileSync(path.join(classical_dir, '2025-01-09'), 'utf8'));
@@ -649,7 +621,7 @@ describe('Sequential game creation', () => {
 			Classical,
 			Classical90p30,
 			toDateMajor('2025-01-09'),
-			toDateMinor('17:06:30:000')
+			toDateMinor('17:06:30:000'),
 		);
 		{
 			const game_array = gameArrayFromString(fs.readFileSync(path.join(classical_dir, '2025-01-09'), 'utf8'));
@@ -820,16 +792,7 @@ describe('Inverse game creation', () => {
 			expect(fU.getRating(Classical).numWonDrawnLost()).toEqual([2, 1, 1, 0]);
 		}
 
-		gameAddNew(
-			'sample',
-			cU,
-			dU,
-			'black_wins',
-			Blitz,
-			Blitz5p3,
-			toDateMajor('2025-01-20'),
-			toDateMinor('17:06:10:000')
-		);
+		gameAddNew('sample', cU, dU, 'black_wins', Blitz, Blitz5p3, toDateMajor('2025-01-20'), toDateMinor('17:06:10:000'));
 		{
 			const game_array = gameArrayFromString(fs.readFileSync(path.join(blitz_dir, '2025-01-20'), 'utf8'));
 			expect(game_array).not.toBeNull();
@@ -889,16 +852,7 @@ describe('Inverse game creation', () => {
 			expect(fU.getRating(Classical).numWonDrawnLost()).toEqual([2, 1, 1, 0]);
 		}
 
-		gameAddNew(
-			'sample',
-			aU,
-			bU,
-			'white_wins',
-			Blitz,
-			Blitz5p3,
-			toDateMajor('2025-01-20'),
-			toDateMinor('17:06:00:000')
-		);
+		gameAddNew('sample', aU, bU, 'white_wins', Blitz, Blitz5p3, toDateMajor('2025-01-20'), toDateMinor('17:06:00:000'));
 		{
 			const game_array = gameArrayFromString(fs.readFileSync(path.join(blitz_dir, '2025-01-20'), 'utf8'));
 			expect(game_array).not.toBeNull();
@@ -978,7 +932,7 @@ describe('Inverse game creation', () => {
 			Classical,
 			Classical90p30,
 			toDateMajor('2025-01-10'),
-			toDateMinor('17:06:30:000')
+			toDateMinor('17:06:30:000'),
 		);
 		{
 			const game_array = gameArrayFromString(fs.readFileSync(path.join(classical_dir, '2025-01-10'), 'utf8'));
@@ -1031,7 +985,7 @@ describe('Inverse game creation', () => {
 			Classical,
 			Classical90p30,
 			toDateMajor('2025-01-10'),
-			toDateMinor('17:06:20:000')
+			toDateMinor('17:06:20:000'),
 		);
 		{
 			const game_array = gameArrayFromString(fs.readFileSync(path.join(classical_dir, '2025-01-10'), 'utf8'));
@@ -1092,7 +1046,7 @@ describe('Inverse game creation', () => {
 			Classical,
 			Classical90p30,
 			toDateMajor('2025-01-10'),
-			toDateMinor('17:06:10:000')
+			toDateMinor('17:06:10:000'),
 		);
 		{
 			const game_array = gameArrayFromString(fs.readFileSync(path.join(classical_dir, '2025-01-10'), 'utf8'));
@@ -1161,7 +1115,7 @@ describe('Inverse game creation', () => {
 			Classical,
 			Classical90p30,
 			toDateMajor('2025-01-10'),
-			toDateMinor('17:06:00:000')
+			toDateMinor('17:06:00:000'),
 		);
 		{
 			const game_array = gameArrayFromString(fs.readFileSync(path.join(classical_dir, '2025-01-10'), 'utf8'));
@@ -1395,16 +1349,7 @@ describe('Zig-zag game creation', () => {
 			expect(fU.getRating(Classical).numWonDrawnLost()).toEqual([4, 1, 3, 0]);
 		}
 
-		gameAddNew(
-			'sample',
-			cU,
-			dU,
-			'white_wins',
-			Blitz,
-			Blitz5p3,
-			toDateMajor('2025-01-20'),
-			toDateMinor('17:06:15:000')
-		);
+		gameAddNew('sample', cU, dU, 'white_wins', Blitz, Blitz5p3, toDateMajor('2025-01-20'), toDateMinor('17:06:15:000'));
 		{
 			const game_array = gameArrayFromString(fs.readFileSync(path.join(blitz_dir, '2025-01-20'), 'utf8'));
 			expect(game_array).not.toBeNull();
@@ -1496,16 +1441,7 @@ describe('Zig-zag game creation', () => {
 			expect(fU.getRating(Classical).numWonDrawnLost()).toEqual([4, 1, 3, 0]);
 		}
 
-		gameAddNew(
-			'sample',
-			aU,
-			bU,
-			'black_wins',
-			Blitz,
-			Blitz5p3,
-			toDateMajor('2025-01-20'),
-			toDateMinor('17:05:55:000')
-		);
+		gameAddNew('sample', aU, bU, 'black_wins', Blitz, Blitz5p3, toDateMajor('2025-01-20'), toDateMinor('17:05:55:000'));
 		{
 			const game_array = gameArrayFromString(fs.readFileSync(path.join(blitz_dir, '2025-01-20'), 'utf8'));
 			expect(game_array).not.toBeNull();
@@ -1616,7 +1552,7 @@ describe('Zig-zag game creation', () => {
 			Classical,
 			Classical90p30,
 			toDateMajor('2025-01-10'),
-			toDateMinor('17:06:25:000')
+			toDateMinor('17:06:25:000'),
 		);
 		{
 			const game_array = gameArrayFromString(fs.readFileSync(path.join(blitz_dir, '2025-01-10'), 'utf8'));
@@ -1701,7 +1637,7 @@ describe('Zig-zag game creation', () => {
 			Classical,
 			Classical90p30,
 			toDateMajor('2025-01-10'),
-			toDateMinor('17:06:05:000')
+			toDateMinor('17:06:05:000'),
 		);
 		{
 			const game_array = gameArrayFromString(fs.readFileSync(path.join(blitz_dir, '2025-01-10'), 'utf8'));
@@ -1794,7 +1730,7 @@ describe('Zig-zag game creation', () => {
 			Classical,
 			Classical90p30,
 			toDateMajor('2025-01-10'),
-			toDateMinor('17:06:15:000')
+			toDateMinor('17:06:15:000'),
 		);
 		{
 			const game_array = gameArrayFromString(fs.readFileSync(path.join(blitz_dir, '2025-01-10'), 'utf8'));
@@ -1895,7 +1831,7 @@ describe('Zig-zag game creation', () => {
 			Classical,
 			Classical90p30,
 			toDateMajor('2025-01-10'),
-			toDateMinor('17:05:55:000')
+			toDateMinor('17:05:55:000'),
 		);
 		{
 			const game_array = gameArrayFromString(fs.readFileSync(path.join(blitz_dir, '2025-01-10'), 'utf8'));
@@ -2262,8 +2198,8 @@ describe('Edition of game results', () => {
 				when: toDateFull('1'),
 				field: 'result',
 				oldValue: 'white_wins',
-				newValue: 'black_wins'
-			}
+				newValue: 'black_wins',
+			},
 		]);
 
 		expect(aU.getRating(Blitz).numWonDrawnLost()).toEqual([8, 1, 4, 3]);
@@ -2287,15 +2223,15 @@ describe('Edition of game results', () => {
 				when: toDateFull('1'),
 				field: 'result',
 				oldValue: 'white_wins',
-				newValue: 'black_wins'
+				newValue: 'black_wins',
 			},
 			{
 				who: aU.username,
 				when: toDateFull('2'),
 				field: 'result',
 				oldValue: 'black_wins',
-				newValue: 'draw'
-			}
+				newValue: 'draw',
+			},
 		]);
 
 		expect(aU.getRating(Blitz).numWonDrawnLost()).toEqual([8, 1, 5, 2]);
@@ -2319,15 +2255,15 @@ describe('Edition of game results', () => {
 				when: toDateFull('1'),
 				field: 'result',
 				oldValue: 'white_wins',
-				newValue: 'black_wins'
+				newValue: 'black_wins',
 			},
 			{
 				who: aU.username,
 				when: toDateFull('2'),
 				field: 'result',
 				oldValue: 'black_wins',
-				newValue: 'draw'
-			}
+				newValue: 'draw',
+			},
 		]);
 
 		expect(aU.getRating(Blitz).numWonDrawnLost()).toEqual([8, 1, 5, 2]);
@@ -2353,8 +2289,8 @@ describe('Edition of game results', () => {
 				when: toDateFull('4'),
 				field: 'result',
 				oldValue: 'black_wins',
-				newValue: 'draw'
-			}
+				newValue: 'draw',
+			},
 		]);
 
 		expect(aU.getRating(Blitz).numWonDrawnLost()).toEqual([8, 1, 5, 2]);
@@ -2382,8 +2318,8 @@ describe('Edition of game results', () => {
 				when: toDateFull('5'),
 				field: 'result',
 				oldValue: 'draw',
-				newValue: 'black_wins'
-			}
+				newValue: 'black_wins',
+			},
 		]);
 
 		expect(aU.getRating(Blitz).numWonDrawnLost()).toEqual([8, 1, 5, 2]);
@@ -2407,15 +2343,15 @@ describe('Edition of game results', () => {
 				when: toDateFull('5'),
 				field: 'result',
 				oldValue: 'draw',
-				newValue: 'black_wins'
+				newValue: 'black_wins',
 			},
 			{
 				who: aU.username,
 				when: toDateFull('6'),
 				field: 'result',
 				oldValue: 'black_wins',
-				newValue: 'white_wins'
-			}
+				newValue: 'white_wins',
+			},
 		]);
 
 		expect(aU.getRating(Blitz).numWonDrawnLost()).toEqual([8, 1, 5, 2]);
@@ -2439,22 +2375,22 @@ describe('Edition of game results', () => {
 				when: toDateFull('5'),
 				field: 'result',
 				oldValue: 'draw',
-				newValue: 'black_wins'
+				newValue: 'black_wins',
 			},
 			{
 				who: aU.username,
 				when: toDateFull('6'),
 				field: 'result',
 				oldValue: 'black_wins',
-				newValue: 'white_wins'
+				newValue: 'white_wins',
 			},
 			{
 				who: aU.username,
 				when: toDateFull('7'),
 				field: 'result',
 				oldValue: 'white_wins',
-				newValue: 'draw'
-			}
+				newValue: 'draw',
+			},
 		]);
 
 		expect(aU.getRating(Blitz).numWonDrawnLost()).toEqual([8, 1, 5, 2]);
@@ -2480,8 +2416,8 @@ describe('Edition of game results', () => {
 				when: toDateFull('8'),
 				field: 'result',
 				oldValue: 'draw',
-				newValue: 'black_wins'
-			}
+				newValue: 'black_wins',
+			},
 		]);
 
 		expect(aU.getRating(Blitz).numWonDrawnLost()).toEqual([8, 1, 5, 2]);
@@ -2507,15 +2443,15 @@ describe('Edition of game title', () => {
 				when: toDateFull('1'),
 				field: 'result',
 				oldValue: 'white_wins',
-				newValue: 'black_wins'
+				newValue: 'black_wins',
 			},
 			{
 				who: aU.username,
 				when: toDateFull('2'),
 				field: 'result',
 				oldValue: 'black_wins',
-				newValue: 'draw'
-			}
+				newValue: 'draw',
+			},
 		]);
 
 		gameEditTitle(bU, toDateFull('1234'), id0000000001, 'New title');
@@ -2526,22 +2462,22 @@ describe('Edition of game title', () => {
 				when: toDateFull('1'),
 				field: 'result',
 				oldValue: 'white_wins',
-				newValue: 'black_wins'
+				newValue: 'black_wins',
 			},
 			{
 				who: aU.username,
 				when: toDateFull('2'),
 				field: 'result',
 				oldValue: 'black_wins',
-				newValue: 'draw'
+				newValue: 'draw',
 			},
 			{
 				who: bU.username,
 				when: toDateFull('1234'),
 				field: 'title',
 				oldValue: 'sample',
-				newValue: 'New title'
-			}
+				newValue: 'New title',
+			},
 		]);
 	});
 });

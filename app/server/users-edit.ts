@@ -23,17 +23,17 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import Debug from 'debug';
-const debug = Debug('ELO_CHESS_TRACKER:users-edit');
-
+import { Empty } from '@common/api/schemas-endpoints';
+import { UserEditInput } from '@common/api/schemas/user';
+import { isNotDefined } from '@common/utils/is-defined';
 import { logNow } from '@common/utils/time';
 import { userEdit } from '@server/managers/users';
 import { UsersManager } from '@server/managers/users-manager';
-import { isNotDefined } from '@common/utils/is-defined';
-import { Empty } from '@common/api/schemas-endpoints';
-import { UserSession } from '@server/models/user';
 import { PublicError } from '@server/models/error-types/public-error';
-import { UserEditInput } from '@common/api/schemas/user';
+import { UserSession } from '@server/models/user';
+import Debug from 'debug';
+
+const debug = Debug('ELO_CHESS_TRACKER:users-edit');
 
 export async function getPageUserEdit({ user, session: _session }: UserSession) {
 	debug(logNow(), 'function getPageUserEdit...');
@@ -48,7 +48,7 @@ export async function getPageUserEdit({ user, session: _session }: UserSession) 
 
 export async function postUserEdit(
 	{ user: editor, session: _session }: UserSession,
-	input: UserEditInput
+	input: UserEditInput,
 ): Promise<Empty> {
 	debug(logNow(), 'function postUserEdit...');
 

@@ -23,34 +23,34 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import Debug from 'debug';
-const debug = Debug('ELO_CHESS_TRACKER:serverChallenges');
-
 import { logNow } from '@common/utils/time';
 import {
 	challengeAccept,
+	challengeAgreeResult,
 	challengeDecline,
+	challengeDisagreeResult,
 	challengeSendNew,
 	challengeSetResult,
-	challengeDisagreeResult,
-	challengeAgreeResult
 } from '@server/managers/challenges';
+import Debug from 'debug';
 
-import { ChallengesManager } from '@server/managers/challenges-manager';
-import { UsersManager } from '@server/managers/users-manager';
-import { RatingSystemManager } from '@server/managers/rating-system-manager';
-import { isNotDefined } from '@common/utils/is-defined';
 import { Empty } from '@common/api/schemas-endpoints';
-import { UserSession } from '@server/models/user';
 import {
 	ChallengeAcceptInput,
 	ChallengeAgreeResultInput,
 	ChallengeDeclineInput,
 	ChallengeDisagreeResultInput,
 	ChallengeSendInput,
-	ChallengeSetResultInput
+	ChallengeSetResultInput,
 } from '@common/api/schemas/challenges';
+import { isNotDefined } from '@common/utils/is-defined';
+import { ChallengesManager } from '@server/managers/challenges-manager';
+import { RatingSystemManager } from '@server/managers/rating-system-manager';
+import { UsersManager } from '@server/managers/users-manager';
 import { PublicError } from '@server/models/error-types/public-error';
+import { UserSession } from '@server/models/user';
+
+const debug = Debug('ELO_CHESS_TRACKER:serverChallenges');
 
 export async function getPageChallenge(_u: UserSession) {
 	debug(logNow(), 'function getPageChallenge...');
@@ -59,7 +59,7 @@ export async function getPageChallenge(_u: UserSession) {
 
 export async function postChallengeSend(
 	{ user: sender, session: _session }: UserSession,
-	input: ChallengeSendInput
+	input: ChallengeSendInput,
 ): Promise<Empty> {
 	debug(logNow(), 'function postChallengeSend...');
 
@@ -105,7 +105,7 @@ export async function postChallengeSend(
 
 export async function postChallengeAccept(
 	{ user, session: _session }: UserSession,
-	input: ChallengeAcceptInput
+	input: ChallengeAcceptInput,
 ): Promise<Empty> {
 	debug(logNow(), 'function postChallengeAccept...');
 
@@ -127,7 +127,7 @@ export async function postChallengeAccept(
 
 export async function postChallengeDecline(
 	{ user, session: _session }: UserSession,
-	input: ChallengeDeclineInput
+	input: ChallengeDeclineInput,
 ): Promise<Empty> {
 	debug(logNow(), 'function postChallengeDecline...');
 
@@ -149,7 +149,7 @@ export async function postChallengeDecline(
 
 export async function postChallengeSetResult(
 	{ user, session: _session }: UserSession,
-	input: ChallengeSetResultInput
+	input: ChallengeSetResultInput,
 ): Promise<Empty> {
 	debug(logNow(), 'function postChallengeSetResult...');
 
@@ -187,7 +187,7 @@ export async function postChallengeSetResult(
 		when: logNow(),
 		white: white.user.username,
 		black: black.user.username,
-		result: gameResult
+		result: gameResult,
 	});
 
 	return {};
@@ -195,7 +195,7 @@ export async function postChallengeSetResult(
 
 export async function postChallengeAgree(
 	{ user, session: _session }: UserSession,
-	input: ChallengeAgreeResultInput
+	input: ChallengeAgreeResultInput,
 ): Promise<Empty> {
 	debug(logNow(), 'function postChallengeAgree...');
 
@@ -213,7 +213,7 @@ export async function postChallengeAgree(
 
 export async function postChallengeDisagree(
 	{ user, session: _session }: UserSession,
-	input: ChallengeDisagreeResultInput
+	input: ChallengeDisagreeResultInput,
 ): Promise<Empty> {
 	debug(logNow(), 'function postChallengeDisagree...');
 

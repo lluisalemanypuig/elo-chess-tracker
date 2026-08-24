@@ -31,7 +31,7 @@ import { z } from 'zod';
 export const UserLoginInputSchema = z
 	.object({
 		u: PlayerPrivateIdSchema,
-		p: PlayerPrivateIdSchema
+		p: PlayerPrivateIdSchema,
 	})
 	.strict();
 
@@ -39,7 +39,7 @@ export type UserLoginInput = z.infer<typeof UserLoginInputSchema>;
 
 export const UserLoginOutputSchema = z
 	.object({
-		cookies: z.array(z.string())
+		cookies: z.array(z.string()),
 	})
 	.strict();
 
@@ -49,7 +49,7 @@ export type UserLoginOutput = z.infer<typeof UserLoginOutputSchema>;
 
 export const UserLogoutOutputSchema = z
 	.object({
-		cookies: z.array(z.string())
+		cookies: z.array(z.string()),
 	})
 	.strict();
 

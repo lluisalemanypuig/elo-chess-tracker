@@ -61,7 +61,7 @@ describe('Any function tests', () => {
 		expect(
 			any(array, (i: number): boolean => {
 				return i % 2 === 0;
-			})
+			}),
 		).toBe(false);
 	});
 
@@ -70,12 +70,12 @@ describe('Any function tests', () => {
 		expect(
 			any(array, (i: number): boolean => {
 				return i % 2 === 0;
-			})
+			}),
 		).toBe(false);
 		expect(
 			any(array, (i: number): boolean => {
 				return i >= 10;
-			})
+			}),
 		).toBe(false);
 	});
 
@@ -84,12 +84,12 @@ describe('Any function tests', () => {
 		expect(
 			any(array, (i: number): boolean => {
 				return i % 2 === 1;
-			})
+			}),
 		).toBe(true);
 		expect(
 			any(array, (i: number): boolean => {
 				return i < 10;
-			})
+			}),
 		).toBe(true);
 	});
 });

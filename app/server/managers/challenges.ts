@@ -23,35 +23,35 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import fs from 'fs';
-import path from 'path';
-import Debug from 'debug';
-const debug = Debug('ELO_CHESS_TRACKER:managers/challenges');
-
-import { DateFull, logNow, dateSplitMajorMinor, toDateMinor } from '@common/utils/time';
+import { TimeControlId, TimeControlName } from '@common/models/time-control';
+import { isNotDefined } from '@common/utils/is-defined';
+import { DateFull, dateSplitMajorMinor, logNow, toDateMinor } from '@common/utils/time';
 import { ChallengesManager } from '@server/managers/challenges-manager';
 import { EnvironmentManager } from '@server/managers/environment-manager';
+import { gameAddNew } from '@server/managers/games';
+import { canUserDeclineChallenge, canUserSendChallenge } from '@server/managers/user-relationships';
+import { UsersManager } from '@server/managers/users-manager';
 import {
+	accept,
+	agreeResult,
 	Challenge,
+	ChallengeAccept,
+	ChallengeAgreeResult,
+	ChallengeDecline,
+	ChallengeDisagreeResult,
+	ChallengeSetResult,
+	disagreeResult,
+	isPartOfChallenge,
 	newChallenge,
 	setResult,
-	disagreeResult as disagreeResult,
-	ChallengeAccept,
-	accept,
-	ChallengeDecline,
-	ChallengeSetResult,
-	ChallengeAgreeResult,
-	agreeResult,
-	ChallengeDisagreeResult,
-	isPartOfChallenge
 } from '@server/models/challenge';
-import { gameAddNew } from '@server/managers/games';
-import { TimeControlId, TimeControlName } from '@common/models/time-control';
-import { UsersManager } from '@server/managers/users-manager';
-import { isNotDefined } from '@common/utils/is-defined';
-import { User } from '@server/models/user';
-import { canUserDeclineChallenge, canUserSendChallenge } from '@server/managers/user-relationships';
 import { PublicError } from '@server/models/error-types/public-error';
+import { User } from '@server/models/user';
+import Debug from 'debug';
+import fs from 'fs';
+import path from 'path';
+
+const debug = Debug('ELO_CHESS_TRACKER:managers/challenges');
 
 export function writeChallengeToFile(filename: string, c: Challenge) {
 	fs.writeFileSync(filename, JSON.stringify(c, null, 4));
@@ -87,7 +87,7 @@ export function challengeSendNew(
 	receiver: User,
 	timeControlId: TimeControlId,
 	timeControlName: TimeControlName,
-	when: DateFull
+	when: DateFull,
 ): Challenge {
 	debug(logNow(), 'Adding a new challenge...');
 
@@ -207,7 +207,7 @@ export function challengeSetResult(c: Challenge, { by, when, white, black, resul
 	if (originalSetter !== undefined && originalSetter !== by) {
 		debug(
 			logNow(),
-			`User '${by}' is trying to override the result of challenge '${c.id}' which was set by '${originalSetter} on '${c.whenResultSet}'`
+			`User '${by}' is trying to override the result of challenge '${c.id}' which was set by '${originalSetter} on '${c.whenResultSet}'`,
 		);
 		throw new PublicError('The result of this challenge has to be set by the original setter, which you are not.');
 	}
@@ -287,7 +287,7 @@ export function challengeAgreeResult(c: Challenge, { by, when }: ChallengeAgreeR
 
 	const randMilli = `${Math.floor(Math.random() * 999)}`;
 	const date = toDateMinor(
-		split[1] + ':' + (randMilli.length === 1 ? '00' : randMilli.length === 2 ? '0' : '') + randMilli
+		split[1] + ':' + (randMilli.length === 1 ? '00' : randMilli.length === 2 ? '0' : '') + randMilli,
 	);
 	gameAddNew(c.title, white.user, black.user, c.result, c.timeControlId, c.timeControlName, split[0], date);
 

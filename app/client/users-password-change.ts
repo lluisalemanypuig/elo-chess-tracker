@@ -19,10 +19,9 @@ Full source code of elo-chess-tracker:
 	https://github.com/lluisalemanypuig/elo-chess-tracker
 */
 
-import 'htmx.org';
-
 import { messageFromResponse, serverCall } from '@client/action';
 import { ROUTES } from '@common/api/routes';
+import 'htmx.org';
 
 async function buttonSubmitClicked() {
 	let boxOldPassword = document.getElementById('box-old-password') as HTMLInputElement;
@@ -36,7 +35,7 @@ async function buttonSubmitClicked() {
 
 	const response = await serverCall(ROUTES.USER_PASSWORD_CHANGE, {
 		old: boxOldPassword.value,
-		new: boxNewPassword.value
+		new: boxNewPassword.value,
 	});
 	if (response.status === 'Error') {
 		alert(messageFromResponse(response));

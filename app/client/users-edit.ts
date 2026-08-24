@@ -19,20 +19,19 @@ Full source code of elo-chess-tracker:
 	https://github.com/lluisalemanypuig/elo-chess-tracker
 */
 
-import 'htmx.org';
-
 import { messageFromResponse, serverCall } from '@client/action';
-import {
-	UserRole,
-	ALL_USER_ROLES,
-	USER_ROLE_TO_STRING,
-	arrayStringToRoles,
-	stringToRole
-} from '@common/models/user-role';
-import { isNotDefined } from '@common/utils/is-defined';
 import { ROUTES } from '@common/api/routes';
 import { toPlayerPublicId } from '@common/models/player-id';
 import { toUserGivenName } from '@common/models/user-given-name';
+import {
+	ALL_USER_ROLES,
+	USER_ROLE_TO_STRING,
+	UserRole,
+	arrayStringToRoles,
+	stringToRole,
+} from '@common/models/user-role';
+import { isNotDefined } from '@common/utils/is-defined';
+import 'htmx.org';
 
 async function userWasChanged(_event: any) {
 	ALL_USER_ROLES.forEach(function (role: string) {
@@ -76,9 +75,8 @@ async function userWasChanged(_event: any) {
 async function submitWasClicked(_event: any) {
 	// username
 	let usernameListInput = document.getElementById('username-list') as HTMLInputElement;
-	const userPublicId = (
-		document.querySelector('option[value="' + usernameListInput.value + '"]') as HTMLOptionElement
-	).id;
+	const userPublicId = (document.querySelector('option[value="' + usernameListInput.value + '"]') as HTMLOptionElement)
+		.id;
 
 	// first and last name
 	const firstName = (document.getElementById('box-first-name') as HTMLInputElement).value;
@@ -101,7 +99,7 @@ async function submitWasClicked(_event: any) {
 		publicId: toPlayerPublicId(userPublicId),
 		firstName: toUserGivenName(firstName),
 		lastName: toUserGivenName(lastName),
-		roles: selectedRoles
+		roles: selectedRoles,
 	});
 	if (response.status === 'Error') {
 		alert(messageFromResponse(response));

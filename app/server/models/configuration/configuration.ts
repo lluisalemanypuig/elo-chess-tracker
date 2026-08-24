@@ -23,13 +23,13 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { z } from 'zod';
+import { BehaviorSchema } from '@server/models/configuration/behavior';
 import { EnvironmentSchema } from '@server/models/configuration/environment';
+import { UserPermissionsSchema } from '@server/models/configuration/permissions';
 import { ServerConfigurationSchema } from '@server/models/configuration/server';
 import { TimeControlArraySchema } from '@server/models/configuration/time-controls';
-import { BehaviorSchema } from '@server/models/configuration/behavior';
-import { UserPermissionsSchema } from '@server/models/configuration/permissions';
 import { RatingFrameworkTypeSchema } from '@server/models/rating-framework/rating-framework-type';
+import { z } from 'zod';
 
 export const ConfigurationSchema = z
 	.object({
@@ -38,7 +38,7 @@ export const ConfigurationSchema = z
 		ratingSystem: RatingFrameworkTypeSchema,
 		timeControls: TimeControlArraySchema,
 		behavior: BehaviorSchema,
-		permissions: UserPermissionsSchema
+		permissions: UserPermissionsSchema,
 	})
 	.strict();
 

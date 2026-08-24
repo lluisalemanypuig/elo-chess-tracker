@@ -19,8 +19,6 @@ Full source code of elo-chess-tracker:
 	https://github.com/lluisalemanypuig/elo-chess-tracker
 */
 
-import 'htmx.org';
-
 import { messageFromResponse, serverCall } from '@client/action';
 import { ROUTES } from '@common/api/routes';
 import {
@@ -28,11 +26,12 @@ import {
 	QueryChallengesConfirmResultSelfOutputSingle,
 	QueryChallengesPendingResultOutputSingle,
 	QueryChallengesReceivedOutputSingle,
-	QueryChallengesSentOutputSingle
+	QueryChallengesSentOutputSingle,
 } from '@common/api/schemas/query-challenges';
-import { TimeControlId, TimeControlName } from '@common/models/time-control';
-import { PlayerPrivateId, toPlayerPublicId } from '@common/models/player-id';
 import { GameResult } from '@common/models/game-result';
+import { PlayerPrivateId, toPlayerPublicId } from '@common/models/player-id';
+import { TimeControlId, TimeControlName } from '@common/models/time-control';
+import 'htmx.org';
 
 function createLabelText(text: string): HTMLLabelElement {
 	let label = document.createElement('label') as HTMLLabelElement;
@@ -63,7 +62,7 @@ async function sendChallengeButtonClicked(_event: any) {
 			to: publicUserId,
 			title: gameTitle,
 			timeControlId: timeControlId,
-			timeControlName: timeControlName
+			timeControlName: timeControlName,
 		});
 		if (response.status === 'Error') {
 			alert(messageFromResponse(response));
@@ -126,7 +125,7 @@ async function submitResultChallengeButtonClicked(event: any) {
 		id: challengeId,
 		white: toPlayerPublicId(whitePublicId),
 		black: toPlayerPublicId(blackPublicId),
-		result: result
+		result: result,
 	});
 	if (response.status === 'Error') {
 		alert(messageFromResponse(response));

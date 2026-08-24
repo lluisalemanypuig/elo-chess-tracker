@@ -23,10 +23,10 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { Game } from '@server/models/game';
-import { Rating } from '@server/models/rating-framework/rating';
 import { TimeControl, TimeControlId } from '@common/models/time-control';
 import { PublicError } from '@server/models/error-types/public-error';
+import { Game } from '@server/models/game';
+import { Rating } from '@server/models/rating-framework/rating';
 
 /**
  * @brief Rating System Manager singleton class
@@ -134,7 +134,7 @@ export class RatingSystemManager {
 		this.allTimeControls = allRatings;
 
 		this.allUniqueTimeControls = [
-			...new Set(this.allTimeControls.map((value: TimeControl): TimeControlId => value.id))
+			...new Set(this.allTimeControls.map((value: TimeControl): TimeControlId => value.id)),
 		];
 	}
 

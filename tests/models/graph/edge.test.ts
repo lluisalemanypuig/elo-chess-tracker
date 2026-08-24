@@ -23,9 +23,9 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { EdgeMetadata } from '@server/models/graph/edge-metadata';
-import { Edge } from '@server/models/graph/edge';
 import { toPlayerPrivateId } from '@common/models/player-id';
+import { Edge } from '@server/models/graph/edge';
+import { EdgeMetadata } from '@server/models/graph/edge-metadata';
 
 const a = toPlayerPrivateId('a');
 const b = toPlayerPrivateId('b');

@@ -23,23 +23,23 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import Debug from 'debug';
-const debug = Debug('ELO_CHESS_TRACKER:serverLoginLogout');
-import { Request, Response } from 'express';
-
+import { ROUTES } from '@common/api/routes';
+import { Empty } from '@common/api/schemas-endpoints';
+import { UserLoginInputSchema } from '@common/api/schemas/login-logout';
+import { SessionIdPublicIdFieldName, SessionIdTokenFieldName } from '@common/models/session-id';
+import { isNotDefined } from '@common/utils/is-defined';
 import { logNow } from '@common/utils/time';
-import { isPasswordOfUserCorrect } from '@server/utils/encrypt';
-import { emptySessionIdCookie, makeSessionIdCookie } from '@server/utils/cookies';
 import { sessionIdAdd, sessionIdDelete } from '@server/managers/session';
 import { SessionIDManager } from '@server/managers/session-id-manager';
-import { SessionIdPublicIdFieldName, SessionIdTokenFieldName } from '@common/models/session-id';
 import { UsersManager } from '@server/managers/users-manager';
-import { isNotDefined } from '@common/utils/is-defined';
-import { UserLoginInputSchema } from '@common/api/schemas/login-logout';
-import { ROUTES } from '@common/api/routes';
-import { safeParseRequestBody } from '@server/utils/schemas';
 import { UserSession } from '@server/models/user';
-import { Empty } from '@common/api/schemas-endpoints';
+import { emptySessionIdCookie, makeSessionIdCookie } from '@server/utils/cookies';
+import { isPasswordOfUserCorrect } from '@server/utils/encrypt';
+import { safeParseRequestBody } from '@server/utils/schemas';
+import Debug from 'debug';
+import { Request, Response } from 'express';
+
+const debug = Debug('ELO_CHESS_TRACKER:serverLoginLogout');
 
 export async function postUserLogin(req: Request, res: Response) {
 	debug(logNow(), `POST ${ROUTES.USER_LOGIN}`);
@@ -85,8 +85,8 @@ export async function postUserLogin(req: Request, res: Response) {
 	res.status(200).send({
 		cookies: [
 			makeSessionIdCookie(SessionIdTokenFieldName, session.token, 1),
-			makeSessionIdCookie(SessionIdPublicIdFieldName, `${session.publicId}`, 1)
-		]
+			makeSessionIdCookie(SessionIdPublicIdFieldName, `${session.publicId}`, 1),
+		],
 	});
 }
 
@@ -101,7 +101,7 @@ export async function postUserLogout({ user: _u, session }: UserSession, _i: Emp
 	if (!SessionIDManager.getInstance().hasSessionId(session)) {
 		debug(
 			logNow(),
-			`    User '${session.publicId}' was never logged in with this session id but it is fine, since they are logging out.`
+			`    User '${session.publicId}' was never logged in with this session id but it is fine, since they are logging out.`,
 		);
 	} else {
 		debug(logNow(), `    Deleting session id of user '${session.publicId}'...`);
@@ -109,6 +109,6 @@ export async function postUserLogout({ user: _u, session }: UserSession, _i: Emp
 		debug(logNow(), `        Deleted.`);
 	}
 	return {
-		cookies: [emptySessionIdCookie(SessionIdTokenFieldName), emptySessionIdCookie(SessionIdPublicIdFieldName)]
+		cookies: [emptySessionIdCookie(SessionIdTokenFieldName), emptySessionIdCookie(SessionIdPublicIdFieldName)],
 	};
 }

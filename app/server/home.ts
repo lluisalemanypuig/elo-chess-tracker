@@ -23,19 +23,19 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import Debug from 'debug';
-const debug = Debug('ELO_CHESS_TRACKER:serverHome');
-import { Request, Response } from 'express';
-
+import { ROUTES } from '@common/api/routes';
+import { AuthenticationInputSchema } from '@common/api/schemas/authentication';
+import { isDefined } from '@common/utils/is-defined';
 import { logNow } from '@common/utils/time';
-import { isUserLoggedIn } from '@server/managers/session';
 import { ConfigurationManager } from '@server/managers/configuration-manager';
 import { getExecutionDirectory } from '@server/managers/environment-manager';
-import { isDefined } from '@common/utils/is-defined';
-import { ROUTES } from '@common/api/routes';
-import { parseSchema } from '@server/utils/schemas';
-import { AuthenticationInputSchema } from '@common/api/schemas/authentication';
+import { isUserLoggedIn } from '@server/managers/session';
 import { UserSession } from '@server/models/user';
+import { parseSchema } from '@server/utils/schemas';
+import Debug from 'debug';
+import { Request, Response } from 'express';
+
+const debug = Debug('ELO_CHESS_TRACKER:serverHome');
 
 export async function getPageLogin(req: Request, res: Response) {
 	let sendHome: boolean;

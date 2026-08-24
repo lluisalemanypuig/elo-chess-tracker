@@ -53,7 +53,7 @@ export class EloRating extends Rating {
 		drawn: number,
 		lost: number,
 		K: number,
-		surpassed2400: boolean
+		surpassed2400: boolean,
 	) {
 		super(rating, numGames, won, drawn, lost);
 		this.K = K;

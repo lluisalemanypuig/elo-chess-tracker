@@ -23,12 +23,12 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { z } from 'zod';
 import { ChallengeIdSchema } from '@common/models/challenge-id';
-import { TimeControlNameSchema } from '@common/models/time-control';
-import { DateFullSchema } from '@common/utils/time';
-import { UserGivenNameSchema } from '@common/models/user-given-name';
 import { PlayerPublicIdSchema } from '@common/models/player-id';
+import { TimeControlNameSchema } from '@common/models/time-control';
+import { UserGivenNameSchema } from '@common/models/user-given-name';
+import { DateFullSchema } from '@common/utils/time';
+import { z } from 'zod';
 
 // ROUTES.QUERY_CHALLENGE_RECEIVED
 
@@ -39,7 +39,7 @@ export const QueryChallengesReceivedOutputSingleSchema = z
 		sentBy: UserGivenNameSchema,
 		sentWhen: DateFullSchema,
 		timeControlName: TimeControlNameSchema,
-		canBeDeclined: z.boolean()
+		canBeDeclined: z.boolean(),
 	})
 	.strict();
 
@@ -58,7 +58,7 @@ export const QueryChallengesSentOutputSingleSchema = z
 		sentTo: UserGivenNameSchema,
 		sentWhen: DateFullSchema,
 		timeControlName: TimeControlNameSchema,
-		canBeDeclined: z.boolean()
+		canBeDeclined: z.boolean(),
 	})
 	.strict();
 
@@ -76,15 +76,15 @@ export const QueryChallengesPendingResultOutputSingleSchema = z
 		title: z.string(),
 		sentBy: z.object({
 			name: UserGivenNameSchema,
-			publicId: PlayerPublicIdSchema
+			publicId: PlayerPublicIdSchema,
 		}),
 		sentTo: z.object({
 			name: UserGivenNameSchema,
-			publicId: PlayerPublicIdSchema
+			publicId: PlayerPublicIdSchema,
 		}),
 		opponent: UserGivenNameSchema,
 		sentWhen: DateFullSchema,
-		timeControlName: TimeControlNameSchema
+		timeControlName: TimeControlNameSchema,
 	})
 	.strict();
 
@@ -105,7 +105,7 @@ export const QueryChallengesConfirmResultOtherOutputSingleSchema = z
 		white: UserGivenNameSchema,
 		black: UserGivenNameSchema,
 		result: z.string(),
-		timeControlName: TimeControlNameSchema
+		timeControlName: TimeControlNameSchema,
 	})
 	.strict();
 
@@ -114,7 +114,7 @@ export type QueryChallengesConfirmResultOtherOutputSingle = z.infer<
 >;
 
 export const QueryChallengesConfirmResultOtherOutputSchema = z.array(
-	QueryChallengesConfirmResultOtherOutputSingleSchema
+	QueryChallengesConfirmResultOtherOutputSingleSchema,
 );
 
 export type QueryChallengesConfirmResultOtherOutput = z.infer<typeof QueryChallengesConfirmResultOtherOutputSchema>;
@@ -130,7 +130,7 @@ export const QueryChallengesConfirmResultSelfOutputSingleSchema = z
 		white: UserGivenNameSchema,
 		black: UserGivenNameSchema,
 		result: z.string(),
-		timeControlName: TimeControlNameSchema
+		timeControlName: TimeControlNameSchema,
 	})
 	.strict();
 

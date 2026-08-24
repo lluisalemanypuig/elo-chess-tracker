@@ -52,7 +52,7 @@ describe('Rating System Manager', () => {
 			{ id: Rapid, name: Rapid10p0 },
 			{ id: Blitz, name: Blitz5p3 },
 			{ id: Blitz, name: Blitz5p0 },
-			{ id: Blitz, name: Blitz3p2 }
+			{ id: Blitz, name: Blitz3p2 },
 		]);
 
 		expect(rating.getTimeControls().length).toBe(7);
@@ -65,17 +65,17 @@ describe('Rating System Manager', () => {
 		expect(
 			unique_ids.findIndex((val: string): boolean => {
 				return val === Classical;
-			})
+			}),
 		).not.toEqual(-1);
 		expect(
 			unique_ids.findIndex((val: string): boolean => {
 				return val === Rapid;
-			})
+			}),
 		).not.toEqual(-1);
 		expect(
 			unique_ids.findIndex((val: string): boolean => {
 				return val === Blitz;
-			})
+			}),
 		).not.toEqual(-1);
 	});
 });

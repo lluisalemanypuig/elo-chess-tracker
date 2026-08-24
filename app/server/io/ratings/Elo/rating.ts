@@ -24,7 +24,7 @@ Contact:
 */
 
 import { readJsonArrayString, readJsonObjectString } from '@server/io/generic';
-import { EloRating, ELO_RATING_KEYS } from '@server/models/rating-framework/Elo/rating';
+import { ELO_RATING_KEYS, EloRating } from '@server/models/rating-framework/Elo/rating';
 
 /**
  * @brief Parses a JSON string and returns a TimeControlRating object.

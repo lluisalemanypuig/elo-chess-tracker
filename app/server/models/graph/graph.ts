@@ -23,21 +23,21 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { z } from 'zod';
-import { EdgeMetadata } from '@server/models/graph/edge-metadata';
-import { EdgeSchema, Edge } from '@server/models/graph/edge';
-import { searchByKey, whereShouldBeInsertedByKey } from '@server/utils/searching';
+import { GameResult, oppositeResult } from '@common/models/game-result';
+import { PlayerPrivateId } from '@common/models/player-id';
 import { isDefined, isNotDefined } from '@common/utils/is-defined';
 import { InternalError } from '@server/models/error-types/internal-error';
-import { PlayerPrivateId } from '@common/models/player-id';
-import { GameResult, oppositeResult } from '@common/models/game-result';
+import { Edge, EdgeSchema } from '@server/models/graph/edge';
+import { EdgeMetadata } from '@server/models/graph/edge-metadata';
+import { searchByKey, whereShouldBeInsertedByKey } from '@server/utils/searching';
+import { z } from 'zod';
 
 export const NeighborhoodSchema = z.array(EdgeSchema);
 
 export const GraphSchema = z
 	.object({
 		adjacencyList: z.map(z.string(), NeighborhoodSchema),
-		inAdjacencyList: z.map(z.string(), NeighborhoodSchema)
+		inAdjacencyList: z.map(z.string(), NeighborhoodSchema),
 	})
 	.strict();
 
@@ -207,7 +207,7 @@ export class Graph {
 		v: PlayerPrivateId,
 		oldRes: GameResult,
 		newRes: GameResult,
-		NU: Neighborhood
+		NU: Neighborhood,
 	) {
 		const bIdx = searchByKey(NU, function (e: Edge): number {
 			return v.localeCompare(e.neighbor);

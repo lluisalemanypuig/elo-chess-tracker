@@ -23,14 +23,14 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { z } from 'zod';
-import { UserThinSchema } from '@common/models/user-thin';
-import { UserRoleArraySchema } from '@common/models/user-role';
-import { UserActionArraySchema } from '@common/models/user-action';
-import { TimeControlIdSchema } from '@common/models/time-control';
 import { PlayerPublicIdSchema } from '@common/models/player-id';
 import { RatingSchema } from '@common/models/rating-framework/rating';
+import { TimeControlIdSchema } from '@common/models/time-control';
+import { UserActionArraySchema } from '@common/models/user-action';
 import { UserGivenNameSchema } from '@common/models/user-given-name';
+import { UserRoleArraySchema } from '@common/models/user-role';
+import { UserThinSchema } from '@common/models/user-thin';
+import { z } from 'zod';
 
 // ROUTES.QUERY_USER_LIST
 
@@ -42,7 +42,7 @@ export type QueryUserListOutput = z.infer<typeof QueryUserListOutputSchema>;
 
 export const QueryUserEditInputSchema = z
 	.object({
-		u: PlayerPublicIdSchema
+		u: PlayerPublicIdSchema,
 	})
 	.strict();
 
@@ -52,7 +52,7 @@ export type QueryUserEditInput = z.infer<typeof QueryUserEditInputSchema>;
 
 export const QueryUserRankingInputSchema = z
 	.object({
-		timeControlId: TimeControlIdSchema
+		timeControlId: TimeControlIdSchema,
 	})
 	.strict();
 
@@ -63,7 +63,7 @@ export type QueryUserRankingInput = z.infer<typeof QueryUserRankingInputSchema>;
 export const TimeControlAndRatingSchema = z
 	.object({
 		timeControlId: TimeControlIdSchema,
-		rating: RatingSchema
+		rating: RatingSchema,
 	})
 	.strict();
 
@@ -74,7 +74,7 @@ export const QueryUserHomeOutputSchema = z
 		fullname: UserGivenNameSchema,
 		roles: UserRoleArraySchema,
 		actions: UserActionArraySchema,
-		ratings: z.array(TimeControlAndRatingSchema)
+		ratings: z.array(TimeControlAndRatingSchema),
 	})
 	.strict();
 
@@ -86,7 +86,7 @@ export const QueryUserEditOutputSchema = z
 	.object({
 		firstName: UserGivenNameSchema,
 		lastName: UserGivenNameSchema,
-		roles: UserRoleArraySchema
+		roles: UserRoleArraySchema,
 	})
 	.strict();
 
@@ -101,7 +101,7 @@ export const UserWithGamesSchema = z
 		totalGames: z.number(),
 		won: z.number(),
 		drawn: z.number(),
-		lost: z.number()
+		lost: z.number(),
 	})
 	.strict();
 
@@ -110,7 +110,7 @@ export type UserWithGames = z.infer<typeof UserWithGamesSchema>;
 export const UserWithoutGamesSchema = z
 	.object({
 		name: UserGivenNameSchema,
-		rating: z.number()
+		rating: z.number(),
 	})
 	.strict();
 
@@ -119,7 +119,7 @@ export type UserWithoutGames = z.infer<typeof UserWithoutGamesSchema>;
 export const QueryUserRankingOutputSchema = z
 	.object({
 		withGames: z.array(UserWithGamesSchema),
-		withoutGames: z.array(UserWithoutGamesSchema)
+		withoutGames: z.array(UserWithoutGamesSchema),
 	})
 	.strict();
 

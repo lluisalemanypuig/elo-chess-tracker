@@ -23,26 +23,26 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { z } from 'zod';
-import { Player } from '@server/models/player';
-import { Password } from '@server/models/password';
-import { UserRole } from '@common/models/user-role';
-import { UserAction } from '@common/models/user-action';
-import { UserRoleToUserAction } from '@server/managers/user-role-action';
-import { TimeControlRating } from '@server/models/time-control-rating';
-import { TimeControlId, TimeControlIdSchema } from '@common/models/time-control';
-import { copyarray } from '@server/utils/misc';
-import { searchByKey, searchLinearByKey, whereShouldBeInsertedByKey } from '@server/utils/searching';
-import { DateMajor, DateMajorSchema } from '@common/utils/time';
-import { InternalError } from '@server/models/error-types/internal-error';
-import { toUserGivenName, UserGivenName } from '@common/models/user-given-name';
 import { PlayerPrivateId } from '@common/models/player-id';
 import { SessionId } from '@common/models/session-id';
+import { TimeControlId, TimeControlIdSchema } from '@common/models/time-control';
+import { UserAction } from '@common/models/user-action';
+import { toUserGivenName, UserGivenName } from '@common/models/user-given-name';
+import { UserRole } from '@common/models/user-role';
+import { DateMajor, DateMajorSchema } from '@common/utils/time';
+import { UserRoleToUserAction } from '@server/managers/user-role-action';
+import { InternalError } from '@server/models/error-types/internal-error';
+import { Password } from '@server/models/password';
+import { Player } from '@server/models/player';
+import { TimeControlRating } from '@server/models/time-control-rating';
+import { copyarray } from '@server/utils/misc';
+import { searchByKey, searchLinearByKey, whereShouldBeInsertedByKey } from '@server/utils/searching';
+import { z } from 'zod';
 
 export const GameNumberSchema = z
 	.object({
 		record: DateMajorSchema,
-		amount: z.number()
+		amount: z.number(),
 	})
 	.strict();
 
@@ -55,7 +55,7 @@ export type GameNumberArray = z.infer<typeof GameNumberArraySchema>;
 export const TimeControlGameSchema = z
 	.object({
 		timeControl: TimeControlIdSchema,
-		records: z.array(GameNumberSchema)
+		records: z.array(GameNumberSchema),
 	})
 	.strict();
 
@@ -112,7 +112,7 @@ export class User extends Player {
 		password: Password,
 		roles: UserRole[],
 		games: TimeControlGame[],
-		ratings: TimeControlRating[]
+		ratings: TimeControlRating[],
 	) {
 		super(username, ratings);
 		this.firstName = firstName;
@@ -180,7 +180,7 @@ export class User extends Player {
 		});
 		if (index === -1) {
 			throw new InternalError(
-				`User '${this.username}' does not have game record '${gameRecord}' in time control '${id}': '${this.games[idx].records}'.`
+				`User '${this.username}' does not have game record '${gameRecord}' in time control '${id}': '${this.games[idx].records}'.`,
 			);
 		}
 
@@ -232,9 +232,7 @@ export class User extends Player {
 	 */
 	copyPlayerData(p: Player) {
 		if (this.username !== p.username) {
-			throw new InternalError(
-				`Trying to dump data of user ${p.username} into a different player ${this.username}`
-			);
+			throw new InternalError(`Trying to dump data of user ${p.username} into a different player ${this.username}`);
 		}
 
 		// copy all ratings
@@ -256,7 +254,7 @@ export class User extends Player {
 			}),
 			copyarray(this.ratings, (r: TimeControlRating): TimeControlRating => {
 				return r.clone();
-			})
+			}),
 		);
 	}
 
@@ -265,7 +263,7 @@ export class User extends Player {
 			this.username,
 			copyarray(this.ratings, (tcr: TimeControlRating): TimeControlRating => {
 				return tcr.clone();
-			})
+			}),
 		);
 	}
 }

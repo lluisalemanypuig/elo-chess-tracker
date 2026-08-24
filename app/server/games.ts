@@ -23,23 +23,23 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import Debug from 'debug';
-const debug = Debug('ELO_CHESS_TRACKER:serverGames');
-
+import { Empty } from '@common/api/schemas-endpoints';
+import { GameCreateInput, GameDeleteInput, GameEditResultInput, GameEditTitleInput } from '@common/api/schemas/games';
+import { isNotDefined } from '@common/utils/is-defined';
 import { logNow } from '@common/utils/time';
 import {
 	gameAddNewGuarded,
 	gameDelete,
 	gameEditResult,
 	gameEditTitle,
-	recalculateAllRatings
+	recalculateAllRatings,
 } from '@server/managers/games';
 import { UsersManager } from '@server/managers/users-manager';
-import { isNotDefined } from '@common/utils/is-defined';
-import { Empty } from '@common/api/schemas-endpoints';
-import { UserSession } from '@server/models/user';
 import { PublicError } from '@server/models/error-types/public-error';
-import { GameCreateInput, GameDeleteInput, GameEditResultInput, GameEditTitleInput } from '@common/api/schemas/games';
+import { UserSession } from '@server/models/user';
+import Debug from 'debug';
+
+const debug = Debug('ELO_CHESS_TRACKER:serverGames');
 
 export async function getPageGameListOwn(_u: UserSession) {
 	debug(logNow(), 'function getPageGameListOwn...');
@@ -62,7 +62,7 @@ export async function getPageGameCreate({ user, session: _session }: UserSession
 
 export async function postGameCreate(
 	{ user: creator, session: _session }: UserSession,
-	input: GameCreateInput
+	input: GameCreateInput,
 ): Promise<Empty> {
 	debug(logNow(), 'function postGameCreate...');
 
@@ -98,7 +98,7 @@ export async function postGameCreate(
 		timeControlId,
 		timeControlName,
 		gameDate,
-		gameTime
+		gameTime,
 	);
 
 	return {};
@@ -106,7 +106,7 @@ export async function postGameCreate(
 
 export async function postGameEditResult(
 	{ user: editor, session: _session }: UserSession,
-	input: GameEditResultInput
+	input: GameEditResultInput,
 ): Promise<Empty> {
 	debug(logNow(), 'function postGameEditResult...');
 
@@ -123,7 +123,7 @@ export async function postGameEditResult(
 
 export async function postGameEditTitle(
 	{ user: editor, session: _session }: UserSession,
-	input: GameEditTitleInput
+	input: GameEditTitleInput,
 ): Promise<Empty> {
 	debug(logNow(), 'function postGameEditTitle...');
 
@@ -140,7 +140,7 @@ export async function postGameEditTitle(
 
 export async function postGameDelete(
 	{ user: deleter, session: _session }: UserSession,
-	input: GameDeleteInput
+	input: GameDeleteInput,
 ): Promise<Empty> {
 	debug(logNow(), 'function postGameDelete...');
 
