@@ -93,7 +93,7 @@ async function defineEndpointPage(route: Route, action: (u: UserSession) => Prom
 }
 
 async function defineEndpointHTMX<R extends Route>(route: R, action: (u: UserSession) => Promise<string>) {
-	router.post(route, (req: Request, res: Response) => {
+	router.get(route, (req: Request, res: Response) => {
 		return entryPointHTMX(route, action, req, res);
 	});
 }

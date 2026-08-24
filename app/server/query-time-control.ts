@@ -28,11 +28,10 @@ const debug = Debug('ELO_CHESS_TRACKER:serverQueryTimeControl');
 
 import { logNow } from '@common/utils/time';
 import { RatingSystemManager } from '@server/managers/rating-system-manager';
-import { ROUTES } from '@common/api/routes';
 import { UserSession } from '@server/models/user';
 
 export async function getQueryHtmlTimeControls(_u: UserSession) {
-	debug(logNow(), `GET ${ROUTES.QUERY_HTML_TIME_CONTROLS}...`);
+	debug(logNow(), 'function getQueryHtmlTimeControls...');
 
 	let html: string = '';
 	const tcs = RatingSystemManager.getInstance().getTimeControls();
@@ -43,7 +42,7 @@ export async function getQueryHtmlTimeControls(_u: UserSession) {
 }
 
 export async function getQueryHtmlTimeControlsUnique(_u: UserSession) {
-	debug(logNow(), `GET ${ROUTES.QUERY_HTML_TIME_CONTROLS_UNIQUE}...`);
+	debug(logNow(), 'function getQueryHtmlTimeControlsUnique...');
 
 	let html: string = '';
 	const tcs = RatingSystemManager.getInstance().getUniqueTimeControlsIds();
