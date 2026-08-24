@@ -118,21 +118,21 @@ export function sessionUserDeleteAll(session: SessionId) {
 export function isUserLoggedIn(session: SessionId): [boolean, string, User | undefined] {
 	const user = UsersManager.getInstance().getAllUserDataByPublicId(session.publicId);
 	if (isNotDefined(user)) {
-		debug(logNow(), `User '${session.publicId}' does not exist.`);
+		debug(logNow(), `User does not exist.`);
 		return [false, 'Forbidden access. <a href="/">Go home</a>.', undefined];
 	}
 
-	debug(logNow(), `User '${session.publicId}' exists and is trying to access the page.`);
+	debug(logNow(), `User exists and is trying to access the page.`);
 	debug(logNow(), `Checking now if the user has a valid session ID.`);
 
 	// at this point, the user exists --> check if the session id received exists
 	if (!SessionIDManager.getInstance().hasSessionId(session)) {
-		debug(logNow(), `    The session ID received for user '${session.publicId}' does not exist.`);
+		debug(logNow(), `    The session ID received for user does not exist.`);
 		debug(logNow(), '    This means that the user is not logged into the web in');
 		debug(logNow(), '    the device they are trying to access the web from.');
 		return [false, 'Forbidden access. <a href="/">Go home</a>.', undefined];
 	} else {
-		debug(logNow(), `    Valid session ID received for user '${session.publicId}'.`);
+		debug(logNow(), `    Valid session ID received for user.`);
 	}
 	return [true, '', user.user];
 }
