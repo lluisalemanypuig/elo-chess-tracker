@@ -31,7 +31,7 @@ import {
 } from '@common/models/user-role';
 import { isNotDefined } from '@common/utils/is-defined';
 import { ROUTES } from '@common/api/routes';
-import { PlayerPublicId } from '@common/models/player-id';
+import { toPlayerPublicId } from '@common/models/player-id';
 import { toUserGivenName } from '@common/models/user-given-name';
 
 async function userWasChanged(_event: any) {
@@ -49,7 +49,7 @@ async function userWasChanged(_event: any) {
 
 	if (usernameOption !== null) {
 		const userId = (usernameOption as HTMLOptionElement).id;
-		const response = await serverCall(ROUTES.QUERY_USER_EDIT, { u: Number(userId) as PlayerPublicId });
+		const response = await serverCall(ROUTES.QUERY_USER_EDIT, { u: toPlayerPublicId(userId) });
 		if (response.status === 'Error') {
 			alert(messageFromResponse(response));
 			return;
@@ -76,7 +76,9 @@ async function userWasChanged(_event: any) {
 async function submitWasClicked(_event: any) {
 	// username
 	let usernameListInput = document.getElementById('username-list') as HTMLInputElement;
-	const userRid = (document.querySelector('option[value="' + usernameListInput.value + '"]') as HTMLOptionElement).id;
+	const userPublicId = (
+		document.querySelector('option[value="' + usernameListInput.value + '"]') as HTMLOptionElement
+	).id;
 
 	// first and last name
 	const firstName = (document.getElementById('box-first-name') as HTMLInputElement).value;
@@ -96,7 +98,7 @@ async function submitWasClicked(_event: any) {
 	}
 
 	const response = await serverCall(ROUTES.USER_EDIT, {
-		publicId: Number(userRid) as PlayerPublicId,
+		publicId: toPlayerPublicId(userPublicId),
 		firstName: toUserGivenName(firstName),
 		lastName: toUserGivenName(lastName),
 		roles: selectedRoles

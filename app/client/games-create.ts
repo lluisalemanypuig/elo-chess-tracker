@@ -27,7 +27,7 @@ import { ROUTES } from '@common/api/routes';
 import { TimeControlId, TimeControlName } from '@common/models/time-control';
 import { toDateMajor, toDateMinor } from '@common/utils/time';
 import { resultFromTextToValue } from '@common/models/game-result';
-import { PlayerPublicId } from '@common/models/player-id';
+import { toPlayerPublicId } from '@common/models/player-id';
 
 async function initializeWindowClientGamesCreate() {
 	let datalistWhiteUsers = document.getElementById('datalist-white-users') as HTMLDataListElement;
@@ -83,8 +83,8 @@ async function submitNewGame(_event: any) {
 		console.log('Could not find black option');
 		return;
 	}
-	const white = Number(whiteOption.id) as PlayerPublicId;
-	const black = Number(blackOption.id) as PlayerPublicId;
+	const white = toPlayerPublicId(whiteOption.id);
+	const black = toPlayerPublicId(blackOption.id);
 	const whenCreated = toDateMajor(inputGameDate.value);
 
 	const randSec = `${Math.floor(Math.random() * 59)}`;

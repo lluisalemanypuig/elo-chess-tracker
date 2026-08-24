@@ -31,7 +31,7 @@ import {
 	QueryChallengesSentOutputSingle
 } from '@common/api/schemas/query-challenges';
 import { TimeControlId, TimeControlName } from '@common/models/time-control';
-import { PlayerPrivateId, PlayerPublicId, toPlayerPublicId } from '@common/models/player-id';
+import { PlayerPrivateId, toPlayerPublicId } from '@common/models/player-id';
 import { GameResult } from '@common/models/game-result';
 
 function createLabelText(text: string): HTMLLabelElement {
@@ -50,7 +50,7 @@ async function sendChallengeButtonClicked(_event: any) {
 	const usernameOption = document.querySelector('option[value="' + usernameListInput.value + '"]');
 
 	if (usernameOption !== null) {
-		const publicUserId = Number(usernameOption.id) as PlayerPublicId;
+		const publicUserId = toPlayerPublicId(usernameOption.id);
 
 		const selectTimeControl = document.getElementById('select-time-control') as HTMLSelectElement;
 		const timeControlId = selectTimeControl.options[selectTimeControl.selectedIndex].value as TimeControlId;
@@ -124,8 +124,8 @@ async function submitResultChallengeButtonClicked(event: any) {
 	// "query" the server
 	const response = await serverCall(ROUTES.CHALLENGE_SET_RESULT, {
 		id: challengeId,
-		white: toPlayerPublicId(Number(whitePublicId)),
-		black: toPlayerPublicId(Number(blackPublicId)),
+		white: toPlayerPublicId(whitePublicId),
+		black: toPlayerPublicId(blackPublicId),
 		result: result
 	});
 	if (response.status === 'Error') {
