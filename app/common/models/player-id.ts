@@ -27,15 +27,21 @@ import { z } from 'zod';
 
 // Player public ID
 
+export const PLAYER_PUBLIC_ID_LENGTH = 256;
+
 declare const PlayerPublicIdBrand: unique symbol;
-export type PlayerPublicIdLocal = number & {
+export type PlayerPublicIdLocal = string & {
 	readonly [PlayerPublicIdBrand]: 'PlayerPublicId';
 };
-export const PlayerPublicIdSchema = z.number().gte(0).brand<'PlayerPublicIdLocal'>();
+export const PlayerPublicIdSchema = z
+	.string()
+	.min(PLAYER_PUBLIC_ID_LENGTH)
+	.max(PLAYER_PUBLIC_ID_LENGTH)
+	.brand<'PlayerPublicIdLocal'>();
 export type PlayerPublicId = z.infer<typeof PlayerPublicIdSchema>;
 
-export function toPlayerPublicId(n: number): PlayerPublicId {
-	return n as PlayerPublicId;
+export function toPlayerPublicId(s: string): PlayerPublicId {
+	return s as PlayerPublicId;
 }
 
 // Player private ID

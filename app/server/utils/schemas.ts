@@ -29,7 +29,7 @@ import { Request } from 'express';
 
 import { isDefined, isNotDefined } from '@common/utils/is-defined';
 import { logNow } from '@common/utils/time';
-import { AuthenticationInputSchema, authenticationInputSchemaToSessionId } from '@common/api/schemas/authentication';
+import { AuthenticationInputSchema } from '@common/api/schemas/authentication';
 import { SessionId } from '@common//models/session-id';
 
 export type ParseResult = 'jsonDataNotProvided' | 'error' | 'success';
@@ -95,7 +95,7 @@ export function safeParseRequestCookies(req: Request, debug: Debug.Debugger): Sa
 	}
 	return {
 		result: 'good',
-		data: authenticationInputSchemaToSessionId(parse.data)
+		data: parse.data
 	};
 }
 

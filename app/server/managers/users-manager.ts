@@ -27,12 +27,42 @@ import { isDefined, isNotDefined } from '@common/utils/is-defined';
 import { User } from '@server/models/user';
 import { searchLinearByKey } from '@server/utils/searching';
 import { InternalError } from '@server/models/error-types/internal-error';
-import { PlayerPrivateId, PlayerPublicId, toPlayerPublicId } from '@common/models/player-id';
+import { PLAYER_PUBLIC_ID_LENGTH, PlayerPrivateId, PlayerPublicId, toPlayerPublicId } from '@common/models/player-id';
+import { shuffleArray } from '@common/utils/shuffle-random';
 
 interface UserBundle {
 	user: User;
 	publicId: PlayerPublicId;
 	index: number;
+}
+
+// In case of accidental overwrite, use:
+// '$ALLOWED-SYMBOLS-PLAYER-PUBLIC-ID'
+// (replace the dashes '-' with underscores '_')
+
+// This string is randomized by the build script which the administrator must
+// use in order to configure the webpage in their machine.
+const characterSamples: string = '$ALLOWED_SYMBOLS_PLAYER_PUBLIC_ID';
+
+// Makes a random session token from a starting string.
+function randomPlayerPublicId(str: string): string {
+	const cryptoObj = globalThis.crypto;
+
+	let stringArray: string[] = [];
+	for (const char of str) {
+		stringArray.push(char);
+	}
+
+	const rand = new Uint32Array(PLAYER_PUBLIC_ID_LENGTH - stringArray.length);
+	cryptoObj.getRandomValues(rand);
+	const currentLength = stringArray.length;
+	for (let i = currentLength; i < PLAYER_PUBLIC_ID_LENGTH; ++i) {
+		const randIdx = rand[i - currentLength] % characterSamples.length;
+		stringArray.push(characterSamples.charAt(randIdx));
+	}
+
+	shuffleArray(stringArray);
+	return stringArray.join('');
 }
 
 /**
@@ -76,11 +106,10 @@ export class UsersManager {
 
 	addUser(u: User) {
 		this.users.push(u);
-
 		// stupid and slow way of generating a unique random id
-		let publicId = Math.floor(Math.random() * 10_000_000);
+		let publicId = randomPlayerPublicId(u.username);
 		while (publicId in this.publicIds) {
-			publicId = Math.floor(Math.random() * 10_000_000);
+			publicId = randomPlayerPublicId(u.username);
 		}
 		this.publicIds.push(toPlayerPublicId(publicId));
 	}
@@ -99,7 +128,7 @@ export class UsersManager {
 		return idx !== -1 ? idx : undefined;
 	}
 	getIndexByPublicId(publicId: PlayerPublicId): number | undefined {
-		const idx = searchLinearByKey(this.publicIds, (n: number): boolean => {
+		const idx = searchLinearByKey(this.publicIds, (n: PlayerPublicId): boolean => {
 			return n === publicId;
 		});
 		return idx !== -1 ? idx : undefined;

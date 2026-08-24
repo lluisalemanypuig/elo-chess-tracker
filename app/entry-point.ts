@@ -30,7 +30,7 @@ const debug = Debug('ELO_CHESS_TRACKER:entry-point');
 import { logNow } from '@common/utils/time';
 
 import { Route } from '@common/api/routes';
-import { Empty, EmptySchema, inputSchemaOf, methodTypeOf, outputSchemaOf } from '@common/api/schemas-endpoints';
+import { EmptySchema, inputSchemaOf, methodTypeOf, outputSchemaOf } from '@common/api/schemas-endpoints';
 import { safeParseRequestBody, safeParseRequestCookies } from '@server/utils/schemas';
 import { isUserLoggedIn } from '@server/managers/session';
 import { isNotDefined } from '@common/utils/is-defined';

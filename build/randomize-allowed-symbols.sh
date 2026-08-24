@@ -7,38 +7,30 @@ function escape_string {
 	echo $replaceEscaped
 }
 
-# app/server/utils/encrypt.ts
+function apply_to_file {
 
-file='app/server/utils/encrypt.ts'
-if [ ! -f $file ]; then
-	echo "    File '$f' does not exist"
-	exit 1
-fi
-raw_symbols_encrypt=$(bun build/random-symbols.ts)
-symbols_encrypt=$(echo "$raw_symbols_encrypt" | jq -r '.symbols')
-echo "Replacing with symbols: $symbols_encrypt"
-sed -i "s/\$ALLOWED_SYMBOLS_ENCRYPT/$(escape_string "$symbols_encrypt")/g" $file
+	file=$1
+	string_to_replace=$2
 
-# app/server/managers/session.ts
+	if [ ! -f $file ]; then
+		echo "    File '$f' does not exist"
+		exit 1
+	fi
+	if [ -z $string_to_replace ]; then
+		echo "No string to replace given for file '$file'"
+		exit 1
+	fi
 
-file='app/server/managers/session.ts'
-if [ ! -f $file ]; then
-	echo "    File '$f' does not exist"
-	exit 1
-fi
-raw_symbols_cookies=$(bun build/random-symbols.ts)
-symbols_cookies=$(echo "$raw_symbols_cookies" | jq -r '.symbols')
-echo "Replacing with symbols: $symbols_encrypt"
-sed -i "s/\$ALLOWED_SYMBOLS_COOKIES/$(escape_string "$symbols_cookies")/g" $file
+	raw_symbols_encrypt=$(bun build/random-symbols.ts)
+	symbols_encrypt=$(echo "$raw_symbols_encrypt" | jq -r '.symbols')
+	echo "Replacing with symbols: $symbols_encrypt"
+	sed -i "s/$string_to_replace/$(escape_string "$symbols_encrypt")/g" $file
 
-# app/client/users-new.ts
+}
 
-file='app/client/users-new.ts'
-if [ ! -f $file ]; then
-	echo "    File '$f' does not exist"
-	exit 1
-fi
-raw_symbols_cookies=$(bun build/random-symbols.ts)
-symbols_cookies=$(echo "$raw_symbols_cookies" | jq -r '.symbols')
-echo "Replacing with symbols: $symbols_encrypt"
-sed -i "s/\$ALLOWED_SYMBOLS_RANDOM_PASSWORD/$(escape_string "$symbols_cookies")/g" $file
+apply_to_file 'app/client/users-new.ts' '\$ALLOWED_SYMBOLS_RANDOM_PASSWORD'
+apply_to_file 'app/server/utils/encrypt.ts' '\$ALLOWED_SYMBOLS_ENCRYPT'
+apply_to_file 'app/server/managers/session.ts' '\$ALLOWED_SYMBOLS_COOKIES'
+apply_to_file 'app/server/managers/users-manager.ts' '\$ALLOWED_SYMBOLS_PLAYER_PUBLIC_ID'
+
+

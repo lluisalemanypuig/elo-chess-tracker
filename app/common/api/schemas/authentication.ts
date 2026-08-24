@@ -24,19 +24,8 @@ Contact:
 */
 
 import { z } from 'zod';
-import { SessionId } from '@common/models/session-id';
-import { toPlayerPublicId } from '@common/models/player-id';
+import { SessionIdSchema } from '@common/models/session-id';
 
-export const AuthenticationInputSchema = z.object({
-	token: z.string(),
-	publicId: z.string()
-});
+export const AuthenticationInputSchema = SessionIdSchema;
 
 export type AuthenticationInput = z.infer<typeof AuthenticationInputSchema>;
-
-export function authenticationInputSchemaToSessionId(id: AuthenticationInput): SessionId {
-	return {
-		token: id.token,
-		publicId: toPlayerPublicId(Number(id.publicId))
-	};
-}

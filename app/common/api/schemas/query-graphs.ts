@@ -60,8 +60,8 @@ export type EdgeWeight = z.infer<typeof EdgeWeightSchema>;
 
 export const EdgeInfoSchema = z
 	.object({
-		source: z.number(),
-		target: z.number(),
+		source: PlayerPublicIdSchema,
+		target: PlayerPublicIdSchema,
 		label: z.string(),
 		weight: EdgeWeightSchema
 	})
