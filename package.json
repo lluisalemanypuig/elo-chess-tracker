@@ -6,7 +6,8 @@
 		"run": "bun run ./app/main.ts",
 		"debug": "DEBUG=ELO_CHESS_TRACKER:* bun run ./app/main.ts",
 		"check": "bun test --bail --path-ignore-patterns=js-full/tests/*",
-		"compile": "./build/compile-deep.sh"
+		"compile": "./build/compile-deep.sh",
+		"format": "npx prettier --write \"app/**/*\" \"tests/**/*\""
 	},
 	"devDependencies": {
 		"@types/compression": "^1.8.1",
