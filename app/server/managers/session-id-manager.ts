@@ -45,7 +45,8 @@ export class SessionIDManager {
 	}
 
 	static getInstance(): SessionIDManager {
-		SessionIDManager.instance = SessionIDManager.instance || new SessionIDManager();
+		SessionIDManager.instance =
+			SessionIDManager.instance || new SessionIDManager();
 		return SessionIDManager.instance;
 	}
 

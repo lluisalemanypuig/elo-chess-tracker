@@ -40,7 +40,12 @@ import Debug from 'debug';
 
 const debug = Debug('ELO_CHESS_TRACKER:managers/graphs');
 
-export function graphUpdate(w: PlayerPrivateId, b: PlayerPrivateId, result: GameResult, id: TimeControlId) {
+export function graphUpdate(
+	w: PlayerPrivateId,
+	b: PlayerPrivateId,
+	result: GameResult,
+	id: TimeControlId,
+) {
 	let manager = GraphsManager.getInstance();
 	let g = manager.getGraph(id);
 	if (isNotDefined(g)) {
@@ -48,7 +53,8 @@ export function graphUpdate(w: PlayerPrivateId, b: PlayerPrivateId, result: Game
 	}
 	g.addEdge(w, b, result);
 
-	const graphsDir = EnvironmentManager.getInstance().getDirGraphsTimeControl(id);
+	const graphsDir =
+		EnvironmentManager.getInstance().getDirGraphsTimeControl(id);
 	graphToFile(graphsDir, [w], g);
 }
 
@@ -66,11 +72,17 @@ export function graphModifyEdge(
 	}
 	g.changeGameResult(w, b, oldRes, newRes);
 
-	const graphsDir = EnvironmentManager.getInstance().getDirGraphsTimeControl(id);
+	const graphsDir =
+		EnvironmentManager.getInstance().getDirGraphsTimeControl(id);
 	graphToFile(graphsDir, [w], g);
 }
 
-export function graphDeleteEdge(w: PlayerPrivateId, b: PlayerPrivateId, result: GameResult, id: TimeControlId) {
+export function graphDeleteEdge(
+	w: PlayerPrivateId,
+	b: PlayerPrivateId,
+	result: GameResult,
+	id: TimeControlId,
+) {
 	let manager = GraphsManager.getInstance();
 	let g = manager.getGraph(id);
 	if (isNotDefined(g)) {
@@ -78,7 +90,8 @@ export function graphDeleteEdge(w: PlayerPrivateId, b: PlayerPrivateId, result: 
 	}
 	g.deleteEdge(w, b, result);
 
-	const graphsDir = EnvironmentManager.getInstance().getDirGraphsTimeControl(id);
+	const graphsDir =
+		EnvironmentManager.getInstance().getDirGraphsTimeControl(id);
 	graphToFile(graphsDir, [w], g);
 }
 
@@ -91,9 +104,11 @@ export function recalculateAllGraphs(user: User) {
 	let manager = GraphsManager.getInstance();
 	manager.clear();
 
-	const uniqueTimeControls = RatingSystemManager.getInstance().getUniqueTimeControlsIds();
+	const uniqueTimeControls =
+		RatingSystemManager.getInstance().getUniqueTimeControlsIds();
 	for (const timeControlId of uniqueTimeControls) {
-		const gamesDir = EnvironmentManager.getInstance().getDirGamesTimeControl(timeControlId);
+		const gamesDir =
+			EnvironmentManager.getInstance().getDirGamesTimeControl(timeControlId);
 		let g = new Graph();
 		let iter = new GamesIterator(gamesDir);
 		while (!iter.endRecordList()) {
@@ -103,7 +118,8 @@ export function recalculateAllGraphs(user: User) {
 		}
 		manager.addGraph(timeControlId, g);
 
-		const graphsDir = EnvironmentManager.getInstance().getDirGraphsTimeControl(timeControlId);
+		const graphsDir =
+			EnvironmentManager.getInstance().getDirGraphsTimeControl(timeControlId);
 		graphFullToFile(graphsDir, g);
 	}
 }

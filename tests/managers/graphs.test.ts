@@ -24,7 +24,10 @@ Contact:
 */
 
 import { toPlayerPrivateId } from '@common/models/player-id';
-import { toTimeControlId, toTimeControlName } from '@common/models/time-control';
+import {
+	toTimeControlId,
+	toTimeControlName,
+} from '@common/models/time-control';
 import { isNotDefined } from '@common/utils/is-defined';
 import { graphFromString } from '@server/io/graph/graph';
 import { EnvironmentManager } from '@server/managers/environment-manager';
@@ -132,7 +135,9 @@ const C = toPlayerPrivateId('C');
 describe('Server setup', () => {
 	test('Load an empty server', async () => {
 		await runCommand('./tests/initialize-empty.sh');
-		expect(() => serverInitFromData('tests/webpage', configuration)).not.toThrow();
+		expect(() =>
+			serverInitFromData('tests/webpage', configuration),
+		).not.toThrow();
 	});
 });
 
@@ -140,7 +145,9 @@ describe('Simple construction and query', () => {
 	test(Blitz, () => {
 		graphUpdate(A, B, 'white_wins', Blitz);
 		{
-			const g = graphFromString(EnvironmentManager.getInstance().getDirGraphsTimeControl(Blitz));
+			const g = graphFromString(
+				EnvironmentManager.getInstance().getDirGraphsTimeControl(Blitz),
+			);
 			expect(g).not.toBeNull();
 			if (isNotDefined(g)) {
 				return;
@@ -161,7 +168,9 @@ describe('Simple construction and query', () => {
 
 		graphUpdate(A, B, 'white_wins', Blitz);
 		{
-			const g = graphFromString(EnvironmentManager.getInstance().getDirGraphsTimeControl(Blitz));
+			const g = graphFromString(
+				EnvironmentManager.getInstance().getDirGraphsTimeControl(Blitz),
+			);
 			expect(g).not.toBeNull();
 			if (isNotDefined(g)) {
 				return;
@@ -182,7 +191,9 @@ describe('Simple construction and query', () => {
 
 		graphUpdate(A, B, 'white_wins', Blitz);
 		{
-			const g = graphFromString(EnvironmentManager.getInstance().getDirGraphsTimeControl(Blitz));
+			const g = graphFromString(
+				EnvironmentManager.getInstance().getDirGraphsTimeControl(Blitz),
+			);
 			expect(g).not.toBeNull();
 			if (isNotDefined(g)) {
 				return;
@@ -205,7 +216,9 @@ describe('Simple construction and query', () => {
 	test(Classical, () => {
 		graphUpdate(A, B, 'white_wins', Classical);
 		{
-			const g = graphFromString(EnvironmentManager.getInstance().getDirGraphsTimeControl(Classical));
+			const g = graphFromString(
+				EnvironmentManager.getInstance().getDirGraphsTimeControl(Classical),
+			);
 			expect(g).not.toBeNull();
 			if (isNotDefined(g)) {
 				return;
@@ -226,7 +239,9 @@ describe('Simple construction and query', () => {
 
 		graphUpdate(A, B, 'black_wins', Classical);
 		{
-			const g = graphFromString(EnvironmentManager.getInstance().getDirGraphsTimeControl(Classical));
+			const g = graphFromString(
+				EnvironmentManager.getInstance().getDirGraphsTimeControl(Classical),
+			);
 			expect(g).not.toBeNull();
 			if (isNotDefined(g)) {
 				return;
@@ -247,7 +262,9 @@ describe('Simple construction and query', () => {
 
 		graphUpdate(A, B, 'draw', Classical);
 		{
-			const g = graphFromString(EnvironmentManager.getInstance().getDirGraphsTimeControl(Classical));
+			const g = graphFromString(
+				EnvironmentManager.getInstance().getDirGraphsTimeControl(Classical),
+			);
 			expect(g).not.toBeNull();
 			if (isNotDefined(g)) {
 				return;
@@ -281,7 +298,9 @@ describe('Edge update', () => {
 		graphUpdate(A, B, 'white_wins', Classical);
 		graphModifyEdge(A, B, 'white_wins', 'draw', Classical);
 		{
-			const g = graphFromString(EnvironmentManager.getInstance().getDirGraphsTimeControl(Classical));
+			const g = graphFromString(
+				EnvironmentManager.getInstance().getDirGraphsTimeControl(Classical),
+			);
 			expect(g).not.toBeNull();
 			if (isNotDefined(g)) {
 				return;
@@ -314,7 +333,9 @@ describe('Edge update', () => {
 
 		graphModifyEdge(A, B, 'draw', 'black_wins', Classical);
 		{
-			const g = graphFromString(EnvironmentManager.getInstance().getDirGraphsTimeControl(Classical));
+			const g = graphFromString(
+				EnvironmentManager.getInstance().getDirGraphsTimeControl(Classical),
+			);
 			expect(g).not.toBeNull();
 			if (isNotDefined(g)) {
 				return;
@@ -347,7 +368,9 @@ describe('Edge update', () => {
 
 		graphModifyEdge(A, B, 'black_wins', 'draw', Classical);
 		{
-			const g = graphFromString(EnvironmentManager.getInstance().getDirGraphsTimeControl(Classical));
+			const g = graphFromString(
+				EnvironmentManager.getInstance().getDirGraphsTimeControl(Classical),
+			);
 			expect(g).not.toBeNull();
 			if (isNotDefined(g)) {
 				return;
@@ -383,7 +406,9 @@ describe('Edge update', () => {
 
 		graphModifyEdge(C, A, 'white_wins', 'draw', Classical);
 		{
-			const g = graphFromString(EnvironmentManager.getInstance().getDirGraphsTimeControl(Classical));
+			const g = graphFromString(
+				EnvironmentManager.getInstance().getDirGraphsTimeControl(Classical),
+			);
 			expect(g).not.toBeNull();
 			if (isNotDefined(g)) {
 				return;
@@ -416,7 +441,9 @@ describe('Edge update', () => {
 
 		graphModifyEdge(C, B, 'black_wins', 'draw', Classical);
 		{
-			const g = graphFromString(EnvironmentManager.getInstance().getDirGraphsTimeControl(Classical));
+			const g = graphFromString(
+				EnvironmentManager.getInstance().getDirGraphsTimeControl(Classical),
+			);
 			expect(g).not.toBeNull();
 			if (isNotDefined(g)) {
 				return;

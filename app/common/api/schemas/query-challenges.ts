@@ -43,11 +43,17 @@ export const QueryChallengesReceivedOutputSingleSchema = z
 	})
 	.strict();
 
-export type QueryChallengesReceivedOutputSingle = z.infer<typeof QueryChallengesReceivedOutputSingleSchema>;
+export type QueryChallengesReceivedOutputSingle = z.infer<
+	typeof QueryChallengesReceivedOutputSingleSchema
+>;
 
-export const QueryChallengesReceivedOutputSchema = z.array(QueryChallengesReceivedOutputSingleSchema);
+export const QueryChallengesReceivedOutputSchema = z.array(
+	QueryChallengesReceivedOutputSingleSchema,
+);
 
-export type QueryChallengesReceivedOutput = z.infer<typeof QueryChallengesReceivedOutputSchema>;
+export type QueryChallengesReceivedOutput = z.infer<
+	typeof QueryChallengesReceivedOutputSchema
+>;
 
 // ROUTES.QUERY_CHALLENGE_SENT
 
@@ -62,11 +68,17 @@ export const QueryChallengesSentOutputSingleSchema = z
 	})
 	.strict();
 
-export type QueryChallengesSentOutputSingle = z.infer<typeof QueryChallengesSentOutputSingleSchema>;
+export type QueryChallengesSentOutputSingle = z.infer<
+	typeof QueryChallengesSentOutputSingleSchema
+>;
 
-export const QueryChallengesSentOutputSchema = z.array(QueryChallengesSentOutputSingleSchema);
+export const QueryChallengesSentOutputSchema = z.array(
+	QueryChallengesSentOutputSingleSchema,
+);
 
-export type QueryChallengesSentOutput = z.infer<typeof QueryChallengesSentOutputSchema>;
+export type QueryChallengesSentOutput = z.infer<
+	typeof QueryChallengesSentOutputSchema
+>;
 
 // ROUTES.QUERY_CHALLENGE_PENDING_RESULT
 
@@ -88,11 +100,17 @@ export const QueryChallengesPendingResultOutputSingleSchema = z
 	})
 	.strict();
 
-export type QueryChallengesPendingResultOutputSingle = z.infer<typeof QueryChallengesPendingResultOutputSingleSchema>;
+export type QueryChallengesPendingResultOutputSingle = z.infer<
+	typeof QueryChallengesPendingResultOutputSingleSchema
+>;
 
-export const QueryChallengesPendingResultOutputSchema = z.array(QueryChallengesPendingResultOutputSingleSchema);
+export const QueryChallengesPendingResultOutputSchema = z.array(
+	QueryChallengesPendingResultOutputSingleSchema,
+);
 
-export type QueryChallengesPendingResultOutput = z.infer<typeof QueryChallengesPendingResultOutputSchema>;
+export type QueryChallengesPendingResultOutput = z.infer<
+	typeof QueryChallengesPendingResultOutputSchema
+>;
 
 // ROUTES.QUERY_CHALLENGE_CONFIRM_RESULT_OTHER
 
@@ -117,7 +135,9 @@ export const QueryChallengesConfirmResultOtherOutputSchema = z.array(
 	QueryChallengesConfirmResultOtherOutputSingleSchema,
 );
 
-export type QueryChallengesConfirmResultOtherOutput = z.infer<typeof QueryChallengesConfirmResultOtherOutputSchema>;
+export type QueryChallengesConfirmResultOtherOutput = z.infer<
+	typeof QueryChallengesConfirmResultOtherOutputSchema
+>;
 
 // ROUTES.QUERY_CHALLENGE_CONFIRM_RESULT_SELF
 
@@ -138,6 +158,10 @@ export type QueryChallengesConfirmResultSelfOutputSingle = z.infer<
 	typeof QueryChallengesConfirmResultSelfOutputSingleSchema
 >;
 
-export const QueryChallengesConfirmResultSelfOutputSchema = z.array(QueryChallengesConfirmResultSelfOutputSingleSchema);
+export const QueryChallengesConfirmResultSelfOutputSchema = z.array(
+	QueryChallengesConfirmResultSelfOutputSingleSchema,
+);
 
-export type QueryChallengesConfirmResultSelfOutput = z.infer<typeof QueryChallengesConfirmResultSelfOutputSchema>;
+export type QueryChallengesConfirmResultSelfOutput = z.infer<
+	typeof QueryChallengesConfirmResultSelfOutputSchema
+>;

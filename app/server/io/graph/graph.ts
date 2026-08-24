@@ -44,7 +44,11 @@ const debug = Debug('ELO_CHESS_TRACKER:io');
  * @param username The actual filename.
  * @param edges The information to save.
  */
-export function neighborhoodToFile(dir: string, username: PlayerPrivateId, edges: Neighborhood) {
+export function neighborhoodToFile(
+	dir: string,
+	username: PlayerPrivateId,
+	edges: Neighborhood,
+) {
 	const filename = path.join(dir, username);
 	fs.writeFileSync(filename, JSON.stringify(edges, null, 4));
 }

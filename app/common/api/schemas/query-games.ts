@@ -24,7 +24,10 @@ Contact:
 */
 
 import { GameIdSchema } from '@common/models/game-id';
-import { TimeControlIdSchema, TimeControlNameSchema } from '@common/models/time-control';
+import {
+	TimeControlIdSchema,
+	TimeControlNameSchema,
+} from '@common/models/time-control';
 import { UserGivenNameSchema } from '@common/models/user-given-name';
 import { DateFullSchema } from '@common/utils/time';
 import { z } from 'zod';
@@ -37,7 +40,9 @@ export const QueryGamesListOwnInputSchema = z
 	})
 	.strict();
 
-export type QueryGamesListOwnInput = z.infer<typeof QueryGamesListOwnInputSchema>;
+export type QueryGamesListOwnInput = z.infer<
+	typeof QueryGamesListOwnInputSchema
+>;
 
 // ROUTES.QUERY_GAME_LIST_ALL
 
@@ -47,7 +52,9 @@ export const QueryGamesListAllInputSchema = z
 	})
 	.strict();
 
-export type QueryGamesListAllInput = z.infer<typeof QueryGamesListAllInputSchema>;
+export type QueryGamesListAllInput = z.infer<
+	typeof QueryGamesListAllInputSchema
+>;
 
 // ROUTES.QUERY_GAME_LIST_OWN + Routes.QUERY_GAME_LIST_ALL
 
@@ -69,8 +76,12 @@ export const QueryGamesListOutputSingleSchema = z
 	})
 	.strict();
 
-export type QueryGamesListOutputSingle = z.infer<typeof QueryGamesListOutputSingleSchema>;
+export type QueryGamesListOutputSingle = z.infer<
+	typeof QueryGamesListOutputSingleSchema
+>;
 
-export const QueryGamesListOutputSchema = z.array(QueryGamesListOutputSingleSchema);
+export const QueryGamesListOutputSchema = z.array(
+	QueryGamesListOutputSingleSchema,
+);
 
 export type QueryGamesListOutput = z.infer<typeof QueryGamesListOutputSchema>;

@@ -46,7 +46,10 @@ import Debug from 'debug';
 
 const debug = Debug('ELO_CHESS_TRACKER:serverQueryGraphs');
 
-function retrieveGraphUser(username: PlayerPrivateId, timeControlId: TimeControlId): QueryGraphOutput {
+function retrieveGraphUser(
+	username: PlayerPrivateId,
+	timeControlId: TimeControlId,
+): QueryGraphOutput {
 	const users = UsersManager.getInstance();
 	const graphs = GraphsManager.getInstance();
 
@@ -141,7 +144,10 @@ function retrieveGraphUser(username: PlayerPrivateId, timeControlId: TimeControl
 	return { nodes: listNodes, edges: listEdges };
 }
 
-function retrieveGraphFull(querier: User, timeControlId: TimeControlId): QueryGraphOutput {
+function retrieveGraphFull(
+	querier: User,
+	timeControlId: TimeControlId,
+): QueryGraphOutput {
 	const users = UsersManager.getInstance();
 	const graphs = GraphsManager.getInstance();
 
@@ -201,26 +207,40 @@ function retrieveGraphFull(querier: User, timeControlId: TimeControlId): QueryGr
 	return { nodes: listNodes, edges: listEdges };
 }
 
-export async function postQueryGraphOwn({ user, session: _session }: UserSession, input: QueryGraphOwnInput) {
+export async function postQueryGraphOwn(
+	{ user, session: _session }: UserSession,
+	input: QueryGraphOwnInput,
+) {
 	debug(logNow(), 'function postQueryGraphOwn...');
 
 	const timeControlId = input.timeControlId;
 
-	debug(logNow(), `User ${user.username} is querying their own graph of time control ${timeControlId}.`);
+	debug(
+		logNow(),
+		`User ${user.username} is querying their own graph of time control ${timeControlId}.`,
+	);
 
 	return retrieveGraphUser(user.username, timeControlId);
 }
 
-export async function postQueryGraphFull({ user, session: _session }: UserSession, input: QueryGraphFullInput) {
+export async function postQueryGraphFull(
+	{ user, session: _session }: UserSession,
+	input: QueryGraphFullInput,
+) {
 	debug(logNow(), 'function postQueryGraphFull...');
 
 	if (!user.canDo('SEE_GRAPHS')) {
-		throw new PublicError('You do not have enough permissions to see the full graph.');
+		throw new PublicError(
+			'You do not have enough permissions to see the full graph.',
+		);
 	}
 
 	const timeControlId = input.timeControlId;
 
-	debug(logNow(), `User ${user.username} is querying the graph of the entire server of time control ${timeControlId}.`);
+	debug(
+		logNow(),
+		`User ${user.username} is querying the graph of the entire server of time control ${timeControlId}.`,
+	);
 
 	return retrieveGraphFull(user, timeControlId);
 }

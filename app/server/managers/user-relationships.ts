@@ -108,7 +108,11 @@ export function canUserSendChallenge(sender: User, receiver: User): boolean {
 	);
 }
 
-export function canUserDeclineChallenge(u1: User, u2: User, id: TimeControlId): boolean {
+export function canUserDeclineChallenge(
+	u1: User,
+	u2: User,
+	id: TimeControlId,
+): boolean {
 	if (u1.getRating(id).rating > u2.getRating(id).rating) {
 		return UsersBehavior.getInstance().canHigherRatedDeclineChallengeLowerRated();
 	}

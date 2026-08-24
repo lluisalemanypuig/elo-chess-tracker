@@ -41,7 +41,11 @@ export async function getPageLogin(req: Request, res: Response) {
 	let sendHome: boolean;
 	debug(logNow(), `GET ${ROUTES.ROOT}`);
 
-	const sessionParse = parseSchema(req.cookies, AuthenticationInputSchema, debug);
+	const sessionParse = parseSchema(
+		req.cookies,
+		AuthenticationInputSchema,
+		debug,
+	);
 	if (sessionParse.result === 'Error') {
 		debug(logNow(), req.cookies);
 		return;
@@ -57,7 +61,10 @@ export async function getPageLogin(req: Request, res: Response) {
 		sendHome = r[0];
 
 		if (sendHome) {
-			debug(logNow(), `    Session id for user '${session.publicId}' exists. Please, come in.`);
+			debug(
+				logNow(),
+				`    Session id for user '${session.publicId}' exists. Please, come in.`,
+			);
 		}
 	} else {
 		debug(logNow(), 'There is no user key in the cookies received.');

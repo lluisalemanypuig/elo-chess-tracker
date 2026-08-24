@@ -68,12 +68,19 @@ export async function postChallengeSend(
 	const timeControlName = input.timeControlName;
 	const title = input.title;
 
-	debug(logNow(), `Trying to send challenge from '${sender.username}' to '${receiverPublicId}'.`);
+	debug(
+		logNow(),
+		`Trying to send challenge from '${sender.username}' to '${receiverPublicId}'.`,
+	);
 
-	const receiver = UsersManager.getInstance().getAllUserDataByPublicId(receiverPublicId);
+	const receiver =
+		UsersManager.getInstance().getAllUserDataByPublicId(receiverPublicId);
 
 	if (isNotDefined(receiver)) {
-		debug(logNow(), `User receiver of the challenge '${receiverPublicId}' does not exist.`);
+		debug(
+			logNow(),
+			`User receiver of the challenge '${receiverPublicId}' does not exist.`,
+		);
 		throw new PublicError('User receiver of the challenge does not exist');
 	}
 
@@ -93,12 +100,24 @@ export async function postChallengeSend(
 	}
 	if (!match) {
 		debug(logNow(), `Time control id ${timeControlId} is not valid.`);
-		throw new PublicError('The chosen time control name does not correspond to the given time control id.');
+		throw new PublicError(
+			'The chosen time control name does not correspond to the given time control id.',
+		);
 	}
 
-	debug(logNow(), `Send challenge from '${sender.username}' to '${receiver.user.username}'`);
+	debug(
+		logNow(),
+		`Send challenge from '${sender.username}' to '${receiver.user.username}'`,
+	);
 
-	challengeSendNew(title, sender, receiver.user, timeControlId, timeControlName, logNow());
+	challengeSendNew(
+		title,
+		sender,
+		receiver.user,
+		timeControlId,
+		timeControlName,
+		logNow(),
+	);
 
 	return {};
 }
@@ -111,14 +130,20 @@ export async function postChallengeAccept(
 
 	const challengeId = input.id;
 
-	debug(logNow(), `User '${user.username}' wants to accept challenge '${challengeId}'`);
+	debug(
+		logNow(),
+		`User '${user.username}' wants to accept challenge '${challengeId}'`,
+	);
 
 	const c = ChallengesManager.getInstance().getChallengeById(challengeId);
 	if (isNotDefined(c)) {
 		throw new PublicError('Challenge does not exist');
 	}
 
-	debug(logNow(), `Challenge '${challengeId}' involves players '${c.sentBy}' and '${c.sentTo}'`);
+	debug(
+		logNow(),
+		`Challenge '${challengeId}' involves players '${c.sentBy}' and '${c.sentTo}'`,
+	);
 
 	challengeAccept(c, { by: user.username, when: logNow() });
 
@@ -133,14 +158,20 @@ export async function postChallengeDecline(
 
 	const challengeId = input.id;
 
-	debug(logNow(), `User '${user.username}' wants to decline challenge '${challengeId}'`);
+	debug(
+		logNow(),
+		`User '${user.username}' wants to decline challenge '${challengeId}'`,
+	);
 
 	const c = ChallengesManager.getInstance().getChallengeById(challengeId);
 	if (isNotDefined(c)) {
 		throw new PublicError('Challenge does not exist');
 	}
 
-	debug(logNow(), `Challenge '${challengeId}' involves players '${c.sentBy}' and '${c.sentTo}'`);
+	debug(
+		logNow(),
+		`Challenge '${challengeId}' involves players '${c.sentBy}' and '${c.sentTo}'`,
+	);
 
 	challengeDecline(c, { by: user.username });
 
@@ -160,7 +191,10 @@ export async function postChallengeSetResult(
 	const blackPublicId = input.black;
 	const gameResult = input.result;
 
-	debug(logNow(), `User '${setterUser}' is trying to set the result of a challenge`);
+	debug(
+		logNow(),
+		`User '${setterUser}' is trying to set the result of a challenge`,
+	);
 	debug(logNow(), `    Challenge id: '${challengeId}'`);
 	debug(logNow(), `    White: '${whitePublicId}'`);
 	debug(logNow(), `    Black: '${blackPublicId}'`);

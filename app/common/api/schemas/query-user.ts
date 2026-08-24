@@ -123,4 +123,6 @@ export const QueryUserRankingOutputSchema = z
 	})
 	.strict();
 
-export type QueryUserRankingOutput = z.infer<typeof QueryUserRankingOutputSchema>;
+export type QueryUserRankingOutput = z.infer<
+	typeof QueryUserRankingOutputSchema
+>;

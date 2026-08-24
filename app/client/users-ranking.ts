@@ -26,8 +26,12 @@ import { isDefined } from '@common/utils/is-defined';
 import 'htmx.org';
 
 async function fillRanking(_event: any) {
-	const selectTimeControl = document.getElementById('select-time-control') as HTMLSelectElement;
-	const timeControlId = selectTimeControl.options[selectTimeControl.selectedIndex].value as TimeControlId;
+	const selectTimeControl = document.getElementById(
+		'select-time-control',
+	) as HTMLSelectElement;
+	const timeControlId = selectTimeControl.options[
+		selectTimeControl.selectedIndex
+	].value as TimeControlId;
 
 	if (timeControlId === '') {
 		return;
@@ -40,7 +44,9 @@ async function fillRanking(_event: any) {
 	};
 
 	// "query" the server
-	const response = await serverCall(ROUTES.QUERY_USER_RANKING, { timeControlId: timeControlId });
+	const response = await serverCall(ROUTES.QUERY_USER_RANKING, {
+		timeControlId: timeControlId,
+	});
 	if (response.status === 'Error') {
 		alert(messageFromResponse(response));
 		return;
@@ -49,7 +55,9 @@ async function fillRanking(_event: any) {
 	const listOfUsers = response.value;
 
 	{
-		let table = document.getElementById('users-table-with-games') as HTMLTableElement;
+		let table = document.getElementById(
+			'users-table-with-games',
+		) as HTMLTableElement;
 		let oldTbody = table.getElementsByTagName('tbody')[0];
 		let newTbody = document.createElement('tbody');
 
@@ -71,7 +79,9 @@ async function fillRanking(_event: any) {
 	}
 
 	{
-		let table = document.getElementById('users-table-without-games') as HTMLTableElement;
+		let table = document.getElementById(
+			'users-table-without-games',
+		) as HTMLTableElement;
 		let oldTbody = table.getElementsByTagName('tbody')[0];
 		let newTbody = document.createElement('tbody');
 
@@ -94,6 +104,8 @@ async function fillRanking(_event: any) {
 }
 
 window.onload = async function () {
-	let selectTimeControl = document.getElementById('select-time-control') as HTMLSelectElement;
+	let selectTimeControl = document.getElementById(
+		'select-time-control',
+	) as HTMLSelectElement;
 	selectTimeControl.onchange = fillRanking;
 };

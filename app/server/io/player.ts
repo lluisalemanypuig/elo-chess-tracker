@@ -32,7 +32,10 @@ export function playerFromJson(json: any): Player {
 	const manager = RatingSystemManager.getInstance();
 	let ratings: TimeControlRating[] = [];
 	for (const r of json.ratings) {
-		const rating = new TimeControlRating(r.timeControl, manager.getRatingFromJson(r.rating));
+		const rating = new TimeControlRating(
+			r.timeControl,
+			manager.getRatingFromJson(r.rating),
+		);
 		ratings.push(rating);
 	}
 

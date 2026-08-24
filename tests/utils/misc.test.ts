@@ -39,7 +39,9 @@ describe('Interleave strings', () => {
 
 		expect(interleaveStrings('admin', '星')).toBe('a星dmin');
 		expect(interleaveStrings('admin', '山田')).toBe('a山d田min');
-		expect(interleaveStrings('私は一番有名な人です', '山田')).toBe('私山は田一番有名な人です');
+		expect(interleaveStrings('私は一番有名な人です', '山田')).toBe(
+			'私山は田一番有名な人です',
+		);
 	});
 
 	test('length(A) <= length(B)', () => {
@@ -51,7 +53,9 @@ describe('Interleave strings', () => {
 
 		expect(interleaveStrings('星', 'admin')).toBe('星admin');
 		expect(interleaveStrings('山田', 'admin')).toBe('山a田dmin');
-		expect(interleaveStrings('山田', '私は一番有名な人です')).toBe('山私田は一番有名な人です');
+		expect(interleaveStrings('山田', '私は一番有名な人です')).toBe(
+			'山私田は一番有名な人です',
+		);
 	});
 });
 

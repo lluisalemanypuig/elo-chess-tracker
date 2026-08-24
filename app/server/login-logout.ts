@@ -26,14 +26,20 @@ Contact:
 import { ROUTES } from '@common/api/routes';
 import { Empty } from '@common/api/schemas-endpoints';
 import { UserLoginInputSchema } from '@common/api/schemas/login-logout';
-import { SessionIdPublicIdFieldName, SessionIdTokenFieldName } from '@common/models/session-id';
+import {
+	SessionIdPublicIdFieldName,
+	SessionIdTokenFieldName,
+} from '@common/models/session-id';
 import { isNotDefined } from '@common/utils/is-defined';
 import { logNow } from '@common/utils/time';
 import { sessionIdAdd, sessionIdDelete } from '@server/managers/session';
 import { SessionIDManager } from '@server/managers/session-id-manager';
 import { UsersManager } from '@server/managers/users-manager';
 import { UserSession } from '@server/models/user';
-import { emptySessionIdCookie, makeSessionIdCookie } from '@server/utils/cookies';
+import {
+	emptySessionIdCookie,
+	makeSessionIdCookie,
+} from '@server/utils/cookies';
 import { isPasswordOfUserCorrect } from '@server/utils/encrypt';
 import { safeParseRequestBody } from '@server/utils/schemas';
 import Debug from 'debug';
@@ -55,7 +61,8 @@ export async function postUserLogin(req: Request, res: Response) {
 
 	debug(logNow(), `    Username '${username}'`);
 
-	const userData = UsersManager.getInstance().getAllUserDataByPrivateId(username);
+	const userData =
+		UsersManager.getInstance().getAllUserDataByPrivateId(username);
 
 	// nonexistent user
 	if (isNotDefined(userData)) {
@@ -68,7 +75,11 @@ export async function postUserLogin(req: Request, res: Response) {
 	const pwd = userData.user.password;
 
 	// check if password is correct
-	const isPasswordCorrect = isPasswordOfUserCorrect(username, passwordPlainText, pwd);
+	const isPasswordCorrect = isPasswordOfUserCorrect(
+		username,
+		passwordPlainText,
+		pwd,
+	);
 
 	// correct password
 	if (!isPasswordCorrect) {
@@ -90,7 +101,10 @@ export async function postUserLogin(req: Request, res: Response) {
 	});
 }
 
-export async function postUserLogout({ user: _u, session }: UserSession, _i: Empty) {
+export async function postUserLogout(
+	{ user: _u, session }: UserSession,
+	_i: Empty,
+) {
 	debug(logNow(), 'function postUserLogout...');
 
 	debug(logNow(), `    Cookie:`);
@@ -109,6 +123,9 @@ export async function postUserLogout({ user: _u, session }: UserSession, _i: Emp
 		debug(logNow(), `        Deleted.`);
 	}
 	return {
-		cookies: [emptySessionIdCookie(SessionIdTokenFieldName), emptySessionIdCookie(SessionIdPublicIdFieldName)],
+		cookies: [
+			emptySessionIdCookie(SessionIdTokenFieldName),
+			emptySessionIdCookie(SessionIdPublicIdFieldName),
+		],
 	};
 }

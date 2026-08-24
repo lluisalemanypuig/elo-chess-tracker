@@ -25,12 +25,20 @@ Contact:
 
 import { toPlayerPrivateId } from '@common/models/player-id';
 import { SessionId } from '@common/models/session-id';
-import { toTimeControlId, toTimeControlName } from '@common/models/time-control';
+import {
+	toTimeControlId,
+	toTimeControlName,
+} from '@common/models/time-control';
 import { toUserGivenName } from '@common/models/user-given-name';
 import { isNotDefined } from '@common/utils/is-defined';
 import { clearServer } from '@server/managers/memory/clear';
 import { serverInitFromData } from '@server/managers/memory/initialization';
-import { isUserLoggedIn, sessionIdAdd, sessionIdDelete, sessionUserDeleteAll } from '@server/managers/session';
+import {
+	isUserLoggedIn,
+	sessionIdAdd,
+	sessionIdDelete,
+	sessionUserDeleteAll,
+} from '@server/managers/session';
 import { SessionIDManager } from '@server/managers/session-id-manager';
 import { userAddNew } from '@server/managers/users';
 import { UsersManager } from '@server/managers/users-manager';
@@ -158,16 +166,38 @@ describe('Session management via functions', () => {
 	test('Load an empty server', async () => {
 		await runCommand('./tests/initialize-empty.sh');
 		clearServer();
-		expect(() => serverInitFromData('tests/webpage', configuration)).not.toThrow();
+		expect(() =>
+			serverInitFromData('tests/webpage', configuration),
+		).not.toThrow();
 
-		const admin = UsersManager.getInstance().getAllUserDataByPrivateId(toPlayerPrivateId('admin.default'));
+		const admin = UsersManager.getInstance().getAllUserDataByPrivateId(
+			toPlayerPrivateId('admin.default'),
+		);
 		if (isNotDefined(admin)) {
 			throw new TestError('admin default user could not be retrieved');
 		}
 
-		userAddNew(admin.user, { username: aa, firstName: A, lastName: a, password: 'pass_a', roles: ['ADMIN'] });
-		userAddNew(admin.user, { username: bb, firstName: B, lastName: b, password: 'pass_b', roles: ['MEMBER'] });
-		userAddNew(admin.user, { username: cc, firstName: C, lastName: c, password: 'pass_c', roles: ['MEMBER'] });
+		userAddNew(admin.user, {
+			username: aa,
+			firstName: A,
+			lastName: a,
+			password: 'pass_a',
+			roles: ['ADMIN'],
+		});
+		userAddNew(admin.user, {
+			username: bb,
+			firstName: B,
+			lastName: b,
+			password: 'pass_b',
+			roles: ['MEMBER'],
+		});
+		userAddNew(admin.user, {
+			username: cc,
+			firstName: C,
+			lastName: c,
+			password: 'pass_c',
+			roles: ['MEMBER'],
+		});
 		userAddNew(admin.user, {
 			username: dd,
 			firstName: D,

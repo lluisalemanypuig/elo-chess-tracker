@@ -89,7 +89,10 @@ export function sessionIdDelete(session: SessionId) {
 	debug(logNow(), `Before deleting, '${mem.numSessionIds()}' sessions`);
 	const idx = mem.indexSessionId(session);
 	if (idx !== -1) {
-		debug(logNow(), `    Session of user '${session.publicId}' was found. Deleting...`);
+		debug(
+			logNow(),
+			`    Session of user '${session.publicId}' was found. Deleting...`,
+		);
 		mem.removeSessionId(idx);
 	} else {
 		debug(logNow(), `    Session of user '${session.publicId}' was not found.`);
@@ -114,8 +117,12 @@ export function sessionUserDeleteAll(session: SessionId) {
  *
  * Checks that a user logged in or not using the cookies.
  */
-export function isUserLoggedIn(session: SessionId): [boolean, string, User | undefined] {
-	const user = UsersManager.getInstance().getAllUserDataByPublicId(session.publicId);
+export function isUserLoggedIn(
+	session: SessionId,
+): [boolean, string, User | undefined] {
+	const user = UsersManager.getInstance().getAllUserDataByPublicId(
+		session.publicId,
+	);
 	if (isNotDefined(user)) {
 		debug(logNow(), `User does not exist.`);
 		return [false, 'Forbidden access. <a href="/">Go home</a>.', undefined];
@@ -127,7 +134,10 @@ export function isUserLoggedIn(session: SessionId): [boolean, string, User | und
 	// at this point, the user exists --> check if the session id received exists
 	if (!SessionIDManager.getInstance().hasSessionId(session)) {
 		debug(logNow(), `    The session ID received for user does not exist.`);
-		debug(logNow(), '    This means that the user is not logged into the web in');
+		debug(
+			logNow(),
+			'    This means that the user is not logged into the web in',
+		);
 		debug(logNow(), '    the device they are trying to access the web from.');
 		return [false, 'Forbidden access. <a href="/">Go home</a>.', undefined];
 	} else {

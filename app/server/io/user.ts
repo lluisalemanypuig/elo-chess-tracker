@@ -25,7 +25,11 @@ Contact:
 
 import { UserRoleArraySchema } from '@common/models/user-role';
 import { logNow } from '@common/utils/time';
-import { readJsonArrayString, readJsonObjectString, readSchema } from '@server/io/generic';
+import {
+	readJsonArrayString,
+	readJsonObjectString,
+	readSchema,
+} from '@server/io/generic';
 import { RatingSystemManager } from '@server/managers/rating-system-manager';
 import { PasswordSchema } from '@server/models/password';
 import { TimeControlRating } from '@server/models/time-control-rating';
@@ -75,7 +79,9 @@ export function timeControlGameFromString(str: string): TimeControlGame | null {
  * @param str A string with data of several TimeControlGames.
  * @returns An array of TimeControlGames objects.
  */
-export function timeControlGamesArrayFromString(str: string): TimeControlGame[] | null {
+export function timeControlGamesArrayFromString(
+	str: string,
+): TimeControlGame[] | null {
 	return readSchema(TimeControlGameArraySchema, str);
 }
 
@@ -106,11 +112,22 @@ export function userFromJson(json: any): User | null {
 	const manager = RatingSystemManager.getInstance();
 	let ratings: TimeControlRating[] = [];
 	for (const r of json.ratings) {
-		const rating = new TimeControlRating(r.timeControl, manager.getRatingFromJson(r.rating));
+		const rating = new TimeControlRating(
+			r.timeControl,
+			manager.getRatingFromJson(r.rating),
+		);
 		ratings.push(rating);
 	}
 
-	return new User(json.username, json.firstName, json.lastName, password.data, roles.data, games.data, ratings);
+	return new User(
+		json.username,
+		json.firstName,
+		json.lastName,
+		password.data,
+		roles.data,
+		games.data,
+		ratings,
+	);
 }
 
 /**

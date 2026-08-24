@@ -24,7 +24,12 @@ Contact:
 */
 
 import { Route } from '@common/api/routes';
-import { EmptySchema, inputSchemaOf, methodTypeOf, outputSchemaOf } from '@common/api/schemas-endpoints';
+import {
+	EmptySchema,
+	inputSchemaOf,
+	methodTypeOf,
+	outputSchemaOf,
+} from '@common/api/schemas-endpoints';
 import { InputTypeOf, OutputTypeOf } from '@common/api/types';
 import { isNotDefined } from '@common/utils/is-defined';
 import { logNow } from '@common/utils/time';
@@ -33,7 +38,10 @@ import { getExecutionDirectory } from '@server/managers/environment-manager';
 import { isUserLoggedIn } from '@server/managers/session';
 import { UserSession } from '@server/models/user';
 import { handleError } from '@server/utils/error-handling';
-import { safeParseRequestBody, safeParseRequestCookies } from '@server/utils/schemas';
+import {
+	safeParseRequestBody,
+	safeParseRequestCookies,
+} from '@server/utils/schemas';
 import Debug from 'debug';
 import { Request, Response } from 'express';
 
@@ -135,7 +143,9 @@ export async function entryPointAction<R extends Route>(
 			if (inputParse.result === 'bad') {
 				debug(logNow(), 'Data sent by client:');
 				console.log(JSON.stringify(req.body, null, 2));
-				res.status(401).send('Request input data (body) sent from client is malformed');
+				res
+					.status(401)
+					.send('Request input data (body) sent from client is malformed');
 				return;
 			}
 
@@ -149,7 +159,10 @@ export async function entryPointAction<R extends Route>(
 				res.status(200).send(actionResult);
 			}
 		} else {
-			const actionResult = await action({ user, session }, {} as InputTypeOf<R>);
+			const actionResult = await action(
+				{ user, session },
+				{} as InputTypeOf<R>,
+			);
 			if (outputSchemaOf(route) === EmptySchema) {
 				res.status(204).send();
 			} else {

@@ -72,7 +72,9 @@ export function normalizeString(str: string): string {
 
 	const newLength = newPassword.length;
 	if ((newLength & (newLength - 1)) !== 0) {
-		throw new InternalError(`New password does not have the right length ${newLength}.`);
+		throw new InternalError(
+			`New password does not have the right length ${newLength}.`,
+		);
 	}
 
 	return newPassword;
@@ -87,7 +89,10 @@ export function normalizeString(str: string): string {
  * @param password Password in plain text set by the user.
  * @returns A pair of strings: encrypted text, and random initialization vector of AES (length 16 bytes)
  */
-export function encryptPasswordForUser(username: PlayerPrivateId, password: string): [string, string] {
+export function encryptPasswordForUser(
+	username: PlayerPrivateId,
+	password: string,
+): [string, string] {
 	const normalizedPassword = normalizeString(password);
 	const keyUsedToEncrypt = CryptoJS.SHA256(normalizedPassword);
 
@@ -95,11 +100,15 @@ export function encryptPasswordForUser(username: PlayerPrivateId, password: stri
 
 	const iv = CryptoJS.lib.WordArray.random(16);
 
-	const encrypted = CryptoJS.AES.encrypt(actualPasswordToBeEncrypted, keyUsedToEncrypt, {
-		iv: iv,
-		mode: CryptoJS.mode.CBC,
-		padding: CryptoJS.pad.Pkcs7,
-	});
+	const encrypted = CryptoJS.AES.encrypt(
+		actualPasswordToBeEncrypted,
+		keyUsedToEncrypt,
+		{
+			iv: iv,
+			mode: CryptoJS.mode.CBC,
+			padding: CryptoJS.pad.Pkcs7,
+		},
+	);
 
 	return [encrypted.toString(), iv.toString(CryptoJS.enc.Base64)];
 }
@@ -111,7 +120,10 @@ export function encryptPasswordForUser(username: PlayerPrivateId, password: stri
  * @param iv Initialization vector of AES.
  * @returns A string resulting of decrypting @e encryptedMsg.
  */
-export function decryptPasswordForUser(password: string, { encrypted, iv }: Password): string {
+export function decryptPasswordForUser(
+	password: string,
+	{ encrypted, iv }: Password,
+): string {
 	const normalizedPassword = normalizeString(password);
 	const keyUsedToDecrypt = CryptoJS.SHA256(normalizedPassword);
 

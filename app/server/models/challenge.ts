@@ -25,7 +25,10 @@ Contact:
 
 import { ChallengeId, ChallengeIdSchema } from '@common/models/challenge-id';
 import { GameResult, GameResultSchema } from '@common/models/game-result';
-import { PlayerPrivateId, PlayerPrivateIdSchema } from '@common/models/player-id';
+import {
+	PlayerPrivateId,
+	PlayerPrivateIdSchema,
+} from '@common/models/player-id';
 import {
 	TimeControlId,
 	TimeControlIdSchema,
@@ -37,7 +40,12 @@ import { z } from 'zod';
 
 // Challenge state
 
-export const CHALLENGE_STATE = ['PENDING_ACCEPT', 'PENDING_RESULT', 'PENDING_RESULT_AGREE', 'COMPLETED'] as const;
+export const CHALLENGE_STATE = [
+	'PENDING_ACCEPT',
+	'PENDING_RESULT',
+	'PENDING_RESULT_AGREE',
+	'COMPLETED',
+] as const;
 
 export const ChallengeStateSchema = z.enum(CHALLENGE_STATE);
 export type ChallengeState = z.infer<typeof ChallengeStateSchema>;
@@ -145,7 +153,10 @@ export interface ChallengeSetResult {
 }
 
 // Set the result of a challenge. Checks integrity of input parameters.s
-export function setResult(c: Challenge, { by, when, white, black, result }: ChallengeSetResult) {
+export function setResult(
+	c: Challenge,
+	{ by, when, white, black, result }: ChallengeSetResult,
+) {
 	c.resultSetBy = by;
 	c.whenResultSet = when;
 	c.white = white;

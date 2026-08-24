@@ -24,7 +24,10 @@ Contact:
 */
 
 import { TimeControlId } from '@common/models/time-control';
-import { Environment, SSLCertificate } from '@server/models/configuration/environment';
+import {
+	Environment,
+	SSLCertificate,
+} from '@server/models/configuration/environment';
 import path from 'path';
 
 /**
@@ -46,7 +49,8 @@ export class EnvironmentManager {
 	}
 
 	static getInstance(): EnvironmentManager {
-		EnvironmentManager.instance = EnvironmentManager.instance || new EnvironmentManager();
+		EnvironmentManager.instance =
+			EnvironmentManager.instance || new EnvironmentManager();
 		return EnvironmentManager.instance;
 	}
 
@@ -102,7 +106,10 @@ export class EnvironmentManager {
 		this.directoryDatabase = baseDir;
 		this.directoryDatabaseGames = path.join(this.directoryDatabase, 'games');
 		this.directoryDatabaseUsers = path.join(this.directoryDatabase, 'users');
-		this.directoryDatabaseChallenges = path.join(this.directoryDatabase, 'challenges');
+		this.directoryDatabaseChallenges = path.join(
+			this.directoryDatabase,
+			'challenges',
+		);
 		this.directoryDatabaseGraphs = path.join(this.directoryDatabase, 'graphs');
 	}
 
@@ -146,7 +153,11 @@ export class EnvironmentManager {
 	}
 
 	isSSLInfoValid(): boolean {
-		return this.directorySsl !== '' && this.sslPublicKeyFile !== '' && this.sslPrivateKeyFile !== '';
+		return (
+			this.directorySsl !== '' &&
+			this.sslPublicKeyFile !== '' &&
+			this.sslPrivateKeyFile !== ''
+		);
 	}
 
 	// icons

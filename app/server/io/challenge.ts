@@ -24,7 +24,11 @@ Contact:
 */
 
 import { readSchema } from '@server/io/generic';
-import { Challenge, ChallengeArraySchema, ChallengeSchema } from '@server/models/challenge';
+import {
+	Challenge,
+	ChallengeArraySchema,
+	ChallengeSchema,
+} from '@server/models/challenge';
 
 export function challengeFromString(str: string): Challenge | null {
 	return readSchema(ChallengeSchema, str);

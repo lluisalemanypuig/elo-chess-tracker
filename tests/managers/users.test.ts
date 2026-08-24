@@ -24,7 +24,10 @@ Contact:
 */
 
 import { toPlayerPrivateId } from '@common/models/player-id';
-import { toTimeControlId, toTimeControlName } from '@common/models/time-control';
+import {
+	toTimeControlId,
+	toTimeControlName,
+} from '@common/models/time-control';
 import { toUserGivenName } from '@common/models/user-given-name';
 import { UserRole } from '@common/models/user-role';
 import { UserThin } from '@common/models/user-thin';
@@ -32,7 +35,12 @@ import { isNotDefined } from '@common/utils/is-defined';
 import { userFromString } from '@server/io/user';
 import { clearServer } from '@server/managers/memory/clear';
 import { serverInitFromData } from '@server/managers/memory/initialization';
-import { userAddNew, userEdit, userGetAllNamePublicId, userUpdateFromPlayerData } from '@server/managers/users';
+import {
+	userAddNew,
+	userEdit,
+	userGetAllNamePublicId,
+	userUpdateFromPlayerData,
+} from '@server/managers/users';
 import { UsersManager } from '@server/managers/users-manager';
 import { Configuration } from '@server/models/configuration/configuration';
 import { Player } from '@server/models/player';
@@ -261,7 +269,9 @@ function testUserExists(username: string): boolean {
 }
 
 function testUserRetrieve(username: string): User | undefined {
-	const d = UsersManager.getInstance().getAllUserDataByPrivateId(toPlayerPrivateId(username));
+	const d = UsersManager.getInstance().getAllUserDataByPrivateId(
+		toPlayerPrivateId(username),
+	);
 	if (isNotDefined(d)) {
 		throw new TestError(`Could not find user ${username}`);
 	}
@@ -272,8 +282,16 @@ function testUserGetAll(): User[] {
 	return UsersManager.getInstance().all();
 }
 
-function testUserAddNew(username: string, firstName: string, lastName: string, password: string, roles: UserRole[]) {
-	const admin = UsersManager.getInstance().getAllUserDataByPrivateId(toPlayerPrivateId('admin.default'));
+function testUserAddNew(
+	username: string,
+	firstName: string,
+	lastName: string,
+	password: string,
+	roles: UserRole[],
+) {
+	const admin = UsersManager.getInstance().getAllUserDataByPrivateId(
+		toPlayerPrivateId('admin.default'),
+	);
 	if (isNotDefined(admin)) {
 		throw new TestError('admin default user could not be retrieved');
 	}
@@ -286,9 +304,16 @@ function testUserAddNew(username: string, firstName: string, lastName: string, p
 	});
 }
 
-function testUserEdit(username: string, firstName: string, lastName: string, roles: UserRole[]) {
+function testUserEdit(
+	username: string,
+	firstName: string,
+	lastName: string,
+	roles: UserRole[],
+) {
 	const manager = UsersManager.getInstance();
-	const admin = manager.getAllUserDataByPrivateId(toPlayerPrivateId('admin.default'));
+	const admin = manager.getAllUserDataByPrivateId(
+		toPlayerPrivateId('admin.default'),
+	);
 	if (isNotDefined(admin)) {
 		throw new TestError('admin default user could not be retrieved');
 	}
@@ -317,7 +342,9 @@ describe('Create users', () => {
 		clearServer();
 		serverInitFromData('tests/webpage/', classical_rapid_blitz);
 
-		const newUser = testUserAddNew('asdf', 'First', 'Last', 'password', ['ADMIN']);
+		const newUser = testUserAddNew('asdf', 'First', 'Last', 'password', [
+			'ADMIN',
+		]);
 
 		{
 			const asdf_user_file = path.join(db_users_dir, 'asdf');
@@ -374,7 +401,9 @@ describe('Create users', () => {
 			expect(u.ratings.length).toBe(4);
 		}
 
-		const newUser = testUserAddNew('qwer', 'Perico', 'Palotes', 'password', ['TEACHER']);
+		const newUser = testUserAddNew('qwer', 'Perico', 'Palotes', 'password', [
+			'TEACHER',
+		]);
 
 		const qwerUserFile = path.join(db_users_dir, 'qwer');
 		expect(fs.existsSync(qwerUserFile)).toBe(true);
@@ -439,7 +468,9 @@ describe('Modify existing users', () => {
 		clearServer();
 		serverInitFromData('tests/webpage/', classical_rapid_blitz);
 
-		const newUser = testUserAddNew('asdf', 'First', 'Last', 'password', ['ADMIN']);
+		const newUser = testUserAddNew('asdf', 'First', 'Last', 'password', [
+			'ADMIN',
+		]);
 
 		const asdfUserFile = path.join(db_users_dir, 'asdf');
 
@@ -477,7 +508,10 @@ describe('Modify existing users', () => {
 		clearServer();
 		serverInitFromData('tests/webpage/', classical_rapid_blitz);
 
-		const modifiedUser = testUserEdit('asdf', 'FFF', 'GGG', ['ADMIN', 'MEMBER']);
+		const modifiedUser = testUserEdit('asdf', 'FFF', 'GGG', [
+			'ADMIN',
+			'MEMBER',
+		]);
 
 		const asdfUserFile = path.join(db_users_dir, 'asdf');
 		expect(fs.existsSync(asdfUserFile)).toBe(true);
@@ -511,31 +545,76 @@ describe('Modify existing users', () => {
 		testUserAddNew(ee, 'E', 'e', 'pass_e', ['STUDENT']);
 		testUserAddNew(ff, 'F', 'f', 'pass_f', ['STUDENT']);
 
-		const aa_Classical = new TimeControlRating(Classical, new EloRating(2000, 10, 10, 0, 0, 40, false));
-		const aa_Blitz = new TimeControlRating(Blitz, new EloRating(300, 100, 0, 0, 100, 40, false));
-		const aa_Rapid = new TimeControlRating(Rapid, new EloRating(1000, 100, 0, 50, 50, 40, false));
+		const aa_Classical = new TimeControlRating(
+			Classical,
+			new EloRating(2000, 10, 10, 0, 0, 40, false),
+		);
+		const aa_Blitz = new TimeControlRating(
+			Blitz,
+			new EloRating(300, 100, 0, 0, 100, 40, false),
+		);
+		const aa_Rapid = new TimeControlRating(
+			Rapid,
+			new EloRating(1000, 100, 0, 50, 50, 40, false),
+		);
 		const rating_aa = [aa_Classical, aa_Blitz, aa_Rapid];
 
-		const bb_Classical = new TimeControlRating(Classical, new EloRating(2500, 2000, 1999, 0, 1, 10, true));
-		const bb_Blitz = new TimeControlRating(Blitz, new EloRating(2000, 10, 10, 0, 0, 40, false));
-		const bb_Rapid = new TimeControlRating(Rapid, new EloRating(1000, 100, 0, 0, 100, 40, false));
+		const bb_Classical = new TimeControlRating(
+			Classical,
+			new EloRating(2500, 2000, 1999, 0, 1, 10, true),
+		);
+		const bb_Blitz = new TimeControlRating(
+			Blitz,
+			new EloRating(2000, 10, 10, 0, 0, 40, false),
+		);
+		const bb_Rapid = new TimeControlRating(
+			Rapid,
+			new EloRating(1000, 100, 0, 0, 100, 40, false),
+		);
 		const rating_bb = [bb_Classical, bb_Blitz, bb_Rapid];
 
-		const cc_Classical = new TimeControlRating(Classical, new EloRating(2000, 10, 10, 0, 0, 40, false));
-		const cc_Blitz = new TimeControlRating(Blitz, new EloRating(300, 100, 0, 0, 100, 40, false));
-		const cc_Rapid = new TimeControlRating(Rapid, new EloRating(2000, 10, 10, 0, 0, 40, false));
+		const cc_Classical = new TimeControlRating(
+			Classical,
+			new EloRating(2000, 10, 10, 0, 0, 40, false),
+		);
+		const cc_Blitz = new TimeControlRating(
+			Blitz,
+			new EloRating(300, 100, 0, 0, 100, 40, false),
+		);
+		const cc_Rapid = new TimeControlRating(
+			Rapid,
+			new EloRating(2000, 10, 10, 0, 0, 40, false),
+		);
 		const rating_cc = [cc_Classical, cc_Blitz, cc_Rapid];
 
-		const dd_Classical = new TimeControlRating(Classical, new EloRating(2500, 2000, 1999, 0, 1, 10, true));
-		const dd_Rapid = new TimeControlRating(Rapid, new EloRating(1000, 100, 0, 0, 100, 40, false));
+		const dd_Classical = new TimeControlRating(
+			Classical,
+			new EloRating(2500, 2000, 1999, 0, 1, 10, true),
+		);
+		const dd_Rapid = new TimeControlRating(
+			Rapid,
+			new EloRating(1000, 100, 0, 0, 100, 40, false),
+		);
 		const rating_dd = [dd_Classical, dd_Rapid];
 
-		const ee_Blitz = new TimeControlRating(Blitz, new EloRating(300, 100, 0, 0, 100, 40, false));
-		const ee_Rapid = new TimeControlRating(Rapid, new EloRating(2000, 10, 10, 0, 0, 40, false));
+		const ee_Blitz = new TimeControlRating(
+			Blitz,
+			new EloRating(300, 100, 0, 0, 100, 40, false),
+		);
+		const ee_Rapid = new TimeControlRating(
+			Rapid,
+			new EloRating(2000, 10, 10, 0, 0, 40, false),
+		);
 		const rating_ee = [ee_Blitz, ee_Rapid];
 
-		const ff_Classical = new TimeControlRating(Classical, new EloRating(2500, 2000, 1999, 0, 1, 10, true));
-		const ff_Blitz = new TimeControlRating(Blitz, new EloRating(2000, 10, 10, 0, 0, 40, false));
+		const ff_Classical = new TimeControlRating(
+			Classical,
+			new EloRating(2500, 2000, 1999, 0, 1, 10, true),
+		);
+		const ff_Blitz = new TimeControlRating(
+			Blitz,
+			new EloRating(2000, 10, 10, 0, 0, 40, false),
+		);
 		const rating_ff = [ff_Classical, ff_Blitz];
 
 		userUpdateFromPlayerData([

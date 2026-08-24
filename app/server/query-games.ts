@@ -35,7 +35,11 @@ import { DateMajor, logNow } from '@common/utils/time';
 import { gameArrayFromString } from '@server/io/game';
 import { EnvironmentManager } from '@server/managers/environment-manager';
 import { RatingSystemManager } from '@server/managers/rating-system-manager';
-import { canUserDeleteGame, canUserEditGame, canUserSeeGame } from '@server/managers/user-relationships';
+import {
+	canUserDeleteGame,
+	canUserEditGame,
+	canUserSeeGame,
+} from '@server/managers/user-relationships';
 import { UsersManager } from '@server/managers/users-manager';
 import { InternalError } from '@server/models/error-types/internal-error';
 import { PublicError } from '@server/models/error-types/public-error';
@@ -50,7 +54,8 @@ import path from 'path';
 const debug = Debug('ELO_CHESS_TRACKER:serverQueryGames');
 
 function increment(g: Game) {
-	const [whiteAfter, blackAfter] = RatingSystemManager.getInstance().applyRatingFunction(g);
+	const [whiteAfter, blackAfter] =
+		RatingSystemManager.getInstance().applyRatingFunction(g);
 	return {
 		whiteIncrement: Math.round(whiteAfter.rating - g.whiteRating.rating),
 		blackIncrement: Math.round(blackAfter.rating - g.blackRating.rating),
@@ -65,7 +70,8 @@ function filterGameList(
 ): QueryGamesListOutputSingle[] {
 	let dataToReturn: QueryGamesListOutputSingle[] = [];
 
-	const gamesIdDir = EnvironmentManager.getInstance().getDirGamesTimeControl(timeControlId);
+	const gamesIdDir =
+		EnvironmentManager.getInstance().getDirGamesTimeControl(timeControlId);
 
 	// The files currently existing in the 'gamesDirectory'
 	debug(logNow(), `Reading directory '${gamesIdDir}'...`);
@@ -88,8 +94,13 @@ function filterGameList(
 		debug(logNow(), `        Game record '${gameRecordFile}' read.`);
 		const gameSet = gameArrayFromString(data);
 		if (isNotDefined(gameSet)) {
-			debug(logNow(), `        Game record '${gameRecordFile}' could not be parsed.`);
-			throw new InternalError(`Game record '${gameRecordFile}' could not be parsed.`);
+			debug(
+				logNow(),
+				`        Game record '${gameRecordFile}' could not be parsed.`,
+			);
+			throw new InternalError(
+				`Game record '${gameRecordFile}' could not be parsed.`,
+			);
 		}
 
 		for (let j = gameSet.length - 1; j >= 0; --j) {
@@ -114,16 +125,24 @@ function filterGameList(
 			const white = manager.getAllUserDataByPrivateId(g.white);
 			if (isNotDefined(white)) {
 				debug(logNow(), `User with username '${g.white}' could not be found.`);
-				throw new InternalError(`User with username '${g.white}' could not be found.`);
+				throw new InternalError(
+					`User with username '${g.white}' could not be found.`,
+				);
 			}
 			const black = manager.getAllUserDataByPrivateId(g.black);
 			if (isNotDefined(black)) {
 				debug(logNow(), `User with username '${g.black}' could not be found.`);
-				throw new InternalError(`User with username '${g.black}' could not be found.`);
+				throw new InternalError(
+					`User with username '${g.black}' could not be found.`,
+				);
 			}
 
 			const isEditable: boolean = canUserEditGame(user, white.user, black.user);
-			const isDeleteable: boolean = canUserDeleteGame(user, white.user, black.user);
+			const isDeleteable: boolean = canUserDeleteGame(
+				user,
+				white.user,
+				black.user,
+			);
 
 			dataToReturn.push({
 				id: g.id,
@@ -146,7 +165,10 @@ function filterGameList(
 	return dataToReturn;
 }
 
-export async function postQueryGameListOwn({ user, session: _session }: UserSession, input: QueryGamesListOwnInput) {
+export async function postQueryGameListOwn(
+	{ user, session: _session }: UserSession,
+	input: QueryGamesListOwnInput,
+) {
 	debug(logNow(), 'function postQueryGameListOwn...');
 
 	const timeControlId = input.timeControlId;
@@ -190,12 +212,18 @@ export async function postQueryGameListOwn({ user, session: _session }: UserSess
 		}
 	}
 
-	debug(logNow(), `Found '${dataToReturn.length}' games involving '${user.username}'`);
+	debug(
+		logNow(),
+		`Found '${dataToReturn.length}' games involving '${user.username}'`,
+	);
 
 	return dataToReturn;
 }
 
-function mergeByDate(v1: QueryGamesListOutputSingle[], v2: QueryGamesListOutputSingle[]): QueryGamesListOutputSingle[] {
+function mergeByDate(
+	v1: QueryGamesListOutputSingle[],
+	v2: QueryGamesListOutputSingle[],
+): QueryGamesListOutputSingle[] {
 	let v3: QueryGamesListOutputSingle[] = [];
 	let i: number = 0;
 	let j: number = 0;
@@ -225,11 +253,16 @@ function mergeByDate(v1: QueryGamesListOutputSingle[], v2: QueryGamesListOutputS
 	return v3;
 }
 
-export async function postQueryGameListAll({ user, session: _session }: UserSession, input: QueryGamesListAllInput) {
+export async function postQueryGameListAll(
+	{ user, session: _session }: UserSession,
+	input: QueryGamesListAllInput,
+) {
 	debug(logNow(), 'function postQueryGameListAll...');
 
 	if (!user.canDo('SEE_GAMES')) {
-		throw new PublicError('You cannot see the entire list of games in the web.');
+		throw new PublicError(
+			'You cannot see the entire list of games in the web.',
+		);
 	}
 
 	const timeControlId = input.timeControlId;
@@ -246,13 +279,23 @@ export async function postQueryGameListAll({ user, session: _session }: UserSess
 			(g: Game): boolean => {
 				const white = manager.getAllUserDataByPrivateId(g.white);
 				if (isNotDefined(white)) {
-					debug(logNow(), `User with username '${g.white}' could not be found.`);
-					throw new InternalError(`User with username '${g.white}' could not be found.`);
+					debug(
+						logNow(),
+						`User with username '${g.white}' could not be found.`,
+					);
+					throw new InternalError(
+						`User with username '${g.white}' could not be found.`,
+					);
 				}
 				const black = manager.getAllUserDataByPrivateId(g.black);
 				if (isNotDefined(black)) {
-					debug(logNow(), `User with username '${g.black}' could not be found.`);
-					throw new InternalError(`User with username '${g.black}' could not be found.`);
+					debug(
+						logNow(),
+						`User with username '${g.black}' could not be found.`,
+					);
+					throw new InternalError(
+						`User with username '${g.black}' could not be found.`,
+					);
 				}
 				return canUserSeeGame(user, white.user, black.user);
 			},
@@ -271,13 +314,23 @@ export async function postQueryGameListAll({ user, session: _session }: UserSess
 			(g: Game): boolean => {
 				const white = manager.getAllUserDataByPrivateId(g.white);
 				if (isNotDefined(white)) {
-					debug(logNow(), `User with username '${g.white}' could not be found.`);
-					throw new InternalError(`User with username '${g.white}' could not be found.`);
+					debug(
+						logNow(),
+						`User with username '${g.white}' could not be found.`,
+					);
+					throw new InternalError(
+						`User with username '${g.white}' could not be found.`,
+					);
 				}
 				const black = manager.getAllUserDataByPrivateId(g.black);
 				if (isNotDefined(black)) {
-					debug(logNow(), `User with username '${g.black}' could not be found.`);
-					throw new InternalError(`User with username '${g.black}' could not be found.`);
+					debug(
+						logNow(),
+						`User with username '${g.black}' could not be found.`,
+					);
+					throw new InternalError(
+						`User with username '${g.black}' could not be found.`,
+					);
 				}
 				return canUserSeeGame(user, white.user, black.user);
 			},

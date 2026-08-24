@@ -41,7 +41,10 @@ import { PublicError } from '@server/models/error-types/public-error';
 import { Player } from '@server/models/player';
 import { TimeControlRating } from '@server/models/time-control-rating';
 import { TimeControlGame, User } from '@server/models/user';
-import { encryptPasswordForUser, isPasswordOfUserCorrect } from '@server/utils/encrypt';
+import {
+	encryptPasswordForUser,
+	isPasswordOfUserCorrect,
+} from '@server/utils/encrypt';
 import Debug from 'debug';
 import fs from 'fs';
 import path from 'path';
@@ -64,12 +67,24 @@ interface UserEdit {
 	roles: UserRole[];
 }
 
-export function userEdit(editor: User, edited: User, { firstName, lastName, roles }: UserEdit) {
-	debug(logNow(), `User '${editor.username}' is trying to modify user '${edited.username}'`);
+export function userEdit(
+	editor: User,
+	edited: User,
+	{ firstName, lastName, roles }: UserEdit,
+) {
+	debug(
+		logNow(),
+		`User '${editor.username}' is trying to modify user '${edited.username}'`,
+	);
 
 	if (!canUserEditUser(editor, edited)) {
-		debug(logNow(), `User '${editor.username}' cannot modify user '${edited.username}'`);
-		throw new PublicError('You do not have enough permissions to edit this user.');
+		debug(
+			logNow(),
+			`User '${editor.username}' cannot modify user '${edited.username}'`,
+		);
+		throw new PublicError(
+			'You do not have enough permissions to edit this user.',
+		);
 	}
 
 	debug(logNow(), `    First name: '${firstName}'`);
@@ -79,7 +94,9 @@ export function userEdit(editor: User, edited: User, { firstName, lastName, role
 	for (const role of roles) {
 		const action = getRoleActionName('ASSIGN_ROLE_USERS', role);
 		if (!editor.canDo(action)) {
-			throw new PublicError(`You do not have enough permissions to assign role '${role}'.`);
+			throw new PublicError(
+				`You do not have enough permissions to assign role '${role}'.`,
+			);
 		}
 	}
 
@@ -106,8 +123,13 @@ export function userAddNew(
 		throw new PublicError('You cannot create users.');
 	}
 	if (!registerer.canDo('ASSIGN_ROLE')) {
-		debug(logNow(), `User '${registerer.username}' cannot assign roles to users.`);
-		throw new PublicError(`You cannot assign roles and thus cannot create users.`);
+		debug(
+			logNow(),
+			`User '${registerer.username}' cannot assign roles to users.`,
+		);
+		throw new PublicError(
+			`You cannot assign roles and thus cannot create users.`,
+		);
 	}
 	for (const r of roles) {
 		const action = getRoleActionName('ASSIGN_ROLE_USERS', r);
@@ -190,7 +212,10 @@ export function userUpdateFromPlayerData(players: Player[]) {
 		debug(logNow(), `        User file '${userFile}' written.`);
 
 		debug(logNow(), '    Server memory...');
-		debug(logNow(), `        User '${u.user.username}' is at index '${u.index}'`);
+		debug(
+			logNow(),
+			`        User '${u.user.username}' is at index '${u.index}'`,
+		);
 		mem.replaceUser(u.user, u.index);
 	}
 }
@@ -201,10 +226,17 @@ interface UserSelfChangePassword {
 	newPassword: string;
 }
 
-export function userSelfChangePassword(user: User, { session, oldPassword, newPassword }: UserSelfChangePassword) {
+export function userSelfChangePassword(
+	user: User,
+	{ session, oldPassword, newPassword }: UserSelfChangePassword,
+) {
 	// check if password is correct
 	const oldPwd = user.password;
-	const isPasswordCorrect = isPasswordOfUserCorrect(user.username, oldPassword, oldPwd);
+	const isPasswordCorrect = isPasswordOfUserCorrect(
+		user.username,
+		oldPassword,
+		oldPwd,
+	);
 
 	// is the password correct?
 	if (!isPasswordCorrect) {

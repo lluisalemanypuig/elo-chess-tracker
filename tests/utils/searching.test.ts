@@ -23,7 +23,13 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { search, searchByKey, searchLinear, searchLinearByKey, whereShouldBeInserted } from '@server/utils/searching';
+import {
+	search,
+	searchByKey,
+	searchLinear,
+	searchLinearByKey,
+	whereShouldBeInserted,
+} from '@server/utils/searching';
 
 describe('Searching in an array of numbers -- locate a number', () => {
 	test('Empty', () => {

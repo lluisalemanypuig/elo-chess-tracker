@@ -23,7 +23,12 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { PLAYER_PUBLIC_ID_LENGTH, PlayerPrivateId, PlayerPublicId, toPlayerPublicId } from '@common/models/player-id';
+import {
+	PLAYER_PUBLIC_ID_LENGTH,
+	PlayerPrivateId,
+	PlayerPublicId,
+	toPlayerPublicId,
+} from '@common/models/player-id';
 import { isDefined, isNotDefined } from '@common/utils/is-defined';
 import { shuffleArray } from '@common/utils/shuffle-random';
 import { InternalError } from '@server/models/error-types/internal-error';
@@ -128,9 +133,12 @@ export class UsersManager {
 		return idx !== -1 ? idx : undefined;
 	}
 	getIndexByPublicId(publicId: PlayerPublicId): number | undefined {
-		const idx = searchLinearByKey(this.publicIds, (n: PlayerPublicId): boolean => {
-			return n === publicId;
-		});
+		const idx = searchLinearByKey(
+			this.publicIds,
+			(n: PlayerPublicId): boolean => {
+				return n === publicId;
+			},
+		);
 		return idx !== -1 ? idx : undefined;
 	}
 

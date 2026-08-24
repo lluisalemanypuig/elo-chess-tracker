@@ -35,11 +35,17 @@ import Debug from 'debug';
 
 const debug = Debug('ELO_CHESS_TRACKER:users-edit');
 
-export async function getPageUserEdit({ user, session: _session }: UserSession) {
+export async function getPageUserEdit({
+	user,
+	session: _session,
+}: UserSession) {
 	debug(logNow(), 'function getPageUserEdit...');
 
 	if (!user.canDo('EDIT_USER')) {
-		debug(logNow(), `    User '${user.username}' does not have sufficient permissions.`);
+		debug(
+			logNow(),
+			`    User '${user.username}' does not have sufficient permissions.`,
+		);
 		throw new PublicError('You cannot edit users');
 	}
 
@@ -60,7 +66,11 @@ export async function postUserEdit(
 		throw new PublicError('Invalid user');
 	}
 
-	userEdit(editor, edited.user, { firstName: input.firstName, lastName: input.lastName, roles: input.roles });
+	userEdit(editor, edited.user, {
+		firstName: input.firstName,
+		lastName: input.lastName,
+		roles: input.roles,
+	});
 
 	return {};
 }

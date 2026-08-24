@@ -40,7 +40,11 @@ import {
 	GameEditResultInputSchema,
 	GameEditTitleInputSchema,
 } from '@common/api/schemas/games';
-import { UserLoginInputSchema, UserLoginOutputSchema, UserLogoutOutputSchema } from '@common/api/schemas/login-logout';
+import {
+	UserLoginInputSchema,
+	UserLoginOutputSchema,
+	UserLogoutOutputSchema,
+} from '@common/api/schemas/login-logout';
 import {
 	QueryChallengesConfirmResultOtherOutputSchema,
 	QueryChallengesConfirmResultSelfOutputSchema,
@@ -66,7 +70,11 @@ import {
 	QueryUserRankingInputSchema,
 	QueryUserRankingOutputSchema,
 } from '@common/api/schemas/query-user';
-import { UserCreateInputSchema, UserEditInputSchema, UserPasswordChangeInputSchema } from '@common/api/schemas/user';
+import {
+	UserCreateInputSchema,
+	UserEditInputSchema,
+	UserPasswordChangeInputSchema,
+} from '@common/api/schemas/user';
 
 export const EmptySchema = z.object({}).strict();
 export type Empty = z.infer<typeof EmptySchema>;

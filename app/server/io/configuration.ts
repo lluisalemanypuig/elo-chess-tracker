@@ -24,7 +24,10 @@ Contact:
 */
 
 import { readSchema } from '@server/io/generic';
-import { Configuration, ConfigurationSchema } from '@server/models/configuration/configuration';
+import {
+	Configuration,
+	ConfigurationSchema,
+} from '@server/models/configuration/configuration';
 
 export function configurationFromString(str: string): Configuration | null {
 	return readSchema(ConfigurationSchema, str);

@@ -26,7 +26,10 @@ Contact:
 import { ChallengeIdSchema } from '@common/models/challenge-id';
 import { GameResultSchema } from '@common/models/game-result';
 import { PlayerPublicIdSchema } from '@common/models/player-id';
-import { TimeControlIdSchema, TimeControlNameSchema } from '@common/models/time-control';
+import {
+	TimeControlIdSchema,
+	TimeControlNameSchema,
+} from '@common/models/time-control';
 import { z } from 'zod';
 
 // ROUTES.CHALLENGE_SEND
@@ -73,7 +76,9 @@ export const ChallengeSetResultInputSchema = z
 	})
 	.strict();
 
-export type ChallengeSetResultInput = z.infer<typeof ChallengeSetResultInputSchema>;
+export type ChallengeSetResultInput = z.infer<
+	typeof ChallengeSetResultInputSchema
+>;
 
 // ROUTES.CHALLENGE_AGREE
 
@@ -83,7 +88,9 @@ export const ChallengeAgreeResultInputSchema = z
 	})
 	.strict();
 
-export type ChallengeAgreeResultInput = z.infer<typeof ChallengeAgreeResultInputSchema>;
+export type ChallengeAgreeResultInput = z.infer<
+	typeof ChallengeAgreeResultInputSchema
+>;
 
 // ROUTES.CHALLENGE_DISAGREE
 
@@ -93,4 +100,6 @@ export const ChallengeDisagreeResultInputSchema = z
 	})
 	.strict();
 
-export type ChallengeDisagreeResultInput = z.infer<typeof ChallengeDisagreeResultInputSchema>;
+export type ChallengeDisagreeResultInput = z.infer<
+	typeof ChallengeDisagreeResultInputSchema
+>;

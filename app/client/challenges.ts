@@ -45,16 +45,28 @@ function formatDate(date: string) {
 }
 
 async function sendChallengeButtonClicked(_event: any) {
-	const usernameListInput = document.getElementById('username-list') as HTMLInputElement;
-	const usernameOption = document.querySelector('option[value="' + usernameListInput.value + '"]');
+	const usernameListInput = document.getElementById(
+		'username-list',
+	) as HTMLInputElement;
+	const usernameOption = document.querySelector(
+		'option[value="' + usernameListInput.value + '"]',
+	);
 
 	if (usernameOption !== null) {
 		const publicUserId = toPlayerPublicId(usernameOption.id);
 
-		const selectTimeControl = document.getElementById('select-time-control') as HTMLSelectElement;
-		const timeControlId = selectTimeControl.options[selectTimeControl.selectedIndex].value as TimeControlId;
-		const timeControlName = selectTimeControl.options[selectTimeControl.selectedIndex].text as TimeControlName;
-		const gameTitleText = document.getElementById('input-game-title') as HTMLSelectElement;
+		const selectTimeControl = document.getElementById(
+			'select-time-control',
+		) as HTMLSelectElement;
+		const timeControlId = selectTimeControl.options[
+			selectTimeControl.selectedIndex
+		].value as TimeControlId;
+		const timeControlName = selectTimeControl.options[
+			selectTimeControl.selectedIndex
+		].text as TimeControlName;
+		const gameTitleText = document.getElementById(
+			'input-game-title',
+		) as HTMLSelectElement;
 		const gameTitle = gameTitleText.textContent;
 
 		// "query" the server
@@ -77,7 +89,9 @@ async function acceptChallengeButtonClicked(event: any) {
 	let tagClicked = event.target;
 	let challengeId = tagClicked.id;
 
-	const response = await serverCall(ROUTES.CHALLENGE_ACCEPT, { id: challengeId });
+	const response = await serverCall(ROUTES.CHALLENGE_ACCEPT, {
+		id: challengeId,
+	});
 	if (response.status === 'Error') {
 		alert(messageFromResponse(response));
 		return;
@@ -89,7 +103,9 @@ async function declineChallengeTagClicked(event: any) {
 	let tagClicked = event.target;
 	let challengeId = tagClicked.id;
 
-	const response = await serverCall(ROUTES.CHALLENGE_DECLINE, { id: challengeId });
+	const response = await serverCall(ROUTES.CHALLENGE_DECLINE, {
+		id: challengeId,
+	});
 	if (response.status === 'Error') {
 		alert(messageFromResponse(response));
 		return;
@@ -101,13 +117,22 @@ async function submitResultChallengeButtonClicked(event: any) {
 	let buttonClicked = event.target;
 	let challengeId = buttonClicked.id;
 
-	const whiteSelect = document.getElementById('white-select-' + challengeId) as HTMLSelectElement;
-	const blackSelect = document.getElementById('black-select-' + challengeId) as HTMLSelectElement;
-	const selectResultGame = document.getElementById('select-result-game-' + challengeId) as HTMLSelectElement;
+	const whiteSelect = document.getElementById(
+		'white-select-' + challengeId,
+	) as HTMLSelectElement;
+	const blackSelect = document.getElementById(
+		'black-select-' + challengeId,
+	) as HTMLSelectElement;
+	const selectResultGame = document.getElementById(
+		'select-result-game-' + challengeId,
+	) as HTMLSelectElement;
 
-	const whitePublicId = whiteSelect.options[whiteSelect.selectedIndex].value as PlayerPrivateId;
-	const blackPublicId = blackSelect.options[blackSelect.selectedIndex].value as PlayerPrivateId;
-	const resultStr = selectResultGame.options[selectResultGame.selectedIndex].value;
+	const whitePublicId = whiteSelect.options[whiteSelect.selectedIndex]
+		.value as PlayerPrivateId;
+	const blackPublicId = blackSelect.options[blackSelect.selectedIndex]
+		.value as PlayerPrivateId;
+	const resultStr =
+		selectResultGame.options[selectResultGame.selectedIndex].value;
 	let result: GameResult;
 	if (resultStr === 'white_wins') {
 		result = 'white_wins';
@@ -139,7 +164,9 @@ async function agreeChallengeResultButtonClicked(event: any) {
 	let tagClicked = event.target;
 	let challengeId = tagClicked.id;
 
-	const response = await serverCall(ROUTES.CHALLENGE_AGREE, { id: challengeId });
+	const response = await serverCall(ROUTES.CHALLENGE_AGREE, {
+		id: challengeId,
+	});
 
 	if (response.status === 'Error') {
 		alert(messageFromResponse(response));
@@ -153,7 +180,9 @@ async function disagreeChallengeResultButtonClicked(event: any) {
 	let tagClicked = event.target;
 	let challengeId = tagClicked.id;
 
-	const response = await serverCall(ROUTES.CHALLENGE_DISAGREE, { id: challengeId });
+	const response = await serverCall(ROUTES.CHALLENGE_DISAGREE, {
+		id: challengeId,
+	});
 	if (response.status === 'Error') {
 		alert(messageFromResponse(response));
 		return;
@@ -172,7 +201,10 @@ async function fillChallengesReceived() {
 
 	let challengeList = document.createElement('ul') as HTMLUListElement;
 	challengeList.className = 'challenge-items';
-	data.forEach(function (elem: QueryChallengesReceivedOutputSingle, index: number) {
+	data.forEach(function (
+		elem: QueryChallengesReceivedOutputSingle,
+		index: number,
+	) {
 		let challengeDiv = document.createElement('div') as HTMLDivElement;
 		{
 			// ---
@@ -247,7 +279,9 @@ async function fillChallengesReceived() {
 	});
 
 	if (data.length > 0) {
-		(document.getElementById('challenges-received') as HTMLDivElement).appendChild(challengeList);
+		(
+			document.getElementById('challenges-received') as HTMLDivElement
+		).appendChild(challengeList);
 	}
 }
 
@@ -294,20 +328,30 @@ async function fillChallengesSent() {
 	});
 
 	if (data.length > 0) {
-		(document.getElementById('challenges-sent') as HTMLDivElement).appendChild(challengeList);
+		(document.getElementById('challenges-sent') as HTMLDivElement).appendChild(
+			challengeList,
+		);
 	}
 }
 
 async function fillChallengesPendingResult() {
-	const response = await serverCall(ROUTES.QUERY_CHALLENGE_PENDING_RESULT, null);
+	const response = await serverCall(
+		ROUTES.QUERY_CHALLENGE_PENDING_RESULT,
+		null,
+	);
 	if (response.status === 'Error') {
 		alert(messageFromResponse(response));
 		return;
 	}
 	const challengeData = response.value;
 
-	let allChallengesList = document.getElementById('challenges-pending-result--list') as HTMLDivElement;
-	challengeData.forEach(function (elem: QueryChallengesPendingResultOutputSingle, index: number) {
+	let allChallengesList = document.getElementById(
+		'challenges-pending-result--list',
+	) as HTMLDivElement;
+	challengeData.forEach(function (
+		elem: QueryChallengesPendingResultOutputSingle,
+		index: number,
+	) {
 		{
 			let header = document.createElement('ul') as HTMLUListElement;
 			header.className = 'challenge-items';
@@ -433,12 +477,17 @@ async function fillChallengesPendingResult() {
 			allChallengesList.appendChild(submitResultButton);
 		}
 
-		(document.getElementById('challenges-pending-result') as HTMLDivElement).appendChild(allChallengesList);
+		(
+			document.getElementById('challenges-pending-result') as HTMLDivElement
+		).appendChild(allChallengesList);
 	});
 }
 
 async function fillChallengesConfirmResultOther() {
-	const response = await serverCall(ROUTES.QUERY_CHALLENGE_CONFIRM_RESULT_OTHER, null);
+	const response = await serverCall(
+		ROUTES.QUERY_CHALLENGE_CONFIRM_RESULT_OTHER,
+		null,
+	);
 	if (response.status === 'Error') {
 		alert(messageFromResponse(response));
 		return;
@@ -448,7 +497,9 @@ async function fillChallengesConfirmResultOther() {
 
 	let challengeList = document.createElement('ul') as HTMLUListElement;
 	challengeList.className = 'challenge-items';
-	challengeData.forEach(function (elem: QueryChallengesConfirmResultOtherOutputSingle) {
+	challengeData.forEach(function (
+		elem: QueryChallengesConfirmResultOtherOutputSingle,
+	) {
 		{
 			let li = document.createElement('li') as HTMLLIElement;
 			li.className = 'challenge-items-bullet';
@@ -485,12 +536,19 @@ async function fillChallengesConfirmResultOther() {
 	});
 
 	if (challengeData.length > 0) {
-		(document.getElementById('challenges-confirm-result-other') as HTMLDivElement).appendChild(challengeList);
+		(
+			document.getElementById(
+				'challenges-confirm-result-other',
+			) as HTMLDivElement
+		).appendChild(challengeList);
 	}
 }
 
 async function fillChallengesConfirmResultSelf() {
-	const response = await serverCall(ROUTES.QUERY_CHALLENGE_CONFIRM_RESULT_SELF, null);
+	const response = await serverCall(
+		ROUTES.QUERY_CHALLENGE_CONFIRM_RESULT_SELF,
+		null,
+	);
 	if (response.status === 'Error') {
 		alert(messageFromResponse(response));
 		return;
@@ -500,7 +558,10 @@ async function fillChallengesConfirmResultSelf() {
 
 	let challengeList = document.createElement('ul') as HTMLUListElement;
 	challengeList.className = 'challenge-items';
-	challengeData.forEach(function (elem: QueryChallengesConfirmResultSelfOutputSingle, index: number) {
+	challengeData.forEach(function (
+		elem: QueryChallengesConfirmResultSelfOutputSingle,
+		index: number,
+	) {
 		let confirmationDiv = document.createElement('div') as HTMLDivElement;
 		{
 			let li = document.createElement('li') as HTMLLIElement;
@@ -556,7 +617,9 @@ async function fillChallengesConfirmResultSelf() {
 
 		{
 			// decline tag
-			let disagreeButton = document.createElement('button') as HTMLButtonElement;
+			let disagreeButton = document.createElement(
+				'button',
+			) as HTMLButtonElement;
 			disagreeButton.id = elem.id;
 			disagreeButton.onclick = disagreeChallengeResultButtonClicked;
 			disagreeButton.className = 'button-agree-disagree-challenge';
@@ -573,13 +636,19 @@ async function fillChallengesConfirmResultSelf() {
 	});
 
 	if (challengeData.length > 0) {
-		(document.getElementById('challenges-confirm-result-self') as HTMLDivElement).appendChild(challengeList);
+		(
+			document.getElementById(
+				'challenges-confirm-result-self',
+			) as HTMLDivElement
+		).appendChild(challengeList);
 	}
 }
 
 window.onload = function () {
 	// link button 'button-submit-challenge' click behaviour
-	let sendChallengeButton = document.getElementById('send-challenge-button') as HTMLButtonElement;
+	let sendChallengeButton = document.getElementById(
+		'send-challenge-button',
+	) as HTMLButtonElement;
 	sendChallengeButton.onclick = sendChallengeButtonClicked;
 
 	// add list of challenges

@@ -25,7 +25,10 @@ Contact:
 
 import { toGameId } from '@common/models/game-id';
 import { toPlayerPrivateId } from '@common/models/player-id';
-import { toTimeControlId, toTimeControlName } from '@common/models/time-control';
+import {
+	toTimeControlId,
+	toTimeControlName,
+} from '@common/models/time-control';
 import { toUserGivenName } from '@common/models/user-given-name';
 import { isNotDefined } from '@common/utils/is-defined';
 import { toDateMajor, toDateMinor } from '@common/utils/time';
@@ -150,29 +153,114 @@ const ff = toUserGivenName('ff');
 describe('Server setup', () => {
 	test('Fill an empty server', async () => {
 		await runCommand('./tests/initialize-empty.sh');
-		expect(() => serverInitFromData('tests/webpage', configuration)).not.toThrow();
+		expect(() =>
+			serverInitFromData('tests/webpage', configuration),
+		).not.toThrow();
 
-		const admin = UsersManager.getInstance().getAllUserDataByPrivateId(toPlayerPrivateId('admin.default'));
+		const admin = UsersManager.getInstance().getAllUserDataByPrivateId(
+			toPlayerPrivateId('admin.default'),
+		);
 		if (isNotDefined(admin)) {
 			throw new TestError('admin default user could not be retrieved');
 		}
 
-		aU = userAddNew(admin.user, { username: a, firstName: A, lastName: aa, password: 'aaaa', roles: ['ADMIN'] });
-		bU = userAddNew(admin.user, { username: b, firstName: B, lastName: bb, password: 'dddd', roles: ['ADMIN'] });
-		cU = userAddNew(admin.user, { username: c, firstName: C, lastName: cc, password: 'cccc', roles: ['ADMIN'] });
-		dU = userAddNew(admin.user, { username: d, firstName: D, lastName: dd, password: 'dddd', roles: ['ADMIN'] });
-		eU = userAddNew(admin.user, { username: e, firstName: E, lastName: ee, password: 'eeee', roles: ['ADMIN'] });
-		fU = userAddNew(admin.user, { username: f, firstName: F, lastName: ff, password: 'ffff', roles: ['ADMIN'] });
+		aU = userAddNew(admin.user, {
+			username: a,
+			firstName: A,
+			lastName: aa,
+			password: 'aaaa',
+			roles: ['ADMIN'],
+		});
+		bU = userAddNew(admin.user, {
+			username: b,
+			firstName: B,
+			lastName: bb,
+			password: 'dddd',
+			roles: ['ADMIN'],
+		});
+		cU = userAddNew(admin.user, {
+			username: c,
+			firstName: C,
+			lastName: cc,
+			password: 'cccc',
+			roles: ['ADMIN'],
+		});
+		dU = userAddNew(admin.user, {
+			username: d,
+			firstName: D,
+			lastName: dd,
+			password: 'dddd',
+			roles: ['ADMIN'],
+		});
+		eU = userAddNew(admin.user, {
+			username: e,
+			firstName: E,
+			lastName: ee,
+			password: 'eeee',
+			roles: ['ADMIN'],
+		});
+		fU = userAddNew(admin.user, {
+			username: f,
+			firstName: F,
+			lastName: ff,
+			password: 'ffff',
+			roles: ['ADMIN'],
+		});
 	});
 });
 
 describe('Sequential game creation', () => {
 	test('Add "Blitz" games', () => {
-		gameAddNew('sample', aU, bU, 'white_wins', Blitz, Blitz5p3, toDateMajor('2025-01-19'), toDateMinor('17:06:00:000'));
-		gameAddNew('sample', cU, dU, 'black_wins', Blitz, Blitz5p3, toDateMajor('2025-01-19'), toDateMinor('17:06:10:000'));
-		gameAddNew('sample', eU, fU, 'draw', Blitz, Blitz5p3, toDateMajor('2025-01-19'), toDateMinor('17:06:20:000'));
-		gameAddNew('sample', aU, fU, 'black_wins', Blitz, Blitz5p3, toDateMajor('2025-01-19'), toDateMinor('17:06:30:000'));
-		gameAddNew('sample', bU, aU, 'white_wins', Blitz, Blitz5p3, toDateMajor('2025-01-19'), toDateMinor('17:06:40:000'));
+		gameAddNew(
+			'sample',
+			aU,
+			bU,
+			'white_wins',
+			Blitz,
+			Blitz5p3,
+			toDateMajor('2025-01-19'),
+			toDateMinor('17:06:00:000'),
+		);
+		gameAddNew(
+			'sample',
+			cU,
+			dU,
+			'black_wins',
+			Blitz,
+			Blitz5p3,
+			toDateMajor('2025-01-19'),
+			toDateMinor('17:06:10:000'),
+		);
+		gameAddNew(
+			'sample',
+			eU,
+			fU,
+			'draw',
+			Blitz,
+			Blitz5p3,
+			toDateMajor('2025-01-19'),
+			toDateMinor('17:06:20:000'),
+		);
+		gameAddNew(
+			'sample',
+			aU,
+			fU,
+			'black_wins',
+			Blitz,
+			Blitz5p3,
+			toDateMajor('2025-01-19'),
+			toDateMinor('17:06:30:000'),
+		);
+		gameAddNew(
+			'sample',
+			bU,
+			aU,
+			'white_wins',
+			Blitz,
+			Blitz5p3,
+			toDateMajor('2025-01-19'),
+			toDateMinor('17:06:40:000'),
+		);
 
 		expect(aU.getGames(Blitz).length).toBe(1);
 		expect(bU.getGames(Blitz).length).toBe(1);
@@ -269,7 +357,8 @@ describe('Sequential game creation', () => {
 		expect(g.getDataAsBlack(f, d)).toEqual(undefined);
 		expect(g.getDataAsBlack(f, e)).toEqual(new EdgeMetadata(0, 1, 0));
 
-		const blitz_dir = EnvironmentManager.getInstance().getDirGraphsTimeControl(Blitz);
+		const blitz_dir =
+			EnvironmentManager.getInstance().getDirGraphsTimeControl(Blitz);
 		expect(fs.existsSync(path.join(blitz_dir, 'a'))).toBe(true);
 		expect(fs.existsSync(path.join(blitz_dir, 'b'))).toBe(true);
 		expect(fs.existsSync(path.join(blitz_dir, 'c'))).toBe(true);
@@ -306,7 +395,8 @@ describe('Sequential game creation', () => {
 		expect(eU.getRating(Blitz).numWonDrawnLost()).toEqual([1, 0, 1, 0]);
 		expect(fU.getRating(Blitz).numWonDrawnLost()).toEqual([2, 1, 1, 0]);
 
-		const blitz_dir = EnvironmentManager.getInstance().getDirGamesTimeControl(Blitz);
+		const blitz_dir =
+			EnvironmentManager.getInstance().getDirGamesTimeControl(Blitz);
 		expect(fs.existsSync(path.join(blitz_dir, '2025-01-19'))).toBe(true);
 	});
 
@@ -390,7 +480,8 @@ describe('Sequential game creation', () => {
 		expect(g.getDataAsBlack(f, d)).toEqual(undefined);
 		expect(g.getDataAsBlack(f, e)).toEqual(new EdgeMetadata(0, 1, 0));
 
-		const blitz_dir = EnvironmentManager.getInstance().getDirGraphsTimeControl(Blitz);
+		const blitz_dir =
+			EnvironmentManager.getInstance().getDirGraphsTimeControl(Blitz);
 		expect(fs.existsSync(path.join(blitz_dir, 'a'))).toBe(true);
 		expect(fs.existsSync(path.join(blitz_dir, 'b'))).toBe(true);
 		expect(fs.existsSync(path.join(blitz_dir, 'c'))).toBe(true);
@@ -421,7 +512,8 @@ describe('Sequential game creation', () => {
 		expect(eU.getRating(Blitz).numWonDrawnLost()).toEqual([1, 0, 1, 0]);
 		expect(fU.getRating(Blitz).numWonDrawnLost()).toEqual([1, 0, 1, 0]);
 
-		const blitz_dir = EnvironmentManager.getInstance().getDirGamesTimeControl(Blitz);
+		const blitz_dir =
+			EnvironmentManager.getInstance().getDirGamesTimeControl(Blitz);
 		expect(fs.existsSync(path.join(blitz_dir, '2025-01-19'))).toBe(true);
 	});
 
@@ -505,7 +597,8 @@ describe('Sequential game creation', () => {
 		expect(g.getDataAsBlack(f, d)).toEqual(undefined);
 		expect(g.getDataAsBlack(f, e)).toEqual(new EdgeMetadata(0, 1, 0));
 
-		const blitz_dir = EnvironmentManager.getInstance().getDirGraphsTimeControl(Blitz);
+		const blitz_dir =
+			EnvironmentManager.getInstance().getDirGraphsTimeControl(Blitz);
 		expect(fs.existsSync(path.join(blitz_dir, 'a'))).toBe(false);
 		expect(fs.existsSync(path.join(blitz_dir, 'b'))).toBe(true);
 		expect(fs.existsSync(path.join(blitz_dir, 'c'))).toBe(true);
@@ -536,7 +629,8 @@ describe('Sequential game creation', () => {
 		expect(eU.getRating(Blitz).numWonDrawnLost()).toEqual([0, 0, 0, 0]);
 		expect(fU.getRating(Blitz).numWonDrawnLost()).toEqual([0, 0, 0, 0]);
 
-		const blitz_dir = EnvironmentManager.getInstance().getDirGamesTimeControl(Blitz);
+		const blitz_dir =
+			EnvironmentManager.getInstance().getDirGamesTimeControl(Blitz);
 		expect(fs.existsSync(path.join(blitz_dir, '2025-01-19'))).toBe(true);
 	});
 
@@ -620,7 +714,8 @@ describe('Sequential game creation', () => {
 		expect(g.getDataAsBlack(f, d)).toEqual(undefined);
 		expect(g.getDataAsBlack(f, e)).toEqual(undefined);
 
-		const blitz_dir = EnvironmentManager.getInstance().getDirGraphsTimeControl(Blitz);
+		const blitz_dir =
+			EnvironmentManager.getInstance().getDirGraphsTimeControl(Blitz);
 		expect(fs.existsSync(path.join(blitz_dir, 'a'))).toBe(false);
 		expect(fs.existsSync(path.join(blitz_dir, 'b'))).toBe(true);
 		expect(fs.existsSync(path.join(blitz_dir, 'c'))).toBe(true);
@@ -651,7 +746,8 @@ describe('Sequential game creation', () => {
 		expect(eU.getRating(Blitz).numWonDrawnLost()).toEqual([0, 0, 0, 0]);
 		expect(fU.getRating(Blitz).numWonDrawnLost()).toEqual([0, 0, 0, 0]);
 
-		const blitz_dir = EnvironmentManager.getInstance().getDirGamesTimeControl(Blitz);
+		const blitz_dir =
+			EnvironmentManager.getInstance().getDirGamesTimeControl(Blitz);
 		expect(fs.existsSync(path.join(blitz_dir, '2025-01-19'))).toBe(true);
 	});
 
@@ -735,7 +831,8 @@ describe('Sequential game creation', () => {
 		expect(g.getDataAsBlack(f, d)).toEqual(undefined);
 		expect(g.getDataAsBlack(f, e)).toEqual(undefined);
 
-		const blitz_dir = EnvironmentManager.getInstance().getDirGraphsTimeControl(Blitz);
+		const blitz_dir =
+			EnvironmentManager.getInstance().getDirGraphsTimeControl(Blitz);
 		expect(fs.existsSync(path.join(blitz_dir, 'a'))).toBe(false);
 		expect(fs.existsSync(path.join(blitz_dir, 'b'))).toBe(true);
 		expect(fs.existsSync(path.join(blitz_dir, 'c'))).toBe(false);
@@ -766,7 +863,8 @@ describe('Sequential game creation', () => {
 		expect(eU.getRating(Blitz).numWonDrawnLost()).toEqual([0, 0, 0, 0]);
 		expect(fU.getRating(Blitz).numWonDrawnLost()).toEqual([0, 0, 0, 0]);
 
-		const blitz_dir = EnvironmentManager.getInstance().getDirGamesTimeControl(Blitz);
+		const blitz_dir =
+			EnvironmentManager.getInstance().getDirGamesTimeControl(Blitz);
 		expect(fs.existsSync(path.join(blitz_dir, '2025-01-19'))).toBe(false);
 	});
 
@@ -850,7 +948,8 @@ describe('Sequential game creation', () => {
 		expect(g.getDataAsBlack(f, d)).toEqual(undefined);
 		expect(g.getDataAsBlack(f, e)).toEqual(undefined);
 
-		const blitz_dir = EnvironmentManager.getInstance().getDirGraphsTimeControl(Blitz);
+		const blitz_dir =
+			EnvironmentManager.getInstance().getDirGraphsTimeControl(Blitz);
 		expect(fs.existsSync(path.join(blitz_dir, 'a'))).toBe(false);
 		expect(fs.existsSync(path.join(blitz_dir, 'b'))).toBe(false);
 		expect(fs.existsSync(path.join(blitz_dir, 'c'))).toBe(false);

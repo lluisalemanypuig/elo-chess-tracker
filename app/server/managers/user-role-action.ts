@@ -53,7 +53,8 @@ export class UserRoleToUserAction {
 	 * @pre Method @ref initialize must have been called before
 	 */
 	static getInstance(): UserRoleToUserAction {
-		UserRoleToUserAction.instance = UserRoleToUserAction.instance || new UserRoleToUserAction();
+		UserRoleToUserAction.instance =
+			UserRoleToUserAction.instance || new UserRoleToUserAction();
 		return UserRoleToUserAction.instance;
 	}
 

@@ -84,7 +84,10 @@ export type SafeParseSchemaResult<T> =
 			data: T;
 	  };
 
-export function safeParseRequestCookies(req: Request, debug: Debug.Debugger): SafeParseSchemaResult<SessionId> {
+export function safeParseRequestCookies(
+	req: Request,
+	debug: Debug.Debugger,
+): SafeParseSchemaResult<SessionId> {
 	const parse = parseSchema(req.cookies, AuthenticationInputSchema, debug);
 	if (parse.result !== 'Success') {
 		return {

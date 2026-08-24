@@ -83,12 +83,21 @@ if (serverEnvironment.isSSLInfoValid()) {
 	app.set('port', port);
 
 	let httpsServer = (function () {
-		const privateKey = fs.readFileSync(serverEnvironment.getSslPrivateKeyFile(), 'utf8');
-		const certificate = fs.readFileSync(serverEnvironment.getSslPublicKeyFile(), 'utf8');
+		const privateKey = fs.readFileSync(
+			serverEnvironment.getSslPrivateKeyFile(),
+			'utf8',
+		);
+		const certificate = fs.readFileSync(
+			serverEnvironment.getSslPublicKeyFile(),
+			'utf8',
+		);
 
 		if (serverEnvironment.getSslPassphraseFile() !== '') {
 			debug(logNow(), 'Passphrase file found...');
-			let passphrase = fs.readFileSync(serverEnvironment.getSslPassphraseFile(), 'utf8');
+			let passphrase = fs.readFileSync(
+				serverEnvironment.getSslPassphraseFile(),
+				'utf8',
+			);
 			return https.createServer(
 				{
 					key: privateKey,
@@ -105,7 +114,10 @@ if (serverEnvironment.isSSLInfoValid()) {
 
 	function httpsOnListening() {
 		let addr = httpsServer.address();
-		let bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + (addr as AddressInfo).port;
+		let bind =
+			typeof addr === 'string'
+				? 'pipe ' + addr
+				: 'port ' + (addr as AddressInfo).port;
 		debug(logNow(), 'Listening on ' + bind);
 	}
 	function httpsOnError(error: any) {
@@ -170,7 +182,10 @@ function httpOnError(error: any) {
 // Event listener for servers "listening" event.
 function httpOnListening() {
 	let addr = httpServer.address();
-	let bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + (addr as AddressInfo).port;
+	let bind =
+		typeof addr === 'string'
+			? 'pipe ' + addr
+			: 'port ' + (addr as AddressInfo).port;
 	debug(logNow(), 'Listening on ' + bind);
 }
 

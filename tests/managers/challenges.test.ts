@@ -25,7 +25,10 @@ Contact:
 
 import { isNotDefined } from '@common//utils/is-defined';
 import { PlayerPrivateId, toPlayerPrivateId } from '@common/models/player-id';
-import { toTimeControlId, toTimeControlName } from '@common/models/time-control';
+import {
+	toTimeControlId,
+	toTimeControlName,
+} from '@common/models/time-control';
 import { toUserGivenName } from '@common/models/user-given-name';
 import { toDateFull } from '@common/utils/time';
 import { challengeFromString } from '@server/io/challenge';
@@ -38,7 +41,10 @@ import {
 	challengeSetResult,
 	getChallengesBy,
 } from '@server/managers/challenges';
-import { ChallengesManager, numberToChallengeId } from '@server/managers/challenges-manager';
+import {
+	ChallengesManager,
+	numberToChallengeId,
+} from '@server/managers/challenges-manager';
 import { GamesManager } from '@server/managers/games-manager';
 import { clearServer } from '@server/managers/memory/clear';
 import { serverInitFromData } from '@server/managers/memory/initialization';
@@ -129,9 +135,24 @@ const classical_rapid_blitz: Configuration = {
 			'CHALLENGE_USER_TEACHER',
 			'CHALLENGE_USER_STUDENT',
 		],
-		teacher: ['CHALLENGE_USER_ADMIN', 'CHALLENGE_USER_MEMBER', 'CHALLENGE_USER_TEACHER', 'CHALLENGE_USER_STUDENT'],
-		member: ['CHALLENGE_USER_ADMIN', 'CHALLENGE_USER_MEMBER', 'CHALLENGE_USER_TEACHER', 'CHALLENGE_USER_STUDENT'],
-		student: ['CHALLENGE_USER_ADMIN', 'CHALLENGE_USER_MEMBER', 'CHALLENGE_USER_TEACHER', 'CHALLENGE_USER_STUDENT'],
+		teacher: [
+			'CHALLENGE_USER_ADMIN',
+			'CHALLENGE_USER_MEMBER',
+			'CHALLENGE_USER_TEACHER',
+			'CHALLENGE_USER_STUDENT',
+		],
+		member: [
+			'CHALLENGE_USER_ADMIN',
+			'CHALLENGE_USER_MEMBER',
+			'CHALLENGE_USER_TEACHER',
+			'CHALLENGE_USER_STUDENT',
+		],
+		student: [
+			'CHALLENGE_USER_ADMIN',
+			'CHALLENGE_USER_MEMBER',
+			'CHALLENGE_USER_TEACHER',
+			'CHALLENGE_USER_STUDENT',
+		],
 	},
 };
 
@@ -174,22 +195,50 @@ describe('Check initialization', () => {
 		expect(challenges.numChallenges()).toBe(0);
 		expect(challenges.getMaxChallengeId()).toBe(0);
 		expect(getChallengesBy()).toEqual([]);
-		expect(challenges.getChallengeById(numberToChallengeId(1))).toEqual(undefined);
-		expect(challenges.getChallengeById(numberToChallengeId(2))).toEqual(undefined);
-		expect(challenges.getChallengeIndexById(numberToChallengeId(1))).toEqual(-1);
-		expect(challenges.getChallengeIndexById(numberToChallengeId(2))).toEqual(-1);
+		expect(challenges.getChallengeById(numberToChallengeId(1))).toEqual(
+			undefined,
+		);
+		expect(challenges.getChallengeById(numberToChallengeId(2))).toEqual(
+			undefined,
+		);
+		expect(challenges.getChallengeIndexById(numberToChallengeId(1))).toEqual(
+			-1,
+		);
+		expect(challenges.getChallengeIndexById(numberToChallengeId(2))).toEqual(
+			-1,
+		);
 	});
 });
 
 describe('Check challenge communication', () => {
 	test('Add users', () => {
-		const admin = UsersManager.getInstance().getAllUserDataByPrivateId(toPlayerPrivateId('admin.default'));
+		const admin = UsersManager.getInstance().getAllUserDataByPrivateId(
+			toPlayerPrivateId('admin.default'),
+		);
 		if (isNotDefined(admin)) {
 			throw new TestError('admin default user could not be retrieved');
 		}
-		uA = userAddNew(admin.user, { username: aa, firstName: A, lastName: A, password: 'pass_a', roles: ['ADMIN'] });
-		uB = userAddNew(admin.user, { username: bb, firstName: B, lastName: B, password: 'pass_b', roles: ['MEMBER'] });
-		uC = userAddNew(admin.user, { username: cc, firstName: C, lastName: C, password: 'pass_c', roles: ['MEMBER'] });
+		uA = userAddNew(admin.user, {
+			username: aa,
+			firstName: A,
+			lastName: A,
+			password: 'pass_a',
+			roles: ['ADMIN'],
+		});
+		uB = userAddNew(admin.user, {
+			username: bb,
+			firstName: B,
+			lastName: B,
+			password: 'pass_b',
+			roles: ['MEMBER'],
+		});
+		uC = userAddNew(admin.user, {
+			username: cc,
+			firstName: C,
+			lastName: C,
+			password: 'pass_c',
+			roles: ['MEMBER'],
+		});
 		uD = userAddNew(admin.user, {
 			username: dd,
 			firstName: D,
@@ -233,7 +282,14 @@ describe('Check challenge communication', () => {
 			Classical90p30,
 			toDateFull('2025-01-10..20:38:13:000'),
 		);
-		const c_aa_dd = challengeSendNew('sample', uA, uD, Blitz, Blitz5p3, toDateFull('2025-01-10..20:38:14:000'));
+		const c_aa_dd = challengeSendNew(
+			'sample',
+			uA,
+			uD,
+			Blitz,
+			Blitz5p3,
+			toDateFull('2025-01-10..20:38:14:000'),
+		);
 		const c_ee_ff = challengeSendNew(
 			'sample',
 			uE,
@@ -254,7 +310,9 @@ describe('Check challenge communication', () => {
 		{
 			const challenge_file_aa_bb = path.join(db_challenges_dir, c_aa_bb_id);
 			expect(fs.existsSync(challenge_file_aa_bb)).toBe(true);
-			const c_aa_bb_ = challengeFromString(fs.readFileSync(challenge_file_aa_bb, 'utf8'));
+			const c_aa_bb_ = challengeFromString(
+				fs.readFileSync(challenge_file_aa_bb, 'utf8'),
+			);
 			expect(c_aa_bb).toEqual(c_aa_bb_);
 		}
 
@@ -264,7 +322,9 @@ describe('Check challenge communication', () => {
 		{
 			const challenge_file_aa_cc = path.join(db_challenges_dir, c_aa_cc_id);
 			expect(fs.existsSync(challenge_file_aa_cc)).toBe(true);
-			const c_aa_cc_ = challengeFromString(fs.readFileSync(challenge_file_aa_cc, 'utf8'));
+			const c_aa_cc_ = challengeFromString(
+				fs.readFileSync(challenge_file_aa_cc, 'utf8'),
+			);
 			expect(c_aa_cc).toEqual(c_aa_cc_);
 		}
 
@@ -274,7 +334,9 @@ describe('Check challenge communication', () => {
 		{
 			const challenge_file_aa_dd = path.join(db_challenges_dir, c_aa_dd_id);
 			expect(fs.existsSync(challenge_file_aa_dd)).toBe(true);
-			const c_aa_dd_ = challengeFromString(fs.readFileSync(challenge_file_aa_dd, 'utf8'));
+			const c_aa_dd_ = challengeFromString(
+				fs.readFileSync(challenge_file_aa_dd, 'utf8'),
+			);
 			expect(c_aa_dd).toEqual(c_aa_dd_);
 		}
 
@@ -284,21 +346,39 @@ describe('Check challenge communication', () => {
 		{
 			const challenge_file_ee_ff = path.join(db_challenges_dir, c_ee_ff_id);
 			expect(fs.existsSync(challenge_file_ee_ff)).toBe(true);
-			const c_ee_ff_ = challengeFromString(fs.readFileSync(challenge_file_ee_ff, 'utf8'));
+			const c_ee_ff_ = challengeFromString(
+				fs.readFileSync(challenge_file_ee_ff, 'utf8'),
+			);
 			expect(c_ee_ff).toEqual(c_ee_ff_);
 		}
 
 		expect(challenges.numChallenges()).toBe(4);
 		expect(challenges.getMaxChallengeId()).toBe(4);
 		expect(getChallengesBy().length).toEqual(4);
-		expect(challenges.getChallengeById(numberToChallengeId(1))).toEqual(c_aa_bb);
-		expect(challenges.getChallengeById(numberToChallengeId(2))).toEqual(c_aa_cc);
-		expect(challenges.getChallengeById(numberToChallengeId(3))).toEqual(c_aa_dd);
-		expect(challenges.getChallengeById(numberToChallengeId(4))).toEqual(c_ee_ff);
-		expect(challenges.getChallengeIndexById(numberToChallengeId(1))).not.toEqual(-1);
-		expect(challenges.getChallengeIndexById(numberToChallengeId(2))).not.toEqual(-1);
-		expect(challenges.getChallengeIndexById(numberToChallengeId(3))).not.toEqual(-1);
-		expect(challenges.getChallengeIndexById(numberToChallengeId(4))).not.toEqual(-1);
+		expect(challenges.getChallengeById(numberToChallengeId(1))).toEqual(
+			c_aa_bb,
+		);
+		expect(challenges.getChallengeById(numberToChallengeId(2))).toEqual(
+			c_aa_cc,
+		);
+		expect(challenges.getChallengeById(numberToChallengeId(3))).toEqual(
+			c_aa_dd,
+		);
+		expect(challenges.getChallengeById(numberToChallengeId(4))).toEqual(
+			c_ee_ff,
+		);
+		expect(
+			challenges.getChallengeIndexById(numberToChallengeId(1)),
+		).not.toEqual(-1);
+		expect(
+			challenges.getChallengeIndexById(numberToChallengeId(2)),
+		).not.toEqual(-1);
+		expect(
+			challenges.getChallengeIndexById(numberToChallengeId(3)),
+		).not.toEqual(-1);
+		expect(
+			challenges.getChallengeIndexById(numberToChallengeId(4)),
+		).not.toEqual(-1);
 	});
 
 	test('Accept some challenges', () => {
@@ -316,7 +396,9 @@ describe('Check challenge communication', () => {
 
 			const challenge_file = path.join(db_challenges_dir, id);
 			expect(fs.existsSync(challenge_file)).toBe(true);
-			expect(challengeFromString(fs.readFileSync(challenge_file, 'utf8'))).toEqual(c);
+			expect(
+				challengeFromString(fs.readFileSync(challenge_file, 'utf8')),
+			).toEqual(c);
 			expect(challenges.getChallengeById(id)).toEqual(c);
 		}
 	});
@@ -366,7 +448,9 @@ describe('Check challenge communication', () => {
 
 		const challenge_file = path.join(db_challenges_dir, id);
 		expect(fs.existsSync(challenge_file)).toBe(true);
-		expect(challengeFromString(fs.readFileSync(challenge_file, 'utf8'))).toEqual(c);
+		expect(
+			challengeFromString(fs.readFileSync(challenge_file, 'utf8')),
+		).toEqual(c);
 		expect(challenges.getChallengeById(id)).toEqual(c);
 
 		expect(challenges.numChallenges()).toBe(2);
@@ -395,7 +479,9 @@ describe('Check challenge communication', () => {
 
 		const challenge_file = path.join(db_challenges_dir, id);
 		expect(fs.existsSync(challenge_file)).toBe(true);
-		expect(challengeFromString(fs.readFileSync(challenge_file, 'utf8'))).toEqual(c);
+		expect(
+			challengeFromString(fs.readFileSync(challenge_file, 'utf8')),
+		).toEqual(c);
 		expect(challenges.getChallengeById(id)).toEqual(c);
 
 		expect(challenges.numChallenges()).toBe(2);
@@ -409,7 +495,10 @@ describe('Check challenge communication', () => {
 		expect(c.white).toEqual(ee);
 		expect(c.black).toEqual(ff);
 
-		challengeAgreeResult(c, { by: ee, when: toDateFull('2026-08-09..11:23:58:000') });
+		challengeAgreeResult(c, {
+			by: ee,
+			when: toDateFull('2026-08-09..11:23:58:000'),
+		});
 
 		const aaUser = userRetrieve(aa) as User;
 		expect(aaUser.getGames(Classical).length).toBe(0);
@@ -467,7 +556,9 @@ describe('Check challenge communication', () => {
 
 		const challenge_file = path.join(db_challenges_dir, id);
 		expect(fs.existsSync(challenge_file)).toBe(true);
-		expect(challengeFromString(fs.readFileSync(challenge_file, 'utf8'))).toEqual(c);
+		expect(
+			challengeFromString(fs.readFileSync(challenge_file, 'utf8')),
+		).toEqual(c);
 		expect(challenges.getChallengeById(id)).toEqual(c);
 
 		expect(challenges.numChallenges()).toBe(1);
@@ -496,7 +587,9 @@ describe('Check challenge communication', () => {
 
 		const challenge_file = path.join(db_challenges_dir, id);
 		expect(fs.existsSync(challenge_file)).toBe(true);
-		expect(challengeFromString(fs.readFileSync(challenge_file, 'utf8'))).toEqual(c);
+		expect(
+			challengeFromString(fs.readFileSync(challenge_file, 'utf8')),
+		).toEqual(c);
 		expect(challenges.getChallengeById(id)).toEqual(c);
 
 		expect(challenges.numChallenges()).toBe(1);
@@ -520,7 +613,10 @@ describe('Check initialization and communication', () => {
 		expect(c.white).toEqual(dd);
 		expect(c.black).toEqual(aa);
 
-		challengeAgreeResult(c, { by: dd, when: toDateFull('2026-08-09..11:25:19:000') });
+		challengeAgreeResult(c, {
+			by: dd,
+			when: toDateFull('2026-08-09..11:25:19:000'),
+		});
 
 		const aaUser = userRetrieve(aa) as User;
 		expect(aaUser.getGames(Classical).length).toBe(0);
@@ -563,11 +659,26 @@ describe('Check initialization and communication', () => {
 
 describe('Incorrect challenge communication', () => {
 	test('New challenge (Blitz) aa -- bb', () => {
-		const c_aa_bb = challengeSendNew('sample', uA, uB, Blitz, Blitz5p3, toDateFull('2025-01-10..20:38:45:000'));
+		const c_aa_bb = challengeSendNew(
+			'sample',
+			uA,
+			uB,
+			Blitz,
+			Blitz5p3,
+			toDateFull('2025-01-10..20:38:45:000'),
+		);
 
-		expect(() => challengeAccept(c_aa_bb, { by: aa, when: toDateFull('2025-01-10..20:38:50:000') })).toThrow();
+		expect(() =>
+			challengeAccept(c_aa_bb, {
+				by: aa,
+				when: toDateFull('2025-01-10..20:38:50:000'),
+			}),
+		).toThrow();
 
-		challengeAccept(c_aa_bb, { by: bb, when: toDateFull('2025-01-10..20:38:50:000') });
+		challengeAccept(c_aa_bb, {
+			by: bb,
+			when: toDateFull('2025-01-10..20:38:50:000'),
+		});
 
 		expect(() =>
 			challengeSetResult(c_aa_bb, {
@@ -605,9 +716,17 @@ describe('Incorrect challenge communication', () => {
 			result: 'black_wins',
 		});
 
-		expect(() => challengeAgreeResult(c_aa_bb, { by: aa, when: toDateFull('2025-01-10..20:39:30:000') })).toThrow();
+		expect(() =>
+			challengeAgreeResult(c_aa_bb, {
+				by: aa,
+				when: toDateFull('2025-01-10..20:39:30:000'),
+			}),
+		).toThrow();
 
-		challengeAgreeResult(c_aa_bb, { by: bb, when: toDateFull('2025-01-10..20:39:30:000') });
+		challengeAgreeResult(c_aa_bb, {
+			by: bb,
+			when: toDateFull('2025-01-10..20:39:30:000'),
+		});
 
 		const aaUser = userRetrieve(aa) as User;
 		expect(aaUser.getGames(Classical).length).toBe(0);
@@ -645,8 +764,16 @@ describe('Incorrect challenge communication', () => {
 			toDateFull('2025-01-10..20:40:00:000'),
 		);
 
-		expect(() => challengeAccept(c_bb_cc, { by: cc, when: toDateFull('2025-01-10..20:40:30:000') })).toThrow();
-		challengeAccept(c_bb_cc, { by: bb, when: toDateFull('2025-01-10..20:40:30:000') });
+		expect(() =>
+			challengeAccept(c_bb_cc, {
+				by: cc,
+				when: toDateFull('2025-01-10..20:40:30:000'),
+			}),
+		).toThrow();
+		challengeAccept(c_bb_cc, {
+			by: bb,
+			when: toDateFull('2025-01-10..20:40:30:000'),
+		});
 
 		expect(() =>
 			challengeSetResult(c_bb_cc, {
@@ -684,9 +811,17 @@ describe('Incorrect challenge communication', () => {
 			result: 'black_wins',
 		});
 
-		expect(() => challengeAgreeResult(c_bb_cc, { by: bb, when: toDateFull('2025-01-10..20:40:30:000') })).toThrow();
+		expect(() =>
+			challengeAgreeResult(c_bb_cc, {
+				by: bb,
+				when: toDateFull('2025-01-10..20:40:30:000'),
+			}),
+		).toThrow();
 
-		challengeAgreeResult(c_bb_cc, { by: cc, when: toDateFull('2025-01-10..20:40:30:000') });
+		challengeAgreeResult(c_bb_cc, {
+			by: cc,
+			when: toDateFull('2025-01-10..20:40:30:000'),
+		});
 
 		const aaUser = userRetrieve(aa) as User;
 		expect(aaUser.getGames(Classical).length).toBe(0);

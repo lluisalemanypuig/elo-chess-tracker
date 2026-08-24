@@ -29,7 +29,10 @@ import { DateFull, DateMajor, logNow, toDateMajor } from '@common/utils/time';
 import { gameArrayFromString } from '@server/io/game';
 import { Game } from '@server/models/game';
 import { readDirectory } from '@server/utils/read-directory';
-import { searchByKey, whereShouldBeInsertedByKey } from '@server/utils/searching';
+import {
+	searchByKey,
+	whereShouldBeInsertedByKey,
+} from '@server/utils/searching';
 import Debug from 'debug';
 import fs from 'fs';
 import path from 'path';
@@ -53,10 +56,16 @@ export class GamesIterator {
 	private gameIdx: number = 0;
 
 	private loadCurrentRecord() {
-		const filename = path.join(this.directory, this.recordFilesList[this.recordIdx]);
+		const filename = path.join(
+			this.directory,
+			this.recordFilesList[this.recordIdx],
+		);
 		const array = gameArrayFromString(fs.readFileSync(filename, 'utf8'));
 		if (isNotDefined(array)) {
-			debug(logNow(), `File '${filename}' does not contain a valid game array.`);
+			debug(
+				logNow(),
+				`File '${filename}' does not contain a valid game array.`,
+			);
 			return;
 		}
 		this.gameSet = array;
@@ -175,9 +184,12 @@ export class GamesIterator {
 
 	// Locate the record named 'record'
 	locateRecord(record: DateMajor): boolean {
-		const [idx, exists] = whereShouldBeInsertedByKey(this.recordFilesList, (s: DateMajor): number => {
-			return record.localeCompare(s);
-		});
+		const [idx, exists] = whereShouldBeInsertedByKey(
+			this.recordFilesList,
+			(s: DateMajor): number => {
+				return record.localeCompare(s);
+			},
+		);
 		this.recordIdx = idx;
 		this.gameIdx = 0;
 		if (this.recordIdx < this.recordFilesList.length) {
@@ -201,9 +213,12 @@ export class GamesIterator {
 	 * @post The iterator is left in an invalid state in case of failure.
 	 */
 	locateFirstGameAfter(record: DateMajor, when: DateFull): boolean {
-		const [recordIdx, recordExists] = whereShouldBeInsertedByKey(this.recordFilesList, (s: DateMajor): number => {
-			return record.localeCompare(s);
-		});
+		const [recordIdx, recordExists] = whereShouldBeInsertedByKey(
+			this.recordFilesList,
+			(s: DateMajor): number => {
+				return record.localeCompare(s);
+			},
+		);
 		if (!recordExists) {
 			this.recordIdx = recordIdx;
 			this.gameIdx = 0;
@@ -232,9 +247,12 @@ export class GamesIterator {
 	 * @post The iterator is left in an invalid state in case of failure.
 	 */
 	locateGame(record: DateMajor, id: GameId): boolean {
-		this.recordIdx = searchByKey(this.recordFilesList, (s: DateMajor): number => {
-			return record.localeCompare(s);
-		});
+		this.recordIdx = searchByKey(
+			this.recordFilesList,
+			(s: DateMajor): number => {
+				return record.localeCompare(s);
+			},
+		);
 		if (this.recordIdx === -1) {
 			this.recordIdx = this.recordFilesList.length;
 			return false;

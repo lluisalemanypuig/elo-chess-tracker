@@ -41,7 +41,9 @@ export async function logoutLinkClicked(_event: any) {
 }
 
 function fillActionLinks(userActions: string[], userRoles: string[]) {
-	let actionLinks = document.getElementById('special-action-links') as HTMLDivElement;
+	let actionLinks = document.getElementById(
+		'special-action-links',
+	) as HTMLDivElement;
 
 	if (userActions.includes('CREATE_USER')) {
 		let userCreateLink = document.createElement('a') as HTMLAnchorElement;
@@ -115,30 +117,46 @@ async function fillOwnInfo() {
 	fillActionLinks(data.actions, data.roles);
 
 	{
-		let labelNameAndRoles = document.getElementById('user-name-and-roles') as HTMLDivElement;
+		let labelNameAndRoles = document.getElementById(
+			'user-name-and-roles',
+		) as HTMLDivElement;
 		labelNameAndRoles.textContent = data.fullname;
 
 		// roles of user from the cookies
 		let userRoles = data.roles as string[];
 		// add roles of user next to the name
 		labelNameAndRoles.textContent += ' - ';
-		labelNameAndRoles.textContent += USER_ROLE_TO_STRING[userRoles[0] as UserRole];
+		labelNameAndRoles.textContent +=
+			USER_ROLE_TO_STRING[userRoles[0] as UserRole];
 		for (let i = 1; i < userRoles.length; ++i) {
-			labelNameAndRoles.textContent += ', ' + USER_ROLE_TO_STRING[userRoles[i] as UserRole];
+			labelNameAndRoles.textContent +=
+				', ' + USER_ROLE_TO_STRING[userRoles[i] as UserRole];
 		}
 	}
 
 	{
-		let table = document.getElementById('user-ratings-table') as HTMLTableElement;
+		let table = document.getElementById(
+			'user-ratings-table',
+		) as HTMLTableElement;
 
 		for (const r of data.ratings) {
 			let row = table.insertRow(-1);
 			row.insertCell(-1).appendChild(document.createTextNode(r.timeControlId));
-			row.insertCell(-1).appendChild(document.createTextNode(`${r.rating.rating}`));
-			row.insertCell(-1).appendChild(document.createTextNode(`${r.rating.numGames}`));
-			row.insertCell(-1).appendChild(document.createTextNode(`${r.rating.won}`));
-			row.insertCell(-1).appendChild(document.createTextNode(`${r.rating.drawn}`));
-			row.insertCell(-1).appendChild(document.createTextNode(`${r.rating.lost}`));
+			row
+				.insertCell(-1)
+				.appendChild(document.createTextNode(`${r.rating.rating}`));
+			row
+				.insertCell(-1)
+				.appendChild(document.createTextNode(`${r.rating.numGames}`));
+			row
+				.insertCell(-1)
+				.appendChild(document.createTextNode(`${r.rating.won}`));
+			row
+				.insertCell(-1)
+				.appendChild(document.createTextNode(`${r.rating.drawn}`));
+			row
+				.insertCell(-1)
+				.appendChild(document.createTextNode(`${r.rating.lost}`));
 		}
 	}
 }

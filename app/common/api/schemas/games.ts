@@ -26,7 +26,10 @@ Contact:
 import { GameIdSchema } from '@common/models/game-id';
 import { GameResultSchema } from '@common/models/game-result';
 import { PlayerPublicIdSchema } from '@common/models/player-id';
-import { TimeControlIdSchema, TimeControlNameSchema } from '@common/models/time-control';
+import {
+	TimeControlIdSchema,
+	TimeControlNameSchema,
+} from '@common/models/time-control';
 import { DateMajorSchema, DateMinorSchema } from '@common/utils/time';
 import { z } from 'zod';
 

@@ -33,7 +33,15 @@ const Blitz = toTimeControlId('blitz');
 
 describe('IO conversion -- Elo', () => {
 	initializeRatingFunctions('Elo');
-	const classical = { rating: 1700, numGames: 0, won: 0, drawn: 0, lost: 0, K: 40, surpassed2400: false };
+	const classical = {
+		rating: 1700,
+		numGames: 0,
+		won: 0,
+		drawn: 0,
+		lost: 0,
+		K: 40,
+		surpassed2400: false,
+	};
 
 	test('string', () => {
 		const p = playerFromString(

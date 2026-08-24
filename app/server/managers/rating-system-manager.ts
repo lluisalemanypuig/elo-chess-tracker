@@ -51,7 +51,8 @@ export class RatingSystemManager {
 	 * @pre Method @ref initialize must have been called before
 	 */
 	static getInstance(): RatingSystemManager {
-		RatingSystemManager.instance = RatingSystemManager.instance || new RatingSystemManager();
+		RatingSystemManager.instance =
+			RatingSystemManager.instance || new RatingSystemManager();
 		return RatingSystemManager.instance;
 	}
 
@@ -100,7 +101,12 @@ export class RatingSystemManager {
 	// All unique rating ids used in the server
 	private allUniqueTimeControls: TimeControlId[] = [];
 
-	setFunctions(formula: Function, newRating: Function, fromString: Function, fromJson: Function) {
+	setFunctions(
+		formula: Function,
+		newRating: Function,
+		fromString: Function,
+		fromJson: Function,
+	) {
 		this.ratingFormulaFunc = formula;
 		this.newRatingFunc = newRating;
 		this.ratingFromStringFunc = fromString;
@@ -134,7 +140,11 @@ export class RatingSystemManager {
 		this.allTimeControls = allRatings;
 
 		this.allUniqueTimeControls = [
-			...new Set(this.allTimeControls.map((value: TimeControl): TimeControlId => value.id)),
+			...new Set(
+				this.allTimeControls.map(
+					(value: TimeControl): TimeControlId => value.id,
+				),
+			),
 		];
 	}
 

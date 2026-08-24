@@ -24,7 +24,11 @@ Contact:
 */
 
 import { PlayerPrivateId, toPlayerPrivateId } from '@common/models/player-id';
-import { encryptPasswordForUser, isPasswordOfUserCorrect, normalizeString } from '@server/utils/encrypt';
+import {
+	encryptPasswordForUser,
+	isPasswordOfUserCorrect,
+	normalizeString,
+} from '@server/utils/encrypt';
 
 describe('Password normalization', () => {
 	test('1', () => {
@@ -37,8 +41,14 @@ describe('Password normalization', () => {
 
 	test('2', () => {
 		expect(normalizeString('12345678')).toBe('12345678$ALLOWED');
-		expect(normalizeString('1234567890123456')).toBe('1234567890123456$ALLOWED_SYMBOLS');
-		expect(normalizeString('1234567890123456789012345678901234567890123456789012345678901234')).toBe(
+		expect(normalizeString('1234567890123456')).toBe(
+			'1234567890123456$ALLOWED_SYMBOLS',
+		);
+		expect(
+			normalizeString(
+				'1234567890123456789012345678901234567890123456789012345678901234',
+			),
+		).toBe(
 			'1234567890123456789012345678901234567890123456789012345678901234$ALLOWED_SYMBOLS_ENCRYPT$ALLOWED_SYMBOLS_ENCRYPT$ALLOWED_SYMBOLS',
 		);
 		expect(
@@ -88,9 +98,14 @@ describe('Encrypt password for users', () => {
 	});
 
 	test('Several users', () => {
-		const user_array = ['a', 'asdf', 'qwer', 'admin', 'administrator', 'qwer ppp'].map((s: string) =>
-			toPlayerPrivateId(s),
-		);
+		const user_array = [
+			'a',
+			'asdf',
+			'qwer',
+			'admin',
+			'administrator',
+			'qwer ppp',
+		].map((s: string) => toPlayerPrivateId(s));
 		for (const user of user_array) {
 			checkEncryptUserPassword(user, 'QQQQQQQ');
 		}

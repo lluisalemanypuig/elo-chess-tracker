@@ -27,7 +27,10 @@ import { toPlayerPrivateId } from '@common/models/player-id';
 import { toTimeControlId } from '@common/models/time-control';
 import { toUserGivenName } from '@common/models/user-given-name';
 import { toDateMajor } from '@common/utils/time';
-import { initializePermissions, UserRoleToUserAction } from '@server/managers/user-role-action';
+import {
+	initializePermissions,
+	UserRoleToUserAction,
+} from '@server/managers/user-role-action';
 import { EloRating } from '@server/models/rating-framework/Elo/rating';
 import { TimeControlRating } from '@server/models/time-control-rating';
 import { User } from '@server/models/user';
@@ -50,10 +53,19 @@ describe('Elo', () => {
 			{ encrypted: 'asdf', iv: 'ivrandom' },
 			['ADMIN', 'TEACHER'],
 			[
-				{ timeControl: Blitz, records: [{ record: toDateMajor('2024-12-24'), amount: 1 }] },
-				{ timeControl: Rapid, records: [{ record: toDateMajor('2024-12-25'), amount: 1 }] },
+				{
+					timeControl: Blitz,
+					records: [{ record: toDateMajor('2024-12-24'), amount: 1 }],
+				},
+				{
+					timeControl: Rapid,
+					records: [{ record: toDateMajor('2024-12-25'), amount: 1 }],
+				},
 			],
-			[new TimeControlRating(Blitz, blitz), new TimeControlRating(Classical, classical)],
+			[
+				new TimeControlRating(Blitz, blitz),
+				new TimeControlRating(Classical, classical),
+			],
 		);
 
 		expect(u.is('ADMIN')).toBe(true);
@@ -67,8 +79,12 @@ describe('Elo', () => {
 		expect(u.firstName).toEqual('First');
 		expect(u.lastName).toEqual('Last');
 		expect(u.getFullName()).toEqual('First Last');
-		expect(u.getGames(Blitz)).toEqual([{ record: toDateMajor('2024-12-24'), amount: 1 }]);
-		expect(u.getGames(Rapid)).toEqual([{ record: toDateMajor('2024-12-25'), amount: 1 }]);
+		expect(u.getGames(Blitz)).toEqual([
+			{ record: toDateMajor('2024-12-24'), amount: 1 },
+		]);
+		expect(u.getGames(Rapid)).toEqual([
+			{ record: toDateMajor('2024-12-25'), amount: 1 },
+		]);
 	});
 
 	test('basic sets', () => {
@@ -79,10 +95,19 @@ describe('Elo', () => {
 			{ encrypted: 'asdf', iv: 'ivrandom' },
 			['ADMIN', 'TEACHER'],
 			[
-				{ timeControl: Blitz, records: [{ record: toDateMajor('2024-12-24'), amount: 1 }] },
-				{ timeControl: Rapid, records: [{ record: toDateMajor('2024-12-25'), amount: 1 }] },
+				{
+					timeControl: Blitz,
+					records: [{ record: toDateMajor('2024-12-24'), amount: 1 }],
+				},
+				{
+					timeControl: Rapid,
+					records: [{ record: toDateMajor('2024-12-25'), amount: 1 }],
+				},
 			],
-			[new TimeControlRating(Blitz, blitz), new TimeControlRating(Classical, classical)],
+			[
+				new TimeControlRating(Blitz, blitz),
+				new TimeControlRating(Classical, classical),
+			],
 		);
 
 		expect(u.is('ADMIN')).toBe(true);
@@ -111,10 +136,19 @@ describe('Elo', () => {
 			{ encrypted: 'asdf', iv: 'ivrandom' },
 			['ADMIN', 'TEACHER'],
 			[
-				{ timeControl: Blitz, records: [{ record: toDateMajor('2024-12-24'), amount: 1 }] },
-				{ timeControl: Rapid, records: [{ record: toDateMajor('2024-12-25'), amount: 1 }] },
+				{
+					timeControl: Blitz,
+					records: [{ record: toDateMajor('2024-12-24'), amount: 1 }],
+				},
+				{
+					timeControl: Rapid,
+					records: [{ record: toDateMajor('2024-12-25'), amount: 1 }],
+				},
 			],
-			[new TimeControlRating(Blitz, blitz), new TimeControlRating(Classical, classical)],
+			[
+				new TimeControlRating(Blitz, blitz),
+				new TimeControlRating(Classical, classical),
+			],
 		);
 
 		// blitz

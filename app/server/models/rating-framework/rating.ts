@@ -46,7 +46,13 @@ export class Rating {
 	 * @param drawn Number of drawn games
 	 * @param lost Number of lost games
 	 */
-	constructor(rating: number, numGames: number, won: number, drawn: number, lost: number) {
+	constructor(
+		rating: number,
+		numGames: number,
+		won: number,
+		drawn: number,
+		lost: number,
+	) {
 		this.rating = rating;
 		this.numGames = numGames;
 		this.won = won;
@@ -61,7 +67,13 @@ export class Rating {
 	}
 
 	clone(): Rating {
-		return new Rating(this.rating, this.numGames, this.won, this.drawn, this.lost);
+		return new Rating(
+			this.rating,
+			this.numGames,
+			this.won,
+			this.drawn,
+			this.lost,
+		);
 	}
 
 	numWonDrawnLost(): [number, number, number, number] {

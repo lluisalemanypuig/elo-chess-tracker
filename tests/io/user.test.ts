@@ -76,8 +76,12 @@ describe('IO conversion (Elo)', () => {
 		expect(u.password).toEqual({ encrypted: 'a', iv: 'b' });
 		expect(u.roles).toEqual(['ADMIN']);
 		expect(u.is('ADMIN')).toEqual(true);
-		expect(u.getGames(Blitz)).toEqual([{ record: toDateMajor('2024-12-31'), amount: 1 }]);
-		expect(u.getGames(Rapid)).toEqual([{ record: toDateMajor('2025-01-01'), amount: 1 }]);
+		expect(u.getGames(Blitz)).toEqual([
+			{ record: toDateMajor('2024-12-31'), amount: 1 },
+		]);
+		expect(u.getGames(Rapid)).toEqual([
+			{ record: toDateMajor('2025-01-01'), amount: 1 },
+		]);
 		expect(u.ratings).toEqual([]);
 		expect(u.ratings.length).toBe(0);
 	});

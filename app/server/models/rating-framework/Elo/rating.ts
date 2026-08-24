@@ -25,7 +25,15 @@ Contact:
 
 import { Rating } from '@server/models/rating-framework/rating';
 
-export const ELO_RATING_KEYS = ['rating', 'numGames', 'won', 'drawn', 'lost', 'K', 'surpassed2400'] as const;
+export const ELO_RATING_KEYS = [
+	'rating',
+	'numGames',
+	'won',
+	'drawn',
+	'lost',
+	'K',
+	'surpassed2400',
+] as const;
 
 /**
  * @brief Simple class to encode a rating.
@@ -62,7 +70,15 @@ export class EloRating extends Rating {
 
 	// Clones the object.
 	override clone(): EloRating {
-		return new EloRating(this.rating, this.numGames, this.won, this.drawn, this.lost, this.K, this.surpassed2400);
+		return new EloRating(
+			this.rating,
+			this.numGames,
+			this.won,
+			this.drawn,
+			this.lost,
+			this.K,
+			this.surpassed2400,
+		);
 	}
 }
 

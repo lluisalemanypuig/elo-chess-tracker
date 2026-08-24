@@ -31,7 +31,9 @@ import { EdgeMetadata } from '@server/models/graph/edge-metadata';
 describe('IO conversion', () => {
 	test('string', () => {
 		expect(
-			edgeFromString('{"neighbor": "A", "metadata": {"numGamesWon": 1, "numGamesDrawn": 0, "numGamesLost": 300}}'),
+			edgeFromString(
+				'{"neighbor": "A", "metadata": {"numGamesWon": 1, "numGamesDrawn": 0, "numGamesLost": 300}}',
+			),
 		).toEqual(new Edge(toPlayerPrivateId('A'), new EdgeMetadata(1, 0, 300)));
 	});
 });

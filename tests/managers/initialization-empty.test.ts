@@ -23,7 +23,10 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { toTimeControlId, toTimeControlName } from '@common/models/time-control';
+import {
+	toTimeControlId,
+	toTimeControlName,
+} from '@common/models/time-control';
 import { ChallengesManager } from '@server/managers/challenges-manager';
 import { ConfigurationManager } from '@server/managers/configuration-manager';
 import { EnvironmentManager } from '@server/managers/environment-manager';
@@ -146,18 +149,26 @@ const configuration: Configuration = {
 describe('Configure server', () => {
 	test('Load an empty server', async () => {
 		await runCommand('./tests/initialize-empty.sh');
-		expect(() => serverInitFromData('tests/webpage', configuration)).not.toThrow();
+		expect(() =>
+			serverInitFromData('tests/webpage', configuration),
+		).not.toThrow();
 	});
 
 	test('Check RatingSystemManager', () => {
 		const ratingSystem_manager = RatingSystemManager.getInstance();
 
 		expect(ratingSystem_manager.isTimeControlIdValid(Classical)).toBe(true);
-		expect(ratingSystem_manager.isTimeControlIdValid(toTimeControlId('classical'))).toBe(false);
+		expect(
+			ratingSystem_manager.isTimeControlIdValid(toTimeControlId('classical')),
+		).toBe(false);
 		expect(ratingSystem_manager.isTimeControlIdValid(Rapid)).toBe(true);
-		expect(ratingSystem_manager.isTimeControlIdValid(toTimeControlId('rapid'))).toBe(false);
+		expect(
+			ratingSystem_manager.isTimeControlIdValid(toTimeControlId('rapid')),
+		).toBe(false);
 		expect(ratingSystem_manager.isTimeControlIdValid(Blitz)).toBe(true);
-		expect(ratingSystem_manager.isTimeControlIdValid(toTimeControlId('blitz'))).toBe(false);
+		expect(
+			ratingSystem_manager.isTimeControlIdValid(toTimeControlId('blitz')),
+		).toBe(false);
 
 		const unique_ids = ratingSystem_manager.getUniqueTimeControlsIds();
 		expect(
@@ -208,9 +219,15 @@ describe('Configure server', () => {
 
 		expect(environment_manager.getDirDatabase()).toEqual(db_dir);
 		expect(environment_manager.getDirGames()).toEqual(db_games_dir);
-		expect(environment_manager.getDirGamesTimeControl(Classical)).toEqual(db_games_Classical_dir);
-		expect(environment_manager.getDirGamesTimeControl(Rapid)).toEqual(db_games_Rapid_dir);
-		expect(environment_manager.getDirGamesTimeControl(Blitz)).toEqual(db_games_Blitz_dir);
+		expect(environment_manager.getDirGamesTimeControl(Classical)).toEqual(
+			db_games_Classical_dir,
+		);
+		expect(environment_manager.getDirGamesTimeControl(Rapid)).toEqual(
+			db_games_Rapid_dir,
+		);
+		expect(environment_manager.getDirGamesTimeControl(Blitz)).toEqual(
+			db_games_Blitz_dir,
+		);
 		expect(environment_manager.getDirUsers()).toEqual(db_users_dir);
 		expect(environment_manager.getDirChallenges()).toEqual(db_challenges_dir);
 
@@ -219,14 +236,26 @@ describe('Configure server', () => {
 		expect(fs.existsSync(db_games_Blitz_dir)).toBe(true);
 
 		expect(environment_manager.getDirSsl()).toEqual(ssl_dir);
-		expect(environment_manager.getSslPublicKeyFile()).toEqual(path.join(ssl_dir, 'sadf'));
-		expect(environment_manager.getSslPrivateKeyFile()).toEqual(path.join(ssl_dir, 'qwer'));
-		expect(environment_manager.getSslPassphraseFile()).toEqual(path.join(ssl_dir, 'kgj68'));
+		expect(environment_manager.getSslPublicKeyFile()).toEqual(
+			path.join(ssl_dir, 'sadf'),
+		);
+		expect(environment_manager.getSslPrivateKeyFile()).toEqual(
+			path.join(ssl_dir, 'qwer'),
+		);
+		expect(environment_manager.getSslPassphraseFile()).toEqual(
+			path.join(ssl_dir, 'kgj68'),
+		);
 
 		expect(environment_manager.getDirIcons()).toEqual(icons_dir);
-		expect(environment_manager.getIconFavicon()).toEqual(path.join(icons_dir, 'favicon.png'));
-		expect(environment_manager.getIconLoginPage()).toEqual(path.join(icons_dir, 'login.png'));
-		expect(environment_manager.getIconHomePage()).toEqual(path.join(icons_dir, 'home.png'));
+		expect(environment_manager.getIconFavicon()).toEqual(
+			path.join(icons_dir, 'favicon.png'),
+		);
+		expect(environment_manager.getIconLoginPage()).toEqual(
+			path.join(icons_dir, 'login.png'),
+		);
+		expect(environment_manager.getIconHomePage()).toEqual(
+			path.join(icons_dir, 'home.png'),
+		);
 
 		expect(environment_manager.getTitleLoginPage()).toEqual('Login title');
 		expect(environment_manager.getTitleHomePage()).toEqual('Home title');

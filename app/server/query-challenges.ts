@@ -45,7 +45,10 @@ import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:serverQueryChallenges');
 
 // Query the server for challenges received sento to me by other users
-export async function getQueryChallengeReceived({ user: sentTo, session: _session }: UserSession, _i: Empty) {
+export async function getQueryChallengeReceived(
+	{ user: sentTo, session: _session }: UserSession,
+	_i: Empty,
+) {
 	debug(logNow(), 'function getQueryChallengeReceived...');
 
 	// challenges to be returned
@@ -66,7 +69,9 @@ export async function getQueryChallengeReceived({ user: sentTo, session: _sessio
 		const sentBy = manager.getAllUserDataByPrivateId(c.sentBy);
 		if (isNotDefined(sentBy)) {
 			debug(logNow(), `User '${c.sentBy}' does not exist.`);
-			throw new InternalError(`User '${c.sentBy}' from challenge does not exist`);
+			throw new InternalError(
+				`User '${c.sentBy}' from challenge does not exist`,
+			);
 		}
 
 		// return only basic information
@@ -76,7 +81,11 @@ export async function getQueryChallengeReceived({ user: sentTo, session: _sessio
 			sentBy: sentBy.user.getFullName(),
 			sentWhen: c.whenChallengeSent,
 			timeControlName: c.timeControlName,
-			canBeDeclined: canUserDeclineChallenge(sentTo, sentBy.user, c.timeControlId),
+			canBeDeclined: canUserDeclineChallenge(
+				sentTo,
+				sentBy.user,
+				c.timeControlId,
+			),
 		});
 	}
 
@@ -86,7 +95,10 @@ export async function getQueryChallengeReceived({ user: sentTo, session: _sessio
 }
 
 // Query the server for challenges sent to other users by me
-export async function getQueryChallengeSent({ user: sentBy, session: _session }: UserSession, _i: Empty) {
+export async function getQueryChallengeSent(
+	{ user: sentBy, session: _session }: UserSession,
+	_i: Empty,
+) {
 	debug(logNow(), 'function getQueryChallengeSent...');
 
 	// challenges to be returned
@@ -107,7 +119,9 @@ export async function getQueryChallengeSent({ user: sentBy, session: _session }:
 		const sentTo = manager.getAllUserDataByPrivateId(c.sentTo);
 		if (isNotDefined(sentTo)) {
 			debug(logNow(), `User '${c.sentTo}' does not exist.`);
-			throw new InternalError(`User '${c.sentTo}' from challenge does not exist`);
+			throw new InternalError(
+				`User '${c.sentTo}' from challenge does not exist`,
+			);
 		}
 
 		// return only basic information
@@ -117,7 +131,11 @@ export async function getQueryChallengeSent({ user: sentBy, session: _session }:
 			sentTo: sentTo.user.getFullName(),
 			sentWhen: c.whenChallengeSent,
 			timeControlName: c.timeControlName,
-			canBeDeclined: canUserDeclineChallenge(sentTo.user, sentBy, c.timeControlId),
+			canBeDeclined: canUserDeclineChallenge(
+				sentTo.user,
+				sentBy,
+				c.timeControlId,
+			),
 		});
 	}
 
@@ -127,7 +145,10 @@ export async function getQueryChallengeSent({ user: sentBy, session: _session }:
 }
 
 // Query the server for accepted challenges whose result has not been set yet.
-export async function getQueryChallengePendingResult({ user, session: _session }: UserSession, _i: Empty) {
+export async function getQueryChallengePendingResult(
+	{ user, session: _session }: UserSession,
+	_i: Empty,
+) {
 	debug(logNow(), 'function getQueryChallengePendingResult...');
 
 	// challenges to be returned
@@ -154,13 +175,17 @@ export async function getQueryChallengePendingResult({ user, session: _session }
 		const userSentTo = manager.getAllUserDataByPrivateId(c.sentTo);
 		if (isNotDefined(userSentTo)) {
 			debug(logNow(), `User '${c.sentTo}' does not exist.`);
-			throw new InternalError(`User '${c.sentTo}' from challenge does not exist.`);
+			throw new InternalError(
+				`User '${c.sentTo}' from challenge does not exist.`,
+			);
 		}
 
 		const userSentBy = manager.getAllUserDataByPrivateId(c.sentBy);
 		if (isNotDefined(userSentBy)) {
 			debug(logNow(), `User '${c.sentBy}' does not exist.`);
-			throw new InternalError(`User '${c.sentBy}' from challenge does not exist.`);
+			throw new InternalError(
+				`User '${c.sentBy}' from challenge does not exist.`,
+			);
 		}
 
 		const opponent = ((): UserGivenName => {
@@ -194,7 +219,10 @@ export async function getQueryChallengePendingResult({ user, session: _session }
 }
 
 // Query the server for accepted challenges whose result has been set by me
-export async function getQueryChallengeConfirmResultOther({ user, session: _session }: UserSession, _i: Empty) {
+export async function getQueryChallengeConfirmResultOther(
+	{ user, session: _session }: UserSession,
+	_i: Empty,
+) {
 	debug(logNow(), 'function getQueryChallengeConfirmResultOther...');
 
 	// challenges to be returned
@@ -225,18 +253,24 @@ export async function getQueryChallengeConfirmResultOther({ user, session: _sess
 		const sentTo = manager.getAllUserDataByPrivateId(c.sentTo);
 		if (isNotDefined(sentTo)) {
 			debug(logNow(), `User '${c.sentTo}' does not exist.`);
-			throw new InternalError(`User '${c.sentTo}' from challenge does not exist.`);
+			throw new InternalError(
+				`User '${c.sentTo}' from challenge does not exist.`,
+			);
 		}
 
 		const sentBy = manager.getAllUserDataByPrivateId(c.sentBy);
 		if (isNotDefined(sentBy)) {
 			debug(logNow(), `User '${c.sentBy}' does not exist.`);
-			throw new InternalError(`User '${c.sentBy}' from challenge does not exist.`);
+			throw new InternalError(
+				`User '${c.sentBy}' from challenge does not exist.`,
+			);
 		}
 
 		if (isNotDefined(c.white) || isNotDefined(c.black)) {
 			debug(logNow(), `White or Black player is not set in challenge.`);
-			throw new InternalError(`White ${isNotDefined(c.white)}. Black: ${isNotDefined(c.black)}.`);
+			throw new InternalError(
+				`White ${isNotDefined(c.white)}. Black: ${isNotDefined(c.black)}.`,
+			);
 		}
 
 		const [whiteFullName, blackFullName] = (() => {
@@ -282,7 +316,10 @@ export async function getQueryChallengeConfirmResultOther({ user, session: _sess
 }
 
 // Query the server for accepted challenges whose result has been set by my opponent
-export async function getQueryChallengeConfirmResultSelf({ user, session: _session }: UserSession, _i: Empty) {
+export async function getQueryChallengeConfirmResultSelf(
+	{ user, session: _session }: UserSession,
+	_i: Empty,
+) {
 	debug(logNow(), 'function getQueryChallengeConfirmResultSelf...');
 
 	// challenges to be returned
@@ -313,18 +350,24 @@ export async function getQueryChallengeConfirmResultSelf({ user, session: _sessi
 		const sentTo = manager.getAllUserDataByPrivateId(c.sentTo);
 		if (isNotDefined(sentTo)) {
 			debug(logNow(), `User '${c.sentTo}' does not exist.`);
-			throw new InternalError(`User '${c.sentTo}' from challenge does not exist.`);
+			throw new InternalError(
+				`User '${c.sentTo}' from challenge does not exist.`,
+			);
 		}
 
 		const sentBy = manager.getAllUserDataByPrivateId(c.sentBy);
 		if (isNotDefined(sentBy)) {
 			debug(logNow(), `User '${c.sentBy}' does not exist.`);
-			throw new InternalError(`User '${c.sentBy}' from challenge does not exist.`);
+			throw new InternalError(
+				`User '${c.sentBy}' from challenge does not exist.`,
+			);
 		}
 
 		if (isNotDefined(c.white) || isNotDefined(c.black)) {
 			debug(logNow(), `White or Black player is not set in challenge.`);
-			throw new InternalError(`White ${isNotDefined(c.white)}. Black: ${isNotDefined(c.black)}.`);
+			throw new InternalError(
+				`White ${isNotDefined(c.white)}. Black: ${isNotDefined(c.black)}.`,
+			);
 		}
 
 		const [whiteFullName, blackFullName] = (() => {

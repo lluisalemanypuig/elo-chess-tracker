@@ -25,7 +25,10 @@ Contact:
 
 import { isNotDefined } from '@common/utils/is-defined';
 import { readSchema } from '@server/io/generic';
-import { EdgeMetadata, EdgeMetadataSchema } from '@server/models/graph/edge-metadata';
+import {
+	EdgeMetadata,
+	EdgeMetadataSchema,
+} from '@server/models/graph/edge-metadata';
 
 /**
  * @brief Parses a JSON string and returns an EdgeMetadata.
@@ -37,5 +40,9 @@ export function edgeMetadataFromString(str: string): EdgeMetadata | null {
 	if (isNotDefined(data)) {
 		return null;
 	}
-	return new EdgeMetadata(data.numGamesWon, data.numGamesDrawn, data.numGamesLost);
+	return new EdgeMetadata(
+		data.numGamesWon,
+		data.numGamesDrawn,
+		data.numGamesLost,
+	);
 }

@@ -23,9 +23,15 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { PlayerPrivateId, PlayerPrivateIdSchema } from '@common/models/player-id';
+import {
+	PlayerPrivateId,
+	PlayerPrivateIdSchema,
+} from '@common/models/player-id';
 import { InternalError } from '@server/models/error-types/internal-error';
-import { EdgeMetadata, EdgeMetadataSchema } from '@server/models/graph/edge-metadata';
+import {
+	EdgeMetadata,
+	EdgeMetadataSchema,
+} from '@server/models/graph/edge-metadata';
 import { z } from 'zod';
 
 export const EdgeSchema = z
@@ -70,7 +76,11 @@ export class Edge {
 
 	// Is the metadata of this edge all zeroes?
 	isEmptyEdge(): boolean {
-		return this.metadata.numGamesDrawn === 0 && this.metadata.numGamesLost === 0 && this.metadata.numGamesWon === 0;
+		return (
+			this.metadata.numGamesDrawn === 0 &&
+			this.metadata.numGamesLost === 0 &&
+			this.metadata.numGamesWon === 0
+		);
 	}
 }
 

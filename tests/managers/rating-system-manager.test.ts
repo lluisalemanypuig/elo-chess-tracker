@@ -23,7 +23,10 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { toTimeControlId, toTimeControlName } from '@common/models/time-control';
+import {
+	toTimeControlId,
+	toTimeControlName,
+} from '@common/models/time-control';
 import { RatingSystemManager } from '@server/managers/rating-system-manager';
 
 const Classical = toTimeControlId('Classical');

@@ -31,7 +31,8 @@ import { Response } from 'express';
 
 const debug = Debug('ELO_CHESS_TRACKER:serverGraphs');
 
-export const internalErrorMessage = 'Internal error. Contact your administrator.';
+export const internalErrorMessage =
+	'Internal error. Contact your administrator.';
 
 export function handleError(e: Error, res: Response) {
 	if (e instanceof PublicError) {

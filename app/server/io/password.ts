@@ -24,7 +24,11 @@ Contact:
 */
 
 import { readSchema } from '@server/io/generic';
-import { Password, PasswordArraySchema, PasswordSchema } from '@server/models/password';
+import {
+	Password,
+	PasswordArraySchema,
+	PasswordSchema,
+} from '@server/models/password';
 
 export function passwordFromString(str: string): Password | null {
 	return readSchema(PasswordSchema, str);

@@ -26,7 +26,12 @@ Contact:
 import { isNotDefined } from '@common/utils/is-defined';
 import { z } from 'zod';
 
-export const ALL_USER_ROLES = ['ADMIN', 'TEACHER', 'MEMBER', 'STUDENT'] as const;
+export const ALL_USER_ROLES = [
+	'ADMIN',
+	'TEACHER',
+	'MEMBER',
+	'STUDENT',
+] as const;
 
 export type UserRole = (typeof ALL_USER_ROLES)[number];
 

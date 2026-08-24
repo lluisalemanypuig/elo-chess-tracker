@@ -40,7 +40,8 @@ export class ConfigurationManager {
 	}
 
 	static getInstance(): ConfigurationManager {
-		ConfigurationManager.instance = ConfigurationManager.instance || new ConfigurationManager();
+		ConfigurationManager.instance =
+			ConfigurationManager.instance || new ConfigurationManager();
 		return ConfigurationManager.instance;
 	}
 

@@ -24,7 +24,10 @@ Contact:
 */
 
 import { TimeControl } from '@common/models/time-control';
-import { ratingFromJsonElo, ratingFromStringElo } from '@server/io/ratings/Elo/rating';
+import {
+	ratingFromJsonElo,
+	ratingFromStringElo,
+} from '@server/io/ratings/Elo/rating';
 import { RatingSystemManager } from '@server/managers/rating-system-manager';
 import { newRatingElo } from '@server/models/rating-framework/Elo/rating';
 import { RatingFrameworkType } from '@server/models/rating-framework/rating-framework-type';
@@ -38,7 +41,12 @@ import { EloPlayerVsPlayer } from '@server/rating-framework/Elo/formula';
 export function initializeRatingFunctions(name: RatingFrameworkType) {
 	let ratingSystem = RatingSystemManager.getInstance();
 	if (name === 'Elo') {
-		ratingSystem.setFunctions(EloPlayerVsPlayer, newRatingElo, ratingFromStringElo, ratingFromJsonElo);
+		ratingSystem.setFunctions(
+			EloPlayerVsPlayer,
+			newRatingElo,
+			ratingFromStringElo,
+			ratingFromJsonElo,
+		);
 	}
 }
 

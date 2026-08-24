@@ -25,7 +25,10 @@ Contact:
 
 import { PlayerPrivateId } from '@common/models/player-id';
 import { SessionId } from '@common/models/session-id';
-import { TimeControlId, TimeControlIdSchema } from '@common/models/time-control';
+import {
+	TimeControlId,
+	TimeControlIdSchema,
+} from '@common/models/time-control';
 import { UserAction } from '@common/models/user-action';
 import { toUserGivenName, UserGivenName } from '@common/models/user-given-name';
 import { UserRole } from '@common/models/user-role';
@@ -36,7 +39,11 @@ import { Password } from '@server/models/password';
 import { Player } from '@server/models/player';
 import { TimeControlRating } from '@server/models/time-control-rating';
 import { copyarray } from '@server/utils/misc';
-import { searchByKey, searchLinearByKey, whereShouldBeInsertedByKey } from '@server/utils/searching';
+import {
+	searchByKey,
+	searchLinearByKey,
+	whereShouldBeInsertedByKey,
+} from '@server/utils/searching';
 import { z } from 'zod';
 
 export const GameNumberSchema = z
@@ -65,7 +72,15 @@ export const TimeControlGameArraySchema = z.array(TimeControlGameSchema);
 
 export type TimeControlGameArray = z.infer<typeof TimeControlGameArraySchema>;
 
-export const UserKeys = ['username', 'firstName', 'lastName', 'password', 'roles', 'games', 'ratings'];
+export const UserKeys = [
+	'username',
+	'firstName',
+	'lastName',
+	'password',
+	'roles',
+	'games',
+	'ratings',
+];
 
 export interface UserSession {
 	user: User;
@@ -157,11 +172,17 @@ export class User extends Player {
 			throw new InternalError(`User does not have time control id '${id}'`);
 		}
 
-		const [index, exists] = whereShouldBeInsertedByKey(this.games[idx].records, (s: GameNumber): number => {
-			return gameRecord.localeCompare(s.record);
-		});
+		const [index, exists] = whereShouldBeInsertedByKey(
+			this.games[idx].records,
+			(s: GameNumber): number => {
+				return gameRecord.localeCompare(s.record);
+			},
+		);
 		if (!exists) {
-			this.games[idx].records.splice(index, 0, { record: gameRecord, amount: 1 });
+			this.games[idx].records.splice(index, 0, {
+				record: gameRecord,
+				amount: 1,
+			});
 		} else {
 			this.games[idx].records[index].amount += 1;
 		}
@@ -175,9 +196,12 @@ export class User extends Player {
 			throw new InternalError(`User does not have time control id '${id}'`);
 		}
 
-		const index = searchByKey(this.games[idx].records, (s: GameNumber): number => {
-			return gameRecord.localeCompare(s.record);
-		});
+		const index = searchByKey(
+			this.games[idx].records,
+			(s: GameNumber): number => {
+				return gameRecord.localeCompare(s.record);
+			},
+		);
 		if (index === -1) {
 			throw new InternalError(
 				`User '${this.username}' does not have game record '${gameRecord}' in time control '${id}': '${this.games[idx].records}'.`,
@@ -232,7 +256,9 @@ export class User extends Player {
 	 */
 	copyPlayerData(p: Player) {
 		if (this.username !== p.username) {
-			throw new InternalError(`Trying to dump data of user ${p.username} into a different player ${this.username}`);
+			throw new InternalError(
+				`Trying to dump data of user ${p.username} into a different player ${this.username}`,
+			);
 		}
 
 		// copy all ratings

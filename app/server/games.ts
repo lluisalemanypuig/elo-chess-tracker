@@ -24,7 +24,12 @@ Contact:
 */
 
 import { Empty } from '@common/api/schemas-endpoints';
-import { GameCreateInput, GameDeleteInput, GameEditResultInput, GameEditTitleInput } from '@common/api/schemas/games';
+import {
+	GameCreateInput,
+	GameDeleteInput,
+	GameEditResultInput,
+	GameEditTitleInput,
+} from '@common/api/schemas/games';
 import { isNotDefined } from '@common/utils/is-defined';
 import { logNow } from '@common/utils/time';
 import {
@@ -51,7 +56,10 @@ export async function getPageGameListAll(_u: UserSession) {
 	return 'html/game/list/all.html';
 }
 
-export async function getPageGameCreate({ user, session: _session }: UserSession) {
+export async function getPageGameCreate({
+	user,
+	session: _session,
+}: UserSession) {
 	debug(logNow(), 'function getPageGameCreate...');
 	if (!user.canDo('CREATE_GAMES')) {
 		debug(logNow(), `User '${user.username}' cannot create games.`);
@@ -154,7 +162,10 @@ export async function postGameDelete(
 	return {};
 }
 
-export async function postRecalculateRatings({ user, session: _session }: UserSession, _input: Empty): Promise<Empty> {
+export async function postRecalculateRatings(
+	{ user, session: _session }: UserSession,
+	_input: Empty,
+): Promise<Empty> {
 	debug(logNow(), 'function postRecalculateRatings...');
 	debug(logNow(), `Recalculating ratings...`);
 	recalculateAllRatings(user);

@@ -28,13 +28,28 @@ import { GameResult } from '@common/models/game-result';
 import { PlayerPrivateId } from '@common/models/player-id';
 import { TimeControlId, TimeControlName } from '@common/models/time-control';
 import { isDefined, isNotDefined } from '@common/utils/is-defined';
-import { DateFull, dateFullToMajor, DateMajor, DateMinor, logNow, toDateFull } from '@common/utils/time';
+import {
+	DateFull,
+	dateFullToMajor,
+	DateMajor,
+	DateMinor,
+	logNow,
+	toDateFull,
+} from '@common/utils/time';
 import { EnvironmentManager } from '@server/managers/environment-manager';
 import { GamesIterator } from '@server/managers/games-iterator';
 import { GamesManager } from '@server/managers/games-manager';
-import { graphDeleteEdge, graphModifyEdge, graphUpdate } from '@server/managers/graphs';
+import {
+	graphDeleteEdge,
+	graphModifyEdge,
+	graphUpdate,
+} from '@server/managers/graphs';
 import { RatingSystemManager } from '@server/managers/rating-system-manager';
-import { canUserCreateGame, canUserDeleteGame, canUserEditGame } from '@server/managers/user-relationships';
+import {
+	canUserCreateGame,
+	canUserDeleteGame,
+	canUserEditGame,
+} from '@server/managers/user-relationships';
 import { userUpdateFromPlayerData } from '@server/managers/users';
 import { UsersManager } from '@server/managers/users-manager';
 import { InternalError } from '@server/models/error-types/internal-error';
@@ -67,8 +82,13 @@ function gameCompareDates(g: Game): Function {
 	};
 }
 
-function gameNextOfPlayer(username: PlayerPrivateId, timeControlId: TimeControlId, when: DateFull): Game | undefined {
-	const gamesDir = EnvironmentManager.getInstance().getDirGamesTimeControl(timeControlId);
+function gameNextOfPlayer(
+	username: PlayerPrivateId,
+	timeControlId: TimeControlId,
+	when: DateFull,
+): Game | undefined {
+	const gamesDir =
+		EnvironmentManager.getInstance().getDirGamesTimeControl(timeControlId);
 
 	// The file into which we have to add the new game.
 	const recordStr = dateFullToMajor(when);
@@ -118,9 +138,12 @@ function gameNew(
 		}
 	} else {
 		// there is no next game for white
-		const whiteData = UsersManager.getInstance().getAllUserDataByPrivateId(white);
+		const whiteData =
+			UsersManager.getInstance().getAllUserDataByPrivateId(white);
 		if (isNotDefined(whiteData)) {
-			throw new InternalError(`White user '${white}' is not in the users database`);
+			throw new InternalError(
+				`White user '${white}' is not in the users database`,
+			);
 		}
 		whiteToAssign = whiteData.user.getRating(timeControlId).clone();
 	}
@@ -135,9 +158,12 @@ function gameNew(
 			blackToAssign = nextBlackGame.blackRating.clone();
 		}
 	} else {
-		const blackData = UsersManager.getInstance().getAllUserDataByPrivateId(black);
+		const blackData =
+			UsersManager.getInstance().getAllUserDataByPrivateId(black);
 		if (isNotDefined(blackData)) {
-			throw new InternalError(`Black user '${black}' is not in the users database`);
+			throw new InternalError(
+				`Black user '${black}' is not in the users database`,
+			);
 		}
 		blackToAssign = blackData.user.getRating(timeControlId).clone();
 	}
@@ -157,8 +183,14 @@ function gameNew(
 	);
 }
 
-function ratingIntoPlayer(timeControlId: TimeControlId, player: PlayerPrivateId, rating: Rating): Player {
-	return new Player(player, [new TimeControlRating(timeControlId, rating.clone())]);
+function ratingIntoPlayer(
+	timeControlId: TimeControlId,
+	player: PlayerPrivateId,
+	rating: Rating,
+): Player {
+	return new Player(player, [
+		new TimeControlRating(timeControlId, rating.clone()),
+	]);
 }
 
 function updateGameRecord(
@@ -179,7 +211,10 @@ function updateGameRecord(
 
 	let i: number = 0;
 	while (!gamesIter.endRecordSingle()) {
-		debug(logNow(), `        Updating game ${i}/${gamesIter.getCurrentGameArray().length}.`);
+		debug(
+			logNow(),
+			`        Updating game ${i}/${gamesIter.getCurrentGameArray().length}.`,
+		);
 
 		let g = gamesIter.getCurrentGame();
 
@@ -195,26 +230,35 @@ function updateGameRecord(
 		if (whiteWasUpdated || blackWasUpdated) {
 			// set the player information in the game to the most updated version
 			if (whiteWasUpdated) {
-				g.whiteRating = updatedPlayers[whiteIdx].getRating(timeControlId).clone();
+				g.whiteRating = updatedPlayers[whiteIdx]
+					.getRating(timeControlId)
+					.clone();
 			}
 			if (blackWasUpdated) {
-				g.blackRating = updatedPlayers[blackIdx].getRating(timeControlId).clone();
+				g.blackRating = updatedPlayers[blackIdx]
+					.getRating(timeControlId)
+					.clone();
 			}
 
 			// calculate result of game
-			const [ratingWhiteAfter, ratingBlackAfter] = RatingSystemManager.getInstance().applyRatingFunction(g);
+			const [ratingWhiteAfter, ratingBlackAfter] =
+				RatingSystemManager.getInstance().applyRatingFunction(g);
 
 			if (whiteWasUpdated) {
 				updatedPlayers[whiteIdx].setRating(timeControlId, ratingWhiteAfter);
 			} else {
-				updatedPlayers.push(ratingIntoPlayer(timeControlId, white, ratingWhiteAfter));
+				updatedPlayers.push(
+					ratingIntoPlayer(timeControlId, white, ratingWhiteAfter),
+				);
 				playerToIndex.set(white, updatedPlayers.length - 1);
 			}
 
 			if (blackWasUpdated) {
 				updatedPlayers[blackIdx].setRating(timeControlId, ratingBlackAfter);
 			} else {
-				updatedPlayers.push(ratingIntoPlayer(timeControlId, black, ratingBlackAfter));
+				updatedPlayers.push(
+					ratingIntoPlayer(timeControlId, black, ratingBlackAfter),
+				);
 				playerToIndex.set(black, updatedPlayers.length - 1);
 			}
 		}
@@ -242,19 +286,28 @@ function gameInsertInHistory(g: Game, recordId: DateMajor) {
 	const timeControlId = g.timeControlId;
 
 	{
-		let [whiteRatingAfter, blackRatingAfter] = RatingSystemManager.getInstance().applyRatingFunction(g);
-		updatedPlayers.push(ratingIntoPlayer(timeControlId, whiteUsername, whiteRatingAfter));
-		updatedPlayers.push(ratingIntoPlayer(timeControlId, blackUsername, blackRatingAfter));
+		let [whiteRatingAfter, blackRatingAfter] =
+			RatingSystemManager.getInstance().applyRatingFunction(g);
+		updatedPlayers.push(
+			ratingIntoPlayer(timeControlId, whiteUsername, whiteRatingAfter),
+		);
+		updatedPlayers.push(
+			ratingIntoPlayer(timeControlId, blackUsername, blackRatingAfter),
+		);
 	}
 
-	const gamesDir = EnvironmentManager.getInstance().getDirGamesTimeControl(timeControlId);
+	const gamesDir =
+		EnvironmentManager.getInstance().getDirGamesTimeControl(timeControlId);
 	const gameRecordFile = path.join(gamesDir, recordId);
 
 	let gamesIter = new GamesIterator(gamesDir);
 
 	// the directory is completely empty
 	if (gamesIter.getAllRecords().length === 0) {
-		debug(logNow(), `There are no game record files for time control '${timeControlId}'.`);
+		debug(
+			logNow(),
+			`There are no game record files for time control '${timeControlId}'.`,
+		);
 
 		writeGameArrayToFile(gameRecordFile, [g]);
 		userUpdateFromPlayerData(updatedPlayers);
@@ -268,14 +321,20 @@ function gameInsertInHistory(g: Game, recordId: DateMajor) {
 
 		writeGameArrayToFile(gameRecordFile, [g]);
 		if (gamesIter.endRecordList()) {
-			debug(logNow(), `The new game record file is beyond every other game record.`);
+			debug(
+				logNow(),
+				`The new game record file is beyond every other game record.`,
+			);
 
 			userUpdateFromPlayerData(updatedPlayers);
 			return;
 		}
 	}
 
-	debug(logNow(), `There is some game record file beyond the current game record -- those have to be updated.`);
+	debug(
+		logNow(),
+		`There is some game record file beyond the current game record -- those have to be updated.`,
+	);
 
 	let playerToIndex: Map<string, number> = new Map();
 	playerToIndex.set(whiteUsername, 0);
@@ -286,9 +345,14 @@ function gameInsertInHistory(g: Game, recordId: DateMajor) {
 
 		let gameSet = gamesIter.getCurrentGameArray();
 
-		const [gameIdx, gameExists] = whereShouldBeInsertedByKey(gameSet, gameCompareDates(g));
+		const [gameIdx, gameExists] = whereShouldBeInsertedByKey(
+			gameSet,
+			gameCompareDates(g),
+		);
 		if (gameExists) {
-			throw new InternalError(`Game of the exact same date field '${g.when}' already exists`);
+			throw new InternalError(
+				`Game of the exact same date field '${g.when}' already exists`,
+			);
 		}
 
 		gameSet.splice(gameIdx, 0, g);
@@ -300,13 +364,19 @@ function gameInsertInHistory(g: Game, recordId: DateMajor) {
 		gamesIter.nextRecord();
 	}
 
-	debug(logNow(), `The game record for game '${g.id}' has been created/updated.`);
+	debug(
+		logNow(),
+		`The game record for game '${g.id}' has been created/updated.`,
+	);
 	debug(logNow(), `Going to update the next game records.`);
 
 	while (!gamesIter.endRecordList()) {
 		updateGameRecord(gamesIter, timeControlId, updatedPlayers, playerToIndex);
 
-		writeGameArrayToFile(path.join(gamesDir, gamesIter.getCurrentRecordName()), gamesIter.getCurrentGameArray());
+		writeGameArrayToFile(
+			path.join(gamesDir, gamesIter.getCurrentRecordName()),
+			gamesIter.getCurrentGameArray(),
+		);
 
 		gamesIter.nextRecord();
 	}
@@ -347,7 +417,15 @@ export function gameAddNew(
 	debug(logNow(), `Adding the new game`);
 
 	const when = toDateFull(gameDate + '..' + gameTime);
-	const g = gameNew(gameTitle, white.username, black.username, result, timeControlId, timeControlName, when);
+	const g = gameNew(
+		gameTitle,
+		white.username,
+		black.username,
+		result,
+		timeControlId,
+		timeControlName,
+		when,
+	);
 
 	white.addGame(timeControlId, gameDate);
 	black.addGame(timeControlId, gameDate);
@@ -378,10 +456,24 @@ export function gameAddNewGuarded(
 		debug(logNow(), `User cannot create this game.`);
 		throw new PublicError('You cannot create this game.');
 	}
-	gameAddNew(gameTitle, white, black, result, timeControlId, timeControlName, gameDate, gameTime);
+	gameAddNew(
+		gameTitle,
+		white,
+		black,
+		result,
+		timeControlId,
+		timeControlName,
+		gameDate,
+		gameTime,
+	);
 }
 
-export function gameEditResult(editor: User, when: DateFull, gameId: GameId, newResult: GameResult) {
+export function gameEditResult(
+	editor: User,
+	when: DateFull,
+	gameId: GameId,
+	newResult: GameResult,
+) {
 	if (!editor.canDo('EDIT_GAMES')) {
 		debug(logNow(), `User '${editor.username}' cannot edit games.`);
 		throw new PublicError('You cannot edit games');
@@ -389,12 +481,15 @@ export function gameEditResult(editor: User, when: DateFull, gameId: GameId, new
 
 	const info = GamesManager.getInstance().getGameInfo(gameId);
 	if (isNotDefined(info)) {
-		throw new PublicError(`Could not find information associated to this game.`);
+		throw new PublicError(
+			`Could not find information associated to this game.`,
+		);
 	}
 
 	const timeControlId = info.timeControlId;
 	const gameRecord = info.gameRecord;
-	const gamesDir = EnvironmentManager.getInstance().getDirGamesTimeControl(timeControlId);
+	const gamesDir =
+		EnvironmentManager.getInstance().getDirGamesTimeControl(timeControlId);
 
 	const gamesIter = new GamesIterator(gamesDir);
 	const found = gamesIter.locateGame(gameRecord, gameId);
@@ -434,7 +529,13 @@ export function gameEditResult(editor: User, when: DateFull, gameId: GameId, new
 
 	/* Update the graphs */
 
-	graphModifyEdge(white.user.username, black.user.username, oldResult, newResult, timeControlId);
+	graphModifyEdge(
+		white.user.username,
+		black.user.username,
+		oldResult,
+		newResult,
+		timeControlId,
+	);
 
 	/* Update the game files */
 
@@ -449,9 +550,14 @@ export function gameEditResult(editor: User, when: DateFull, gameId: GameId, new
 
 	const updatedPlayers: Player[] = [];
 	{
-		const [whiteAfter, blackAfter] = RatingSystemManager.getInstance().applyRatingFunction(game);
-		updatedPlayers.push(ratingIntoPlayer(timeControlId, white.user.username, whiteAfter));
-		updatedPlayers.push(ratingIntoPlayer(timeControlId, black.user.username, blackAfter));
+		const [whiteAfter, blackAfter] =
+			RatingSystemManager.getInstance().applyRatingFunction(game);
+		updatedPlayers.push(
+			ratingIntoPlayer(timeControlId, white.user.username, whiteAfter),
+		);
+		updatedPlayers.push(
+			ratingIntoPlayer(timeControlId, black.user.username, blackAfter),
+		);
 	}
 
 	const playerToIndex = new Map<string, number>();
@@ -463,14 +569,22 @@ export function gameEditResult(editor: User, when: DateFull, gameId: GameId, new
 
 	while (!gamesIter.endRecordList()) {
 		updateGameRecord(gamesIter, timeControlId, updatedPlayers, playerToIndex);
-		writeGameArrayToFile(path.join(gamesDir, gamesIter.getCurrentRecordName()), gamesIter.getCurrentGameArray());
+		writeGameArrayToFile(
+			path.join(gamesDir, gamesIter.getCurrentRecordName()),
+			gamesIter.getCurrentGameArray(),
+		);
 		gamesIter.nextRecord();
 	}
 
 	userUpdateFromPlayerData(updatedPlayers);
 }
 
-export function gameEditTitle(editor: User, when: DateFull, gameId: GameId, newTitle: string) {
+export function gameEditTitle(
+	editor: User,
+	when: DateFull,
+	gameId: GameId,
+	newTitle: string,
+) {
 	if (!editor.canDo('EDIT_GAMES')) {
 		debug(logNow(), `User '${editor.username}' cannot edit games.`);
 		throw new PublicError('You cannot edit games');
@@ -478,12 +592,15 @@ export function gameEditTitle(editor: User, when: DateFull, gameId: GameId, newT
 
 	const info = GamesManager.getInstance().getGameInfo(gameId);
 	if (isNotDefined(info)) {
-		throw new PublicError(`Could not find information associated to this game.`);
+		throw new PublicError(
+			`Could not find information associated to this game.`,
+		);
 	}
 
 	const timeControlId = info.timeControlId;
 	const gameRecord = info.gameRecord;
-	const gamesDir = EnvironmentManager.getInstance().getDirGamesTimeControl(timeControlId);
+	const gamesDir =
+		EnvironmentManager.getInstance().getDirGamesTimeControl(timeControlId);
 
 	const gamesIter = new GamesIterator(gamesDir);
 	const found = gamesIter.locateGame(gameRecord, gameId);
@@ -552,12 +669,15 @@ export function gameDelete(deleter: User, gameId: GameId) {
 
 	// gameId does not exist
 	if (isNotDefined(info)) {
-		throw new PublicError(`Game id '${gameId}' does not exist in the Games Manager`);
+		throw new PublicError(
+			`Game id '${gameId}' does not exist in the Games Manager`,
+		);
 	}
 
 	const timeControlId = info.timeControlId;
 	const gameRecord = info.gameRecord;
-	const gamesDir = EnvironmentManager.getInstance().getDirGamesTimeControl(timeControlId);
+	const gamesDir =
+		EnvironmentManager.getInstance().getDirGamesTimeControl(timeControlId);
 
 	const gamesIter = new GamesIterator(gamesDir);
 	const found = gamesIter.locateGame(gameRecord, gameId);
@@ -587,7 +707,12 @@ export function gameDelete(deleter: User, gameId: GameId) {
 
 	/* Update the graphs */
 
-	graphDeleteEdge(white.user.username, black.user.username, result, timeControlId);
+	graphDeleteEdge(
+		white.user.username,
+		black.user.username,
+		result,
+		timeControlId,
+	);
 
 	/* Update the game files */
 
@@ -595,8 +720,12 @@ export function gameDelete(deleter: User, gameId: GameId) {
 	{
 		const whiteBefore = game.whiteRating;
 		const blackBefore = game.blackRating;
-		updatedPlayers.push(ratingIntoPlayer(timeControlId, white.user.username, whiteBefore));
-		updatedPlayers.push(ratingIntoPlayer(timeControlId, black.user.username, blackBefore));
+		updatedPlayers.push(
+			ratingIntoPlayer(timeControlId, white.user.username, whiteBefore),
+		);
+		updatedPlayers.push(
+			ratingIntoPlayer(timeControlId, black.user.username, blackBefore),
+		);
 	}
 
 	const playerToIndex: Map<string, number> = new Map();
@@ -610,7 +739,10 @@ export function gameDelete(deleter: User, gameId: GameId) {
 	while (!gamesIter.endRecordList()) {
 		updateGameRecord(gamesIter, timeControlId, updatedPlayers, playerToIndex);
 
-		writeGameArrayToFile(path.join(gamesDir, gamesIter.getCurrentRecordName()), gamesIter.getCurrentGameArray());
+		writeGameArrayToFile(
+			path.join(gamesDir, gamesIter.getCurrentRecordName()),
+			gamesIter.getCurrentGameArray(),
+		);
 
 		gamesIter.nextRecord();
 	}
@@ -673,13 +805,17 @@ export function recalculateAllRatings(u: User) {
 	}
 
 	for (const timeControl of allTimeControls) {
-		const gamesDir = EnvironmentManager.getInstance().getDirGamesTimeControl(timeControl);
+		const gamesDir =
+			EnvironmentManager.getInstance().getDirGamesTimeControl(timeControl);
 
 		const gamesIter = new GamesIterator(gamesDir);
 		while (!gamesIter.endRecordList()) {
 			updateGameRecord(gamesIter, timeControl, updatedPlayers, playerToIndex);
 
-			writeGameArrayToFile(path.join(gamesDir, gamesIter.getCurrentRecordName()), gamesIter.getCurrentGameArray());
+			writeGameArrayToFile(
+				path.join(gamesDir, gamesIter.getCurrentRecordName()),
+				gamesIter.getCurrentGameArray(),
+			);
 
 			gamesIter.nextRecord();
 		}

@@ -74,21 +74,26 @@ export async function getQueryHtmlUserList(_u: UserSession) {
 	return data;
 }
 
-export async function getQueryUserHome({ user, session: _session }: UserSession, _i: Empty) {
+export async function getQueryUserHome(
+	{ user, session: _session }: UserSession,
+	_i: Empty,
+) {
 	debug(logNow(), 'function getQueryUserHome...');
 
-	const ratingsUser = user.ratings.map((value: TimeControlRating): TimeControlAndRating => {
-		return {
-			timeControlId: value.timeControl,
-			rating: {
-				rating: Math.round(value.rating.rating),
-				numGames: value.rating.numGames,
-				won: value.rating.won,
-				drawn: value.rating.drawn,
-				lost: value.rating.lost,
-			},
-		};
-	});
+	const ratingsUser = user.ratings.map(
+		(value: TimeControlRating): TimeControlAndRating => {
+			return {
+				timeControlId: value.timeControl,
+				rating: {
+					rating: Math.round(value.rating.rating),
+					numGames: value.rating.numGames,
+					won: value.rating.won,
+					drawn: value.rating.drawn,
+					lost: value.rating.lost,
+				},
+			};
+		},
+	);
 
 	const output: QueryUserHomeOutput = {
 		fullname: user.getFullName(),
@@ -99,7 +104,10 @@ export async function getQueryUserHome({ user, session: _session }: UserSession,
 	return output;
 }
 
-export async function postQueryUserEdit({ user, session: _session }: UserSession, input: QueryUserEditInput) {
+export async function postQueryUserEdit(
+	{ user, session: _session }: UserSession,
+	input: QueryUserEditInput,
+) {
 	debug(logNow(), 'function postQueryUserEdit...');
 
 	if (!user.canDo('EDIT_USER')) {
@@ -108,14 +116,21 @@ export async function postQueryUserEdit({ user, session: _session }: UserSession
 
 	const toEditPublicId = input.u;
 
-	const toEdit = UsersManager.getInstance().getAllUserDataByPublicId(toEditPublicId);
+	const toEdit =
+		UsersManager.getInstance().getAllUserDataByPublicId(toEditPublicId);
 	if (isNotDefined(toEdit)) {
-		debug(logNow(), `Public id '${toEditPublicId}' for edited user is not valid.`);
+		debug(
+			logNow(),
+			`Public id '${toEditPublicId}' for edited user is not valid.`,
+		);
 		throw new PublicError('Cannot edit invalid user.');
 	}
 
 	if (!canUserEditUser(user, toEdit.user)) {
-		debug(logNow(), `User '${user.username}' is querying information of user '${toEdit.user.username}' to edit it.`);
+		debug(
+			logNow(),
+			`User '${user.username}' is querying information of user '${toEdit.user.username}' to edit it.`,
+		);
 		throw new PublicError('You cannot edit this user.');
 	}
 
@@ -127,7 +142,10 @@ export async function postQueryUserEdit({ user, session: _session }: UserSession
 	return output;
 }
 
-export async function postQueryUserRanking(_u: UserSession, input: QueryUserRankingInput) {
+export async function postQueryUserRanking(
+	_u: UserSession,
+	input: QueryUserRankingInput,
+) {
 	debug(logNow(), 'function postQueryUserRanking...');
 
 	const timeControlId = input.timeControlId;
@@ -170,6 +188,9 @@ export async function postQueryUserRanking(_u: UserSession, input: QueryUserRank
 	debug(logNow(), `    Found ${usersWithGames.length} users with games.`);
 	debug(logNow(), `    Found ${usersWithoutGames.length} users without games.`);
 
-	const output: QueryUserRankingOutput = { withGames: usersWithGames, withoutGames: usersWithoutGames };
+	const output: QueryUserRankingOutput = {
+		withGames: usersWithGames,
+		withoutGames: usersWithoutGames,
+	};
 	return output;
 }

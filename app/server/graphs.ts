@@ -37,7 +37,10 @@ export async function getPageGraphOwn(_u: UserSession) {
 	return 'html/graph/own.html';
 }
 
-export async function getPageGraphFull({ user, session: _session }: UserSession) {
+export async function getPageGraphFull({
+	user,
+	session: _session,
+}: UserSession) {
 	debug(logNow(), 'function getPageGraphFull...');
 
 	if (!user.canDo('SEE_GRAPHS')) {
@@ -48,7 +51,10 @@ export async function getPageGraphFull({ user, session: _session }: UserSession)
 	return 'html/graph/full.html';
 }
 
-export async function postRecalculateGraphs({ user, session: _session }: UserSession, _input: Empty) {
+export async function postRecalculateGraphs(
+	{ user, session: _session }: UserSession,
+	_input: Empty,
+) {
 	debug(logNow(), 'function postRecalculateGraphs...');
 	debug(logNow(), `Recalculating ratings...`);
 	recalculateAllGraphs(user);

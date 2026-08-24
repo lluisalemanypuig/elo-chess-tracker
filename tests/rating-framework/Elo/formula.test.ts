@@ -25,7 +25,10 @@ Contact:
 
 import { toGameId } from '@common/models/game-id';
 import { toPlayerPrivateId } from '@common/models/player-id';
-import { toTimeControlId, toTimeControlName } from '@common/models/time-control';
+import {
+	toTimeControlId,
+	toTimeControlName,
+} from '@common/models/time-control';
 import { toDateFull } from '@common/utils/time';
 import { Game } from '@server/models/game';
 import { EloRating } from '@server/models/rating-framework/Elo/rating';

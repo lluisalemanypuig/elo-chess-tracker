@@ -29,8 +29,12 @@ import { toDateMajor, toDateMinor } from '@common/utils/time';
 import 'htmx.org';
 
 async function initializeWindowClientGamesCreate() {
-	let datalistWhiteUsers = document.getElementById('datalist-white-users') as HTMLDataListElement;
-	let datalistBlackUsers = document.getElementById('datalist-black-users') as HTMLDataListElement;
+	let datalistWhiteUsers = document.getElementById(
+		'datalist-white-users',
+	) as HTMLDataListElement;
+	let datalistBlackUsers = document.getElementById(
+		'datalist-black-users',
+	) as HTMLDataListElement;
 
 	// query the server for the list of users
 	const response = await serverCall(ROUTES.QUERY_HTML_USER_LIST, null);
@@ -44,19 +48,42 @@ async function initializeWindowClientGamesCreate() {
 }
 
 async function submitNewGame(_event: any) {
-	let gameTitleInput = document.getElementById('input-game-title') as HTMLInputElement;
-	let whiteInput = document.getElementById('list-white-users') as HTMLInputElement;
-	let blackInput = document.getElementById('list-black-users') as HTMLInputElement;
-	let selectResultGame = document.getElementById('select-result-game') as HTMLSelectElement;
-	const selectTimeControl = document.getElementById('select-time-control') as HTMLSelectElement;
-	const inputGameDate = document.getElementById('input-game-date') as HTMLInputElement;
-	const inputGameTime = document.getElementById('input-game-time') as HTMLInputElement;
+	let gameTitleInput = document.getElementById(
+		'input-game-title',
+	) as HTMLInputElement;
+	let whiteInput = document.getElementById(
+		'list-white-users',
+	) as HTMLInputElement;
+	let blackInput = document.getElementById(
+		'list-black-users',
+	) as HTMLInputElement;
+	let selectResultGame = document.getElementById(
+		'select-result-game',
+	) as HTMLSelectElement;
+	const selectTimeControl = document.getElementById(
+		'select-time-control',
+	) as HTMLSelectElement;
+	const inputGameDate = document.getElementById(
+		'input-game-date',
+	) as HTMLInputElement;
+	const inputGameTime = document.getElementById(
+		'input-game-time',
+	) as HTMLInputElement;
 
-	const whiteOption = document.querySelector('option[value="' + whiteInput.value + '"]');
-	const blackOption = document.querySelector('option[value="' + blackInput.value + '"]');
-	const resultStr = selectResultGame.options[selectResultGame.selectedIndex].value;
-	const timeControlId = selectTimeControl.options[selectTimeControl.selectedIndex].value as TimeControlId;
-	const timeControlName = selectTimeControl.options[selectTimeControl.selectedIndex].text as TimeControlName;
+	const whiteOption = document.querySelector(
+		'option[value="' + whiteInput.value + '"]',
+	);
+	const blackOption = document.querySelector(
+		'option[value="' + blackInput.value + '"]',
+	);
+	const resultStr =
+		selectResultGame.options[selectResultGame.selectedIndex].value;
+	const timeControlId = selectTimeControl.options[
+		selectTimeControl.selectedIndex
+	].value as TimeControlId;
+	const timeControlName = selectTimeControl.options[
+		selectTimeControl.selectedIndex
+	].text as TimeControlName;
 
 	const result = resultFromTextToValue(resultStr);
 	if (isNotDefined(result)) {
@@ -121,6 +148,8 @@ async function submitNewGame(_event: any) {
 window.onload = async function () {
 	initializeWindowClientGamesCreate();
 
-	let submit = document.getElementById('submit-new-game-button') as HTMLButtonElement;
+	let submit = document.getElementById(
+		'submit-new-game-button',
+	) as HTMLButtonElement;
 	submit.onclick = submitNewGame;
 };

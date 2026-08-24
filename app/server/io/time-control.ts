@@ -23,7 +23,11 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { TimeControl, TimeControlArraySchema, TimeControlSchema } from '@common/models/time-control';
+import {
+	TimeControl,
+	TimeControlArraySchema,
+	TimeControlSchema,
+} from '@common/models/time-control';
 import { readSchema } from '@server/io/generic';
 
 export function timeControlFromString(str: string): TimeControl | null {

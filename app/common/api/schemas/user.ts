@@ -23,7 +23,10 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { PlayerPrivateIdSchema, PlayerPublicIdSchema } from '@common/models/player-id';
+import {
+	PlayerPrivateIdSchema,
+	PlayerPublicIdSchema,
+} from '@common/models/player-id';
 import { UserGivenNameSchema } from '@common/models/user-given-name';
 import { UserRoleArraySchema } from '@common/models/user-role';
 import { z } from 'zod';
@@ -62,4 +65,6 @@ export const UserPasswordChangeInputSchema = z
 	})
 	.strict();
 
-export type UserPasswordChangeInput = z.infer<typeof UserPasswordChangeInputSchema>;
+export type UserPasswordChangeInput = z.infer<
+	typeof UserPasswordChangeInputSchema
+>;
