@@ -37,10 +37,7 @@ export async function getPageGraphOwn(_u: UserSession) {
 	return 'html/graph/own.html';
 }
 
-export async function getPageGraphFull({
-	user,
-	session: _session,
-}: UserSession) {
+export async function getPageGraphFull({ user }: UserSession) {
 	debug(logNow(), 'function getPageGraphFull...');
 
 	if (!user.canDo('SEE_GRAPHS')) {
@@ -52,7 +49,7 @@ export async function getPageGraphFull({
 }
 
 export async function postRecalculateGraphs(
-	{ user, session: _session }: UserSession,
+	{ user }: UserSession,
 	_input: Empty,
 ) {
 	debug(logNow(), 'function postRecalculateGraphs...');

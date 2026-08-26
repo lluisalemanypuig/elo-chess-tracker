@@ -23,8 +23,8 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
+import { SessionId } from '@app/common/models/session-id';
 import { PlayerPrivateId } from '@common/models/player-id';
-import { SessionId } from '@common/models/session-id';
 import {
 	TimeControlId,
 	TimeControlIdSchema,

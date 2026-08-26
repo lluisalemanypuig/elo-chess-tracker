@@ -58,7 +58,7 @@ export async function getPageChallenge(_u: UserSession) {
 }
 
 export async function postChallengeSend(
-	{ user: sender, session: _session }: UserSession,
+	{ user: sender }: UserSession,
 	input: ChallengeSendInput,
 ): Promise<Empty> {
 	debug(logNow(), 'function postChallengeSend...');
@@ -123,7 +123,7 @@ export async function postChallengeSend(
 }
 
 export async function postChallengeAccept(
-	{ user, session: _session }: UserSession,
+	{ user }: UserSession,
 	input: ChallengeAcceptInput,
 ): Promise<Empty> {
 	debug(logNow(), 'function postChallengeAccept...');
@@ -151,7 +151,7 @@ export async function postChallengeAccept(
 }
 
 export async function postChallengeDecline(
-	{ user, session: _session }: UserSession,
+	{ user }: UserSession,
 	input: ChallengeDeclineInput,
 ): Promise<Empty> {
 	debug(logNow(), 'function postChallengeDecline...');
@@ -179,7 +179,7 @@ export async function postChallengeDecline(
 }
 
 export async function postChallengeSetResult(
-	{ user, session: _session }: UserSession,
+	{ user }: UserSession,
 	input: ChallengeSetResultInput,
 ): Promise<Empty> {
 	debug(logNow(), 'function postChallengeSetResult...');
@@ -228,7 +228,7 @@ export async function postChallengeSetResult(
 }
 
 export async function postChallengeAgree(
-	{ user, session: _session }: UserSession,
+	{ user }: UserSession,
 	input: ChallengeAgreeResultInput,
 ): Promise<Empty> {
 	debug(logNow(), 'function postChallengeAgree...');
@@ -246,7 +246,7 @@ export async function postChallengeAgree(
 }
 
 export async function postChallengeDisagree(
-	{ user, session: _session }: UserSession,
+	{ user }: UserSession,
 	input: ChallengeDisagreeResultInput,
 ): Promise<Empty> {
 	debug(logNow(), 'function postChallengeDisagree...');

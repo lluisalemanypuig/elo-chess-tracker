@@ -34,10 +34,7 @@ import Debug from 'debug';
 
 const debug = Debug('ELO_CHESS_TRACKER:users-new');
 
-export async function getPageUserCreate({
-	user,
-	session: _session,
-}: UserSession) {
+export async function getPageUserCreate({ user }: UserSession) {
 	debug(logNow(), 'function getPageUserCreate...');
 
 	if (!user.canDo('CREATE_USER')) {
@@ -55,7 +52,7 @@ export async function getPageUserCreate({
 }
 
 export async function postUserCreate(
-	{ user: registerer, session: _session }: UserSession,
+	{ user: registerer }: UserSession,
 	input: UserCreateInput,
 ): Promise<Empty> {
 	debug(logNow(), 'function postUserCreate...');

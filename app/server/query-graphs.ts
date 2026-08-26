@@ -208,7 +208,7 @@ function retrieveGraphFull(
 }
 
 export async function postQueryGraphOwn(
-	{ user, session: _session }: UserSession,
+	{ user }: UserSession,
 	input: QueryGraphOwnInput,
 ) {
 	debug(logNow(), 'function postQueryGraphOwn...');
@@ -224,7 +224,7 @@ export async function postQueryGraphOwn(
 }
 
 export async function postQueryGraphFull(
-	{ user, session: _session }: UserSession,
+	{ user }: UserSession,
 	input: QueryGraphFullInput,
 ) {
 	debug(logNow(), 'function postQueryGraphFull...');

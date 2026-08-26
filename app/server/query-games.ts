@@ -166,7 +166,7 @@ function filterGameList(
 }
 
 export async function postQueryGameListOwn(
-	{ user, session: _session }: UserSession,
+	{ user }: UserSession,
 	input: QueryGamesListOwnInput,
 ) {
 	debug(logNow(), 'function postQueryGameListOwn...');
@@ -254,7 +254,7 @@ function mergeByDate(
 }
 
 export async function postQueryGameListAll(
-	{ user, session: _session }: UserSession,
+	{ user }: UserSession,
 	input: QueryGamesListAllInput,
 ) {
 	debug(logNow(), 'function postQueryGameListAll...');

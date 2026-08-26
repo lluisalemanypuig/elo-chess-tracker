@@ -35,10 +35,7 @@ import Debug from 'debug';
 
 const debug = Debug('ELO_CHESS_TRACKER:users-edit');
 
-export async function getPageUserEdit({
-	user,
-	session: _session,
-}: UserSession) {
+export async function getPageUserEdit({ user }: UserSession) {
 	debug(logNow(), 'function getPageUserEdit...');
 
 	if (!user.canDo('EDIT_USER')) {
@@ -53,7 +50,7 @@ export async function getPageUserEdit({
 }
 
 export async function postUserEdit(
-	{ user: editor, session: _session }: UserSession,
+	{ user: editor }: UserSession,
 	input: UserEditInput,
 ): Promise<Empty> {
 	debug(logNow(), 'function postUserEdit...');

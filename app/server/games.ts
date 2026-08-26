@@ -56,10 +56,7 @@ export async function getPageGameListAll(_u: UserSession) {
 	return 'html/game/list/all.html';
 }
 
-export async function getPageGameCreate({
-	user,
-	session: _session,
-}: UserSession) {
+export async function getPageGameCreate({ user }: UserSession) {
 	debug(logNow(), 'function getPageGameCreate...');
 	if (!user.canDo('CREATE_GAMES')) {
 		debug(logNow(), `User '${user.username}' cannot create games.`);
@@ -69,7 +66,7 @@ export async function getPageGameCreate({
 }
 
 export async function postGameCreate(
-	{ user: creator, session: _session }: UserSession,
+	{ user: creator }: UserSession,
 	input: GameCreateInput,
 ): Promise<Empty> {
 	debug(logNow(), 'function postGameCreate...');
@@ -113,7 +110,7 @@ export async function postGameCreate(
 }
 
 export async function postGameEditResult(
-	{ user: editor, session: _session }: UserSession,
+	{ user: editor }: UserSession,
 	input: GameEditResultInput,
 ): Promise<Empty> {
 	debug(logNow(), 'function postGameEditResult...');
@@ -130,7 +127,7 @@ export async function postGameEditResult(
 }
 
 export async function postGameEditTitle(
-	{ user: editor, session: _session }: UserSession,
+	{ user: editor }: UserSession,
 	input: GameEditTitleInput,
 ): Promise<Empty> {
 	debug(logNow(), 'function postGameEditTitle...');
@@ -147,7 +144,7 @@ export async function postGameEditTitle(
 }
 
 export async function postGameDelete(
-	{ user: deleter, session: _session }: UserSession,
+	{ user: deleter }: UserSession,
 	input: GameDeleteInput,
 ): Promise<Empty> {
 	debug(logNow(), 'function postGameDelete...');
@@ -163,7 +160,7 @@ export async function postGameDelete(
 }
 
 export async function postRecalculateRatings(
-	{ user, session: _session }: UserSession,
+	{ user }: UserSession,
 	_input: Empty,
 ): Promise<Empty> {
 	debug(logNow(), 'function postRecalculateRatings...');

@@ -74,10 +74,7 @@ export async function getQueryHtmlUserList(_u: UserSession) {
 	return data;
 }
 
-export async function getQueryUserHome(
-	{ user, session: _session }: UserSession,
-	_i: Empty,
-) {
+export async function getQueryUserHome({ user }: UserSession, _i: Empty) {
 	debug(logNow(), 'function getQueryUserHome...');
 
 	const ratingsUser = user.ratings.map(
@@ -105,7 +102,7 @@ export async function getQueryUserHome(
 }
 
 export async function postQueryUserEdit(
-	{ user, session: _session }: UserSession,
+	{ user }: UserSession,
 	input: QueryUserEditInput,
 ) {
 	debug(logNow(), 'function postQueryUserEdit...');

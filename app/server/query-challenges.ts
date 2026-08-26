@@ -46,7 +46,7 @@ const debug = Debug('ELO_CHESS_TRACKER:serverQueryChallenges');
 
 // Query the server for challenges received sento to me by other users
 export async function getQueryChallengeReceived(
-	{ user: sentTo, session: _session }: UserSession,
+	{ user: sentTo }: UserSession,
 	_i: Empty,
 ) {
 	debug(logNow(), 'function getQueryChallengeReceived...');
@@ -96,7 +96,7 @@ export async function getQueryChallengeReceived(
 
 // Query the server for challenges sent to other users by me
 export async function getQueryChallengeSent(
-	{ user: sentBy, session: _session }: UserSession,
+	{ user: sentBy }: UserSession,
 	_i: Empty,
 ) {
 	debug(logNow(), 'function getQueryChallengeSent...');
@@ -146,7 +146,7 @@ export async function getQueryChallengeSent(
 
 // Query the server for accepted challenges whose result has not been set yet.
 export async function getQueryChallengePendingResult(
-	{ user, session: _session }: UserSession,
+	{ user }: UserSession,
 	_i: Empty,
 ) {
 	debug(logNow(), 'function getQueryChallengePendingResult...');
@@ -220,7 +220,7 @@ export async function getQueryChallengePendingResult(
 
 // Query the server for accepted challenges whose result has been set by me
 export async function getQueryChallengeConfirmResultOther(
-	{ user, session: _session }: UserSession,
+	{ user }: UserSession,
 	_i: Empty,
 ) {
 	debug(logNow(), 'function getQueryChallengeConfirmResultOther...');
@@ -317,7 +317,7 @@ export async function getQueryChallengeConfirmResultOther(
 
 // Query the server for accepted challenges whose result has been set by my opponent
 export async function getQueryChallengeConfirmResultSelf(
-	{ user, session: _session }: UserSession,
+	{ user }: UserSession,
 	_i: Empty,
 ) {
 	debug(logNow(), 'function getQueryChallengeConfirmResultSelf...');

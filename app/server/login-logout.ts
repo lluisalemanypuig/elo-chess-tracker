@@ -101,10 +101,7 @@ export async function postUserLogin(req: Request, res: Response) {
 	});
 }
 
-export async function postUserLogout(
-	{ user: _u, session }: UserSession,
-	_i: Empty,
-) {
+export async function postUserLogout({ session }: UserSession, _i: Empty) {
 	debug(logNow(), 'function postUserLogout...');
 
 	debug(logNow(), `    Cookie:`);
