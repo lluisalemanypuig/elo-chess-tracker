@@ -182,50 +182,50 @@ The site implements four different roles a user can have. To each role we can as
 Available actions are
 
 - Creation of users:
-    - _CREATE_USER_
+  - _CREATE_USER_
 
 - Assignment of roles to another user
-    - _ASSIGN_ROLE_ADMIN_
-    - _ASSIGN_ROLE_TEACHER_
-    - _ASSIGN_ROLE_MEMBER_
-    - _ASSIGN_ROLE_STUDENT_
+  - _ASSIGN_ROLE_ADMIN_
+  - _ASSIGN_ROLE_TEACHER_
+  - _ASSIGN_ROLE_MEMBER_
+  - _ASSIGN_ROLE_STUDENT_
 
 - Edition of users: to be able to edit user's information, except for passwords and ratings.
-    - _EDIT_ADMIN_
-    - _EDIT_TEACHER_
-    - _EDIT_MEMBER_
-    - _EDIT_STUDENT_
+  - _EDIT_ADMIN_
+  - _EDIT_TEACHER_
+  - _EDIT_MEMBER_
+  - _EDIT_STUDENT_
 
 - Creation of games: to be able to create games between pairs of players. This is restricted to players of specific roles.
-    - _CREATE_GAMES_ADMIN_
-    - _CREATE_GAMES_TEACHER_
-    - _CREATE_GAMES_MEMBER_
-    - _CREATE_GAMES_STUDENT_
+  - _CREATE_GAMES_ADMIN_
+  - _CREATE_GAMES_TEACHER_
+  - _CREATE_GAMES_MEMBER_
+  - _CREATE_GAMES_STUDENT_
 
 - Edition of a user's game: to change the result of a game.
-    - _EDIT_GAMES_ADMIN_
-    - _EDIT_GAMES_TEACHER_
-    - _EDIT_GAMES_MEMBER_
-    - _EDIT_GAMES_STUDENT_
+  - _EDIT_GAMES_ADMIN_
+  - _EDIT_GAMES_TEACHER_
+  - _EDIT_GAMES_MEMBER_
+  - _EDIT_GAMES_STUDENT_
 
 - See another user's games.
-    - _SEE_GAMES_ADMIN_
-    - _SEE_GAMES_TEACHER_
-    - _SEE_GAMES_MEMBER_
-    - _SEE_GAMES_STUDENT_
+  - _SEE_GAMES_ADMIN_
+  - _SEE_GAMES_TEACHER_
+  - _SEE_GAMES_MEMBER_
+  - _SEE_GAMES_STUDENT_
 
 - Challenge other users to a game.
-    - _CHALLENGE_ADMIN_
-    - _CHALLENGE_MEMBER_
-    - _CHALLENGE_TEACHER_
-    - _CHALLENGE_STUDENT_
+  - _CHALLENGE_ADMIN_
+  - _CHALLENGE_MEMBER_
+  - _CHALLENGE_TEACHER_
+  - _CHALLENGE_STUDENT_
 
 ## Running the website
 
 Once the configuration file has been properly edited, now we can run the website. To do so, use **one** of the following commands (we recommend using the second)
 
-    $ bun start    configuration-file /path/to/configuration.json
-    $ bun devstart configuration-file /path/to/configuration.json
+    $ npm run launch configuration-file /path/to/configuration.json
+    $ nom run debug  configuration-file /path/to/configuration.json
 
 ## Access the website from a local network
 
