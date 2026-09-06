@@ -24,7 +24,7 @@ Contact:
 */
 
 export const ROUTES = {
-	CSS_ALL: '/css/*.css',
+	CSS_ALL: '/css/*cssFile.css',
 	VERSION_NUMBER: '/version-number',
 	FAVICON_ICO: '/favicon.ico',
 	ICON_LOGIN_PAGE: '/icon/login-page',
@@ -33,7 +33,7 @@ export const ROUTES = {
 	TITLE_HOME_PAGE: '/title/homepage',
 	ROOT: '/',
 	HOME: '/home',
-	JS_ALL: '/js/*',
+	JS_ALL: '/js/*jsFile',
 
 	QUERY_USER_LIST: '/query/user/list',
 	QUERY_HTML_USER_LIST: '/query/html/user/list',
