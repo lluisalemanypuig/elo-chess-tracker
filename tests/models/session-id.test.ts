@@ -29,5 +29,5 @@ import { SessionId } from '@common/models/session-id';
 test('Fields contents are correct', () => {
 	const sid: SessionId = { token: 'asdf', publicId: toPlayerPublicId('1234') };
 	expect(sid.token).toEqual('asdf');
-	expect(sid.publicId).toEqual(1234);
+	expect(sid.publicId).toEqual('1234');
 });
