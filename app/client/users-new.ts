@@ -117,7 +117,7 @@ async function submitNewUserClicked(_event: any) {
 		roles: selectedRoles,
 		password: password,
 	});
-	if (response.status === 'Error') {
+	if (response.status === 'error') {
 		alert(messageFromResponse(response));
 		return;
 	}

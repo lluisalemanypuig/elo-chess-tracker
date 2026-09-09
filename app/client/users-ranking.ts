@@ -47,7 +47,7 @@ async function fillRanking(_event: any) {
 	const response = await serverCall(ROUTES.QUERY_USER_RANKING, {
 		timeControlId: timeControlId,
 	});
-	if (response.status === 'Error') {
+	if (response.status === 'error') {
 		alert(messageFromResponse(response));
 		return;
 	}

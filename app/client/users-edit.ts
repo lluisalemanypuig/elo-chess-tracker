@@ -61,7 +61,7 @@ async function userWasChanged(_event: any) {
 		const response = await serverCall(ROUTES.QUERY_USER_EDIT, {
 			u: toPlayerPublicId(userId),
 		});
-		if (response.status === 'Error') {
+		if (response.status === 'error') {
 			alert(messageFromResponse(response));
 			return;
 		}
@@ -126,7 +126,7 @@ async function submitWasClicked(_event: any) {
 		lastName: toUserGivenName(lastName),
 		roles: selectedRoles,
 	});
-	if (response.status === 'Error') {
+	if (response.status === 'error') {
 		alert(messageFromResponse(response));
 		return;
 	}

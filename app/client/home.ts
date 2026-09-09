@@ -27,7 +27,7 @@ import 'htmx.org';
 export async function logoutLinkClicked(_event: any) {
 	// "query" the server
 	const response = await serverCall(ROUTES.USER_LOGOUT, null);
-	if (response.status === 'Error') {
+	if (response.status === 'error') {
 		alert(messageFromResponse(response));
 		return;
 	}
@@ -82,7 +82,7 @@ function fillActionLinks(userActions: string[], userRoles: string[]) {
 		recalculateRatingsLink.textContent = 'Recalculate ratings';
 		recalculateRatingsLink.onclick = async function () {
 			const response = await serverCall(ROUTES.RECALCULATE_RATINGS, null);
-			if (response.status === 'Error') {
+			if (response.status === 'error') {
 				alert(messageFromResponse(response));
 				return;
 			}
@@ -94,7 +94,7 @@ function fillActionLinks(userActions: string[], userRoles: string[]) {
 		recalculateGraphsLink.textContent = 'Recalculate graphs';
 		recalculateGraphsLink.onclick = async function () {
 			const response = await serverCall(ROUTES.RECALCULATE_GRAPHS, null);
-			if (response.status === 'Error') {
+			if (response.status === 'error') {
 				alert(messageFromResponse(response));
 				return;
 			}
@@ -106,7 +106,7 @@ function fillActionLinks(userActions: string[], userRoles: string[]) {
 async function fillOwnInfo() {
 	// "query" the server
 	const response = await serverCall(ROUTES.QUERY_USER_HOME, null);
-	if (response.status === 'Error') {
+	if (response.status === 'error') {
 		alert(messageFromResponse(response));
 		return;
 	}
