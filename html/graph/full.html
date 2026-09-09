@@ -61,41 +61,67 @@ Full source code of elo-chess-tracker:
 							<label class="label-basic">Node color:</label>
 							<select class="select-basic" id="select-node-color">
 								<option value="fixed">Single color</option>
-								<option value="dynamic_rating">Color by rating</option>
+								<option value="dynamicRating">Color by rating</option>
 							</select>
-							<input class="input-color" type="color" id="color-picker-node" value="#1A5FB4" />
+							<input
+								class="input-color"
+								type="color"
+								id="color-picker-node"
+								value="#1A5FB4"
+							/>
 						</div>
 						<div class="label-select-input">
 							<label class="label-basic">Node size:</label>
 							<select class="select-basic" id="select-node-size">
 								<option value="fixed">Fixed size</option>
-								<option value="dynamic_rating">Size by rating</option>
+								<option value="dynamicRating">Size by rating</option>
 							</select>
-							<input class="input-number" type="number" id="size-picker-node" value="25" />
+							<input
+								class="input-number"
+								type="number"
+								id="size-picker-node"
+								value="25"
+							/>
 						</div>
 						<div class="label-select-input">
 							<label class="label-basic">Edge color:</label>
 							<select class="select-basic" id="select-edge-color">
 								<option value="fixed">Single color</option>
-								<option value="dynamic_games">Color by games</option>
-								<option value="dynamic_results">Color by results</option>
+								<option value="dynamicGames">Color by games</option>
+								<option value="dynamicResults">Color by results</option>
 							</select>
-							<input class="input-color" type="color" id="color-picker-edge" value="#62A0EA" />
+							<input
+								class="input-color"
+								type="color"
+								id="color-picker-edge"
+								value="#62A0EA"
+							/>
 						</div>
 						<div class="label-select-input">
 							<label class="label-basic">Edge size:</label>
 							<select class="select-basic" id="select-edge-size">
 								<option value="fixed">Fixed size</option>
-								<option value="dynamic_games">Size by games</option>
-								<option value="dynamic_results">Size by results</option>
+								<option value="dynamicGames">Size by games</option>
+								<option value="dynamicResults">Size by results</option>
 							</select>
-							<input class="input-number" type="number" id="size-picker-edge" value="10" />
+							<input
+								class="input-number"
+								type="number"
+								id="size-picker-edge"
+								value="10"
+							/>
 						</div>
 					</div>
 
 					<footer id="copyright" class="footer-copyright-notice">
-						Elo chess tracker (v<i hx-get="/version-number" hx-trigger="load"></i>). Code
-						<a href="https://github.com/lluisalemanypuig/elo-chess-tracker">online at Github</a>.
+						Elo chess tracker (v<i
+							hx-get="/version-number"
+							hx-trigger="load"
+						></i
+						>). Code
+						<a href="https://github.com/lluisalemanypuig/elo-chess-tracker"
+							>online at Github</a
+						>.
 					</footer>
 				</div>
 			</div>
