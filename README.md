@@ -225,7 +225,7 @@ Available actions are
 Once the configuration file has been properly edited, now we can run the website. To do so, use **one** of the following commands (we recommend using the second)
 
     $ npm run launch configuration-file /path/to/configuration.json
-    $ nom run debug  configuration-file /path/to/configuration.json
+    $ npm run debug  configuration-file /path/to/configuration.json
 
 ## Access the website from a local network
 
