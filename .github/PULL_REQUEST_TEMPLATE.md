@@ -36,7 +36,7 @@ After changes:
 
 ## Checklist
 
-_Remove those that do not apply_
+_Leave all items and use '--' for those items that do not apply and 'x' for those that apply to this PR_
 
 - [ ] The tests were run locally and all passed before opening this PR for review.
 - [ ] The changes were tested locally in a simulated production environment.
