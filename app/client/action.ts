@@ -31,14 +31,14 @@ import { isNotDefined } from '@common/utils/is-defined';
 type ResponseResultError = {
 	message: string;
 	statusCode: number;
-	status: 'Error';
+	status: 'error';
 };
 
 type ResponseResult<T> =
 	| ResponseResultError
 	| {
 			value: T;
-			status: 'Success';
+			status: 'success';
 	  };
 
 export async function serverCall<T extends Route>(
@@ -66,7 +66,7 @@ export async function serverCall<T extends Route>(
 		return {
 			message: msg,
 			statusCode: response.status,
-			status: 'Error',
+			status: 'error',
 		};
 	}
 
@@ -77,14 +77,14 @@ export async function serverCall<T extends Route>(
 		return {
 			message: `Failed to parse schema '${schemaObject.constructor.name}', at route '${route}'. Reason: ${parse.error}`,
 			statusCode: 900,
-			status: 'Error',
+			status: 'error',
 		};
 	}
 	return {
 		// TODO: eventually, remove the type assertion so that typescript
 		// figures out on its own that the type of parse.data is correct
 		value: parse.data as OutputTypeOf<T>,
-		status: 'Success',
+		status: 'success',
 	};
 }
 

@@ -76,7 +76,7 @@ async function sendChallengeButtonClicked(_event: any) {
 			timeControlId: timeControlId,
 			timeControlName: timeControlName,
 		});
-		if (response.status === 'Error') {
+		if (response.status === 'error') {
 			alert(messageFromResponse(response));
 			return;
 		}
@@ -92,7 +92,7 @@ async function acceptChallengeButtonClicked(event: any) {
 	const response = await serverCall(ROUTES.CHALLENGE_ACCEPT, {
 		id: challengeId,
 	});
-	if (response.status === 'Error') {
+	if (response.status === 'error') {
 		alert(messageFromResponse(response));
 		return;
 	}
@@ -106,7 +106,7 @@ async function declineChallengeTagClicked(event: any) {
 	const response = await serverCall(ROUTES.CHALLENGE_DECLINE, {
 		id: challengeId,
 	});
-	if (response.status === 'Error') {
+	if (response.status === 'error') {
 		alert(messageFromResponse(response));
 		return;
 	}
@@ -152,7 +152,7 @@ async function submitResultChallengeButtonClicked(event: any) {
 		black: toPlayerPublicId(blackPublicId),
 		result: result,
 	});
-	if (response.status === 'Error') {
+	if (response.status === 'error') {
 		alert(messageFromResponse(response));
 		return;
 	}
@@ -168,7 +168,7 @@ async function agreeChallengeResultButtonClicked(event: any) {
 		id: challengeId,
 	});
 
-	if (response.status === 'Error') {
+	if (response.status === 'error') {
 		alert(messageFromResponse(response));
 		return;
 	}
@@ -183,7 +183,7 @@ async function disagreeChallengeResultButtonClicked(event: any) {
 	const response = await serverCall(ROUTES.CHALLENGE_DISAGREE, {
 		id: challengeId,
 	});
-	if (response.status === 'Error') {
+	if (response.status === 'error') {
 		alert(messageFromResponse(response));
 		return;
 	}
@@ -193,7 +193,7 @@ async function disagreeChallengeResultButtonClicked(event: any) {
 
 async function fillChallengesReceived() {
 	const response = await serverCall(ROUTES.QUERY_CHALLENGE_RECEIVED, null);
-	if (response.status === 'Error') {
+	if (response.status === 'error') {
 		alert(messageFromResponse(response));
 		return;
 	}
@@ -287,7 +287,7 @@ async function fillChallengesReceived() {
 
 async function fillChallengesSent() {
 	const response = await serverCall(ROUTES.QUERY_CHALLENGE_SENT, null);
-	if (response.status === 'Error') {
+	if (response.status === 'error') {
 		alert(messageFromResponse(response));
 		return;
 	}
@@ -339,7 +339,7 @@ async function fillChallengesPendingResult() {
 		ROUTES.QUERY_CHALLENGE_PENDING_RESULT,
 		null,
 	);
-	if (response.status === 'Error') {
+	if (response.status === 'error') {
 		alert(messageFromResponse(response));
 		return;
 	}
@@ -488,7 +488,7 @@ async function fillChallengesConfirmResultOther() {
 		ROUTES.QUERY_CHALLENGE_CONFIRM_RESULT_OTHER,
 		null,
 	);
-	if (response.status === 'Error') {
+	if (response.status === 'error') {
 		alert(messageFromResponse(response));
 		return;
 	}
@@ -549,7 +549,7 @@ async function fillChallengesConfirmResultSelf() {
 		ROUTES.QUERY_CHALLENGE_CONFIRM_RESULT_SELF,
 		null,
 	);
-	if (response.status === 'Error') {
+	if (response.status === 'error') {
 		alert(messageFromResponse(response));
 		return;
 	}

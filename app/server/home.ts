@@ -46,7 +46,7 @@ export async function getPageLogin(req: Request, res: Response) {
 		AuthenticationInputSchema,
 		debug,
 	);
-	if (sessionParse.result === 'Error') {
+	if (sessionParse.result === 'error') {
 		debug(logNow(), req.cookies);
 		return;
 	}

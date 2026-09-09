@@ -51,7 +51,7 @@ async function logIntoWebpage(_event: any) {
 		u: username,
 		p: password,
 	});
-	if (response.status === 'Error') {
+	if (response.status === 'error') {
 		alert(messageFromResponse(response));
 		return;
 	}

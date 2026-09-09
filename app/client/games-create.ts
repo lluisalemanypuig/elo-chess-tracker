@@ -38,7 +38,7 @@ async function initializeWindowClientGamesCreate() {
 
 	// query the server for the list of users
 	const response = await serverCall(ROUTES.QUERY_HTML_USER_LIST, null);
-	if (response.status === 'Error') {
+	if (response.status === 'error') {
 		alert(messageFromResponse(response));
 		return;
 	}
@@ -135,7 +135,7 @@ async function submitNewGame(_event: any) {
 		whenCreated: whenCreated,
 		timeCreated: timeCreated,
 	});
-	if (response.status === 'Error') {
+	if (response.status === 'error') {
 		alert(messageFromResponse(response));
 		return;
 	}

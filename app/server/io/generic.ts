@@ -30,7 +30,7 @@ import { isNotDefined } from '@common/utils/is-defined';
 import { logNow } from '@common/utils/time';
 import { z } from 'zod';
 
-export function readSchema<T extends z.ZodTypeAny>(
+export function readSchema<T extends z.ZodType>(
 	schema: T,
 	str: string,
 ): z.output<T> | null {

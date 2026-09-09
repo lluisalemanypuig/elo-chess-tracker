@@ -84,8 +84,8 @@ export const StringSchema = z.string();
 export type ApiMethod = 'GET' | 'POST';
 
 type ApiSchemaEntry = {
-	input: z.ZodTypeAny;
-	output: z.ZodTypeAny;
+	input: z.ZodType;
+	output: z.ZodType;
 	method: ApiMethod;
 };
 
@@ -357,14 +357,14 @@ export const API_SCHEMA = {
 	},
 } satisfies Record<Route, ApiSchemaEntry>;
 
-type InputSchemaFor<R extends Route> = (typeof API_SCHEMA)[R]['input'];
-type OutputSchemaFor<R extends Route> = (typeof API_SCHEMA)[R]['output'];
+type InputSchemaOf<R extends Route> = (typeof API_SCHEMA)[R]['input'];
+type OutputSchemaOf<R extends Route> = (typeof API_SCHEMA)[R]['output'];
 
-export function inputSchemaOf<R extends Route>(route: R): InputSchemaFor<R> {
+export function inputSchemaOf<R extends Route>(route: R): InputSchemaOf<R> {
 	return API_SCHEMA[route].input;
 }
 
-export function outputSchemaOf<R extends Route>(route: R): OutputSchemaFor<R> {
+export function outputSchemaOf<R extends Route>(route: R): OutputSchemaOf<R> {
 	return API_SCHEMA[route].output;
 }
 

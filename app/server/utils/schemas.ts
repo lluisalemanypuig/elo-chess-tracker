@@ -35,15 +35,15 @@ export type ParseResult = 'jsonDataNotProvided' | 'error' | 'success';
 
 export type ParseSchemaResult<T> =
 	| {
-			result: 'JsonDataNotProvided' | 'Error';
+			result: 'jsonDataNotProvided' | 'error';
 			data: undefined;
 	  }
 	| {
-			result: 'Success';
+			result: 'success';
 			data: T;
 	  };
 
-export function parseSchema<S extends z.ZodTypeAny>(
+export function parseSchema<S extends z.ZodType>(
 	json: unknown | undefined | null,
 	schemaObj: S,
 	debug: Debug.Debugger,
@@ -56,7 +56,7 @@ export function parseSchema<S extends z.ZodTypeAny>(
 
 	if (isNotDefined(json) || isEmptyPlainObject(json)) {
 		return {
-			result: 'JsonDataNotProvided',
+			result: 'jsonDataNotProvided',
 			data: undefined,
 		};
 	}
@@ -64,12 +64,12 @@ export function parseSchema<S extends z.ZodTypeAny>(
 	if (!parse.success) {
 		debug(logNow(), `Failed to parse schema: ${schemaObj.constructor.name}`);
 		return {
-			result: 'Error',
+			result: 'error',
 			data: undefined,
 		};
 	}
 	return {
-		result: 'Success',
+		result: 'success',
 		data: parse.data,
 	};
 }
@@ -89,7 +89,7 @@ export function safeParseRequestCookies(
 	debug: Debug.Debugger,
 ): SafeParseSchemaResult<SessionId> {
 	const parse = parseSchema(req.cookies, AuthenticationInputSchema, debug);
-	if (parse.result !== 'Success') {
+	if (parse.result !== 'success') {
 		return {
 			result: 'bad',
 			data: undefined,
@@ -101,13 +101,13 @@ export function safeParseRequestCookies(
 	};
 }
 
-export function safeParseRequestBody<S extends z.ZodTypeAny>(
+export function safeParseRequestBody<S extends z.ZodType>(
 	req: Request,
 	schemaObj: S,
 	debug: Debug.Debugger,
 ): SafeParseSchemaResult<z.output<S>> {
 	const parse = parseSchema(req.body, schemaObj, debug);
-	if (parse.result !== 'Success') {
+	if (parse.result !== 'success') {
 		return {
 			result: 'bad',
 			data: undefined,

@@ -43,7 +43,7 @@ async function buttonSubmitClicked() {
 		old: boxOldPassword.value,
 		new: boxNewPassword.value,
 	});
-	if (response.status === 'Error') {
+	if (response.status === 'error') {
 		alert(messageFromResponse(response));
 		return;
 	}

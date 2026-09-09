@@ -69,7 +69,7 @@ async function selectResultGameOnChange(event: any) {
 		newResult: newResult,
 	});
 
-	if (response.status === 'Error') {
+	if (response.status === 'error') {
 		alert(messageFromResponse(response));
 		return;
 	}
@@ -119,7 +119,7 @@ async function buttonDeleteGameOnClick(event: any) {
 	const gameId = button.getAttribute('gameId');
 	const response = await serverCall(ROUTES.GAME_DELETE, { id: gameId });
 
-	if (response.status === 'Error') {
+	if (response.status === 'error') {
 		alert(messageFromResponse(response));
 		return;
 	}
@@ -157,7 +157,7 @@ async function triggerEditGameTitle(event: Event) {
 		id: gameId,
 		title: newTitle,
 	});
-	if (response.status === 'Error') {
+	if (response.status === 'error') {
 		alert(messageFromResponse(response));
 		return;
 	}
@@ -212,7 +212,7 @@ async function fillGamesListTimeControl(timeControlId: TimeControlId) {
 		return;
 	}
 
-	if (response.status === 'Error') {
+	if (response.status === 'error') {
 		alert(messageFromResponse(response));
 		return;
 	}
