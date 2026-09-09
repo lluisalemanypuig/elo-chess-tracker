@@ -2,8 +2,7 @@
 
 cd js
 
-mv client/* .
-rmdir client
-rm -rf common
+mv app/client/* .
+rm -rf app
 
 cd ..

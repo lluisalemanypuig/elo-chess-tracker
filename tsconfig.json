@@ -36,6 +36,7 @@
 		/* JavaScript Support */
 
 		/* Emit */
+		"rootDir": ".",
 		"outDir": "js-full",
 
 		/* Interop Constraints */
