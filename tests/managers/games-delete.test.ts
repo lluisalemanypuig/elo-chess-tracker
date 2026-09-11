@@ -116,6 +116,7 @@ const configuration: Configuration = {
 			'DELETE_GAMES',
 			'DELETE_GAMES_ADMIN',
 		],
+		referee: [],
 		teacher: [],
 		member: [],
 		student: [],

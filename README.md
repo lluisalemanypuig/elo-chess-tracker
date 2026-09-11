@@ -122,6 +122,7 @@ Edit the configuration file `webpage/configuration.json` appropriately. This fil
 
     	"permissions": {
     		"admin": [ ],
+            "referee": [ ],
     		"teacher": [ ],
     		"member": [ ],
     		"student": [ ]
@@ -175,6 +176,7 @@ _Note_: the configuration file created by the `initialize.sh` script already pro
 The site implements four different roles a user can have. To each role we can associate a series of actions that a user with said role can perform. All roles implemented are
 
 - _ADMIN_
+- _REFEREE_
 - _MEMBER_
 - _TEACHER_
 - _STUDENT_
@@ -186,36 +188,42 @@ Available actions are
 
 - Assignment of roles to another user
   - _ASSIGN_ROLE_ADMIN_
+  - _ASSIGN_ROLE_REFEREE_
   - _ASSIGN_ROLE_TEACHER_
   - _ASSIGN_ROLE_MEMBER_
   - _ASSIGN_ROLE_STUDENT_
 
 - Edition of users: to be able to edit user's information, except for passwords and ratings.
   - _EDIT_ADMIN_
+  - _EDIT_REFEREE_
   - _EDIT_TEACHER_
   - _EDIT_MEMBER_
   - _EDIT_STUDENT_
 
 - Creation of games: to be able to create games between pairs of players. This is restricted to players of specific roles.
   - _CREATE_GAMES_ADMIN_
+  - _CREATE_GAMES_REFEREE_
   - _CREATE_GAMES_TEACHER_
   - _CREATE_GAMES_MEMBER_
   - _CREATE_GAMES_STUDENT_
 
 - Edition of a user's game: to change the result of a game.
   - _EDIT_GAMES_ADMIN_
+  - _EDIT_GAMES_REFEREE_
   - _EDIT_GAMES_TEACHER_
   - _EDIT_GAMES_MEMBER_
   - _EDIT_GAMES_STUDENT_
 
 - See another user's games.
   - _SEE_GAMES_ADMIN_
+  - _SEE_GAMES_REFEREE_
   - _SEE_GAMES_TEACHER_
   - _SEE_GAMES_MEMBER_
   - _SEE_GAMES_STUDENT_
 
 - Challenge other users to a game.
   - _CHALLENGE_ADMIN_
+  - _CHALLENGE_REFEREE_
   - _CHALLENGE_MEMBER_
   - _CHALLENGE_TEACHER_
   - _CHALLENGE_STUDENT_

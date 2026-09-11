@@ -123,6 +123,7 @@ describe('Edition', () => {
 		rel.clear();
 		initializePermissions({
 			admin: ['EDIT_USER_TEACHER'],
+			referee: [],
 			teacher: [],
 			student: [],
 			member: [],
@@ -139,6 +140,7 @@ describe('Edition', () => {
 		rel.clear();
 		initializePermissions({
 			admin: ['EDIT_USER_TEACHER', 'EDIT_USER_STUDENT'],
+			referee: [],
 			teacher: [],
 			student: [],
 			member: [],
@@ -155,6 +157,7 @@ describe('Edition', () => {
 		rel.clear();
 		initializePermissions({
 			admin: [],
+			referee: [],
 			teacher: ['EDIT_USER_TEACHER'],
 			student: [],
 			member: [],
@@ -171,6 +174,7 @@ describe('Edition', () => {
 		rel.clear();
 		initializePermissions({
 			admin: [],
+			referee: [],
 			teacher: ['EDIT_USER_TEACHER', 'EDIT_USER_STUDENT'],
 			student: [],
 			member: [],
@@ -187,6 +191,7 @@ describe('Edition', () => {
 		rel.clear();
 		initializePermissions({
 			admin: [],
+			referee: [],
 			teacher: [],
 			student: ['EDIT_USER_TEACHER'],
 			member: [],
@@ -203,6 +208,7 @@ describe('Edition', () => {
 		rel.clear();
 		initializePermissions({
 			admin: [],
+			referee: [],
 			teacher: [],
 			student: ['EDIT_USER_TEACHER', 'EDIT_USER_STUDENT'],
 			member: [],
@@ -219,6 +225,7 @@ describe('Edition', () => {
 		rel.clear();
 		initializePermissions({
 			admin: [],
+			referee: [],
 			teacher: [],
 			student: [],
 			member: ['EDIT_USER_TEACHER'],
@@ -235,6 +242,7 @@ describe('Edition', () => {
 		rel.clear();
 		initializePermissions({
 			admin: [],
+			referee: [],
 			teacher: [],
 			student: [],
 			member: ['EDIT_USER_TEACHER', 'EDIT_USER_STUDENT'],
@@ -290,6 +298,7 @@ describe('Can a user see a game?', () => {
 		rel.clear();
 		initializePermissions({
 			admin: ['SEE_GAMES_ADMIN', 'SEE_GAMES_MEMBER'],
+			referee: [],
 			teacher: [],
 			student: [],
 			member: [],
@@ -306,6 +315,7 @@ describe('Can a user see a game?', () => {
 		rel.clear();
 		initializePermissions({
 			admin: [],
+			referee: [],
 			teacher: ['SEE_GAMES_ADMIN', 'SEE_GAMES_STUDENT'],
 			student: [],
 			member: [],
@@ -361,6 +371,7 @@ describe('Can a user edit a game?', () => {
 		rel.clear();
 		initializePermissions({
 			admin: ['EDIT_GAMES_ADMIN', 'EDIT_GAMES_MEMBER'],
+			referee: [],
 			teacher: [],
 			student: [],
 			member: [],
@@ -377,6 +388,7 @@ describe('Can a user edit a game?', () => {
 		rel.clear();
 		initializePermissions({
 			admin: [],
+			referee: [],
 			teacher: ['EDIT_GAMES_ADMIN', 'EDIT_GAMES_STUDENT'],
 			student: [],
 			member: [],
@@ -393,6 +405,7 @@ describe('Can a user edit a game?', () => {
 		rel.clear();
 		initializePermissions({
 			admin: [],
+			referee: [],
 			teacher: ['EDIT_GAMES_ADMIN', 'EDIT_GAMES_TEACHER'],
 			student: [],
 			member: [],
@@ -448,6 +461,7 @@ describe('Can a user create a game?', () => {
 		rel.clear();
 		initializePermissions({
 			admin: ['CREATE_GAMES_ADMIN', 'CREATE_GAMES_MEMBER'],
+			referee: [],
 			teacher: [],
 			student: [],
 			member: [],
@@ -464,6 +478,7 @@ describe('Can a user create a game?', () => {
 		rel.clear();
 		initializePermissions({
 			admin: [],
+			referee: [],
 			teacher: ['CREATE_GAMES_ADMIN', 'CREATE_GAMES_STUDENT'],
 			student: [],
 			member: [],
@@ -480,6 +495,7 @@ describe('Can a user create a game?', () => {
 		rel.clear();
 		initializePermissions({
 			admin: [],
+			referee: [],
 			teacher: ['CREATE_GAMES_ADMIN', 'CREATE_GAMES_TEACHER'],
 			student: [],
 			member: [],
@@ -535,6 +551,7 @@ describe('Can a user challenge?', () => {
 		rel.clear();
 		initializePermissions({
 			admin: ['CHALLENGE_USER_ADMIN', 'CHALLENGE_USER_STUDENT'],
+			referee: [],
 			teacher: [],
 			student: [],
 			member: [],
@@ -551,6 +568,7 @@ describe('Can a user challenge?', () => {
 		rel.clear();
 		initializePermissions({
 			admin: [],
+			referee: [],
 			teacher: ['CHALLENGE_USER_ADMIN', 'CHALLENGE_USER_STUDENT'],
 			student: [],
 			member: [],
@@ -567,6 +585,7 @@ describe('Can a user challenge?', () => {
 		rel.clear();
 		initializePermissions({
 			admin: [],
+			referee: [],
 			teacher: [
 				'CHALLENGE_USER_ADMIN',
 				'CHALLENGE_USER_STUDENT',
@@ -626,6 +645,7 @@ describe('Can a user see a graph?', () => {
 		rel.clear();
 		initializePermissions({
 			admin: ['SEE_GRAPHS_ADMIN', 'SEE_GRAPHS_STUDENT'],
+			referee: [],
 			teacher: [],
 			student: [],
 			member: [],
@@ -642,6 +662,7 @@ describe('Can a user see a graph?', () => {
 		rel.clear();
 		initializePermissions({
 			admin: [],
+			referee: [],
 			teacher: ['SEE_GRAPHS_ADMIN', 'SEE_GRAPHS_STUDENT'],
 			student: [],
 			member: [],
@@ -658,6 +679,7 @@ describe('Can a user see a graph?', () => {
 		rel.clear();
 		initializePermissions({
 			admin: [],
+			referee: [],
 			teacher: ['SEE_GRAPHS_ADMIN', 'SEE_GRAPHS_STUDENT', 'SEE_GRAPHS_MEMBER'],
 			student: [],
 			member: [],

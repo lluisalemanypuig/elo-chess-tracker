@@ -130,6 +130,7 @@ const configuration: Configuration = {
 			'EDIT_GAMES',
 			'EDIT_GAMES_ADMIN',
 		],
+		referee: [],
 		teacher: [],
 		member: [],
 		student: [],

@@ -236,6 +236,7 @@ describe('Actions allowed per user (single role)', () => {
 		UserRoleToUserAction.getInstance().clear();
 		initializePermissions({
 			admin: ['EDIT_USER_TEACHER'],
+			referee: [],
 			teacher: [],
 			student: [],
 			member: [],
@@ -289,6 +290,7 @@ describe('Actions allowed per user (single role)', () => {
 		UserRoleToUserAction.getInstance().clear();
 		initializePermissions({
 			admin: [],
+			referee: [],
 			teacher: ['ASSIGN_ROLE_MEMBER'],
 			student: [],
 			member: [],
@@ -342,6 +344,7 @@ describe('Actions allowed per user (single role)', () => {
 		UserRoleToUserAction.getInstance().clear();
 		initializePermissions({
 			admin: [],
+			referee: [],
 			teacher: [],
 			student: ['CREATE_USER', 'CREATE_GAMES'],
 			member: [],
@@ -395,6 +398,7 @@ describe('Actions allowed per user (single role)', () => {
 		UserRoleToUserAction.getInstance().clear();
 		initializePermissions({
 			admin: [],
+			referee: [],
 			teacher: [],
 			student: [],
 			member: ['CHALLENGE_USER_ADMIN', 'CHALLENGE_USER_STUDENT'],
@@ -451,6 +455,7 @@ describe('Actions allowed per user (multiple roles)', () => {
 		UserRoleToUserAction.getInstance().clear();
 		initializePermissions({
 			admin: ['EDIT_USER_TEACHER'],
+			referee: [],
 			teacher: [],
 			student: ['CHALLENGE_USER_STUDENT'],
 			member: [],
@@ -506,6 +511,7 @@ describe('Actions allowed per user (multiple roles)', () => {
 		UserRoleToUserAction.getInstance().clear();
 		initializePermissions({
 			admin: ['EDIT_USER_TEACHER'],
+			referee: [],
 			teacher: [],
 			student: ['CHALLENGE_USER_STUDENT'],
 			member: [],
