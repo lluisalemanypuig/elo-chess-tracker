@@ -61,6 +61,7 @@ export class UserRoleToUserAction {
 	// The data structure that relates user roles to actions
 	private relate: { [key in UserRole]: UserAction[] } = {
 		ADMIN: [],
+		REFEREE: [],
 		TEACHER: [],
 		MEMBER: [],
 		STUDENT: [],
@@ -103,6 +104,7 @@ export class UserRoleToUserAction {
 	clear() {
 		this.relate = {
 			ADMIN: [],
+			REFEREE: [],
 			TEACHER: [],
 			MEMBER: [],
 			STUDENT: [],
@@ -115,6 +117,7 @@ export class UserRoleToUserAction {
  * @param permissions A JSON object with the following structure:
 	{
 		admin : [...],
+		referee : [...],
 		teacher : [...],
 		member : [...],
 		student : [...],
@@ -129,6 +132,12 @@ export function initializePermissions(permissions: UserPermissions) {
 		actions.addToRole('ADMIN', permission);
 	}
 	actions.addMissingGenericActions('ADMIN');
+
+	// REFEREE
+	for (const permission of permissions.admin) {
+		actions.addToRole('REFEREE', permission);
+	}
+	actions.addMissingGenericActions('REFEREE');
 
 	// TEACHER
 	for (const permission of permissions.teacher) {
