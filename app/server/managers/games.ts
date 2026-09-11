@@ -32,9 +32,8 @@ import {
 	DateFull,
 	dateFullToMajor,
 	DateMajor,
-	DateMinor,
 	logNow,
-	toDateFull,
+	toDateMajor,
 } from '@common/utils/time';
 import { EnvironmentManager } from '@server/managers/environment-manager';
 import { GamesIterator } from '@server/managers/games-iterator';
@@ -115,6 +114,8 @@ function gameNew(
 	title: string,
 	white: PlayerPrivateId,
 	black: PlayerPrivateId,
+	createdBy: PlayerPrivateId,
+	createdAt: DateFull,
 	result: GameResult,
 	timeControlId: TimeControlId,
 	timeControlName: TimeControlName,
@@ -175,6 +176,8 @@ function gameNew(
 		whiteToAssign,
 		black,
 		blackToAssign,
+		createdBy,
+		createdAt,
 		result,
 		timeControlId,
 		timeControlName,
@@ -388,51 +391,51 @@ export function gameAddNew(
 	gameTitle: string,
 	white: User,
 	black: User,
+	createdBy: PlayerPrivateId,
+	createdAt: DateFull,
 	result: GameResult,
 	timeControlId: TimeControlId,
 	timeControlName: TimeControlName,
-	gameDate: DateMajor,
-	gameTime: DateMinor,
+	whenPlayed: DateFull,
 ) {
 	if (white.username === black.username) {
 		throw new PublicError('The players cannot be the same.');
 	}
 
-	if (gameDate === '') {
+	if (whenPlayed === '') {
 		throw new PublicError('The selected date is incorrect.');
 	}
-	if (gameTime === '') {
-		throw new PublicError('The selected time is incorrect.');
-	}
 
+	debug(logNow(), `Player ${createdBy} is trying to create a game`);
 	debug(logNow(), `    Title: '${gameTitle}'`);
 	debug(logNow(), `    White: '${white.username}'`);
 	debug(logNow(), `    Black: '${black.username}'`);
 	debug(logNow(), `    Result: '${result}'`);
 	debug(logNow(), `    Time control id: '${timeControlId}'`);
 	debug(logNow(), `    Time control name: '${timeControlName}'`);
-	debug(logNow(), `    Date of game: '${gameDate}'`);
-	debug(logNow(), `    Time of game: '${gameTime}'`);
+	debug(logNow(), `    Game was played at: '${whenPlayed}'`);
 
 	debug(logNow(), `Adding the new game`);
 
-	const when = toDateFull(gameDate + '..' + gameTime);
 	const g = gameNew(
 		gameTitle,
 		white.username,
 		black.username,
+		createdBy,
+		createdAt,
 		result,
 		timeControlId,
 		timeControlName,
-		when,
+		whenPlayed,
 	);
 
-	white.addGame(timeControlId, gameDate);
-	black.addGame(timeControlId, gameDate);
+	const whenPlayedDate = toDateMajor(whenPlayed.split('..')[0]);
+	white.addGame(timeControlId, whenPlayedDate);
+	black.addGame(timeControlId, whenPlayedDate);
 
-	gameInsertInHistory(g, gameDate);
+	gameInsertInHistory(g, whenPlayedDate);
 
-	GamesManager.getInstance().addGame(g.id, gameDate, timeControlId);
+	GamesManager.getInstance().addGame(g.id, whenPlayedDate, timeControlId);
 	graphUpdate(white.username, black.username, result, timeControlId);
 }
 
@@ -441,11 +444,11 @@ export function gameAddNewGuarded(
 	gameTitle: string,
 	white: User,
 	black: User,
+	createdAt: DateFull,
 	result: GameResult,
 	timeControlId: TimeControlId,
 	timeControlName: TimeControlName,
-	gameDate: DateMajor,
-	gameTime: DateMinor,
+	whenPlayed: DateFull,
 ) {
 	if (!creator.canDo('CREATE_GAMES')) {
 		debug(logNow(), `User '${creator.username}' cannot create users.`);
@@ -460,11 +463,12 @@ export function gameAddNewGuarded(
 		gameTitle,
 		white,
 		black,
+		creator.username,
+		createdAt,
 		result,
 		timeControlId,
 		timeControlName,
-		gameDate,
-		gameTime,
+		whenPlayed,
 	);
 }
 
