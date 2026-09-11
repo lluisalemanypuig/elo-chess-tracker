@@ -34,48 +34,56 @@ export const ALL_ACTIONS = [
 
 	'CREATE_GAMES',
 	'CREATE_GAMES_ADMIN',
+	'CREATE_GAMES_REFEREE',
 	'CREATE_GAMES_TEACHER',
 	'CREATE_GAMES_MEMBER',
 	'CREATE_GAMES_STUDENT',
 
 	'EDIT_GAMES',
 	'EDIT_GAMES_ADMIN',
+	'EDIT_GAMES_REFEREE',
 	'EDIT_GAMES_TEACHER',
 	'EDIT_GAMES_MEMBER',
 	'EDIT_GAMES_STUDENT',
 
 	'DELETE_GAMES',
 	'DELETE_GAMES_ADMIN',
+	'DELETE_GAMES_REFEREE',
 	'DELETE_GAMES_TEACHER',
 	'DELETE_GAMES_MEMBER',
 	'DELETE_GAMES_STUDENT',
 
 	'SEE_GAMES',
 	'SEE_GAMES_ADMIN',
+	'SEE_GAMES_REFEREE',
 	'SEE_GAMES_TEACHER',
 	'SEE_GAMES_MEMBER',
 	'SEE_GAMES_STUDENT',
 
 	'EDIT_USER',
 	'EDIT_USER_ADMIN',
+	'EDIT_USER_REFEREE',
 	'EDIT_USER_TEACHER',
 	'EDIT_USER_MEMBER',
 	'EDIT_USER_STUDENT',
 
 	'ASSIGN_ROLE',
 	'ASSIGN_ROLE_ADMIN',
+	'ASSIGN_ROLE_REFEREE',
 	'ASSIGN_ROLE_TEACHER',
 	'ASSIGN_ROLE_MEMBER',
 	'ASSIGN_ROLE_STUDENT',
 
 	'SEE_GRAPHS',
 	'SEE_GRAPHS_ADMIN',
+	'SEE_GRAPHS_REFEREE',
 	'SEE_GRAPHS_TEACHER',
 	'SEE_GRAPHS_MEMBER',
 	'SEE_GRAPHS_STUDENT',
 
 	'CHALLENGE_USER',
 	'CHALLENGE_USER_ADMIN',
+	'CHALLENGE_USER_REFEREE',
 	'CHALLENGE_USER_TEACHER',
 	'CHALLENGE_USER_MEMBER',
 	'CHALLENGE_USER_STUDENT',
@@ -134,6 +142,8 @@ export function getRoleActionName(id: UserActionId, r: UserRole): UserAction {
 			switch (r) {
 				case 'ADMIN':
 					return 'CREATE_GAMES_ADMIN';
+				case 'REFEREE':
+					return 'CREATE_GAMES_REFEREE';
 				case 'TEACHER':
 					return 'CREATE_GAMES_TEACHER';
 				case 'MEMBER':
@@ -146,6 +156,8 @@ export function getRoleActionName(id: UserActionId, r: UserRole): UserAction {
 			switch (r) {
 				case 'ADMIN':
 					return 'EDIT_GAMES_ADMIN';
+				case 'REFEREE':
+					return 'EDIT_GAMES_REFEREE';
 				case 'TEACHER':
 					return 'EDIT_GAMES_TEACHER';
 				case 'MEMBER':
@@ -158,6 +170,8 @@ export function getRoleActionName(id: UserActionId, r: UserRole): UserAction {
 			switch (r) {
 				case 'ADMIN':
 					return 'DELETE_GAMES_ADMIN';
+				case 'REFEREE':
+					return 'DELETE_GAMES_REFEREE';
 				case 'TEACHER':
 					return 'DELETE_GAMES_TEACHER';
 				case 'MEMBER':
@@ -170,6 +184,8 @@ export function getRoleActionName(id: UserActionId, r: UserRole): UserAction {
 			switch (r) {
 				case 'ADMIN':
 					return 'SEE_GAMES_ADMIN';
+				case 'REFEREE':
+					return 'SEE_GAMES_REFEREE';
 				case 'TEACHER':
 					return 'SEE_GAMES_TEACHER';
 				case 'MEMBER':
@@ -182,6 +198,8 @@ export function getRoleActionName(id: UserActionId, r: UserRole): UserAction {
 			switch (r) {
 				case 'ADMIN':
 					return 'EDIT_USER_ADMIN';
+				case 'REFEREE':
+					return 'EDIT_USER_REFEREE';
 				case 'TEACHER':
 					return 'EDIT_USER_TEACHER';
 				case 'MEMBER':
@@ -194,6 +212,8 @@ export function getRoleActionName(id: UserActionId, r: UserRole): UserAction {
 			switch (r) {
 				case 'ADMIN':
 					return 'ASSIGN_ROLE_ADMIN';
+				case 'REFEREE':
+					return 'ASSIGN_ROLE_REFEREE';
 				case 'TEACHER':
 					return 'ASSIGN_ROLE_TEACHER';
 				case 'MEMBER':
@@ -206,6 +226,8 @@ export function getRoleActionName(id: UserActionId, r: UserRole): UserAction {
 			switch (r) {
 				case 'ADMIN':
 					return 'CHALLENGE_USER_ADMIN';
+				case 'REFEREE':
+					return 'CHALLENGE_USER_REFEREE';
 				case 'TEACHER':
 					return 'CHALLENGE_USER_TEACHER';
 				case 'MEMBER':
@@ -218,6 +240,8 @@ export function getRoleActionName(id: UserActionId, r: UserRole): UserAction {
 			switch (r) {
 				case 'ADMIN':
 					return 'SEE_GRAPHS_ADMIN';
+				case 'REFEREE':
+					return 'SEE_GRAPHS_REFEREE';
 				case 'TEACHER':
 					return 'SEE_GRAPHS_TEACHER';
 				case 'MEMBER':

@@ -32,6 +32,7 @@ export function canUserEditUser(editor: User, edited: User): boolean {
 	return (
 		editor.canDo('EDIT_USER') &&
 		((editor.canDo('EDIT_USER_ADMIN') && edited.is('ADMIN')) ||
+			(editor.canDo('EDIT_USER_REFEREE') && edited.is('REFEREE')) ||
 			(editor.canDo('EDIT_USER_TEACHER') && edited.is('TEACHER')) ||
 			(editor.canDo('EDIT_USER_MEMBER') && edited.is('MEMBER')) ||
 			(editor.canDo('EDIT_USER_STUDENT') && edited.is('STUDENT')))
@@ -48,6 +49,7 @@ export function canUserSeeGame(u: User, white: User, black: User): boolean {
 	return (
 		u.canDo('SEE_GAMES') &&
 		((u.canDo('SEE_GAMES_ADMIN') && eitherUserIs('ADMIN')) ||
+			(u.canDo('SEE_GAMES_REFEREE') && eitherUserIs('REFEREE')) ||
 			(u.canDo('SEE_GAMES_TEACHER') && eitherUserIs('TEACHER')) ||
 			(u.canDo('SEE_GAMES_STUDENT') && eitherUserIs('STUDENT')) ||
 			(u.canDo('SEE_GAMES_MEMBER') && eitherUserIs('MEMBER')))
@@ -62,6 +64,7 @@ export function canUserCreateGame(u: User, white: User, black: User): boolean {
 	return (
 		u.canDo('CREATE_GAMES') &&
 		((u.canDo('CREATE_GAMES_ADMIN') && eitherUserIs('ADMIN')) ||
+			(u.canDo('CREATE_GAMES_REFEREE') && eitherUserIs('REFEREE')) ||
 			(u.canDo('CREATE_GAMES_TEACHER') && eitherUserIs('TEACHER')) ||
 			(u.canDo('CREATE_GAMES_STUDENT') && eitherUserIs('STUDENT')) ||
 			(u.canDo('CREATE_GAMES_MEMBER') && eitherUserIs('MEMBER')))
@@ -76,6 +79,7 @@ export function canUserEditGame(u: User, white: User, black: User): boolean {
 	return (
 		u.canDo('EDIT_GAMES') &&
 		((u.canDo('EDIT_GAMES_ADMIN') && eitherUserIs('ADMIN')) ||
+			(u.canDo('EDIT_GAMES_REFEREE') && eitherUserIs('REFEREE')) ||
 			(u.canDo('EDIT_GAMES_TEACHER') && eitherUserIs('TEACHER')) ||
 			(u.canDo('EDIT_GAMES_STUDENT') && eitherUserIs('STUDENT')) ||
 			(u.canDo('EDIT_GAMES_MEMBER') && eitherUserIs('MEMBER')))
@@ -90,6 +94,7 @@ export function canUserDeleteGame(u: User, white: User, black: User): boolean {
 	return (
 		u.canDo('DELETE_GAMES') &&
 		((u.canDo('DELETE_GAMES_ADMIN') && eitherUserIs('ADMIN')) ||
+			(u.canDo('DELETE_GAMES_REFEREE') && eitherUserIs('REFEREE')) ||
 			(u.canDo('DELETE_GAMES_TEACHER') && eitherUserIs('TEACHER')) ||
 			(u.canDo('DELETE_GAMES_STUDENT') && eitherUserIs('STUDENT')) ||
 			(u.canDo('DELETE_GAMES_MEMBER') && eitherUserIs('MEMBER')))
@@ -102,6 +107,7 @@ export function canUserSendChallenge(sender: User, receiver: User): boolean {
 	return (
 		sender.canDo('CHALLENGE_USER') &&
 		((receiver.is('ADMIN') && sender.canDo('CHALLENGE_USER_ADMIN')) ||
+			(receiver.is('REFEREE') && sender.canDo('CHALLENGE_USER_REFEREE')) ||
 			(receiver.is('MEMBER') && sender.canDo('CHALLENGE_USER_MEMBER')) ||
 			(receiver.is('STUDENT') && sender.canDo('CHALLENGE_USER_STUDENT')) ||
 			(receiver.is('TEACHER') && sender.canDo('CHALLENGE_USER_TEACHER')))
@@ -125,6 +131,7 @@ export function canUserSeeGraph(u: User, other: User): boolean {
 	return (
 		u.canDo('SEE_GRAPHS') &&
 		((other.is('ADMIN') && u.canDo('SEE_GRAPHS_ADMIN')) ||
+			(other.is('REFEREE') && u.canDo('SEE_GRAPHS_REFEREE')) ||
 			(other.is('MEMBER') && u.canDo('SEE_GRAPHS_MEMBER')) ||
 			(other.is('STUDENT') && u.canDo('SEE_GRAPHS_STUDENT')) ||
 			(other.is('TEACHER') && u.canDo('SEE_GRAPHS_TEACHER')))

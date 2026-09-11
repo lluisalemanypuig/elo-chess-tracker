@@ -28,6 +28,7 @@ import { z } from 'zod';
 
 export const ALL_USER_ROLES = [
 	'ADMIN',
+	'REFEREE',
 	'TEACHER',
 	'MEMBER',
 	'STUDENT',
@@ -41,6 +42,7 @@ export const UserRoleArraySchema = z.array(UserRoleSchema);
 
 export const USER_ROLE_TO_STRING: { [key in UserRole]: string } = {
 	ADMIN: 'Admin',
+	REFEREE: 'Referee',
 	TEACHER: 'Teacher',
 	MEMBER: 'Member',
 	STUDENT: 'Student',
@@ -53,6 +55,9 @@ export function isRoleStringCorrect(r: string): boolean {
 export function stringToRole(r: string): UserRole | undefined {
 	if (r === 'ADMIN') {
 		return 'ADMIN';
+	}
+	if (r === 'REFEREE') {
+		return 'REFEREE';
 	}
 	if (r === 'TEACHER') {
 		return 'TEACHER';
