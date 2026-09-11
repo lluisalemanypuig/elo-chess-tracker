@@ -31,7 +31,7 @@ import {
 } from '@common/models/time-control';
 import { toUserGivenName } from '@common/models/user-given-name';
 import { isNotDefined } from '@common/utils/is-defined';
-import { toDateMajor, toDateMinor } from '@common/utils/time';
+import { toDateFull } from '@common/utils/time';
 import { EnvironmentManager } from '@server/managers/environment-manager';
 import { gameAddNew, gameDelete } from '@server/managers/games';
 import { GamesManager } from '@server/managers/games-manager';
@@ -215,51 +215,56 @@ describe('Sequential game creation', () => {
 			'sample',
 			aU,
 			bU,
+			aU.username,
+			toDateFull('2020-02-17..00:00:00:000'),
 			'white_wins',
 			Blitz,
 			Blitz5p3,
-			toDateMajor('2025-01-19'),
-			toDateMinor('17:06:00:000'),
+			toDateFull('2025-01-19..17:06:00:000'),
 		);
 		gameAddNew(
 			'sample',
 			cU,
 			dU,
+			aU.username,
+			toDateFull('2020-02-17..00:00:00:000'),
 			'black_wins',
 			Blitz,
 			Blitz5p3,
-			toDateMajor('2025-01-19'),
-			toDateMinor('17:06:10:000'),
+			toDateFull('2025-01-19..17:06:10:000'),
 		);
 		gameAddNew(
 			'sample',
 			eU,
 			fU,
+			aU.username,
+			toDateFull('2020-02-17..00:00:00:000'),
 			'draw',
 			Blitz,
 			Blitz5p3,
-			toDateMajor('2025-01-19'),
-			toDateMinor('17:06:20:000'),
+			toDateFull('2025-01-19..17:06:20:000'),
 		);
 		gameAddNew(
 			'sample',
 			aU,
 			fU,
+			aU.username,
+			toDateFull('2020-02-17..00:00:00:000'),
 			'black_wins',
 			Blitz,
 			Blitz5p3,
-			toDateMajor('2025-01-19'),
-			toDateMinor('17:06:30:000'),
+			toDateFull('2025-01-19..17:06:30:000'),
 		);
 		gameAddNew(
 			'sample',
 			bU,
 			aU,
+			aU.username,
+			toDateFull('2020-02-17..00:00:00:000'),
 			'white_wins',
 			Blitz,
 			Blitz5p3,
-			toDateMajor('2025-01-19'),
-			toDateMinor('17:06:40:000'),
+			toDateFull('2025-01-19..17:06:40:000'),
 		);
 
 		expect(aU.getGames(Blitz).length).toBe(1);

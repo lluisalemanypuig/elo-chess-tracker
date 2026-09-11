@@ -31,12 +31,7 @@ import {
 } from '@common/models/time-control';
 import { toUserGivenName } from '@common/models/user-given-name';
 import { isNotDefined } from '@common/utils/is-defined';
-import {
-	dateFullToMajor,
-	toDateFull,
-	toDateMajor,
-	toDateMinor,
-} from '@common/utils/time';
+import { dateFullToMajor, toDateFull } from '@common/utils/time';
 import { gameArrayFromString } from '@server/io/game';
 import { graphFromString } from '@server/io/graph/graph';
 import { EnvironmentManager } from '@server/managers/environment-manager';
@@ -261,11 +256,12 @@ describe('Sequential game creation', () => {
 			'sample',
 			aU,
 			bU,
+			a,
+			toDateFull('2020-02-17..00:00:00:000'),
 			'white_wins',
 			Blitz,
 			Blitz5p3,
-			toDateMajor('2025-01-19'),
-			toDateMinor('17:06:00:000'),
+			toDateFull('2025-01-19..17:06:00:000'),
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -280,6 +276,8 @@ describe('Sequential game creation', () => {
 			expect(game_array[0].id).toBe('0000000001');
 			expect(game_array[0].white).toBe('a');
 			expect(game_array[0].black).toBe('b');
+			expect(game_array[0].createdBy).toBe('a');
+			expect(game_array[0].createdAt).toBe('2020-02-17..00:00:00:000');
 			expect(game_array[0].result).toBe('white_wins');
 			expect(game_array[0].timeControlId).toBe(Blitz);
 			expect(game_array[0].timeControlName).toBe(Blitz5p3);
@@ -316,11 +314,12 @@ describe('Sequential game creation', () => {
 			'sample',
 			cU,
 			dU,
+			a,
+			toDateFull('2020-02-17..00:00:00:000'),
 			'black_wins',
 			Blitz,
 			Blitz5p3,
-			toDateMajor('2025-01-19'),
-			toDateMinor('17:06:10:000'),
+			toDateFull('2025-01-19..17:06:10:000'),
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -379,11 +378,12 @@ describe('Sequential game creation', () => {
 			'sample',
 			eU,
 			fU,
+			a,
+			toDateFull('2020-02-17..00:00:00:000'),
 			'draw',
 			Blitz,
 			Blitz5p3,
-			toDateMajor('2025-01-19'),
-			toDateMinor('17:06:20:000'),
+			toDateFull('2025-01-19..17:06:20:000'),
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -450,11 +450,12 @@ describe('Sequential game creation', () => {
 			'sample',
 			aU,
 			fU,
+			a,
+			toDateFull('2020-02-17..00:00:00:000'),
 			'black_wins',
 			Blitz,
 			Blitz5p3,
-			toDateMajor('2025-01-19'),
-			toDateMinor('17:06:30:000'),
+			toDateFull('2025-01-19..17:06:30:000'),
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -534,11 +535,12 @@ describe('Sequential game creation', () => {
 			'sample',
 			aU,
 			bU,
+			a,
+			toDateFull('2020-02-17..00:00:00:000'),
 			'white_wins',
 			Classical,
 			Classical90p30,
-			toDateMajor('2025-01-09'),
-			toDateMinor('17:06:00:000'),
+			toDateFull('2025-01-09..17:06:00:000'),
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -589,11 +591,12 @@ describe('Sequential game creation', () => {
 			'sample',
 			cU,
 			dU,
+			a,
+			toDateFull('2020-02-17..00:00:00:000'),
 			'black_wins',
 			Classical,
 			Classical90p30,
-			toDateMajor('2025-01-09'),
-			toDateMinor('17:06:10:000'),
+			toDateFull('2025-01-09..17:06:10:000'),
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -652,11 +655,12 @@ describe('Sequential game creation', () => {
 			'sample',
 			eU,
 			fU,
+			a,
+			toDateFull('2020-02-17..00:00:00:000'),
 			'draw',
 			Classical,
 			Classical90p30,
-			toDateMajor('2025-01-09'),
-			toDateMinor('17:06:20:000'),
+			toDateFull('2025-01-09..17:06:20:000'),
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -723,11 +727,12 @@ describe('Sequential game creation', () => {
 			'sample',
 			aU,
 			fU,
+			a,
+			toDateFull('2020-02-17..00:00:00:000'),
 			'black_wins',
 			Classical,
 			Classical90p30,
-			toDateMajor('2025-01-09'),
-			toDateMinor('17:06:30:000'),
+			toDateFull('2025-01-09..17:06:30:000'),
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -809,11 +814,12 @@ describe('Inverse game creation', () => {
 			'sample',
 			aU,
 			fU,
+			a,
+			toDateFull('2020-02-17..00:00:00:000'),
 			'draw',
 			Blitz,
 			Blitz5p0,
-			toDateMajor('2025-01-20'),
-			toDateMinor('17:06:30:000'),
+			toDateFull('2025-01-20..17:06:30:000'),
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -864,11 +870,12 @@ describe('Inverse game creation', () => {
 			'sample',
 			eU,
 			fU,
+			a,
+			toDateFull('2020-02-17..00:00:00:000'),
 			'draw',
 			Blitz,
 			Blitz5p0,
-			toDateMajor('2025-01-20'),
-			toDateMinor('17:06:20:000'),
+			toDateFull('2025-01-20..17:06:20:000'),
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -927,11 +934,12 @@ describe('Inverse game creation', () => {
 			'sample',
 			cU,
 			dU,
+			a,
+			toDateFull('2020-02-17..00:00:00:000'),
 			'black_wins',
 			Blitz,
 			Blitz5p3,
-			toDateMajor('2025-01-20'),
-			toDateMinor('17:06:10:000'),
+			toDateFull('2025-01-20..17:06:10:000'),
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -998,11 +1006,12 @@ describe('Inverse game creation', () => {
 			'sample',
 			aU,
 			bU,
+			a,
+			toDateFull('2020-02-17..00:00:00:000'),
 			'white_wins',
 			Blitz,
 			Blitz5p3,
-			toDateMajor('2025-01-20'),
-			toDateMinor('17:06:00:000'),
+			toDateFull('2025-01-20..17:06:00:000'),
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -1082,11 +1091,12 @@ describe('Inverse game creation', () => {
 			'sample',
 			aU,
 			fU,
+			a,
+			toDateFull('2020-02-17..00:00:00:000'),
 			'draw',
 			Classical,
 			Classical90p30,
-			toDateMajor('2025-01-10'),
-			toDateMinor('17:06:30:000'),
+			toDateFull('2025-01-10..17:06:30:000'),
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -1137,11 +1147,12 @@ describe('Inverse game creation', () => {
 			'sample',
 			eU,
 			fU,
+			a,
+			toDateFull('2020-02-17..00:00:00:000'),
 			'draw',
 			Classical,
 			Classical90p30,
-			toDateMajor('2025-01-10'),
-			toDateMinor('17:06:20:000'),
+			toDateFull('2025-01-10..17:06:20:000'),
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -1200,11 +1211,12 @@ describe('Inverse game creation', () => {
 			'sample',
 			cU,
 			dU,
+			a,
+			toDateFull('2020-02-17..00:00:00:000'),
 			'black_wins',
 			Classical,
 			Classical90p30,
-			toDateMajor('2025-01-10'),
-			toDateMinor('17:06:10:000'),
+			toDateFull('2025-01-10..17:06:10:000'),
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -1271,11 +1283,12 @@ describe('Inverse game creation', () => {
 			'sample',
 			aU,
 			bU,
+			a,
+			toDateFull('2020-02-17..00:00:00:000'),
 			'white_wins',
 			Classical,
 			Classical90p30,
-			toDateMajor('2025-01-10'),
-			toDateMinor('17:06:00:000'),
+			toDateFull('2025-01-10..17:06:00:000'),
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -1356,11 +1369,12 @@ describe('Zig-zag game creation', () => {
 			'sample',
 			aU,
 			fU,
+			a,
+			toDateFull('2020-02-17..00:00:00:000'),
 			'draw',
 			Blitz,
 			Blitz5p0,
-			toDateMajor('2025-01-20'),
-			toDateMinor('17:06:25:000'),
+			toDateFull('2025-01-20..17:06:25:000'),
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -1443,11 +1457,12 @@ describe('Zig-zag game creation', () => {
 			'sample',
 			eU,
 			fU,
+			a,
+			toDateFull('2020-02-17..00:00:00:000'),
 			'draw',
 			Blitz,
 			Blitz5p0,
-			toDateMajor('2025-01-20'),
-			toDateMinor('17:06:05:000'),
+			toDateFull('2025-01-20..17:06:05:000'),
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -1538,11 +1553,12 @@ describe('Zig-zag game creation', () => {
 			'sample',
 			cU,
 			dU,
+			a,
+			toDateFull('2020-02-17..00:00:00:000'),
 			'white_wins',
 			Blitz,
 			Blitz5p3,
-			toDateMajor('2025-01-20'),
-			toDateMinor('17:06:15:000'),
+			toDateFull('2025-01-20..17:06:15:000'),
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -1641,11 +1657,12 @@ describe('Zig-zag game creation', () => {
 			'sample',
 			aU,
 			bU,
+			a,
+			toDateFull('2020-02-17..00:00:00:000'),
 			'black_wins',
 			Blitz,
 			Blitz5p3,
-			toDateMajor('2025-01-20'),
-			toDateMinor('17:05:55:000'),
+			toDateFull('2025-01-20..17:05:55:000'),
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -1756,11 +1773,12 @@ describe('Zig-zag game creation', () => {
 			'sample',
 			aU,
 			fU,
+			a,
+			toDateFull('2020-02-17..00:00:00:000'),
 			'draw',
 			Classical,
 			Classical90p30,
-			toDateMajor('2025-01-10'),
-			toDateMinor('17:06:25:000'),
+			toDateFull('2025-01-10..17:06:25:000'),
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -1843,11 +1861,12 @@ describe('Zig-zag game creation', () => {
 			'sample',
 			eU,
 			fU,
+			a,
+			toDateFull('2020-02-17..00:00:00:000'),
 			'draw',
 			Classical,
 			Classical90p30,
-			toDateMajor('2025-01-10'),
-			toDateMinor('17:06:05:000'),
+			toDateFull('2025-01-10..17:06:05:000'),
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -1938,11 +1957,12 @@ describe('Zig-zag game creation', () => {
 			'sample',
 			cU,
 			dU,
+			a,
+			toDateFull('2020-02-17..00:00:00:000'),
 			'white_wins',
 			Classical,
 			Classical90p30,
-			toDateMajor('2025-01-10'),
-			toDateMinor('17:06:15:000'),
+			toDateFull('2025-01-10..17:06:15:000'),
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -2041,11 +2061,12 @@ describe('Zig-zag game creation', () => {
 			'sample',
 			aU,
 			bU,
+			a,
+			toDateFull('2020-02-17..00:00:00:000'),
 			'black_wins',
 			Classical,
 			Classical90p30,
-			toDateMajor('2025-01-10'),
-			toDateMinor('17:05:55:000'),
+			toDateFull('2025-01-10..17:05:55:000'),
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -2158,11 +2179,12 @@ describe('Before-time inverse game creation', () => {
 			'sample',
 			aU,
 			fU,
+			a,
+			toDateFull('2020-02-17..00:00:00:000'),
 			'draw',
 			Blitz,
 			Blitz5p0,
-			toDateMajor('2023-01-20'),
-			toDateMinor('17:06:50:000'),
+			toDateFull('2023-01-20..17:06:50:000'),
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -2213,11 +2235,12 @@ describe('Before-time inverse game creation', () => {
 			'sample',
 			aU,
 			cU,
+			a,
+			toDateFull('2020-02-17..00:00:00:000'),
 			'draw',
 			Blitz,
 			Blitz5p0,
-			toDateMajor('2023-01-10'),
-			toDateMinor('17:06:40:000'),
+			toDateFull('2023-01-10..17:06:40:000'),
 		);
 		{
 			const game_array = gameArrayFromString(
