@@ -39,7 +39,7 @@ export const GameKeys = [
 	'black',
 	'blackRating',
 	'createdBy',
-	'createdAt',
+	'whenCreated',
 	'result',
 	'timeControlId',
 	'timeControlName',
@@ -67,7 +67,7 @@ export class Game {
 	public readonly black: PlayerPrivateId;
 	public blackRating: Rating;
 	public readonly createdBy: PlayerPrivateId;
-	public readonly createdAt: DateFull;
+	public readonly whenCreated: DateFull;
 	public result: GameResult;
 	public timeControlId: TimeControlId;
 	public timeControlName: TimeControlName;
@@ -82,7 +82,7 @@ export class Game {
 	 * @param black Black player
 	 * @param blackRating Black rating before the game
 	 * @param createdBy Player that created the game
-	 * @param createdAt Date when the game was created
+	 * @param whenCreated Date when the game was created
 	 * @param result Result of the game (white_wins, draw, black_wins)
 	 * @param timeControlId Time control id of the game
 	 * @param timeControlName Time control name of the game
@@ -97,7 +97,7 @@ export class Game {
 		black: PlayerPrivateId,
 		blackRating: Rating,
 		createdBy: PlayerPrivateId,
-		createdAt: DateFull,
+		whenCreated: DateFull,
 		result: GameResult,
 		timeControlId: TimeControlId,
 		timeControlName: TimeControlName,
@@ -111,7 +111,7 @@ export class Game {
 		this.black = black;
 		this.blackRating = blackRating;
 		this.createdBy = createdBy;
-		this.createdAt = createdAt;
+		this.whenCreated = whenCreated;
 		this.result = result;
 		this.timeControlId = timeControlId;
 		this.timeControlName = timeControlName;

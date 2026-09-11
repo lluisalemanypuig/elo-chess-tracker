@@ -278,7 +278,7 @@ describe('Sequential game creation', () => {
 			expect(game_array[0].white).toBe('a');
 			expect(game_array[0].black).toBe('b');
 			expect(game_array[0].createdBy).toBe('a');
-			expect(game_array[0].createdAt).toBe('2020-02-17..00:00:00:000');
+			expect(game_array[0].whenCreated).toBe('2020-02-17..00:00:00:000');
 			expect(game_array[0].result).toBe('white_wins');
 			expect(game_array[0].timeControlId).toBe(Blitz);
 			expect(game_array[0].timeControlName).toBe(Blitz5p3);

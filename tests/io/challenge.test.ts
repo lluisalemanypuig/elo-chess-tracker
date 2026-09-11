@@ -38,6 +38,7 @@ describe('IO conversion', () => {
 				"timeControlName": "Blitz (5 + 3)",\
 				"whenChallengeSent": "2024-12-29..17:10:00",\
 				"whenChallengeAccepted": "2024-12-29..17:10:01",\
+				"challengeAcceptedBy": "goku",\
 				"whenResultSet": "2024-12-29..17:10:02",\
 				"resultSetBy": "A",\
 				"whenResultAccepted": "2024-12-30..17:10:02",\
@@ -60,6 +61,7 @@ describe('IO conversion', () => {
 		expect(c.timeControlName).toBe('Blitz (5 + 3)');
 		expect(c.whenChallengeSent).toBe('2024-12-29..17:10:00');
 		expect(c.whenChallengeAccepted).toBe('2024-12-29..17:10:01');
+		expect(c.challengeAcceptedBy).toBe('goku');
 		expect(c.whenResultSet).toBe('2024-12-29..17:10:02');
 		expect(c.resultSetBy).toBe('A');
 		expect(c.whenResultAccepted).toBe('2024-12-30..17:10:02');

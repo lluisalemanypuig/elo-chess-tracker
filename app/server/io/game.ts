@@ -48,7 +48,7 @@ export function gameFromJson(json: any): Game | null {
 		json.black,
 		manager.getRatingFromJson(json.blackRating),
 		json.createdBy,
-		json.createdAt,
+		json.whenCreated,
 		result.data,
 		json.timeControlId,
 		json.timeControlName,
