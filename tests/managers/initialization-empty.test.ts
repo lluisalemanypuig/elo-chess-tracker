@@ -122,6 +122,7 @@ const configuration: Configuration = {
 			'CHALLENGE_USER_TEACHER',
 			'CHALLENGE_USER_STUDENT',
 		],
+		referee: [],
 		teacher: [
 			'CHALLENGE_USER',
 			'CHALLENGE_USER_ADMIN',

@@ -135,6 +135,7 @@ const classical_rapid_blitz: Configuration = {
 			'CHALLENGE_USER_TEACHER',
 			'CHALLENGE_USER_STUDENT',
 		],
+		referee: [],
 		teacher: [
 			'CHALLENGE_USER_ADMIN',
 			'CHALLENGE_USER_MEMBER',
