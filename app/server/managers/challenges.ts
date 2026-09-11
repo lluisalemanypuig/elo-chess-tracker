@@ -25,12 +25,7 @@ Contact:
 
 import { TimeControlId, TimeControlName } from '@common/models/time-control';
 import { isNotDefined } from '@common/utils/is-defined';
-import {
-	DateFull,
-	dateSplitMajorMinor,
-	logNow,
-	toDateMinor,
-} from '@common/utils/time';
+import { DateFull, logNow } from '@common/utils/time';
 import { ChallengesManager } from '@server/managers/challenges-manager';
 import { EnvironmentManager } from '@server/managers/environment-manager';
 import { gameAddNew } from '@server/managers/games';
@@ -323,7 +318,6 @@ export function challengeAgreeResult(
 	}
 
 	debug(logNow(), `Adding game...`);
-	const split = dateSplitMajorMinor(c.whenResultSet);
 
 	const mem = UsersManager.getInstance();
 	const white = mem.getAllUserDataByPrivateId(c.white);
@@ -334,22 +328,17 @@ export function challengeAgreeResult(
 		);
 	}
 
-	const randMilli = `${Math.floor(Math.random() * 999)}`;
-	const date = toDateMinor(
-		split[1] +
-			':' +
-			(randMilli.length === 1 ? '00' : randMilli.length === 2 ? '0' : '') +
-			randMilli,
-	);
+	const now = logNow();
 	gameAddNew(
 		c.title,
 		white.user,
 		black.user,
+		by,
+		now,
 		c.result,
 		c.timeControlId,
 		c.timeControlName,
-		split[0],
-		date,
+		c.whenResultSet,
 	);
 
 	{

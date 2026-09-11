@@ -38,10 +38,12 @@ export const GameKeys = [
 	'whiteRating',
 	'black',
 	'blackRating',
+	'createdBy',
+	'createdAt',
 	'result',
 	'timeControlId',
 	'timeControlName',
-	'when',
+	'whenPlayed',
 	'history',
 ];
 
@@ -64,10 +66,12 @@ export class Game {
 	public whiteRating: Rating;
 	public readonly black: PlayerPrivateId;
 	public blackRating: Rating;
+	public readonly createdBy: PlayerPrivateId;
+	public readonly createdAt: DateFull;
 	public result: GameResult;
 	public timeControlId: TimeControlId;
 	public timeControlName: TimeControlName;
-	public when: DateFull;
+	public whenPlayed: DateFull;
 	public history: GameEditLog[];
 
 	/**
@@ -77,10 +81,13 @@ export class Game {
 	 * @param whiteRating White rating before the game
 	 * @param black Black player
 	 * @param blackRating Black rating before the game
+	 * @param createdBy Player that created the game
+	 * @param createdAt Date when the game was created
 	 * @param result Result of the game (white_wins, draw, black_wins)
 	 * @param timeControlId Time control id of the game
 	 * @param timeControlName Time control name of the game
-	 * @param when Date
+	 * @param whenPlayed Date of the game
+	 * @param history The history of changes for this game
 	 */
 	constructor(
 		id: GameId,
@@ -89,10 +96,12 @@ export class Game {
 		whiteRating: Rating,
 		black: PlayerPrivateId,
 		blackRating: Rating,
+		createdBy: PlayerPrivateId,
+		createdAt: DateFull,
 		result: GameResult,
 		timeControlId: TimeControlId,
 		timeControlName: TimeControlName,
-		when: DateFull,
+		whenPlayed: DateFull,
 		history: GameEditLog[],
 	) {
 		this.id = id;
@@ -101,10 +110,12 @@ export class Game {
 		this.whiteRating = whiteRating;
 		this.black = black;
 		this.blackRating = blackRating;
+		this.createdBy = createdBy;
+		this.createdAt = createdAt;
 		this.result = result;
 		this.timeControlId = timeControlId;
 		this.timeControlName = timeControlName;
-		this.when = when;
+		this.whenPlayed = whenPlayed;
 		this.history = history;
 	}
 

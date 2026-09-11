@@ -30,7 +30,7 @@ import {
 	TimeControlIdSchema,
 	TimeControlNameSchema,
 } from '@common/models/time-control';
-import { DateMajorSchema, DateMinorSchema } from '@common/utils/time';
+import { DateFullSchema } from '@common/utils/time';
 import { z } from 'zod';
 
 // ROUTES.GAME_CREATE
@@ -43,8 +43,7 @@ export const GameCreateInputSchema = z
 		result: GameResultSchema,
 		timeControlId: TimeControlIdSchema,
 		timeControlName: TimeControlNameSchema,
-		whenCreated: DateMajorSchema,
-		timeCreated: DateMinorSchema,
+		whenPlayed: DateFullSchema,
 	})
 	.strict();
 

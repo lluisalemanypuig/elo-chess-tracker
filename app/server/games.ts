@@ -77,8 +77,7 @@ export async function postGameCreate(
 	const result = input.result;
 	const timeControlId = input.timeControlId;
 	const timeControlName = input.timeControlName;
-	const gameDate = input.whenCreated;
-	const gameTime = input.timeCreated;
+	const whenPlayed = input.whenPlayed;
 
 	const mem = UsersManager.getInstance();
 
@@ -94,16 +93,17 @@ export async function postGameCreate(
 		throw new PublicError('Invalid black user sent to the server.');
 	}
 
+	const now = logNow();
 	gameAddNewGuarded(
 		creator,
 		gameTitle,
 		white.user,
 		black.user,
+		now,
 		result,
 		timeControlId,
 		timeControlName,
-		gameDate,
-		gameTime,
+		whenPlayed,
 	);
 
 	return {};

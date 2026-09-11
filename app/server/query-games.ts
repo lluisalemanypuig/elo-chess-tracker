@@ -151,7 +151,7 @@ function filterGameList(
 				black: black.user.getFullName(),
 				result: result,
 				timeControlName: g.timeControlName,
-				date: g.when,
+				date: g.whenPlayed,
 				whiteRating: Math.round(g.whiteRating.rating),
 				blackRating: Math.round(g.blackRating.rating),
 				whiteIncrement: inc.whiteIncrement,

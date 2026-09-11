@@ -228,7 +228,7 @@ export class GamesIterator {
 		this.loadCurrentRecord();
 		let found: boolean = false;
 		while (!found && !this.endRecordSingle()) {
-			if (this.getCurrentGame().when > when) {
+			if (this.getCurrentGame().whenPlayed > when) {
 				found = true;
 			} else {
 				this.nextGame();

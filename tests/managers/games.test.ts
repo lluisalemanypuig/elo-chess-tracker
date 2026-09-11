@@ -31,12 +31,7 @@ import {
 } from '@common/models/time-control';
 import { toUserGivenName } from '@common/models/user-given-name';
 import { isNotDefined } from '@common/utils/is-defined';
-import {
-	dateFullToMajor,
-	toDateFull,
-	toDateMajor,
-	toDateMinor,
-} from '@common/utils/time';
+import { dateFullToMajor, toDateFull } from '@common/utils/time';
 import { gameArrayFromString } from '@server/io/game';
 import { graphFromString } from '@server/io/graph/graph';
 import { EnvironmentManager } from '@server/managers/environment-manager';
@@ -261,11 +256,12 @@ describe('Sequential game creation', () => {
 			'sample',
 			aU,
 			bU,
+			a,
+			toDateFull('2020-02-17..00:00:00:000'),
 			'white_wins',
 			Blitz,
 			Blitz5p3,
-			toDateMajor('2025-01-19'),
-			toDateMinor('17:06:00:000'),
+			toDateFull('2025-01-19..17:06:00:000'),
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -280,10 +276,12 @@ describe('Sequential game creation', () => {
 			expect(game_array[0].id).toBe('0000000001');
 			expect(game_array[0].white).toBe('a');
 			expect(game_array[0].black).toBe('b');
+			expect(game_array[0].createdBy).toBe('a');
+			expect(game_array[0].createdAt).toBe('2020-02-17..00:00:00:000');
 			expect(game_array[0].result).toBe('white_wins');
 			expect(game_array[0].timeControlId).toBe(Blitz);
 			expect(game_array[0].timeControlName).toBe(Blitz5p3);
-			expect(game_array[0].when).toBe('2025-01-19..17:06:00:000');
+			expect(game_array[0].whenPlayed).toBe('2025-01-19..17:06:00:000');
 
 			expect(aU.getGames(Blitz).length).toBe(1);
 			expect(bU.getGames(Blitz).length).toBe(1);
@@ -316,11 +314,12 @@ describe('Sequential game creation', () => {
 			'sample',
 			cU,
 			dU,
+			a,
+			toDateFull('2020-02-17..00:00:00:000'),
 			'black_wins',
 			Blitz,
 			Blitz5p3,
-			toDateMajor('2025-01-19'),
-			toDateMinor('17:06:10:000'),
+			toDateFull('2025-01-19..17:06:10:000'),
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -338,7 +337,7 @@ describe('Sequential game creation', () => {
 			expect(game_array[0].result).toBe('white_wins');
 			expect(game_array[0].timeControlId).toBe(Blitz);
 			expect(game_array[0].timeControlName).toBe(Blitz5p3);
-			expect(game_array[0].when).toBe('2025-01-19..17:06:00:000');
+			expect(game_array[0].whenPlayed).toBe('2025-01-19..17:06:00:000');
 
 			expect(game_array[1].id).toBe('0000000002');
 			expect(game_array[1].white).toBe('c');
@@ -346,7 +345,7 @@ describe('Sequential game creation', () => {
 			expect(game_array[1].result).toBe('black_wins');
 			expect(game_array[1].timeControlId).toBe(Blitz);
 			expect(game_array[1].timeControlName).toBe(Blitz5p3);
-			expect(game_array[1].when).toBe('2025-01-19..17:06:10:000');
+			expect(game_array[1].whenPlayed).toBe('2025-01-19..17:06:10:000');
 
 			expect(aU.getGames(Blitz).length).toBe(1);
 			expect(bU.getGames(Blitz).length).toBe(1);
@@ -379,11 +378,12 @@ describe('Sequential game creation', () => {
 			'sample',
 			eU,
 			fU,
+			a,
+			toDateFull('2020-02-17..00:00:00:000'),
 			'draw',
 			Blitz,
 			Blitz5p3,
-			toDateMajor('2025-01-19'),
-			toDateMinor('17:06:20:000'),
+			toDateFull('2025-01-19..17:06:20:000'),
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -401,7 +401,7 @@ describe('Sequential game creation', () => {
 			expect(game_array[0].result).toBe('white_wins');
 			expect(game_array[0].timeControlId).toBe(Blitz);
 			expect(game_array[0].timeControlName).toBe(Blitz5p3);
-			expect(game_array[0].when).toBe('2025-01-19..17:06:00:000');
+			expect(game_array[0].whenPlayed).toBe('2025-01-19..17:06:00:000');
 
 			expect(game_array[1].id).toBe('0000000002');
 			expect(game_array[1].white).toBe('c');
@@ -409,7 +409,7 @@ describe('Sequential game creation', () => {
 			expect(game_array[1].result).toBe('black_wins');
 			expect(game_array[1].timeControlId).toBe(Blitz);
 			expect(game_array[1].timeControlName).toBe(Blitz5p3);
-			expect(game_array[1].when).toBe('2025-01-19..17:06:10:000');
+			expect(game_array[1].whenPlayed).toBe('2025-01-19..17:06:10:000');
 
 			expect(game_array[2].id).toBe('0000000003');
 			expect(game_array[2].white).toBe('e');
@@ -417,7 +417,7 @@ describe('Sequential game creation', () => {
 			expect(game_array[2].result).toBe('draw');
 			expect(game_array[2].timeControlId).toBe(Blitz);
 			expect(game_array[2].timeControlName).toBe(Blitz5p3);
-			expect(game_array[2].when).toBe('2025-01-19..17:06:20:000');
+			expect(game_array[2].whenPlayed).toBe('2025-01-19..17:06:20:000');
 
 			expect(aU.getGames(Blitz).length).toBe(1);
 			expect(bU.getGames(Blitz).length).toBe(1);
@@ -450,11 +450,12 @@ describe('Sequential game creation', () => {
 			'sample',
 			aU,
 			fU,
+			a,
+			toDateFull('2020-02-17..00:00:00:000'),
 			'black_wins',
 			Blitz,
 			Blitz5p3,
-			toDateMajor('2025-01-19'),
-			toDateMinor('17:06:30:000'),
+			toDateFull('2025-01-19..17:06:30:000'),
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -472,7 +473,7 @@ describe('Sequential game creation', () => {
 			expect(game_array[0].result).toBe('white_wins');
 			expect(game_array[0].timeControlId).toBe(Blitz);
 			expect(game_array[0].timeControlName).toBe(Blitz5p3);
-			expect(game_array[0].when).toBe('2025-01-19..17:06:00:000');
+			expect(game_array[0].whenPlayed).toBe('2025-01-19..17:06:00:000');
 
 			expect(game_array[1].id).toBe('0000000002');
 			expect(game_array[1].white).toBe('c');
@@ -480,7 +481,7 @@ describe('Sequential game creation', () => {
 			expect(game_array[1].result).toBe('black_wins');
 			expect(game_array[1].timeControlId).toBe(Blitz);
 			expect(game_array[1].timeControlName).toBe(Blitz5p3);
-			expect(game_array[1].when).toBe('2025-01-19..17:06:10:000');
+			expect(game_array[1].whenPlayed).toBe('2025-01-19..17:06:10:000');
 
 			expect(game_array[2].id).toBe('0000000003');
 			expect(game_array[2].white).toBe('e');
@@ -488,7 +489,7 @@ describe('Sequential game creation', () => {
 			expect(game_array[2].result).toBe('draw');
 			expect(game_array[2].timeControlId).toBe(Blitz);
 			expect(game_array[2].timeControlName).toBe(Blitz5p3);
-			expect(game_array[2].when).toBe('2025-01-19..17:06:20:000');
+			expect(game_array[2].whenPlayed).toBe('2025-01-19..17:06:20:000');
 
 			expect(game_array[3].id).toBe('0000000004');
 			expect(game_array[3].white).toBe('a');
@@ -496,7 +497,7 @@ describe('Sequential game creation', () => {
 			expect(game_array[3].result).toBe('black_wins');
 			expect(game_array[3].timeControlId).toBe(Blitz);
 			expect(game_array[3].timeControlName).toBe(Blitz5p3);
-			expect(game_array[3].when).toBe('2025-01-19..17:06:30:000');
+			expect(game_array[3].whenPlayed).toBe('2025-01-19..17:06:30:000');
 
 			expect(aU.getGames(Blitz).length).toBe(1);
 			expect(bU.getGames(Blitz).length).toBe(1);
@@ -534,11 +535,12 @@ describe('Sequential game creation', () => {
 			'sample',
 			aU,
 			bU,
+			a,
+			toDateFull('2020-02-17..00:00:00:000'),
 			'white_wins',
 			Classical,
 			Classical90p30,
-			toDateMajor('2025-01-09'),
-			toDateMinor('17:06:00:000'),
+			toDateFull('2025-01-09..17:06:00:000'),
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -556,7 +558,7 @@ describe('Sequential game creation', () => {
 			expect(game_array[0].result).toBe('white_wins');
 			expect(game_array[0].timeControlId).toBe(Classical);
 			expect(game_array[0].timeControlName).toBe(Classical90p30);
-			expect(game_array[0].when).toBe('2025-01-09..17:06:00:000');
+			expect(game_array[0].whenPlayed).toBe('2025-01-09..17:06:00:000');
 
 			expect(aU.getGames(Blitz).length).toBe(1);
 			expect(bU.getGames(Blitz).length).toBe(1);
@@ -589,11 +591,12 @@ describe('Sequential game creation', () => {
 			'sample',
 			cU,
 			dU,
+			a,
+			toDateFull('2020-02-17..00:00:00:000'),
 			'black_wins',
 			Classical,
 			Classical90p30,
-			toDateMajor('2025-01-09'),
-			toDateMinor('17:06:10:000'),
+			toDateFull('2025-01-09..17:06:10:000'),
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -611,7 +614,7 @@ describe('Sequential game creation', () => {
 			expect(game_array[0].result).toBe('white_wins');
 			expect(game_array[0].timeControlId).toBe(Classical);
 			expect(game_array[0].timeControlName).toBe(Classical90p30);
-			expect(game_array[0].when).toBe('2025-01-09..17:06:00:000');
+			expect(game_array[0].whenPlayed).toBe('2025-01-09..17:06:00:000');
 
 			expect(game_array[1].id).toBe('0000000006');
 			expect(game_array[1].white).toBe('c');
@@ -619,7 +622,7 @@ describe('Sequential game creation', () => {
 			expect(game_array[1].result).toBe('black_wins');
 			expect(game_array[1].timeControlId).toBe(Classical);
 			expect(game_array[1].timeControlName).toBe(Classical90p30);
-			expect(game_array[1].when).toBe('2025-01-09..17:06:10:000');
+			expect(game_array[1].whenPlayed).toBe('2025-01-09..17:06:10:000');
 
 			expect(aU.getGames(Blitz).length).toBe(1);
 			expect(bU.getGames(Blitz).length).toBe(1);
@@ -652,11 +655,12 @@ describe('Sequential game creation', () => {
 			'sample',
 			eU,
 			fU,
+			a,
+			toDateFull('2020-02-17..00:00:00:000'),
 			'draw',
 			Classical,
 			Classical90p30,
-			toDateMajor('2025-01-09'),
-			toDateMinor('17:06:20:000'),
+			toDateFull('2025-01-09..17:06:20:000'),
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -674,7 +678,7 @@ describe('Sequential game creation', () => {
 			expect(game_array[0].result).toBe('white_wins');
 			expect(game_array[0].timeControlId).toBe(Classical);
 			expect(game_array[0].timeControlName).toBe(Classical90p30);
-			expect(game_array[0].when).toBe('2025-01-09..17:06:00:000');
+			expect(game_array[0].whenPlayed).toBe('2025-01-09..17:06:00:000');
 
 			expect(game_array[1].id).toBe('0000000006');
 			expect(game_array[1].white).toBe('c');
@@ -682,7 +686,7 @@ describe('Sequential game creation', () => {
 			expect(game_array[1].result).toBe('black_wins');
 			expect(game_array[1].timeControlId).toBe(Classical);
 			expect(game_array[1].timeControlName).toBe(Classical90p30);
-			expect(game_array[1].when).toBe('2025-01-09..17:06:10:000');
+			expect(game_array[1].whenPlayed).toBe('2025-01-09..17:06:10:000');
 
 			expect(game_array[2].id).toBe('0000000007');
 			expect(game_array[2].white).toBe('e');
@@ -690,7 +694,7 @@ describe('Sequential game creation', () => {
 			expect(game_array[2].result).toBe('draw');
 			expect(game_array[2].timeControlId).toBe(Classical);
 			expect(game_array[2].timeControlName).toBe(Classical90p30);
-			expect(game_array[2].when).toBe('2025-01-09..17:06:20:000');
+			expect(game_array[2].whenPlayed).toBe('2025-01-09..17:06:20:000');
 
 			expect(aU.getGames(Blitz).length).toBe(1);
 			expect(bU.getGames(Blitz).length).toBe(1);
@@ -723,11 +727,12 @@ describe('Sequential game creation', () => {
 			'sample',
 			aU,
 			fU,
+			a,
+			toDateFull('2020-02-17..00:00:00:000'),
 			'black_wins',
 			Classical,
 			Classical90p30,
-			toDateMajor('2025-01-09'),
-			toDateMinor('17:06:30:000'),
+			toDateFull('2025-01-09..17:06:30:000'),
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -745,7 +750,7 @@ describe('Sequential game creation', () => {
 			expect(game_array[0].result).toBe('white_wins');
 			expect(game_array[0].timeControlId).toBe(Classical);
 			expect(game_array[0].timeControlName).toBe(Classical90p30);
-			expect(game_array[0].when).toBe('2025-01-09..17:06:00:000');
+			expect(game_array[0].whenPlayed).toBe('2025-01-09..17:06:00:000');
 
 			expect(game_array[1].id).toBe('0000000006');
 			expect(game_array[1].white).toBe('c');
@@ -753,7 +758,7 @@ describe('Sequential game creation', () => {
 			expect(game_array[1].result).toBe('black_wins');
 			expect(game_array[1].timeControlId).toBe(Classical);
 			expect(game_array[1].timeControlName).toBe(Classical90p30);
-			expect(game_array[1].when).toBe('2025-01-09..17:06:10:000');
+			expect(game_array[1].whenPlayed).toBe('2025-01-09..17:06:10:000');
 
 			expect(game_array[2].id).toBe('0000000007');
 			expect(game_array[2].white).toBe('e');
@@ -761,7 +766,7 @@ describe('Sequential game creation', () => {
 			expect(game_array[2].result).toBe('draw');
 			expect(game_array[2].timeControlId).toBe(Classical);
 			expect(game_array[2].timeControlName).toBe(Classical90p30);
-			expect(game_array[2].when).toBe('2025-01-09..17:06:20:000');
+			expect(game_array[2].whenPlayed).toBe('2025-01-09..17:06:20:000');
 
 			expect(game_array[3].id).toBe('0000000008');
 			expect(game_array[3].white).toBe('a');
@@ -769,7 +774,7 @@ describe('Sequential game creation', () => {
 			expect(game_array[3].result).toBe('black_wins');
 			expect(game_array[3].timeControlId).toBe(Classical);
 			expect(game_array[3].timeControlName).toBe(Classical90p30);
-			expect(game_array[3].when).toBe('2025-01-09..17:06:30:000');
+			expect(game_array[3].whenPlayed).toBe('2025-01-09..17:06:30:000');
 
 			expect(aU.getGames(Blitz).length).toBe(1);
 			expect(bU.getGames(Blitz).length).toBe(1);
@@ -809,11 +814,12 @@ describe('Inverse game creation', () => {
 			'sample',
 			aU,
 			fU,
+			a,
+			toDateFull('2020-02-17..00:00:00:000'),
 			'draw',
 			Blitz,
 			Blitz5p0,
-			toDateMajor('2025-01-20'),
-			toDateMinor('17:06:30:000'),
+			toDateFull('2025-01-20..17:06:30:000'),
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -831,7 +837,7 @@ describe('Inverse game creation', () => {
 			expect(game_array[0].result).toBe('draw');
 			expect(game_array[0].timeControlId).toBe(Blitz);
 			expect(game_array[0].timeControlName).toBe(Blitz5p0);
-			expect(game_array[0].when).toBe('2025-01-20..17:06:30:000');
+			expect(game_array[0].whenPlayed).toBe('2025-01-20..17:06:30:000');
 
 			expect(aU.getGames(Blitz).length).toBe(2);
 			expect(bU.getGames(Blitz).length).toBe(1);
@@ -864,11 +870,12 @@ describe('Inverse game creation', () => {
 			'sample',
 			eU,
 			fU,
+			a,
+			toDateFull('2020-02-17..00:00:00:000'),
 			'draw',
 			Blitz,
 			Blitz5p0,
-			toDateMajor('2025-01-20'),
-			toDateMinor('17:06:20:000'),
+			toDateFull('2025-01-20..17:06:20:000'),
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -886,7 +893,7 @@ describe('Inverse game creation', () => {
 			expect(game_array[0].result).toBe('draw');
 			expect(game_array[0].timeControlId).toBe(Blitz);
 			expect(game_array[0].timeControlName).toBe(Blitz5p0);
-			expect(game_array[0].when).toBe('2025-01-20..17:06:20:000');
+			expect(game_array[0].whenPlayed).toBe('2025-01-20..17:06:20:000');
 
 			expect(game_array[1].id).toBe('0000000009');
 			expect(game_array[1].white).toBe('a');
@@ -894,7 +901,7 @@ describe('Inverse game creation', () => {
 			expect(game_array[1].result).toBe('draw');
 			expect(game_array[1].timeControlId).toBe(Blitz);
 			expect(game_array[1].timeControlName).toBe(Blitz5p0);
-			expect(game_array[1].when).toBe('2025-01-20..17:06:30:000');
+			expect(game_array[1].whenPlayed).toBe('2025-01-20..17:06:30:000');
 
 			expect(aU.getGames(Blitz).length).toBe(2);
 			expect(bU.getGames(Blitz).length).toBe(1);
@@ -927,11 +934,12 @@ describe('Inverse game creation', () => {
 			'sample',
 			cU,
 			dU,
+			a,
+			toDateFull('2020-02-17..00:00:00:000'),
 			'black_wins',
 			Blitz,
 			Blitz5p3,
-			toDateMajor('2025-01-20'),
-			toDateMinor('17:06:10:000'),
+			toDateFull('2025-01-20..17:06:10:000'),
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -949,7 +957,7 @@ describe('Inverse game creation', () => {
 			expect(game_array[0].result).toBe('black_wins');
 			expect(game_array[0].timeControlId).toBe(Blitz);
 			expect(game_array[0].timeControlName).toBe(Blitz5p3);
-			expect(game_array[0].when).toBe('2025-01-20..17:06:10:000');
+			expect(game_array[0].whenPlayed).toBe('2025-01-20..17:06:10:000');
 
 			expect(game_array[1].id).toBe('0000000010');
 			expect(game_array[1].white).toBe('e');
@@ -957,7 +965,7 @@ describe('Inverse game creation', () => {
 			expect(game_array[1].result).toBe('draw');
 			expect(game_array[1].timeControlId).toBe(Blitz);
 			expect(game_array[1].timeControlName).toBe(Blitz5p0);
-			expect(game_array[1].when).toBe('2025-01-20..17:06:20:000');
+			expect(game_array[1].whenPlayed).toBe('2025-01-20..17:06:20:000');
 
 			expect(game_array[2].id).toBe('0000000009');
 			expect(game_array[2].white).toBe('a');
@@ -965,7 +973,7 @@ describe('Inverse game creation', () => {
 			expect(game_array[2].result).toBe('draw');
 			expect(game_array[2].timeControlId).toBe(Blitz);
 			expect(game_array[2].timeControlName).toBe(Blitz5p0);
-			expect(game_array[2].when).toBe('2025-01-20..17:06:30:000');
+			expect(game_array[2].whenPlayed).toBe('2025-01-20..17:06:30:000');
 
 			expect(aU.getGames(Blitz).length).toBe(2);
 			expect(bU.getGames(Blitz).length).toBe(1);
@@ -998,11 +1006,12 @@ describe('Inverse game creation', () => {
 			'sample',
 			aU,
 			bU,
+			a,
+			toDateFull('2020-02-17..00:00:00:000'),
 			'white_wins',
 			Blitz,
 			Blitz5p3,
-			toDateMajor('2025-01-20'),
-			toDateMinor('17:06:00:000'),
+			toDateFull('2025-01-20..17:06:00:000'),
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -1020,7 +1029,7 @@ describe('Inverse game creation', () => {
 			expect(game_array[0].result).toBe('white_wins');
 			expect(game_array[0].timeControlId).toBe(Blitz);
 			expect(game_array[0].timeControlName).toBe(Blitz5p3);
-			expect(game_array[0].when).toBe('2025-01-20..17:06:00:000');
+			expect(game_array[0].whenPlayed).toBe('2025-01-20..17:06:00:000');
 
 			expect(game_array[1].id).toBe('0000000011');
 			expect(game_array[1].white).toBe('c');
@@ -1028,7 +1037,7 @@ describe('Inverse game creation', () => {
 			expect(game_array[1].result).toBe('black_wins');
 			expect(game_array[1].timeControlId).toBe(Blitz);
 			expect(game_array[1].timeControlName).toBe(Blitz5p3);
-			expect(game_array[1].when).toBe('2025-01-20..17:06:10:000');
+			expect(game_array[1].whenPlayed).toBe('2025-01-20..17:06:10:000');
 
 			expect(game_array[2].id).toBe('0000000010');
 			expect(game_array[2].white).toBe('e');
@@ -1036,7 +1045,7 @@ describe('Inverse game creation', () => {
 			expect(game_array[2].result).toBe('draw');
 			expect(game_array[2].timeControlId).toBe(Blitz);
 			expect(game_array[2].timeControlName).toBe(Blitz5p0);
-			expect(game_array[2].when).toBe('2025-01-20..17:06:20:000');
+			expect(game_array[2].whenPlayed).toBe('2025-01-20..17:06:20:000');
 
 			expect(game_array[3].id).toBe('0000000009');
 			expect(game_array[3].white).toBe('a');
@@ -1044,7 +1053,7 @@ describe('Inverse game creation', () => {
 			expect(game_array[3].result).toBe('draw');
 			expect(game_array[3].timeControlId).toBe(Blitz);
 			expect(game_array[3].timeControlName).toBe(Blitz5p0);
-			expect(game_array[3].when).toBe('2025-01-20..17:06:30:000');
+			expect(game_array[3].whenPlayed).toBe('2025-01-20..17:06:30:000');
 
 			expect(aU.getGames(Blitz).length).toBe(2);
 			expect(bU.getGames(Blitz).length).toBe(2);
@@ -1082,11 +1091,12 @@ describe('Inverse game creation', () => {
 			'sample',
 			aU,
 			fU,
+			a,
+			toDateFull('2020-02-17..00:00:00:000'),
 			'draw',
 			Classical,
 			Classical90p30,
-			toDateMajor('2025-01-10'),
-			toDateMinor('17:06:30:000'),
+			toDateFull('2025-01-10..17:06:30:000'),
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -1104,7 +1114,7 @@ describe('Inverse game creation', () => {
 			expect(game_array[0].result).toBe('draw');
 			expect(game_array[0].timeControlId).toBe(Classical);
 			expect(game_array[0].timeControlName).toBe(Classical90p30);
-			expect(game_array[0].when).toBe('2025-01-10..17:06:30:000');
+			expect(game_array[0].whenPlayed).toBe('2025-01-10..17:06:30:000');
 
 			expect(aU.getGames(Blitz).length).toBe(2);
 			expect(bU.getGames(Blitz).length).toBe(2);
@@ -1137,11 +1147,12 @@ describe('Inverse game creation', () => {
 			'sample',
 			eU,
 			fU,
+			a,
+			toDateFull('2020-02-17..00:00:00:000'),
 			'draw',
 			Classical,
 			Classical90p30,
-			toDateMajor('2025-01-10'),
-			toDateMinor('17:06:20:000'),
+			toDateFull('2025-01-10..17:06:20:000'),
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -1159,7 +1170,7 @@ describe('Inverse game creation', () => {
 			expect(game_array[0].result).toBe('draw');
 			expect(game_array[0].timeControlId).toBe(Classical);
 			expect(game_array[0].timeControlName).toBe(Classical90p30);
-			expect(game_array[0].when).toBe('2025-01-10..17:06:20:000');
+			expect(game_array[0].whenPlayed).toBe('2025-01-10..17:06:20:000');
 
 			expect(game_array[1].id).toBe('0000000013');
 			expect(game_array[1].white).toBe('a');
@@ -1167,7 +1178,7 @@ describe('Inverse game creation', () => {
 			expect(game_array[1].result).toBe('draw');
 			expect(game_array[1].timeControlId).toBe(Classical);
 			expect(game_array[1].timeControlName).toBe(Classical90p30);
-			expect(game_array[1].when).toBe('2025-01-10..17:06:30:000');
+			expect(game_array[1].whenPlayed).toBe('2025-01-10..17:06:30:000');
 
 			expect(aU.getGames(Blitz).length).toBe(2);
 			expect(bU.getGames(Blitz).length).toBe(2);
@@ -1200,11 +1211,12 @@ describe('Inverse game creation', () => {
 			'sample',
 			cU,
 			dU,
+			a,
+			toDateFull('2020-02-17..00:00:00:000'),
 			'black_wins',
 			Classical,
 			Classical90p30,
-			toDateMajor('2025-01-10'),
-			toDateMinor('17:06:10:000'),
+			toDateFull('2025-01-10..17:06:10:000'),
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -1222,7 +1234,7 @@ describe('Inverse game creation', () => {
 			expect(game_array[0].result).toBe('black_wins');
 			expect(game_array[0].timeControlId).toBe(Classical);
 			expect(game_array[0].timeControlName).toBe(Classical90p30);
-			expect(game_array[0].when).toBe('2025-01-10..17:06:10:000');
+			expect(game_array[0].whenPlayed).toBe('2025-01-10..17:06:10:000');
 
 			expect(game_array[1].id).toBe('0000000014');
 			expect(game_array[1].white).toBe('e');
@@ -1230,7 +1242,7 @@ describe('Inverse game creation', () => {
 			expect(game_array[1].result).toBe('draw');
 			expect(game_array[1].timeControlId).toBe(Classical);
 			expect(game_array[1].timeControlName).toBe(Classical90p30);
-			expect(game_array[1].when).toBe('2025-01-10..17:06:20:000');
+			expect(game_array[1].whenPlayed).toBe('2025-01-10..17:06:20:000');
 
 			expect(game_array[2].id).toBe('0000000013');
 			expect(game_array[2].white).toBe('a');
@@ -1238,7 +1250,7 @@ describe('Inverse game creation', () => {
 			expect(game_array[2].result).toBe('draw');
 			expect(game_array[2].timeControlId).toBe(Classical);
 			expect(game_array[2].timeControlName).toBe(Classical90p30);
-			expect(game_array[2].when).toBe('2025-01-10..17:06:30:000');
+			expect(game_array[2].whenPlayed).toBe('2025-01-10..17:06:30:000');
 
 			expect(aU.getGames(Blitz).length).toBe(2);
 			expect(bU.getGames(Blitz).length).toBe(2);
@@ -1271,11 +1283,12 @@ describe('Inverse game creation', () => {
 			'sample',
 			aU,
 			bU,
+			a,
+			toDateFull('2020-02-17..00:00:00:000'),
 			'white_wins',
 			Classical,
 			Classical90p30,
-			toDateMajor('2025-01-10'),
-			toDateMinor('17:06:00:000'),
+			toDateFull('2025-01-10..17:06:00:000'),
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -1293,7 +1306,7 @@ describe('Inverse game creation', () => {
 			expect(game_array[0].result).toBe('white_wins');
 			expect(game_array[0].timeControlId).toBe(Classical);
 			expect(game_array[0].timeControlName).toBe(Classical90p30);
-			expect(game_array[0].when).toBe('2025-01-10..17:06:00:000');
+			expect(game_array[0].whenPlayed).toBe('2025-01-10..17:06:00:000');
 
 			expect(game_array[1].id).toBe('0000000015');
 			expect(game_array[1].white).toBe('c');
@@ -1301,7 +1314,7 @@ describe('Inverse game creation', () => {
 			expect(game_array[1].result).toBe('black_wins');
 			expect(game_array[1].timeControlId).toBe(Classical);
 			expect(game_array[1].timeControlName).toBe(Classical90p30);
-			expect(game_array[1].when).toBe('2025-01-10..17:06:10:000');
+			expect(game_array[1].whenPlayed).toBe('2025-01-10..17:06:10:000');
 
 			expect(game_array[2].id).toBe('0000000014');
 			expect(game_array[2].white).toBe('e');
@@ -1309,7 +1322,7 @@ describe('Inverse game creation', () => {
 			expect(game_array[2].result).toBe('draw');
 			expect(game_array[2].timeControlId).toBe(Classical);
 			expect(game_array[2].timeControlName).toBe(Classical90p30);
-			expect(game_array[2].when).toBe('2025-01-10..17:06:20:000');
+			expect(game_array[2].whenPlayed).toBe('2025-01-10..17:06:20:000');
 
 			expect(game_array[3].id).toBe('0000000013');
 			expect(game_array[3].white).toBe('a');
@@ -1317,7 +1330,7 @@ describe('Inverse game creation', () => {
 			expect(game_array[3].result).toBe('draw');
 			expect(game_array[3].timeControlId).toBe(Classical);
 			expect(game_array[3].timeControlName).toBe(Classical90p30);
-			expect(game_array[3].when).toBe('2025-01-10..17:06:30:000');
+			expect(game_array[3].whenPlayed).toBe('2025-01-10..17:06:30:000');
 
 			expect(aU.getGames(Blitz).length).toBe(2);
 			expect(bU.getGames(Blitz).length).toBe(2);
@@ -1356,11 +1369,12 @@ describe('Zig-zag game creation', () => {
 			'sample',
 			aU,
 			fU,
+			a,
+			toDateFull('2020-02-17..00:00:00:000'),
 			'draw',
 			Blitz,
 			Blitz5p0,
-			toDateMajor('2025-01-20'),
-			toDateMinor('17:06:25:000'),
+			toDateFull('2025-01-20..17:06:25:000'),
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -1378,7 +1392,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_array[0].result).toBe('white_wins');
 			expect(game_array[0].timeControlId).toBe(Blitz);
 			expect(game_array[0].timeControlName).toBe(Blitz5p3);
-			expect(game_array[0].when).toBe('2025-01-20..17:06:00:000');
+			expect(game_array[0].whenPlayed).toBe('2025-01-20..17:06:00:000');
 
 			expect(game_array[1].id).toBe('0000000011');
 			expect(game_array[1].white).toBe('c');
@@ -1386,7 +1400,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_array[1].result).toBe('black_wins');
 			expect(game_array[1].timeControlId).toBe(Blitz);
 			expect(game_array[1].timeControlName).toBe(Blitz5p3);
-			expect(game_array[1].when).toBe('2025-01-20..17:06:10:000');
+			expect(game_array[1].whenPlayed).toBe('2025-01-20..17:06:10:000');
 
 			expect(game_array[2].id).toBe('0000000010');
 			expect(game_array[2].white).toBe('e');
@@ -1394,7 +1408,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_array[2].result).toBe('draw');
 			expect(game_array[2].timeControlId).toBe(Blitz);
 			expect(game_array[2].timeControlName).toBe(Blitz5p0);
-			expect(game_array[2].when).toBe('2025-01-20..17:06:20:000');
+			expect(game_array[2].whenPlayed).toBe('2025-01-20..17:06:20:000');
 
 			expect(game_array[3].id).toBe('0000000017');
 			expect(game_array[3].white).toBe('a');
@@ -1402,7 +1416,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_array[3].result).toBe('draw');
 			expect(game_array[3].timeControlId).toBe(Blitz);
 			expect(game_array[3].timeControlName).toBe(Blitz5p0);
-			expect(game_array[3].when).toBe('2025-01-20..17:06:25:000');
+			expect(game_array[3].whenPlayed).toBe('2025-01-20..17:06:25:000');
 
 			expect(game_array[4].id).toBe('0000000009');
 			expect(game_array[4].white).toBe('a');
@@ -1410,7 +1424,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_array[4].result).toBe('draw');
 			expect(game_array[4].timeControlId).toBe(Blitz);
 			expect(game_array[4].timeControlName).toBe(Blitz5p0);
-			expect(game_array[4].when).toBe('2025-01-20..17:06:30:000');
+			expect(game_array[4].whenPlayed).toBe('2025-01-20..17:06:30:000');
 
 			expect(aU.getGames(Blitz).length).toBe(2);
 			expect(bU.getGames(Blitz).length).toBe(2);
@@ -1443,11 +1457,12 @@ describe('Zig-zag game creation', () => {
 			'sample',
 			eU,
 			fU,
+			a,
+			toDateFull('2020-02-17..00:00:00:000'),
 			'draw',
 			Blitz,
 			Blitz5p0,
-			toDateMajor('2025-01-20'),
-			toDateMinor('17:06:05:000'),
+			toDateFull('2025-01-20..17:06:05:000'),
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -1465,7 +1480,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_array[0].result).toBe('white_wins');
 			expect(game_array[0].timeControlId).toBe(Blitz);
 			expect(game_array[0].timeControlName).toBe(Blitz5p3);
-			expect(game_array[0].when).toBe('2025-01-20..17:06:00:000');
+			expect(game_array[0].whenPlayed).toBe('2025-01-20..17:06:00:000');
 
 			expect(game_array[1].id).toBe('0000000018');
 			expect(game_array[1].white).toBe('e');
@@ -1473,7 +1488,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_array[1].result).toBe('draw');
 			expect(game_array[1].timeControlId).toBe(Blitz);
 			expect(game_array[1].timeControlName).toBe(Blitz5p0);
-			expect(game_array[1].when).toBe('2025-01-20..17:06:05:000');
+			expect(game_array[1].whenPlayed).toBe('2025-01-20..17:06:05:000');
 
 			expect(game_array[2].id).toBe('0000000011');
 			expect(game_array[2].white).toBe('c');
@@ -1481,7 +1496,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_array[2].result).toBe('black_wins');
 			expect(game_array[2].timeControlId).toBe(Blitz);
 			expect(game_array[2].timeControlName).toBe(Blitz5p3);
-			expect(game_array[2].when).toBe('2025-01-20..17:06:10:000');
+			expect(game_array[2].whenPlayed).toBe('2025-01-20..17:06:10:000');
 
 			expect(game_array[3].id).toBe('0000000010');
 			expect(game_array[3].white).toBe('e');
@@ -1489,7 +1504,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_array[3].result).toBe('draw');
 			expect(game_array[3].timeControlId).toBe(Blitz);
 			expect(game_array[3].timeControlName).toBe(Blitz5p0);
-			expect(game_array[3].when).toBe('2025-01-20..17:06:20:000');
+			expect(game_array[3].whenPlayed).toBe('2025-01-20..17:06:20:000');
 
 			expect(game_array[4].id).toBe('0000000017');
 			expect(game_array[4].white).toBe('a');
@@ -1497,7 +1512,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_array[4].result).toBe('draw');
 			expect(game_array[4].timeControlId).toBe(Blitz);
 			expect(game_array[4].timeControlName).toBe(Blitz5p0);
-			expect(game_array[4].when).toBe('2025-01-20..17:06:25:000');
+			expect(game_array[4].whenPlayed).toBe('2025-01-20..17:06:25:000');
 
 			expect(game_array[5].id).toBe('0000000009');
 			expect(game_array[5].white).toBe('a');
@@ -1505,7 +1520,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_array[5].result).toBe('draw');
 			expect(game_array[5].timeControlId).toBe(Blitz);
 			expect(game_array[5].timeControlName).toBe(Blitz5p0);
-			expect(game_array[5].when).toBe('2025-01-20..17:06:30:000');
+			expect(game_array[5].whenPlayed).toBe('2025-01-20..17:06:30:000');
 
 			expect(aU.getGames(Blitz).length).toBe(2);
 			expect(bU.getGames(Blitz).length).toBe(2);
@@ -1538,11 +1553,12 @@ describe('Zig-zag game creation', () => {
 			'sample',
 			cU,
 			dU,
+			a,
+			toDateFull('2020-02-17..00:00:00:000'),
 			'white_wins',
 			Blitz,
 			Blitz5p3,
-			toDateMajor('2025-01-20'),
-			toDateMinor('17:06:15:000'),
+			toDateFull('2025-01-20..17:06:15:000'),
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -1560,7 +1576,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_array[0].result).toBe('white_wins');
 			expect(game_array[0].timeControlId).toBe(Blitz);
 			expect(game_array[0].timeControlName).toBe(Blitz5p3);
-			expect(game_array[0].when).toBe('2025-01-20..17:06:00:000');
+			expect(game_array[0].whenPlayed).toBe('2025-01-20..17:06:00:000');
 
 			expect(game_array[1].id).toBe('0000000018');
 			expect(game_array[1].white).toBe('e');
@@ -1568,7 +1584,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_array[1].result).toBe('draw');
 			expect(game_array[1].timeControlId).toBe(Blitz);
 			expect(game_array[1].timeControlName).toBe(Blitz5p0);
-			expect(game_array[1].when).toBe('2025-01-20..17:06:05:000');
+			expect(game_array[1].whenPlayed).toBe('2025-01-20..17:06:05:000');
 
 			expect(game_array[2].id).toBe('0000000011');
 			expect(game_array[2].white).toBe('c');
@@ -1576,7 +1592,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_array[2].result).toBe('black_wins');
 			expect(game_array[2].timeControlId).toBe(Blitz);
 			expect(game_array[2].timeControlName).toBe(Blitz5p3);
-			expect(game_array[2].when).toBe('2025-01-20..17:06:10:000');
+			expect(game_array[2].whenPlayed).toBe('2025-01-20..17:06:10:000');
 
 			expect(game_array[3].id).toBe('0000000019');
 			expect(game_array[3].white).toBe('c');
@@ -1584,7 +1600,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_array[3].result).toBe('white_wins');
 			expect(game_array[3].timeControlId).toBe(Blitz);
 			expect(game_array[3].timeControlName).toBe(Blitz5p3);
-			expect(game_array[3].when).toBe('2025-01-20..17:06:15:000');
+			expect(game_array[3].whenPlayed).toBe('2025-01-20..17:06:15:000');
 
 			expect(game_array[4].id).toBe('0000000010');
 			expect(game_array[4].white).toBe('e');
@@ -1592,7 +1608,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_array[4].result).toBe('draw');
 			expect(game_array[4].timeControlId).toBe(Blitz);
 			expect(game_array[4].timeControlName).toBe(Blitz5p0);
-			expect(game_array[4].when).toBe('2025-01-20..17:06:20:000');
+			expect(game_array[4].whenPlayed).toBe('2025-01-20..17:06:20:000');
 
 			expect(game_array[5].id).toBe('0000000017');
 			expect(game_array[5].white).toBe('a');
@@ -1600,7 +1616,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_array[5].result).toBe('draw');
 			expect(game_array[5].timeControlId).toBe(Blitz);
 			expect(game_array[5].timeControlName).toBe(Blitz5p0);
-			expect(game_array[5].when).toBe('2025-01-20..17:06:25:000');
+			expect(game_array[5].whenPlayed).toBe('2025-01-20..17:06:25:000');
 
 			expect(game_array[6].id).toBe('0000000009');
 			expect(game_array[6].white).toBe('a');
@@ -1608,7 +1624,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_array[6].result).toBe('draw');
 			expect(game_array[6].timeControlId).toBe(Blitz);
 			expect(game_array[6].timeControlName).toBe(Blitz5p0);
-			expect(game_array[6].when).toBe('2025-01-20..17:06:30:000');
+			expect(game_array[6].whenPlayed).toBe('2025-01-20..17:06:30:000');
 
 			expect(aU.getGames(Blitz).length).toBe(2);
 			expect(bU.getGames(Blitz).length).toBe(2);
@@ -1641,11 +1657,12 @@ describe('Zig-zag game creation', () => {
 			'sample',
 			aU,
 			bU,
+			a,
+			toDateFull('2020-02-17..00:00:00:000'),
 			'black_wins',
 			Blitz,
 			Blitz5p3,
-			toDateMajor('2025-01-20'),
-			toDateMinor('17:05:55:000'),
+			toDateFull('2025-01-20..17:05:55:000'),
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -1663,7 +1680,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_array[0].result).toBe('black_wins');
 			expect(game_array[0].timeControlId).toBe(Blitz);
 			expect(game_array[0].timeControlName).toBe(Blitz5p3);
-			expect(game_array[0].when).toBe('2025-01-20..17:05:55:000');
+			expect(game_array[0].whenPlayed).toBe('2025-01-20..17:05:55:000');
 
 			expect(game_array[1].id).toBe('0000000012');
 			expect(game_array[1].white).toBe('a');
@@ -1671,7 +1688,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_array[1].result).toBe('white_wins');
 			expect(game_array[1].timeControlId).toBe(Blitz);
 			expect(game_array[1].timeControlName).toBe(Blitz5p3);
-			expect(game_array[1].when).toBe('2025-01-20..17:06:00:000');
+			expect(game_array[1].whenPlayed).toBe('2025-01-20..17:06:00:000');
 
 			expect(game_array[2].id).toBe('0000000018');
 			expect(game_array[2].white).toBe('e');
@@ -1679,7 +1696,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_array[2].result).toBe('draw');
 			expect(game_array[2].timeControlId).toBe(Blitz);
 			expect(game_array[2].timeControlName).toBe(Blitz5p0);
-			expect(game_array[2].when).toBe('2025-01-20..17:06:05:000');
+			expect(game_array[2].whenPlayed).toBe('2025-01-20..17:06:05:000');
 
 			expect(game_array[3].id).toBe('0000000011');
 			expect(game_array[3].white).toBe('c');
@@ -1687,7 +1704,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_array[3].result).toBe('black_wins');
 			expect(game_array[3].timeControlId).toBe(Blitz);
 			expect(game_array[3].timeControlName).toBe(Blitz5p3);
-			expect(game_array[3].when).toBe('2025-01-20..17:06:10:000');
+			expect(game_array[3].whenPlayed).toBe('2025-01-20..17:06:10:000');
 
 			expect(game_array[4].id).toBe('0000000019');
 			expect(game_array[4].white).toBe('c');
@@ -1695,7 +1712,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_array[4].result).toBe('white_wins');
 			expect(game_array[4].timeControlId).toBe(Blitz);
 			expect(game_array[4].timeControlName).toBe(Blitz5p3);
-			expect(game_array[4].when).toBe('2025-01-20..17:06:15:000');
+			expect(game_array[4].whenPlayed).toBe('2025-01-20..17:06:15:000');
 
 			expect(game_array[5].id).toBe('0000000010');
 			expect(game_array[5].white).toBe('e');
@@ -1703,7 +1720,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_array[5].result).toBe('draw');
 			expect(game_array[5].timeControlId).toBe(Blitz);
 			expect(game_array[5].timeControlName).toBe(Blitz5p0);
-			expect(game_array[5].when).toBe('2025-01-20..17:06:20:000');
+			expect(game_array[5].whenPlayed).toBe('2025-01-20..17:06:20:000');
 
 			expect(game_array[6].id).toBe('0000000017');
 			expect(game_array[6].white).toBe('a');
@@ -1711,7 +1728,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_array[6].result).toBe('draw');
 			expect(game_array[6].timeControlId).toBe(Blitz);
 			expect(game_array[6].timeControlName).toBe(Blitz5p0);
-			expect(game_array[6].when).toBe('2025-01-20..17:06:25:000');
+			expect(game_array[6].whenPlayed).toBe('2025-01-20..17:06:25:000');
 
 			expect(game_array[7].id).toBe('0000000009');
 			expect(game_array[7].white).toBe('a');
@@ -1719,7 +1736,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_array[7].result).toBe('draw');
 			expect(game_array[7].timeControlId).toBe(Blitz);
 			expect(game_array[7].timeControlName).toBe(Blitz5p0);
-			expect(game_array[7].when).toBe('2025-01-20..17:06:30:000');
+			expect(game_array[7].whenPlayed).toBe('2025-01-20..17:06:30:000');
 
 			expect(aU.getGames(Blitz).length).toBe(2);
 			expect(bU.getGames(Blitz).length).toBe(2);
@@ -1756,11 +1773,12 @@ describe('Zig-zag game creation', () => {
 			'sample',
 			aU,
 			fU,
+			a,
+			toDateFull('2020-02-17..00:00:00:000'),
 			'draw',
 			Classical,
 			Classical90p30,
-			toDateMajor('2025-01-10'),
-			toDateMinor('17:06:25:000'),
+			toDateFull('2025-01-10..17:06:25:000'),
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -1778,7 +1796,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_array[0].result).toBe('white_wins');
 			expect(game_array[0].timeControlId).toBe(Classical);
 			expect(game_array[0].timeControlName).toBe(Classical90p30);
-			expect(game_array[0].when).toBe('2025-01-10..17:06:00:000');
+			expect(game_array[0].whenPlayed).toBe('2025-01-10..17:06:00:000');
 
 			expect(game_array[1].id).toBe('0000000015');
 			expect(game_array[1].white).toBe('c');
@@ -1786,7 +1804,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_array[1].result).toBe('black_wins');
 			expect(game_array[1].timeControlId).toBe(Classical);
 			expect(game_array[1].timeControlName).toBe(Classical90p30);
-			expect(game_array[1].when).toBe('2025-01-10..17:06:10:000');
+			expect(game_array[1].whenPlayed).toBe('2025-01-10..17:06:10:000');
 
 			expect(game_array[2].id).toBe('0000000014');
 			expect(game_array[2].white).toBe('e');
@@ -1794,7 +1812,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_array[2].result).toBe('draw');
 			expect(game_array[2].timeControlId).toBe(Classical);
 			expect(game_array[2].timeControlName).toBe(Classical90p30);
-			expect(game_array[2].when).toBe('2025-01-10..17:06:20:000');
+			expect(game_array[2].whenPlayed).toBe('2025-01-10..17:06:20:000');
 
 			expect(game_array[3].id).toBe('0000000021');
 			expect(game_array[3].white).toBe('a');
@@ -1802,7 +1820,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_array[3].result).toBe('draw');
 			expect(game_array[3].timeControlId).toBe(Classical);
 			expect(game_array[3].timeControlName).toBe(Classical90p30);
-			expect(game_array[3].when).toBe('2025-01-10..17:06:25:000');
+			expect(game_array[3].whenPlayed).toBe('2025-01-10..17:06:25:000');
 
 			expect(game_array[4].id).toBe('0000000013');
 			expect(game_array[4].white).toBe('a');
@@ -1810,7 +1828,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_array[4].result).toBe('draw');
 			expect(game_array[4].timeControlId).toBe(Classical);
 			expect(game_array[4].timeControlName).toBe(Classical90p30);
-			expect(game_array[4].when).toBe('2025-01-10..17:06:30:000');
+			expect(game_array[4].whenPlayed).toBe('2025-01-10..17:06:30:000');
 
 			expect(aU.getGames(Classical).length).toBe(2);
 			expect(bU.getGames(Classical).length).toBe(2);
@@ -1843,11 +1861,12 @@ describe('Zig-zag game creation', () => {
 			'sample',
 			eU,
 			fU,
+			a,
+			toDateFull('2020-02-17..00:00:00:000'),
 			'draw',
 			Classical,
 			Classical90p30,
-			toDateMajor('2025-01-10'),
-			toDateMinor('17:06:05:000'),
+			toDateFull('2025-01-10..17:06:05:000'),
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -1865,7 +1884,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_array[0].result).toBe('white_wins');
 			expect(game_array[0].timeControlId).toBe(Classical);
 			expect(game_array[0].timeControlName).toBe(Classical90p30);
-			expect(game_array[0].when).toBe('2025-01-10..17:06:00:000');
+			expect(game_array[0].whenPlayed).toBe('2025-01-10..17:06:00:000');
 
 			expect(game_array[1].id).toBe('0000000022');
 			expect(game_array[1].white).toBe('e');
@@ -1873,7 +1892,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_array[1].result).toBe('draw');
 			expect(game_array[1].timeControlId).toBe(Classical);
 			expect(game_array[1].timeControlName).toBe(Classical90p30);
-			expect(game_array[1].when).toBe('2025-01-10..17:06:05:000');
+			expect(game_array[1].whenPlayed).toBe('2025-01-10..17:06:05:000');
 
 			expect(game_array[2].id).toBe('0000000015');
 			expect(game_array[2].white).toBe('c');
@@ -1881,7 +1900,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_array[2].result).toBe('black_wins');
 			expect(game_array[2].timeControlId).toBe(Classical);
 			expect(game_array[2].timeControlName).toBe(Classical90p30);
-			expect(game_array[2].when).toBe('2025-01-10..17:06:10:000');
+			expect(game_array[2].whenPlayed).toBe('2025-01-10..17:06:10:000');
 
 			expect(game_array[3].id).toBe('0000000014');
 			expect(game_array[3].white).toBe('e');
@@ -1889,7 +1908,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_array[3].result).toBe('draw');
 			expect(game_array[3].timeControlId).toBe(Classical);
 			expect(game_array[3].timeControlName).toBe(Classical90p30);
-			expect(game_array[3].when).toBe('2025-01-10..17:06:20:000');
+			expect(game_array[3].whenPlayed).toBe('2025-01-10..17:06:20:000');
 
 			expect(game_array[4].id).toBe('0000000021');
 			expect(game_array[4].white).toBe('a');
@@ -1897,7 +1916,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_array[4].result).toBe('draw');
 			expect(game_array[4].timeControlId).toBe(Classical);
 			expect(game_array[4].timeControlName).toBe(Classical90p30);
-			expect(game_array[4].when).toBe('2025-01-10..17:06:25:000');
+			expect(game_array[4].whenPlayed).toBe('2025-01-10..17:06:25:000');
 
 			expect(game_array[5].id).toBe('0000000013');
 			expect(game_array[5].white).toBe('a');
@@ -1905,7 +1924,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_array[5].result).toBe('draw');
 			expect(game_array[5].timeControlId).toBe(Classical);
 			expect(game_array[5].timeControlName).toBe(Classical90p30);
-			expect(game_array[5].when).toBe('2025-01-10..17:06:30:000');
+			expect(game_array[5].whenPlayed).toBe('2025-01-10..17:06:30:000');
 
 			expect(aU.getGames(Classical).length).toBe(2);
 			expect(bU.getGames(Classical).length).toBe(2);
@@ -1938,11 +1957,12 @@ describe('Zig-zag game creation', () => {
 			'sample',
 			cU,
 			dU,
+			a,
+			toDateFull('2020-02-17..00:00:00:000'),
 			'white_wins',
 			Classical,
 			Classical90p30,
-			toDateMajor('2025-01-10'),
-			toDateMinor('17:06:15:000'),
+			toDateFull('2025-01-10..17:06:15:000'),
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -1960,7 +1980,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_array[0].result).toBe('white_wins');
 			expect(game_array[0].timeControlId).toBe(Classical);
 			expect(game_array[0].timeControlName).toBe(Classical90p30);
-			expect(game_array[0].when).toBe('2025-01-10..17:06:00:000');
+			expect(game_array[0].whenPlayed).toBe('2025-01-10..17:06:00:000');
 
 			expect(game_array[1].id).toBe('0000000022');
 			expect(game_array[1].white).toBe('e');
@@ -1968,7 +1988,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_array[1].result).toBe('draw');
 			expect(game_array[1].timeControlId).toBe(Classical);
 			expect(game_array[1].timeControlName).toBe(Classical90p30);
-			expect(game_array[1].when).toBe('2025-01-10..17:06:05:000');
+			expect(game_array[1].whenPlayed).toBe('2025-01-10..17:06:05:000');
 
 			expect(game_array[2].id).toBe('0000000015');
 			expect(game_array[2].white).toBe('c');
@@ -1976,7 +1996,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_array[2].result).toBe('black_wins');
 			expect(game_array[2].timeControlId).toBe(Classical);
 			expect(game_array[2].timeControlName).toBe(Classical90p30);
-			expect(game_array[2].when).toBe('2025-01-10..17:06:10:000');
+			expect(game_array[2].whenPlayed).toBe('2025-01-10..17:06:10:000');
 
 			expect(game_array[3].id).toBe('0000000023');
 			expect(game_array[3].white).toBe('c');
@@ -1984,7 +2004,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_array[3].result).toBe('white_wins');
 			expect(game_array[3].timeControlId).toBe(Classical);
 			expect(game_array[3].timeControlName).toBe(Classical90p30);
-			expect(game_array[3].when).toBe('2025-01-10..17:06:15:000');
+			expect(game_array[3].whenPlayed).toBe('2025-01-10..17:06:15:000');
 
 			expect(game_array[4].id).toBe('0000000014');
 			expect(game_array[4].white).toBe('e');
@@ -1992,7 +2012,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_array[4].result).toBe('draw');
 			expect(game_array[4].timeControlId).toBe(Classical);
 			expect(game_array[4].timeControlName).toBe(Classical90p30);
-			expect(game_array[4].when).toBe('2025-01-10..17:06:20:000');
+			expect(game_array[4].whenPlayed).toBe('2025-01-10..17:06:20:000');
 
 			expect(game_array[5].id).toBe('0000000021');
 			expect(game_array[5].white).toBe('a');
@@ -2000,7 +2020,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_array[5].result).toBe('draw');
 			expect(game_array[5].timeControlId).toBe(Classical);
 			expect(game_array[5].timeControlName).toBe(Classical90p30);
-			expect(game_array[5].when).toBe('2025-01-10..17:06:25:000');
+			expect(game_array[5].whenPlayed).toBe('2025-01-10..17:06:25:000');
 
 			expect(game_array[6].id).toBe('0000000013');
 			expect(game_array[6].white).toBe('a');
@@ -2008,7 +2028,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_array[6].result).toBe('draw');
 			expect(game_array[6].timeControlId).toBe(Classical);
 			expect(game_array[6].timeControlName).toBe(Classical90p30);
-			expect(game_array[6].when).toBe('2025-01-10..17:06:30:000');
+			expect(game_array[6].whenPlayed).toBe('2025-01-10..17:06:30:000');
 
 			expect(aU.getGames(Classical).length).toBe(2);
 			expect(bU.getGames(Classical).length).toBe(2);
@@ -2041,11 +2061,12 @@ describe('Zig-zag game creation', () => {
 			'sample',
 			aU,
 			bU,
+			a,
+			toDateFull('2020-02-17..00:00:00:000'),
 			'black_wins',
 			Classical,
 			Classical90p30,
-			toDateMajor('2025-01-10'),
-			toDateMinor('17:05:55:000'),
+			toDateFull('2025-01-10..17:05:55:000'),
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -2063,7 +2084,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_array[0].result).toBe('black_wins');
 			expect(game_array[0].timeControlId).toBe(Classical);
 			expect(game_array[0].timeControlName).toBe(Classical90p30);
-			expect(game_array[0].when).toBe('2025-01-10..17:05:55:000');
+			expect(game_array[0].whenPlayed).toBe('2025-01-10..17:05:55:000');
 
 			expect(game_array[1].id).toBe('0000000016');
 			expect(game_array[1].white).toBe('a');
@@ -2071,7 +2092,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_array[1].result).toBe('white_wins');
 			expect(game_array[1].timeControlId).toBe(Classical);
 			expect(game_array[1].timeControlName).toBe(Classical90p30);
-			expect(game_array[1].when).toBe('2025-01-10..17:06:00:000');
+			expect(game_array[1].whenPlayed).toBe('2025-01-10..17:06:00:000');
 
 			expect(game_array[2].id).toBe('0000000022');
 			expect(game_array[2].white).toBe('e');
@@ -2079,7 +2100,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_array[2].result).toBe('draw');
 			expect(game_array[2].timeControlId).toBe(Classical);
 			expect(game_array[2].timeControlName).toBe(Classical90p30);
-			expect(game_array[2].when).toBe('2025-01-10..17:06:05:000');
+			expect(game_array[2].whenPlayed).toBe('2025-01-10..17:06:05:000');
 
 			expect(game_array[3].id).toBe('0000000015');
 			expect(game_array[3].white).toBe('c');
@@ -2087,7 +2108,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_array[3].result).toBe('black_wins');
 			expect(game_array[3].timeControlId).toBe(Classical);
 			expect(game_array[3].timeControlName).toBe(Classical90p30);
-			expect(game_array[3].when).toBe('2025-01-10..17:06:10:000');
+			expect(game_array[3].whenPlayed).toBe('2025-01-10..17:06:10:000');
 
 			expect(game_array[4].id).toBe('0000000023');
 			expect(game_array[4].white).toBe('c');
@@ -2095,7 +2116,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_array[4].result).toBe('white_wins');
 			expect(game_array[4].timeControlId).toBe(Classical);
 			expect(game_array[4].timeControlName).toBe(Classical90p30);
-			expect(game_array[4].when).toBe('2025-01-10..17:06:15:000');
+			expect(game_array[4].whenPlayed).toBe('2025-01-10..17:06:15:000');
 
 			expect(game_array[5].id).toBe('0000000014');
 			expect(game_array[5].white).toBe('e');
@@ -2103,7 +2124,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_array[5].result).toBe('draw');
 			expect(game_array[5].timeControlId).toBe(Classical);
 			expect(game_array[5].timeControlName).toBe(Classical90p30);
-			expect(game_array[5].when).toBe('2025-01-10..17:06:20:000');
+			expect(game_array[5].whenPlayed).toBe('2025-01-10..17:06:20:000');
 
 			expect(game_array[6].id).toBe('0000000021');
 			expect(game_array[6].white).toBe('a');
@@ -2111,7 +2132,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_array[6].result).toBe('draw');
 			expect(game_array[6].timeControlId).toBe(Classical);
 			expect(game_array[6].timeControlName).toBe(Classical90p30);
-			expect(game_array[6].when).toBe('2025-01-10..17:06:25:000');
+			expect(game_array[6].whenPlayed).toBe('2025-01-10..17:06:25:000');
 
 			expect(game_array[7].id).toBe('0000000013');
 			expect(game_array[7].white).toBe('a');
@@ -2119,7 +2140,7 @@ describe('Zig-zag game creation', () => {
 			expect(game_array[7].result).toBe('draw');
 			expect(game_array[7].timeControlId).toBe(Classical);
 			expect(game_array[7].timeControlName).toBe(Classical90p30);
-			expect(game_array[7].when).toBe('2025-01-10..17:06:30:000');
+			expect(game_array[7].whenPlayed).toBe('2025-01-10..17:06:30:000');
 
 			expect(aU.getGames(Classical).length).toBe(2);
 			expect(bU.getGames(Classical).length).toBe(2);
@@ -2158,11 +2179,12 @@ describe('Before-time inverse game creation', () => {
 			'sample',
 			aU,
 			fU,
+			a,
+			toDateFull('2020-02-17..00:00:00:000'),
 			'draw',
 			Blitz,
 			Blitz5p0,
-			toDateMajor('2023-01-20'),
-			toDateMinor('17:06:50:000'),
+			toDateFull('2023-01-20..17:06:50:000'),
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -2180,7 +2202,7 @@ describe('Before-time inverse game creation', () => {
 			expect(game_array[0].result).toBe('draw');
 			expect(game_array[0].timeControlId).toBe(Blitz);
 			expect(game_array[0].timeControlName).toBe(Blitz5p0);
-			expect(game_array[0].when).toBe('2023-01-20..17:06:50:000');
+			expect(game_array[0].whenPlayed).toBe('2023-01-20..17:06:50:000');
 
 			expect(aU.getGames(Blitz).length).toBe(3);
 			expect(bU.getGames(Blitz).length).toBe(2);
@@ -2213,11 +2235,12 @@ describe('Before-time inverse game creation', () => {
 			'sample',
 			aU,
 			cU,
+			a,
+			toDateFull('2020-02-17..00:00:00:000'),
 			'draw',
 			Blitz,
 			Blitz5p0,
-			toDateMajor('2023-01-10'),
-			toDateMinor('17:06:40:000'),
+			toDateFull('2023-01-10..17:06:40:000'),
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -2235,7 +2258,7 @@ describe('Before-time inverse game creation', () => {
 			expect(game_array[0].result).toBe('draw');
 			expect(game_array[0].timeControlId).toBe(Blitz);
 			expect(game_array[0].timeControlName).toBe(Blitz5p0);
-			expect(game_array[0].when).toBe('2023-01-10..17:06:40:000');
+			expect(game_array[0].whenPlayed).toBe('2023-01-10..17:06:40:000');
 
 			expect(aU.getGames(Blitz).length).toBe(4);
 			expect(bU.getGames(Blitz).length).toBe(2);
@@ -2930,7 +2953,7 @@ for (let i = 0; i < N; ++i) {
 			for (let i = 1; i < all_games.length; ++i) {
 				const gi1 = all_games[i - 1];
 				const gi = all_games[i];
-				expect(gi1.when < gi.when).toBe(true);
+				expect(gi1.whenPlayed < gi.whenPlayed).toBe(true);
 			}
 		});
 
@@ -2948,7 +2971,7 @@ for (let i = 0; i < N; ++i) {
 			for (let i = 1; i < all_games.length; ++i) {
 				const gi1 = all_games[i - 1];
 				const gi = all_games[i];
-				expect(gi1.when < gi.when).toBe(true);
+				expect(gi1.whenPlayed < gi.whenPlayed).toBe(true);
 			}
 		});
 	});
@@ -2965,7 +2988,7 @@ for (let i = 0; i < N; ++i) {
 				for (let i = 0; i < current_games.length; ++i) {
 					const gi = current_games[i];
 					expect(gi.timeControlId).toEqual(Blitz);
-					expect(dateFullToMajor(gi.when)).toEqual(current_record);
+					expect(dateFullToMajor(gi.whenPlayed)).toEqual(current_record);
 				}
 				games_iter.nextRecord();
 			}
@@ -2982,7 +3005,7 @@ for (let i = 0; i < N; ++i) {
 				for (let i = 0; i < current_games.length; ++i) {
 					const gi = current_games[i];
 					expect(gi.timeControlId).toEqual(Classical);
-					expect(dateFullToMajor(gi.when)).toEqual(current_record);
+					expect(dateFullToMajor(gi.whenPlayed)).toEqual(current_record);
 				}
 				games_iter.nextRecord();
 			}
