@@ -29,10 +29,10 @@ import { toDateFull, toDateMajor, toDateMinor } from '@common/utils/time';
 import 'htmx.org';
 
 async function initializeWindowClientGamesCreate() {
-	let datalistWhiteUsers = document.getElementById(
+	const datalistWhiteUsers = document.getElementById(
 		'datalist-white-users',
 	) as HTMLDataListElement;
-	let datalistBlackUsers = document.getElementById(
+	const datalistBlackUsers = document.getElementById(
 		'datalist-black-users',
 	) as HTMLDataListElement;
 
@@ -48,16 +48,16 @@ async function initializeWindowClientGamesCreate() {
 }
 
 async function submitNewGame(_event: any) {
-	let gameTitleInput = document.getElementById(
+	const gameTitleInput = document.getElementById(
 		'input-game-title',
 	) as HTMLInputElement;
-	let whiteInput = document.getElementById(
+	const whiteInput = document.getElementById(
 		'list-white-users',
 	) as HTMLInputElement;
-	let blackInput = document.getElementById(
+	const blackInput = document.getElementById(
 		'list-black-users',
 	) as HTMLInputElement;
-	let selectResultGame = document.getElementById(
+	const selectResultGame = document.getElementById(
 		'select-result-game',
 	) as HTMLSelectElement;
 	const selectTimeControl = document.getElementById(

@@ -44,19 +44,27 @@ Full source code of elo-chess-tracker:
 				<br />
 				<div class="label-input">
 					<label class="label-basic">White:</label>
-					<input class="input-select" list="datalist-white-users" id="list-white-users" />
+					<input
+						class="input-select"
+						list="datalist-white-users"
+						id="list-white-users"
+					/>
 					<datalist id="datalist-white-users"></datalist>
 				</div>
 
 				<div class="label-input">
 					<label class="label-basic">Black:</label>
-					<input class="input-select" list="datalist-black-users" id="list-black-users" />
+					<input
+						class="input-select"
+						list="datalist-black-users"
+						id="list-black-users"
+					/>
 					<datalist id="datalist-black-users"></datalist>
 				</div>
 
 				<div class="label-select">
-					<label class="label-basic" for="select_result_game">Result:</label>
-					<select class="select-basic" id="select_result_game">
+					<label class="label-basic" for="select-result-game">Result:</label>
+					<select class="select-basic" id="select-result-game">
 						<option value=""></option>
 						<option value="white_wins">1 - 0</option>
 						<option value="draw">1/2 - 1/2</option>
@@ -65,11 +73,13 @@ Full source code of elo-chess-tracker:
 				</div>
 
 				<div class="label-select">
-					<label class="label-basic" for="select-time-control">Time control:</label>
+					<label class="label-basic" for="select-time-control"
+						>Time control:</label
+					>
 					<select
 						class="select-basic"
 						id="select-time-control"
-						hx-get="/query/html/time_controls"
+						hx-get="/query/html/time-controls"
 						hx-trigger="load"
 						hx-swap="beforeend"
 					>
@@ -93,12 +103,17 @@ Full source code of elo-chess-tracker:
 				</div>
 
 				<br />
-				<button class="button-submit" type="button" id="submit-new-game-button">Submit</button>
+				<button class="button-submit" type="button" id="submit-new-game-button">
+					Submit
+				</button>
 			</div>
 
 			<footer class="footer-copyright-notice">
-				Elo chess tracker (v<i hx-get="/version-number" hx-trigger="load"></i>). Code
-				<a href="https://github.com/lluisalemanypuig/elo-chess-tracker">online at Github</a>.
+				Elo chess tracker (v<i hx-get="/version-number" hx-trigger="load"></i>).
+				Code
+				<a href="https://github.com/lluisalemanypuig/elo-chess-tracker"
+					>online at Github</a
+				>.
 			</footer>
 		</div>
 	</body>

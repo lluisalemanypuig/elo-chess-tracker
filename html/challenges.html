@@ -44,7 +44,11 @@ Full source code of elo-chess-tracker:
 
 				<div class="label-input">
 					<label>Select a user:</label>
-					<input class="input-text" list="datalist-username" id="username-list" />
+					<input
+						class="input-text"
+						list="datalist-username"
+						id="username-list"
+					/>
 					<datalist
 						id="datalist-username"
 						hx-swap="innerHTML"
@@ -57,7 +61,7 @@ Full source code of elo-chess-tracker:
 					<select
 						class="select-basic"
 						id="select-time-control"
-						hx-get="/query/html/time_controls"
+						hx-get="/query/html/time-controls"
 						hx-trigger="load"
 						hx-swap="beforeend"
 					>
@@ -71,7 +75,9 @@ Full source code of elo-chess-tracker:
 				</div>
 
 				<br />
-				<button class="button-submit" type="button" id="send-challenge-button">Send challenge</button>
+				<button class="button-submit" type="button" id="send-challenge-button">
+					Send challenge
+				</button>
 
 				<div class="challenge-list" id="challenges-received">
 					<h2 class="title2">Challenges received</h2>
@@ -96,8 +102,11 @@ Full source code of elo-chess-tracker:
 			</div>
 
 			<footer class="footer-copyright-notice">
-				Elo chess tracker (v<i hx-get="/version-number" hx-trigger="load"></i>). Code
-				<a href="https://github.com/lluisalemanypuig/elo-chess-tracker">online at Github</a>.
+				Elo chess tracker (v<i hx-get="/version-number" hx-trigger="load"></i>).
+				Code
+				<a href="https://github.com/lluisalemanypuig/elo-chess-tracker"
+					>online at Github</a
+				>.
 			</footer>
 		</div>
 	</body>
