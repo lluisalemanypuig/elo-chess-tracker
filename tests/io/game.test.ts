@@ -32,7 +32,7 @@ describe('IO conversion -- Elo', () => {
 
 	test('string', () => {
 		const g = gameFromString(
-			'{ "id": "0001", "title": "asdf", "white": "W", "whiteRating": {"rating": 1500.43, "numGames": 100, "won": 50, "drawn": 20, "lost": 30, "K": 40, "surpassed2400": true}, "black": "B", "blackRating" : {"rating": 1500.43, "numGames": 100, "won": 50, "drawn": 20, "lost": 30, "K": 40, "surpassed2400": false}, "createdBy": "goku", "createdAt": "2020-02-17..00:00:00:000", "result": "black_wins", "timeControlId": "blitz", "timeControlName": "Blitz (5 + 3)", "whenPlayed": "2024-12-29..12:24:00", "history": [{"who": "pepe", "when": "today", "field": "title", "oldValue": "asdf", "newValue": "qwer"}]}',
+			'{ "id": "0001", "title": "asdf", "white": "W", "whiteRating": {"rating": 1500.43, "numGames": 100, "won": 50, "drawn": 20, "lost": 30, "K": 40, "surpassed2400": true}, "black": "B", "blackRating" : {"rating": 1500.43, "numGames": 100, "won": 50, "drawn": 20, "lost": 30, "K": 40, "surpassed2400": false}, "createdBy": "goku", "whenCreated": "2020-02-17..00:00:00:000", "result": "black_wins", "timeControlId": "blitz", "timeControlName": "Blitz (5 + 3)", "whenPlayed": "2024-12-29..12:24:00", "history": [{"who": "pepe", "when": "today", "field": "title", "oldValue": "asdf", "newValue": "qwer"}]}',
 		);
 		expect(g).not.toBeNull();
 		if (isNotDefined(g)) {
@@ -61,7 +61,7 @@ describe('IO conversion -- Elo', () => {
 			surpassed2400: false,
 		});
 		expect(g.createdBy).toEqual('goku');
-		expect(g.createdAt).toEqual('2020-02-17..00:00:00:000');
+		expect(g.whenCreated).toEqual('2020-02-17..00:00:00:000');
 		expect(g.result).toEqual('black_wins');
 		expect(g.timeControlId).toEqual('blitz');
 		expect(g.timeControlName).toEqual('Blitz (5 + 3)');
