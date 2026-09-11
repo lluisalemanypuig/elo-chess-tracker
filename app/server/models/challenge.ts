@@ -69,10 +69,12 @@ export const ChallengeSchema = z
 
 		// Date when the challenge was accepted
 		whenChallengeAccepted: DateFullSchema.optional(),
+		// User who accepted the challenge
+		challengeAcceptedBy: PlayerPrivateIdSchema.optional(),
 
 		// Date when the result of the game was last modified
 		whenResultSet: DateFullSchema.optional(),
-		// Player who set the result
+		// User who set the result
 		resultSetBy: PlayerPrivateIdSchema.optional(),
 
 		// Date when the result of the game was accepted.
@@ -119,6 +121,7 @@ export function newChallenge(
 		sentTo: sentTo,
 		whenChallengeSent: whenChallengeSent,
 		whenChallengeAccepted: undefined,
+		challengeAcceptedBy: undefined,
 		whenResultSet: undefined,
 		resultSetBy: undefined,
 		whenResultAccepted: undefined,
@@ -135,8 +138,9 @@ export interface ChallengeAccept {
 	when: DateFull;
 }
 
-export function accept(c: Challenge, { by: _by, when }: ChallengeAccept) {
+export function accept(c: Challenge, { by, when }: ChallengeAccept) {
 	c.whenChallengeAccepted = when;
+	c.challengeAcceptedBy = by;
 	c.state = 'PENDING_RESULT';
 }
 
