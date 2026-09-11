@@ -29,6 +29,7 @@ import { z } from 'zod';
 export const UserPermissionsSchema = z
 	.object({
 		admin: UserActionArraySchema,
+		referee: UserActionArraySchema,
 		teacher: UserActionArraySchema,
 		member: UserActionArraySchema,
 		student: UserActionArraySchema,
