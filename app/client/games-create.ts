@@ -21,7 +21,7 @@ Full source code of elo-chess-tracker:
 
 import { messageFromResponse, serverCall } from '@client/action';
 import { ROUTES } from '@common/api/routes';
-import { resultFromTextToValue } from '@common/models/game-result';
+import { GameResult } from '@common/models/game-result';
 import { toPlayerPublicId } from '@common/models/player-id';
 import { TimeControlId, TimeControlName } from '@common/models/time-control';
 import { isNotDefined } from '@common/utils/is-defined';
@@ -85,12 +85,6 @@ async function submitNewGame(_event: any) {
 		selectTimeControl.selectedIndex
 	].text as TimeControlName;
 
-	const result = resultFromTextToValue(resultStr);
-	if (isNotDefined(result)) {
-		console.log(`Wrong result for the game '${resultStr}'.`);
-		return;
-	}
-
 	if (inputGameDate.value === '') {
 		alert('Invalid date');
 		return;
@@ -129,7 +123,7 @@ async function submitNewGame(_event: any) {
 		title: gameTitle,
 		white: white,
 		black: black,
-		result: result,
+		result: resultStr as GameResult,
 		timeControlId: timeControlId,
 		timeControlName: timeControlName,
 		whenPlayed: toDateFull(`${whenCreated}..${timeCreated}`),
