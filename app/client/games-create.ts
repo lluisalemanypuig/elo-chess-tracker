@@ -25,7 +25,7 @@ import { resultFromTextToValue } from '@common/models/game-result';
 import { toPlayerPublicId } from '@common/models/player-id';
 import { TimeControlId, TimeControlName } from '@common/models/time-control';
 import { isNotDefined } from '@common/utils/is-defined';
-import { toDateMajor, toDateMinor } from '@common/utils/time';
+import { toDateFull, toDateMajor, toDateMinor } from '@common/utils/time';
 import 'htmx.org';
 
 async function initializeWindowClientGamesCreate() {
@@ -132,8 +132,7 @@ async function submitNewGame(_event: any) {
 		result: result,
 		timeControlId: timeControlId,
 		timeControlName: timeControlName,
-		whenCreated: whenCreated,
-		timeCreated: timeCreated,
+		whenPlayed: toDateFull(`${whenCreated}..${timeCreated}`),
 	});
 	if (response.status === 'error') {
 		alert(messageFromResponse(response));
