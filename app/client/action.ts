@@ -24,7 +24,11 @@ Contact:
 */
 
 import { Route } from '@common/api/routes';
-import { methodTypeOf, outputSchemaOf } from '@common/api/schemas-endpoints';
+import {
+	StringSchema,
+	methodTypeOf,
+	outputSchemaOf,
+} from '@common/api/schemas-endpoints';
 import { InputTypeOf, OutputTypeOf } from '@common/api/types';
 import { isNotDefined } from '@common/utils/is-defined';
 
@@ -71,6 +75,16 @@ export async function serverCall<T extends Route>(
 	}
 
 	const schemaObject = outputSchemaOf(route);
+	if (schemaObject === StringSchema) {
+		const str = await response.text();
+		return {
+			// TODO: eventually, remove the type assertion so that typescript
+			// figures out on its own that the type of parse.data is correct
+			value: str as OutputTypeOf<T>,
+			status: 'success',
+		};
+	}
+
 	const jsonText = await response.json();
 	const parse = schemaObject.safeParse(jsonText);
 	if (!parse.success) {

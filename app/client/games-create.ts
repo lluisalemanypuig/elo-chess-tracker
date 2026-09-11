@@ -21,7 +21,7 @@ Full source code of elo-chess-tracker:
 
 import { messageFromResponse, serverCall } from '@client/action';
 import { ROUTES } from '@common/api/routes';
-import { resultFromTextToValue } from '@common/models/game-result';
+import { GameResult } from '@common/models/game-result';
 import { toPlayerPublicId } from '@common/models/player-id';
 import { TimeControlId, TimeControlName } from '@common/models/time-control';
 import { isNotDefined } from '@common/utils/is-defined';
@@ -29,10 +29,10 @@ import { toDateFull, toDateMajor, toDateMinor } from '@common/utils/time';
 import 'htmx.org';
 
 async function initializeWindowClientGamesCreate() {
-	let datalistWhiteUsers = document.getElementById(
+	const datalistWhiteUsers = document.getElementById(
 		'datalist-white-users',
 	) as HTMLDataListElement;
-	let datalistBlackUsers = document.getElementById(
+	const datalistBlackUsers = document.getElementById(
 		'datalist-black-users',
 	) as HTMLDataListElement;
 
@@ -48,16 +48,16 @@ async function initializeWindowClientGamesCreate() {
 }
 
 async function submitNewGame(_event: any) {
-	let gameTitleInput = document.getElementById(
+	const gameTitleInput = document.getElementById(
 		'input-game-title',
 	) as HTMLInputElement;
-	let whiteInput = document.getElementById(
+	const whiteInput = document.getElementById(
 		'list-white-users',
 	) as HTMLInputElement;
-	let blackInput = document.getElementById(
+	const blackInput = document.getElementById(
 		'list-black-users',
 	) as HTMLInputElement;
-	let selectResultGame = document.getElementById(
+	const selectResultGame = document.getElementById(
 		'select-result-game',
 	) as HTMLSelectElement;
 	const selectTimeControl = document.getElementById(
@@ -84,12 +84,6 @@ async function submitNewGame(_event: any) {
 	const timeControlName = selectTimeControl.options[
 		selectTimeControl.selectedIndex
 	].text as TimeControlName;
-
-	const result = resultFromTextToValue(resultStr);
-	if (isNotDefined(result)) {
-		console.log(`Wrong result for the game '${resultStr}'.`);
-		return;
-	}
 
 	if (inputGameDate.value === '') {
 		alert('Invalid date');
@@ -129,7 +123,7 @@ async function submitNewGame(_event: any) {
 		title: gameTitle,
 		white: white,
 		black: black,
-		result: result,
+		result: resultStr as GameResult,
 		timeControlId: timeControlId,
 		timeControlName: timeControlName,
 		whenPlayed: toDateFull(`${whenCreated}..${timeCreated}`),
