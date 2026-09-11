@@ -30,11 +30,12 @@ import {
 } from '@common/models/user-role';
 
 test('Array of all roles', () => {
-	expect(ALL_USER_ROLES.length).toBe(4);
+	expect(ALL_USER_ROLES.length).toBe(5);
 });
 
 test('Human-readable strings', () => {
 	expect(USER_ROLE_TO_STRING['ADMIN']).toEqual('Admin');
+	expect(USER_ROLE_TO_STRING['REFEREE']).toEqual('Referee');
 	expect(USER_ROLE_TO_STRING['TEACHER']).toEqual('Teacher');
 	expect(USER_ROLE_TO_STRING['MEMBER']).toEqual('Member');
 	expect(USER_ROLE_TO_STRING['STUDENT']).toEqual('Student');
@@ -46,6 +47,12 @@ test('Correct roles', () => {
 	expect(isRoleStringCorrect('admi')).toBe(false);
 	expect(isRoleStringCorrect('admin!')).toBe(false);
 	expect(isRoleStringCorrect('Admin')).toBe(false);
+
+	expect(isRoleStringCorrect('REFEREE')).toBe(true);
+	expect(isRoleStringCorrect('referee')).toBe(false);
+	expect(isRoleStringCorrect('refer')).toBe(false);
+	expect(isRoleStringCorrect('referee!')).toBe(false);
+	expect(isRoleStringCorrect('Referee')).toBe(false);
 
 	expect(isRoleStringCorrect('TEACHER')).toBe(true);
 	expect(isRoleStringCorrect('teacher')).toBe(false);
