@@ -78,6 +78,8 @@ export async function serverCall<T extends Route>(
 	if (schemaObject === StringSchema) {
 		const str = await response.text();
 		return {
+			// TODO: eventually, remove the type assertion so that typescript
+			// figures out on its own that the type of parse.data is correct
 			value: str as OutputTypeOf<T>,
 			status: 'success',
 		};
