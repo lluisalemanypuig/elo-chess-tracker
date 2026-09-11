@@ -63,7 +63,7 @@ describe('IO conversion -- Elo', () => {
 		expect(g.result).toEqual('black_wins');
 		expect(g.timeControlId).toEqual('blitz');
 		expect(g.timeControlName).toEqual('Blitz (5 + 3)');
-		expect(g.when).toEqual('2024-12-29..12:24:00');
+		expect(g.whenPlayed).toEqual('2024-12-29..12:24:00');
 
 		expect(g.history).toEqual([
 			{

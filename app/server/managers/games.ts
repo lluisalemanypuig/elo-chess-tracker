@@ -71,10 +71,10 @@ function writeGameArrayToFile(filename: string, gs: Game[]) {
 
 function gameCompareDates(g: Game): Function {
 	return (g2: Game): number => {
-		if (g.when < g2.when) {
+		if (g.whenPlayed < g2.whenPlayed) {
 			return -1;
 		}
-		if (g.when === g2.when) {
+		if (g.whenPlayed === g2.whenPlayed) {
 			return 0;
 		}
 		return 1;
@@ -84,16 +84,16 @@ function gameCompareDates(g: Game): Function {
 function gameNextOfPlayer(
 	username: PlayerPrivateId,
 	timeControlId: TimeControlId,
-	when: DateFull,
+	whenPlayed: DateFull,
 ): Game | undefined {
 	const gamesDir =
 		EnvironmentManager.getInstance().getDirGamesTimeControl(timeControlId);
 
 	// The file into which we have to add the new game.
-	const recordStr = dateFullToMajor(when);
+	const recordStr = dateFullToMajor(whenPlayed);
 
 	let gamesIter = new GamesIterator(gamesDir);
-	let found = gamesIter.locateFirstGameAfter(recordStr, when);
+	let found = gamesIter.locateFirstGameAfter(recordStr, whenPlayed);
 	if (!found) {
 		return undefined;
 	}
@@ -119,7 +119,7 @@ function gameNew(
 	result: GameResult,
 	timeControlId: TimeControlId,
 	timeControlName: TimeControlName,
-	when: DateFull,
+	whenPlayed: DateFull,
 ): Game {
 	// retrieve next id and increment maximum id
 	const idStr: GameId = GamesManager.getInstance().newGameId();
@@ -128,7 +128,7 @@ function gameNew(
 	let whiteToAssign: Rating;
 	let blackToAssign: Rating;
 
-	let nextWhiteGame = gameNextOfPlayer(white, timeControlId, when);
+	let nextWhiteGame = gameNextOfPlayer(white, timeControlId, whenPlayed);
 	if (isDefined(nextWhiteGame)) {
 		if (nextWhiteGame.white === white) {
 			// white in this game is also white in the next game
@@ -149,7 +149,7 @@ function gameNew(
 		whiteToAssign = whiteData.user.getRating(timeControlId).clone();
 	}
 
-	let nextBlackGame = gameNextOfPlayer(black, timeControlId, when);
+	let nextBlackGame = gameNextOfPlayer(black, timeControlId, whenPlayed);
 	if (isDefined(nextBlackGame)) {
 		if (nextBlackGame.white === black) {
 			// white in this game is white in the next game
@@ -181,7 +181,7 @@ function gameNew(
 		result,
 		timeControlId,
 		timeControlName,
-		when,
+		whenPlayed,
 		[],
 	);
 }
@@ -354,7 +354,7 @@ function gameInsertInHistory(g: Game, recordId: DateMajor) {
 		);
 		if (gameExists) {
 			throw new InternalError(
-				`Game of the exact same date field '${g.when}' already exists`,
+				`Game of the exact same date field '${g.whenPlayed}' already exists`,
 			);
 		}
 
@@ -658,7 +658,7 @@ export function gameEditTitle(
 
 	const gameRecordFile = path.join(gamesDir, gameRecord);
 
-	let gameSet = gamesIter.getCurrentGameArray();
+	const gameSet = gamesIter.getCurrentGameArray();
 	writeGameArrayToFile(gameRecordFile, gameSet);
 }
 

@@ -60,7 +60,7 @@ describe('Setters and Getters -- Elo', () => {
 		expect(g.result).toEqual('white_wins');
 		expect(g.timeControlId).toEqual(Blitz);
 		expect(g.timeControlName).toEqual(Blitz5p3);
-		expect(g.when).toEqual('2024-12-29..11:15:00');
+		expect(g.whenPlayed).toEqual('2024-12-29..11:15:00');
 		expect(g.isUserInvolved(toPlayerPrivateId('W'))).toBe(true);
 		expect(g.isUserInvolved(toPlayerPrivateId('B'))).toBe(true);
 		expect(g.isUserInvolved(toPlayerPrivateId('q'))).toBe(false);

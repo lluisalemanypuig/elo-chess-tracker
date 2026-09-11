@@ -43,7 +43,7 @@ export const GameKeys = [
 	'result',
 	'timeControlId',
 	'timeControlName',
-	'when',
+	'whenPlayed',
 	'history',
 ];
 
@@ -71,7 +71,7 @@ export class Game {
 	public result: GameResult;
 	public timeControlId: TimeControlId;
 	public timeControlName: TimeControlName;
-	public when: DateFull;
+	public whenPlayed: DateFull;
 	public history: GameEditLog[];
 
 	/**
@@ -86,7 +86,8 @@ export class Game {
 	 * @param result Result of the game (white_wins, draw, black_wins)
 	 * @param timeControlId Time control id of the game
 	 * @param timeControlName Time control name of the game
-	 * @param when Date of the game
+	 * @param whenPlayed Date of the game
+	 * @param history The history of changes for this game
 	 */
 	constructor(
 		id: GameId,
@@ -100,7 +101,7 @@ export class Game {
 		result: GameResult,
 		timeControlId: TimeControlId,
 		timeControlName: TimeControlName,
-		when: DateFull,
+		whenPlayed: DateFull,
 		history: GameEditLog[],
 	) {
 		this.id = id;
@@ -114,7 +115,7 @@ export class Game {
 		this.result = result;
 		this.timeControlId = timeControlId;
 		this.timeControlName = timeControlName;
-		this.when = when;
+		this.whenPlayed = whenPlayed;
 		this.history = history;
 	}
 
