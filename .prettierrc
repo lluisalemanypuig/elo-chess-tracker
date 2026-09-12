@@ -4,5 +4,13 @@
 	"singleQuote": true,
 	"tabWidth": 2,
 	"useTabs": true,
-	"trailingComma": "all"
+	"trailingComma": "all",
+	"overrides": [
+		{
+			"files": ["tests/models/user-role-action.test.ts"],
+			"options": {
+				"printWidth": 120
+			}
+		}
+	]
 }
