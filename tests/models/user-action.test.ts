@@ -24,9 +24,9 @@ Contact:
 */
 
 import {
+	actionIdToUserActions,
 	ALL_ACTION_IDS,
 	roleActionNames,
-	rolesAndActions,
 } from '@common/models/user-action';
 import { ALL_USER_ROLES } from '@common/models/user-role';
 
@@ -42,7 +42,7 @@ describe('Role concatenation', () => {
 	test('Check correct concatenation', () => {
 		for (let i = 0; i < ALL_ACTION_IDS.length; ++i) {
 			const action_id = ALL_ACTION_IDS[i];
-			const concats = rolesAndActions[action_id];
+			const concats = actionIdToUserActions[action_id];
 			for (let j = 0; j < ALL_USER_ROLES.length; ++j) {
 				const r = ALL_USER_ROLES[j];
 				expect(roleActionNames[action_id][r]).toEqual(concats[j]);
