@@ -134,7 +134,7 @@ export function initializePermissions(permissions: UserPermissions) {
 	actions.addMissingGenericActions('ADMIN');
 
 	// REFEREE
-	for (const permission of permissions.admin) {
+	for (const permission of permissions.referee) {
 		actions.addToRole('REFEREE', permission);
 	}
 	actions.addMissingGenericActions('REFEREE');
