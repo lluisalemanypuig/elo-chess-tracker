@@ -231,7 +231,7 @@ export const roleActionNames: Record<
 	},
 };
 
-export const rolesAndActions: { [key in UserActionId]: UserAction[] } = {
+export const actionIdToUserActions: { [key in UserActionId]: UserAction[] } = {
 	CREATE_GAMES: [
 		'CREATE_GAMES_ADMIN',
 		'CREATE_GAMES_REFEREE',
