@@ -77,14 +77,14 @@ export class UserRoleToUserAction {
 		return this.serverRolesDefinition[role];
 	}
 
-	roleIncludesAction(role: UserRole, action: UserAction): boolean {
+	roleHasAction(role: UserRole, action: UserAction): boolean {
 		return this.serverRolesDefinition[role].includes(action);
 	}
 
 	roleCanDo(role: UserRole, action: UserActionId): boolean {
 		for (const otherRole of ALL_USER_ROLES) {
 			const userAction = roleActionNames[action][otherRole];
-			if (this.roleIncludesAction(role, userAction)) {
+			if (this.roleHasAction(role, userAction)) {
 				return true;
 			}
 		}

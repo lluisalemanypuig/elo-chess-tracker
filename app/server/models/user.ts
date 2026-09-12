@@ -238,7 +238,7 @@ export class User extends Player {
 		const userRoleToAction = UserRoleToUserAction.getInstance();
 
 		for (const role of this.roles) {
-			if (userRoleToAction.roleIncludesAction(role, a)) {
+			if (userRoleToAction.roleHasAction(role, a)) {
 				return true;
 			}
 		}
