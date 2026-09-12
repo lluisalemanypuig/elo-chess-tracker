@@ -22,7 +22,6 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { CommonError } from '@common/models/error-types/common-error';
 import { UserRole } from '@common/models/user-role';
 import { z } from 'zod';
 
@@ -131,197 +130,183 @@ export const ALL_ACTION_IDS = [
 	'FORCE_CHALLENGE_ACCEPT_RESULT',
 ] as const;
 
-// All actions as type
 export type UserActionId = (typeof ALL_ACTION_IDS)[number];
 
 export const UserActionIDSchema = z.enum(ALL_ACTION_IDS);
 
-export function getGenericRoleActionName(id: UserActionId): UserAction {
-	switch (id) {
-		case 'CREATE_GAMES':
-			return 'CREATE_GAMES';
-		case 'EDIT_GAMES':
-			return 'EDIT_GAMES';
-		case 'DELETE_GAMES':
-			return 'DELETE_GAMES';
-		case 'SEE_GAMES':
-			return 'SEE_GAMES';
-		case 'EDIT_USERS':
-			return 'EDIT_USER';
-		case 'ASSIGN_ROLE_USERS':
-			return 'ASSIGN_ROLE';
-		case 'CHALLENGE_USERS':
-			return 'CHALLENGE_USER';
-		case 'SEE_GRAPHS':
-			return 'SEE_GRAPHS';
-		case 'FORCE_CHALLENGE_ACCEPT':
-			return 'FORCE_CHALLENGE_ACCEPT';
-		case 'FORCE_CHALLENGE_SET_RESULT':
-			return 'FORCE_CHALLENGE_SET_RESULT';
-		case 'FORCE_CHALLENGE_ACCEPT_RESULT':
-			return 'FORCE_CHALLENGE_ACCEPT_RESULT';
-	}
+export const userActionIdToUserAction: Record<UserActionId, UserAction> = {
+	CREATE_GAMES: 'CREATE_GAMES',
+	EDIT_GAMES: 'EDIT_GAMES',
+	DELETE_GAMES: 'DELETE_GAMES',
+	SEE_GAMES: 'SEE_GAMES',
+	EDIT_USERS: 'EDIT_USER',
+	ASSIGN_ROLE_USERS: 'ASSIGN_ROLE',
+	CHALLENGE_USERS: 'CHALLENGE_USER',
+	SEE_GRAPHS: 'SEE_GRAPHS',
+	FORCE_CHALLENGE_ACCEPT: 'FORCE_CHALLENGE_ACCEPT',
+	FORCE_CHALLENGE_SET_RESULT: 'FORCE_CHALLENGE_SET_RESULT',
+	FORCE_CHALLENGE_ACCEPT_RESULT: 'FORCE_CHALLENGE_ACCEPT_RESULT',
+};
 
-	throw new CommonError(`Wrong action identifier ${id}`);
-}
+export const roleActionNames: Record<
+	UserActionId,
+	Record<UserRole, UserAction>
+> = {
+	CREATE_GAMES: {
+		ADMIN: 'CREATE_GAMES_ADMIN',
+		REFEREE: 'CREATE_GAMES_REFEREE',
+		TEACHER: 'CREATE_GAMES_TEACHER',
+		MEMBER: 'CREATE_GAMES_MEMBER',
+		STUDENT: 'CREATE_GAMES_STUDENT',
+	},
+	EDIT_GAMES: {
+		ADMIN: 'EDIT_GAMES_ADMIN',
+		REFEREE: 'EDIT_GAMES_REFEREE',
+		TEACHER: 'EDIT_GAMES_TEACHER',
+		MEMBER: 'EDIT_GAMES_MEMBER',
+		STUDENT: 'EDIT_GAMES_STUDENT',
+	},
+	DELETE_GAMES: {
+		ADMIN: 'DELETE_GAMES_ADMIN',
+		REFEREE: 'DELETE_GAMES_REFEREE',
+		TEACHER: 'DELETE_GAMES_TEACHER',
+		MEMBER: 'DELETE_GAMES_MEMBER',
+		STUDENT: 'DELETE_GAMES_STUDENT',
+	},
+	SEE_GAMES: {
+		ADMIN: 'SEE_GAMES_ADMIN',
+		REFEREE: 'SEE_GAMES_REFEREE',
+		TEACHER: 'SEE_GAMES_TEACHER',
+		MEMBER: 'SEE_GAMES_MEMBER',
+		STUDENT: 'SEE_GAMES_STUDENT',
+	},
+	EDIT_USERS: {
+		ADMIN: 'EDIT_USER_ADMIN',
+		REFEREE: 'EDIT_USER_REFEREE',
+		TEACHER: 'EDIT_USER_TEACHER',
+		MEMBER: 'EDIT_USER_MEMBER',
+		STUDENT: 'EDIT_USER_STUDENT',
+	},
+	ASSIGN_ROLE_USERS: {
+		ADMIN: 'ASSIGN_ROLE_ADMIN',
+		REFEREE: 'ASSIGN_ROLE_REFEREE',
+		TEACHER: 'ASSIGN_ROLE_TEACHER',
+		MEMBER: 'ASSIGN_ROLE_MEMBER',
+		STUDENT: 'ASSIGN_ROLE_STUDENT',
+	},
+	CHALLENGE_USERS: {
+		ADMIN: 'CHALLENGE_USER_ADMIN',
+		REFEREE: 'CHALLENGE_USER_REFEREE',
+		TEACHER: 'CHALLENGE_USER_TEACHER',
+		MEMBER: 'CHALLENGE_USER_MEMBER',
+		STUDENT: 'CHALLENGE_USER_STUDENT',
+	},
+	SEE_GRAPHS: {
+		ADMIN: 'SEE_GRAPHS_ADMIN',
+		REFEREE: 'SEE_GRAPHS_REFEREE',
+		TEACHER: 'SEE_GRAPHS_TEACHER',
+		MEMBER: 'SEE_GRAPHS_MEMBER',
+		STUDENT: 'SEE_GRAPHS_STUDENT',
+	},
+	FORCE_CHALLENGE_ACCEPT: {
+		ADMIN: 'FORCE_CHALLENGE_ACCEPT_ADMIN',
+		REFEREE: 'FORCE_CHALLENGE_ACCEPT_REFEREE',
+		TEACHER: 'FORCE_CHALLENGE_ACCEPT_TEACHER',
+		MEMBER: 'FORCE_CHALLENGE_ACCEPT_MEMBER',
+		STUDENT: 'FORCE_CHALLENGE_ACCEPT_STUDENT',
+	},
+	FORCE_CHALLENGE_SET_RESULT: {
+		ADMIN: 'FORCE_CHALLENGE_SET_RESULT_ADMIN',
+		REFEREE: 'FORCE_CHALLENGE_SET_RESULT_REFEREE',
+		TEACHER: 'FORCE_CHALLENGE_SET_RESULT_TEACHER',
+		MEMBER: 'FORCE_CHALLENGE_SET_RESULT_MEMBER',
+		STUDENT: 'FORCE_CHALLENGE_SET_RESULT_STUDENT',
+	},
+	FORCE_CHALLENGE_ACCEPT_RESULT: {
+		ADMIN: 'FORCE_CHALLENGE_ACCEPT_RESULT_ADMIN',
+		REFEREE: 'FORCE_CHALLENGE_ACCEPT_RESULT_REFEREE',
+		TEACHER: 'FORCE_CHALLENGE_ACCEPT_RESULT_TEACHER',
+		MEMBER: 'FORCE_CHALLENGE_ACCEPT_RESULT_MEMBER',
+		STUDENT: 'FORCE_CHALLENGE_ACCEPT_RESULT_STUDENT',
+	},
+};
 
-export function getRoleActionName(id: UserActionId, r: UserRole): UserAction {
-	switch (id) {
-		case 'CREATE_GAMES':
-			switch (r) {
-				case 'ADMIN':
-					return 'CREATE_GAMES_ADMIN';
-				case 'REFEREE':
-					return 'CREATE_GAMES_REFEREE';
-				case 'TEACHER':
-					return 'CREATE_GAMES_TEACHER';
-				case 'MEMBER':
-					return 'CREATE_GAMES_MEMBER';
-				case 'STUDENT':
-					return 'CREATE_GAMES_STUDENT';
-			}
-			throw new CommonError(`Unhandled user role ${r} in ${id}`);
-		case 'EDIT_GAMES':
-			switch (r) {
-				case 'ADMIN':
-					return 'EDIT_GAMES_ADMIN';
-				case 'REFEREE':
-					return 'EDIT_GAMES_REFEREE';
-				case 'TEACHER':
-					return 'EDIT_GAMES_TEACHER';
-				case 'MEMBER':
-					return 'EDIT_GAMES_MEMBER';
-				case 'STUDENT':
-					return 'EDIT_GAMES_STUDENT';
-			}
-			throw new CommonError(`Unhandled user role ${r} in ${id}`);
-		case 'DELETE_GAMES':
-			switch (r) {
-				case 'ADMIN':
-					return 'DELETE_GAMES_ADMIN';
-				case 'REFEREE':
-					return 'DELETE_GAMES_REFEREE';
-				case 'TEACHER':
-					return 'DELETE_GAMES_TEACHER';
-				case 'MEMBER':
-					return 'DELETE_GAMES_MEMBER';
-				case 'STUDENT':
-					return 'DELETE_GAMES_STUDENT';
-			}
-			throw new CommonError(`Unhandled user role ${r} in ${id}`);
-		case 'SEE_GAMES':
-			switch (r) {
-				case 'ADMIN':
-					return 'SEE_GAMES_ADMIN';
-				case 'REFEREE':
-					return 'SEE_GAMES_REFEREE';
-				case 'TEACHER':
-					return 'SEE_GAMES_TEACHER';
-				case 'MEMBER':
-					return 'SEE_GAMES_MEMBER';
-				case 'STUDENT':
-					return 'SEE_GAMES_STUDENT';
-			}
-			throw new CommonError(`Unhandled user role ${r} in ${id}`);
-		case 'EDIT_USERS':
-			switch (r) {
-				case 'ADMIN':
-					return 'EDIT_USER_ADMIN';
-				case 'REFEREE':
-					return 'EDIT_USER_REFEREE';
-				case 'TEACHER':
-					return 'EDIT_USER_TEACHER';
-				case 'MEMBER':
-					return 'EDIT_USER_MEMBER';
-				case 'STUDENT':
-					return 'EDIT_USER_STUDENT';
-			}
-			throw new CommonError(`Unhandled user role ${r} in ${id}`);
-		case 'ASSIGN_ROLE_USERS':
-			switch (r) {
-				case 'ADMIN':
-					return 'ASSIGN_ROLE_ADMIN';
-				case 'REFEREE':
-					return 'ASSIGN_ROLE_REFEREE';
-				case 'TEACHER':
-					return 'ASSIGN_ROLE_TEACHER';
-				case 'MEMBER':
-					return 'ASSIGN_ROLE_MEMBER';
-				case 'STUDENT':
-					return 'ASSIGN_ROLE_STUDENT';
-			}
-			throw new CommonError(`Unhandled user role ${r} in ${id}`);
-		case 'CHALLENGE_USERS':
-			switch (r) {
-				case 'ADMIN':
-					return 'CHALLENGE_USER_ADMIN';
-				case 'REFEREE':
-					return 'CHALLENGE_USER_REFEREE';
-				case 'TEACHER':
-					return 'CHALLENGE_USER_TEACHER';
-				case 'MEMBER':
-					return 'CHALLENGE_USER_MEMBER';
-				case 'STUDENT':
-					return 'CHALLENGE_USER_STUDENT';
-			}
-			throw new CommonError(`Unhandled user role ${r} in ${id}`);
-		case 'SEE_GRAPHS':
-			switch (r) {
-				case 'ADMIN':
-					return 'SEE_GRAPHS_ADMIN';
-				case 'REFEREE':
-					return 'SEE_GRAPHS_REFEREE';
-				case 'TEACHER':
-					return 'SEE_GRAPHS_TEACHER';
-				case 'MEMBER':
-					return 'SEE_GRAPHS_MEMBER';
-				case 'STUDENT':
-					return 'SEE_GRAPHS_STUDENT';
-			}
-			throw new CommonError(`Unhandled user role ${r} in ${id}`);
-		case 'FORCE_CHALLENGE_ACCEPT':
-			switch (r) {
-				case 'ADMIN':
-					return 'FORCE_CHALLENGE_ACCEPT_ADMIN';
-				case 'REFEREE':
-					return 'FORCE_CHALLENGE_ACCEPT_REFEREE';
-				case 'TEACHER':
-					return 'FORCE_CHALLENGE_ACCEPT_TEACHER';
-				case 'MEMBER':
-					return 'FORCE_CHALLENGE_ACCEPT_MEMBER';
-				case 'STUDENT':
-					return 'FORCE_CHALLENGE_ACCEPT_STUDENT';
-			}
-			throw new CommonError(`Unhandled user role ${r} in ${id}`);
-		case 'FORCE_CHALLENGE_SET_RESULT':
-			switch (r) {
-				case 'ADMIN':
-					return 'FORCE_CHALLENGE_SET_RESULT_ADMIN';
-				case 'REFEREE':
-					return 'FORCE_CHALLENGE_SET_RESULT_REFEREE';
-				case 'TEACHER':
-					return 'FORCE_CHALLENGE_SET_RESULT_TEACHER';
-				case 'MEMBER':
-					return 'FORCE_CHALLENGE_SET_RESULT_MEMBER';
-				case 'STUDENT':
-					return 'FORCE_CHALLENGE_SET_RESULT_STUDENT';
-			}
-			throw new CommonError(`Unhandled user role ${r} in ${id}`);
-		case 'FORCE_CHALLENGE_ACCEPT_RESULT':
-			switch (r) {
-				case 'ADMIN':
-					return 'FORCE_CHALLENGE_ACCEPT_RESULT_ADMIN';
-				case 'REFEREE':
-					return 'FORCE_CHALLENGE_ACCEPT_RESULT_REFEREE';
-				case 'TEACHER':
-					return 'FORCE_CHALLENGE_ACCEPT_RESULT_TEACHER';
-				case 'MEMBER':
-					return 'FORCE_CHALLENGE_ACCEPT_RESULT_MEMBER';
-				case 'STUDENT':
-					return 'FORCE_CHALLENGE_ACCEPT_RESULT_STUDENT';
-			}
-			throw new CommonError(`Unhandled user role ${r} in ${id}`);
-	}
-
-	throw new CommonError(`Wrong action identifier ${id}`);
-}
+export const rolesAndActions: { [key in UserActionId]: UserAction[] } = {
+	CREATE_GAMES: [
+		'CREATE_GAMES_ADMIN',
+		'CREATE_GAMES_REFEREE',
+		'CREATE_GAMES_TEACHER',
+		'CREATE_GAMES_MEMBER',
+		'CREATE_GAMES_STUDENT',
+	],
+	DELETE_GAMES: [
+		'DELETE_GAMES_ADMIN',
+		'DELETE_GAMES_REFEREE',
+		'DELETE_GAMES_TEACHER',
+		'DELETE_GAMES_MEMBER',
+		'DELETE_GAMES_STUDENT',
+	],
+	EDIT_USERS: [
+		'EDIT_USER_ADMIN',
+		'EDIT_USER_REFEREE',
+		'EDIT_USER_TEACHER',
+		'EDIT_USER_MEMBER',
+		'EDIT_USER_STUDENT',
+	],
+	EDIT_GAMES: [
+		'EDIT_GAMES_ADMIN',
+		'EDIT_GAMES_REFEREE',
+		'EDIT_GAMES_TEACHER',
+		'EDIT_GAMES_MEMBER',
+		'EDIT_GAMES_STUDENT',
+	],
+	ASSIGN_ROLE_USERS: [
+		'ASSIGN_ROLE_ADMIN',
+		'ASSIGN_ROLE_REFEREE',
+		'ASSIGN_ROLE_TEACHER',
+		'ASSIGN_ROLE_MEMBER',
+		'ASSIGN_ROLE_STUDENT',
+	],
+	SEE_GAMES: [
+		'SEE_GAMES_ADMIN',
+		'SEE_GAMES_REFEREE',
+		'SEE_GAMES_TEACHER',
+		'SEE_GAMES_MEMBER',
+		'SEE_GAMES_STUDENT',
+	],
+	SEE_GRAPHS: [
+		'SEE_GRAPHS_ADMIN',
+		'SEE_GRAPHS_REFEREE',
+		'SEE_GRAPHS_TEACHER',
+		'SEE_GRAPHS_MEMBER',
+		'SEE_GRAPHS_STUDENT',
+	],
+	CHALLENGE_USERS: [
+		'CHALLENGE_USER_ADMIN',
+		'CHALLENGE_USER_REFEREE',
+		'CHALLENGE_USER_TEACHER',
+		'CHALLENGE_USER_MEMBER',
+		'CHALLENGE_USER_STUDENT',
+	],
+	FORCE_CHALLENGE_ACCEPT: [
+		'FORCE_CHALLENGE_ACCEPT_ADMIN',
+		'FORCE_CHALLENGE_ACCEPT_REFEREE',
+		'FORCE_CHALLENGE_ACCEPT_TEACHER',
+		'FORCE_CHALLENGE_ACCEPT_MEMBER',
+		'FORCE_CHALLENGE_ACCEPT_STUDENT',
+	],
+	FORCE_CHALLENGE_SET_RESULT: [
+		'FORCE_CHALLENGE_SET_RESULT_ADMIN',
+		'FORCE_CHALLENGE_SET_RESULT_REFEREE',
+		'FORCE_CHALLENGE_SET_RESULT_TEACHER',
+		'FORCE_CHALLENGE_SET_RESULT_MEMBER',
+		'FORCE_CHALLENGE_SET_RESULT_STUDENT',
+	],
+	FORCE_CHALLENGE_ACCEPT_RESULT: [
+		'FORCE_CHALLENGE_ACCEPT_RESULT_ADMIN',
+		'FORCE_CHALLENGE_ACCEPT_RESULT_REFEREE',
+		'FORCE_CHALLENGE_ACCEPT_RESULT_TEACHER',
+		'FORCE_CHALLENGE_ACCEPT_RESULT_MEMBER',
+		'FORCE_CHALLENGE_ACCEPT_RESULT_STUDENT',
+	],
+};
