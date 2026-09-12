@@ -1,5 +1,4 @@
-/*
-Elo rating for a Chess Club
+/* Elo rating for a Chess Club
 Copyright (C) 2023 - 2026  Lluís Alemany Puig
 
 This program is free software: you can redistribute it and/or modify
@@ -87,6 +86,27 @@ export const ALL_ACTIONS = [
 	'CHALLENGE_USER_TEACHER',
 	'CHALLENGE_USER_MEMBER',
 	'CHALLENGE_USER_STUDENT',
+
+	'FORCE_CHALLENGE_ACCEPT',
+	'FORCE_CHALLENGE_ACCEPT_ADMIN',
+	'FORCE_CHALLENGE_ACCEPT_REFEREE',
+	'FORCE_CHALLENGE_ACCEPT_TEACHER',
+	'FORCE_CHALLENGE_ACCEPT_MEMBER',
+	'FORCE_CHALLENGE_ACCEPT_STUDENT',
+
+	'FORCE_CHALLENGE_SET_RESULT',
+	'FORCE_CHALLENGE_SET_RESULT_ADMIN',
+	'FORCE_CHALLENGE_SET_RESULT_REFEREE',
+	'FORCE_CHALLENGE_SET_RESULT_TEACHER',
+	'FORCE_CHALLENGE_SET_RESULT_MEMBER',
+	'FORCE_CHALLENGE_SET_RESULT_STUDENT',
+
+	'FORCE_CHALLENGE_ACCEPT_RESULT',
+	'FORCE_CHALLENGE_ACCEPT_RESULT_ADMIN',
+	'FORCE_CHALLENGE_ACCEPT_RESULT_REFEREE',
+	'FORCE_CHALLENGE_ACCEPT_RESULT_TEACHER',
+	'FORCE_CHALLENGE_ACCEPT_RESULT_MEMBER',
+	'FORCE_CHALLENGE_ACCEPT_RESULT_STUDENT',
 ] as const;
 
 export type UserAction = (typeof ALL_ACTIONS)[number];
@@ -106,6 +126,9 @@ export const ALL_ACTION_IDS = [
 	'CHALLENGE_USERS',
 	'SEE_GAMES',
 	'SEE_GRAPHS',
+	'FORCE_CHALLENGE_ACCEPT',
+	'FORCE_CHALLENGE_SET_RESULT',
+	'FORCE_CHALLENGE_ACCEPT_RESULT',
 ] as const;
 
 // All actions as type
@@ -131,6 +154,12 @@ export function getGenericRoleActionName(id: UserActionId): UserAction {
 			return 'CHALLENGE_USER';
 		case 'SEE_GRAPHS':
 			return 'SEE_GRAPHS';
+		case 'FORCE_CHALLENGE_ACCEPT':
+			return 'FORCE_CHALLENGE_ACCEPT';
+		case 'FORCE_CHALLENGE_SET_RESULT':
+			return 'FORCE_CHALLENGE_SET_RESULT';
+		case 'FORCE_CHALLENGE_ACCEPT_RESULT':
+			return 'FORCE_CHALLENGE_ACCEPT_RESULT';
 	}
 
 	throw new CommonError(`Wrong action identifier ${id}`);
@@ -248,6 +277,48 @@ export function getRoleActionName(id: UserActionId, r: UserRole): UserAction {
 					return 'SEE_GRAPHS_MEMBER';
 				case 'STUDENT':
 					return 'SEE_GRAPHS_STUDENT';
+			}
+			throw new CommonError(`Unhandled user role ${r} in ${id}`);
+		case 'FORCE_CHALLENGE_ACCEPT':
+			switch (r) {
+				case 'ADMIN':
+					return 'FORCE_CHALLENGE_ACCEPT_ADMIN';
+				case 'REFEREE':
+					return 'FORCE_CHALLENGE_ACCEPT_REFEREE';
+				case 'TEACHER':
+					return 'FORCE_CHALLENGE_ACCEPT_TEACHER';
+				case 'MEMBER':
+					return 'FORCE_CHALLENGE_ACCEPT_MEMBER';
+				case 'STUDENT':
+					return 'FORCE_CHALLENGE_ACCEPT_STUDENT';
+			}
+			throw new CommonError(`Unhandled user role ${r} in ${id}`);
+		case 'FORCE_CHALLENGE_SET_RESULT':
+			switch (r) {
+				case 'ADMIN':
+					return 'FORCE_CHALLENGE_SET_RESULT_ADMIN';
+				case 'REFEREE':
+					return 'FORCE_CHALLENGE_SET_RESULT_REFEREE';
+				case 'TEACHER':
+					return 'FORCE_CHALLENGE_SET_RESULT_TEACHER';
+				case 'MEMBER':
+					return 'FORCE_CHALLENGE_SET_RESULT_MEMBER';
+				case 'STUDENT':
+					return 'FORCE_CHALLENGE_SET_RESULT_STUDENT';
+			}
+			throw new CommonError(`Unhandled user role ${r} in ${id}`);
+		case 'FORCE_CHALLENGE_ACCEPT_RESULT':
+			switch (r) {
+				case 'ADMIN':
+					return 'FORCE_CHALLENGE_ACCEPT_RESULT_ADMIN';
+				case 'REFEREE':
+					return 'FORCE_CHALLENGE_ACCEPT_RESULT_REFEREE';
+				case 'TEACHER':
+					return 'FORCE_CHALLENGE_ACCEPT_RESULT_TEACHER';
+				case 'MEMBER':
+					return 'FORCE_CHALLENGE_ACCEPT_RESULT_MEMBER';
+				case 'STUDENT':
+					return 'FORCE_CHALLENGE_ACCEPT_RESULT_STUDENT';
 			}
 			throw new CommonError(`Unhandled user role ${r} in ${id}`);
 	}
