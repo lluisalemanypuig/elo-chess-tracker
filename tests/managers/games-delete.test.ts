@@ -31,19 +31,22 @@ import {
 } from '@common/models/time-control';
 import { toUserGivenName } from '@common/models/user-given-name';
 import { isNotDefined } from '@common/utils/is-defined';
-import { toDateFull } from '@common/utils/time';
 import { EnvironmentManager } from '@server/managers/environment-manager';
-import { gameAddNew, gameDelete } from '@server/managers/games';
+import { gameDelete } from '@server/managers/games';
 import { GamesManager } from '@server/managers/games-manager';
 import { GraphsManager } from '@server/managers/graphs-manager';
 import { serverInitFromData } from '@server/managers/memory/initialization';
 import { userAddNew } from '@server/managers/users';
 import { UsersManager } from '@server/managers/users-manager';
-import { Configuration } from '@server/models/configuration/configuration';
 import { EdgeMetadata } from '@server/models/graph/edge-metadata';
 import { Graph } from '@server/models/graph/graph';
 import { User } from '@server/models/user';
-import { runCommand, TestError } from '@tests';
+import {
+	makeConfiguration,
+	runCommand,
+	TestError,
+	testGameAddNew,
+} from '@tests';
 import fs from 'fs';
 import path from 'path';
 
@@ -57,31 +60,8 @@ const Rapid10p0 = toTimeControlName('Rapid (10 + 0)');
 const Blitz = toTimeControlId('Blitz');
 const Blitz5p3 = toTimeControlName('Blitz (5 + 3)');
 
-const configuration: Configuration = {
-	environment: {
-		sslCertificate: {
-			publicKeyFile: 'sadf',
-			privateKeyFile: 'qwer',
-			passphraseFile: 'kgj68',
-		},
-		favicon: 'favicon.png',
-		loginPage: {
-			title: 'Login title',
-			icon: 'login.png',
-		},
-		homePage: {
-			title: 'Home title',
-			icon: 'home.png',
-		},
-	},
-	server: {
-		domainName: '$DOMAIN_NAME',
-		ports: {
-			http: '8080',
-			https: '8443',
-		},
-	},
-	ratingSystem: 'Elo',
+const configuration = makeConfiguration({
+	domainName: '$DOMAIN_NAME',
 	timeControls: [
 		{
 			id: Classical,
@@ -100,11 +80,6 @@ const configuration: Configuration = {
 			name: Blitz5p3,
 		},
 	],
-	behavior: {
-		challenges: {
-			higherRatedPlayerCanDeclineChallengeFromLowerRatedPlayer: false,
-		},
-	},
 	permissions: {
 		admin: [
 			'CREATE_USER',
@@ -121,7 +96,7 @@ const configuration: Configuration = {
 		member: [],
 		student: [],
 	},
-};
+});
 
 let aU: User;
 let bU: User;
@@ -212,60 +187,60 @@ describe('Server setup', () => {
 
 describe('Sequential game creation', () => {
 	test('Add "Blitz" games', () => {
-		gameAddNew(
+		testGameAddNew(
 			'sample',
 			aU,
 			bU,
 			aU.username,
-			toDateFull('2020-02-17..00:00:00:000'),
+			'2020-02-17..00:00:00:000',
 			'white_wins',
 			Blitz,
 			Blitz5p3,
-			toDateFull('2025-01-19..17:06:00:000'),
+			'2025-01-19..17:06:00:000',
 		);
-		gameAddNew(
+		testGameAddNew(
 			'sample',
 			cU,
 			dU,
 			aU.username,
-			toDateFull('2020-02-17..00:00:00:000'),
+			'2020-02-17..00:00:00:000',
 			'black_wins',
 			Blitz,
 			Blitz5p3,
-			toDateFull('2025-01-19..17:06:10:000'),
+			'2025-01-19..17:06:10:000',
 		);
-		gameAddNew(
+		testGameAddNew(
 			'sample',
 			eU,
 			fU,
 			aU.username,
-			toDateFull('2020-02-17..00:00:00:000'),
+			'2020-02-17..00:00:00:000',
 			'draw',
 			Blitz,
 			Blitz5p3,
-			toDateFull('2025-01-19..17:06:20:000'),
+			'2025-01-19..17:06:20:000',
 		);
-		gameAddNew(
+		testGameAddNew(
 			'sample',
 			aU,
 			fU,
 			aU.username,
-			toDateFull('2020-02-17..00:00:00:000'),
+			'2020-02-17..00:00:00:000',
 			'black_wins',
 			Blitz,
 			Blitz5p3,
-			toDateFull('2025-01-19..17:06:30:000'),
+			'2025-01-19..17:06:30:000',
 		);
-		gameAddNew(
+		testGameAddNew(
 			'sample',
 			bU,
 			aU,
 			aU.username,
-			toDateFull('2020-02-17..00:00:00:000'),
+			'2020-02-17..00:00:00:000',
 			'white_wins',
 			Blitz,
 			Blitz5p3,
-			toDateFull('2025-01-19..17:06:40:000'),
+			'2025-01-19..17:06:40:000',
 		);
 
 		expect(aU.getGames(Blitz).length).toBe(1);

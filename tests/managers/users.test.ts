@@ -42,12 +42,11 @@ import {
 	userUpdateFromPlayerData,
 } from '@server/managers/users';
 import { UsersManager } from '@server/managers/users-manager';
-import { Configuration } from '@server/models/configuration/configuration';
 import { Player } from '@server/models/player';
 import { EloRating } from '@server/models/rating-framework/Elo/rating';
 import { TimeControlRating } from '@server/models/time-control-rating';
 import { User } from '@server/models/user';
-import { runCommand, TestError } from '@tests';
+import { makeConfiguration, runCommand, TestError } from '@tests';
 import fs from 'fs';
 import path from 'path';
 
@@ -68,31 +67,7 @@ const webpage_dir = 'tests/webpage';
 const db_dir = path.join(webpage_dir, 'database');
 const db_users_dir = path.join(db_dir, 'users');
 
-const classical_rapid_blitz: Configuration = {
-	environment: {
-		sslCertificate: {
-			publicKeyFile: 'sadf',
-			privateKeyFile: 'qwer',
-			passphraseFile: 'kgj68',
-		},
-		favicon: 'favicon.png',
-		loginPage: {
-			title: 'Login title',
-			icon: 'login.png',
-		},
-		homePage: {
-			title: 'Home title',
-			icon: 'home.png',
-		},
-	},
-	server: {
-		domainName: '',
-		ports: {
-			http: '8080',
-			https: '8443',
-		},
-	},
-	ratingSystem: 'Elo',
+const classical_rapid_blitz = makeConfiguration({
 	timeControls: [
 		{
 			id: Classical,
@@ -111,11 +86,6 @@ const classical_rapid_blitz: Configuration = {
 			name: Blitz5p3,
 		},
 	],
-	behavior: {
-		challenges: {
-			higherRatedPlayerCanDeclineChallengeFromLowerRatedPlayer: false,
-		},
-	},
 	permissions: {
 		admin: [
 			'CREATE_USER',
@@ -135,33 +105,9 @@ const classical_rapid_blitz: Configuration = {
 		member: [],
 		student: [],
 	},
-};
+});
 
-const classical_rapid_blitz_bullet: Configuration = {
-	environment: {
-		sslCertificate: {
-			publicKeyFile: 'sadf',
-			privateKeyFile: 'qwer',
-			passphraseFile: 'kgj68',
-		},
-		favicon: 'favicon.png',
-		loginPage: {
-			title: 'Login title',
-			icon: 'login.png',
-		},
-		homePage: {
-			title: 'Home title',
-			icon: 'home.png',
-		},
-	},
-	server: {
-		domainName: '',
-		ports: {
-			http: '8080',
-			https: '8443',
-		},
-	},
-	ratingSystem: 'Elo',
+const classical_rapid_blitz_bullet = makeConfiguration({
 	timeControls: [
 		{
 			id: Classical,
@@ -184,11 +130,6 @@ const classical_rapid_blitz_bullet: Configuration = {
 			name: Bullet2p1,
 		},
 	],
-	behavior: {
-		challenges: {
-			higherRatedPlayerCanDeclineChallengeFromLowerRatedPlayer: false,
-		},
-	},
 	permissions: {
 		admin: [
 			'CREATE_USER',
@@ -208,44 +149,15 @@ const classical_rapid_blitz_bullet: Configuration = {
 		member: [],
 		student: [],
 	},
-};
+});
 
-const classical: Configuration = {
-	environment: {
-		sslCertificate: {
-			publicKeyFile: 'sadf',
-			privateKeyFile: 'qwer',
-			passphraseFile: 'kgj68',
-		},
-		favicon: 'favicon.png',
-		loginPage: {
-			title: 'Login title',
-			icon: 'login.png',
-		},
-		homePage: {
-			title: 'Home title',
-			icon: 'home.png',
-		},
-	},
-	server: {
-		domainName: '',
-		ports: {
-			http: '8080',
-			https: '8443',
-		},
-	},
-	ratingSystem: 'Elo',
+const classical = makeConfiguration({
 	timeControls: [
 		{
 			id: Classical,
 			name: Classical90p30,
 		},
 	],
-	behavior: {
-		challenges: {
-			higherRatedPlayerCanDeclineChallengeFromLowerRatedPlayer: false,
-		},
-	},
 	permissions: {
 		admin: [
 			'CREATE_USER',
@@ -265,7 +177,7 @@ const classical: Configuration = {
 		member: [],
 		student: [],
 	},
-};
+});
 
 function testUserExists(username: string): boolean {
 	return UsersManager.getInstance().exists(toPlayerPrivateId(username));

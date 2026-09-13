@@ -42,8 +42,7 @@ import {
 import { SessionIDManager } from '@server/managers/session-id-manager';
 import { userAddNew } from '@server/managers/users';
 import { UsersManager } from '@server/managers/users-manager';
-import { Configuration } from '@server/models/configuration/configuration';
-import { runCommand, TestError } from '@tests';
+import { makeConfiguration, runCommand, TestError } from '@tests';
 
 const Classical = toTimeControlId('Classical');
 const Classical90p30 = toTimeControlName('Classical (90 + 30)');
@@ -55,31 +54,7 @@ const Rapid10p0 = toTimeControlName('Rapid (10 + 0)');
 const Blitz = toTimeControlId('Blitz');
 const Blitz5p3 = toTimeControlName('Blitz (5 + 3)');
 
-const configuration: Configuration = {
-	environment: {
-		sslCertificate: {
-			publicKeyFile: 'sadf',
-			privateKeyFile: 'qwer',
-			passphraseFile: 'kgj68',
-		},
-		favicon: 'favicon.png',
-		loginPage: {
-			title: 'Login title',
-			icon: 'login.png',
-		},
-		homePage: {
-			title: 'Home title',
-			icon: 'home.png',
-		},
-	},
-	server: {
-		domainName: '',
-		ports: {
-			http: '8080',
-			https: '8443',
-		},
-	},
-	ratingSystem: 'Elo',
+const configuration = makeConfiguration({
 	timeControls: [
 		{
 			id: Classical,
@@ -98,11 +73,6 @@ const configuration: Configuration = {
 			name: Blitz5p3,
 		},
 	],
-	behavior: {
-		challenges: {
-			higherRatedPlayerCanDeclineChallengeFromLowerRatedPlayer: false,
-		},
-	},
 	permissions: {
 		admin: [
 			'CREATE_USER',
@@ -140,7 +110,7 @@ const configuration: Configuration = {
 			'CHALLENGE_USER_STUDENT',
 		],
 	},
-};
+});
 
 const aa = toPlayerPrivateId('aa');
 const bb = toPlayerPrivateId('bb');

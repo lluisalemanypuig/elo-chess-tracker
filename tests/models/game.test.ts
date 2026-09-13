@@ -23,15 +23,13 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { toGameId } from '@common/models/game-id';
 import { toPlayerPrivateId } from '@common/models/player-id';
 import {
 	toTimeControlId,
 	toTimeControlName,
 } from '@common/models/time-control';
-import { toDateFull } from '@common/utils/time';
-import { Game } from '@server/models/game';
 import { EloRating } from '@server/models/rating-framework/Elo/rating';
+import { makeGame } from '@tests/test-utils';
 
 const Blitz = toTimeControlId('Blitz');
 const Blitz5p3 = toTimeControlName('Blitz (5 + 3)');
@@ -40,21 +38,20 @@ describe('Setters and Getters -- Elo', () => {
 	test('Gets', () => {
 		const rW = new EloRating(1500, 0, 0, 0, 0, 40, false);
 		const rB = new EloRating(1500, 0, 0, 0, 0, 40, false);
-		const g = new Game(
-			toGameId('1'),
-			'asdf',
-			toPlayerPrivateId('W'),
-			rW,
-			toPlayerPrivateId('B'),
-			rB,
-			toPlayerPrivateId('a'),
-			toDateFull('2020-02-17..00:00:00:000'),
-			'white_wins',
-			Blitz,
-			Blitz5p3,
-			toDateFull('2024-12-29..11:15:00'),
-			[],
-		);
+		const g = makeGame({
+			id: '1',
+			title: 'asdf',
+			white: 'W',
+			whiteRating: rW,
+			black: 'B',
+			blackRating: rB,
+			createdBy: 'a',
+			whenCreated: '2020-02-17..00:00:00:000',
+			result: 'white_wins',
+			timeControlId: 'Blitz',
+			timeControlName: 'Blitz (5 + 3)',
+			whenPlayed: '2024-12-29..11:15:00',
+		});
 
 		expect(g.id).toEqual('1');
 		expect(g.white).toEqual('W');
@@ -71,21 +68,20 @@ describe('Setters and Getters -- Elo', () => {
 	test('Sets', () => {
 		let rW = new EloRating(1500, 0, 0, 0, 0, 40, false);
 		let rB = new EloRating(1500, 0, 0, 0, 0, 40, false);
-		const g = new Game(
-			toGameId('1'),
-			'asdf',
-			toPlayerPrivateId('W'),
-			rW,
-			toPlayerPrivateId('B'),
-			rB,
-			toPlayerPrivateId('a'),
-			toDateFull('2020-02-17..00:00:00:000'),
-			'white_wins',
-			Blitz,
-			Blitz5p3,
-			toDateFull('2024-12-29..11:15:00'),
-			[],
-		);
+		const g = makeGame({
+			id: '1',
+			title: 'asdf',
+			white: 'W',
+			whiteRating: rW,
+			black: 'B',
+			blackRating: rB,
+			createdBy: 'a',
+			whenCreated: '2020-02-17..00:00:00:000',
+			result: 'white_wins',
+			timeControlId: 'Blitz',
+			timeControlName: 'Blitz (5 + 3)',
+			whenPlayed: '2024-12-29..11:15:00',
+		});
 
 		expect(g.result).toEqual('white_wins');
 		g.result = 'black_wins';

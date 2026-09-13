@@ -27,3 +27,4 @@ import { TimeControlSchema } from '@common/models/time-control';
 import { z } from 'zod';
 
 export const TimeControlArraySchema = z.array(TimeControlSchema);
+export type TimeControlArray = z.infer<typeof TimeControlArraySchema>;

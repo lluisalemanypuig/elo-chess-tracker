@@ -36,7 +36,6 @@ import { gameArrayFromString } from '@server/io/game';
 import { graphFromString } from '@server/io/graph/graph';
 import { EnvironmentManager } from '@server/managers/environment-manager';
 import {
-	gameAddNew,
 	gameEditResult,
 	gameEditTitle,
 	recalculateAllRatings,
@@ -49,12 +48,16 @@ import { clearServer } from '@server/managers/memory/clear';
 import { serverInitFromData } from '@server/managers/memory/initialization';
 import { userAddNew } from '@server/managers/users';
 import { UsersManager } from '@server/managers/users-manager';
-import { Configuration } from '@server/models/configuration/configuration';
 import { Game } from '@server/models/game';
 import { EdgeMetadata } from '@server/models/graph/edge-metadata';
 import { Graph } from '@server/models/graph/graph';
 import { User } from '@server/models/user';
-import { runCommand, TestError } from '@tests';
+import {
+	makeConfiguration,
+	runCommand,
+	TestError,
+	testGameAddNew,
+} from '@tests';
 import fs from 'fs';
 import path from 'path';
 
@@ -69,31 +72,7 @@ const Blitz = toTimeControlId('Blitz');
 const Blitz5p3 = toTimeControlName('Blitz (5 + 3)');
 const Blitz5p0 = toTimeControlName('Blitz (5 + 0)');
 
-const configuration: Configuration = {
-	environment: {
-		sslCertificate: {
-			publicKeyFile: 'sadf',
-			privateKeyFile: 'qwer',
-			passphraseFile: 'kgj68',
-		},
-		favicon: 'favicon.png',
-		loginPage: {
-			title: 'Login title',
-			icon: 'login.png',
-		},
-		homePage: {
-			title: 'Home title',
-			icon: 'home.png',
-		},
-	},
-	server: {
-		domainName: '',
-		ports: {
-			http: '8080',
-			https: '8443',
-		},
-	},
-	ratingSystem: 'Elo',
+const configuration = makeConfiguration({
 	timeControls: [
 		{
 			id: Classical,
@@ -112,11 +91,6 @@ const configuration: Configuration = {
 			name: Blitz5p3,
 		},
 	],
-	behavior: {
-		challenges: {
-			higherRatedPlayerCanDeclineChallengeFromLowerRatedPlayer: false,
-		},
-	},
 	permissions: {
 		admin: [
 			'CREATE_USER',
@@ -135,7 +109,7 @@ const configuration: Configuration = {
 		member: [],
 		student: [],
 	},
-};
+});
 
 let aU: User;
 let bU: User;
@@ -253,16 +227,16 @@ describe('Sequential game creation', () => {
 		const blitz_dir =
 			EnvironmentManager.getInstance().getDirGamesTimeControl(Blitz);
 
-		gameAddNew(
+		testGameAddNew(
 			'sample',
 			aU,
 			bU,
-			a,
-			toDateFull('2020-02-17..00:00:00:000'),
+			'a',
+			'2020-02-17..00:00:00:000',
 			'white_wins',
 			Blitz,
 			Blitz5p3,
-			toDateFull('2025-01-19..17:06:00:000'),
+			'2025-01-19..17:06:00:000',
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -311,16 +285,16 @@ describe('Sequential game creation', () => {
 			expect(fU.getRating(Classical).numWonDrawnLost()).toEqual([0, 0, 0, 0]);
 		}
 
-		gameAddNew(
+		testGameAddNew(
 			'sample',
 			cU,
 			dU,
-			a,
-			toDateFull('2020-02-17..00:00:00:000'),
+			'a',
+			'2020-02-17..00:00:00:000',
 			'black_wins',
 			Blitz,
 			Blitz5p3,
-			toDateFull('2025-01-19..17:06:10:000'),
+			'2025-01-19..17:06:10:000',
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -375,16 +349,16 @@ describe('Sequential game creation', () => {
 			expect(fU.getRating(Classical).numWonDrawnLost()).toEqual([0, 0, 0, 0]);
 		}
 
-		gameAddNew(
+		testGameAddNew(
 			'sample',
 			eU,
 			fU,
-			a,
-			toDateFull('2020-02-17..00:00:00:000'),
+			'a',
+			'2020-02-17..00:00:00:000',
 			'draw',
 			Blitz,
 			Blitz5p3,
-			toDateFull('2025-01-19..17:06:20:000'),
+			'2025-01-19..17:06:20:000',
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -447,16 +421,16 @@ describe('Sequential game creation', () => {
 			expect(fU.getRating(Classical).numWonDrawnLost()).toEqual([0, 0, 0, 0]);
 		}
 
-		gameAddNew(
+		testGameAddNew(
 			'sample',
 			aU,
 			fU,
-			a,
-			toDateFull('2020-02-17..00:00:00:000'),
+			'a',
+			'2020-02-17..00:00:00:000',
 			'black_wins',
 			Blitz,
 			Blitz5p3,
-			toDateFull('2025-01-19..17:06:30:000'),
+			'2025-01-19..17:06:30:000',
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -532,16 +506,16 @@ describe('Sequential game creation', () => {
 		const classical_dir =
 			EnvironmentManager.getInstance().getDirGamesTimeControl(Classical);
 
-		gameAddNew(
+		testGameAddNew(
 			'sample',
 			aU,
 			bU,
-			a,
-			toDateFull('2020-02-17..00:00:00:000'),
+			'a',
+			'2020-02-17..00:00:00:000',
 			'white_wins',
 			Classical,
 			Classical90p30,
-			toDateFull('2025-01-09..17:06:00:000'),
+			'2025-01-09..17:06:00:000',
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -588,16 +562,16 @@ describe('Sequential game creation', () => {
 			expect(fU.getRating(Classical).numWonDrawnLost()).toEqual([0, 0, 0, 0]);
 		}
 
-		gameAddNew(
+		testGameAddNew(
 			'sample',
 			cU,
 			dU,
-			a,
-			toDateFull('2020-02-17..00:00:00:000'),
+			'a',
+			'2020-02-17..00:00:00:000',
 			'black_wins',
 			Classical,
 			Classical90p30,
-			toDateFull('2025-01-09..17:06:10:000'),
+			'2025-01-09..17:06:10:000',
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -652,16 +626,16 @@ describe('Sequential game creation', () => {
 			expect(fU.getRating(Classical).numWonDrawnLost()).toEqual([0, 0, 0, 0]);
 		}
 
-		gameAddNew(
+		testGameAddNew(
 			'sample',
 			eU,
 			fU,
-			a,
-			toDateFull('2020-02-17..00:00:00:000'),
+			'a',
+			'2020-02-17..00:00:00:000',
 			'draw',
 			Classical,
 			Classical90p30,
-			toDateFull('2025-01-09..17:06:20:000'),
+			'2025-01-09..17:06:20:000',
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -724,16 +698,16 @@ describe('Sequential game creation', () => {
 			expect(fU.getRating(Classical).numWonDrawnLost()).toEqual([1, 0, 1, 0]);
 		}
 
-		gameAddNew(
+		testGameAddNew(
 			'sample',
 			aU,
 			fU,
-			a,
-			toDateFull('2020-02-17..00:00:00:000'),
+			'a',
+			'2020-02-17..00:00:00:000',
 			'black_wins',
 			Classical,
 			Classical90p30,
-			toDateFull('2025-01-09..17:06:30:000'),
+			'2025-01-09..17:06:30:000',
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -811,16 +785,16 @@ describe('Inverse game creation', () => {
 		const blitz_dir =
 			EnvironmentManager.getInstance().getDirGamesTimeControl(Blitz);
 
-		gameAddNew(
+		testGameAddNew(
 			'sample',
 			aU,
 			fU,
-			a,
-			toDateFull('2020-02-17..00:00:00:000'),
+			'a',
+			'2020-02-17..00:00:00:000',
 			'draw',
 			Blitz,
 			Blitz5p0,
-			toDateFull('2025-01-20..17:06:30:000'),
+			'2025-01-20..17:06:30:000',
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -867,16 +841,16 @@ describe('Inverse game creation', () => {
 			expect(fU.getRating(Classical).numWonDrawnLost()).toEqual([2, 1, 1, 0]);
 		}
 
-		gameAddNew(
+		testGameAddNew(
 			'sample',
 			eU,
 			fU,
-			a,
-			toDateFull('2020-02-17..00:00:00:000'),
+			'a',
+			'2020-02-17..00:00:00:000',
 			'draw',
 			Blitz,
 			Blitz5p0,
-			toDateFull('2025-01-20..17:06:20:000'),
+			'2025-01-20..17:06:20:000',
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -931,16 +905,16 @@ describe('Inverse game creation', () => {
 			expect(fU.getRating(Classical).numWonDrawnLost()).toEqual([2, 1, 1, 0]);
 		}
 
-		gameAddNew(
+		testGameAddNew(
 			'sample',
 			cU,
 			dU,
-			a,
-			toDateFull('2020-02-17..00:00:00:000'),
+			'a',
+			'2020-02-17..00:00:00:000',
 			'black_wins',
 			Blitz,
 			Blitz5p3,
-			toDateFull('2025-01-20..17:06:10:000'),
+			'2025-01-20..17:06:10:000',
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -1003,16 +977,16 @@ describe('Inverse game creation', () => {
 			expect(fU.getRating(Classical).numWonDrawnLost()).toEqual([2, 1, 1, 0]);
 		}
 
-		gameAddNew(
+		testGameAddNew(
 			'sample',
 			aU,
 			bU,
-			a,
-			toDateFull('2020-02-17..00:00:00:000'),
+			'a',
+			'2020-02-17..00:00:00:000',
 			'white_wins',
 			Blitz,
 			Blitz5p3,
-			toDateFull('2025-01-20..17:06:00:000'),
+			'2025-01-20..17:06:00:000',
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -1088,16 +1062,16 @@ describe('Inverse game creation', () => {
 		const classical_dir =
 			EnvironmentManager.getInstance().getDirGamesTimeControl(Classical);
 
-		gameAddNew(
+		testGameAddNew(
 			'sample',
 			aU,
 			fU,
-			a,
-			toDateFull('2020-02-17..00:00:00:000'),
+			'a',
+			'2020-02-17..00:00:00:000',
 			'draw',
 			Classical,
 			Classical90p30,
-			toDateFull('2025-01-10..17:06:30:000'),
+			'2025-01-10..17:06:30:000',
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -1144,16 +1118,16 @@ describe('Inverse game creation', () => {
 			expect(fU.getRating(Classical).numWonDrawnLost()).toEqual([3, 1, 2, 0]);
 		}
 
-		gameAddNew(
+		testGameAddNew(
 			'sample',
 			eU,
 			fU,
-			a,
-			toDateFull('2020-02-17..00:00:00:000'),
+			'a',
+			'2020-02-17..00:00:00:000',
 			'draw',
 			Classical,
 			Classical90p30,
-			toDateFull('2025-01-10..17:06:20:000'),
+			'2025-01-10..17:06:20:000',
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -1208,16 +1182,16 @@ describe('Inverse game creation', () => {
 			expect(fU.getRating(Classical).numWonDrawnLost()).toEqual([4, 1, 3, 0]);
 		}
 
-		gameAddNew(
+		testGameAddNew(
 			'sample',
 			cU,
 			dU,
-			a,
-			toDateFull('2020-02-17..00:00:00:000'),
+			'a',
+			'2020-02-17..00:00:00:000',
 			'black_wins',
 			Classical,
 			Classical90p30,
-			toDateFull('2025-01-10..17:06:10:000'),
+			'2025-01-10..17:06:10:000',
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -1280,16 +1254,16 @@ describe('Inverse game creation', () => {
 			expect(fU.getRating(Classical).numWonDrawnLost()).toEqual([4, 1, 3, 0]);
 		}
 
-		gameAddNew(
+		testGameAddNew(
 			'sample',
 			aU,
 			bU,
-			a,
-			toDateFull('2020-02-17..00:00:00:000'),
+			'a',
+			'2020-02-17..00:00:00:000',
 			'white_wins',
 			Classical,
 			Classical90p30,
-			toDateFull('2025-01-10..17:06:00:000'),
+			'2025-01-10..17:06:00:000',
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -1366,16 +1340,16 @@ describe('Zig-zag game creation', () => {
 	test('Add "Blitz" games', () => {
 		const blitz_dir =
 			EnvironmentManager.getInstance().getDirGamesTimeControl(Blitz);
-		gameAddNew(
+		testGameAddNew(
 			'sample',
 			aU,
 			fU,
-			a,
-			toDateFull('2020-02-17..00:00:00:000'),
+			'a',
+			'2020-02-17..00:00:00:000',
 			'draw',
 			Blitz,
 			Blitz5p0,
-			toDateFull('2025-01-20..17:06:25:000'),
+			'2025-01-20..17:06:25:000',
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -1454,16 +1428,16 @@ describe('Zig-zag game creation', () => {
 			expect(fU.getRating(Classical).numWonDrawnLost()).toEqual([4, 1, 3, 0]);
 		}
 
-		gameAddNew(
+		testGameAddNew(
 			'sample',
 			eU,
 			fU,
-			a,
-			toDateFull('2020-02-17..00:00:00:000'),
+			'a',
+			'2020-02-17..00:00:00:000',
 			'draw',
 			Blitz,
 			Blitz5p0,
-			toDateFull('2025-01-20..17:06:05:000'),
+			'2025-01-20..17:06:05:000',
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -1550,16 +1524,16 @@ describe('Zig-zag game creation', () => {
 			expect(fU.getRating(Classical).numWonDrawnLost()).toEqual([4, 1, 3, 0]);
 		}
 
-		gameAddNew(
+		testGameAddNew(
 			'sample',
 			cU,
 			dU,
-			a,
-			toDateFull('2020-02-17..00:00:00:000'),
+			'a',
+			'2020-02-17..00:00:00:000',
 			'white_wins',
 			Blitz,
 			Blitz5p3,
-			toDateFull('2025-01-20..17:06:15:000'),
+			'2025-01-20..17:06:15:000',
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -1654,16 +1628,16 @@ describe('Zig-zag game creation', () => {
 			expect(fU.getRating(Classical).numWonDrawnLost()).toEqual([4, 1, 3, 0]);
 		}
 
-		gameAddNew(
+		testGameAddNew(
 			'sample',
 			aU,
 			bU,
-			a,
-			toDateFull('2020-02-17..00:00:00:000'),
+			'a',
+			'2020-02-17..00:00:00:000',
 			'black_wins',
 			Blitz,
 			Blitz5p3,
-			toDateFull('2025-01-20..17:05:55:000'),
+			'2025-01-20..17:05:55:000',
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -1770,16 +1744,16 @@ describe('Zig-zag game creation', () => {
 	test('Add "Classical" games', () => {
 		const blitz_dir =
 			EnvironmentManager.getInstance().getDirGamesTimeControl(Classical);
-		gameAddNew(
+		testGameAddNew(
 			'sample',
 			aU,
 			fU,
-			a,
-			toDateFull('2020-02-17..00:00:00:000'),
+			'a',
+			'2020-02-17..00:00:00:000',
 			'draw',
 			Classical,
 			Classical90p30,
-			toDateFull('2025-01-10..17:06:25:000'),
+			'2025-01-10..17:06:25:000',
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -1858,16 +1832,16 @@ describe('Zig-zag game creation', () => {
 			expect(fU.getRating(Classical).numWonDrawnLost()).toEqual([5, 1, 4, 0]);
 		}
 
-		gameAddNew(
+		testGameAddNew(
 			'sample',
 			eU,
 			fU,
-			a,
-			toDateFull('2020-02-17..00:00:00:000'),
+			'a',
+			'2020-02-17..00:00:00:000',
 			'draw',
 			Classical,
 			Classical90p30,
-			toDateFull('2025-01-10..17:06:05:000'),
+			'2025-01-10..17:06:05:000',
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -1954,16 +1928,16 @@ describe('Zig-zag game creation', () => {
 			expect(fU.getRating(Classical).numWonDrawnLost()).toEqual([6, 1, 5, 0]);
 		}
 
-		gameAddNew(
+		testGameAddNew(
 			'sample',
 			cU,
 			dU,
-			a,
-			toDateFull('2020-02-17..00:00:00:000'),
+			'a',
+			'2020-02-17..00:00:00:000',
 			'white_wins',
 			Classical,
 			Classical90p30,
-			toDateFull('2025-01-10..17:06:15:000'),
+			'2025-01-10..17:06:15:000',
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -2058,16 +2032,16 @@ describe('Zig-zag game creation', () => {
 			expect(fU.getRating(Classical).numWonDrawnLost()).toEqual([6, 1, 5, 0]);
 		}
 
-		gameAddNew(
+		testGameAddNew(
 			'sample',
 			aU,
 			bU,
-			a,
-			toDateFull('2020-02-17..00:00:00:000'),
+			'a',
+			'2020-02-17..00:00:00:000',
 			'black_wins',
 			Classical,
 			Classical90p30,
-			toDateFull('2025-01-10..17:05:55:000'),
+			'2025-01-10..17:05:55:000',
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -2176,16 +2150,16 @@ describe('Before-time inverse game creation', () => {
 	test('Add "Blitz" games', () => {
 		const blitz_dir =
 			EnvironmentManager.getInstance().getDirGamesTimeControl(Blitz);
-		gameAddNew(
+		testGameAddNew(
 			'sample',
 			aU,
 			fU,
-			a,
-			toDateFull('2020-02-17..00:00:00:000'),
+			'a',
+			'2020-02-17..00:00:00:000',
 			'draw',
 			Blitz,
 			Blitz5p0,
-			toDateFull('2023-01-20..17:06:50:000'),
+			'2023-01-20..17:06:50:000',
 		);
 		{
 			const game_array = gameArrayFromString(
@@ -2232,16 +2206,16 @@ describe('Before-time inverse game creation', () => {
 			expect(fU.getRating(Classical).numWonDrawnLost()).toEqual([6, 1, 5, 0]);
 		}
 
-		gameAddNew(
+		testGameAddNew(
 			'sample',
 			aU,
 			cU,
-			a,
+			'a',
 			toDateFull('2020-02-17..00:00:00:000'),
 			'draw',
 			Blitz,
 			Blitz5p0,
-			toDateFull('2023-01-10..17:06:40:000'),
+			'2023-01-10..17:06:40:000',
 		);
 		{
 			const game_array = gameArrayFromString(

@@ -37,9 +37,8 @@ import { serverInitFromData } from '@server/managers/memory/initialization';
 import { RatingSystemManager } from '@server/managers/rating-system-manager';
 import { SessionIDManager } from '@server/managers/session-id-manager';
 import { UsersManager } from '@server/managers/users-manager';
-import { Configuration } from '@server/models/configuration/configuration';
 import { Graph } from '@server/models/graph/graph';
-import { runCommand } from '@tests';
+import { makeConfiguration, runCommand } from '@tests';
 import fs from 'fs';
 import path from 'path';
 
@@ -64,33 +63,8 @@ const Rapid10p0 = toTimeControlName('Rapid (10 + 0)');
 const Blitz = toTimeControlId('Blitz');
 const Blitz5p3 = toTimeControlName('Blitz (5 + 3)');
 
-const configuration: Configuration = {
-	environment: {
-		sslCertificate: {
-			publicKeyFile: 'sadf',
-			privateKeyFile: 'qwer',
-			passphraseFile: 'kgj68',
-		},
-		favicon: 'favicon.png',
-		loginPage: {
-			title: 'Login title',
-			icon: 'login.png',
-		},
-		homePage: {
-			title: 'Home title',
-			icon: 'home.png',
-		},
-	},
-
-	server: {
-		domainName: 'my_domain',
-		ports: {
-			http: '8080',
-			https: '8443',
-		},
-	},
-
-	ratingSystem: 'Elo',
+const configuration = makeConfiguration({
+	domainName: 'my_domain',
 	timeControls: [
 		{
 			id: Classical,
@@ -109,11 +83,6 @@ const configuration: Configuration = {
 			name: Blitz5p3,
 		},
 	],
-	behavior: {
-		challenges: {
-			higherRatedPlayerCanDeclineChallengeFromLowerRatedPlayer: false,
-		},
-	},
 	permissions: {
 		admin: [
 			'CHALLENGE_USER',
@@ -145,7 +114,7 @@ const configuration: Configuration = {
 			'CHALLENGE_USER_STUDENT',
 		],
 	},
-};
+});
 
 describe('Configure server', () => {
 	test('Load an empty server', async () => {

@@ -23,9 +23,9 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { toPlayerPrivateId } from '@common/models/player-id';
 import { toTimeControlId } from '@common/models/time-control';
 import { toUserGivenName } from '@common/models/user-given-name';
+import { UserRole } from '@common/models/user-role';
 import { toDateMajor } from '@common/utils/time';
 import {
 	initializePermissions,
@@ -33,7 +33,7 @@ import {
 } from '@server/managers/user-role-action';
 import { EloRating } from '@server/models/rating-framework/Elo/rating';
 import { TimeControlRating } from '@server/models/time-control-rating';
-import { User } from '@server/models/user';
+import { makeUser } from '@tests/test-utils';
 
 const Classical = toTimeControlId('Classical');
 const Rapid = toTimeControlId('Rapid');
@@ -46,13 +46,13 @@ describe('Elo', () => {
 	const classical = new EloRating(1700, 0, 0, 0, 0, 40, false);
 
 	test('basic gets', () => {
-		const u = new User(
-			toPlayerPrivateId('user.name'),
-			toUserGivenName('First'),
-			toUserGivenName('Last'),
-			{ encrypted: 'asdf', iv: 'ivrandom' },
-			['ADMIN', 'TEACHER'],
-			[
+		const u = makeUser({
+			username: 'user.name',
+			firstName: 'First',
+			lastName: 'Last',
+			password: { encrypted: 'asdf', iv: 'ivrandom' },
+			roles: ['ADMIN', 'TEACHER'],
+			games: [
 				{
 					timeControl: Blitz,
 					records: [{ record: toDateMajor('2024-12-24'), amount: 1 }],
@@ -62,11 +62,11 @@ describe('Elo', () => {
 					records: [{ record: toDateMajor('2024-12-25'), amount: 1 }],
 				},
 			],
-			[
+			ratings: [
 				new TimeControlRating(Blitz, blitz),
 				new TimeControlRating(Classical, classical),
 			],
-		);
+		});
 
 		expect(u.is('ADMIN')).toBe(true);
 		expect(u.is('TEACHER')).toBe(true);
@@ -88,13 +88,13 @@ describe('Elo', () => {
 	});
 
 	test('basic sets', () => {
-		let u = new User(
-			toPlayerPrivateId('user.name'),
-			toUserGivenName('First'),
-			toUserGivenName('Last'),
-			{ encrypted: 'asdf', iv: 'ivrandom' },
-			['ADMIN', 'TEACHER'],
-			[
+		let u = makeUser({
+			username: 'user.name',
+			firstName: 'First',
+			lastName: 'Last',
+			password: { encrypted: 'asdf', iv: 'ivrandom' },
+			roles: ['ADMIN', 'TEACHER'],
+			games: [
 				{
 					timeControl: Blitz,
 					records: [{ record: toDateMajor('2024-12-24'), amount: 1 }],
@@ -104,11 +104,11 @@ describe('Elo', () => {
 					records: [{ record: toDateMajor('2024-12-25'), amount: 1 }],
 				},
 			],
-			[
+			ratings: [
 				new TimeControlRating(Blitz, blitz),
 				new TimeControlRating(Classical, classical),
 			],
-		);
+		});
 
 		expect(u.is('ADMIN')).toBe(true);
 		expect(u.is('TEACHER')).toBe(true);
@@ -129,13 +129,13 @@ describe('Elo', () => {
 	});
 
 	test('Adding games', () => {
-		let u = new User(
-			toPlayerPrivateId('user.name'),
-			toUserGivenName('First'),
-			toUserGivenName('Last'),
-			{ encrypted: 'asdf', iv: 'ivrandom' },
-			['ADMIN', 'TEACHER'],
-			[
+		let u = makeUser({
+			username: 'user.name',
+			firstName: 'First',
+			lastName: 'Last',
+			password: { encrypted: 'asdf', iv: 'ivrandom' },
+			roles: ['ADMIN', 'TEACHER'],
+			games: [
 				{
 					timeControl: Blitz,
 					records: [{ record: toDateMajor('2024-12-24'), amount: 1 }],
@@ -145,11 +145,11 @@ describe('Elo', () => {
 					records: [{ record: toDateMajor('2024-12-25'), amount: 1 }],
 				},
 			],
-			[
+			ratings: [
 				new TimeControlRating(Blitz, blitz),
 				new TimeControlRating(Classical, classical),
 			],
-		);
+		});
 
 		// blitz
 
@@ -229,7 +229,15 @@ describe('Elo', () => {
 	});
 });
 
-const u = toPlayerPrivateId('u');
+function makeRoleUser(roles: UserRole[]) {
+	return makeUser({
+		username: 'u',
+		firstName: 'F',
+		lastName: 'L',
+		password: { encrypted: 'a', iv: 'i' },
+		roles,
+	});
+}
 
 describe('Actions allowed per user (single role)', () => {
 	test('Admin', () => {
@@ -242,15 +250,7 @@ describe('Actions allowed per user (single role)', () => {
 			member: [],
 		});
 
-		const admin = new User(
-			u,
-			toUserGivenName('F'),
-			toUserGivenName('L'),
-			{ encrypted: 'a', iv: 'i' },
-			['ADMIN'],
-			[],
-			[],
-		);
+		const admin = makeRoleUser(['ADMIN']);
 
 		const actions = admin.getActions();
 		expect(actions.length).toBe(2);
@@ -296,15 +296,7 @@ describe('Actions allowed per user (single role)', () => {
 			member: [],
 		});
 
-		const teacher = new User(
-			u,
-			toUserGivenName('F'),
-			toUserGivenName('L'),
-			{ encrypted: 'a', iv: 'i' },
-			['TEACHER'],
-			[],
-			[],
-		);
+		const teacher = makeRoleUser(['TEACHER']);
 
 		const actions = teacher.getActions();
 		expect(actions.length).toBe(2);
@@ -350,15 +342,7 @@ describe('Actions allowed per user (single role)', () => {
 			member: [],
 		});
 
-		const student = new User(
-			u,
-			toUserGivenName('F'),
-			toUserGivenName('L'),
-			{ encrypted: 'a', iv: 'i' },
-			['STUDENT'],
-			[],
-			[],
-		);
+		const student = makeRoleUser(['STUDENT']);
 
 		const actions = student.getActions();
 		expect(actions.length).toBe(2);
@@ -404,15 +388,7 @@ describe('Actions allowed per user (single role)', () => {
 			member: ['CHALLENGE_USER_ADMIN', 'CHALLENGE_USER_STUDENT'],
 		});
 
-		const member = new User(
-			u,
-			toUserGivenName('F'),
-			toUserGivenName('L'),
-			{ encrypted: 'a', iv: 'i' },
-			['MEMBER'],
-			[],
-			[],
-		);
+		const member = makeRoleUser(['MEMBER']);
 
 		const actions = member.getActions();
 		expect(actions.length).toBe(3);
@@ -461,15 +437,7 @@ describe('Actions allowed per user (multiple roles)', () => {
 			member: [],
 		});
 
-		const admin_teacher = new User(
-			u,
-			toUserGivenName('F'),
-			toUserGivenName('L'),
-			{ encrypted: 'a', iv: 'i' },
-			['ADMIN', 'TEACHER'],
-			[],
-			[],
-		);
+		const admin_teacher = makeRoleUser(['ADMIN', 'TEACHER']);
 
 		const actions = admin_teacher.getActions();
 		expect(actions.length).toBe(2);
@@ -517,15 +485,7 @@ describe('Actions allowed per user (multiple roles)', () => {
 			member: [],
 		});
 
-		const admin_student = new User(
-			u,
-			toUserGivenName('F'),
-			toUserGivenName('L'),
-			{ encrypted: 'a', iv: 'i' },
-			['ADMIN', 'STUDENT'],
-			[],
-			[],
-		);
+		const admin_student = makeRoleUser(['ADMIN', 'STUDENT']);
 
 		const actions = admin_student.getActions();
 		expect(actions.length).toBe(4);
