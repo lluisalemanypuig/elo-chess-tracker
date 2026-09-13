@@ -295,6 +295,11 @@ export const API_SCHEMA = {
 		output: EmptySchema,
 		method: 'GET',
 	},
+	[ROUTES.PAGE_CHALLENGES_REFEREE]: {
+		input: EmptySchema,
+		output: EmptySchema,
+		method: 'GET',
+	},
 	[ROUTES.GAME_CREATE]: {
 		input: GameCreateInputSchema,
 		output: EmptySchema,

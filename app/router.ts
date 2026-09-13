@@ -34,6 +34,7 @@ import { InputTypeOf, OutputTypeOf } from '@common/api/types';
 import { logNow } from '@common/utils/time';
 import {
 	getPageChallengesOwn,
+	getPageChallengesReferee,
 	postChallengeAccept,
 	postChallengeAgree,
 	postChallengeDecline,
@@ -302,6 +303,7 @@ defineEndpointAction(ROUTES.RECALCULATE_RATINGS, postRecalculateRatings);
 
 // challenges management
 defineEndpointPage(ROUTES.PAGE_CHALLENGES_OWN, getPageChallengesOwn);
+defineEndpointPage(ROUTES.PAGE_CHALLENGES_REFEREE, getPageChallengesReferee);
 defineEndpointAction(ROUTES.CHALLENGE_SEND, postChallengeSend);
 defineEndpointAction(ROUTES.CHALLENGE_ACCEPT, postChallengeAccept);
 defineEndpointAction(ROUTES.CHALLENGE_DECLINE, postChallengeDecline);

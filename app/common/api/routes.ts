@@ -68,6 +68,7 @@ export const ROUTES = {
 	PAGE_GRAPH_OWN: '/page/graph/own',
 	PAGE_GRAPH_FULL: '/page/graph/full',
 	PAGE_CHALLENGES_OWN: '/page/challenges/own',
+	PAGE_CHALLENGES_REFEREE: '/page/challenges/referee',
 
 	GAME_CREATE: '/game/create',
 	GAME_DELETE: '/game/delete',

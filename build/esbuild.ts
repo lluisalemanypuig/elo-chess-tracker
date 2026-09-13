@@ -10,6 +10,7 @@ const filesToBundle = [
 	'users-ranking.js',
 	'users-password-change.js',
 	'challenges-own.js',
+	'challenges-referee.js',
 	'games-list.js',
 	'games-create.js',
 	'graph-display.js',

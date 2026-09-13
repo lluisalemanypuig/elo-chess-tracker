@@ -57,6 +57,11 @@ export async function getPageChallengesOwn(_u: UserSession) {
 	return 'html/challenges/own.html';
 }
 
+export async function getPageChallengesReferee(_u: UserSession) {
+	debug(logNow(), 'function getPageChallengesReferee...');
+	return 'html/challenges/referee.html';
+}
+
 export async function postChallengeSend(
 	{ user: sender }: UserSession,
 	input: ChallengeSendInput,
