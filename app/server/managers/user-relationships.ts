@@ -159,7 +159,7 @@ export function canUserForceSetResultChallenge(
 	);
 }
 
-export function canUserForceAcceptResultChallenge(
+export function canUserForceAgreeResultChallenge(
 	sentTo: User,
 	sentBy: User,
 	by: User,

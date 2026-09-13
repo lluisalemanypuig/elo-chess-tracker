@@ -32,7 +32,7 @@ import { gameAddNew } from '@server/managers/games';
 import {
 	canUserDeclineChallenge,
 	canUserForceAcceptChallenge,
-	canUserForceAcceptResultChallenge,
+	canUserForceAgreeResultChallenge,
 	canUserForceSetResultChallenge,
 	canUserSendChallenge,
 } from '@server/managers/user-relationships';
@@ -341,7 +341,7 @@ export function challengeAgreeResult(
 			);
 		}
 
-		if (canUserForceAcceptResultChallenge(white.user, black.user, by)) {
+		if (canUserForceAgreeResultChallenge(white.user, black.user, by)) {
 			cont = true;
 		}
 	}
@@ -456,21 +456,10 @@ export function challengeDisagreeResult(
 		}
 	} else {
 		// if the result was set by one of the players in this challenge then
-		// the result can be disagreed by the corresponding player or a referee
+		// the result can be disagreed by the corresponding player -- no need
+		// for a referee
 
-		const white = mem.getAllUserDataByPrivateId(c.white);
-		const black = mem.getAllUserDataByPrivateId(c.black);
-		if (isNotDefined(white) || isNotDefined(black)) {
-			throw new InternalError(
-				`Could not find white or black user from challenge ${c.id}.`,
-			);
-		}
-
-		if (
-			(by.is('REFEREE') &&
-				canUserForceAcceptResultChallenge(white.user, black.user, by)) ||
-			(isPartOfChallenge(c, by) && c.resultSetBy !== by.username)
-		) {
+		if (isPartOfChallenge(c, by) && c.resultSetBy !== by.username) {
 			cont = true;
 		}
 	}
