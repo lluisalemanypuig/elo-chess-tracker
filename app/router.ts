@@ -301,7 +301,7 @@ defineEndpointAction(ROUTES.GAME_DELETE, postGameDelete);
 defineEndpointAction(ROUTES.RECALCULATE_RATINGS, postRecalculateRatings);
 
 // challenges management
-defineEndpointPage(ROUTES.PAGE_CHALLENGE, getPageChallenge);
+defineEndpointPage(ROUTES.PAGE_CHALLENGES_OWN, getPageChallenge);
 defineEndpointAction(ROUTES.CHALLENGE_SEND, postChallengeSend);
 defineEndpointAction(ROUTES.CHALLENGE_ACCEPT, postChallengeAccept);
 defineEndpointAction(ROUTES.CHALLENGE_DECLINE, postChallengeDecline);

@@ -81,7 +81,7 @@ async function sendChallengeButtonClicked(_event: any) {
 			return;
 		}
 
-		window.location.href = '/page/challenge';
+		window.location.href = ROUTES.PAGE_CHALLENGES_OWN;
 	}
 }
 
@@ -96,7 +96,7 @@ async function acceptChallengeButtonClicked(event: any) {
 		alert(messageFromResponse(response));
 		return;
 	}
-	window.location.href = '/page/challenge';
+	window.location.href = ROUTES.PAGE_CHALLENGES_OWN;
 }
 
 async function declineChallengeTagClicked(event: any) {
@@ -110,7 +110,7 @@ async function declineChallengeTagClicked(event: any) {
 		alert(messageFromResponse(response));
 		return;
 	}
-	window.location.href = '/page/challenge';
+	window.location.href = ROUTES.PAGE_CHALLENGES_OWN;
 }
 
 async function submitResultChallengeButtonClicked(event: any) {
@@ -157,7 +157,7 @@ async function submitResultChallengeButtonClicked(event: any) {
 		return;
 	}
 
-	window.location.href = '/page/challenge';
+	window.location.href = ROUTES.PAGE_CHALLENGES_OWN;
 }
 
 async function agreeChallengeResultButtonClicked(event: any) {
@@ -173,7 +173,7 @@ async function agreeChallengeResultButtonClicked(event: any) {
 		return;
 	}
 
-	window.location.href = '/page/challenge';
+	window.location.href = ROUTES.PAGE_CHALLENGES_OWN;
 }
 
 async function disagreeChallengeResultButtonClicked(event: any) {
@@ -188,7 +188,7 @@ async function disagreeChallengeResultButtonClicked(event: any) {
 		return;
 	}
 
-	window.location.href = '/page/challenge';
+	window.location.href = ROUTES.PAGE_CHALLENGES_OWN;
 }
 
 async function fillChallengesReceived() {

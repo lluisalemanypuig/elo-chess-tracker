@@ -67,7 +67,7 @@ export const ROUTES = {
 	PAGE_GAME_LIST_ALL: '/page/game/list/all',
 	PAGE_GRAPH_OWN: '/page/graph/own',
 	PAGE_GRAPH_FULL: '/page/graph/full',
-	PAGE_CHALLENGE: '/page/challenge',
+	PAGE_CHALLENGES_OWN: '/page/challenges/own',
 
 	GAME_CREATE: '/game/create',
 	GAME_DELETE: '/game/delete',

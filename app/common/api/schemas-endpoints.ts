@@ -290,7 +290,7 @@ export const API_SCHEMA = {
 		output: EmptySchema,
 		method: 'GET',
 	},
-	[ROUTES.PAGE_CHALLENGE]: {
+	[ROUTES.PAGE_CHALLENGES_OWN]: {
 		input: EmptySchema,
 		output: EmptySchema,
 		method: 'GET',
