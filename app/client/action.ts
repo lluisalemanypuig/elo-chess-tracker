@@ -89,7 +89,7 @@ export async function serverCall<T extends Route>(
 	const parse = schemaObject.safeParse(jsonText);
 	if (!parse.success) {
 		return {
-			message: `Failed to parse schema '${schemaObject.constructor.name}', at route '${route}'. Reason: ${parse.error}`,
+			message: `Failed to parse schema at route '${route}'. Reason: ${parse.error}`,
 			statusCode: 900,
 			status: 'error',
 		};

@@ -42,7 +42,7 @@ export function readSchema<T extends z.ZodType>(
 	const res = schema.safeParse(parse);
 	if (!res.success) {
 		debug(logNow(), `safeParse Failed to parse schema schema.`);
-		debug(logNow(), `    errors: ${res.error}.`);
+		debug(logNow(), `errors: ${res.error}.`);
 		return null;
 	}
 	return res.data;

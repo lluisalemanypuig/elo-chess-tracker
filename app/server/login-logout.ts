@@ -104,20 +104,17 @@ export async function postUserLogin(req: Request, res: Response) {
 export async function postUserLogout({ session }: UserSession, _i: Empty) {
 	debug(logNow(), 'function postUserLogout...');
 
-	debug(logNow(), `    Cookie:`);
-	debug(logNow(), `        Public Id:   '${session.publicId}'`);
-
 	// in order to log out a user, the must have been logged in with the given
 	// session id token
 	if (!SessionIDManager.getInstance().hasSessionId(session)) {
 		debug(
 			logNow(),
-			`    User '${session.publicId}' was never logged in with this session id but it is fine, since they are logging out.`,
+			`    User was never logged in with this session id. But it is fine, since they are logging out.`,
 		);
 	} else {
-		debug(logNow(), `    Deleting session id of user '${session.publicId}'...`);
+		debug(logNow(), `    Deleting session id of user...`);
 		sessionIdDelete(session);
-		debug(logNow(), `        Deleted.`);
+		debug(logNow(), `    Deleted.`);
 	}
 	return {
 		cookies: [
