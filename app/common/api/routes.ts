@@ -45,6 +45,12 @@ export const ROUTES = {
 	QUERY_CHALLENGE_PENDING_RESULT: '/query/challenge/pending-result',
 	QUERY_CHALLENGE_CONFIRM_RESULT_OTHER: '/query/challenge/confirm-result/other',
 	QUERY_CHALLENGE_CONFIRM_RESULT_SELF: '/query/challenge/confirm-result/self',
+	QUERY_CHALLENGE_PENDING_ACCEPT_REFEREE:
+		'/query/challenge/referee/pending-accept',
+	QUERY_CHALLENGE_PENDING_RESULT_SET_REFEREE:
+		'/query/challenge/referee/pending-result-set',
+	QUERY_CHALLENGE_PENDING_RESULT_AGREE_REFEREE:
+		'/query/challenge/referee/pending-result-agree',
 	QUERY_GAME_LIST_OWN: '/query/game/list/own',
 	QUERY_GAME_LIST_ALL: '/query/game/list/all',
 	QUERY_GRAPH_OWN: '/query/graph/own',

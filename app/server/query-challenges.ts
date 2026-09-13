@@ -27,7 +27,10 @@ import { Empty } from '@common/api/schemas-endpoints';
 import {
 	QueryChallengesConfirmResultOtherOutput,
 	QueryChallengesConfirmResultSelfOutput,
+	QueryChallengesPendingAcceptRefereeOutput,
+	QueryChallengesPendingResultAgreeRefereeOutput,
 	QueryChallengesPendingResultOutput,
+	QueryChallengesPendingResultSetRefereeOutput,
 	QueryChallengesReceivedOutput,
 	QueryChallengesSentOutput,
 } from '@common/api/schemas/query-challenges';
@@ -35,12 +38,19 @@ import { UserGivenName } from '@common/models/user-given-name';
 import { isDefined, isNotDefined } from '@common/utils/is-defined';
 import { logNow } from '@common/utils/time';
 import { getChallengesBy } from '@server/managers/challenges';
-import { canUserDeclineChallenge } from '@server/managers/user-relationships';
+import {
+	canUserDeclineChallenge,
+	canUserForceAcceptChallenge,
+	canUserForceAgreeResultChallenge,
+	canUserForceSetResultChallenge,
+} from '@server/managers/user-relationships';
 import { UsersManager } from '@server/managers/users-manager';
-import { Challenge } from '@server/models/challenge';
+import { Challenge, isPartOfChallenge } from '@server/models/challenge';
 import { InternalError } from '@server/models/error-types/internal-error';
 import { UserSession } from '@server/models/user';
 import Debug from 'debug';
+import { ChallengesManager } from './managers/challenges-manager';
+import { PublicError } from './models/error-types/public-error';
 
 const debug = Debug('ELO_CHESS_TRACKER:serverQueryChallenges');
 
@@ -410,4 +420,171 @@ export async function getQueryChallengeConfirmResultSelf(
 	debug(logNow(), `Found '${allChallenges.length}' challenges`);
 
 	return allChallenges;
+}
+
+export async function getQueryChallengesPendingAcceptReferee(
+	{ user }: UserSession,
+	_i: Empty,
+) {
+	debug(logNow(), 'function getQueryChallengesPendingAcceptReferee...');
+
+	if (!user.is('REFEREE')) {
+		throw new PublicError(`You cannot see the challenges pending of accept.`);
+	}
+
+	const challenges: QueryChallengesPendingAcceptRefereeOutput = [];
+	const cMem = ChallengesManager.getInstance();
+	const uMem = UsersManager.getInstance();
+	for (let i = 0; i < cMem.numChallenges(); ++i) {
+		const c = cMem.getChallengeAt(i);
+		if (isNotDefined(c)) {
+			throw new InternalError(
+				`Could not get challenge at index ${i + 1}/${cMem.numChallenges()}`,
+			);
+		}
+		if (c.state !== 'PENDING_ACCEPT') {
+			continue;
+		}
+
+		const sentTo = uMem.getAllUserDataByPrivateId(c.sentTo);
+		const sentBy = uMem.getAllUserDataByPrivateId(c.sentBy);
+		if (isNotDefined(sentTo) || isNotDefined(sentBy)) {
+			throw new InternalError(
+				`Malformed challenge ${c.id}. Users 'sentTo' or 'sentBy' could not be retrieved.`,
+			);
+		}
+		if (
+			!isPartOfChallenge(c, user) &&
+			canUserForceAcceptChallenge(sentTo.user, sentBy.user, user)
+		) {
+			challenges.push({
+				id: c.id,
+				title: c.title,
+				sentTo: sentTo.user.getFullName(),
+				sentBy: sentBy.user.getFullName(),
+				sentWhen: c.whenChallengeSent,
+				timeControlName: c.timeControlName,
+			});
+		}
+	}
+	return challenges;
+}
+
+export async function getQueryChallengesPendingResultSetReferee(
+	{ user }: UserSession,
+	_i: Empty,
+) {
+	debug(logNow(), 'function getQueryChallengesPendingAcceptReferee...');
+
+	if (!user.is('REFEREE')) {
+		throw new PublicError(`You cannot see the challenges pending of accept.`);
+	}
+
+	const challenges: QueryChallengesPendingResultSetRefereeOutput = [];
+	const cMem = ChallengesManager.getInstance();
+	const uMem = UsersManager.getInstance();
+	for (let i = 0; i < cMem.numChallenges(); ++i) {
+		const c = cMem.getChallengeAt(i);
+		if (isNotDefined(c)) {
+			throw new InternalError(
+				`Could not get challenge at index ${i + 1}/${cMem.numChallenges()}`,
+			);
+		}
+		if (c.state !== 'PENDING_RESULT') {
+			continue;
+		}
+
+		const sentTo = uMem.getAllUserDataByPrivateId(c.sentTo);
+		const sentBy = uMem.getAllUserDataByPrivateId(c.sentBy);
+		if (isNotDefined(sentTo) || isNotDefined(sentBy)) {
+			throw new InternalError(
+				`Malformed challenge ${c.id}. Users 'sentTo' or 'sentBy' could not be retrieved.`,
+			);
+		}
+		if (
+			!isPartOfChallenge(c, user) &&
+			canUserForceSetResultChallenge(sentTo.user, sentBy.user, user)
+		) {
+			challenges.push({
+				id: c.id,
+				title: c.title,
+				sentTo: sentTo.user.getFullName(),
+				sentBy: sentBy.user.getFullName(),
+				sentWhen: c.whenChallengeSent,
+				timeControlName: c.timeControlName,
+			});
+		}
+	}
+	return challenges;
+}
+
+export async function getQueryChallengesPendingResultAgreeReferee(
+	{ user }: UserSession,
+	_i: Empty,
+) {
+	debug(logNow(), 'function getQueryChallengesPendingResultAgreeReferee...');
+
+	if (!user.is('REFEREE')) {
+		throw new PublicError(`You cannot see the challenges pending of accept.`);
+	}
+
+	const challenges: QueryChallengesPendingResultAgreeRefereeOutput = [];
+	const cMem = ChallengesManager.getInstance();
+	const uMem = UsersManager.getInstance();
+	for (let i = 0; i < cMem.numChallenges(); ++i) {
+		const c = cMem.getChallengeAt(i);
+		if (isNotDefined(c)) {
+			throw new InternalError(
+				`Could not get challenge at index ${i + 1}/${cMem.numChallenges()}`,
+			);
+		}
+		if (c.state !== 'PENDING_RESULT_AGREE') {
+			continue;
+		}
+
+		const sentTo = uMem.getAllUserDataByPrivateId(c.sentTo);
+		const sentBy = uMem.getAllUserDataByPrivateId(c.sentBy);
+		if (isNotDefined(sentTo) || isNotDefined(sentBy)) {
+			throw new InternalError(
+				`Malformed challenge ${c.id}. Users 'sentTo' or 'sentBy' could not be retrieved.`,
+			);
+		}
+
+		if (isNotDefined(c.white) || isNotDefined(c.black)) {
+			throw new InternalError(
+				`Malformed challenge ${c.id}. Users 'white' or 'black' are not defined.`,
+			);
+		}
+		if (isNotDefined(c.result)) {
+			throw new InternalError(
+				`Malformed challenge ${c.id}. Result is not defined.`,
+			);
+		}
+
+		const white = uMem.getAllUserDataByPrivateId(c.white);
+		const black = uMem.getAllUserDataByPrivateId(c.black);
+		if (isNotDefined(white) || isNotDefined(black)) {
+			throw new InternalError(
+				`Malformed challenge ${c.id}. Users 'white' or 'black' could not be retrieved.`,
+			);
+		}
+
+		if (
+			!isPartOfChallenge(c, user) &&
+			canUserForceAgreeResultChallenge(sentTo.user, sentBy.user, user)
+		) {
+			challenges.push({
+				id: c.id,
+				title: c.title,
+				sentTo: sentTo.user.getFullName(),
+				sentBy: sentBy.user.getFullName(),
+				sentWhen: c.whenChallengeSent,
+				white: white.user.getFullName(),
+				black: black.user.getFullName(),
+				result: c.result,
+				timeControlName: c.timeControlName,
+			});
+		}
+	}
+	return challenges;
 }

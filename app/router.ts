@@ -70,6 +70,9 @@ import {
 	getQueryChallengePendingResult,
 	getQueryChallengeReceived,
 	getQueryChallengeSent,
+	getQueryChallengesPendingAcceptReferee,
+	getQueryChallengesPendingResultAgreeReferee,
+	getQueryChallengesPendingResultSetReferee,
 } from '@server/query-challenges';
 import {
 	postQueryGameListAll,
@@ -260,6 +263,18 @@ defineEndpointAction(
 defineEndpointAction(
 	ROUTES.QUERY_CHALLENGE_CONFIRM_RESULT_SELF,
 	getQueryChallengeConfirmResultSelf,
+);
+defineEndpointAction(
+	ROUTES.QUERY_CHALLENGE_PENDING_ACCEPT_REFEREE,
+	getQueryChallengesPendingAcceptReferee,
+);
+defineEndpointAction(
+	ROUTES.QUERY_CHALLENGE_PENDING_RESULT_SET_REFEREE,
+	getQueryChallengesPendingResultSetReferee,
+);
+defineEndpointAction(
+	ROUTES.QUERY_CHALLENGE_PENDING_RESULT_AGREE_REFEREE,
+	getQueryChallengesPendingResultAgreeReferee,
 );
 
 defineEndpointAction(ROUTES.QUERY_GAME_LIST_OWN, postQueryGameListOwn);
