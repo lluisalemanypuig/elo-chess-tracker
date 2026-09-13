@@ -122,11 +122,11 @@ export function canUserDeclineChallenge(
 }
 
 export function canUserForceAcceptChallenge(
-	white: User,
-	black: User,
+	sentTo: User,
+	sentBy: User,
 	by: User,
 ): boolean {
-	const eitherUserIs = useEitherUserIs(white, black);
+	const eitherUserIs = useEitherUserIs(sentTo, sentBy);
 
 	return (
 		by.is('REFEREE') &&
@@ -139,11 +139,11 @@ export function canUserForceAcceptChallenge(
 }
 
 export function canUserForceSetResultChallenge(
-	white: User,
-	black: User,
+	sentTo: User,
+	sentBy: User,
 	by: User,
 ): boolean {
-	const eitherUserIs = useEitherUserIs(white, black);
+	const eitherUserIs = useEitherUserIs(sentTo, sentBy);
 
 	return (
 		by.is('REFEREE') &&
@@ -160,11 +160,11 @@ export function canUserForceSetResultChallenge(
 }
 
 export function canUserForceAcceptResultChallenge(
-	white: User,
-	black: User,
+	sentTo: User,
+	sentBy: User,
 	by: User,
 ): boolean {
-	const eitherUserIs = useEitherUserIs(white, black);
+	const eitherUserIs = useEitherUserIs(sentTo, sentBy);
 
 	return (
 		by.is('REFEREE') &&
