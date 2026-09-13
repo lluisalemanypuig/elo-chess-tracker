@@ -47,24 +47,18 @@ export async function getPageLogin(req: Request, res: Response) {
 		debug,
 	);
 	if (sessionParse.result === 'error') {
-		debug(logNow(), req.cookies);
-		return;
-	}
-
-	if (isDefined(sessionParse.data)) {
+		debug(logNow(), 'cookies:', req.cookies);
+		sendHome = false;
+	} else if (isDefined(sessionParse.data)) {
 		const session = sessionParse.data;
 
-		debug(logNow(), 'There is a username key in the cookies received.');
-		debug(logNow(), `    Value: ${session.publicId}`);
+		debug(logNow(), 'There is a public ID key in the cookies received.');
 
 		const r = isUserLoggedIn(session);
 		sendHome = r[0];
 
 		if (sendHome) {
-			debug(
-				logNow(),
-				`    Session id for user '${session.publicId}' exists. Please, come in.`,
-			);
+			debug(logNow(), `    Session id for user '${session.publicId}' exists.`);
 		}
 	} else {
 		debug(logNow(), 'There is no user key in the cookies received.');

@@ -62,7 +62,7 @@ export function parseSchema<S extends z.ZodType>(
 	}
 	const parse = schemaObj.safeParse(json);
 	if (!parse.success) {
-		debug(logNow(), `Failed to parse schema: ${schemaObj.constructor.name}`);
+		debug(logNow(), `Failed to parse schema`);
 		return {
 			result: 'error',
 			data: undefined,
