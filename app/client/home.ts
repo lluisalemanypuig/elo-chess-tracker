@@ -76,6 +76,12 @@ function fillActionLinks(userActions: string[], userRoles: string[]) {
 		actionLinks.appendChild(seeFullGraphLink);
 	}
 
+	if (userRoles.includes('REFEREE')) {
+		let seeAllChallenges = document.createElement('a') as HTMLAnchorElement;
+		seeAllChallenges.href = ROUTES.PAGE_CHALLENGES_REFEREE;
+		seeAllChallenges.text = 'All challenges';
+		actionLinks.appendChild(seeAllChallenges);
+	}
 	if (userRoles.includes('ADMIN')) {
 		let recalculateRatingsLink = document.createElement('u') as HTMLElement;
 		recalculateRatingsLink.id = 'recalculate-ratings-link';
