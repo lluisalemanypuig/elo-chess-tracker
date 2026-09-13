@@ -20,6 +20,10 @@ Full source code of elo-chess-tracker:
 */
 
 import { messageFromResponse, serverCall } from '@client/action';
+import {
+	createChallengeResultSetDiv,
+	formatDate,
+} from '@client/challenges-utils';
 import { ROUTES } from '@common/api/routes';
 import {
 	QueryChallengesConfirmResultOtherOutputSingle,
@@ -32,17 +36,6 @@ import { GameResult } from '@common/models/game-result';
 import { PlayerPrivateId, toPlayerPublicId } from '@common/models/player-id';
 import { TimeControlId, TimeControlName } from '@common/models/time-control';
 import 'htmx.org';
-
-function createLabelText(text: string): HTMLLabelElement {
-	let label = document.createElement('label') as HTMLLabelElement;
-	label.textContent = text;
-	label.className = 'label';
-	return label;
-}
-
-function formatDate(date: string) {
-	return date.replace('..', ', ').replace('-', '/').replace('-', '/');
-}
 
 async function sendChallengeButtonClicked(_event: any) {
 	const usernameListInput = document.getElementById(
@@ -192,6 +185,8 @@ async function disagreeChallengeResultButtonClicked(event: any) {
 	window.location.href = ROUTES.PAGE_CHALLENGES_OWN;
 }
 
+//
+
 async function fillChallengesReceived() {
 	const response = await serverCall(ROUTES.QUERY_CHALLENGE_RECEIVED, null);
 	if (response.status === 'error') {
@@ -202,11 +197,12 @@ async function fillChallengesReceived() {
 
 	const challengeList = document.createElement('ul') as HTMLUListElement;
 	challengeList.className = 'challenge-items';
+
 	data.forEach(function (
 		elem: QueryChallengesReceivedOutputSingle,
 		index: number,
 	) {
-		let challengeDiv = document.createElement('div') as HTMLDivElement;
+		const challengeDiv = document.createElement('div') as HTMLDivElement;
 		{
 			// ---
 			let li = document.createElement('li') as HTMLLIElement;
@@ -234,7 +230,7 @@ async function fillChallengesReceived() {
 			li.textContent = `Sent on ${formatDate(elem.sentWhen)}.`;
 			challengeDiv.appendChild(li);
 			//
-			let canCannot = elem.canBeDeclined ? 'can' : 'cannot';
+			const canCannot = elem.canBeDeclined ? 'can' : 'cannot';
 			li = document.createElement('li') as HTMLLIElement;
 			li.className = 'challenge-items-nobullet';
 			li.textContent = `You ${canCannot} decline the challenge.`;
@@ -242,14 +238,16 @@ async function fillChallengesReceived() {
 		}
 		challengeList.appendChild(challengeDiv);
 
-		let buttonsDiv = document.createElement('div') as HTMLDivElement;
+		const buttonsDiv = document.createElement('div') as HTMLDivElement;
 		buttonsDiv.setAttribute('align', 'center');
 		buttonsDiv.style.marginTop = '5px';
 		buttonsDiv.style.marginBottom = '5px';
 
 		{
 			// accept tag
-			let acceptButton = document.createElement('button') as HTMLButtonElement;
+			const acceptButton = document.createElement(
+				'button',
+			) as HTMLButtonElement;
 			acceptButton.id = `button-accept-${elem.id}`;
 			acceptButton.onclick = acceptChallengeButtonClicked;
 			acceptButton.className = 'button-accept-decline-challenge';
@@ -260,7 +258,9 @@ async function fillChallengesReceived() {
 
 		{
 			// decline tag
-			let declineButton = document.createElement('button') as HTMLButtonElement;
+			const declineButton = document.createElement(
+				'button',
+			) as HTMLButtonElement;
 			declineButton.id = `button-decline-${elem.id}`;
 			declineButton.onclick = declineChallengeTagClicked;
 			declineButton.className = 'button-accept-decline-challenge';
@@ -280,9 +280,10 @@ async function fillChallengesReceived() {
 	});
 
 	if (data.length > 0) {
-		(
-			document.getElementById('challenges-received') as HTMLDivElement
-		).appendChild(challengeList);
+		const challenges = document.getElementById(
+			'challenges-received',
+		) as HTMLDivElement;
+		challenges.appendChild(challengeList);
 	}
 }
 
@@ -294,45 +295,79 @@ async function fillChallengesSent() {
 	}
 	const data = response.value;
 
-	let challengeList = document.createElement('ul') as HTMLUListElement;
+	const challengeList = document.createElement('ul') as HTMLUListElement;
 	challengeList.className = 'challenge-items';
 
 	data.forEach(function (elem: QueryChallengesSentOutputSingle) {
-		// ----
-		let li = document.createElement('li') as HTMLLIElement;
-		li.className = 'challenge-items-bullet';
-		li.textContent = `Challenge sent to ${elem.sentTo}.`;
-		challengeList.appendChild(li);
-		// ----
-		li = document.createElement('li') as HTMLLIElement;
-		li.className = 'challenge-items-nobullet';
-		li.textContent = `Of time control: ${elem.timeControlName}.`;
-		challengeList.appendChild(li);
-		//
-		if (elem.title !== '') {
+		const challengeDiv = document.createElement('div') as HTMLDivElement;
+		{
+			// ----
+			let li = document.createElement('li') as HTMLLIElement;
+			li.className = 'challenge-items-bullet';
+			li.textContent = `Challenge sent to ${elem.sentTo}.`;
+			challengeDiv.appendChild(li);
+			// ----
 			li = document.createElement('li') as HTMLLIElement;
 			li.className = 'challenge-items-nobullet';
-			li.textContent = `Of title: ${elem.title}.`;
-			challengeList.appendChild(li);
+			li.textContent = `Of time control: ${elem.timeControlName}.`;
+			challengeDiv.appendChild(li);
+			//
+			if (elem.title !== '') {
+				li = document.createElement('li') as HTMLLIElement;
+				li.className = 'challenge-items-nobullet';
+				li.textContent = `Of title: ${elem.title}.`;
+				challengeDiv.appendChild(li);
+			}
+			//
+			li = document.createElement('li') as HTMLLIElement;
+			li.className = 'challenge-items-nobullet';
+			li.textContent = `Sent on ${formatDate(elem.sentWhen)}.`;
+			challengeDiv.appendChild(li);
+			//
+			let canCannot = elem.canBeDeclined ? 'can' : 'cannot';
+			li = document.createElement('li') as HTMLLIElement;
+			li.className = 'challenge-items-nobullet';
+			li.textContent = `Your opponent ${canCannot} decline the challenge.`;
 		}
-		//
-		li = document.createElement('li') as HTMLLIElement;
-		li.className = 'challenge-items-nobullet';
-		li.textContent = `Sent on ${formatDate(elem.sentWhen)}.`;
-		challengeList.appendChild(li);
-		//
-		let canCannot = elem.canBeDeclined ? 'can' : 'cannot';
-		li = document.createElement('li') as HTMLLIElement;
-		li.className = 'challenge-items-nobullet';
-		li.textContent = `Your opponent ${canCannot} decline the challenge.`;
-		challengeList.appendChild(li);
+		challengeList.appendChild(challengeDiv);
 	});
 
 	if (data.length > 0) {
-		(document.getElementById('challenges-sent') as HTMLDivElement).appendChild(
-			challengeList,
-		);
+		const challenges = document.getElementById(
+			'challenges-sent',
+		) as HTMLDivElement;
+		challenges.appendChild(challengeList);
 	}
+}
+
+function makeHeaderChallengeSetResult(
+	c: QueryChallengesPendingResultOutputSingle,
+) {
+	const header = document.createElement('ul') as HTMLUListElement;
+	header.className = 'challenge-items';
+	{
+		let li = document.createElement('li') as HTMLLIElement;
+		li.className = 'challenge-items-bullet';
+		li.textContent = `Challenge with ${c.opponent}.`;
+		header.appendChild(li);
+		//
+		li = document.createElement('li') as HTMLLIElement;
+		li.className = 'challenge-items-nobullet';
+		li.textContent = `Of time control: ${c.timeControlName}.`;
+		header.appendChild(li);
+		//
+		if (c.title !== '') {
+			li = document.createElement('li') as HTMLLIElement;
+			li.className = 'challenge-items-nobullet';
+			li.textContent = `Of title: ${c.title}.`;
+			header.appendChild(li);
+		}
+		li = document.createElement('li') as HTMLLIElement;
+		li.className = 'challenge-items-nobullet';
+		li.textContent = `Sent on ${formatDate(c.sentWhen)}.`;
+		header.appendChild(li);
+	}
+	return header;
 }
 
 async function fillChallengesPendingResult() {
@@ -344,142 +379,31 @@ async function fillChallengesPendingResult() {
 		alert(messageFromResponse(response));
 		return;
 	}
-	const challengeData = response.value;
+	const data = response.value;
 
-	let allChallengesList = document.getElementById(
-		'challenges-pending-result--list',
-	) as HTMLDivElement;
-	challengeData.forEach(function (
+	const challengeList = document.createElement('div') as HTMLDivElement;
+	challengeList.className = 'challenge-items';
+
+	data.forEach(function (
 		elem: QueryChallengesPendingResultOutputSingle,
 		index: number,
 	) {
-		{
-			const header = document.createElement('ul') as HTMLUListElement;
-			header.className = 'challenge-items';
-			{
-				let li = document.createElement('li') as HTMLLIElement;
-				li.className = 'challenge-items-bullet';
-				li.textContent = `Challenge with ${elem.opponent}.`;
-				header.appendChild(li);
-				//
-				li = document.createElement('li') as HTMLLIElement;
-				li.className = 'challenge-items-nobullet';
-				li.textContent = `Of time control: ${elem.timeControlName}.`;
-				header.appendChild(li);
-				//
-				if (elem.title !== '') {
-					li = document.createElement('li') as HTMLLIElement;
-					li.className = 'challenge-items-nobullet';
-					li.textContent = `Of title: ${elem.title}.`;
-					header.appendChild(li);
-				}
-				li = document.createElement('li') as HTMLLIElement;
-				li.className = 'challenge-items-nobullet';
-				li.textContent = `Sent on ${formatDate(elem.sentWhen)}.`;
-				header.appendChild(li);
-			}
-			allChallengesList.appendChild(header);
-		}
-
-		let challengeDiv = document.createElement('div') as HTMLDivElement;
-
-		// Who is the white player?
-		{
-			const div = document.createElement('div') as HTMLDivElement;
-			div.className = 'label-select';
-
-			div.appendChild(createLabelText('White:'));
-
-			let select = document.createElement('select');
-			select.id = `white-select-${elem.id}`;
-			select.className = 'select-basic';
-
-			let option1 = document.createElement('option') as HTMLOptionElement;
-			option1.text = elem.sentTo.name;
-			option1.value = `${elem.sentTo.publicId}`;
-			select.appendChild(option1);
-			let option2 = document.createElement('option') as HTMLOptionElement;
-			option2.text = elem.sentBy.name;
-			option2.value = `${elem.sentBy.publicId}`;
-			select.appendChild(option2);
-
-			div.appendChild(select);
-			challengeDiv.appendChild(div);
-		}
-
-		// Who is the black player?
-		{
-			const div = document.createElement('div') as HTMLDivElement;
-			div.className = 'label-select';
-
-			div.appendChild(createLabelText('Black:'));
-
-			const select = document.createElement('select');
-			select.id = `black-select-${elem.id}`;
-			select.className = 'select-basic';
-
-			const option1 = document.createElement('option') as HTMLOptionElement;
-			option1.text = elem.sentBy.name;
-			option1.value = `${elem.sentBy.publicId}`;
-			select.appendChild(option1);
-			const option2 = document.createElement('option') as HTMLOptionElement;
-			option2.text = elem.sentTo.name;
-			option2.value = `${elem.sentTo.publicId}`;
-			select.appendChild(option2);
-
-			div.appendChild(select);
-			challengeDiv.appendChild(div);
-		}
-
-		// Result of the game
-		{
-			const div = document.createElement('div') as HTMLDivElement;
-			div.className = 'label-select';
-
-			div.appendChild(createLabelText('Result:'));
-
-			const select = document.createElement('select');
-			select.id = `select-result-game-${elem.id}`;
-			select.className = 'select-basic';
-
-			const option1 = document.createElement('option') as HTMLOptionElement;
-			option1.text = '1 - 0';
-			option1.value = 'white_wins';
-			select.appendChild(option1);
-			const option2 = document.createElement('option') as HTMLOptionElement;
-			option2.text = '1/2 - 1/2';
-			option2.value = 'draw';
-			select.appendChild(option2);
-			const option3 = document.createElement('option') as HTMLOptionElement;
-			option3.text = '0 - 1';
-			option3.value = 'black_wins';
-			select.appendChild(option3);
-
-			div.appendChild(select);
-			challengeDiv.appendChild(div);
-		}
-
-		allChallengesList.appendChild(challengeDiv);
-
-		// submit button
-		{
-			const submitResultButton = document.createElement('button');
-			submitResultButton.textContent = 'Submit result';
-			submitResultButton.className = 'button-submit-challenge';
-			submitResultButton.id = elem.id;
-			submitResultButton.onclick = submitResultChallengeButtonClicked;
-			submitResultButton.style.marginTop = '5px';
-			if (index < challengeData.length - 1) {
-				submitResultButton.style.marginBottom = '20px';
-			}
-
-			allChallengesList.appendChild(submitResultButton);
-		}
-
-		(
-			document.getElementById('challenges-pending-result') as HTMLDivElement
-		).appendChild(allChallengesList);
+		const itemDiv = createChallengeResultSetDiv(
+			elem,
+			index,
+			data.length,
+			makeHeaderChallengeSetResult,
+			submitResultChallengeButtonClicked,
+		);
+		challengeList.appendChild(itemDiv);
 	});
+
+	if (data.length > 0) {
+		const challenges = document.getElementById(
+			'challenges-pending-result',
+		) as HTMLDivElement;
+		challenges.appendChild(challengeList);
+	}
 }
 
 async function fillChallengesConfirmResultOther() {
