@@ -23,6 +23,7 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
+import { GameResult } from '@app/common/models/game-result';
 import { Empty } from '@common/api/schemas-endpoints';
 import {
 	QueryChallengesConfirmResultOtherOutput,
@@ -53,6 +54,16 @@ import { ChallengesManager } from './managers/challenges-manager';
 import { PublicError } from './models/error-types/public-error';
 
 const debug = Debug('ELO_CHESS_TRACKER:serverQueryChallenges');
+
+function niceResult(r: GameResult): string {
+	if (r === 'white_wins') {
+		return 'White wins';
+	}
+	if (r === 'black_wins') {
+		return 'Black wins';
+	}
+	return 'Draw';
+}
 
 // Query the server for challenges received sento to me by other users
 export async function getQueryChallengeReceived(
@@ -262,7 +273,6 @@ export async function getQueryChallengeConfirmResultOther(
 	for (const c of toReturn) {
 		const sentTo = manager.getAllUserDataByPrivateId(c.sentTo);
 		if (isNotDefined(sentTo)) {
-			debug(logNow(), `User '${c.sentTo}' does not exist.`);
 			throw new InternalError(
 				`User '${c.sentTo}' from challenge does not exist.`,
 			);
@@ -270,16 +280,19 @@ export async function getQueryChallengeConfirmResultOther(
 
 		const sentBy = manager.getAllUserDataByPrivateId(c.sentBy);
 		if (isNotDefined(sentBy)) {
-			debug(logNow(), `User '${c.sentBy}' does not exist.`);
 			throw new InternalError(
 				`User '${c.sentBy}' from challenge does not exist.`,
 			);
 		}
 
 		if (isNotDefined(c.white) || isNotDefined(c.black)) {
-			debug(logNow(), `White or Black player is not set in challenge.`);
 			throw new InternalError(
 				`White ${isNotDefined(c.white)}. Black: ${isNotDefined(c.black)}.`,
+			);
+		}
+		if (isNotDefined(c.result)) {
+			throw new InternalError(
+				`Challenge ${c.id} is malformed. Result is undefined.`,
 			);
 		}
 
@@ -297,16 +310,6 @@ export async function getQueryChallengeConfirmResultOther(
 			return sentBy.user.getFullName();
 		})();
 
-		const niceResult: string = ((): string => {
-			if (c.result === 'white_wins') {
-				return 'White wins';
-			}
-			if (c.result === 'black_wins') {
-				return 'Black wins';
-			}
-			return 'Draw';
-		})();
-
 		// return only basic information
 		allChallenges.push({
 			id: c.id,
@@ -315,7 +318,7 @@ export async function getQueryChallengeConfirmResultOther(
 			sentWhen: c.whenChallengeSent,
 			white: whiteFullName,
 			black: blackFullName,
-			result: niceResult,
+			result: niceResult(c.result),
 			timeControlName: c.timeControlName,
 		});
 	}
@@ -508,8 +511,14 @@ export async function getQueryChallengesPendingResultSetReferee(
 			challenges.push({
 				id: c.id,
 				title: c.title,
-				sentTo: sentTo.user.getFullName(),
-				sentBy: sentBy.user.getFullName(),
+				sentTo: {
+					name: sentTo.user.getFullName(),
+					publicId: sentTo.publicId,
+				},
+				sentBy: {
+					name: sentBy.user.getFullName(),
+					publicId: sentBy.publicId,
+				},
 				sentWhen: c.whenChallengeSent,
 				timeControlName: c.timeControlName,
 			});
@@ -541,12 +550,22 @@ export async function getQueryChallengesPendingResultAgreeReferee(
 		if (c.state !== 'PENDING_RESULT_AGREE') {
 			continue;
 		}
+		if (isNotDefined(c.resultSetBy)) {
+			throw new InternalError(
+				`Malformed challenge ${c.id}. User 'resultSetBy' is not defined.`,
+			);
+		}
 
 		const sentTo = uMem.getAllUserDataByPrivateId(c.sentTo);
 		const sentBy = uMem.getAllUserDataByPrivateId(c.sentBy);
-		if (isNotDefined(sentTo) || isNotDefined(sentBy)) {
+		const resultSetBy = uMem.getAllUserDataByPrivateId(c.resultSetBy);
+		if (
+			isNotDefined(sentTo) ||
+			isNotDefined(sentBy) ||
+			isNotDefined(resultSetBy)
+		) {
 			throw new InternalError(
-				`Malformed challenge ${c.id}. Users 'sentTo' or 'sentBy' could not be retrieved.`,
+				`Malformed challenge ${c.id}. Users 'sentTo', 'sentBy' or 'resultSetBy' could not be retrieved.`,
 			);
 		}
 
@@ -581,7 +600,8 @@ export async function getQueryChallengesPendingResultAgreeReferee(
 				sentWhen: c.whenChallengeSent,
 				white: white.user.getFullName(),
 				black: black.user.getFullName(),
-				result: c.result,
+				result: niceResult(c.result),
+				resultSetByReferee: resultSetBy.user.is('REFEREE'),
 				timeControlName: c.timeControlName,
 			});
 		}
