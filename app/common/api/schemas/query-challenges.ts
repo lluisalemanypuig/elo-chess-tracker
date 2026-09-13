@@ -23,8 +23,8 @@ Contact:
     https://github.com/lluisalemanypuig
 */
 
-import { GameResultSchema } from '@app/common/models/game-result';
 import { ChallengeIdSchema } from '@common/models/challenge-id';
+import { GameResultSchema } from '@common/models/game-result';
 import { PlayerPublicIdSchema } from '@common/models/player-id';
 import { TimeControlNameSchema } from '@common/models/time-control';
 import { UserGivenNameSchema } from '@common/models/user-given-name';

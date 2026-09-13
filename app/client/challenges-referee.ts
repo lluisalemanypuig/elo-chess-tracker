@@ -19,13 +19,13 @@ Full source code of elo-chess-tracker:
 	https://github.com/lluisalemanypuig/elo-chess-tracker
 */
 
+import { messageFromResponse, serverCall } from '@client/action';
+import { ROUTES } from '@common/api/routes';
 import {
 	QueryChallengesPendingAcceptRefereeOutputSingle,
 	QueryChallengesPendingResultAgreeRefereeOutputSingle,
 	QueryChallengesPendingResultSetRefereeOutputSingle,
-} from '@app/common/api/schemas/query-challenges';
-import { messageFromResponse, serverCall } from '@client/action';
-import { ROUTES } from '@common/api/routes';
+} from '@common/api/schemas/query-challenges';
 import 'htmx.org';
 
 /*

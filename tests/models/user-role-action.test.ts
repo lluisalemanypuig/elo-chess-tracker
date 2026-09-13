@@ -23,8 +23,8 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { ALL_USER_ROLES } from '@app/common/models/user-role';
 import { roleActionNames, userActionIdToUserAction } from '@common/models/user-action';
+import { ALL_USER_ROLES } from '@common/models/user-role';
 import { initializePermissions, UserRoleToUserAction } from '@server/managers/user-role-action';
 
 describe('Actions allowed per user (single role)', () => {
