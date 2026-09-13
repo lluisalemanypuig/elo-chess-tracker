@@ -44,7 +44,7 @@ const username = args[usernameIndex + 1] as PlayerPrivateId;
 const password = args[passwordIndex + 1];
 
 console.log(`Username: '${username}'`);
-console.log(`Psasword: '${password}'`);
+console.log(`Password: '${password}'`);
 
 let [encrypted_password, iv] = encryptPasswordForUser(username, password);
 
