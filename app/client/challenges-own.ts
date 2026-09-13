@@ -386,7 +386,7 @@ async function fillChallengesPendingResult() {
 		// Who is the white player?
 		{
 			const div = document.createElement('div') as HTMLDivElement;
-			div.className = 'label-and-select';
+			div.className = 'label-select';
 
 			div.appendChild(createLabelText('White:'));
 
@@ -410,7 +410,7 @@ async function fillChallengesPendingResult() {
 		// Who is the black player?
 		{
 			const div = document.createElement('div') as HTMLDivElement;
-			div.className = 'label-and-select';
+			div.className = 'label-select';
 
 			div.appendChild(createLabelText('Black:'));
 
@@ -434,7 +434,7 @@ async function fillChallengesPendingResult() {
 		// Result of the game
 		{
 			const div = document.createElement('div') as HTMLDivElement;
-			div.className = 'label-and-select';
+			div.className = 'label-select';
 
 			div.appendChild(createLabelText('Result:'));
 
