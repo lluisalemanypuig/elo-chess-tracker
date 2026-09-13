@@ -35,6 +35,7 @@ import {
 import { toUserGivenName } from '@common/models/user-given-name';
 import { UserRole } from '@common/models/user-role';
 import { toDateFull } from '@common/utils/time';
+import { gameAddNew } from '@server/managers/games';
 import { Behavior } from '@server/models/configuration/behavior';
 import { Configuration } from '@server/models/configuration/configuration';
 import {
@@ -146,6 +147,30 @@ export function makeConfiguration({
 		behavior,
 		permissions,
 	};
+}
+
+export function testGameAddNew(
+	gameTitle: string,
+	white: User,
+	black: User,
+	createdBy: string,
+	whenCreated: string,
+	result: GameResult,
+	timeControlId: string,
+	timeControlName: string,
+	whenPlayed: string,
+): void {
+	gameAddNew(
+		gameTitle,
+		white,
+		black,
+		toPlayerPrivateId(createdBy),
+		toDateFull(whenCreated),
+		result,
+		toTimeControlId(timeControlId),
+		toTimeControlName(timeControlName),
+		toDateFull(whenPlayed),
+	);
 }
 
 interface NewGameProps {
