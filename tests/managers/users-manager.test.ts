@@ -25,25 +25,13 @@ Contact:
 
 import { isNotDefined } from '@common//utils/is-defined';
 import { toPlayerPrivateId } from '@common/models/player-id';
-import { toUserGivenName } from '@common/models/user-given-name';
 import { UsersManager } from '@server/managers/users-manager';
-import { User } from '@server/models/user';
-import { TestError } from '@tests';
+import { makeUser, TestError } from '@tests';
 
-const a = toPlayerPrivateId('a');
-const b = toPlayerPrivateId('b');
-const c = toPlayerPrivateId('c');
-const d = toPlayerPrivateId('d');
-
-const AA = toUserGivenName('AA');
-const BB = toUserGivenName('BB');
-const CC = toUserGivenName('CC');
-const DD = toUserGivenName('DD');
-
-const aa = toUserGivenName('aa');
-const bb = toUserGivenName('bb');
-const cc = toUserGivenName('cc');
-const dd = toUserGivenName('dd');
+const a = 'a';
+const b = 'b';
+const c = 'c';
+const d = 'd';
 
 describe('Users Manager', () => {
 	test('Empty manager', () => {
@@ -57,9 +45,24 @@ describe('Users Manager', () => {
 		let users = UsersManager.getInstance();
 		users.clear();
 
-		const aU = new User(a, AA, aa, { encrypted: 'p', iv: 'w' }, [], [], []);
-		const bU = new User(b, BB, bb, { encrypted: 'p', iv: 'w' }, [], [], []);
-		const cU = new User(c, CC, cc, { encrypted: 'p', iv: 'w' }, [], [], []);
+		const aU = makeUser({
+			username: a,
+			firstName: 'AA',
+			lastName: 'aa',
+			password: { encrypted: 'p', iv: 'w' },
+		});
+		const bU = makeUser({
+			username: b,
+			firstName: 'BB',
+			lastName: 'bb',
+			password: { encrypted: 'p', iv: 'w' },
+		});
+		const cU = makeUser({
+			username: c,
+			firstName: 'CC',
+			lastName: 'cc',
+			password: { encrypted: 'p', iv: 'w' },
+		});
 
 		users.addUser(aU);
 		expect(users.numUsers()).toBe(1);
@@ -74,13 +77,13 @@ describe('Users Manager', () => {
 		expect(users.getAllUserDataAtSafeIdx(1).user).toEqual(bU);
 		expect(users.getAllUserDataAtSafeIdx(2).user).toEqual(cU);
 
-		expect(users.getIndexByPrivateId(a)).toBe(0);
+		expect(users.getIndexByPrivateId(toPlayerPrivateId(a))).toBe(0);
 		expect(users.getIndexByPrivateId(aU.username)).toBe(0);
 
-		expect(users.getIndexByPrivateId(b)).toBe(1);
+		expect(users.getIndexByPrivateId(toPlayerPrivateId(b))).toBe(1);
 		expect(users.getIndexByPrivateId(bU.username)).toBe(1);
 
-		expect(users.getIndexByPrivateId(c)).toBe(2);
+		expect(users.getIndexByPrivateId(toPlayerPrivateId(c))).toBe(2);
 		expect(users.getIndexByPrivateId(cU.username)).toBe(2);
 	});
 
@@ -88,15 +91,35 @@ describe('Users Manager', () => {
 		let users = UsersManager.getInstance();
 		users.clear();
 
-		const aU = new User(a, AA, aa, { encrypted: 'p', iv: 'w' }, [], [], []);
-		const bU = new User(b, BB, bb, { encrypted: 'p', iv: 'w' }, [], [], []);
-		const cU = new User(c, CC, cc, { encrypted: 'p', iv: 'w' }, [], [], []);
+		const aU = makeUser({
+			username: a,
+			firstName: 'AA',
+			lastName: 'aa',
+			password: { encrypted: 'p', iv: 'w' },
+		});
+		const bU = makeUser({
+			username: b,
+			firstName: 'BB',
+			lastName: 'bb',
+			password: { encrypted: 'p', iv: 'w' },
+		});
+		const cU = makeUser({
+			username: c,
+			firstName: 'CC',
+			lastName: 'cc',
+			password: { encrypted: 'p', iv: 'w' },
+		});
 
 		users.addUser(aU);
 		users.addUser(bU);
 		users.addUser(cU);
 
-		const dU = new User(d, DD, dd, { encrypted: 'p', iv: 'w' }, [], [], []);
+		const dU = makeUser({
+			username: d,
+			firstName: 'DD',
+			lastName: 'dd',
+			password: { encrypted: 'p', iv: 'w' },
+		});
 
 		const idx = users.getIndexByPrivateId(bU.username);
 		expect(idx).not.toBeNull();
@@ -113,16 +136,16 @@ describe('Users Manager', () => {
 		expect(users.getAllUserDataAtSafeIdx(1).user).toEqual(dU);
 		expect(users.getAllUserDataAtSafeIdx(2).user).toEqual(cU);
 
-		expect(users.getIndexByPrivateId(a)).toBe(0);
+		expect(users.getIndexByPrivateId(toPlayerPrivateId(a))).toBe(0);
 		expect(users.getIndexByPrivateId(aU.username)).toBe(0);
 
-		expect(users.getIndexByPrivateId(b)).toBe(undefined);
+		expect(users.getIndexByPrivateId(toPlayerPrivateId(b))).toBe(undefined);
 		expect(users.getIndexByPrivateId(bU.username)).toBe(undefined);
 
-		expect(users.getIndexByPrivateId(d)).toBe(1);
+		expect(users.getIndexByPrivateId(toPlayerPrivateId(d))).toBe(1);
 		expect(users.getIndexByPrivateId(dU.username)).toBe(1);
 
-		expect(users.getIndexByPrivateId(c)).toBe(2);
+		expect(users.getIndexByPrivateId(toPlayerPrivateId(c))).toBe(2);
 		expect(users.getIndexByPrivateId(cU.username)).toBe(2);
 	});
 });

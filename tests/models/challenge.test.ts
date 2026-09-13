@@ -241,7 +241,7 @@ describe('Sets and gets', () => {
 		expect(c.whenChallengeAccepted).toBe('2024-12-29..14:00:01');
 
 		setResult(c, {
-			by: a,
+			by: A,
 			when: toDateFull('2024-12-29..14:00:02'),
 			white: A,
 			black: B,

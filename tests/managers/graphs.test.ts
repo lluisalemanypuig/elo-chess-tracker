@@ -34,9 +34,8 @@ import { EnvironmentManager } from '@server/managers/environment-manager';
 import { graphModifyEdge, graphUpdate } from '@server/managers/graphs';
 import { clearServer } from '@server/managers/memory/clear';
 import { serverInitFromData } from '@server/managers/memory/initialization';
-import { Configuration } from '@server/models/configuration/configuration';
 import { EdgeMetadata } from '@server/models/graph/edge-metadata';
-import { runCommand } from '@tests';
+import { makeConfiguration, runCommand } from '@tests';
 
 const Classical = toTimeControlId('Classical');
 const Classical90p30 = toTimeControlName('Classical (90 + 30)');
@@ -48,31 +47,7 @@ const Rapid10p0 = toTimeControlName('Rapid (10 + 0)');
 const Blitz = toTimeControlId('Blitz');
 const Blitz5p3 = toTimeControlName('Blitz (5 + 3)');
 
-const configuration: Configuration = {
-	environment: {
-		sslCertificate: {
-			publicKeyFile: 'sadf',
-			privateKeyFile: 'qwer',
-			passphraseFile: 'kgj68',
-		},
-		favicon: 'favicon.png',
-		loginPage: {
-			title: 'Login title',
-			icon: 'login.png',
-		},
-		homePage: {
-			title: 'Home title',
-			icon: 'home.png',
-		},
-	},
-	server: {
-		domainName: '',
-		ports: {
-			http: '8080',
-			https: '8443',
-		},
-	},
-	ratingSystem: 'Elo',
+const configuration = makeConfiguration({
 	timeControls: [
 		{
 			id: Classical,
@@ -91,11 +66,6 @@ const configuration: Configuration = {
 			name: Blitz5p3,
 		},
 	],
-	behavior: {
-		challenges: {
-			higherRatedPlayerCanDeclineChallengeFromLowerRatedPlayer: false,
-		},
-	},
 	permissions: {
 		admin: [
 			'CHALLENGE_USER',
@@ -127,7 +97,7 @@ const configuration: Configuration = {
 			'CHALLENGE_USER_STUDENT',
 		],
 	},
-};
+});
 
 const A = toPlayerPrivateId('A');
 const B = toPlayerPrivateId('B');
