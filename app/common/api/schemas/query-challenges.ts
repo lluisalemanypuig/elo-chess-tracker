@@ -24,7 +24,6 @@ Contact:
 */
 
 import { ChallengeIdSchema } from '@common/models/challenge-id';
-import { GameResultSchema } from '@common/models/game-result';
 import { PlayerPublicIdSchema } from '@common/models/player-id';
 import { TimeControlNameSchema } from '@common/models/time-control';
 import { UserGivenNameSchema } from '@common/models/user-given-name';
@@ -198,8 +197,14 @@ export const QueryChallengesPendingResultSetRefereeOutputSingleSchema = z
 	.object({
 		id: ChallengeIdSchema,
 		title: z.string(),
-		sentTo: UserGivenNameSchema,
-		sentBy: UserGivenNameSchema,
+		sentBy: z.object({
+			name: UserGivenNameSchema,
+			publicId: PlayerPublicIdSchema,
+		}),
+		sentTo: z.object({
+			name: UserGivenNameSchema,
+			publicId: PlayerPublicIdSchema,
+		}),
 		sentWhen: DateFullSchema,
 		timeControlName: TimeControlNameSchema,
 	})
@@ -228,7 +233,8 @@ export const QueryChallengesPendingResultAgreeRefereeOutputSingleSchema = z
 		sentWhen: DateFullSchema,
 		white: UserGivenNameSchema,
 		black: UserGivenNameSchema,
-		result: GameResultSchema,
+		result: z.string(),
+		resultSetByReferee: z.boolean(),
 		timeControlName: TimeControlNameSchema,
 	})
 	.strict();
