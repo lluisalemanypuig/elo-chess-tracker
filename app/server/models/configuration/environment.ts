@@ -42,12 +42,16 @@ const LoginPageSchema = z
 	})
 	.strict();
 
+export type LoginPage = z.infer<typeof LoginPageSchema>;
+
 const HomePageSchema = z
 	.object({
 		title: z.string(),
 		icon: z.string(),
 	})
 	.strict();
+
+export type HomePage = z.infer<typeof HomePageSchema>;
 
 export const EnvironmentSchema = z
 	.object({
