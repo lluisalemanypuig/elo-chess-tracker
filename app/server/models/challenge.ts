@@ -37,6 +37,7 @@ import {
 } from '@common/models/time-control';
 import { DateFull, DateFullSchema } from '@common/utils/time';
 import { z } from 'zod';
+import { User } from './user';
 
 // Challenge state
 
@@ -134,22 +135,22 @@ export function newChallenge(
 }
 
 export interface ChallengeAccept {
-	by: PlayerPrivateId;
+	by: User;
 	when: DateFull;
 }
 
 export function accept(c: Challenge, { by, when }: ChallengeAccept) {
 	c.whenChallengeAccepted = when;
-	c.challengeAcceptedBy = by;
+	c.challengeAcceptedBy = by.username;
 	c.state = 'PENDING_RESULT';
 }
 
 export interface ChallengeDecline {
-	by: PlayerPrivateId;
+	by: User;
 }
 
 export interface ChallengeSetResult {
-	by: PlayerPrivateId;
+	by: User;
 	when: DateFull;
 	white: PlayerPrivateId;
 	black: PlayerPrivateId;
@@ -161,7 +162,7 @@ export function setResult(
 	c: Challenge,
 	{ by, when, white, black, result }: ChallengeSetResult,
 ) {
-	c.resultSetBy = by;
+	c.resultSetBy = by.username;
 	c.whenResultSet = when;
 	c.white = white;
 	c.black = black;
@@ -170,7 +171,7 @@ export function setResult(
 }
 
 export interface ChallengeDisagreeResult {
-	by: PlayerPrivateId;
+	by: User;
 }
 
 // Unset the previous result
@@ -184,17 +185,17 @@ export function disagreeResult(c: Challenge) {
 }
 
 export interface ChallengeAgreeResult {
-	by: PlayerPrivateId;
+	by: User;
 	when: DateFull;
 }
 
 // Accepts the result
 export function agreeResult(c: Challenge, { by, when }: ChallengeAgreeResult) {
-	c.resultAcceptedBy = by;
+	c.resultAcceptedBy = by.username;
 	c.whenResultAccepted = when;
 	c.state = 'COMPLETED';
 }
 
-export function isPartOfChallenge(c: Challenge, by: PlayerPrivateId): boolean {
-	return by === c.sentBy || by === c.sentTo;
+export function isPartOfChallenge(c: Challenge, by: User): boolean {
+	return by.username === c.sentBy || by.username === c.sentTo;
 }

@@ -31,6 +31,9 @@ import { EnvironmentManager } from '@server/managers/environment-manager';
 import { gameAddNew } from '@server/managers/games';
 import {
 	canUserDeclineChallenge,
+	canUserForceAcceptChallenge,
+	canUserForceAcceptResultChallenge,
+	canUserForceSetResultChallenge,
 	canUserSendChallenge,
 } from '@server/managers/user-relationships';
 import { UsersManager } from '@server/managers/users-manager';
@@ -53,6 +56,7 @@ import { User } from '@server/models/user';
 import Debug from 'debug';
 import fs from 'fs';
 import path from 'path';
+import { InternalError } from '../models/error-types/internal-error';
 
 const debug = Debug('ELO_CHESS_TRACKER:managers/challenges');
 
@@ -112,7 +116,7 @@ export function challengeSendNew(
 		throw new PublicError('You cannot challenge yourself.');
 	}
 
-	let mem = ChallengesManager.getInstance();
+	const mem = ChallengesManager.getInstance();
 	const newId = mem.newChallengeId();
 
 	const c = newChallenge(
@@ -144,17 +148,45 @@ export function challengeSendNew(
 export function challengeAccept(c: Challenge, { by, when }: ChallengeAccept) {
 	debug(logNow(), `Accepting challenge '${c.id}'`);
 
+	if (isNotDefined(c.white) || isNotDefined(c.black)) {
+		debug(logNow(), `Player 'white' or 'black' is not defined.`);
+		debug(logNow(), `    White: '${c.white}'.`);
+		debug(logNow(), `    Black: '${c.black}'.`);
+		throw new InternalError(
+			`Challenge ${c.id} is malformed. Either white or black undefined.`,
+		);
+	}
+
 	if (c.state !== 'PENDING_ACCEPT') {
 		throw new PublicError(
 			`The challenge cannot be accepted since its state is ${c.state}.`,
 		);
 	}
-	if (!isPartOfChallenge(c, by)) {
-		debug(logNow(), `Player '${by}' is not part of this challenge.`);
-		throw new PublicError(`You cannot disagree to this result.`);
+
+	// check permissions
+	let cont: boolean = false;
+	if (by.is('REFEREE')) {
+		const mem = UsersManager.getInstance();
+		const white = mem.getAllUserDataByPrivateId(c.white);
+		const black = mem.getAllUserDataByPrivateId(c.black);
+		if (isNotDefined(white) || isNotDefined(black)) {
+			throw new InternalError(
+				`Could not find white or black user from challenge ${c.id}.`,
+			);
+		}
+
+		if (canUserForceAcceptChallenge(white.user, black.user, by)) {
+			cont = true;
+		}
 	}
-	if (by !== c.sentTo) {
-		throw new PublicError('You cannot accept this challenge');
+	if (!cont && isPartOfChallenge(c, by)) {
+		if (by.username === c.sentTo) {
+			cont = true;
+		}
+	}
+	if (!cont) {
+		debug(logNow(), `Player '${by}' cannot accept this challenge.`);
+		throw new PublicError(`You cannot accept this challenge.`);
 	}
 
 	accept(c, { by, when });
@@ -183,13 +215,13 @@ export function challengeDecline(c: Challenge, { by }: ChallengeDecline) {
 		debug(logNow(), `Player '${by}' is not part of this challenge.`);
 		throw new PublicError(`You cannot decline this challenge.`);
 	}
-	if (by !== c.sentTo) {
+	if (by.username !== c.sentTo) {
 		throw new PublicError('You cannot decline this challenge');
 	}
 
 	const mem = UsersManager.getInstance();
 	const sentTo = mem.getAllUserDataByPrivateId(c.sentTo);
-	const sentBy = mem.getAllUserDataByPrivateId(by);
+	const sentBy = mem.getAllUserDataByPrivateId(c.sentBy);
 	if (isNotDefined(sentTo) || isNotDefined(sentBy)) {
 		throw new PublicError(
 			'In challenge, either the white or black player do not exist.',
@@ -224,26 +256,48 @@ export function challengeSetResult(
 ) {
 	debug(logNow(), `Set the result of the challenge '${c.id}'`);
 
+	if (isNotDefined(c.white) || isNotDefined(c.black)) {
+		debug(logNow(), `Player 'white' or 'black' is not defined.`);
+		debug(logNow(), `    White: '${c.white}'.`);
+		debug(logNow(), `    Black: '${c.black}'.`);
+		throw new InternalError(
+			`Challenge ${c.id} is malformed. Either white or black undefined.`,
+		);
+	}
+
 	if (c.state !== 'PENDING_RESULT') {
 		throw new PublicError(
 			`The result to the challenge cannot be set since its state is ${c.state}.`,
 		);
 	}
-	if (!isPartOfChallenge(c, by)) {
-		debug(logNow(), `Player '${by}' is not part of this challenge.`);
-		throw new PublicError(`You cannot set this result.`);
+
+	// check permissions
+	let cont: boolean = false;
+	if (by.is('REFEREE')) {
+		const mem = UsersManager.getInstance();
+		const white = mem.getAllUserDataByPrivateId(c.white);
+		const black = mem.getAllUserDataByPrivateId(c.black);
+		if (isNotDefined(white) || isNotDefined(black)) {
+			throw new InternalError(
+				`Could not find white or black user from challenge ${c.id}.`,
+			);
+		}
+
+		if (canUserForceSetResultChallenge(white.user, black.user, by)) {
+			cont = true;
+		}
 	}
-	const originalSetter = c.resultSetBy;
-	if (originalSetter !== undefined && originalSetter !== by) {
-		debug(
-			logNow(),
-			`User '${by}' is trying to override the result of challenge '${c.id}' which was set by '${originalSetter} on '${c.whenResultSet}'`,
-		);
-		throw new PublicError(
-			'The result of this challenge has to be set by the original setter, which you are not.',
-		);
+	if (!cont && isPartOfChallenge(c, by)) {
+		if (by.username === c.sentTo) {
+			cont = true;
+		}
+	}
+	if (!cont) {
+		debug(logNow(), `Player '${by}' cannot accept this challenge.`);
+		throw new PublicError(`You cannot set the result of this result.`);
 	}
 
+	// sanitize input values
 	if (white === black) {
 		debug(
 			logNow(),
@@ -260,6 +314,7 @@ export function challengeSetResult(
 		throw new PublicError(`Wrong player data.`);
 	}
 
+	// set the result
 	setResult(c, { by, when, white, black, result });
 
 	const challengeDir = EnvironmentManager.getInstance().getDirChallenges();
@@ -279,30 +334,62 @@ export function challengeAgreeResult(
 ) {
 	debug(logNow(), `Agree to result of challenge '${c.id}'...`);
 
+	if (isNotDefined(c.white) || isNotDefined(c.black)) {
+		debug(logNow(), `Player 'white' or 'black' is not defined.`);
+		debug(logNow(), `    White: '${c.white}'.`);
+		debug(logNow(), `    Black: '${c.black}'.`);
+		throw new InternalError(
+			`Challenge ${c.id} is malformed. Either white or black undefined.`,
+		);
+	}
+
 	if (c.state !== 'PENDING_RESULT_AGREE') {
 		throw new PublicError(
 			`The result to the challenge cannot be agreed to since its state is ${c.state}.`,
 		);
 	}
+
 	if (!isPartOfChallenge(c, by)) {
-		debug(logNow(), `Player '${by}' is not part of this challenge.`);
+		debug(logNow(), `Player '${by.username}' is not part of this challenge.`);
 		throw new PublicError(`You cannot agree to this result.`);
 	}
+
+	// check permissions
+	let cont: boolean = false;
+	if (by.is('REFEREE')) {
+		const mem = UsersManager.getInstance();
+		const white = mem.getAllUserDataByPrivateId(c.white);
+		const black = mem.getAllUserDataByPrivateId(c.black);
+		if (isNotDefined(white) || isNotDefined(black)) {
+			throw new InternalError(
+				`Could not find white or black user from challenge ${c.id}.`,
+			);
+		}
+
+		if (canUserForceAcceptResultChallenge(white.user, black.user, by)) {
+			cont = true;
+		}
+	}
+	if (!cont && isPartOfChallenge(c, by)) {
+		if (by.username === c.sentTo) {
+			cont = true;
+		}
+	}
+	if (!cont) {
+		debug(logNow(), `Player '${by}' cannot accept this challenge.`);
+		throw new PublicError(`You cannot set the result of this result.`);
+	}
+
+	// sanitize input values
 	if (isNotDefined(c.whenResultSet)) {
 		debug(logNow(), `Date 'whenResultSet' is not defined`);
 		throw new PublicError(`Invalid date when the challenge was set.`);
-	}
-	if (isNotDefined(c.white) || isNotDefined(c.black)) {
-		debug(logNow(), `Player 'white' or 'black' is not defined.`);
-		debug(logNow(), `    White: '${c.white}'.`);
-		debug(logNow(), `    Black: '${c.black}'.`);
-		throw new PublicError(`White or Black player has not been set.`);
 	}
 	if (isNotDefined(c.result)) {
 		debug(logNow(), `Result is not set.`);
 		throw new PublicError(`Result is not set.`);
 	}
-	if (by === c.resultSetBy) {
+	if (by.username === c.resultSetBy) {
 		throw new PublicError(
 			'The accepter of the result cannot be the same person who set the result',
 		);
@@ -333,7 +420,7 @@ export function challengeAgreeResult(
 		c.title,
 		white.user,
 		black.user,
-		by,
+		by.username,
 		now,
 		c.result,
 		c.timeControlId,
@@ -368,11 +455,8 @@ export function challengeDisagreeResult(
 		debug(logNow(), `Player '${by}' is not part of this challenge.`);
 		throw new PublicError(`You cannot disagree to this result.`);
 	}
-	if (c.resultSetBy === by) {
-		debug(
-			logNow(),
-			`Player '${by}' set the result of the challenge and cannot disagree to it.`,
-		);
+	if (c.resultSetBy !== by.username) {
+		debug(logNow(), `Only player '${by}' can disagree to this result.`);
 		throw new PublicError(`You cannot disagree to this result.`);
 	}
 
