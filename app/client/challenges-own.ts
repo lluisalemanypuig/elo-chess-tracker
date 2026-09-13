@@ -86,8 +86,8 @@ async function sendChallengeButtonClicked(_event: any) {
 }
 
 async function acceptChallengeButtonClicked(event: any) {
-	let tagClicked = event.target;
-	let challengeId = tagClicked.id;
+	const tagClicked = event.target;
+	const challengeId = tagClicked.id;
 
 	const response = await serverCall(ROUTES.CHALLENGE_ACCEPT, {
 		id: challengeId,
@@ -100,8 +100,8 @@ async function acceptChallengeButtonClicked(event: any) {
 }
 
 async function declineChallengeTagClicked(event: any) {
-	let tagClicked = event.target;
-	let challengeId = tagClicked.id;
+	const tagClicked = event.target;
+	const challengeId = tagClicked.id;
 
 	const response = await serverCall(ROUTES.CHALLENGE_DECLINE, {
 		id: challengeId,
@@ -114,17 +114,17 @@ async function declineChallengeTagClicked(event: any) {
 }
 
 async function submitResultChallengeButtonClicked(event: any) {
-	let buttonClicked = event.target;
-	let challengeId = buttonClicked.id;
+	const buttonClicked = event.target;
+	const challengeId = buttonClicked.id;
 
 	const whiteSelect = document.getElementById(
-		'white-select-' + challengeId,
+		`white-select-${challengeId}`,
 	) as HTMLSelectElement;
 	const blackSelect = document.getElementById(
-		'black-select-' + challengeId,
+		`black-select-${challengeId}`,
 	) as HTMLSelectElement;
 	const selectResultGame = document.getElementById(
-		'select-result-game-' + challengeId,
+		`select-result-game-${challengeId}`,
 	) as HTMLSelectElement;
 
 	const whitePublicId = whiteSelect.options[whiteSelect.selectedIndex]
@@ -161,8 +161,8 @@ async function submitResultChallengeButtonClicked(event: any) {
 }
 
 async function agreeChallengeResultButtonClicked(event: any) {
-	let tagClicked = event.target;
-	let challengeId = tagClicked.id;
+	const tagClicked = event.target;
+	const challengeId = tagClicked.id;
 
 	const response = await serverCall(ROUTES.CHALLENGE_AGREE, {
 		id: challengeId,
@@ -177,12 +177,13 @@ async function agreeChallengeResultButtonClicked(event: any) {
 }
 
 async function disagreeChallengeResultButtonClicked(event: any) {
-	let tagClicked = event.target;
-	let challengeId = tagClicked.id;
+	const tagClicked = event.target;
+	const challengeId = tagClicked.id;
 
 	const response = await serverCall(ROUTES.CHALLENGE_DISAGREE, {
 		id: challengeId,
 	});
+
 	if (response.status === 'error') {
 		alert(messageFromResponse(response));
 		return;
@@ -199,7 +200,7 @@ async function fillChallengesReceived() {
 	}
 	const data = response.value;
 
-	let challengeList = document.createElement('ul') as HTMLUListElement;
+	const challengeList = document.createElement('ul') as HTMLUListElement;
 	challengeList.className = 'challenge-items';
 	data.forEach(function (
 		elem: QueryChallengesReceivedOutputSingle,
@@ -249,7 +250,7 @@ async function fillChallengesReceived() {
 		{
 			// accept tag
 			let acceptButton = document.createElement('button') as HTMLButtonElement;
-			acceptButton.id = elem.id;
+			acceptButton.id = `button-accept-${elem.id}`;
 			acceptButton.onclick = acceptChallengeButtonClicked;
 			acceptButton.className = 'button-accept-decline-challenge';
 			acceptButton.textContent = 'Accept';
@@ -260,7 +261,7 @@ async function fillChallengesReceived() {
 		{
 			// decline tag
 			let declineButton = document.createElement('button') as HTMLButtonElement;
-			declineButton.id = elem.id;
+			declineButton.id = `button-decline-${elem.id}`;
 			declineButton.onclick = declineChallengeTagClicked;
 			declineButton.className = 'button-accept-decline-challenge';
 			declineButton.textContent = 'Decline';
@@ -353,17 +354,15 @@ async function fillChallengesPendingResult() {
 		index: number,
 	) {
 		{
-			let header = document.createElement('ul') as HTMLUListElement;
+			const header = document.createElement('ul') as HTMLUListElement;
 			header.className = 'challenge-items';
 			{
 				let li = document.createElement('li') as HTMLLIElement;
 				li.className = 'challenge-items-bullet';
 				li.textContent = `Challenge with ${elem.opponent}.`;
 				header.appendChild(li);
-			}
-
-			{
-				let li = document.createElement('li') as HTMLLIElement;
+				//
+				li = document.createElement('li') as HTMLLIElement;
 				li.className = 'challenge-items-nobullet';
 				li.textContent = `Of time control: ${elem.timeControlName}.`;
 				header.appendChild(li);
@@ -386,13 +385,13 @@ async function fillChallengesPendingResult() {
 
 		// Who is the white player?
 		{
-			let div = document.createElement('div') as HTMLDivElement;
+			const div = document.createElement('div') as HTMLDivElement;
 			div.className = 'label-and-select';
 
 			div.appendChild(createLabelText('White:'));
 
 			let select = document.createElement('select');
-			select.id = 'whiteSelect_' + elem.id;
+			select.id = `white-select-${elem.id}`;
 			select.className = 'select-basic';
 
 			let option1 = document.createElement('option') as HTMLOptionElement;
@@ -410,20 +409,20 @@ async function fillChallengesPendingResult() {
 
 		// Who is the black player?
 		{
-			let div = document.createElement('div') as HTMLDivElement;
+			const div = document.createElement('div') as HTMLDivElement;
 			div.className = 'label-and-select';
 
 			div.appendChild(createLabelText('Black:'));
 
-			let select = document.createElement('select');
-			select.id = 'blackSelect_' + elem.id;
+			const select = document.createElement('select');
+			select.id = `black-select-${elem.id}`;
 			select.className = 'select-basic';
 
-			let option1 = document.createElement('option') as HTMLOptionElement;
+			const option1 = document.createElement('option') as HTMLOptionElement;
 			option1.text = elem.sentBy.name;
 			option1.value = `${elem.sentBy.publicId}`;
 			select.appendChild(option1);
-			let option2 = document.createElement('option') as HTMLOptionElement;
+			const option2 = document.createElement('option') as HTMLOptionElement;
 			option2.text = elem.sentTo.name;
 			option2.value = `${elem.sentTo.publicId}`;
 			select.appendChild(option2);
@@ -434,24 +433,24 @@ async function fillChallengesPendingResult() {
 
 		// Result of the game
 		{
-			let div = document.createElement('div') as HTMLDivElement;
+			const div = document.createElement('div') as HTMLDivElement;
 			div.className = 'label-and-select';
 
 			div.appendChild(createLabelText('Result:'));
 
-			let select = document.createElement('select');
-			select.id = 'selectResultGame_' + elem.id;
+			const select = document.createElement('select');
+			select.id = `select-result-game-${elem.id}`;
 			select.className = 'select-basic';
 
-			let option1 = document.createElement('option') as HTMLOptionElement;
+			const option1 = document.createElement('option') as HTMLOptionElement;
 			option1.text = '1 - 0';
 			option1.value = 'white_wins';
 			select.appendChild(option1);
-			let option2 = document.createElement('option') as HTMLOptionElement;
+			const option2 = document.createElement('option') as HTMLOptionElement;
 			option2.text = '1/2 - 1/2';
 			option2.value = 'draw';
 			select.appendChild(option2);
-			let option3 = document.createElement('option') as HTMLOptionElement;
+			const option3 = document.createElement('option') as HTMLOptionElement;
 			option3.text = '0 - 1';
 			option3.value = 'black_wins';
 			select.appendChild(option3);
@@ -464,7 +463,7 @@ async function fillChallengesPendingResult() {
 
 		// submit button
 		{
-			let submitResultButton = document.createElement('button');
+			const submitResultButton = document.createElement('button');
 			submitResultButton.textContent = 'Submit result';
 			submitResultButton.className = 'button-submit-challenge';
 			submitResultButton.id = elem.id;
@@ -495,7 +494,7 @@ async function fillChallengesConfirmResultOther() {
 
 	const challengeData = response.value;
 
-	let challengeList = document.createElement('ul') as HTMLUListElement;
+	const challengeList = document.createElement('ul') as HTMLUListElement;
 	challengeList.className = 'challenge-items';
 	challengeData.forEach(function (
 		elem: QueryChallengesConfirmResultOtherOutputSingle,
@@ -556,13 +555,13 @@ async function fillChallengesConfirmResultSelf() {
 
 	const challengeData = response.value;
 
-	let challengeList = document.createElement('ul') as HTMLUListElement;
+	const challengeList = document.createElement('ul') as HTMLUListElement;
 	challengeList.className = 'challenge-items';
 	challengeData.forEach(function (
 		elem: QueryChallengesConfirmResultSelfOutputSingle,
 		index: number,
 	) {
-		let confirmationDiv = document.createElement('div') as HTMLDivElement;
+		const confirmationDiv = document.createElement('div') as HTMLDivElement;
 		{
 			let li = document.createElement('li') as HTMLLIElement;
 			li.className = 'challenge-items-bullet';
@@ -599,14 +598,16 @@ async function fillChallengesConfirmResultSelf() {
 
 		challengeList.appendChild(confirmationDiv);
 
-		let buttonsDiv = document.createElement('div') as HTMLDivElement;
+		const buttonsDiv = document.createElement('div') as HTMLDivElement;
 		buttonsDiv.setAttribute('align', 'center');
 		buttonsDiv.style.marginTop = '5px';
 		buttonsDiv.style.marginBottom = '5px';
 
 		{
 			// accept tag
-			let acceptButton = document.createElement('button') as HTMLButtonElement;
+			const acceptButton = document.createElement(
+				'button',
+			) as HTMLButtonElement;
 			acceptButton.id = elem.id;
 			acceptButton.onclick = agreeChallengeResultButtonClicked;
 			acceptButton.className = 'button-agree-disagree-challenge';
@@ -617,7 +618,7 @@ async function fillChallengesConfirmResultSelf() {
 
 		{
 			// decline tag
-			let disagreeButton = document.createElement(
+			const disagreeButton = document.createElement(
 				'button',
 			) as HTMLButtonElement;
 			disagreeButton.id = elem.id;
