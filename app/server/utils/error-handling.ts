@@ -29,7 +29,7 @@ import { PublicError } from '@server/models/error-types/public-error';
 import Debug from 'debug';
 import { Response } from 'express';
 
-const debug = Debug('ELO_CHESS_TRACKER:serverGraphs');
+const debug = Debug('ELO_CHESS_TRACKER:errorHandling');
 
 export const internalErrorMessage =
 	'Internal error. Contact your administrator.';
