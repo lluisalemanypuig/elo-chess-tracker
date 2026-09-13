@@ -145,7 +145,7 @@ export async function postChallengeAccept(
 		`Challenge '${challengeId}' involves players '${c.sentBy}' and '${c.sentTo}'`,
 	);
 
-	challengeAccept(c, { by: user.username, when: logNow() });
+	challengeAccept(c, { by: user, when: logNow() });
 
 	return {};
 }
@@ -173,7 +173,7 @@ export async function postChallengeDecline(
 		`Challenge '${challengeId}' involves players '${c.sentBy}' and '${c.sentTo}'`,
 	);
 
-	challengeDecline(c, { by: user.username });
+	challengeDecline(c, { by: user });
 
 	return {};
 }
@@ -184,7 +184,7 @@ export async function postChallengeSetResult(
 ): Promise<Empty> {
 	debug(logNow(), 'function postChallengeSetResult...');
 
-	const setterUser = user.username;
+	const setterUser = user;
 
 	const challengeId = input.id;
 	const whitePublicId = input.white;
@@ -193,7 +193,7 @@ export async function postChallengeSetResult(
 
 	debug(
 		logNow(),
-		`User '${setterUser}' is trying to set the result of a challenge`,
+		`User '${setterUser.username}' is trying to set the result of a challenge`,
 	);
 	debug(logNow(), `    Challenge id: '${challengeId}'`);
 	debug(logNow(), `    White: '${whitePublicId}'`);
@@ -240,7 +240,7 @@ export async function postChallengeAgree(
 		throw new PublicError('Challenge does not exist');
 	}
 
-	challengeAgreeResult(c, { by: user.username, when: logNow() });
+	challengeAgreeResult(c, { by: user, when: logNow() });
 
 	return {};
 }
@@ -258,7 +258,7 @@ export async function postChallengeDisagree(
 		throw new PublicError('Challenge does not exist');
 	}
 
-	challengeDisagreeResult(c, { by: user.username });
+	challengeDisagreeResult(c, { by: user });
 
 	return {};
 }

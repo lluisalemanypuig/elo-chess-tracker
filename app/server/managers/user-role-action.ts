@@ -25,10 +25,10 @@ Contact:
 
 import {
 	ALL_ACTION_IDS,
-	getGenericRoleActionName,
-	getRoleActionName,
+	roleActionNames,
 	UserAction,
 	UserActionId,
+	userActionIdToUserAction,
 } from '@common/models/user-action';
 import { ALL_USER_ROLES, UserRole } from '@common/models/user-role';
 import { UserPermissions } from '@server/models/configuration/permissions';
@@ -59,7 +59,7 @@ export class UserRoleToUserAction {
 	}
 
 	// The data structure that relates user roles to actions
-	private relate: { [key in UserRole]: UserAction[] } = {
+	private serverRolesDefinition: { [key in UserRole]: UserAction[] } = {
 		ADMIN: [],
 		REFEREE: [],
 		TEACHER: [],
@@ -69,22 +69,22 @@ export class UserRoleToUserAction {
 
 	// Add action 'action' to role 'role'
 	addToRole(role: UserRole, action: UserAction) {
-		this.relate[role].push(action);
+		this.serverRolesDefinition[role].push(action);
 	}
 
 	// Return all actions for role 'role'
 	getActionsRole(role: UserRole): UserAction[] {
-		return this.relate[role];
+		return this.serverRolesDefinition[role];
 	}
 
-	roleIncludesAction(role: UserRole, action: UserAction): boolean {
-		return this.relate[role].includes(action);
+	roleHasAction(role: UserRole, action: UserAction): boolean {
+		return this.serverRolesDefinition[role].includes(action);
 	}
 
 	roleCanDo(role: UserRole, action: UserActionId): boolean {
-		for (const otherRoles of ALL_USER_ROLES) {
-			const userAction = getRoleActionName(action, otherRoles);
-			if (this.roleIncludesAction(role, userAction)) {
+		for (const otherRole of ALL_USER_ROLES) {
+			const userAction = roleActionNames[action][otherRole];
+			if (this.roleHasAction(role, userAction)) {
 				return true;
 			}
 		}
@@ -94,7 +94,7 @@ export class UserRoleToUserAction {
 	addMissingGenericActions(role: UserRole) {
 		for (const actionId of ALL_ACTION_IDS) {
 			if (this.roleCanDo(role, actionId)) {
-				const genericActionName = getGenericRoleActionName(actionId);
+				const genericActionName = userActionIdToUserAction[actionId];
 				this.addToRole(role, genericActionName);
 			}
 		}
@@ -102,7 +102,7 @@ export class UserRoleToUserAction {
 
 	// Clears the relationships contained in this instance.
 	clear() {
-		this.relate = {
+		this.serverRolesDefinition = {
 			ADMIN: [],
 			REFEREE: [],
 			TEACHER: [],
@@ -134,7 +134,7 @@ export function initializePermissions(permissions: UserPermissions) {
 	actions.addMissingGenericActions('ADMIN');
 
 	// REFEREE
-	for (const permission of permissions.admin) {
+	for (const permission of permissions.referee) {
 		actions.addToRole('REFEREE', permission);
 	}
 	actions.addMissingGenericActions('REFEREE');

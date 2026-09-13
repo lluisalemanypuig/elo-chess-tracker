@@ -26,7 +26,7 @@ Contact:
 import { PlayerPrivateId } from '@common/models/player-id';
 import { SessionId } from '@common/models/session-id';
 import { TimeControlId } from '@common/models/time-control';
-import { getRoleActionName } from '@common/models/user-action';
+import { roleActionNames } from '@common/models/user-action';
 import { UserGivenName } from '@common/models/user-given-name';
 import { UserRole } from '@common/models/user-role';
 import { UserThin } from '@common/models/user-thin';
@@ -92,7 +92,7 @@ export function userEdit(
 	debug(logNow(), `    Roles: '${roles}'`);
 
 	for (const role of roles) {
-		const action = getRoleActionName('ASSIGN_ROLE_USERS', role);
+		const action = roleActionNames['ASSIGN_ROLE_USERS'][role];
 		if (!editor.canDo(action)) {
 			throw new PublicError(
 				`You do not have enough permissions to assign role '${role}'.`,
@@ -131,8 +131,9 @@ export function userAddNew(
 			`You cannot assign roles and thus cannot create users.`,
 		);
 	}
+
 	for (const r of roles) {
-		const action = getRoleActionName('ASSIGN_ROLE_USERS', r);
+		const action = roleActionNames['ASSIGN_ROLE_USERS'][r];
 		if (!registerer.canDo(action)) {
 			throw new PublicError(`You cannot assign role ${r} to users.`);
 		}

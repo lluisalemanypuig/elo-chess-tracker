@@ -28,6 +28,10 @@ import { UserRole } from '@common/models/user-role';
 import { UsersBehavior } from '@server/managers/users-behavior';
 import { User } from '@server/models/user';
 
+function useEitherUserIs(white: User, black: User) {
+	return (r: UserRole) => white.is(r) || black.is(r);
+}
+
 export function canUserEditUser(editor: User, edited: User): boolean {
 	return (
 		editor.canDo('EDIT_USER') &&
@@ -42,9 +46,7 @@ export function canUserEditUser(editor: User, edited: User): boolean {
 // GAMES
 
 export function canUserSeeGame(u: User, white: User, black: User): boolean {
-	const eitherUserIs = function (r: UserRole): boolean {
-		return white.is(r) || black.is(r);
-	};
+	const eitherUserIs = useEitherUserIs(white, black);
 
 	return (
 		u.canDo('SEE_GAMES') &&
@@ -57,9 +59,7 @@ export function canUserSeeGame(u: User, white: User, black: User): boolean {
 }
 
 export function canUserCreateGame(u: User, white: User, black: User): boolean {
-	const eitherUserIs = function (r: UserRole): boolean {
-		return white.is(r) || black.is(r);
-	};
+	const eitherUserIs = useEitherUserIs(white, black);
 
 	return (
 		u.canDo('CREATE_GAMES') &&
@@ -72,9 +72,7 @@ export function canUserCreateGame(u: User, white: User, black: User): boolean {
 }
 
 export function canUserEditGame(u: User, white: User, black: User): boolean {
-	const eitherUserIs = function (r: UserRole): boolean {
-		return white.is(r) || black.is(r);
-	};
+	const eitherUserIs = useEitherUserIs(white, black);
 
 	return (
 		u.canDo('EDIT_GAMES') &&
@@ -87,9 +85,7 @@ export function canUserEditGame(u: User, white: User, black: User): boolean {
 }
 
 export function canUserDeleteGame(u: User, white: User, black: User): boolean {
-	const eitherUserIs = function (r: UserRole): boolean {
-		return white.is(r) || black.is(r);
-	};
+	const eitherUserIs = useEitherUserIs(white, black);
 
 	return (
 		u.canDo('DELETE_GAMES') &&
@@ -123,6 +119,66 @@ export function canUserDeclineChallenge(
 		return UsersBehavior.getInstance().canHigherRatedDeclineChallengeLowerRated();
 	}
 	return true;
+}
+
+export function canUserForceAcceptChallenge(
+	sentTo: User,
+	sentBy: User,
+	by: User,
+): boolean {
+	const eitherUserIs = useEitherUserIs(sentTo, sentBy);
+
+	return (
+		by.is('REFEREE') &&
+		((by.canDo('FORCE_CHALLENGE_ACCEPT_ADMIN') && eitherUserIs('ADMIN')) ||
+			(by.canDo('FORCE_CHALLENGE_ACCEPT_REFEREE') && eitherUserIs('REFEREE')) ||
+			(by.canDo('FORCE_CHALLENGE_ACCEPT_TEACHER') && eitherUserIs('TEACHER')) ||
+			(by.canDo('FORCE_CHALLENGE_ACCEPT_MEMBER') && eitherUserIs('MEMBER')) ||
+			(by.canDo('FORCE_CHALLENGE_ACCEPT_STUDENT') && eitherUserIs('STUDENT')))
+	);
+}
+
+export function canUserForceSetResultChallenge(
+	sentTo: User,
+	sentBy: User,
+	by: User,
+): boolean {
+	const eitherUserIs = useEitherUserIs(sentTo, sentBy);
+
+	return (
+		by.is('REFEREE') &&
+		((by.canDo('FORCE_CHALLENGE_SET_RESULT_ADMIN') && eitherUserIs('ADMIN')) ||
+			(by.canDo('FORCE_CHALLENGE_SET_RESULT_REFEREE') &&
+				eitherUserIs('REFEREE')) ||
+			(by.canDo('FORCE_CHALLENGE_SET_RESULT_TEACHER') &&
+				eitherUserIs('TEACHER')) ||
+			(by.canDo('FORCE_CHALLENGE_SET_RESULT_MEMBER') &&
+				eitherUserIs('MEMBER')) ||
+			(by.canDo('FORCE_CHALLENGE_SET_RESULT_STUDENT') &&
+				eitherUserIs('STUDENT')))
+	);
+}
+
+export function canUserForceAgreeResultChallenge(
+	sentTo: User,
+	sentBy: User,
+	by: User,
+): boolean {
+	const eitherUserIs = useEitherUserIs(sentTo, sentBy);
+
+	return (
+		by.is('REFEREE') &&
+		((by.canDo('FORCE_CHALLENGE_ACCEPT_RESULT_ADMIN') &&
+			eitherUserIs('ADMIN')) ||
+			(by.canDo('FORCE_CHALLENGE_ACCEPT_RESULT_REFEREE') &&
+				eitherUserIs('REFEREE')) ||
+			(by.canDo('FORCE_CHALLENGE_ACCEPT_RESULT_TEACHER') &&
+				eitherUserIs('TEACHER')) ||
+			(by.canDo('FORCE_CHALLENGE_ACCEPT_RESULT_MEMBER') &&
+				eitherUserIs('MEMBER')) ||
+			(by.canDo('FORCE_CHALLENGE_ACCEPT_RESULT_STUDENT') &&
+				eitherUserIs('STUDENT')))
+	);
 }
 
 // GRAPHS

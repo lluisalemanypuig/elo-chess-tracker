@@ -36,15 +36,29 @@ import {
 	newChallenge,
 	setResult,
 } from '@server/models/challenge';
+import { makeUser } from '@tests/test-utils';
 
 const Blitz = toTimeControlId('Blitz');
 const Blitz5p3 = toTimeControlName('Blitz (5 + 3)');
 
-const A = toPlayerPrivateId('A');
+const userA = makeUser({
+	username: 'A',
+	firstName: 'A',
+	lastName: 'A',
+	password: { encrypted: 'a', iv: 'b' },
+});
 const a = toPlayerPrivateId('a');
 
-const B = toPlayerPrivateId('B');
+const userB = makeUser({
+	username: 'B',
+	firstName: 'B',
+	lastName: 'B',
+	password: { encrypted: 'a', iv: 'b' },
+});
 const b = toPlayerPrivateId('b');
+
+const A = userA.username;
+const B = userB.username;
 
 const id000x1 = toChallengeId('000x1');
 
@@ -87,7 +101,7 @@ describe('Sets and gets', () => {
 		expect(c.whenChallengeAccepted).toBe('2024-12-29..14:00:01');
 
 		setResult(c, {
-			by: A,
+			by: userA,
 			when: toDateFull('2024-12-29..14:00:02'),
 			white: A,
 			black: B,
@@ -102,7 +116,7 @@ describe('Sets and gets', () => {
 		expect(c.timeControlId).toBe(Blitz);
 		expect(c.timeControlName).toBe('Blitz (5 + 3)');
 
-		agreeResult(c, { by: B, when: toDateFull('2024-12-29..14:00:03') });
+		agreeResult(c, { by: userB, when: toDateFull('2024-12-29..14:00:03') });
 
 		expect(c.whenResultAccepted).toBe('2024-12-29..14:00:03');
 		expect(c.resultAcceptedBy).toBe('B');
@@ -130,7 +144,7 @@ describe('Sets and gets', () => {
 		expect(c.whenChallengeAccepted).toBe('2024-12-29..14:00:01');
 
 		setResult(c, {
-			by: A,
+			by: userA,
 			when: toDateFull('2024-12-29..14:00:02'),
 			white: B,
 			black: A,
@@ -145,7 +159,7 @@ describe('Sets and gets', () => {
 		expect(c.timeControlId).toBe(Blitz);
 		expect(c.timeControlName).toBe('Blitz (5 + 3)');
 
-		agreeResult(c, { by: B, when: toDateFull('2024-12-29..14:00:03') });
+		agreeResult(c, { by: userB, when: toDateFull('2024-12-29..14:00:03') });
 
 		expect(c.whenResultAccepted).toBe('2024-12-29..14:00:03');
 		expect(c.resultAcceptedBy).toBe('B');
@@ -173,7 +187,7 @@ describe('Sets and gets', () => {
 		expect(c.whenChallengeAccepted).toBe('2024-12-29..14:00:01');
 
 		setResult(c, {
-			by: A,
+			by: userA,
 			when: toDateFull('2024-12-29..14:00:02'),
 			white: B,
 			black: A,
@@ -188,7 +202,7 @@ describe('Sets and gets', () => {
 		expect(c.timeControlId).toBe(Blitz);
 		expect(c.timeControlName).toBe('Blitz (5 + 3)');
 
-		agreeResult(c, { by: A, when: toDateFull('2024-12-29..14:00:03') });
+		agreeResult(c, { by: userA, when: toDateFull('2024-12-29..14:00:03') });
 
 		expect(c.whenResultAccepted).toBe('2024-12-29..14:00:03');
 		expect(c.resultAcceptedBy).toBe(A);
@@ -214,7 +228,7 @@ describe('Sets and gets', () => {
 
 		expect(c.whenChallengeAccepted).toBe('2024-12-29..14:00:01');
 
-		agreeResult(c, { by: A, when: toDateFull('2024-12-29..14:00:03') });
+		agreeResult(c, { by: userA, when: toDateFull('2024-12-29..14:00:03') });
 
 		expect(c.whenResultAccepted).toBe('2024-12-29..14:00:03');
 		expect(c.resultAcceptedBy).toBe(A);
@@ -241,21 +255,21 @@ describe('Sets and gets', () => {
 		expect(c.whenChallengeAccepted).toBe('2024-12-29..14:00:01');
 
 		setResult(c, {
-			by: A,
+			by: userA,
 			when: toDateFull('2024-12-29..14:00:02'),
 			white: A,
 			black: B,
 			result: 'black_wins',
 		});
 		setResult(c, {
-			by: A,
+			by: userA,
 			when: toDateFull('2024-12-29..14:00:02'),
 			white: a,
 			black: B,
 			result: 'black_wins',
 		});
 		setResult(c, {
-			by: A,
+			by: userA,
 			when: toDateFull('2024-12-29..14:00:02'),
 			white: A,
 			black: b,
@@ -292,7 +306,7 @@ describe('Sets and gets', () => {
 		expect(c.whenChallengeAccepted).toBe('2024-12-29..14:00:01');
 
 		setResult(c, {
-			by: A,
+			by: userA,
 			when: toDateFull('2024-12-29..14:00:02'),
 			white: A,
 			black: B,

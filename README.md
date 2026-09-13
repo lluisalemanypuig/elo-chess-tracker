@@ -228,6 +228,27 @@ Available actions are
   - _CHALLENGE_TEACHER_
   - _CHALLENGE_STUDENT_
 
+- A referee forcefully accepting a challenge for a user.
+  - _FORCE_CHALLENGE_ACCEPT_ADMIN_,
+  - _FORCE_CHALLENGE_ACCEPT_REFEREE_,
+  - _FORCE_CHALLENGE_ACCEPT_TEACHER_,
+  - _FORCE_CHALLENGE_ACCEPT_MEMBER_,
+  - _FORCE_CHALLENGE_ACCEPT_STUDENT_,
+
+- A referee forcefully setting the result of a challenge for a user.
+  - _FORCE_CHALLENGE_SET_RESULT_ADMIN_,
+  - _FORCE_CHALLENGE_SET_RESULT_REFEREE_,
+  - _FORCE_CHALLENGE_SET_RESULT_TEACHER_,
+  - _FORCE_CHALLENGE_SET_RESULT_MEMBER_,
+  - _FORCE_CHALLENGE_SET_RESULT_STUDENT_,
+
+- A referee forcefully accepting the result of a challenge for a user.
+  - _FORCE_CHALLENGE_ACCEPT_RESULT_ADMIN_,
+  - _FORCE_CHALLENGE_ACCEPT_RESULT_REFEREE_,
+  - _FORCE_CHALLENGE_ACCEPT_RESULT_TEACHER_,
+  - _FORCE_CHALLENGE_ACCEPT_RESULT_MEMBER_,
+  - _FORCE_CHALLENGE_ACCEPT_RESULT_STUDEN_,
+
 ## Running the website
 
 Once the configuration file has been properly edited, now we can run the website. To do so, use **one** of the following commands (we recommend using the second)
