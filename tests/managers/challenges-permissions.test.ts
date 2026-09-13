@@ -668,7 +668,7 @@ describe('Check challenge communication', () => {
 		expect(challenge.state).toBe('PENDING_RESULT');
 	});
 
-	test('A referee can disagree with a player-set result', () => {
+	test('A referee cannot disagree with a player-set result', () => {
 		const challenge = challengeSendNew(
 			'sample',
 			uE,
@@ -694,8 +694,8 @@ describe('Check challenge communication', () => {
 		).not.toThrow();
 
 		expect(() => challengeDisagreeResult(challenge, { by: uF })).toThrow();
-		expect(() => challengeDisagreeResult(challenge, { by: uA })).not.toThrow();
-		expect(challenge.state).toBe('PENDING_RESULT');
+		expect(() => challengeDisagreeResult(challenge, { by: uA })).toThrow();
+		expect(challenge.state).toBe('PENDING_RESULT_AGREE');
 	});
 
 	test('A referee cannot disagree with a member player result', () => {
@@ -723,7 +723,7 @@ describe('Check challenge communication', () => {
 		expect(() => challengeDisagreeResult(challenge, { by: uA })).toThrow();
 	});
 
-	test('A referee can disagree with a student-member result', () => {
+	test('A referee cannot disagree with a student-member result', () => {
 		const challenge = challengeSendNew(
 			'sample',
 			uE,
@@ -745,6 +745,6 @@ describe('Check challenge communication', () => {
 			result: 'white_wins',
 		});
 
-		expect(() => challengeDisagreeResult(challenge, { by: uA })).not.toThrow();
+		expect(() => challengeDisagreeResult(challenge, { by: uA })).toThrow();
 	});
 });
