@@ -354,15 +354,16 @@ describe('Check challenge communication', () => {
 	test('Accept some challenges', () => {
 		const challenges = ChallengesManager.getInstance();
 
-		for (let i of [
-			{ id: 3, accepter: dd, when: toDateFull('2026-08-09..11:10:47:000') },
-			{ id: 4, accepter: ff, when: toDateFull('2026-08-09..11:10:47:000') },
+		for (const i of [
+			{ id: 3, accepter: uD, when: toDateFull('2026-08-09..11:10:47:000') },
+			{ id: 4, accepter: uF, when: toDateFull('2026-08-09..11:10:47:000') },
 		]) {
 			const id = numberToChallengeId(i.id);
 
-			let c = challenges.getChallengeById(id) as Challenge;
+			const c = challenges.getChallengeById(id) as Challenge;
 			challengeAccept(c, { by: i.accepter, when: i.when });
 			expect(c.whenChallengeAccepted).not.toBe(undefined);
+			expect(c.challengeAcceptedBy).toEqual(i.accepter.username);
 
 			const challenge_file = path.join(db_challenges_dir, id);
 			expect(fs.existsSync(challenge_file)).toBe(true);
@@ -376,13 +377,13 @@ describe('Check challenge communication', () => {
 	test('Decline some challenges', () => {
 		const challenges = ChallengesManager.getInstance();
 
-		for (let i of [
-			{ id: 1, decliner: bb },
-			{ id: 2, decliner: cc },
+		for (const i of [
+			{ id: 1, decliner: uB },
+			{ id: 2, decliner: uC },
 		]) {
 			const id = numberToChallengeId(i.id);
 
-			let c = challenges.getChallengeById(id) as Challenge;
+			const c = challenges.getChallengeById(id) as Challenge;
 			challengeDecline(c, { by: i.decliner });
 			expect(c.whenChallengeAccepted).toBe(undefined);
 
@@ -400,9 +401,9 @@ describe('Check challenge communication', () => {
 
 		const id = numberToChallengeId(3);
 
-		let c = challenges.getChallengeById(id) as Challenge;
+		const c = challenges.getChallengeById(id) as Challenge;
 		challengeSetResult(c, {
-			by: aa,
+			by: uA,
 			when: toDateFull('2025-01-10..20:32:11:000'),
 			white: aa,
 			black: dd,
@@ -414,7 +415,7 @@ describe('Check challenge communication', () => {
 		expect(c.black).toEqual(dd);
 		expect(c.result).toEqual('white_wins');
 		expect(c.timeControlId).toEqual(Blitz);
-		expect(c.timeControlName).toEqual('Blitz (5 + 3)');
+		expect(c.timeControlName).toEqual(Blitz5p3);
 
 		const challenge_file = path.join(db_challenges_dir, id);
 		expect(fs.existsSync(challenge_file)).toBe(true);
@@ -431,9 +432,9 @@ describe('Check challenge communication', () => {
 
 		const id = numberToChallengeId(4);
 
-		let c = challenges.getChallengeById(id) as Challenge;
+		const c = challenges.getChallengeById(id) as Challenge;
 		challengeSetResult(c, {
-			by: ff,
+			by: uF,
 			when: toDateFull('2025-01-10..20:37:35:000'),
 			white: ee,
 			black: ff,
@@ -461,12 +462,12 @@ describe('Check challenge communication', () => {
 		const challenges = ChallengesManager.getInstance();
 
 		const id = numberToChallengeId(4);
-		let c = challenges.getChallengeById(id) as Challenge;
+		const c = challenges.getChallengeById(id) as Challenge;
 		expect(c.white).toEqual(ee);
 		expect(c.black).toEqual(ff);
 
 		challengeAgreeResult(c, {
-			by: ee,
+			by: uE,
 			when: toDateFull('2026-08-09..11:23:58:000'),
 		});
 
@@ -513,16 +514,16 @@ describe('Check challenge communication', () => {
 
 		const id = numberToChallengeId(3);
 
-		let c = challenges.getChallengeById(id) as Challenge;
-		expect(() => challengeDisagreeResult(c, { by: ee })).toThrow();
-		challengeDisagreeResult(c, { by: dd });
+		const c = challenges.getChallengeById(id) as Challenge;
+		expect(() => challengeDisagreeResult(c, { by: uE })).toThrow();
+		challengeDisagreeResult(c, { by: uD });
 
 		expect(c.resultSetBy).toEqual(undefined);
 		expect(c.white).toEqual(undefined);
 		expect(c.black).toEqual(undefined);
 		expect(c.result).toEqual(undefined);
 		expect(c.timeControlId).toEqual(Blitz);
-		expect(c.timeControlName).toEqual('Blitz (5 + 3)');
+		expect(c.timeControlName).toEqual(Blitz5p3);
 
 		const challenge_file = path.join(db_challenges_dir, id);
 		expect(fs.existsSync(challenge_file)).toBe(true);
@@ -539,9 +540,9 @@ describe('Check challenge communication', () => {
 
 		const id = numberToChallengeId(3);
 
-		let c = challenges.getChallengeById(id) as Challenge;
+		const c = challenges.getChallengeById(id) as Challenge;
 		challengeSetResult(c, {
-			by: aa,
+			by: uA,
 			when: toDateFull('2025-01-10..20:38:45:000'),
 			white: dd,
 			black: aa,
@@ -553,7 +554,7 @@ describe('Check challenge communication', () => {
 		expect(c.black).toEqual(aa);
 		expect(c.result).toEqual('black_wins');
 		expect(c.timeControlId).toEqual(Blitz);
-		expect(c.timeControlName).toEqual('Blitz (5 + 3)');
+		expect(c.timeControlName).toEqual(Blitz5p3);
 
 		const challenge_file = path.join(db_challenges_dir, id);
 		expect(fs.existsSync(challenge_file)).toBe(true);
@@ -579,12 +580,12 @@ describe('Check initialization and communication', () => {
 		const challenges = ChallengesManager.getInstance();
 
 		const id = numberToChallengeId(3);
-		let c = challenges.getChallengeById(id) as Challenge;
+		const c = challenges.getChallengeById(id) as Challenge;
 		expect(c.white).toEqual(dd);
 		expect(c.black).toEqual(aa);
 
 		challengeAgreeResult(c, {
-			by: dd,
+			by: uD,
 			when: toDateFull('2026-08-09..11:25:19:000'),
 		});
 
@@ -640,19 +641,19 @@ describe('Incorrect challenge communication', () => {
 
 		expect(() =>
 			challengeAccept(c_aa_bb, {
-				by: aa,
+				by: uA,
 				when: toDateFull('2025-01-10..20:38:50:000'),
 			}),
 		).toThrow();
 
 		challengeAccept(c_aa_bb, {
-			by: bb,
+			by: uB,
 			when: toDateFull('2025-01-10..20:38:50:000'),
 		});
 
 		expect(() =>
 			challengeSetResult(c_aa_bb, {
-				by: ee,
+				by: uE,
 				when: toDateFull('2025-01-10..20:39:15:000'),
 				white: aa,
 				black: bb,
@@ -661,7 +662,7 @@ describe('Incorrect challenge communication', () => {
 		).toThrow();
 		expect(() =>
 			challengeSetResult(c_aa_bb, {
-				by: aa,
+				by: uA,
 				when: toDateFull('2025-01-10..20:39:16:000'),
 				white: dd,
 				black: aa,
@@ -670,7 +671,7 @@ describe('Incorrect challenge communication', () => {
 		).toThrow();
 		expect(() =>
 			challengeSetResult(c_aa_bb, {
-				by: aa,
+				by: uA,
 				when: toDateFull('2025-01-10..20:39:17:000'),
 				white: aa,
 				black: ee,
@@ -679,7 +680,7 @@ describe('Incorrect challenge communication', () => {
 		).toThrow();
 
 		challengeSetResult(c_aa_bb, {
-			by: aa,
+			by: uA,
 			when: toDateFull('2025-01-10..20:39:20:000'),
 			white: bb,
 			black: aa,
@@ -688,13 +689,13 @@ describe('Incorrect challenge communication', () => {
 
 		expect(() =>
 			challengeAgreeResult(c_aa_bb, {
-				by: aa,
+				by: uA,
 				when: toDateFull('2025-01-10..20:39:30:000'),
 			}),
 		).toThrow();
 
 		challengeAgreeResult(c_aa_bb, {
-			by: bb,
+			by: uB,
 			when: toDateFull('2025-01-10..20:39:30:000'),
 		});
 
@@ -736,18 +737,18 @@ describe('Incorrect challenge communication', () => {
 
 		expect(() =>
 			challengeAccept(c_bb_cc, {
-				by: cc,
+				by: uC,
 				when: toDateFull('2025-01-10..20:40:30:000'),
 			}),
 		).toThrow();
 		challengeAccept(c_bb_cc, {
-			by: bb,
+			by: uB,
 			when: toDateFull('2025-01-10..20:40:30:000'),
 		});
 
 		expect(() =>
 			challengeSetResult(c_bb_cc, {
-				by: aa,
+				by: uA,
 				when: toDateFull('2025-01-10..20:39:30:000'),
 				white: bb,
 				black: cc,
@@ -756,7 +757,7 @@ describe('Incorrect challenge communication', () => {
 		).toThrow();
 		expect(() =>
 			challengeSetResult(c_bb_cc, {
-				by: bb,
+				by: uB,
 				when: toDateFull('2025-01-10..20:39:31:000'),
 				white: aa,
 				black: cc,
@@ -765,7 +766,7 @@ describe('Incorrect challenge communication', () => {
 		).toThrow();
 		expect(() =>
 			challengeSetResult(c_bb_cc, {
-				by: bb,
+				by: uB,
 				when: toDateFull('2025-01-10..20:39:32:000'),
 				white: bb,
 				black: aa,
@@ -774,7 +775,7 @@ describe('Incorrect challenge communication', () => {
 		).toThrow();
 
 		challengeSetResult(c_bb_cc, {
-			by: bb,
+			by: uB,
 			when: toDateFull('2025-01-10..20:39:33:000'),
 			white: bb,
 			black: cc,
@@ -783,13 +784,13 @@ describe('Incorrect challenge communication', () => {
 
 		expect(() =>
 			challengeAgreeResult(c_bb_cc, {
-				by: bb,
+				by: uB,
 				when: toDateFull('2025-01-10..20:40:30:000'),
 			}),
 		).toThrow();
 
 		challengeAgreeResult(c_bb_cc, {
-			by: cc,
+			by: uC,
 			when: toDateFull('2025-01-10..20:40:30:000'),
 		});
 
