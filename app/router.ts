@@ -33,7 +33,7 @@ import { methodTypeOf } from '@common/api/schemas-endpoints';
 import { InputTypeOf, OutputTypeOf } from '@common/api/types';
 import { logNow } from '@common/utils/time';
 import {
-	getPageChallenge,
+	getPageChallengesOwn,
 	postChallengeAccept,
 	postChallengeAgree,
 	postChallengeDecline,
@@ -301,7 +301,7 @@ defineEndpointAction(ROUTES.GAME_DELETE, postGameDelete);
 defineEndpointAction(ROUTES.RECALCULATE_RATINGS, postRecalculateRatings);
 
 // challenges management
-defineEndpointPage(ROUTES.PAGE_CHALLENGES_OWN, getPageChallenge);
+defineEndpointPage(ROUTES.PAGE_CHALLENGES_OWN, getPageChallengesOwn);
 defineEndpointAction(ROUTES.CHALLENGE_SEND, postChallengeSend);
 defineEndpointAction(ROUTES.CHALLENGE_ACCEPT, postChallengeAccept);
 defineEndpointAction(ROUTES.CHALLENGE_DECLINE, postChallengeDecline);

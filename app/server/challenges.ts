@@ -52,9 +52,9 @@ import { UserSession } from '@server/models/user';
 
 const debug = Debug('ELO_CHESS_TRACKER:serverChallenges');
 
-export async function getPageChallenge(_u: UserSession) {
-	debug(logNow(), 'function getPageChallenge...');
-	return 'html/challenges.html';
+export async function getPageChallengesOwn(_u: UserSession) {
+	debug(logNow(), 'function getPageChallengesOwn...');
+	return 'html/challenges/own.html';
 }
 
 export async function postChallengeSend(
