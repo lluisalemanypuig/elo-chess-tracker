@@ -540,7 +540,7 @@ async function fillChallengesResultPendingAgreeSelf() {
 			buttonsDiv.appendChild(acceptButton);
 		}
 
-		{
+		if (elem.canDisagree) {
 			// decline tag
 			const disagreeButton = document.createElement(
 				'button',
