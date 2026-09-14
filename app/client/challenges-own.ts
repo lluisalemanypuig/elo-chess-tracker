@@ -340,7 +340,7 @@ async function fillChallengesSent() {
 	}
 }
 
-function makeHeaderChallengeSetResult(
+function makeHeaderChallengePendingResultSet(
 	c: QueryChallengesPendingResultOutputSingle,
 ) {
 	const header = document.createElement('ul') as HTMLUListElement;
@@ -370,7 +370,7 @@ function makeHeaderChallengeSetResult(
 	return header;
 }
 
-async function fillChallengesPendingResult() {
+async function fillChallengesPendingResultSet() {
 	const response = await serverCall(
 		ROUTES.QUERY_CHALLENGE_PENDING_RESULT,
 		null,
@@ -392,7 +392,7 @@ async function fillChallengesPendingResult() {
 			elem,
 			index,
 			data.length,
-			makeHeaderChallengeSetResult,
+			makeHeaderChallengePendingResultSet,
 			submitResultChallengeButtonClicked,
 		);
 		challengeList.appendChild(itemDiv);
@@ -406,7 +406,7 @@ async function fillChallengesPendingResult() {
 	}
 }
 
-async function fillChallengesConfirmResultOther() {
+async function fillChallengesResultPendingAgreeOther() {
 	const response = await serverCall(
 		ROUTES.QUERY_CHALLENGE_CONFIRM_RESULT_OTHER,
 		null,
@@ -467,7 +467,7 @@ async function fillChallengesConfirmResultOther() {
 	}
 }
 
-async function fillChallengesConfirmResultSelf() {
+async function fillChallengesResultPendingAgreeSelf() {
 	const response = await serverCall(
 		ROUTES.QUERY_CHALLENGE_CONFIRM_RESULT_SELF,
 		null,
@@ -579,7 +579,7 @@ window.onload = function () {
 	// add list of challenges
 	fillChallengesReceived();
 	fillChallengesSent();
-	fillChallengesPendingResult();
-	fillChallengesConfirmResultOther();
-	fillChallengesConfirmResultSelf();
+	fillChallengesPendingResultSet();
+	fillChallengesResultPendingAgreeOther();
+	fillChallengesResultPendingAgreeSelf();
 };
