@@ -25,6 +25,7 @@ Contact:
 
 import { Route } from '@common/api/routes';
 import {
+	EmptySchema,
 	StringSchema,
 	methodTypeOf,
 	outputSchemaOf,
@@ -75,6 +76,13 @@ export async function serverCall<T extends Route>(
 	}
 
 	const schemaObject = outputSchemaOf(route);
+	if (schemaObject === EmptySchema) {
+		return {
+			value: {} as OutputTypeOf<T>,
+			status: 'success',
+		};
+	}
+
 	if (schemaObject === StringSchema) {
 		const str = await response.text();
 		return {
