@@ -151,6 +151,7 @@ export const QueryChallengesConfirmResultSelfOutputSingleSchema = z
 		black: UserGivenNameSchema,
 		result: z.string(),
 		timeControlName: TimeControlNameSchema,
+		canDisagree: z.boolean(),
 	})
 	.strict();
 
