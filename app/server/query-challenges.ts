@@ -52,6 +52,7 @@ import { UserSession } from '@server/models/user';
 import Debug from 'debug';
 import { ChallengesManager } from './managers/challenges-manager';
 import { PublicError } from './models/error-types/public-error';
+import { assertDefined } from './utils/assert';
 
 const debug = Debug('ELO_CHESS_TRACKER:serverQueryChallenges');
 
@@ -65,35 +66,84 @@ function niceResult(r: GameResult): string {
 	return 'Draw';
 }
 
-// Query the server for challenges received sento to me by other users
+function getSentBy(c: Challenge) {
+	const uMem = UsersManager.getInstance();
+	const sentBy = uMem.getAllUserDataByPrivateId(c.sentBy);
+	assertDefined(
+		sentBy,
+		`User '${c.sentBy}' from challenge could not be retrieved.`,
+	);
+	return sentBy;
+}
+
+function getSentTo(c: Challenge) {
+	const uMem = UsersManager.getInstance();
+	const sentTo = uMem.getAllUserDataByPrivateId(c.sentTo);
+	assertDefined(
+		sentTo,
+		`User '${c.sentTo}' from challenge could not be retrieved.`,
+	);
+	return sentTo;
+}
+
+function getSentResultSetBy(c: Challenge) {
+	assertDefined(
+		c.resultSetBy,
+		`Challenge ${c.id} malformed: 'resultSetBy' not defined.`,
+	);
+	const uMem = UsersManager.getInstance();
+	const resultSetBy = uMem.getAllUserDataByPrivateId(c.resultSetBy);
+	assertDefined(
+		resultSetBy,
+		`User '${c.sentTo}' from challenge could not be retrieved.`,
+	);
+	return resultSetBy;
+}
+
+function getWhite(c: Challenge) {
+	assertDefined(c.white, `Challenge ${c.id} malformed: 'white' not defined.`);
+	const uMem = UsersManager.getInstance();
+	const white = uMem.getAllUserDataByPrivateId(c.white);
+	assertDefined(
+		white,
+		`User '${c.white}' from challenge could not be retrieved.`,
+	);
+	return white;
+}
+
+function getBlack(c: Challenge) {
+	assertDefined(c.black, `Challenge ${c.id} malformed: 'black' not defined.`);
+	const uMem = UsersManager.getInstance();
+	const black = uMem.getAllUserDataByPrivateId(c.black);
+	assertDefined(
+		black,
+		`User '${c.black}' from challenge could not be retrieved.`,
+	);
+	return black;
+}
+
+//
+
 export async function getQueryChallengeReceived(
-	{ user: sentTo }: UserSession,
+	{ user }: UserSession,
 	_i: Empty,
 ) {
 	debug(logNow(), 'function getQueryChallengeReceived...');
 
 	// challenges to be returned
 	const toReturn = getChallengesBy((c: Challenge): boolean => {
-		if (c.sentTo !== sentTo.username) {
+		if (c.state !== 'PENDING_ACCEPT') {
 			return false;
 		}
-		if (isDefined(c.whenChallengeAccepted)) {
+		if (c.sentTo !== user.username) {
 			return false;
 		}
 		return true;
 	});
 
-	let manager = UsersManager.getInstance();
-
-	let allChallengesReceived: QueryChallengesReceivedOutput = [];
+	const allChallengesReceived: QueryChallengesReceivedOutput = [];
 	for (const c of toReturn) {
-		const sentBy = manager.getAllUserDataByPrivateId(c.sentBy);
-		if (isNotDefined(sentBy)) {
-			debug(logNow(), `User '${c.sentBy}' does not exist.`);
-			throw new InternalError(
-				`User '${c.sentBy}' from challenge does not exist`,
-			);
-		}
+		const sentBy = getSentBy(c);
 
 		// return only basic information
 		allChallengesReceived.push({
@@ -103,7 +153,7 @@ export async function getQueryChallengeReceived(
 			sentWhen: c.whenChallengeSent,
 			timeControlName: c.timeControlName,
 			canBeDeclined: canUserDeclineChallenge(
-				sentTo,
+				user,
 				sentBy.user,
 				c.timeControlId,
 			),
@@ -115,35 +165,23 @@ export async function getQueryChallengeReceived(
 	return allChallengesReceived;
 }
 
-// Query the server for challenges sent to other users by me
-export async function getQueryChallengeSent(
-	{ user: sentBy }: UserSession,
-	_i: Empty,
-) {
+export async function getQueryChallengeSent({ user }: UserSession, _i: Empty) {
 	debug(logNow(), 'function getQueryChallengeSent...');
 
 	// challenges to be returned
 	const toReturn = getChallengesBy((c: Challenge): boolean => {
-		if (c.sentBy !== sentBy.username) {
+		if (c.state !== 'PENDING_ACCEPT') {
 			return false;
 		}
-		if (isDefined(c.whenChallengeAccepted)) {
+		if (c.sentBy !== user.username) {
 			return false;
 		}
 		return true;
 	});
 
-	let manager = UsersManager.getInstance();
-
-	let allChallenges: QueryChallengesSentOutput = [];
+	const allChallenges: QueryChallengesSentOutput = [];
 	for (const c of toReturn) {
-		const sentTo = manager.getAllUserDataByPrivateId(c.sentTo);
-		if (isNotDefined(sentTo)) {
-			debug(logNow(), `User '${c.sentTo}' does not exist.`);
-			throw new InternalError(
-				`User '${c.sentTo}' from challenge does not exist`,
-			);
-		}
+		const sentTo = getSentTo(c);
 
 		// return only basic information
 		allChallenges.push({
@@ -154,7 +192,7 @@ export async function getQueryChallengeSent(
 			timeControlName: c.timeControlName,
 			canBeDeclined: canUserDeclineChallenge(
 				sentTo.user,
-				sentBy,
+				user,
 				c.timeControlId,
 			),
 		});
@@ -165,8 +203,7 @@ export async function getQueryChallengeSent(
 	return allChallenges;
 }
 
-// Query the server for accepted challenges whose result has not been set yet.
-export async function getQueryChallengePendingResult(
+export async function getQueryChallengePendingResultSet(
 	{ user }: UserSession,
 	_i: Empty,
 ) {
@@ -174,46 +211,25 @@ export async function getQueryChallengePendingResult(
 
 	// challenges to be returned
 	const toReturn = getChallengesBy((c: Challenge): boolean => {
-		// this user must be involved in the challenge
-		if (c.sentBy !== user.username && c.sentTo !== user.username) {
+		if (c.state !== 'PENDING_RESULT') {
 			return false;
 		}
-		// must have been accepted
-		if (isNotDefined(c.whenChallengeAccepted)) {
-			return false;
-		}
-		// result can't have been set
-		if (isDefined(c.resultSetBy)) {
+		if (!isPartOfChallenge(c, user)) {
 			return false;
 		}
 		return true;
 	});
 
-	let manager = UsersManager.getInstance();
-
-	let allChallenges: QueryChallengesPendingResultOutput = [];
+	const allChallenges: QueryChallengesPendingResultOutput = [];
 	for (const c of toReturn) {
-		const userSentTo = manager.getAllUserDataByPrivateId(c.sentTo);
-		if (isNotDefined(userSentTo)) {
-			debug(logNow(), `User '${c.sentTo}' does not exist.`);
-			throw new InternalError(
-				`User '${c.sentTo}' from challenge does not exist.`,
-			);
-		}
-
-		const userSentBy = manager.getAllUserDataByPrivateId(c.sentBy);
-		if (isNotDefined(userSentBy)) {
-			debug(logNow(), `User '${c.sentBy}' does not exist.`);
-			throw new InternalError(
-				`User '${c.sentBy}' from challenge does not exist.`,
-			);
-		}
+		const sentTo = getSentTo(c);
+		const sentBy = getSentBy(c);
 
 		const opponent = ((): UserGivenName => {
-			if (userSentBy.user.username === user.username) {
-				return userSentTo.user.getFullName();
+			if (sentBy.user.username === user.username) {
+				return sentTo.user.getFullName();
 			}
-			return userSentBy.user.getFullName();
+			return sentBy.user.getFullName();
 		})();
 
 		// return only basic information
@@ -221,12 +237,12 @@ export async function getQueryChallengePendingResult(
 			id: c.id,
 			title: c.title,
 			sentBy: {
-				name: userSentBy.user.getFullName(),
-				publicId: userSentBy.publicId,
+				name: sentBy.user.getFullName(),
+				publicId: sentBy.publicId,
 			},
 			sentTo: {
-				name: userSentTo.user.getFullName(),
-				publicId: userSentTo.publicId,
+				name: sentTo.user.getFullName(),
+				publicId: sentTo.publicId,
 			},
 			opponent: opponent,
 			sentWhen: c.whenChallengeSent,
@@ -239,8 +255,7 @@ export async function getQueryChallengePendingResult(
 	return allChallenges;
 }
 
-// Query the server for accepted challenges whose result has been set by me
-export async function getQueryChallengeConfirmResultOther(
+export async function getQueryChallengePendingResultAgreeOther(
 	{ user }: UserSession,
 	_i: Empty,
 ) {
@@ -248,46 +263,26 @@ export async function getQueryChallengeConfirmResultOther(
 
 	// challenges to be returned
 	const toReturn = getChallengesBy((c: Challenge): boolean => {
-		// this user must be involved in the challenge
-		if (c.sentBy !== user.username && c.sentTo !== user.username) {
+		if (c.state !== 'PENDING_RESULT_AGREE') {
 			return false;
 		}
-		// must have been accepted
-		if (isNotDefined(c.whenChallengeAccepted)) {
+		if (!isPartOfChallenge(c, user)) {
 			return false;
 		}
-		// result already set
-		if (isNotDefined(c.resultSetBy)) {
-			return false;
-		}
-		// result should have been set by this user
 		if (c.resultSetBy !== user.username) {
 			return false;
 		}
 		return true;
 	});
 
-	let manager = UsersManager.getInstance();
-
-	let allChallenges: QueryChallengesConfirmResultOtherOutput = [];
+	const allChallenges: QueryChallengesConfirmResultOtherOutput = [];
 	for (const c of toReturn) {
-		const sentTo = manager.getAllUserDataByPrivateId(c.sentTo);
-		if (isNotDefined(sentTo)) {
-			throw new InternalError(
-				`User '${c.sentTo}' from challenge does not exist.`,
-			);
-		}
-
-		const sentBy = manager.getAllUserDataByPrivateId(c.sentBy);
-		if (isNotDefined(sentBy)) {
-			throw new InternalError(
-				`User '${c.sentBy}' from challenge does not exist.`,
-			);
-		}
+		const sentTo = getSentTo(c);
+		const sentBy = getSentBy(c);
 
 		if (isNotDefined(c.white) || isNotDefined(c.black)) {
 			throw new InternalError(
-				`White ${isNotDefined(c.white)}. Black: ${isNotDefined(c.black)}.`,
+				`Challenge ${c.id} is malformed. White undefined? ${isDefined(c.white)}. Black undefined? ${isDefined(c.black)}.`,
 			);
 		}
 		if (isNotDefined(c.result)) {
@@ -328,8 +323,7 @@ export async function getQueryChallengeConfirmResultOther(
 	return allChallenges;
 }
 
-// Query the server for accepted challenges whose result has been set by my opponent
-export async function getQueryChallengeConfirmResultSelf(
+export async function getQueryChallengePendingResultAgreeSelf(
 	{ user }: UserSession,
 	_i: Empty,
 ) {
@@ -337,49 +331,32 @@ export async function getQueryChallengeConfirmResultSelf(
 
 	// challenges to be returned
 	const toReturn = getChallengesBy((c: Challenge): boolean => {
-		// this user must be involved in the challenge
-		if (c.sentBy !== user.username && c.sentTo !== user.username) {
+		if (c.state !== 'PENDING_RESULT_AGREE') {
 			return false;
 		}
-		// must have been accepted
-		if (isNotDefined(c.whenChallengeAccepted)) {
+		if (!isPartOfChallenge(c, user)) {
 			return false;
 		}
-		// result already set by somebody
-		if (isNotDefined(c.resultSetBy)) {
-			return false;
-		}
-		// result should NOT have been set by this user
 		if (c.resultSetBy === user.username) {
 			return false;
 		}
 		return true;
 	});
 
-	let manager = UsersManager.getInstance();
-
-	let allChallenges: QueryChallengesConfirmResultSelfOutput = [];
+	const allChallenges: QueryChallengesConfirmResultSelfOutput = [];
 	for (const c of toReturn) {
-		const sentTo = manager.getAllUserDataByPrivateId(c.sentTo);
-		if (isNotDefined(sentTo)) {
-			debug(logNow(), `User '${c.sentTo}' does not exist.`);
-			throw new InternalError(
-				`User '${c.sentTo}' from challenge does not exist.`,
-			);
-		}
-
-		const sentBy = manager.getAllUserDataByPrivateId(c.sentBy);
-		if (isNotDefined(sentBy)) {
-			debug(logNow(), `User '${c.sentBy}' does not exist.`);
-			throw new InternalError(
-				`User '${c.sentBy}' from challenge does not exist.`,
-			);
-		}
+		const sentTo = getSentTo(c);
+		const sentBy = getSentBy(c);
+		const resultSetBy = getSentBy(c);
 
 		if (isNotDefined(c.white) || isNotDefined(c.black)) {
-			debug(logNow(), `White or Black player is not set in challenge.`);
 			throw new InternalError(
-				`White ${isNotDefined(c.white)}. Black: ${isNotDefined(c.black)}.`,
+				`Challenge ${c.id} is malformed. White undefined? ${isDefined(c.white)}. Black undefined? ${isDefined(c.black)}.`,
+			);
+		}
+		if (isNotDefined(c.result)) {
+			throw new InternalError(
+				`Challenge ${c.id} is malformed. Result is undefined.`,
 			);
 		}
 
@@ -417,6 +394,7 @@ export async function getQueryChallengeConfirmResultSelf(
 			black: blackFullName,
 			result: niceResult,
 			timeControlName: c.timeControlName,
+			canDisagree: !resultSetBy.user.is('REFEREE'),
 		});
 	}
 
@@ -424,6 +402,8 @@ export async function getQueryChallengeConfirmResultSelf(
 
 	return allChallenges;
 }
+
+//
 
 export async function getQueryChallengesPendingAcceptReferee(
 	{ user }: UserSession,
@@ -435,32 +415,21 @@ export async function getQueryChallengesPendingAcceptReferee(
 		throw new PublicError(`You cannot see the challenges pending of accept.`);
 	}
 
-	const challenges: QueryChallengesPendingAcceptRefereeOutput = [];
-	const cMem = ChallengesManager.getInstance();
-	const uMem = UsersManager.getInstance();
-	for (let i = 0; i < cMem.numChallenges(); ++i) {
-		const c = cMem.getChallengeAt(i);
-		if (isNotDefined(c)) {
-			throw new InternalError(
-				`Could not get challenge at index ${i + 1}/${cMem.numChallenges()}`,
-			);
-		}
+	const toReturn: QueryChallengesPendingAcceptRefereeOutput = [];
+	const challenges = ChallengesManager.getInstance().getChallenges();
+	for (const c of challenges) {
 		if (c.state !== 'PENDING_ACCEPT') {
 			continue;
 		}
 
-		const sentTo = uMem.getAllUserDataByPrivateId(c.sentTo);
-		const sentBy = uMem.getAllUserDataByPrivateId(c.sentBy);
-		if (isNotDefined(sentTo) || isNotDefined(sentBy)) {
-			throw new InternalError(
-				`Malformed challenge ${c.id}. Users 'sentTo' or 'sentBy' could not be retrieved.`,
-			);
-		}
+		const sentTo = getSentTo(c);
+		const sentBy = getSentBy(c);
+
 		if (
 			!isPartOfChallenge(c, user) &&
 			canUserForceAcceptChallenge(sentTo.user, sentBy.user, user)
 		) {
-			challenges.push({
+			toReturn.push({
 				id: c.id,
 				title: c.title,
 				sentTo: sentTo.user.getFullName(),
@@ -470,7 +439,7 @@ export async function getQueryChallengesPendingAcceptReferee(
 			});
 		}
 	}
-	return challenges;
+	return toReturn;
 }
 
 export async function getQueryChallengesPendingResultSetReferee(
@@ -483,32 +452,21 @@ export async function getQueryChallengesPendingResultSetReferee(
 		throw new PublicError(`You cannot see the challenges pending of accept.`);
 	}
 
-	const challenges: QueryChallengesPendingResultSetRefereeOutput = [];
-	const cMem = ChallengesManager.getInstance();
-	const uMem = UsersManager.getInstance();
-	for (let i = 0; i < cMem.numChallenges(); ++i) {
-		const c = cMem.getChallengeAt(i);
-		if (isNotDefined(c)) {
-			throw new InternalError(
-				`Could not get challenge at index ${i + 1}/${cMem.numChallenges()}`,
-			);
-		}
+	const toReturn: QueryChallengesPendingResultSetRefereeOutput = [];
+	const challenges = ChallengesManager.getInstance().getChallenges();
+	for (const c of challenges) {
 		if (c.state !== 'PENDING_RESULT') {
 			continue;
 		}
 
-		const sentTo = uMem.getAllUserDataByPrivateId(c.sentTo);
-		const sentBy = uMem.getAllUserDataByPrivateId(c.sentBy);
-		if (isNotDefined(sentTo) || isNotDefined(sentBy)) {
-			throw new InternalError(
-				`Malformed challenge ${c.id}. Users 'sentTo' or 'sentBy' could not be retrieved.`,
-			);
-		}
+		const sentTo = getSentTo(c);
+		const sentBy = getSentBy(c);
+
 		if (
 			!isPartOfChallenge(c, user) &&
 			canUserForceSetResultChallenge(sentTo.user, sentBy.user, user)
 		) {
-			challenges.push({
+			toReturn.push({
 				id: c.id,
 				title: c.title,
 				sentTo: {
@@ -524,7 +482,7 @@ export async function getQueryChallengesPendingResultSetReferee(
 			});
 		}
 	}
-	return challenges;
+	return toReturn;
 }
 
 export async function getQueryChallengesPendingResultAgreeReferee(
@@ -537,62 +495,30 @@ export async function getQueryChallengesPendingResultAgreeReferee(
 		throw new PublicError(`You cannot see the challenges pending of accept.`);
 	}
 
-	const challenges: QueryChallengesPendingResultAgreeRefereeOutput = [];
-	const cMem = ChallengesManager.getInstance();
-	const uMem = UsersManager.getInstance();
-	for (let i = 0; i < cMem.numChallenges(); ++i) {
-		const c = cMem.getChallengeAt(i);
-		if (isNotDefined(c)) {
-			throw new InternalError(
-				`Could not get challenge at index ${i + 1}/${cMem.numChallenges()}`,
-			);
-		}
+	const toReturn: QueryChallengesPendingResultAgreeRefereeOutput = [];
+	const challenges = ChallengesManager.getInstance().getChallenges();
+	for (const c of challenges) {
 		if (c.state !== 'PENDING_RESULT_AGREE') {
 			continue;
 		}
-		if (isNotDefined(c.resultSetBy)) {
-			throw new InternalError(
-				`Malformed challenge ${c.id}. User 'resultSetBy' is not defined.`,
-			);
-		}
 
-		const sentTo = uMem.getAllUserDataByPrivateId(c.sentTo);
-		const sentBy = uMem.getAllUserDataByPrivateId(c.sentBy);
-		const resultSetBy = uMem.getAllUserDataByPrivateId(c.resultSetBy);
-		if (
-			isNotDefined(sentTo) ||
-			isNotDefined(sentBy) ||
-			isNotDefined(resultSetBy)
-		) {
-			throw new InternalError(
-				`Malformed challenge ${c.id}. Users 'sentTo', 'sentBy' or 'resultSetBy' could not be retrieved.`,
-			);
-		}
-
-		if (isNotDefined(c.white) || isNotDefined(c.black)) {
-			throw new InternalError(
-				`Malformed challenge ${c.id}. Users 'white' or 'black' are not defined.`,
-			);
-		}
 		if (isNotDefined(c.result)) {
 			throw new InternalError(
 				`Malformed challenge ${c.id}. Result is not defined.`,
 			);
 		}
 
-		const white = uMem.getAllUserDataByPrivateId(c.white);
-		const black = uMem.getAllUserDataByPrivateId(c.black);
-		if (isNotDefined(white) || isNotDefined(black)) {
-			throw new InternalError(
-				`Malformed challenge ${c.id}. Users 'white' or 'black' could not be retrieved.`,
-			);
-		}
+		const sentTo = getSentTo(c);
+		const sentBy = getSentBy(c);
+		const resultSetBy = getSentResultSetBy(c);
+		const white = getWhite(c);
+		const black = getBlack(c);
 
 		if (
 			!isPartOfChallenge(c, user) &&
 			canUserForceAgreeResultChallenge(sentTo.user, sentBy.user, user)
 		) {
-			challenges.push({
+			toReturn.push({
 				id: c.id,
 				title: c.title,
 				sentTo: sentTo.user.getFullName(),
@@ -606,5 +532,5 @@ export async function getQueryChallengesPendingResultAgreeReferee(
 			});
 		}
 	}
-	return challenges;
+	return toReturn;
 }
