@@ -64,23 +64,10 @@ export function writeChallengeToFile(filename: string, c: Challenge) {
 	fs.writeFileSync(filename, JSON.stringify(c, null, 4));
 }
 
-/**
- * @brief Filters the set of challenges that are accepted by the filter function @e by.
- * @param by Function to filter. Returns true if a challenge is to be returned.
- * @returns an array of challenges according to function @e by.
- */
 export function getChallengesBy(
-	by: Function = (_c: Challenge): boolean => true,
+	by: (c: Challenge) => boolean = (_c: Challenge) => true,
 ): Challenge[] {
-	let res: Challenge[] = [];
-	const mem = ChallengesManager.getInstance();
-	for (let i = 0; i < mem.numChallenges(); ++i) {
-		const c = mem.getChallengeAt(i) as Challenge;
-		if (by(c)) {
-			res.push(c);
-		}
-	}
-	return res;
+	return ChallengesManager.getInstance().getChallenges().filter(by);
 }
 
 /**
