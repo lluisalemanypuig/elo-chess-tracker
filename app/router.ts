@@ -65,9 +65,9 @@ import {
 } from '@server/managers/environment-manager';
 import { UserSession } from '@server/models/user';
 import {
-	getQueryChallengeConfirmResultOther,
-	getQueryChallengeConfirmResultSelf,
-	getQueryChallengePendingResult,
+	getQueryChallengePendingResultAgreeOther,
+	getQueryChallengePendingResultAgreeSelf,
+	getQueryChallengePendingResultSet,
 	getQueryChallengeReceived,
 	getQueryChallengeSent,
 	getQueryChallengesPendingAcceptReferee,
@@ -254,15 +254,15 @@ defineEndpointAction(
 defineEndpointAction(ROUTES.QUERY_CHALLENGE_SENT, getQueryChallengeSent);
 defineEndpointAction(
 	ROUTES.QUERY_CHALLENGE_PENDING_RESULT,
-	getQueryChallengePendingResult,
+	getQueryChallengePendingResultSet,
 );
 defineEndpointAction(
 	ROUTES.QUERY_CHALLENGE_CONFIRM_RESULT_OTHER,
-	getQueryChallengeConfirmResultOther,
+	getQueryChallengePendingResultAgreeOther,
 );
 defineEndpointAction(
 	ROUTES.QUERY_CHALLENGE_CONFIRM_RESULT_SELF,
-	getQueryChallengeConfirmResultSelf,
+	getQueryChallengePendingResultAgreeSelf,
 );
 defineEndpointAction(
 	ROUTES.QUERY_CHALLENGE_PENDING_ACCEPT_REFEREE,
