@@ -25,7 +25,7 @@ Full source code of elo-chess-tracker:
 		<meta charset="UTF-8" />
 		<title>Challenges</title>
 
-		<script type="module" src="/js/bdl--challenges.js"></script>
+		<script type="module" src="/js/bdl--challenges-referee.js"></script>
 
 		<link rel="stylesheet" href="/css/main.css" />
 		<link rel="stylesheet" href="/css/challenges.css" />
@@ -40,64 +40,16 @@ Full source code of elo-chess-tracker:
 		<meta name="viewport" content="width=device-width,initial-scale=1" />
 		<div class="page-wrapper">
 			<div class="main-content">
-				<h2 class="title2">Challenge a user</h2>
-
-				<div class="label-input">
-					<label>Select a user:</label>
-					<input
-						class="input-text"
-						list="datalist-username"
-						id="username-list"
-					/>
-					<datalist
-						id="datalist-username"
-						hx-swap="innerHTML"
-						hx-get="/query/html/user/list"
-						hx-trigger="load"
-					></datalist>
-				</div>
-				<div class="label-select">
-					<label class="label-basic">Time control:</label>
-					<select
-						class="select-basic"
-						id="select-time-control"
-						hx-get="/query/html/time-controls"
-						hx-trigger="load"
-						hx-swap="beforeend"
-					>
-						<option value=""></option>
-					</select>
-				</div>
-
-				<div class="label-input">
-					<label class="label-basic" for="input-game-title">Title:</label>
-					<input class="input-text" type="text" id="input-game-title" />
-				</div>
-
-				<br />
-				<button class="button-submit" type="button" id="send-challenge-button">
-					Send challenge
-				</button>
-
-				<div class="challenge-list" id="challenges-received">
-					<h2 class="title2">Challenges received</h2>
-				</div>
-
-				<div class="challenge-list" id="challenges-sent">
-					<h2 class="title2">Challenges sent to others</h2>
+				<div class="challenge-list" id="challenges-pending-accept">
+					<h2 class="title2">Challenges pending accept</h2>
 				</div>
 
 				<div class="challenge-list" id="challenges-pending-result">
-					<h2 class="title2">Set the result of a game</h2>
-					<div id="challenges-pending-result--list"></div>
+					<h2 class="title2">Challenges pending result set</h2>
 				</div>
 
-				<div class="challenge-list" id="challenges-confirm-result-other">
-					<h2 class="title2">Results to be confirmed</h2>
-				</div>
-
-				<div class="challenge-list" id="challenges-confirm-result-self">
-					<h2 class="title2">Results I have to confirm</h2>
+				<div class="challenge-list" id="challenges-pending-agree-result">
+					<h2 class="title2">Challenges pending agree result</h2>
 				</div>
 			</div>
 

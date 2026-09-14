@@ -39,7 +39,13 @@ Full source code of elo-chess-tracker:
 		<meta name="viewport" content="width=device-width,initial-scale=1" />
 		<div class="page-wrapper">
 			<div class="main-content">
-				<h1 class="title1" align="center" hx-get="/title/homepage" hx-trigger="load" hx-swap="textContent"></h1>
+				<h1
+					class="title1"
+					align="center"
+					hx-get="/title/homepage"
+					hx-trigger="load"
+					hx-swap="textContent"
+				></h1>
 
 				<div>
 					<img src="/icon/homepage" />
@@ -58,7 +64,7 @@ Full source code of elo-chess-tracker:
 					</tr>
 				</table>
 
-				<a href="/page/challenge">Challenges</a>
+				<a href="/page/challenges/own">My challenges</a>
 				<a href="/page/game/list/own">My games</a>
 				<a href="/page/graph/own">My graph</a>
 				<a href="/page/user/ranking">Ranking</a>
@@ -68,8 +74,11 @@ Full source code of elo-chess-tracker:
 			</div>
 
 			<footer class="footer-copyright-notice">
-				Elo chess tracker (v<i hx-get="/version-number" hx-trigger="load"></i>). Code
-				<a href="https://github.com/lluisalemanypuig/elo-chess-tracker">online at Github</a>.
+				Elo chess tracker (v<i hx-get="/version-number" hx-trigger="load"></i>).
+				Code
+				<a href="https://github.com/lluisalemanypuig/elo-chess-tracker"
+					>online at Github</a
+				>.
 			</footer>
 		</div>
 	</body>

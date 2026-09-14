@@ -1,0 +1,112 @@
+<!--
+Elo rating for a Chess Club
+Copyright (C) 2023 - 2026  Lluís Alemany Puig
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program. If not, see <https://www.gnu.org/licenses/>.
+
+Full source code of elo-chess-tracker:
+	https://github.com/lluisalemanypuig/elo-chess-tracker
+-->
+
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>Challenges</title>
+
+		<script type="module" src="/js/bdl--challenges-own.js"></script>
+
+		<link rel="stylesheet" href="/css/main.css" />
+		<link rel="stylesheet" href="/css/challenges.css" />
+		<link rel="stylesheet" href="/css/titles.css" />
+		<link rel="stylesheet" href="/css/buttons.css" />
+		<link rel="stylesheet" href="/css/inputs.css" />
+		<link rel="stylesheet" href="/css/selects.css" />
+		<link rel="stylesheet" href="/css/footers.css" />
+	</head>
+
+	<body>
+		<meta name="viewport" content="width=device-width,initial-scale=1" />
+		<div class="page-wrapper">
+			<div class="main-content">
+				<h2 class="title2">Challenge a user</h2>
+
+				<div class="label-input">
+					<label>Select a user:</label>
+					<input
+						class="input-text"
+						list="datalist-username"
+						id="username-list"
+					/>
+					<datalist
+						id="datalist-username"
+						hx-swap="innerHTML"
+						hx-get="/query/html/user/list"
+						hx-trigger="load"
+					></datalist>
+				</div>
+				<div class="label-select">
+					<label class="label-basic">Time control:</label>
+					<select
+						class="select-basic"
+						id="select-time-control"
+						hx-get="/query/html/time-controls"
+						hx-trigger="load"
+						hx-swap="beforeend"
+					>
+						<option value=""></option>
+					</select>
+				</div>
+
+				<div class="label-input">
+					<label class="label-basic" for="input-game-title">Title:</label>
+					<input class="input-text" type="text" id="input-game-title" />
+				</div>
+
+				<br />
+				<button class="button-submit" type="button" id="send-challenge-button">
+					Send challenge
+				</button>
+
+				<div class="challenge-list" id="challenges-received">
+					<h2 class="title2">Challenges received</h2>
+				</div>
+
+				<div class="challenge-list" id="challenges-sent">
+					<h2 class="title2">Challenges sent to others</h2>
+				</div>
+
+				<div class="challenge-list" id="challenges-pending-result">
+					<h2 class="title2">Set the result of a game</h2>
+				</div>
+
+				<div class="challenge-list" id="challenges-confirm-result-other">
+					<h2 class="title2">Results to be confirmed</h2>
+				</div>
+
+				<div class="challenge-list" id="challenges-confirm-result-self">
+					<h2 class="title2">Results I have to confirm</h2>
+				</div>
+			</div>
+
+			<footer class="footer-copyright-notice">
+				Elo chess tracker (v<i hx-get="/version-number" hx-trigger="load"></i>).
+				Code
+				<a href="https://github.com/lluisalemanypuig/elo-chess-tracker"
+					>online at Github</a
+				>.
+			</footer>
+		</div>
+	</body>
+</html>

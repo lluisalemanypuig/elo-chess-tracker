@@ -52,9 +52,14 @@ import { UserSession } from '@server/models/user';
 
 const debug = Debug('ELO_CHESS_TRACKER:serverChallenges');
 
-export async function getPageChallenge(_u: UserSession) {
-	debug(logNow(), 'function getPageChallenge...');
-	return 'html/challenges.html';
+export async function getPageChallengesOwn(_u: UserSession) {
+	debug(logNow(), 'function getPageChallengesOwn...');
+	return 'html/challenges/own.html';
+}
+
+export async function getPageChallengesReferee(_u: UserSession) {
+	debug(logNow(), 'function getPageChallengesReferee...');
+	return 'html/challenges/referee.html';
 }
 
 export async function postChallengeSend(
@@ -211,7 +216,7 @@ export async function postChallengeSetResult(
 		throw new PublicError(`Black user does not exist.`);
 	}
 
-	let c = ChallengesManager.getInstance().getChallengeById(challengeId);
+	const c = ChallengesManager.getInstance().getChallengeById(challengeId);
 	if (isNotDefined(c)) {
 		throw new PublicError(`Challenge does not exist.`);
 	}
@@ -235,7 +240,7 @@ export async function postChallengeAgree(
 
 	const challengeId = input.id;
 
-	let c = ChallengesManager.getInstance().getChallengeById(challengeId);
+	const c = ChallengesManager.getInstance().getChallengeById(challengeId);
 	if (isNotDefined(c)) {
 		throw new PublicError('Challenge does not exist');
 	}
@@ -253,7 +258,7 @@ export async function postChallengeDisagree(
 
 	const challengeId = input.id;
 
-	let c = ChallengesManager.getInstance().getChallengeById(challengeId);
+	const c = ChallengesManager.getInstance().getChallengeById(challengeId);
 	if (isNotDefined(c)) {
 		throw new PublicError('Challenge does not exist');
 	}

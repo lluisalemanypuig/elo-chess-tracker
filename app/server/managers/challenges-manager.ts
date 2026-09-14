@@ -82,6 +82,9 @@ export class ChallengesManager {
 		}
 	}
 
+	getChallenges(): Challenge[] {
+		return this.challenges;
+	}
 	numChallenges(): number {
 		return this.challenges.length;
 	}

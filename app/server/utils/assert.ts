@@ -23,26 +23,23 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { logNow } from '@common/utils/time';
+import { isDefined, isNotDefined } from '@common/utils/is-defined';
 import { InternalError } from '@server/models/error-types/internal-error';
-import { PublicError } from '@server/models/error-types/public-error';
-import Debug from 'debug';
-import { Response } from 'express';
 
-const debug = Debug('ELO_CHESS_TRACKER:errorHandling');
+export function assertDefined<T>(
+	v: T | null | undefined,
+	msg: string = '',
+): asserts v is NonNullable<T> {
+	if (isNotDefined(v)) {
+		throw new InternalError(msg);
+	}
+}
 
-export const internalErrorMessage =
-	'Internal error. Contact your administrator.';
-
-export function handleError(e: Error, res: Response) {
-	if (e instanceof PublicError) {
-		debug(logNow(), `Sending public error to user.`);
-		const msg = (e as PublicError).message;
-		res.status(403).send(msg);
-	} else if (e instanceof InternalError) {
-		const msg = (e as InternalError).message;
-		debug(logNow(), `Internal server error.`);
-		debug(logNow(), `Message: '${msg}'.`);
-		res.status(500).send(internalErrorMessage);
+export function assertIsNotDefined<T>(
+	v: T | null | undefined,
+	msg: string = '',
+): asserts v is null | undefined {
+	if (isDefined(v)) {
+		throw new InternalError(msg);
 	}
 }

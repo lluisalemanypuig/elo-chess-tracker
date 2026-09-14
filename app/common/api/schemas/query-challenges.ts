@@ -151,6 +151,7 @@ export const QueryChallengesConfirmResultSelfOutputSingleSchema = z
 		black: UserGivenNameSchema,
 		result: z.string(),
 		timeControlName: TimeControlNameSchema,
+		canDisagree: z.boolean(),
 	})
 	.strict();
 
@@ -164,4 +165,89 @@ export const QueryChallengesConfirmResultSelfOutputSchema = z.array(
 
 export type QueryChallengesConfirmResultSelfOutput = z.infer<
 	typeof QueryChallengesConfirmResultSelfOutputSchema
+>;
+
+// ROUTES.QUERY_CHALLENGE_PENDING_ACCEPT_REFEREE
+
+export const QueryChallengesPendingAcceptRefereeOutputSingleSchema = z
+	.object({
+		id: ChallengeIdSchema,
+		title: z.string(),
+		sentTo: UserGivenNameSchema,
+		sentBy: UserGivenNameSchema,
+		sentWhen: DateFullSchema,
+		timeControlName: TimeControlNameSchema,
+	})
+	.strict();
+
+export type QueryChallengesPendingAcceptRefereeOutputSingle = z.infer<
+	typeof QueryChallengesPendingAcceptRefereeOutputSingleSchema
+>;
+
+export const QueryChallengesPendingAcceptRefereeOutputSchema = z.array(
+	QueryChallengesPendingAcceptRefereeOutputSingleSchema,
+);
+
+export type QueryChallengesPendingAcceptRefereeOutput = z.infer<
+	typeof QueryChallengesPendingAcceptRefereeOutputSchema
+>;
+
+// ROUTES.QUERY_CHALLENGE_PENDING_RESULT_SET_REFEREE
+
+export const QueryChallengesPendingResultSetRefereeOutputSingleSchema = z
+	.object({
+		id: ChallengeIdSchema,
+		title: z.string(),
+		sentBy: z.object({
+			name: UserGivenNameSchema,
+			publicId: PlayerPublicIdSchema,
+		}),
+		sentTo: z.object({
+			name: UserGivenNameSchema,
+			publicId: PlayerPublicIdSchema,
+		}),
+		sentWhen: DateFullSchema,
+		timeControlName: TimeControlNameSchema,
+	})
+	.strict();
+
+export type QueryChallengesPendingResultSetRefereeOutputSingle = z.infer<
+	typeof QueryChallengesPendingResultSetRefereeOutputSingleSchema
+>;
+
+export const QueryChallengesPendingResultSetRefereeOutputSchema = z.array(
+	QueryChallengesPendingResultSetRefereeOutputSingleSchema,
+);
+
+export type QueryChallengesPendingResultSetRefereeOutput = z.infer<
+	typeof QueryChallengesPendingResultSetRefereeOutputSchema
+>;
+
+// ROUTES.QUERY_CHALLENGE_PENDING_RESULT_AGREE_REFEREE
+
+export const QueryChallengesPendingResultAgreeRefereeOutputSingleSchema = z
+	.object({
+		id: ChallengeIdSchema,
+		title: z.string(),
+		sentTo: UserGivenNameSchema,
+		sentBy: UserGivenNameSchema,
+		sentWhen: DateFullSchema,
+		white: UserGivenNameSchema,
+		black: UserGivenNameSchema,
+		result: z.string(),
+		resultSetByReferee: z.boolean(),
+		timeControlName: TimeControlNameSchema,
+	})
+	.strict();
+
+export type QueryChallengesPendingResultAgreeRefereeOutputSingle = z.infer<
+	typeof QueryChallengesPendingResultAgreeRefereeOutputSingleSchema
+>;
+
+export const QueryChallengesPendingResultAgreeRefereeOutputSchema = z.array(
+	QueryChallengesPendingResultAgreeRefereeOutputSingleSchema,
+);
+
+export type QueryChallengesPendingResultAgreeRefereeOutput = z.infer<
+	typeof QueryChallengesPendingResultAgreeRefereeOutputSchema
 >;

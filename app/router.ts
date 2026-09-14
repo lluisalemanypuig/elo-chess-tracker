@@ -33,7 +33,8 @@ import { methodTypeOf } from '@common/api/schemas-endpoints';
 import { InputTypeOf, OutputTypeOf } from '@common/api/types';
 import { logNow } from '@common/utils/time';
 import {
-	getPageChallenge,
+	getPageChallengesOwn,
+	getPageChallengesReferee,
 	postChallengeAccept,
 	postChallengeAgree,
 	postChallengeDecline,
@@ -64,11 +65,14 @@ import {
 } from '@server/managers/environment-manager';
 import { UserSession } from '@server/models/user';
 import {
-	getQueryChallengeConfirmResultOther,
-	getQueryChallengeConfirmResultSelf,
-	getQueryChallengePendingResult,
+	getQueryChallengePendingResultAgreeOther,
+	getQueryChallengePendingResultAgreeSelf,
+	getQueryChallengePendingResultSet,
 	getQueryChallengeReceived,
 	getQueryChallengeSent,
+	getQueryChallengesPendingAcceptReferee,
+	getQueryChallengesPendingResultAgreeReferee,
+	getQueryChallengesPendingResultSetReferee,
 } from '@server/query-challenges';
 import {
 	postQueryGameListAll,
@@ -250,15 +254,27 @@ defineEndpointAction(
 defineEndpointAction(ROUTES.QUERY_CHALLENGE_SENT, getQueryChallengeSent);
 defineEndpointAction(
 	ROUTES.QUERY_CHALLENGE_PENDING_RESULT,
-	getQueryChallengePendingResult,
+	getQueryChallengePendingResultSet,
 );
 defineEndpointAction(
 	ROUTES.QUERY_CHALLENGE_CONFIRM_RESULT_OTHER,
-	getQueryChallengeConfirmResultOther,
+	getQueryChallengePendingResultAgreeOther,
 );
 defineEndpointAction(
 	ROUTES.QUERY_CHALLENGE_CONFIRM_RESULT_SELF,
-	getQueryChallengeConfirmResultSelf,
+	getQueryChallengePendingResultAgreeSelf,
+);
+defineEndpointAction(
+	ROUTES.QUERY_CHALLENGE_PENDING_ACCEPT_REFEREE,
+	getQueryChallengesPendingAcceptReferee,
+);
+defineEndpointAction(
+	ROUTES.QUERY_CHALLENGE_PENDING_RESULT_SET_REFEREE,
+	getQueryChallengesPendingResultSetReferee,
+);
+defineEndpointAction(
+	ROUTES.QUERY_CHALLENGE_PENDING_RESULT_AGREE_REFEREE,
+	getQueryChallengesPendingResultAgreeReferee,
 );
 
 defineEndpointAction(ROUTES.QUERY_GAME_LIST_OWN, postQueryGameListOwn);
@@ -301,7 +317,8 @@ defineEndpointAction(ROUTES.GAME_DELETE, postGameDelete);
 defineEndpointAction(ROUTES.RECALCULATE_RATINGS, postRecalculateRatings);
 
 // challenges management
-defineEndpointPage(ROUTES.PAGE_CHALLENGE, getPageChallenge);
+defineEndpointPage(ROUTES.PAGE_CHALLENGES_OWN, getPageChallengesOwn);
+defineEndpointPage(ROUTES.PAGE_CHALLENGES_REFEREE, getPageChallengesReferee);
 defineEndpointAction(ROUTES.CHALLENGE_SEND, postChallengeSend);
 defineEndpointAction(ROUTES.CHALLENGE_ACCEPT, postChallengeAccept);
 defineEndpointAction(ROUTES.CHALLENGE_DECLINE, postChallengeDecline);

@@ -48,7 +48,10 @@ import {
 import {
 	QueryChallengesConfirmResultOtherOutputSchema,
 	QueryChallengesConfirmResultSelfOutputSchema,
+	QueryChallengesPendingAcceptRefereeOutputSchema,
+	QueryChallengesPendingResultAgreeRefereeOutputSchema,
 	QueryChallengesPendingResultOutputSchema,
+	QueryChallengesPendingResultSetRefereeOutputSchema,
 	QueryChallengesReceivedOutputSchema,
 	QueryChallengesSentOutputSchema,
 } from '@common/api/schemas/query-challenges';
@@ -190,6 +193,21 @@ export const API_SCHEMA = {
 		output: QueryChallengesConfirmResultSelfOutputSchema,
 		method: 'GET',
 	},
+	[ROUTES.QUERY_CHALLENGE_PENDING_ACCEPT_REFEREE]: {
+		input: EmptySchema,
+		output: QueryChallengesPendingAcceptRefereeOutputSchema,
+		method: 'GET',
+	},
+	[ROUTES.QUERY_CHALLENGE_PENDING_RESULT_SET_REFEREE]: {
+		input: EmptySchema,
+		output: QueryChallengesPendingResultSetRefereeOutputSchema,
+		method: 'GET',
+	},
+	[ROUTES.QUERY_CHALLENGE_PENDING_RESULT_AGREE_REFEREE]: {
+		input: EmptySchema,
+		output: QueryChallengesPendingResultAgreeRefereeOutputSchema,
+		method: 'GET',
+	},
 	[ROUTES.QUERY_GAME_LIST_OWN]: {
 		input: QueryGamesListOwnInputSchema,
 		output: QueryGamesListOutputSchema,
@@ -290,7 +308,12 @@ export const API_SCHEMA = {
 		output: EmptySchema,
 		method: 'GET',
 	},
-	[ROUTES.PAGE_CHALLENGE]: {
+	[ROUTES.PAGE_CHALLENGES_OWN]: {
+		input: EmptySchema,
+		output: EmptySchema,
+		method: 'GET',
+	},
+	[ROUTES.PAGE_CHALLENGES_REFEREE]: {
 		input: EmptySchema,
 		output: EmptySchema,
 		method: 'GET',
