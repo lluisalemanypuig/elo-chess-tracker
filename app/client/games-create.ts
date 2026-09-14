@@ -37,7 +37,9 @@ async function initializeWindowClientGamesCreate() {
 	) as HTMLDataListElement;
 
 	// query the server for the list of users
-	const response = await serverCall(ROUTES.QUERY_HTML_USER_LIST, null);
+	const response = await serverCall({
+		route: ROUTES.QUERY_HTML_USER_LIST,
+	});
 	if (response.status === 'error') {
 		alert(messageFromResponse(response));
 		return;
@@ -119,14 +121,17 @@ async function submitNewGame(_event: any) {
 			randMilli,
 	);
 
-	const response = await serverCall(ROUTES.GAME_CREATE, {
-		title: gameTitle,
-		white: white,
-		black: black,
-		result: resultStr as GameResult,
-		timeControlId: timeControlId,
-		timeControlName: timeControlName,
-		whenPlayed: toDateFull(`${whenCreated}..${timeCreated}`),
+	const response = await serverCall({
+		route: ROUTES.GAME_CREATE,
+		body: {
+			title: gameTitle,
+			white: white,
+			black: black,
+			result: resultStr as GameResult,
+			timeControlId: timeControlId,
+			timeControlName: timeControlName,
+			whenPlayed: toDateFull(`${whenCreated}..${timeCreated}`),
+		},
 	});
 	if (response.status === 'error') {
 		alert(messageFromResponse(response));

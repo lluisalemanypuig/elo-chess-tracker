@@ -47,9 +47,12 @@ async function logIntoWebpage(_event: any) {
 	}
 
 	// "query" the server
-	const response = await serverCall(ROUTES.USER_LOGIN, {
-		u: username,
-		p: password,
+	const response = await serverCall({
+		route: ROUTES.USER_LOGIN,
+		body: {
+			u: username,
+			p: password,
+		},
 	});
 	if (response.status === 'error') {
 		alert(messageFromResponse(response));

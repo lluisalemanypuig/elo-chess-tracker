@@ -26,7 +26,9 @@ import 'htmx.org';
 
 export async function logoutLinkClicked(_event: any) {
 	// "query" the server
-	const response = await serverCall(ROUTES.USER_LOGOUT, null);
+	const response = await serverCall({
+		route: ROUTES.USER_LOGOUT,
+	});
 	if (response.status === 'error') {
 		alert(messageFromResponse(response));
 		return;
@@ -87,7 +89,9 @@ function fillActionLinks(userActions: string[], userRoles: string[]) {
 		recalculateRatingsLink.id = 'recalculate-ratings-link';
 		recalculateRatingsLink.textContent = 'Recalculate ratings';
 		recalculateRatingsLink.onclick = async function () {
-			const response = await serverCall(ROUTES.RECALCULATE_RATINGS, null);
+			const response = await serverCall({
+				route: ROUTES.RECALCULATE_RATINGS,
+			});
 			if (response.status === 'error') {
 				alert(messageFromResponse(response));
 				return;
@@ -99,7 +103,9 @@ function fillActionLinks(userActions: string[], userRoles: string[]) {
 		recalculateGraphsLink.id = 'recalculate-graphs';
 		recalculateGraphsLink.textContent = 'Recalculate graphs';
 		recalculateGraphsLink.onclick = async function () {
-			const response = await serverCall(ROUTES.RECALCULATE_GRAPHS, null);
+			const response = await serverCall({
+				route: ROUTES.RECALCULATE_GRAPHS,
+			});
 			if (response.status === 'error') {
 				alert(messageFromResponse(response));
 				return;
@@ -111,7 +117,9 @@ function fillActionLinks(userActions: string[], userRoles: string[]) {
 
 async function fillOwnInfo() {
 	// "query" the server
-	const response = await serverCall(ROUTES.QUERY_USER_HOME, null);
+	const response = await serverCall({
+		route: ROUTES.QUERY_USER_HOME,
+	});
 	if (response.status === 'error') {
 		alert(messageFromResponse(response));
 		return;

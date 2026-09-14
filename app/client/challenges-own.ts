@@ -63,11 +63,14 @@ async function sendChallengeButtonClicked(_event: any) {
 		const gameTitle = gameTitleText.textContent;
 
 		// "query" the server
-		const response = await serverCall(ROUTES.CHALLENGE_SEND, {
-			to: publicUserId,
-			title: gameTitle,
-			timeControlId: timeControlId,
-			timeControlName: timeControlName,
+		const response = await serverCall({
+			route: ROUTES.CHALLENGE_SEND,
+			body: {
+				to: publicUserId,
+				title: gameTitle,
+				timeControlId: timeControlId,
+				timeControlName: timeControlName,
+			},
 		});
 		if (response.status === 'error') {
 			alert(messageFromResponse(response));
@@ -82,8 +85,11 @@ async function acceptChallengeButtonClicked(event: any) {
 	const tagClicked = event.target;
 	const challengeId = tagClicked.id;
 
-	const response = await serverCall(ROUTES.CHALLENGE_ACCEPT, {
-		id: challengeId,
+	const response = await serverCall({
+		route: ROUTES.CHALLENGE_ACCEPT,
+		body: {
+			id: challengeId,
+		},
 	});
 	if (response.status === 'error') {
 		alert(messageFromResponse(response));
@@ -96,8 +102,11 @@ async function declineChallengeTagClicked(event: any) {
 	const tagClicked = event.target;
 	const challengeId = tagClicked.id;
 
-	const response = await serverCall(ROUTES.CHALLENGE_DECLINE, {
-		id: challengeId,
+	const response = await serverCall({
+		route: ROUTES.CHALLENGE_DECLINE,
+		body: {
+			id: challengeId,
+		},
 	});
 	if (response.status === 'error') {
 		alert(messageFromResponse(response));
@@ -139,11 +148,14 @@ async function submitResultChallengeButtonClicked(event: any) {
 	}
 
 	// "query" the server
-	const response = await serverCall(ROUTES.CHALLENGE_SET_RESULT, {
-		id: challengeId,
-		white: toPlayerPublicId(whitePublicId),
-		black: toPlayerPublicId(blackPublicId),
-		result: result,
+	const response = await serverCall({
+		route: ROUTES.CHALLENGE_SET_RESULT,
+		body: {
+			id: challengeId,
+			white: toPlayerPublicId(whitePublicId),
+			black: toPlayerPublicId(blackPublicId),
+			result: result,
+		},
 	});
 	if (response.status === 'error') {
 		alert(messageFromResponse(response));
@@ -157,8 +169,11 @@ async function agreeChallengeResultButtonClicked(event: any) {
 	const tagClicked = event.target;
 	const challengeId = tagClicked.id;
 
-	const response = await serverCall(ROUTES.CHALLENGE_AGREE, {
-		id: challengeId,
+	const response = await serverCall({
+		route: ROUTES.CHALLENGE_AGREE,
+		body: {
+			id: challengeId,
+		},
 	});
 
 	if (response.status === 'error') {
@@ -173,8 +188,11 @@ async function disagreeChallengeResultButtonClicked(event: any) {
 	const tagClicked = event.target;
 	const challengeId = tagClicked.id;
 
-	const response = await serverCall(ROUTES.CHALLENGE_DISAGREE, {
-		id: challengeId,
+	const response = await serverCall({
+		route: ROUTES.CHALLENGE_DISAGREE,
+		body: {
+			id: challengeId,
+		},
 	});
 
 	if (response.status === 'error') {
@@ -188,7 +206,9 @@ async function disagreeChallengeResultButtonClicked(event: any) {
 //
 
 async function fillChallengesReceived() {
-	const response = await serverCall(ROUTES.QUERY_CHALLENGE_RECEIVED, null);
+	const response = await serverCall({
+		route: ROUTES.QUERY_CHALLENGE_RECEIVED,
+	});
 	if (response.status === 'error') {
 		alert(messageFromResponse(response));
 		return;
@@ -288,7 +308,9 @@ async function fillChallengesReceived() {
 }
 
 async function fillChallengesSent() {
-	const response = await serverCall(ROUTES.QUERY_CHALLENGE_SENT, null);
+	const response = await serverCall({
+		route: ROUTES.QUERY_CHALLENGE_SENT,
+	});
 	if (response.status === 'error') {
 		alert(messageFromResponse(response));
 		return;
@@ -371,10 +393,9 @@ function makeHeaderChallengePendingResultSet(
 }
 
 async function fillChallengesPendingResultSet() {
-	const response = await serverCall(
-		ROUTES.QUERY_CHALLENGE_PENDING_RESULT,
-		null,
-	);
+	const response = await serverCall({
+		route: ROUTES.QUERY_CHALLENGE_PENDING_RESULT,
+	});
 	if (response.status === 'error') {
 		alert(messageFromResponse(response));
 		return;
@@ -407,10 +428,9 @@ async function fillChallengesPendingResultSet() {
 }
 
 async function fillChallengesResultPendingAgreeOther() {
-	const response = await serverCall(
-		ROUTES.QUERY_CHALLENGE_CONFIRM_RESULT_OTHER,
-		null,
-	);
+	const response = await serverCall({
+		route: ROUTES.QUERY_CHALLENGE_CONFIRM_RESULT_OTHER,
+	});
 	if (response.status === 'error') {
 		alert(messageFromResponse(response));
 		return;
@@ -468,10 +488,9 @@ async function fillChallengesResultPendingAgreeOther() {
 }
 
 async function fillChallengesResultPendingAgreeSelf() {
-	const response = await serverCall(
-		ROUTES.QUERY_CHALLENGE_CONFIRM_RESULT_SELF,
-		null,
-	);
+	const response = await serverCall({
+		route: ROUTES.QUERY_CHALLENGE_CONFIRM_RESULT_SELF,
+	});
 	if (response.status === 'error') {
 		alert(messageFromResponse(response));
 		return;

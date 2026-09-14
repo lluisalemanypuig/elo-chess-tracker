@@ -58,8 +58,11 @@ async function userWasChanged(_event: any) {
 
 	if (usernameOption !== null) {
 		const userId = (usernameOption as HTMLOptionElement).id;
-		const response = await serverCall(ROUTES.QUERY_USER_EDIT, {
-			u: toPlayerPublicId(userId),
+		const response = await serverCall({
+			route: ROUTES.QUERY_USER_EDIT,
+			body: {
+				u: toPlayerPublicId(userId),
+			},
 		});
 		if (response.status === 'error') {
 			alert(messageFromResponse(response));
@@ -120,11 +123,14 @@ async function submitWasClicked(_event: any) {
 		return;
 	}
 
-	const response = await serverCall(ROUTES.USER_EDIT, {
-		publicId: toPlayerPublicId(userPublicId),
-		firstName: toUserGivenName(firstName),
-		lastName: toUserGivenName(lastName),
-		roles: selectedRoles,
+	const response = await serverCall({
+		route: ROUTES.USER_EDIT,
+		body: {
+			publicId: toPlayerPublicId(userPublicId),
+			firstName: toUserGivenName(firstName),
+			lastName: toUserGivenName(lastName),
+			roles: selectedRoles,
+		},
 	});
 	if (response.status === 'error') {
 		alert(messageFromResponse(response));
