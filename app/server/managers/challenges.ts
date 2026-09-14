@@ -56,9 +56,67 @@ import { User } from '@server/models/user';
 import Debug from 'debug';
 import fs from 'fs';
 import path from 'path';
-import { InternalError } from '../models/error-types/internal-error';
+import { assertDefined } from '../utils/assert';
 
 const debug = Debug('ELO_CHESS_TRACKER:managers/challenges');
+
+export function getSentBy(c: Challenge) {
+	const uMem = UsersManager.getInstance();
+	const sentBy = uMem.getAllUserDataByPrivateId(c.sentBy);
+	assertDefined(
+		sentBy,
+		`User '${c.sentBy}' from challenge could not be retrieved.`,
+	);
+	return sentBy;
+}
+
+export function getSentTo(c: Challenge) {
+	const uMem = UsersManager.getInstance();
+	const sentTo = uMem.getAllUserDataByPrivateId(c.sentTo);
+	assertDefined(
+		sentTo,
+		`User '${c.sentTo}' from challenge could not be retrieved.`,
+	);
+	return sentTo;
+}
+
+export function getSentResultSetBy(c: Challenge) {
+	assertDefined(
+		c.resultSetBy,
+		`Challenge ${c.id} malformed: 'resultSetBy' not defined.`,
+	);
+	const uMem = UsersManager.getInstance();
+	const resultSetBy = uMem.getAllUserDataByPrivateId(c.resultSetBy);
+	assertDefined(
+		resultSetBy,
+		`User '${c.sentTo}' from challenge could not be retrieved.`,
+	);
+	return resultSetBy;
+}
+
+export function getWhite(c: Challenge) {
+	assertDefined(c.white, `Challenge ${c.id} malformed: 'white' not defined.`);
+	const uMem = UsersManager.getInstance();
+	const white = uMem.getAllUserDataByPrivateId(c.white);
+	assertDefined(
+		white,
+		`User '${c.white}' from challenge could not be retrieved.`,
+	);
+	return white;
+}
+
+export function getBlack(c: Challenge) {
+	assertDefined(c.black, `Challenge ${c.id} malformed: 'black' not defined.`);
+	const uMem = UsersManager.getInstance();
+	const black = uMem.getAllUserDataByPrivateId(c.black);
+	assertDefined(
+		black,
+		`User '${c.black}' from challenge could not be retrieved.`,
+	);
+	return black;
+}
+
+//
 
 export function writeChallengeToFile(filename: string, c: Challenge) {
 	fs.writeFileSync(filename, JSON.stringify(c, null, 4));
@@ -144,15 +202,8 @@ export function challengeAccept(c: Challenge, { by, when }: ChallengeAccept) {
 	// check permissions
 	let cont: boolean = false;
 	if (by.is('REFEREE')) {
-		const mem = UsersManager.getInstance();
-		const sentTo = mem.getAllUserDataByPrivateId(c.sentTo);
-		const sentBy = mem.getAllUserDataByPrivateId(c.sentBy);
-		if (isNotDefined(sentTo) || isNotDefined(sentBy)) {
-			throw new InternalError(
-				`Could not find white or black user from challenge ${c.id}.`,
-			);
-		}
-
+		const sentTo = getSentTo(c);
+		const sentBy = getSentBy(c);
 		if (canUserForceAcceptChallenge(sentTo.user, sentBy.user, by)) {
 			cont = true;
 		}
@@ -197,14 +248,8 @@ export function challengeDecline(c: Challenge, { by }: ChallengeDecline) {
 		throw new PublicError('You cannot decline this challenge');
 	}
 
-	const mem = UsersManager.getInstance();
-	const sentTo = mem.getAllUserDataByPrivateId(c.sentTo);
-	const sentBy = mem.getAllUserDataByPrivateId(c.sentBy);
-	if (isNotDefined(sentTo) || isNotDefined(sentBy)) {
-		throw new PublicError(
-			'In challenge, either the white or black player do not exist.',
-		);
-	}
+	const sentTo = getSentTo(c);
+	const sentBy = getSentBy(c);
 
 	if (!canUserDeclineChallenge(sentTo.user, sentBy.user, c.timeControlId)) {
 		debug(
@@ -243,15 +288,8 @@ export function challengeSetResult(
 	// check permissions
 	let cont: boolean = false;
 	if (by.is('REFEREE')) {
-		const mem = UsersManager.getInstance();
-		const sentTo = mem.getAllUserDataByPrivateId(c.sentTo);
-		const sentBy = mem.getAllUserDataByPrivateId(c.sentBy);
-		if (isNotDefined(sentTo) || isNotDefined(sentBy)) {
-			throw new InternalError(
-				`Could not find white or black user from challenge ${c.id}.`,
-			);
-		}
-
+		const sentTo = getSentTo(c);
+		const sentBy = getSentBy(c);
 		if (canUserForceSetResultChallenge(sentTo.user, sentBy.user, by)) {
 			cont = true;
 		}
@@ -307,26 +345,11 @@ export function challengeAgreeResult(
 		);
 	}
 
-	if (isNotDefined(c.white) || isNotDefined(c.black)) {
-		debug(logNow(), `Player 'white' or 'black' is not defined.`);
-		debug(logNow(), `    White: '${c.white}'.`);
-		debug(logNow(), `    Black: '${c.black}'.`);
-		throw new InternalError(
-			`Challenge ${c.id} is malformed. Either white or black undefined: the result was not set properly.`,
-		);
-	}
-
 	// check permissions
 	let cont: boolean = false;
 	if (by.is('REFEREE')) {
-		const mem = UsersManager.getInstance();
-		const white = mem.getAllUserDataByPrivateId(c.white);
-		const black = mem.getAllUserDataByPrivateId(c.black);
-		if (isNotDefined(white) || isNotDefined(black)) {
-			throw new InternalError(
-				`Could not find white or black user from challenge ${c.id}.`,
-			);
-		}
+		const white = getWhite(c);
+		const black = getBlack(c);
 
 		if (canUserForceAgreeResultChallenge(white.user, black.user, by)) {
 			cont = true;
@@ -351,11 +374,6 @@ export function challengeAgreeResult(
 		debug(logNow(), `Result is not set.`);
 		throw new PublicError(`Result is not set.`);
 	}
-	if (by.username === c.resultSetBy) {
-		throw new PublicError(
-			'The accepter of the result cannot be the same person who set the result',
-		);
-	}
 
 	agreeResult(c, { by, when });
 
@@ -368,14 +386,8 @@ export function challengeAgreeResult(
 
 	debug(logNow(), `Adding game...`);
 
-	const mem = UsersManager.getInstance();
-	const white = mem.getAllUserDataByPrivateId(c.white);
-	const black = mem.getAllUserDataByPrivateId(c.black);
-	if (isNotDefined(white) || isNotDefined(black)) {
-		throw new PublicError(
-			'In challenge, either the white or black player do not exist.',
-		);
-	}
+	const white = getWhite(c);
+	const black = getBlack(c);
 
 	const now = logNow();
 	gameAddNew(
@@ -390,10 +402,8 @@ export function challengeAgreeResult(
 		c.whenResultSet,
 	);
 
-	{
-		debug(logNow(), `    Deleting the challenge from the memory...`);
-		ChallengesManager.getInstance().removeChallenge(c);
-	}
+	debug(logNow(), `    Deleting the challenge from the memory...`);
+	ChallengesManager.getInstance().removeChallenge(c);
 }
 
 /**
@@ -413,30 +423,21 @@ export function challengeDisagreeResult(
 			`Challenge's result cannot be disagreed to since its state is ${c.state}`,
 		);
 	}
-	if (isNotDefined(c.white) || isNotDefined(c.black)) {
-		throw new InternalError(
-			`Challenge ${c.id} is malformed. Either white or black is undefined.`,
-		);
-	}
-	if (isNotDefined(c.resultSetBy)) {
-		throw new InternalError(
-			`Field 'resultSetBy' not set. Challenge '${c.id}' is malformed.`,
-		);
-	}
 
-	const mem = UsersManager.getInstance();
+	assertDefined(c.white, `Challenge ${c.id} is malformed. White is undefined.`);
+	assertDefined(c.black, `Challenge ${c.id} is malformed. Black is undefined.`);
+	assertDefined(
+		c.resultSetBy,
+		`Challenge ${c.id} is malformed. Result set by is undefined.`,
+	);
 
-	const resultSetBy = c.resultSetBy;
-	const userResultSetBy = mem.getAllUserDataByPrivateId(resultSetBy);
-	if (isNotDefined(userResultSetBy)) {
-		throw new InternalError(`Could not find user ${resultSetBy}.`);
-	}
+	const resultSetBy = getSentResultSetBy(c);
 
 	let cont: boolean = false;
-	if (userResultSetBy.user.is('REFEREE')) {
+	if (resultSetBy.user.is('REFEREE')) {
 		// if the result was set by some referee, then the result can only
 		// be disagreed by that specific referee or another referee
-		if (by.username === resultSetBy) {
+		if (by.username === resultSetBy.user.username) {
 			cont = true;
 		} else {
 			cont = by.is('REFEREE');

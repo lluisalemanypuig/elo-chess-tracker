@@ -38,21 +38,26 @@ import {
 import { UserGivenName } from '@common/models/user-given-name';
 import { isDefined, isNotDefined } from '@common/utils/is-defined';
 import { logNow } from '@common/utils/time';
-import { getChallengesBy } from '@server/managers/challenges';
+import {
+	getBlack,
+	getChallengesBy,
+	getSentBy,
+	getSentResultSetBy,
+	getSentTo,
+	getWhite,
+} from '@server/managers/challenges';
 import {
 	canUserDeclineChallenge,
 	canUserForceAcceptChallenge,
 	canUserForceAgreeResultChallenge,
 	canUserForceSetResultChallenge,
 } from '@server/managers/user-relationships';
-import { UsersManager } from '@server/managers/users-manager';
 import { Challenge, isPartOfChallenge } from '@server/models/challenge';
 import { InternalError } from '@server/models/error-types/internal-error';
 import { UserSession } from '@server/models/user';
 import Debug from 'debug';
 import { ChallengesManager } from './managers/challenges-manager';
 import { PublicError } from './models/error-types/public-error';
-import { assertDefined } from './utils/assert';
 
 const debug = Debug('ELO_CHESS_TRACKER:serverQueryChallenges');
 
@@ -64,62 +69,6 @@ function niceResult(r: GameResult): string {
 		return 'Black wins';
 	}
 	return 'Draw';
-}
-
-function getSentBy(c: Challenge) {
-	const uMem = UsersManager.getInstance();
-	const sentBy = uMem.getAllUserDataByPrivateId(c.sentBy);
-	assertDefined(
-		sentBy,
-		`User '${c.sentBy}' from challenge could not be retrieved.`,
-	);
-	return sentBy;
-}
-
-function getSentTo(c: Challenge) {
-	const uMem = UsersManager.getInstance();
-	const sentTo = uMem.getAllUserDataByPrivateId(c.sentTo);
-	assertDefined(
-		sentTo,
-		`User '${c.sentTo}' from challenge could not be retrieved.`,
-	);
-	return sentTo;
-}
-
-function getSentResultSetBy(c: Challenge) {
-	assertDefined(
-		c.resultSetBy,
-		`Challenge ${c.id} malformed: 'resultSetBy' not defined.`,
-	);
-	const uMem = UsersManager.getInstance();
-	const resultSetBy = uMem.getAllUserDataByPrivateId(c.resultSetBy);
-	assertDefined(
-		resultSetBy,
-		`User '${c.sentTo}' from challenge could not be retrieved.`,
-	);
-	return resultSetBy;
-}
-
-function getWhite(c: Challenge) {
-	assertDefined(c.white, `Challenge ${c.id} malformed: 'white' not defined.`);
-	const uMem = UsersManager.getInstance();
-	const white = uMem.getAllUserDataByPrivateId(c.white);
-	assertDefined(
-		white,
-		`User '${c.white}' from challenge could not be retrieved.`,
-	);
-	return white;
-}
-
-function getBlack(c: Challenge) {
-	assertDefined(c.black, `Challenge ${c.id} malformed: 'black' not defined.`);
-	const uMem = UsersManager.getInstance();
-	const black = uMem.getAllUserDataByPrivateId(c.black);
-	assertDefined(
-		black,
-		`User '${c.black}' from challenge could not be retrieved.`,
-	);
-	return black;
 }
 
 //
