@@ -80,7 +80,7 @@ export function getSentTo(c: Challenge) {
 	return sentTo;
 }
 
-export function getSentResultSetBy(c: Challenge) {
+export function getResultSetBy(c: Challenge) {
 	assertDefined(
 		c.resultSetBy,
 		`Challenge ${c.id} malformed: 'resultSetBy' not defined.`,
@@ -431,7 +431,7 @@ export function challengeDisagreeResult(
 		`Challenge ${c.id} is malformed. Result set by is undefined.`,
 	);
 
-	const resultSetBy = getSentResultSetBy(c);
+	const resultSetBy = getResultSetBy(c);
 
 	let cont: boolean = false;
 	if (resultSetBy.user.is('REFEREE')) {

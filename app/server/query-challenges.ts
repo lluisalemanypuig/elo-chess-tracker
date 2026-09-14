@@ -41,8 +41,8 @@ import { logNow } from '@common/utils/time';
 import {
 	getBlack,
 	getChallengesBy,
+	getResultSetBy,
 	getSentBy,
-	getSentResultSetBy,
 	getSentTo,
 	getWhite,
 } from '@server/managers/challenges';
@@ -80,7 +80,7 @@ export async function getQueryChallengeReceived(
 	debug(logNow(), 'function getQueryChallengeReceived...');
 
 	// challenges to be returned
-	const toReturn = getChallengesBy((c: Challenge): boolean => {
+	const toFormat = getChallengesBy((c: Challenge): boolean => {
 		if (c.state !== 'PENDING_ACCEPT') {
 			return false;
 		}
@@ -90,12 +90,12 @@ export async function getQueryChallengeReceived(
 		return true;
 	});
 
-	const allChallengesReceived: QueryChallengesReceivedOutput = [];
-	for (const c of toReturn) {
+	const toReturn: QueryChallengesReceivedOutput = [];
+	for (const c of toFormat) {
 		const sentBy = getSentBy(c);
 
 		// return only basic information
-		allChallengesReceived.push({
+		toReturn.push({
 			id: c.id,
 			title: c.title,
 			sentBy: sentBy.user.getFullName(),
@@ -109,16 +109,16 @@ export async function getQueryChallengeReceived(
 		});
 	}
 
-	debug(logNow(), `Found '${allChallengesReceived.length}' challenges`);
+	debug(logNow(), `Found '${toReturn.length}' challenges`);
 
-	return allChallengesReceived;
+	return toReturn;
 }
 
 export async function getQueryChallengeSent({ user }: UserSession, _i: Empty) {
 	debug(logNow(), 'function getQueryChallengeSent...');
 
 	// challenges to be returned
-	const toReturn = getChallengesBy((c: Challenge): boolean => {
+	const toFormat = getChallengesBy((c: Challenge): boolean => {
 		if (c.state !== 'PENDING_ACCEPT') {
 			return false;
 		}
@@ -128,12 +128,12 @@ export async function getQueryChallengeSent({ user }: UserSession, _i: Empty) {
 		return true;
 	});
 
-	const allChallenges: QueryChallengesSentOutput = [];
-	for (const c of toReturn) {
+	const toReturn: QueryChallengesSentOutput = [];
+	for (const c of toFormat) {
 		const sentTo = getSentTo(c);
 
 		// return only basic information
-		allChallenges.push({
+		toReturn.push({
 			id: c.id,
 			title: c.title,
 			sentTo: sentTo.user.getFullName(),
@@ -147,9 +147,9 @@ export async function getQueryChallengeSent({ user }: UserSession, _i: Empty) {
 		});
 	}
 
-	debug(logNow(), `Found '${allChallenges.length}' challenges`);
+	debug(logNow(), `Found '${toReturn.length}' challenges`);
 
-	return allChallenges;
+	return toReturn;
 }
 
 export async function getQueryChallengePendingResultSet(
@@ -159,7 +159,7 @@ export async function getQueryChallengePendingResultSet(
 	debug(logNow(), 'function getQueryChallengePendingResult...');
 
 	// challenges to be returned
-	const toReturn = getChallengesBy((c: Challenge): boolean => {
+	const toFormat = getChallengesBy((c: Challenge): boolean => {
 		if (c.state !== 'PENDING_RESULT') {
 			return false;
 		}
@@ -169,8 +169,8 @@ export async function getQueryChallengePendingResultSet(
 		return true;
 	});
 
-	const allChallenges: QueryChallengesPendingResultOutput = [];
-	for (const c of toReturn) {
+	const toReturn: QueryChallengesPendingResultOutput = [];
+	for (const c of toFormat) {
 		const sentTo = getSentTo(c);
 		const sentBy = getSentBy(c);
 
@@ -182,7 +182,7 @@ export async function getQueryChallengePendingResultSet(
 		})();
 
 		// return only basic information
-		allChallenges.push({
+		toReturn.push({
 			id: c.id,
 			title: c.title,
 			sentBy: {
@@ -199,9 +199,9 @@ export async function getQueryChallengePendingResultSet(
 		});
 	}
 
-	debug(logNow(), `Found '${allChallenges.length}' challenges`);
+	debug(logNow(), `Found '${toReturn.length}' challenges`);
 
-	return allChallenges;
+	return toReturn;
 }
 
 export async function getQueryChallengePendingResultAgreeOther(
@@ -211,7 +211,7 @@ export async function getQueryChallengePendingResultAgreeOther(
 	debug(logNow(), 'function getQueryChallengeConfirmResultOther...');
 
 	// challenges to be returned
-	const toReturn = getChallengesBy((c: Challenge): boolean => {
+	const toFormat = getChallengesBy((c: Challenge): boolean => {
 		if (c.state !== 'PENDING_RESULT_AGREE') {
 			return false;
 		}
@@ -224,8 +224,8 @@ export async function getQueryChallengePendingResultAgreeOther(
 		return true;
 	});
 
-	const allChallenges: QueryChallengesConfirmResultOtherOutput = [];
-	for (const c of toReturn) {
+	const toReturn: QueryChallengesConfirmResultOtherOutput = [];
+	for (const c of toFormat) {
 		const sentTo = getSentTo(c);
 		const sentBy = getSentBy(c);
 
@@ -255,7 +255,7 @@ export async function getQueryChallengePendingResultAgreeOther(
 		})();
 
 		// return only basic information
-		allChallenges.push({
+		toReturn.push({
 			id: c.id,
 			title: c.title,
 			opponent: opponent,
@@ -267,9 +267,9 @@ export async function getQueryChallengePendingResultAgreeOther(
 		});
 	}
 
-	debug(logNow(), `Found '${allChallenges.length}' challenges`);
+	debug(logNow(), `Found '${toReturn.length}' challenges`);
 
-	return allChallenges;
+	return toReturn;
 }
 
 export async function getQueryChallengePendingResultAgreeSelf(
@@ -279,7 +279,7 @@ export async function getQueryChallengePendingResultAgreeSelf(
 	debug(logNow(), 'function getQueryChallengeConfirmResultSelf...');
 
 	// challenges to be returned
-	const toReturn = getChallengesBy((c: Challenge): boolean => {
+	const toFormat = getChallengesBy((c: Challenge): boolean => {
 		if (c.state !== 'PENDING_RESULT_AGREE') {
 			return false;
 		}
@@ -292,29 +292,19 @@ export async function getQueryChallengePendingResultAgreeSelf(
 		return true;
 	});
 
-	const allChallenges: QueryChallengesConfirmResultSelfOutput = [];
-	for (const c of toReturn) {
+	const toReturn: QueryChallengesConfirmResultSelfOutput = [];
+	for (const c of toFormat) {
 		const sentTo = getSentTo(c);
 		const sentBy = getSentBy(c);
-		const resultSetBy = getSentBy(c);
+		const white = getWhite(c);
+		const black = getBlack(c);
+		const resultSetBy = getResultSetBy(c);
 
-		if (isNotDefined(c.white) || isNotDefined(c.black)) {
-			throw new InternalError(
-				`Challenge ${c.id} is malformed. White undefined? ${isDefined(c.white)}. Black undefined? ${isDefined(c.black)}.`,
-			);
-		}
 		if (isNotDefined(c.result)) {
 			throw new InternalError(
 				`Challenge ${c.id} is malformed. Result is undefined.`,
 			);
 		}
-
-		const [whiteFullName, blackFullName] = (() => {
-			if (sentTo.user.username === c.white) {
-				return [sentTo.user.getFullName(), sentBy.user.getFullName()];
-			}
-			return [sentBy.user.getFullName(), sentTo.user.getFullName()];
-		})();
 
 		const opponent = ((): UserGivenName => {
 			if (sentBy.user.username === user.username) {
@@ -323,33 +313,23 @@ export async function getQueryChallengePendingResultAgreeSelf(
 			return sentBy.user.getFullName();
 		})();
 
-		const niceResult: string = ((): string => {
-			if (c.result === 'white_wins') {
-				return 'White wins';
-			}
-			if (c.result === 'black_wins') {
-				return 'Black wins';
-			}
-			return 'Draw';
-		})();
-
 		// return only basic information
-		allChallenges.push({
+		toReturn.push({
 			id: c.id,
 			title: c.title,
 			opponent: opponent,
 			sentWhen: c.whenChallengeSent,
-			white: whiteFullName,
-			black: blackFullName,
-			result: niceResult,
+			white: white.user.getFullName(),
+			black: black.user.getFullName(),
+			result: niceResult(c.result),
 			timeControlName: c.timeControlName,
 			canDisagree: !resultSetBy.user.is('REFEREE'),
 		});
 	}
 
-	debug(logNow(), `Found '${allChallenges.length}' challenges`);
+	debug(logNow(), `Found '${toReturn.length}' challenges`);
 
-	return allChallenges;
+	return toReturn;
 }
 
 //
@@ -459,7 +439,7 @@ export async function getQueryChallengesPendingResultAgreeReferee(
 
 		const sentTo = getSentTo(c);
 		const sentBy = getSentBy(c);
-		const resultSetBy = getSentResultSetBy(c);
+		const resultSetBy = getResultSetBy(c);
 		const white = getWhite(c);
 		const black = getBlack(c);
 
