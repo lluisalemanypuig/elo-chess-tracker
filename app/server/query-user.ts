@@ -23,7 +23,6 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { Empty } from '@common/api/schemas-endpoints';
 import {
 	QueryUserEditInput,
 	QueryUserEditOutput,
@@ -48,7 +47,7 @@ import Debug from 'debug';
 const debug = Debug('ELO_CHESS_TRACKER:serverQueryUsers');
 
 // Returns the list of user full names and usernames sorted by name
-export async function getQueryUserList(_u: UserSession, _i: Empty) {
+export async function getQueryUserList(_u: UserSession) {
 	debug(logNow(), 'function getQueryUserList...');
 
 	let list = userGetAllNamePublicId();
@@ -74,7 +73,7 @@ export async function getQueryHtmlUserList(_u: UserSession) {
 	return data;
 }
 
-export async function getQueryUserHome({ user }: UserSession, _i: Empty) {
+export async function getQueryUserHome({ user }: UserSession) {
 	debug(logNow(), 'function getQueryUserHome...');
 
 	const ratingsUser = user.ratings.map(

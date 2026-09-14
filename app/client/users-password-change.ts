@@ -39,9 +39,12 @@ async function buttonSubmitClicked() {
 		return;
 	}
 
-	const response = await serverCall(ROUTES.USER_PASSWORD_CHANGE, {
-		old: boxOldPassword.value,
-		new: boxNewPassword.value,
+	const response = await serverCall({
+		route: ROUTES.USER_PASSWORD_CHANGE,
+		body: {
+			old: boxOldPassword.value,
+			new: boxNewPassword.value,
+		},
 	});
 	if (response.status === 'error') {
 		alert(messageFromResponse(response));

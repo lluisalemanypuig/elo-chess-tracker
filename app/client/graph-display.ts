@@ -101,8 +101,11 @@ async function loadGraph() {
 	})();
 
 	// "query" the server
-	const response = await serverCall(queryToServer, {
-		timeControlId: timeControlId,
+	const response = await serverCall({
+		route: queryToServer,
+		body: {
+			timeControlId: timeControlId,
+		},
 	});
 	if (response.status === 'error') {
 		alert(messageFromResponse(response));

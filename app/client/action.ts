@@ -46,10 +46,15 @@ type ResponseResult<T> =
 			status: 'success';
 	  };
 
-export async function serverCall<T extends Route>(
-	route: T,
-	body: InputTypeOf<T> | undefined | null,
-): Promise<ResponseResult<OutputTypeOf<T>>> {
+interface ActionParams<T extends Route> {
+	route: T;
+	body?: InputTypeOf<T> | undefined | null;
+}
+
+export async function serverCall<T extends Route>({
+	route,
+	body = null,
+}: ActionParams<T>): Promise<ResponseResult<OutputTypeOf<T>>> {
 	const method = methodTypeOf(route);
 	let response: Response;
 

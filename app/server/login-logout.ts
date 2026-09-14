@@ -24,7 +24,6 @@ Contact:
 */
 
 import { ROUTES } from '@common/api/routes';
-import { Empty } from '@common/api/schemas-endpoints';
 import { UserLoginInputSchema } from '@common/api/schemas/login-logout';
 import {
 	SessionIdPublicIdFieldName,
@@ -101,7 +100,7 @@ export async function postUserLogin(req: Request, res: Response) {
 	});
 }
 
-export async function postUserLogout({ session }: UserSession, _i: Empty) {
+export async function postUserLogout({ session }: UserSession) {
 	debug(logNow(), 'function postUserLogout...');
 
 	// in order to log out a user, the must have been logged in with the given

@@ -64,9 +64,12 @@ async function selectResultGameOnChange(event: any) {
 		return;
 	}
 
-	const response = await serverCall(ROUTES.GAME_EDIT_RESULT, {
-		id: gameId,
-		newResult: newResult,
+	const response = await serverCall({
+		route: ROUTES.GAME_EDIT_RESULT,
+		body: {
+			id: gameId,
+			newResult: newResult,
+		},
 	});
 
 	if (response.status === 'error') {
@@ -117,7 +120,10 @@ async function buttonDeleteGameOnClick(event: any) {
 	].value as TimeControlId;
 
 	const gameId = button.getAttribute('gameId');
-	const response = await serverCall(ROUTES.GAME_DELETE, { id: gameId });
+	const response = await serverCall({
+		route: ROUTES.GAME_DELETE,
+		body: { id: gameId },
+	});
 
 	if (response.status === 'error') {
 		alert(messageFromResponse(response));
@@ -153,9 +159,12 @@ async function triggerEditGameTitle(event: Event) {
 		return;
 	}
 
-	const response = await serverCall(ROUTES.GAME_EDIT_TITLE, {
-		id: gameId,
-		title: newTitle,
+	const response = await serverCall({
+		route: ROUTES.GAME_EDIT_TITLE,
+		body: {
+			id: gameId,
+			title: newTitle,
+		},
 	});
 	if (response.status === 'error') {
 		alert(messageFromResponse(response));
@@ -200,12 +209,18 @@ async function fillGamesListTimeControl(timeControlId: TimeControlId) {
 
 	let response;
 	if (val === 'all') {
-		response = await serverCall(ROUTES.QUERY_GAME_LIST_ALL, {
-			timeControlId: timeControlId,
+		response = await serverCall({
+			route: ROUTES.QUERY_GAME_LIST_ALL,
+			body: {
+				timeControlId: timeControlId,
+			},
 		});
 	} else if (val === 'own') {
-		response = await serverCall(ROUTES.QUERY_GAME_LIST_OWN, {
-			timeControlId: timeControlId,
+		response = await serverCall({
+			route: ROUTES.QUERY_GAME_LIST_OWN,
+			body: {
+				timeControlId: timeControlId,
+			},
 		});
 	} else {
 		alert(`Wrong value for list '${val}'.`);

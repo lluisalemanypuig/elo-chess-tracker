@@ -113,7 +113,7 @@ export async function entryPointHTMX<R extends Route>(
 	}
 }
 
-export async function entryPointAction<R extends Route>(
+export async function entryPointActionPost<R extends Route>(
 	route: R,
 	action: (u: UserSession, data: InputTypeOf<R>) => Promise<OutputTypeOf<R>>,
 	req: Request,
@@ -138,36 +138,68 @@ export async function entryPointAction<R extends Route>(
 
 	try {
 		const inputSchema = inputSchemaOf(route);
-		if (inputSchema !== EmptySchema) {
-			const inputParse = safeParseRequestBody(req, inputSchema, debug);
-			if (inputParse.result === 'bad') {
-				debug(logNow(), 'Data sent by client:');
-				console.log(JSON.stringify(req.body, null, 2));
-				res
-					.status(401)
-					.send('Request input data (body) sent from client is malformed');
-				return;
-			}
+		if (inputSchema === EmptySchema) {
+			throw new Error(`Unexpected 'EmptySchema' for entryPointActionPost.`);
+		}
 
-			// TODO: eventually remove type assertion
-			const input = inputParse.data as InputTypeOf<R>;
+		const inputParse = safeParseRequestBody(req, inputSchema, debug);
+		if (inputParse.result === 'bad') {
+			debug(logNow(), 'Data sent by client:');
+			console.log(JSON.stringify(req.body, null, 2));
+			res
+				.status(401)
+				.send('Request input data (body) sent from client is malformed');
+			return;
+		}
 
-			const actionResult = await action({ user, session }, input);
-			if (outputSchemaOf(route) === EmptySchema) {
-				res.status(204).send();
-			} else {
-				res.status(200).send(actionResult);
-			}
+		// TODO: eventually remove type assertion
+		const input = inputParse.data as InputTypeOf<R>;
+
+		const actionResult = await action({ user, session }, input);
+		if (outputSchemaOf(route) === EmptySchema) {
+			res.status(204).send();
 		} else {
-			const actionResult = await action(
-				{ user, session },
-				{} as InputTypeOf<R>,
-			);
-			if (outputSchemaOf(route) === EmptySchema) {
-				res.status(204).send();
-			} else {
-				res.status(200).send(actionResult);
-			}
+			res.status(200).send(actionResult);
+		}
+	} catch (e) {
+		handleError(e as Error, res);
+	}
+}
+
+export async function entryPointActionGet<R extends Route>(
+	route: R,
+	action: (u: UserSession) => Promise<OutputTypeOf<R>>,
+	req: Request,
+	res: Response,
+) {
+	debug(logNow(), `${methodTypeOf(route)} ${route}...`);
+	debug(logNow(), 'Entry point action');
+
+	const sessionParse = safeParseRequestCookies(req, debug);
+	if (sessionParse.result === 'bad') {
+		res.status(401).send(`Failure to parse cookies.`);
+		return;
+	}
+
+	const session = sessionParse.data;
+	const r = isUserLoggedIn(session);
+	const user = r[2];
+	if (isNotDefined(user)) {
+		res.status(401).send(r[1]);
+		return;
+	}
+
+	try {
+		const inputSchema = inputSchemaOf(route);
+		if (inputSchema !== EmptySchema) {
+			throw new Error(`Expected 'EmptySchema' for entryPointActionGet.`);
+		}
+
+		const actionResult = await action({ user, session });
+		if (outputSchemaOf(route) === EmptySchema) {
+			res.status(204).send();
+		} else {
+			res.status(200).send(actionResult);
 		}
 	} catch (e) {
 		handleError(e as Error, res);

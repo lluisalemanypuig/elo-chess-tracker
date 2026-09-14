@@ -23,7 +23,6 @@ Contact:
 	https://github.com/lluisalemanypuig
 */
 
-import { Empty } from '@common/api/schemas-endpoints';
 import { logNow } from '@common/utils/time';
 import { recalculateAllGraphs } from '@server/managers/graphs';
 import { PublicError } from '@server/models/error-types/public-error';
@@ -48,10 +47,7 @@ export async function getPageGraphFull({ user }: UserSession) {
 	return 'html/graph/full.html';
 }
 
-export async function postRecalculateGraphs(
-	{ user }: UserSession,
-	_input: Empty,
-) {
+export async function postRecalculateGraphs({ user }: UserSession) {
 	debug(logNow(), 'function postRecalculateGraphs...');
 	debug(logNow(), `Recalculating ratings...`);
 	recalculateAllGraphs(user);
