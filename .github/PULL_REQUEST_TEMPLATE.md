@@ -45,4 +45,4 @@ _Leave all items and use '--' for those items that do not apply and 'x' for thos
 
 ## Closes _(optional)_
 
-closes [issue number here]
+Closes [issue number here]
