@@ -24,7 +24,8 @@ Contact:
 */
 
 import {
-	entryPointAction,
+	entryPointActionGet,
+	entryPointActionPost,
 	entryPointHTMX,
 	entryPointPage,
 } from '@app/entry-point';
@@ -125,20 +126,30 @@ async function defineEndpointHTMX<R extends Route>(
 	});
 }
 
-async function defineEndpointAction<R extends Route>(
+async function defineEndpointActionPost<R extends Route>(
 	route: R,
 	action: (u: UserSession, data: InputTypeOf<R>) => Promise<OutputTypeOf<R>>,
 ) {
 	const method = methodTypeOf(route);
-	if (method === 'POST') {
-		router.post(route, (req: Request, res: Response) => {
-			entryPointAction(route, action, req, res);
-		});
-	} else if (method === 'GET') {
-		router.get(route, (req: Request, res: Response) => {
-			entryPointAction(route, action, req, res);
-		});
+	if (method !== 'POST') {
+		throw new Error(`Expected 'POST' endpoint. Instead found '${method}'.`);
 	}
+	router.post(route, (req: Request, res: Response) => {
+		entryPointActionPost(route, action, req, res);
+	});
+}
+
+async function defineEndpointActionGet<R extends Route>(
+	route: R,
+	action: (u: UserSession) => Promise<OutputTypeOf<R>>,
+) {
+	const method = methodTypeOf(route);
+	if (method !== 'GET') {
+		throw new Error(`Expected 'GET' endpoint. Instead found '${method}'.`);
+	}
+	router.get(route, (req: Request, res: Response) => {
+		entryPointActionGet(route, action, req, res);
+	});
 }
 
 /* ************************************************************************** */
@@ -240,48 +251,48 @@ router.get(ROUTES.JS_ALL, (req: Request, res: Response) => {
 	res.sendFile(filepath);
 });
 
-defineEndpointAction(ROUTES.QUERY_USER_HOME, getQueryUserHome);
-defineEndpointAction(ROUTES.QUERY_USER_LIST, getQueryUserList);
+defineEndpointActionGet(ROUTES.QUERY_USER_HOME, getQueryUserHome);
+defineEndpointActionGet(ROUTES.QUERY_USER_LIST, getQueryUserList);
 defineEndpointHTMX(ROUTES.QUERY_HTML_USER_LIST, getQueryHtmlUserList);
-defineEndpointAction(ROUTES.QUERY_USER_EDIT, postQueryUserEdit);
-defineEndpointAction(ROUTES.QUERY_USER_RANKING, postQueryUserRanking);
+defineEndpointActionPost(ROUTES.QUERY_USER_EDIT, postQueryUserEdit);
+defineEndpointActionPost(ROUTES.QUERY_USER_RANKING, postQueryUserRanking);
 
 // sending, receiving, accepting, setting result of challenges
-defineEndpointAction(
+defineEndpointActionGet(
 	ROUTES.QUERY_CHALLENGE_RECEIVED,
 	getQueryChallengeReceived,
 );
-defineEndpointAction(ROUTES.QUERY_CHALLENGE_SENT, getQueryChallengeSent);
-defineEndpointAction(
+defineEndpointActionGet(ROUTES.QUERY_CHALLENGE_SENT, getQueryChallengeSent);
+defineEndpointActionGet(
 	ROUTES.QUERY_CHALLENGE_PENDING_RESULT,
 	getQueryChallengePendingResultSet,
 );
-defineEndpointAction(
+defineEndpointActionGet(
 	ROUTES.QUERY_CHALLENGE_CONFIRM_RESULT_OTHER,
 	getQueryChallengePendingResultAgreeOther,
 );
-defineEndpointAction(
+defineEndpointActionGet(
 	ROUTES.QUERY_CHALLENGE_CONFIRM_RESULT_SELF,
 	getQueryChallengePendingResultAgreeSelf,
 );
-defineEndpointAction(
+defineEndpointActionGet(
 	ROUTES.QUERY_CHALLENGE_PENDING_ACCEPT_REFEREE,
 	getQueryChallengesPendingAcceptReferee,
 );
-defineEndpointAction(
+defineEndpointActionGet(
 	ROUTES.QUERY_CHALLENGE_PENDING_RESULT_SET_REFEREE,
 	getQueryChallengesPendingResultSetReferee,
 );
-defineEndpointAction(
+defineEndpointActionGet(
 	ROUTES.QUERY_CHALLENGE_PENDING_RESULT_AGREE_REFEREE,
 	getQueryChallengesPendingResultAgreeReferee,
 );
 
-defineEndpointAction(ROUTES.QUERY_GAME_LIST_OWN, postQueryGameListOwn);
-defineEndpointAction(ROUTES.QUERY_GAME_LIST_ALL, postQueryGameListAll);
+defineEndpointActionPost(ROUTES.QUERY_GAME_LIST_OWN, postQueryGameListOwn);
+defineEndpointActionPost(ROUTES.QUERY_GAME_LIST_ALL, postQueryGameListAll);
 
-defineEndpointAction(ROUTES.QUERY_GRAPH_OWN, postQueryGraphOwn);
-defineEndpointAction(ROUTES.QUERY_GRAPH_FULL, postQueryGraphFull);
+defineEndpointActionPost(ROUTES.QUERY_GRAPH_OWN, postQueryGraphOwn);
+defineEndpointActionPost(ROUTES.QUERY_GRAPH_FULL, postQueryGraphFull);
 
 // query time controls
 defineEndpointHTMX(ROUTES.QUERY_HTML_TIME_CONTROLS, getQueryHtmlTimeControls);
@@ -292,17 +303,17 @@ defineEndpointHTMX(
 
 // user login and logout
 router.post(ROUTES.USER_LOGIN, postUserLogin);
-defineEndpointAction(ROUTES.USER_LOGOUT, postUserLogout);
+defineEndpointActionPost(ROUTES.USER_LOGOUT, postUserLogout);
 
 // user management
 defineEndpointPage(ROUTES.PAGE_USER_CREATE, getPageUserCreate);
-defineEndpointAction(ROUTES.USER_CREATE, postUserCreate);
+defineEndpointActionPost(ROUTES.USER_CREATE, postUserCreate);
 defineEndpointPage(ROUTES.PAGE_USER_EDIT, getPageUserEdit);
-defineEndpointAction(ROUTES.USER_EDIT, postUserEdit);
+defineEndpointActionPost(ROUTES.USER_EDIT, postUserEdit);
 
 // change of password
 defineEndpointPage(ROUTES.PAGE_USER_PASSWORD_CHANGE, getPageUserPasswordChange);
-defineEndpointAction(ROUTES.USER_PASSWORD_CHANGE, postUserPasswordChange);
+defineEndpointActionPost(ROUTES.USER_PASSWORD_CHANGE, postUserPasswordChange);
 
 // retrieve ranking of players
 defineEndpointPage(ROUTES.PAGE_USER_RANKING, getPageUserRanking);
@@ -310,25 +321,25 @@ defineEndpointPage(ROUTES.PAGE_USER_RANKING, getPageUserRanking);
 defineEndpointPage(ROUTES.PAGE_GAME_LIST_OWN, getPageGameListOwn);
 defineEndpointPage(ROUTES.PAGE_GAME_LIST_ALL, getPageGameListAll);
 defineEndpointPage(ROUTES.PAGE_GAME_CREATE, getPageGameCreate);
-defineEndpointAction(ROUTES.GAME_CREATE, postGameCreate);
-defineEndpointAction(ROUTES.GAME_EDIT_TITLE, postGameEditTitle);
-defineEndpointAction(ROUTES.GAME_EDIT_RESULT, postGameEditResult);
-defineEndpointAction(ROUTES.GAME_DELETE, postGameDelete);
-defineEndpointAction(ROUTES.RECALCULATE_RATINGS, postRecalculateRatings);
+defineEndpointActionPost(ROUTES.GAME_CREATE, postGameCreate);
+defineEndpointActionPost(ROUTES.GAME_EDIT_TITLE, postGameEditTitle);
+defineEndpointActionPost(ROUTES.GAME_EDIT_RESULT, postGameEditResult);
+defineEndpointActionPost(ROUTES.GAME_DELETE, postGameDelete);
+defineEndpointActionPost(ROUTES.RECALCULATE_RATINGS, postRecalculateRatings);
 
 // challenges management
 defineEndpointPage(ROUTES.PAGE_CHALLENGES_OWN, getPageChallengesOwn);
 defineEndpointPage(ROUTES.PAGE_CHALLENGES_REFEREE, getPageChallengesReferee);
-defineEndpointAction(ROUTES.CHALLENGE_SEND, postChallengeSend);
-defineEndpointAction(ROUTES.CHALLENGE_ACCEPT, postChallengeAccept);
-defineEndpointAction(ROUTES.CHALLENGE_DECLINE, postChallengeDecline);
-defineEndpointAction(ROUTES.CHALLENGE_SET_RESULT, postChallengeSetResult);
-defineEndpointAction(ROUTES.CHALLENGE_AGREE, postChallengeAgree);
-defineEndpointAction(ROUTES.CHALLENGE_DISAGREE, postChallengeDisagree);
+defineEndpointActionPost(ROUTES.CHALLENGE_SEND, postChallengeSend);
+defineEndpointActionPost(ROUTES.CHALLENGE_ACCEPT, postChallengeAccept);
+defineEndpointActionPost(ROUTES.CHALLENGE_DECLINE, postChallengeDecline);
+defineEndpointActionPost(ROUTES.CHALLENGE_SET_RESULT, postChallengeSetResult);
+defineEndpointActionPost(ROUTES.CHALLENGE_AGREE, postChallengeAgree);
+defineEndpointActionPost(ROUTES.CHALLENGE_DISAGREE, postChallengeDisagree);
 
 // graphs management
 defineEndpointPage(ROUTES.PAGE_GRAPH_OWN, getPageGraphOwn);
 defineEndpointPage(ROUTES.PAGE_GRAPH_FULL, getPageGraphFull);
-defineEndpointAction(ROUTES.RECALCULATE_GRAPHS, postRecalculateGraphs);
+defineEndpointActionPost(ROUTES.RECALCULATE_GRAPHS, postRecalculateGraphs);
 
 export { router };

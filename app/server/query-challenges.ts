@@ -24,7 +24,6 @@ Contact:
 */
 
 import { GameResult } from '@app/common/models/game-result';
-import { Empty } from '@common/api/schemas-endpoints';
 import {
 	QueryChallengesConfirmResultOtherOutput,
 	QueryChallengesConfirmResultSelfOutput,
@@ -73,10 +72,7 @@ function niceResult(r: GameResult): string {
 
 //
 
-export async function getQueryChallengeReceived(
-	{ user }: UserSession,
-	_i: Empty,
-) {
+export async function getQueryChallengeReceived({ user }: UserSession) {
 	debug(logNow(), 'function getQueryChallengeReceived...');
 
 	// challenges to be returned
@@ -114,7 +110,7 @@ export async function getQueryChallengeReceived(
 	return toReturn;
 }
 
-export async function getQueryChallengeSent({ user }: UserSession, _i: Empty) {
+export async function getQueryChallengeSent({ user }: UserSession) {
 	debug(logNow(), 'function getQueryChallengeSent...');
 
 	// challenges to be returned
@@ -152,10 +148,7 @@ export async function getQueryChallengeSent({ user }: UserSession, _i: Empty) {
 	return toReturn;
 }
 
-export async function getQueryChallengePendingResultSet(
-	{ user }: UserSession,
-	_i: Empty,
-) {
+export async function getQueryChallengePendingResultSet({ user }: UserSession) {
 	debug(logNow(), 'function getQueryChallengePendingResult...');
 
 	// challenges to be returned
@@ -204,10 +197,9 @@ export async function getQueryChallengePendingResultSet(
 	return toReturn;
 }
 
-export async function getQueryChallengePendingResultAgreeOther(
-	{ user }: UserSession,
-	_i: Empty,
-) {
+export async function getQueryChallengePendingResultAgreeOther({
+	user,
+}: UserSession) {
 	debug(logNow(), 'function getQueryChallengeConfirmResultOther...');
 
 	// challenges to be returned
@@ -272,10 +264,9 @@ export async function getQueryChallengePendingResultAgreeOther(
 	return toReturn;
 }
 
-export async function getQueryChallengePendingResultAgreeSelf(
-	{ user }: UserSession,
-	_i: Empty,
-) {
+export async function getQueryChallengePendingResultAgreeSelf({
+	user,
+}: UserSession) {
 	debug(logNow(), 'function getQueryChallengeConfirmResultSelf...');
 
 	// challenges to be returned
@@ -334,10 +325,9 @@ export async function getQueryChallengePendingResultAgreeSelf(
 
 //
 
-export async function getQueryChallengesPendingAcceptReferee(
-	{ user }: UserSession,
-	_i: Empty,
-) {
+export async function getQueryChallengesPendingAcceptReferee({
+	user,
+}: UserSession) {
 	debug(logNow(), 'function getQueryChallengesPendingAcceptReferee...');
 
 	if (!user.is('REFEREE')) {
@@ -371,10 +361,9 @@ export async function getQueryChallengesPendingAcceptReferee(
 	return toReturn;
 }
 
-export async function getQueryChallengesPendingResultSetReferee(
-	{ user }: UserSession,
-	_i: Empty,
-) {
+export async function getQueryChallengesPendingResultSetReferee({
+	user,
+}: UserSession) {
 	debug(logNow(), 'function getQueryChallengesPendingAcceptReferee...');
 
 	if (!user.is('REFEREE')) {
@@ -414,10 +403,9 @@ export async function getQueryChallengesPendingResultSetReferee(
 	return toReturn;
 }
 
-export async function getQueryChallengesPendingResultAgreeReferee(
-	{ user }: UserSession,
-	_i: Empty,
-) {
+export async function getQueryChallengesPendingResultAgreeReferee({
+	user,
+}: UserSession) {
 	debug(logNow(), 'function getQueryChallengesPendingResultAgreeReferee...');
 
 	if (!user.is('REFEREE')) {

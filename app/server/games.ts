@@ -159,10 +159,9 @@ export async function postGameDelete(
 	return {};
 }
 
-export async function postRecalculateRatings(
-	{ user }: UserSession,
-	_input: Empty,
-): Promise<Empty> {
+export async function postRecalculateRatings({
+	user,
+}: UserSession): Promise<Empty> {
 	debug(logNow(), 'function postRecalculateRatings...');
 	debug(logNow(), `Recalculating ratings...`);
 	recalculateAllRatings(user);
